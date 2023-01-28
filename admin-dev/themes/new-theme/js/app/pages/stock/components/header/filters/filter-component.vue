@@ -75,13 +75,14 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
   import PSTags from '@app/widgets/ps-tags.vue';
   import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item.vue';
   import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
-  import {EventBus} from '@app/utils/event-bus';
+  import {EventEmitter} from '@components/event-emitter';
+  import translate from '@app/pages/stock/mixins/translate';
 
-  const FilterComponent = Vue.extend({
+  const FilterComponent = defineComponent({
     props: {
       placeholder: {
         type: String,
@@ -102,6 +103,7 @@
         required: true,
       },
     },
+    mixins: [translate],
     computed: {
       isOverview(): boolean {
         return this.$route.name === 'overview';
@@ -178,7 +180,7 @@
         if (this.match) {
           checkedTag = this.match[this.label];
         }
-        EventBus.$emit('toggleCheckbox', checkedTag);
+        EventEmitter.emit('toggleCheckbox', checkedTag);
         this.currentVal = '';
       },
       filterList(tags: Array<any>): Array<number> {

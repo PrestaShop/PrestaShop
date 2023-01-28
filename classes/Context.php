@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
@@ -42,6 +43,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ContextCore.
+ *
+ * This class is responsible for holding all basic information about the environment,
+ * the customer, cart, currency, language etc.
  *
  * @since 1.5.0.1
  */
@@ -71,7 +75,7 @@ class ContextCore
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController|null */
+    /** @var AdminController|FrontController|LegacyControllerBridgeInterface|null */
     public $controller;
 
     /** @var string */
@@ -102,7 +106,7 @@ class ContextCore
     /** @var Smarty|null */
     public $smarty;
 
-    /** @var \Mobile_Detect */
+    /** @var Mobile_Detect */
     public $mobile_detect;
 
     /** @var int */
@@ -137,25 +141,25 @@ class ContextCore
     protected $is_tablet = null;
 
     /** @var int */
-    const DEVICE_COMPUTER = 1;
+    public const DEVICE_COMPUTER = 1;
 
     /** @var int */
-    const DEVICE_TABLET = 2;
+    public const DEVICE_TABLET = 2;
 
     /** @var int */
-    const DEVICE_MOBILE = 4;
+    public const DEVICE_MOBILE = 4;
 
     /** @var int */
-    const MODE_STD = 1;
+    public const MODE_STD = 1;
 
     /** @var int */
-    const MODE_STD_CONTRIB = 2;
+    public const MODE_STD_CONTRIB = 2;
 
     /** @var int */
-    const MODE_HOST_CONTRIB = 4;
+    public const MODE_HOST_CONTRIB = 4;
 
     /** @var int */
-    const MODE_HOST = 8;
+    public const MODE_HOST = 8;
 
     /**
      * Sets Mobile_Detect tool object.
@@ -345,13 +349,16 @@ class ContextCore
     }
 
     /**
-     * Update context after customer login.
+     * Updates customer in the context, updates the cookie and writes the updated cookie.
      *
      * @param Customer $customer Created customer
      */
     public function updateCustomer(Customer $customer)
     {
+        // Update the customer in context object
         $this->customer = $customer;
+
+        // Update basic information in the cookie
         $this->cookie->id_customer = (int) $customer->id;
         $this->cookie->customer_lastname = $customer->lastname;
         $this->cookie->customer_firstname = $customer->firstname;
@@ -359,15 +366,42 @@ class ContextCore
         $this->cookie->logged = true;
         $customer->logged = true;
         $this->cookie->email = $customer->email;
+
+        // Don't confuse this with "id_guest" and Guest object, that's something completely different
         $this->cookie->is_guest = $customer->isGuest();
 
-        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
+        /*
+         * If "re-display cart at login" option is enabled in Prestashop configuration,
+         * there is no cart in previous cookie or there is, but empty,
+         * and we managed to get that cart ID, we will re-use it.
+         *
+         * We don't want to flush his cart, if he made it when logged out.
+         */
+        if (Configuration::get('PS_CART_FOLLOWING') &&
+            (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) &&
+            $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)
+        ) {
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
+            $this->cookie->id_guest = (int) $this->cart->id_guest;
+
+        /*
+        * Otherwise, normal cart recovery and update scenario.
+        */
         } else {
+            // Initialize new visit only if there is no visit identifier yet
+            if (!$this->cookie->id_guest) {
+                Guest::setNewGuest($this->cookie);
+            }
+
+            // If there is some cart created in the context before logging in
             if (Validate::isLoadedObject($this->cart)) {
-                $idCarrier = (int) $this->cart->id_carrier;
+                // We need to update the cart so it matches the customer
                 $this->cart->secure_key = $customer->secure_key;
+                $this->cart->id_guest = (int) $this->cookie->id_guest;
+
+                // Update and revalidate the selected delivery option
+                $idCarrier = (int) $this->cart->id_carrier;
                 $this->cart->id_carrier = 0;
                 if (!empty($idCarrier)) {
                     $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
@@ -375,6 +409,8 @@ class ContextCore
                 } else {
                     $this->cart->setDeliveryOption(null);
                 }
+
+                // Set proper customer ID and assign addresses to the cart
                 $this->cart->id_customer = (int) $customer->id;
                 $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
                 $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
@@ -382,14 +418,17 @@ class ContextCore
             }
         }
 
+        // If previous logic resolved to some cart to be used, save it and put this information to cookie
         if (Validate::isLoadedObject($this->cart)) {
             $this->cart->save();
             $this->cart->autosetProductAddress();
             $this->cookie->id_cart = (int) $this->cart->id;
         }
 
+        // Physically save and send this cookie to the client
         $this->cookie->write();
 
+        // Register new logged in session in customer_session table
         $this->cookie->registerSession(new CustomerSession());
     }
 
@@ -464,7 +503,7 @@ class ContextCore
                 $containerFinder = new ContainerFinder($this);
                 $container = $containerFinder->getContainer();
                 $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
-            } catch (ContainerNotFoundException | ServiceNotFoundException $exception) {
+            } catch (ContainerNotFoundException|ServiceNotFoundException $exception) {
                 $translatorLoader = null;
             }
 
@@ -485,12 +524,16 @@ class ContextCore
     }
 
     /**
+     * Returns directories that contain translation resources
+     *
      * @return array
      */
     protected function getTranslationResourcesDirectories()
     {
+        // Default common translation folder
         $locations = [_PS_ROOT_DIR_ . '/translations'];
 
+        // Translations for currently selected theme
         if (null !== $this->shop) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
             if (is_dir($activeThemeLocation)) {
@@ -502,7 +545,8 @@ class ContextCore
     }
 
     /**
-     * Returns the computing precision according to the current currency
+     * Returns the computing precision according to the current currency.
+     * If previously requested, it will be stored in priceComputingPrecision property.
      *
      * @return int
      */

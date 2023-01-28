@@ -38,6 +38,7 @@
         aria-haspopup="true"
         aria-expanded="false"
         id="form_invoice_prefix"
+        :data-role="`filter-by-${label.toLowerCase()}`"
       >
         {{ label }} {{ nbFiles }}
       </button>
@@ -50,6 +51,7 @@
           class="md-checkbox"
           v-for="filter in children"
           :key="filter.id"
+          :data-role="`${label.toLowerCase()}-${filter.id}`"
         >
           <label class="dropdown-item">
             <div class="md-checkbox-container">
@@ -69,9 +71,12 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent, PropType} from 'vue';
+  import ProductEventMap from '@pages/product/product-event-map';
 
-  export default Vue.extend({
+  const CombinationEvents = ProductEventMap.combinations;
+
+  export default defineComponent({
     name: 'FilterDropdown',
     data(): {selectedFilters: Array<Record<string, any>>} {
       return {
@@ -84,16 +89,20 @@
         required: true,
       },
       children: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
       label: {
         type: String,
         required: true,
       },
+      eventEmitter: {
+        type: Object,
+        required: true,
+      },
     },
     mounted() {
-      this.$parent.$on('clearAll', this.clear);
+      this.eventEmitter.on(CombinationEvents.clearAllCombinationFilters, this.clear);
     },
     computed: {
       nbFiles(): string | null {
@@ -104,10 +113,10 @@
     },
     methods: {
       isChecked(filter: Record<string, any>): boolean {
-        return this.selectedFilters.includes(filter);
+        return this.selectedFilters.some((e) => filter.id === e.id);
       },
       toggleFilter(filter: Record<string, any>): void {
-        if (this.selectedFilters.includes(filter)) {
+        if (this.selectedFilters.some((e) => filter.id === e.id)) {
           this.$emit('removeFilter', filter, this.parentId);
           this.selectedFilters = this.selectedFilters.filter(
             (item) => item.id !== filter.id,

@@ -37,7 +37,7 @@ use Behat\Behat\Context\Context as BehatContext;
  */
 abstract class AbstractPrestaShopFeatureContext implements BehatContext
 {
-    const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
+    public const MODULES_DIRECTORY = __DIR__ . '/../../../../Resources/modules';
 
     protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
     {

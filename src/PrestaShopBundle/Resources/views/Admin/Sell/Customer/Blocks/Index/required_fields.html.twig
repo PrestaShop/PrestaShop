@@ -38,6 +38,16 @@
             <p>{{ 'Please make sure you are complying with the opt-in legislation applicable in your country.'|trans({}, 'Admin.Orderscustomers.Help') }}</p>
           </div>
         </div>
+        <div class="alert alert-danger d-none" role="alert" id="customerRequiredFieldsAlertMessageOptin">
+          <div class="alert-text">
+            <p>{{ '[1]Make[/1] sure you enable partner offers in the [2]Shop Parameters > Customer Settings[/2] section of the back office before requiring them. Otherwise, new customers won\'t be able to create an account and [1]proceed[/1] to checkout.'|trans({
+                '[1]': '<strong>',
+                '[/1]': '</strong>',
+                '[2]': '<a href="' ~ path('admin_customer_preferences') ~ '">',
+                '[/2]': '</a>',
+              }, 'Admin.Orderscustomers.Help')|raw }}</p>
+          </div>
+        </div>
 
         {{ form_widget(customerRequiredFieldsForm.required_fields) }}
       </div>

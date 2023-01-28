@@ -30,102 +30,66 @@
       <trans-unit id="c4a6a84a33c055a2f92c8f3d52718100">
         <source>1 module</source>
         <target>1 module</target>
-        <note>Line: 74</note>
+        <note>Line: 73</note>
       </trans-unit>
       <trans-unit id="d64f66187ca2535e8aa5eccac54e7013">
         <source>%d modules</source>
         <target>%d modules</target>
-        <note>Line: 76</note>
+        <note>Line: 75</note>
       </trans-unit>
       <trans-unit id="59a2104ef3237945cd8378a51f853ca8">
         <source>1 category</source>
         <target>1 category</target>
-        <note>Line: 96</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="593dafa821d7cebf6e76bf592110ba32">
         <source>%d categories</source>
         <target>%d categories</target>
-        <note>Line: 98</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="702085cd8b96c1e778c9e59ffba0394d">
         <source>1 product</source>
         <target>1 product</target>
-        <note>Line: 116</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="864c665aea5e824772fda0e678c3ac4d">
         <source>%d products</source>
         <target>%d products</target>
-        <note>Line: 118</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="f08f35ebaebc5e5037a0b2a3474de8c4">
         <source>1 customer</source>
         <target>1 customer</target>
-        <note>Line: 130</note>
+        <note>Line: 129</note>
       </trans-unit>
       <trans-unit id="d5865d192ae31edead7bdea6ed1c85d9">
         <source>%d customers</source>
         <target>%d customers</target>
-        <note>Line: 132</note>
+        <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="6febfe29360949ae825d828fa095b6df">
         <source>1 order</source>
         <target>1 order</target>
-        <note>Line: 144</note>
+        <note>Line: 143</note>
       </trans-unit>
       <trans-unit id="c0115153d45d00a4510d71e2605196a3">
         <source>%d orders</source>
         <target>%d orders</target>
-        <note>Line: 146</note>
+        <note>Line: 145</note>
       </trans-unit>
-      <trans-unit id="1b339eb691ebd4d2103b8b76de41d321">
-        <source>1 addon</source>
-        <target>1 addon</target>
-        <note>Line: 157</note>
-      </trans-unit>
-      <trans-unit id="0cbcb09148c0538edfccc2b40d606ae7">
-        <source>%d addons</source>
-        <target>%d addons</target>
-        <note>Line: 159</note>
-      </trans-unit>
-      <trans-unit id="e77449fd1e8fd61e78e99eac35791ed7">
-        <source>Show more results...</source>
-        <target>Show more results...</target>
-        <note>Line: 173</note>
-      </trans-unit>
-      <trans-unit id="fdbb3dd95d543d67dc19d9fb3f6c46f4">
-        <source>Search doc.prestashop.com</source>
-        <target>Search doc.prestashop.com</target>
-        <note>Line: 184</note>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6a435abbb99489f782df19d1c41d7c1b">
+        <source>Search docs.prestashop-project.org</source>
+        <target>Search docs.prestashop-project.org</target>
+        <note>Line: 486</note>
       </trans-unit>
       <trans-unit id="14bd5dfadc5c57da66495ebc2c8c020b">
         <source>Go to the documentation</source>
         <target>Go to the documentation</target>
-        <note>Line: 185</note>
-      </trans-unit>
-      <trans-unit id="9d6f008f9c1e0446e23b253ecc7b311a">
-        <source>Search addons.prestashop.com</source>
-        <target>Search addons.prestashop.com</target>
-        <note>Line: 190</note>
-      </trans-unit>
-      <trans-unit id="a68b46728e83ba2fd535a25e8216bdb7">
-        <source>Go to Addons</source>
-        <target>Go to Addons</target>
-        <note>Line: 191</note>
-      </trans-unit>
-      <trans-unit id="96b65991d3a699bf3e83cec22339b620">
-        <source>Search prestashop.com forum</source>
-        <target>Search prestashop.com forum</target>
-        <note>Line: 196</note>
-      </trans-unit>
-      <trans-unit id="550b342104e3b39d04e56c346bc6f014">
-        <source>Go to the Forum</source>
-        <target>Go to the Forum</target>
-        <note>Line: 197</note>
-      </trans-unit>
-      <trans-unit id="6a435abbb99489f782df19d1c41d7c1b">
-        <source>Search docs.prestashop-project.org</source>
-        <target>Search docs.prestashop-project.org</target>
-        <note>Line: 184</note>
+        <note>Line: 487</note>
       </trans-unit>
     </body>
   </file>

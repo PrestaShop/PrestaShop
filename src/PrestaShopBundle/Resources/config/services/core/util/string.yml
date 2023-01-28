@@ -5,5 +5,10 @@ services:
   prestashop.core.util.string.string_validator:
     class: 'PrestaShop\PrestaShop\Core\Util\String\StringValidator'
 
+  PrestaShop\PrestaShop\Core\Util\String\StringModifier: ~
+
+  PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface: '@PrestaShop\PrestaShop\Core\Util\String\StringModifier'
+
   prestashop.core.util.string.string_modifier:
-    class: 'PrestaShop\PrestaShop\Core\Util\String\StringModifier'
+    alias: PrestaShop\PrestaShop\Core\Util\String\StringModifier
+    deprecated: ~

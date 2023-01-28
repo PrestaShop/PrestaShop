@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -73,10 +74,10 @@ class UpdatePositionFeatureContext extends AbstractProductFeatureContext
     public function assertPositionInformation(string $categoryReference, TableNode $tableNode): void
     {
         $products = $this->localizeByColumns($tableNode);
-        $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_repository');
+        $productRepository = CommonFeatureContext::getContainer()->get(ProductRepository::class);
+        $categoryId = new CategoryId($this->getSharedStorage()->get($categoryReference));
         foreach ($products as $product) {
             $productId = new ProductId($this->getSharedStorage()->get($product['product_reference']));
-            $categoryId = new CategoryId($this->getSharedStorage()->get($categoryReference));
             Assert::assertSame((int) $product['position'], $productRepository->getPositionInCategory($productId, $categoryId));
         }
     }

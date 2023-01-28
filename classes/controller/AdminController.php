@@ -32,7 +32,9 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class AdminControllerCore extends Controller
 {
@@ -256,16 +258,16 @@ class AdminControllerCore extends Controller
     public $override_folder;
 
     /** @var int DELETE access level */
-    const LEVEL_DELETE = 4;
+    public const LEVEL_DELETE = 4;
 
     /** @var int ADD access level */
-    const LEVEL_ADD = 3;
+    public const LEVEL_ADD = 3;
 
     /** @var int EDIT access level */
-    const LEVEL_EDIT = 2;
+    public const LEVEL_EDIT = 2;
 
     /** @var int VIEW access level */
-    const LEVEL_VIEW = 1;
+    public const LEVEL_VIEW = 1;
 
     /**
      * Actions to execute on multiple selections.
@@ -399,7 +401,7 @@ class AdminControllerCore extends Controller
     /** @var array */
     protected $list_partners_modules = [];
 
-    /** @var array */
+    /** @var array<string, string|array> */
     public $modals = [];
 
     /** @var bool if logged employee has access to AdminImport */
@@ -409,7 +411,7 @@ class AdminControllerCore extends Controller
     protected $tabSlug;
 
     /** @var int Auth cookie lifetime */
-    const AUTH_COOKIE_LIFETIME = 3600;
+    public const AUTH_COOKIE_LIFETIME = 3600;
 
     /** @var array */
     public $_conf;
@@ -489,10 +491,10 @@ class AdminControllerCore extends Controller
         $this->token = Tools::getAdminToken($this->controller_name . (int) $this->id . (int) $this->context->employee->id);
 
         $this->_conf = [
-            1 => $this->trans('Successful deletion.', [], 'Admin.Notifications.Success'),
-            2 => $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success'),
-            3 => $this->trans('Successful creation.', [], 'Admin.Notifications.Success'),
-            4 => $this->trans('Successful update.', [], 'Admin.Notifications.Success'),
+            1 => $this->trans('Successful deletion', [], 'Admin.Notifications.Success'),
+            2 => $this->trans('The selection has been successfully deleted', [], 'Admin.Notifications.Success'),
+            3 => $this->trans('Successful creation', [], 'Admin.Notifications.Success'),
+            4 => $this->trans('Successful update', [], 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success'),
             7 => $this->trans('The image was successfully deleted.', [], 'Admin.Notifications.Success'),
@@ -1666,7 +1668,7 @@ class AdminControllerCore extends Controller
             $this->page_header_toolbar_title = $this->toolbar_title[count($this->toolbar_title) - 1];
         }
 
-        $this->context->smarty->assign('help_link', 'https://help.prestashop.com/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
+        $this->context->smarty->assign('help_link', 'https://help.prestashop-project.org/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
             . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($this->context->employee->id_lang));
     }
 
@@ -2031,7 +2033,7 @@ class AdminControllerCore extends Controller
             $this->context->smarty->assign([
                 'help_box' => Configuration::get('PS_HELPBOX'),
                 'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
-                'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
+                'brightness' => (new ColorBrightnessCalculator())->isBright($bo_color) ? '#383838' : 'white',
                 'bo_width' => (int) $this->context->employee->bo_width,
                 'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
                 'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'],
@@ -2140,7 +2142,23 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
+            try {
+                $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
+            } catch (RouteNotFoundException $e) {
+                // If the route specified is not accessible we remove the tab (it can happen during module install process
+                // the route should be usable in next request/process once the cache has been cleared - on process shutdown).
+                // This is not ideal, but clearing the cache during a process and restart the whole kernel is quite a challenge.
+                $this->get('logger')->addWarning(
+                    sprintf('Route not found in one of the Tab %s', $tab['route_name'] ?? ''),
+                    [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ]
+                );
+                unset($tabs[$index]);
+                continue;
+            }
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
@@ -2244,6 +2262,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign([
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
+            'maintenance_allow_admins' => (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex . '&token=' . $this->token,
@@ -2658,16 +2677,32 @@ class AdminControllerCore extends Controller
                 $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js');
             }
 
-            // Specific Admin Theme
-            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
+            $username = $this->get('prestashop.user_provider')->getUsername();
+            $token = $this->get('security.csrf.token_manager')
+                ->getToken($username)
+                ->getValue();
+
+            $this->context->smarty->assign([
+                'js_router_metadata' => [
+                    'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
+                    'token' => $token,
+                ],
+            ]);
         }
 
+        // Specific Admin Theme
+        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
+
+        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product_default_theme.css', 'all', 0);
         $this->addJS([
             _PS_JS_DIR_ . 'admin.js?v=' . _PS_VERSION_, // TODO: SEE IF REMOVABLE
             __PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/cldr.bundle.js',
             _PS_JS_DIR_ . 'tools.js?v=' . _PS_VERSION_,
             __PS_BASE_URI__ . $this->admin_webpath . '/public/bundle.js',
         ]);
+
+        // This is handled as an external common dependency for both themes, but once new-theme is the only one it should be integrated directly into the main.bundle.js file
+        $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product.bundle.js');
 
         Media::addJsDef([
             'changeFormLanguageUrl' => $this->context->link->getAdminLink(
@@ -2718,7 +2753,11 @@ class AdminControllerCore extends Controller
     {
         @trigger_error(__FUNCTION__ . 'is deprecated. Use AdminController::trans instead.', E_USER_DEPRECATED);
 
-        return $this->translator->trans($string);
+        if ($htmlentities === true) {
+            return htmlspecialchars($this->translator->trans($string, []), ENT_NOQUOTES);
+        }
+
+        return $this->translator->trans($string, []);
     }
 
     /**
@@ -2891,7 +2930,7 @@ class AdminControllerCore extends Controller
 
         // Replace current default country
         $this->context->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
-        $this->context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $this->context->currency = Currency::getDefaultCurrency();
     }
 
     /**
@@ -3146,9 +3185,10 @@ class AdminControllerCore extends Controller
             $select_shop = ', shop.name as shop_name ';
         }
 
-        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className) && null !== $this->_join) {
+        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className)) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin()) {
-                $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
+                // test if multishop is already considered by planned request
+                $test_join = (null === $this->_join) || !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
                 if (Shop::isFeatureActive() && $test_join) {
                     $this->_where .= ' AND EXISTS (
                         SELECT 1
@@ -4269,7 +4309,7 @@ class AdminControllerCore extends Controller
             $obj = new $module->name();
         }
         // Fill module data
-        $module->logo = '../../img/questionmark.png';
+        $module->logo = '../../img/module/default.png';
 
         if (@filemtime(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . basename(_PS_MODULE_DIR_) . DIRECTORY_SEPARATOR . $module->name
             . DIRECTORY_SEPARATOR . 'logo.gif')) {

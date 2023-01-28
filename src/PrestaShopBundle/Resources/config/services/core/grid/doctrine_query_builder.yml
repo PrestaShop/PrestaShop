@@ -31,12 +31,16 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id_shop_group"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.getGroup().share_stock"
       - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
       - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
+      - '@prestashop.adapter.shop.context'
     public: true
+
+  prestashop.core.grid.query_builder.product.shops:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductShopsQueryBuilder'
+    parent: 'prestashop.core.grid.query_builder.product'
+    public: false
 
   prestashop.core.grid.query_builder.product_light:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductLightQueryBuilder'
@@ -390,9 +394,9 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - '@=service("prestashop.adapter.shop.context").getContextListShopId()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
-  prestashop.core.grid.query_builder.product_combination:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
+  PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
     arguments:
@@ -436,3 +440,19 @@ services:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     public: true
+
+  prestashop.core.grid.query.builder.customer_thread:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CustomerThreadQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+    public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Query\AuthorizedApplicationQueryBuilder:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\AuthorizedApplicationQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    autowire: true
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'

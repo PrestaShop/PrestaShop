@@ -104,7 +104,7 @@
         <history
           :combinations-list="combinationsHistory"
           @selectCombination="selectCombination"
-          :selected-combination="selectedCombinationId"
+          :selected-combination-id="selectedCombinationId"
           :empty-image-url="emptyImageUrl"
         />
       </template>
@@ -115,9 +115,7 @@
     >
       <modal
         :modal-title="$t('modal.history.confirmTitle')"
-        :cancel-label="$t('modal.cancel')"
         :confirm-label="$t('modal.confirm')"
-        :close-label="$t('modal.close')"
         :confirmation="true"
         v-if="showConfirm"
         @close="hideConfirmModal"
@@ -127,7 +125,7 @@
           <p
             v-html="
               $t('modal.history.confirmBody', {
-                '%combinationName%': selectedCombinationName,
+                'combinationName': selectedCombinationName,
               })
             "
           />
@@ -140,10 +138,11 @@
 <script lang="ts">
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
   import Router from '@components/router';
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
   import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
+  import PsModal from '@components/modal/modal';
   import History from './History.vue';
 
   export interface Combination {
@@ -156,7 +155,7 @@
     selectedCombinationName: string | null,
     previousCombinationId: number | null,
     nextCombinationId: number | null,
-    editCombinationUrl: string | null,
+    editCombinationUrl?: string,
     loadingCombinationForm: boolean,
     submittingCombinationForm: boolean,
     combinationList: JQuery,
@@ -173,7 +172,7 @@
 
   const router = new Router();
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'CombinationModal',
     components: {Modal, History},
     data(): CombinationModalStates {
@@ -248,6 +247,19 @@
         const iframeBody = <HTMLElement> this.getIframeDocument().body;
 
         this.applyIframeStyling();
+
+        // if form is not found it means that combination is missing
+        const editionForm = iframeBody.querySelector<HTMLFormElement>(ProductMap.combinations.editionForm);
+
+        if (!editionForm) {
+          // submitted combinations is set to true to update combination list if combination is not found
+          this.hasSubmittedCombinations = true;
+          this.closeModal();
+          const modal = new PsModal({id: 'combination-not-found-modal'});
+          modal.render(iframeBody.innerHTML);
+          modal.show();
+          return;
+        }
 
         this.selectedCombinationName = iframeBody.querySelector(
           ProductMap.combinations.combinationName,
@@ -380,7 +392,7 @@
         if (combinationId === null) {
           this.previousCombinationId = null;
           this.nextCombinationId = null;
-          this.editCombinationUrl = null;
+          this.editCombinationUrl = undefined;
 
           return;
         }

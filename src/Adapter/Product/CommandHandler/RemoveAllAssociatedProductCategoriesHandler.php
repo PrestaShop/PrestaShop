@@ -28,9 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandlerInterface;
 
@@ -40,33 +38,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociated
 final class RemoveAllAssociatedProductCategoriesHandler implements RemoveAllAssociatedProductCategoriesHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $homeCategoryId;
-
-    /**
      * @var ProductCategoryUpdater
      */
     private $productCategoryUpdater;
 
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @param int $homeCategoryId
      * @param ProductCategoryUpdater $productCategoryUpdater
-     * @param ProductRepository $productRepository
      */
     public function __construct(
-        int $homeCategoryId,
-        ProductCategoryUpdater $productCategoryUpdater,
-        ProductRepository $productRepository
+        ProductCategoryUpdater $productCategoryUpdater
     ) {
-        $this->homeCategoryId = $homeCategoryId;
         $this->productCategoryUpdater = $productCategoryUpdater;
-        $this->productRepository = $productRepository;
     }
 
     /**
@@ -74,11 +56,6 @@ final class RemoveAllAssociatedProductCategoriesHandler implements RemoveAllAsso
      */
     public function handle(RemoveAllAssociatedProductCategoriesCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
-        $categoryId = new CategoryId($this->homeCategoryId);
-
-        // remove all categories associated with this product, keep only home Category
-        // @todo: this is likely to break with multishop
-        $this->productCategoryUpdater->updateCategories($product, [$categoryId], $categoryId);
+        $this->productCategoryUpdater->removeAllCategories($command->getProductId(), $command->getShopConstraint());
     }
 }

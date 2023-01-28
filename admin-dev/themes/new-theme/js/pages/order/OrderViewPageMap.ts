@@ -28,7 +28,7 @@
 export default {
   mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
-  orderPaymentFormAmountInput: '#order_payment_amount',
+  orderPaymentFormAmountInput: '#order_payment_amount_currency_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',
   viewOrderPaymentsBlock: '#view_order_payments_block',
   viewOrderPaymentsAlert: '.js-view-order-payments-alert',

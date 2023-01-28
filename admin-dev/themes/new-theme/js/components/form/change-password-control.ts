@@ -48,6 +48,8 @@ export default class ChangePasswordControl {
 
   generatedPasswordDisplaySelector: string;
 
+  passwordStrengthFeedbackContainerSelector: string;
+
   $newPasswordInputs: JQuery<HTMLElement>;
 
   $copyPasswordInputs: JQuery<HTMLElement>;
@@ -88,6 +90,9 @@ export default class ChangePasswordControl {
 
     // Input that displays generated random password
     this.generatedPasswordDisplaySelector = generatedPasswordDisplaySelector;
+
+    // Block that displays password strength feedback
+    this.passwordStrengthFeedbackContainerSelector = passwordStrengthFeedbackContainerSelector;
 
     // Main input for password generation
     this.$newPasswordInputs = this.$inputsBlock.find(
@@ -249,6 +254,9 @@ export default class ChangePasswordControl {
     this.$submittableInputs.removeAttr('required');
     this.$inputsBlock.find('input').val('');
     this.$inputsBlock.find('.form-text').text('');
+    this.$newPasswordInputs.popover('dispose');
+    this.hide(this.$inputsBlock.find(this.passwordStrengthFeedbackContainerSelector));
+    this.$newPasswordInputs.removeClass('border-success border-danger');
   }
 
   /**

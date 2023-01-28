@@ -9,6 +9,10 @@ services:
 
   form.type.extension.money:
     class: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'
+    arguments:
+      - '@prestashop.core.localization.locale.context_locale'
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
 
@@ -54,6 +58,13 @@ services:
 
   form.extension.label_options:
     class: 'PrestaShopBundle\Form\Admin\Extension\LabelOptionsExtension'
+    tags:
+      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+  form.extension.form_theme:
+    class: 'PrestaShopBundle\Form\Admin\Extension\FormThemeExtension'
+    arguments:
+      - '@twig.form.renderer'
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\ModuleCatalogueProviderFactory;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\ThemeCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -135,6 +136,7 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
         );
 
         $provider = new ThemeCatalogueLayersProvider(
+            $this->createMock(ModuleCatalogueProviderFactory::class),
             $coreFrontProvider,
             $databaseTranslationLoader,
             $this->themeExtractor,
@@ -274,6 +276,7 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
         );
 
         return new ThemeCatalogueLayersProvider(
+            $this->createMock(ModuleCatalogueProviderFactory::class),
             $coreFrontProvider,
             $databaseTranslationLoader,
             $this->themeExtractor,

@@ -31,27 +31,27 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * List of field types.
      */
-    const TYPE_INT = 1;
-    const TYPE_BOOL = 2;
-    const TYPE_STRING = 3;
-    const TYPE_FLOAT = 4;
-    const TYPE_DATE = 5;
-    const TYPE_HTML = 6;
-    const TYPE_NOTHING = 7;
-    const TYPE_SQL = 8;
+    public const TYPE_INT = 1;
+    public const TYPE_BOOL = 2;
+    public const TYPE_STRING = 3;
+    public const TYPE_FLOAT = 4;
+    public const TYPE_DATE = 5;
+    public const TYPE_HTML = 6;
+    public const TYPE_NOTHING = 7;
+    public const TYPE_SQL = 8;
 
     /**
      * List of data to format.
      */
-    const FORMAT_COMMON = 1;
-    const FORMAT_LANG = 2;
-    const FORMAT_SHOP = 3;
+    public const FORMAT_COMMON = 1;
+    public const FORMAT_LANG = 2;
+    public const FORMAT_SHOP = 3;
 
     /**
      * List of association types.
      */
-    const HAS_ONE = 1;
-    const HAS_MANY = 2;
+    public const HAS_ONE = 1;
+    public const HAS_MANY = 2;
 
     /** @var int|null Object ID */
     public $id;
@@ -292,9 +292,17 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        $parameters['legacy'] = 'htmlspecialchars';
+        if (isset($parameters['_raw'])) {
+            @trigger_error(
+                'The _raw parameter is deprecated and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+            unset($parameters['_raw']);
 
-        return $this->translator->trans($id, $parameters, $domain, $locale);
+            return $this->translator->trans($id, $parameters, $domain, $locale);
+        }
+
+        return htmlspecialchars($this->translator->trans($id, $parameters, $domain, $locale), ENT_NOQUOTES);
     }
 
     /**
@@ -609,6 +617,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             /* @phpstan-ignore-next-line  */
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
+
         if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values)) {
             return false;
         }
@@ -815,12 +824,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $all_fields['id_shop'] = (int) $id_shop;
                 $where = $this->def['primary'] . ' = ' . (int) $this->id . ' AND id_shop = ' . (int) $id_shop;
 
-                // A little explanation of what we do here : we want to create multishop entry when update is called, but
-                // only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
+                // A little explanation of what we do here we want to create multishop entry when update is called:
+                // - if the shop is already associated the data is updated
+                // - if we are in a single shop context the association is created
+                // - if the id_shop_list has been forced the association is created
                 $shop_exists = Db::getInstance()->getValue('SELECT ' . $this->def['primary'] . ' FROM ' . _DB_PREFIX_ . $this->def['table'] . '_shop WHERE ' . $where);
                 if ($shop_exists) {
                     $result &= Db::getInstance()->update($this->def['table'] . '_shop', $multiShopFieldsToUpdate, $where, 0, $null_values);
-                } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
+                } elseif (Shop::getContext() == Shop::CONTEXT_SHOP || count($this->id_shop_list)) {
                     $result &= Db::getInstance()->insert($this->def['table'] . '_shop', $all_fields, $null_values);
                 }
             }
@@ -891,17 +902,23 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         $this->clearCache();
         $result = true;
+
         // Remove association to multishop table
+        if (count($this->id_shop_list)) {
+            $shopIdsList = $this->id_shop_list;
+        } else {
+            $shopIdsList = Shop::getContextListShopID();
+        }
+        $shopIdsList = array_map('intval', $shopIdsList);
+
         if (Shop::isTableAssociated($this->def['table'])) {
-            $id_shop_list = Shop::getContextListShopID();
-            if (count($this->id_shop_list)) {
-                $id_shop_list = $this->id_shop_list;
-            }
-
-            $id_shop_list = array_map('intval', $id_shop_list);
-
             $result &= Db::getInstance()->delete($this->def['table'] . '_shop', '`' . $this->def['primary'] . '`=' .
-                (int) $this->id . ' AND id_shop IN (' . implode(', ', $id_shop_list) . ')');
+                (int) $this->id . ' AND id_shop IN (' . implode(', ', $shopIdsList) . ')');
+        }
+
+        if ($this->isLangMultishop()) {
+            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . $this->def['primary'] . '`=' .
+                (int) $this->id . ' AND id_shop IN (' . implode(', ', $shopIdsList) . ')');
         }
 
         // Database deletion
@@ -1759,7 +1776,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $list = [];
         $sql = 'SELECT id_shop FROM `' . _DB_PREFIX_ . $this->def['table'] . '_shop` WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id;
         foreach (Db::getInstance()->executeS($sql) as $row) {
-            $list[] = $row['id_shop'];
+            $list[] = (int) $row['id_shop'];
         }
 
         return $list;
@@ -2297,5 +2314,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         return self::$htmlFields[$this->def['table']];
+    }
+
+    /**
+     * @return int[]
+     */
+    protected function getShopIdsList(): array
+    {
+        if (count($this->id_shop_list)) {
+            $shopIdsList = $this->id_shop_list;
+        } else {
+            $shopIdsList = Shop::getContextListShopID();
+        }
+
+        return $shopIdsList;
     }
 }

@@ -31,24 +31,10 @@
         <target>Order Notifications on the Favicon</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="30dbe7ee3d7be2e58b5e0fe6075360fa">
-        <source>Be notified of each new order, client or message directly in the browser tab of your back office, even when working on another page</source>
-        <target>Be notified of each new order, client or message directly in the browser tab of your back office, even when working on another page</target>
-        <note>Line: 49</note>
-      </trans-unit>
       <trans-unit id="a1f7ca4c81696cde8be394c3c00b13f8">
         <source>Get notified directly on your browser tab each time you get a new order, customer or message.</source>
         <target>Get notified directly on your browser tab each time you get a new order, customer or message.</target>
         <note>Line: 49</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_faviconnotificationbo/views/templates/admin/menu.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="be11c74c1dd7f307bb80183a90dc2067">
-        <source>Get started</source>
-        <target>Get started</target>
-        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>

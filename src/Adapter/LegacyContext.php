@@ -112,6 +112,11 @@ class LegacyContext
         return __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
     }
 
+    public function getCountryId(): int
+    {
+        return $this->getContext()->country->id;
+    }
+
     /**
      * Adapter to get Admin HTTP link.
      *

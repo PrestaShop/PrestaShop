@@ -238,14 +238,18 @@ class TranslationService
         $translation = null;
 
         try {
-            $translation = $entityManager->getRepository(Translation::class)
+            $queryBuilder = $entityManager->getRepository(Translation::class)
                 ->createQueryBuilder('t')
                 ->where('t.lang = :lang')->setParameter('lang', $lang)
                 ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
                 ->andWhere('t.key LIKE :key')->setParameter('key', $key)
-                ->andWhere('t.theme = :theme OR t.theme is NULL')->setParameter('theme', $theme)
-                ->getQuery()
-                ->getSingleResult();
+            ;
+            if ($theme !== null) {
+                $queryBuilder->andWhere('t.theme = :theme')->setParameter('theme', $theme);
+            } else {
+                $queryBuilder->andWhere('t.theme IS NULL');
+            }
+            $translation = $queryBuilder->getQuery()->getSingleResult();
         } catch (Exception $exception) {
             $logger->error($exception->getMessage(), $log_context);
         }

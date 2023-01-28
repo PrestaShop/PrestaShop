@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
 use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
@@ -37,29 +38,49 @@ use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CombinationItemType extends TranslatorAwareType
 {
+    /**
+     * Limit of action buttons to show before they are wrapped into a dropdown
+     */
+    private const INLINE_ACTIONS_LIMIT = 1;
+
     /**
      * @var Currency
      */
     protected $defaultCurrency;
 
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
+     * @var int
+     */
+    private $contextShopId;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency
+        Currency $defaultCurrency,
+        FeatureInterface $multistoreFeature,
+        int $contextShopId
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
+        $this->multistoreFeature = $multistoreFeature;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -67,6 +88,63 @@ class CombinationItemType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        if ($this->multistoreFeature->isActive()) {
+            $deleteItemMessage = $this->trans('Delete selected item from current store?', 'Admin.Notifications.Warning');
+        } else {
+            $deleteItemMessage = $this->trans('Delete selected item?', 'Admin.Notifications.Warning');
+        }
+
+        $actionButtons = [
+            'edit' => [
+                'type' => IconButtonType::class,
+                'options' => [
+                    'label' => $this->trans('Edit', 'Admin.Actions'),
+                    'icon' => 'mode_edit',
+                    'attr' => [
+                        'class' => 'edit-combination-item tooltip-link',
+                        'data-toggle' => 'pstooltip',
+                        'data-original-title' => $this->trans('Edit', 'Admin.Actions'),
+                    ],
+                ],
+            ],
+            'delete' => [
+                'type' => IconButtonType::class,
+                'options' => [
+                    'label' => $this->trans('Delete', 'Admin.Actions'),
+                    'icon' => 'delete',
+                    'attr' => [
+                        'class' => 'delete-combination-item tooltip-link',
+                        'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                        'data-modal-message' => $deleteItemMessage,
+                        'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                        'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                        'data-toggle' => 'pstooltip',
+                        'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
+                        'data-shop-id' => $this->contextShopId,
+                    ],
+                ],
+            ],
+        ];
+
+        if ($this->multistoreFeature->isActive()) {
+            $actionButtons['delete_for_all_shops'] = [
+                'type' => IconButtonType::class,
+                'options' => [
+                    'label' => $this->trans('Delete from all stores', 'Admin.Actions'),
+                    'icon' => 'delete',
+                    'attr' => [
+                        'class' => 'delete-combination-all-shops tooltip-link',
+                        'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                        'data-modal-message' => $this->trans('Delete selected item from all stores?', 'Admin.Notifications.Warning'),
+                        'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                        'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                        'data-toggle' => 'pstooltip',
+                        'data-original-title' => $this->trans('Delete from all stores', 'Admin.Actions'),
+                    ],
+                ],
+            ];
+        }
+
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
@@ -109,6 +187,7 @@ class CombinationItemType extends TranslatorAwareType
                     'class' => 'combination-reference',
                 ],
                 'label' => $this->trans('Reference', 'Admin.Global'),
+                'empty_data' => '',
             ])
             ->add('impact_on_price_te', MoneyType::class, [
                 'attr' => [
@@ -125,6 +204,11 @@ class CombinationItemType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('Impact on price (tax incl.)', 'Admin.Catalog.Feature'),
                 'currency' => $this->defaultCurrency->iso_code,
+            ])
+            ->add('eco_tax', HiddenType::class, [
+                'attr' => [
+                    'class' => 'combination-eco-tax',
+                ],
             ])
             ->add('final_price_te', TextPreviewType::class, [
                 'attr' => [
@@ -147,38 +231,13 @@ class CombinationItemType extends TranslatorAwareType
                 ],
             ])
             ->add('actions', ButtonCollectionType::class, [
-                'buttons' => [
-                    'edit' => [
-                        'type' => IconButtonType::class,
-                        'options' => [
-                            'icon' => 'mode_edit',
-                            'attr' => [
-                                'class' => 'edit-combination-item tooltip-link',
-                                'data-toggle' => 'pstooltip',
-                                'data-original-title' => $this->trans('Edit', 'Admin.Actions'),
-                            ],
-                        ],
-                    ],
-                    'delete' => [
-                        'type' => IconButtonType::class,
-                        'options' => [
-                            'icon' => 'delete',
-                            'attr' => [
-                                'class' => 'delete-combination-item tooltip-link',
-                                'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
-                                'data-modal-message' => $this->trans('Delete selected item?', 'Admin.Notifications.Warning'),
-                                'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
-                                'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                                'data-toggle' => 'pstooltip',
-                                'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
-                            ],
-                        ],
-                    ],
-                ],
+                'buttons' => $actionButtons,
                 'label' => $this->trans('Actions', 'Admin.Global'),
                 'attr' => [
                     'class' => 'combination-row-actions',
                 ],
+                'inline_buttons_limit' => self::INLINE_ACTIONS_LIMIT,
+                'use_inline_labels' => false,
             ])
         ;
     }

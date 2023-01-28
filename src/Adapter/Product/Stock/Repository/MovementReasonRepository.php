@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\MovementReasonConfigurationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\MovementReasonConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\MovementReasonId;
 
 class MovementReasonRepository
@@ -38,32 +39,25 @@ class MovementReasonRepository
      */
     private $configuration;
 
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(
-        ConfigurationInterface $configuration
-    ) {
+    public function __construct(ConfigurationInterface $configuration)
+    {
         $this->configuration = $configuration;
     }
 
     /**
-     * Provides stock movement reason id by configuration
-     *
-     * @param string $configurationName
-     *
-     * @return MovementReasonId
+     * Provides stock movement reason id from configuration
      *
      * @throws MovementReasonConfigurationNotFoundException
+     * @throws MovementReasonConstraintException
      */
-    public function getIdByConfiguration(string $configurationName): MovementReasonId
+    public function getReasonIdFromConfiguration(string $configurationKey): MovementReasonId
     {
-        $id = (int) $this->configuration->get($configurationName);
+        $id = (int) $this->configuration->get($configurationKey);
 
         if (!$id) {
             throw new MovementReasonConfigurationNotFoundException(sprintf(
                 'Movement reason id is not configured by "%s"',
-                $configurationName
+                $configurationKey
             ));
         }
 
@@ -73,14 +67,15 @@ class MovementReasonRepository
     /**
      * @param bool $increased true if quantity increased, false if decreased
      *
-     * @return MovementReasonId
+     * @throws MovementReasonConfigurationNotFoundException
+     * @throws MovementReasonConstraintException
      */
-    public function getIdForEmployeeEdition(bool $increased): MovementReasonId
+    public function getEmployeeEditionReasonId(bool $increased): MovementReasonId
     {
-        if ($increased) {
-            return $this->getIdByConfiguration(MovementReasonId::MOVEMENT_REASON_INCREASE_BY_EMPLOYEE_EDITION);
-        }
-
-        return $this->getIdByConfiguration(MovementReasonId::MOVEMENT_REASON_DECREASE_BY_EMPLOYEE_EDITION);
+        return $this->getReasonIdFromConfiguration(
+            $increased
+            ? MovementReasonId::INCREASE_BY_EMPLOYEE_EDITION_CONFIG_KEY
+            : MovementReasonId::DECREASE_BY_EMPLOYEE_EDITION_CONFIG_KEY
+        );
     }
 }

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 class PatternTransformerTest extends TestCase
 {
     /**
-     * @dataProvider getPatterns
+     * @dataProvider getDataForTestTransform
      *
      * @param string $basePattern
      * @param array $transformations
@@ -40,12 +40,16 @@ class PatternTransformerTest extends TestCase
     public function testTransform(string $basePattern, array $transformations)
     {
         $transformer = new PatternTransformer();
+
         foreach ($transformations as $transformationType => $expectedPattern) {
             $this->assertEquals($expectedPattern, $transformer->transform($basePattern, $transformationType), 'Invalid transformation ' . $transformationType);
         }
     }
 
-    public function getPatterns()
+    /**
+     * @return array[]
+     */
+    public function getDataForTestTransform(): array
     {
         return [
             'fr' => [
@@ -128,11 +132,12 @@ class PatternTransformerTest extends TestCase
      * @param string $expectedTransformationType
      * @param array $patterns
      *
-     * @dataProvider getTransformationTypes
+     * @dataProvider getDataForTestGetTransformationType
      */
     public function testGetTransformationType(string $expectedTransformationType, array $patterns)
     {
         $transformer = new PatternTransformer();
+
         foreach ($patterns as $pattern) {
             $transformationType = $transformer->getTransformationType($pattern);
             $this->assertEquals($expectedTransformationType, $transformationType, 'Invalid pattern match ' . $pattern);
@@ -140,9 +145,9 @@ class PatternTransformerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array[]
      */
-    public function getTransformationTypes()
+    public function getDataForTestGetTransformationType()
     {
         return [
             PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => [

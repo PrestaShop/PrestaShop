@@ -39,7 +39,7 @@
         :checked="checked"
         :class="classes"
         :disabled="disabled"
-        @change="$emit('input', $event.target.checked)"
+        @change="$emit('input', ($event?.target as HTMLInputElement).checked)"
       >
 
       <slot>
@@ -51,9 +51,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     model: {
       prop: 'checked',
       event: 'input',
@@ -66,8 +66,9 @@
         ]),
       },
       checked: {
-        required: true,
-        type: [Array, Number, String],
+        required: false,
+        type: [Array, Boolean],
+        default: false,
       },
       disabled: {
         type: Boolean,

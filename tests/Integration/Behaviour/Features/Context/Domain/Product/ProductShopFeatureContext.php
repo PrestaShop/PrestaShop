@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -89,7 +89,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         $shopId = $this->getSharedStorage()->get($shopReference);
 
         /** @var ProductMultiShopRepository $productRepository */
-        $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+        $productRepository = CommonFeatureContext::getContainer()->get(ProductMultiShopRepository::class);
         $defaultShopId = $productRepository->getProductDefaultShopId(new ProductId($productId));
         Assert::assertEquals($shopId, $defaultShopId->getValue());
     }
@@ -107,7 +107,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         $shopSourceId = $this->getSharedStorage()->get($shopSourceReference);
         $shopTargetId = $this->getSharedStorage()->get($shopTargetReference);
 
-        $this->getCommandBus()->handle(new CopyProductToShop(
+        $this->getCommandBus()->handle(new CopyProductToShopCommand(
             $productId,
             $shopSourceId,
             $shopTargetId

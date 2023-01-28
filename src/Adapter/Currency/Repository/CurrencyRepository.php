@@ -69,4 +69,14 @@ class CurrencyRepository extends AbstractObjectModelRepository
 
         return $currency;
     }
+
+    /**
+     * @param CurrencyId $currencyId
+     *
+     * @return string
+     */
+    public function getIsoCode(CurrencyId $currencyId): string
+    {
+        return $this->get($currencyId)->iso_code;
+    }
 }

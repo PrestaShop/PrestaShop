@@ -1,9 +1,12 @@
-<IfModule mod_mime.c>
-    RemoveHandler .php .phtml .php3 .php4 .php5
-    RemoveType .php .phtml .php3 .php4 .php5
-</IfModule>
+<IfModule !mod_rewrite.c>
+  # Apache 2.2
+  <IfModule !mod_authz_core.c>
+      Order deny,allow
+      Deny from all
+  </IfModule>
 
-<IfModule mod_headers.c>
-  Header set Content-Disposition "Attachment"
-  Header set X-Content-Type-Options "nosniff"
+  # Apache 2.4
+  <IfModule mod_authz_core.c>
+      Require all denied
+  </IfModule>
 </IfModule>

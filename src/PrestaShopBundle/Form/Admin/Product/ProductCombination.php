@@ -26,10 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Context;
-use Currency;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -41,8 +39,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form class is responsible to generate the product combination form.
@@ -50,34 +48,32 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductCombination extends CommonAbstractType
 {
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
-    /**
-     * @var Context
-     */
-    public $contextLegacy;
-    /**
-     * @var Currency
-     */
-    public $currency;
+
     /**
      * @var TranslatorInterface
      */
     public $translator;
 
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
      * Constructor.
      *
      * @param TranslatorInterface $translator
      * @param LegacyContext $legacyContext
+     * @param ConfigurationInterface $configuration
      */
-    public function __construct($translator, $legacyContext)
+    public function __construct(TranslatorInterface $translator, LegacyContext $legacyContext, ConfigurationInterface $configuration)
     {
         $this->translator = $translator;
-        $this->contextLegacy = $legacyContext->getContext();
-        $this->configuration = $this->getConfiguration();
-        $this->currency = $this->contextLegacy->currency;
+        $this->configuration = $configuration;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -87,6 +83,7 @@ class ProductCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $currencyIsoCode = $this->legacyContext->getContext()->currency->iso_code;
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
 
         $builder->add('id_product_attribute', HiddenType::class, [
@@ -133,26 +130,26 @@ class ProductCombination extends CommonAbstractType
             ->add('attribute_wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
-                'currency' => $this->currency->iso_code,
+                'currency' => $currencyIsoCode,
                 'attr' => ['class' => 'attribute_wholesale_price'],
             ])
             ->add('attribute_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
-                'currency' => $this->currency->iso_code,
+                'currency' => $currencyIsoCode,
                 'attr' => ['class' => 'attribute_priceTE'],
             ])
             ->add('attribute_priceTI', MoneyType::class, [
                 'required' => false,
                 'mapped' => false,
                 'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
-                'currency' => $this->currency->iso_code,
+                'currency' => $currencyIsoCode,
                 'attr' => ['class' => 'attribute_priceTI'],
             ])
             ->add('attribute_ecotax', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
-                'currency' => $this->currency->iso_code,
+                'currency' => $currencyIsoCode,
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Type(['type' => 'float']),
@@ -162,6 +159,8 @@ class ProductCombination extends CommonAbstractType
                 ],
             ])
             ->add('attribute_weight', NumberType::class, [
+                'prepend_unit' => true,
+                'unit' => $this->configuration->get('PS_WEIGHT_UNIT'),
                 'scale' => static::PRESTASHOP_WEIGHT_DECIMALS,
                 'required' => false,
                 'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
@@ -170,7 +169,7 @@ class ProductCombination extends CommonAbstractType
             ->add('attribute_unity', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
-                'currency' => $this->currency->iso_code,
+                'currency' => $currencyIsoCode,
                 'attr' => ['class' => 'attribute_unity'],
             ])
             ->add('attribute_minimal_quantity', NumberType::class, [
@@ -238,7 +237,7 @@ class ProductCombination extends CommonAbstractType
             ->add('final_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Final price', [], 'Admin.Catalog.Feature'),
-                'currency' => $this->currency->iso_code,
+                'currency' => $currencyIsoCode,
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

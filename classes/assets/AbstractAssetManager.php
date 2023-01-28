@@ -33,9 +33,9 @@ abstract class AbstractAssetManagerCore
     protected $configuration;
     protected $list = [];
 
-    const DEFAULT_MEDIA = 'all';
-    const DEFAULT_PRIORITY = 50;
-    const DEFAULT_JS_POSITION = 'bottom';
+    public const DEFAULT_MEDIA = 'all';
+    public const DEFAULT_PRIORITY = 50;
+    public const DEFAULT_JS_POSITION = 'bottom';
 
     public function __construct(array $directories, ConfigurationInterface $configuration)
     {

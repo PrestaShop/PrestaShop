@@ -120,6 +120,12 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
+  prestashop.core.form.identifiable_object.data_handler.order_return_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.order_return.validator.order_return_validator'
+
   prestashop.core.form.identifiable_object.data_handler.catalog_price_rule_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CatalogPriceRuleFormDataHandler'
     arguments:
@@ -189,37 +195,49 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
-      - '@prestashop.core.form.command_builder.product_commands_builder'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
       - "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
-  prestashop.core.form.identifiable_object.data_handler.combination_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler'
+  prestashop.core.form.identifiable_object.data_handler.product_shops_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductShopsFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
-      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+      - '@prestashop.core.admin.shop.repository'
 
-  prestashop.core.form.identifiable_object.data_handler.bulk_combination_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler:
+    autowire: true
     arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.core.form.data_formatter.bulk_combination_form_data_formatter'
-      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
 
-  prestashop.core.form.identifiable_object.data_handler.combination_list_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler:
+    autowire: true
     arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.core.form.data_formatter.combination_list_form_data_formatter'
-      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler:
+    - '@prestashop.core.command_bus'
+    - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter'
+    - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
+    - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
+    - "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
   prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
   prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ZoneFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.country_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CountryFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
 

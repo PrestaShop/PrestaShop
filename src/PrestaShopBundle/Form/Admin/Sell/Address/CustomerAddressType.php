@@ -44,10 +44,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Form type for address add/edit
@@ -417,6 +417,7 @@ class CustomerAddressType extends TranslatorAwareType
             ->add('phone_mobile', TextType::class, [
                 'label' => $this->trans('Mobile phone', 'Admin.Global'),
                 'required' => in_array('phone_mobile', $requiredFields, true),
+                'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([

@@ -294,17 +294,22 @@
 								{$params.title}
 							{/if}
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
+                {if $frameworkIndexUrl}
+                    {assign var="baseSortUrl" value="$frameworkIndexUrl"}
+                {else}
+                    {assign var="baseSortUrl" value="{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}"}
+                {/if}
 								<a
                    class="{strip}desc-sort-column-{$key}-link
                           {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')} active{/if}{/strip}"
-                   href="{$currentIndex|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}"
+                   href="{$baseSortUrl}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}"
                 >
 									<i class="icon-caret-down"></i>
 								</a>
 								<a
                    class="{strip}asc-sort-column-{$key}-link
                           {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')} active{/if}{/strip}"
-                   href="{$currentIndex|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
+                   href="{$baseSortUrl}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
 									<i class="icon-caret-up"></i>
 								</a>
 							{/if}
@@ -380,7 +385,7 @@
 									</div>
 								{elseif $params.type == 'select'}
 									{if isset($params.filter_key)}
-										<select class="filter{if isset($params.align) && $params.align == 'center'}center{/if}" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
+										<select class="filter{if isset($params.align) && $params.align == 'center'} center{/if}{if isset($params.class)} {$params.class|escape:'html':'UTF-8'}{/if}" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
 											<option value="" {if $params.value == ''} selected="selected" {/if}>-</option>
 											{if isset($params.list) && is_array($params.list)}
 												{foreach $params.list AS $option_value => $option_display}

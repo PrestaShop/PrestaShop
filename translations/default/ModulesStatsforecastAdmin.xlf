@@ -7,9 +7,9 @@
         <target>Stats Dashboard</target>
         <note>Line: 53</note>
       </trans-unit>
-      <trans-unit id="b17fbc0dacaf9964df883d8065118b98">
-        <source>This is the main module for the Stats dashboard. It displays a summary of all your current statistics.</source>
-        <target>This is the main module for the Stats dashboard. It displays a summary of all your current statistics.</target>
+      <trans-unit id="c516725e6be3691b2ef0f99f30665663">
+        <source>Enrich your stats, add a summary of all your current statistics on your back office.</source>
+        <target>Enrich your stats, add a summary of all your current statistics on your back office.</target>
         <note>Line: 54</note>
       </trans-unit>
       <trans-unit id="7a27f506c0104592dcb95c31e650cfed">
@@ -191,11 +191,6 @@
         <source>Quantity of products sold</source>
         <target>Quantity of products sold</target>
         <note>Line: 591</note>
-      </trans-unit>
-      <trans-unit id="c516725e6be3691b2ef0f99f30665663">
-        <source>Enrich your stats, add a summary of all your current statistics on your back office.</source>
-        <target>Enrich your stats, add a summary of all your current statistics on your back office.</target>
-        <note>Line: 54</note>
       </trans-unit>
     </body>
   </file>

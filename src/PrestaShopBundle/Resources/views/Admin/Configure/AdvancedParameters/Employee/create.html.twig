@@ -28,17 +28,10 @@
 {% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
 
 {% block content %}
-
   {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
-        employeeForm: employeeForm,
-        level: level,
-        errorMessage: errorMessage,
-        isRestrictedAccess: false,
-        superAdminProfileId: superAdminProfileId,
-        getTabsUrl: getTabsUrl,
-        avatarUrl: employeeForm.vars.defaultAvatarUrl
-      } %}
-
+    employeeForm: employeeForm,
+    isRestrictedAccess: false,
+  } %}
 {% endblock %}
 
 {% block javascripts %}

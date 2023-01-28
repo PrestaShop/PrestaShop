@@ -8,6 +8,14 @@
   <!--<![endif]-->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% set direction = 'ltr' %}
+  {% set align_left = 'left' %}
+  {% set align_right = 'right' %}
+  {% if languageIsRTL|default(false) %}
+  {% set direction = 'rtl' %}
+  {% set align_left = 'right' %}
+  {% set align_right = 'left' %}
+  {% endif %}
   {% block styles %}
   <style type="text/css">
     #outlook a {
@@ -124,9 +132,9 @@
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:0;text-align:center;">
+            <td style="direction:{{ direction }};font-size:0px;padding:0;text-align:center;">
               <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:604px;" ><![endif]-->
-              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                   <tbody>
                     <tr>
@@ -148,7 +156,7 @@
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;background-color:#ffffff;width:100%;border-radius:4px;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:0 0 30px;text-align:center;">
+            <td style="direction:{{ direction }};font-size:0px;padding:0 0 30px;text-align:center;">
               <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><![endif]--> 
                   {% block header %}
                       {% include '@MailThemes/modern/components/header.html.twig' %}

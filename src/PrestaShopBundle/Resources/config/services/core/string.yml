@@ -3,4 +3,5 @@ services:
     public: true
 
   prestashop.core.string.character_cleaner:
+    deprecated: ~
     class: 'PrestaShop\PrestaShop\Core\String\CharacterCleaner'

@@ -26,10 +26,10 @@
         <target>Product Comments</target>
         <note>Line: 55</note>
       </trans-unit>
-      <trans-unit id="a8cd99c74a32936a90127454a02d7500">
-        <source>Allows users to post reviews and rate products on specific criteria.</source>
-        <target>Allows users to post reviews and rate products on specific criteria.</target>
-        <note>Line: 58</note>
+      <trans-unit id="900b8fbdc604e70a622a5693cce6d3cf">
+        <source>Allow users to post reviews on your products and/or rate them based on specific criteria.</source>
+        <target>Allow users to post reviews on your products and/or rate them based on specific criteria.</target>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
         <source>Settings updated</source>
@@ -57,15 +57,15 @@
         <note>Line: 298
 Comment: retro compat 1.5</note>
       </trans-unit>
-      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
-        <source>Enabled</source>
-        <target>Enabled</target>
-        <note>Line: 768</note>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Line: 799</note>
       </trans-unit>
-      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
-        <source>Disabled</source>
-        <target>Disabled</target>
-        <note>Line: 773</note>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Line: 804</note>
       </trans-unit>
       <trans-unit id="4e26bb46aa3f40913ee95cfb1d6c82f9">
         <source>Allow guest reviews</source>
@@ -78,6 +78,17 @@ Comment: retro compat 1.5</note>
         <target>Enable upvotes / downvotes on reviews</target>
         <note>Line: 334
 Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="42ccd7b6dbfca50ad7108b282b853d21">
+        <source>Anonymize the user's last name</source>
+        <target>Anonymize the user's last name</target>
+        <note>Line: 352
+Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="69fcab6b2ebdc5f69255bf21bd9da29b">
+        <source>Display only initials, e.g. John D.</source>
+        <target>Display only initials, e.g. John D.</target>
+        <note>Line: 354</note>
       </trans-unit>
       <trans-unit id="9dc1140983196141368ceda7565128a8">
         <source>Minimum time between 2 reviews from the same user</source>
@@ -92,7 +103,7 @@ Comment: retro compat 1.5</note>
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
         <source>Save</source>
         <target>Save</target>
-        <note>Line: 809</note>
+        <note>Line: 810</note>
       </trans-unit>
       <trans-unit id="2ec265696a51530949d345239069f0d4">
         <source>Reviews waiting for approval</source>
@@ -182,94 +193,68 @@ Comment: retro compat 1.5</note>
       <trans-unit id="f3d8e91894baa7ee67e0649abcc092ff">
         <source>Criterion will be restricted to the following categories</source>
         <target>Criterion will be restricted to the following categories</target>
-        <note>Line: 724</note>
+        <note>Line: 725</note>
       </trans-unit>
       <trans-unit id="d3dc571a8be516766c8124a636290fd9">
         <source>Mark the boxes of categories to which this criterion applies.</source>
         <target>Mark the boxes of categories to which this criterion applies.</target>
-        <note>Line: 726</note>
+        <note>Line: 727</note>
       </trans-unit>
       <trans-unit id="91b442d385b54e1418d81adc34871053">
         <source>Selected</source>
         <target>Selected</target>
-        <note>Line: 737</note>
+        <note>Line: 738</note>
       </trans-unit>
       <trans-unit id="b56c3bda503a8dc4be356edb0cc31793">
         <source>Collapse All</source>
         <target>Collapse All</target>
-        <note>Line: 738</note>
+        <note>Line: 739</note>
       </trans-unit>
       <trans-unit id="5ffd7a335dd836b3373f5ec570a58bdc">
         <source>Expand All</source>
         <target>Expand All</target>
-        <note>Line: 739</note>
+        <note>Line: 740</note>
       </trans-unit>
       <trans-unit id="5e9df908eafa83cb51c0a3720e8348c7">
         <source>Check All</source>
         <target>Check All</target>
-        <note>Line: 740</note>
+        <note>Line: 741</note>
       </trans-unit>
       <trans-unit id="9747d23c8cc358c5ef78c51e59cd6817">
         <source>Uncheck All</source>
         <target>Uncheck All</target>
-        <note>Line: 741</note>
+        <note>Line: 742</note>
       </trans-unit>
       <trans-unit id="38fc05fb7f02497ea56b77fe085ffc78">
         <source>Add new criterion</source>
         <target>Add new criterion</target>
-        <note>Line: 757</note>
+        <note>Line: 758</note>
       </trans-unit>
       <trans-unit id="92a497b6a43b59cce82c604a4c834bb0">
         <source>Criterion name</source>
         <target>Criterion name</target>
-        <note>Line: 768</note>
+        <note>Line: 769</note>
       </trans-unit>
       <trans-unit id="5a4657d924969c036c9be8e81e410752">
         <source>Maximum length: %s characters</source>
         <target>Maximum length: %s characters</target>
-        <note>Line: 770</note>
+        <note>Line: 771</note>
       </trans-unit>
       <trans-unit id="bbda28827cde1064b0320cbf6b1890a2">
         <source>Application scope of the criterion</source>
         <target>Application scope of the criterion</target>
-        <note>Line: 775</note>
+        <note>Line: 776</note>
       </trans-unit>
       <trans-unit id="20089c27bf83463fe32e7d30ed9d8f81">
         <source>The criterion will be restricted to the following products</source>
         <target>The criterion will be restricted to the following products</target>
-        <note>Line: 785</note>
+        <note>Line: 786</note>
       </trans-unit>
       <trans-unit id="4d3d769b812b6faa6b76e1a8abaece2d">
         <source>Active</source>
         <target>Active</target>
-        <note>Line: 792
+        <note>Line: 793
 Comment: retro compat 1.5</note>
-      </trans-unit>
-      <trans-unit id="42ccd7b6dbfca50ad7108b282b853d21">
-        <source>Anonymize the user's last name</source>
-        <target>Anonymize the user's last name</target>
-        <note>Line: 352
-Comment: retro compat 1.5</note>
-      </trans-unit>
-      <trans-unit id="69fcab6b2ebdc5f69255bf21bd9da29b">
-        <source>Display only initials, e.g. John D.</source>
-        <target>Display only initials, e.g. John D.</target>
-        <note>Line: 354</note>
-      </trans-unit>
-      <trans-unit id="900b8fbdc604e70a622a5693cce6d3cf">
-        <source>Allow users to post reviews on your products and/or rate them based on specific criteria.</source>
-        <target>Allow users to post reviews on your products and/or rate them based on specific criteria.</target>
-        <note>Line: 56</note>
-      </trans-unit>
-      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
-        <source>Yes</source>
-        <target>Yes</target>
-        <note>Line: 798</note>
-      </trans-unit>
-      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
-        <source>No</source>
-        <target>No</target>
-        <note>Line: 803</note>
       </trans-unit>
     </body>
   </file>

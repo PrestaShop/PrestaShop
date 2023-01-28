@@ -43,7 +43,11 @@ class ProductTypeFeatureContext extends AbstractProductFeatureContext
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
-        $this->getCommandBus()->handle(new UpdateProductTypeCommand($productId, $productType));
+        try {
+            $this->getCommandBus()->handle(new UpdateProductTypeCommand($productId, $productType));
+        } catch (InvalidProductTypeException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -72,5 +76,13 @@ class ProductTypeFeatureContext extends AbstractProductFeatureContext
                 break;
         }
         $this->assertLastErrorIs(InvalidProductTypeException::class, $errorCode);
+    }
+
+    /**
+     * @Then I should get error that the product is already associated to a pack
+     */
+    public function assertLastErrorForbiddenAssociations(): void
+    {
+        $this->assertLastErrorIs(InvalidProductTypeException::class, InvalidProductTypeException::EXPECTED_NO_EXISTING_PACK_ASSOCIATIONS);
     }
 }

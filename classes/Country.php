@@ -44,7 +44,7 @@ class CountryCore extends ObjectModel
     /** @var int international call prefix */
     public $call_prefix;
 
-    /** @var string Name */
+    /** @var string[]|string Name */
     public $name;
 
     /** @var bool Contain states */
@@ -67,11 +67,11 @@ class CountryCore extends ObjectModel
 
     protected static $_idZones = [];
 
-    const GEOLOC_ALLOWED = 0;
+    public const GEOLOC_ALLOWED = 0;
 
-    const GEOLOC_CATALOG_MODE = 1;
+    public const GEOLOC_CATALOG_MODE = 1;
 
-    const GEOLOC_FORBIDDEN = 2;
+    public const GEOLOC_FORBIDDEN = 2;
 
     /**
      * @see ObjectModel::$definition

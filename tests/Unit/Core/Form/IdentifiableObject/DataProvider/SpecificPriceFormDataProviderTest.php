@@ -33,6 +33,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\CustomerInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
@@ -42,10 +43,12 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SpecificPric
 
 class SpecificPriceFormDataProviderTest extends TestCase
 {
+    private const CONTEXT_SHOP_ID = 2;
+
     public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new SpecificPriceFormDataProvider($queryBusMock);
+        $provider = new SpecificPriceFormDataProvider($queryBusMock, self::CONTEXT_SHOP_ID);
 
         $expectedDefaultData = [
             'from_quantity' => 1,
@@ -57,6 +60,10 @@ class SpecificPriceFormDataProviderTest extends TestCase
                 ],
                 'fixed_price_tax_excluded' => (float) InitialPrice::INITIAL_PRICE_VALUE,
             ],
+            'groups' => [
+                'shop_id' => self::CONTEXT_SHOP_ID,
+            ],
+            'combination_id' => NoCombinationId::NO_COMBINATION_ID,
         ];
 
         $this->assertEquals($expectedDefaultData, $provider->getDefaultData());
@@ -71,7 +78,7 @@ class SpecificPriceFormDataProviderTest extends TestCase
     public function testGetData(SpecificPriceForEditing $specificPriceForEditing, array $expectedData): void
     {
         $queryBusMock = $this->createQueryBusMock($specificPriceForEditing);
-        $provider = new SpecificPriceFormDataProvider($queryBusMock);
+        $provider = new SpecificPriceFormDataProvider($queryBusMock, self::CONTEXT_SHOP_ID);
 
         $formData = $provider->getData($specificPriceForEditing->getSpecificPriceId());
         // assertSame is very important here We can't assume null and 0 are the same thing

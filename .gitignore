@@ -1,6 +1,7 @@
 # Cache, temp and personal files
 
 /.htaccess
+/.htpasswd
 *.log
 npm-debug.log.*
 .sass-cache/
@@ -50,6 +51,7 @@ npm-debug.log.*
 !/img/preston-login-wink@2x.png
 !/img/preston-login@2x.png
 !/img/questionmark.png
+!/img/module/default.png
 !/img/genders/index.php
 !/img/admin/index.php
 !/img/c/index.php
@@ -123,6 +125,8 @@ tests-legacy/.phpunit.result.cache
 themes/*/cache/*
 themes/core.js.map
 themes/core.js
+themes/*-chunk.js
+themes/*-chunk.js.map
 
 # Install folder
 /install-dev/theme/custom/*
@@ -196,6 +200,7 @@ themes/default-bootstrap/modules/*/mails/*
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
+!var/class_stub.php
 !/var/modules
 /var/modules/*
 !/var/modules/.gitkeep
@@ -208,3 +213,4 @@ tools/build/releases/*
 
 # Docker configuration
 install.lock
+docker-compose.override.yml

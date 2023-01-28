@@ -231,16 +231,32 @@ class ModuleDataProvider
     }
 
     /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isInstalledAndActive(string $name): bool
+    {
+        return (bool) $this->getModuleIdByName($name, true);
+    }
+
+    /**
      * Returns the Module Id
      *
      * @param string $name The technical module name
+     * @param bool $activeModulesOnly Should we return the module only if it's active ?
      *
      * @return int the Module Id, or 0 if not found
      */
-    public function getModuleIdByName($name)
+    public function getModuleIdByName($name, bool $activeModulesOnly = false)
     {
+        $sqlQuery = 'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"';
+        if ($activeModulesOnly) {
+            $sqlQuery .= ' AND `active` = 1';
+        }
+
         return (int) Db::getInstance()->getValue(
-            'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"'
+            $sqlQuery
         );
     }
 

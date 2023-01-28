@@ -27,21 +27,27 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,6 +57,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CatalogPriceRuleController extends FrameworkBundleAdminController
 {
+    private const UNSPECIFIED_VALUE_FORMAT = '--';
+
     /**
      * Displays catalog price rule listing page.
      *
@@ -73,6 +81,34 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'catalogPriceRuleGrid' => $this->presentGrid($catalogPriceRuleGrid),
         ]);
+    }
+
+    /**
+     * Retrieves catalog prices rules for product.
+     *
+     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminSpecificPriceRule')")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listForProductAction(Request $request, int $productId): JsonResponse
+    {
+        $catalogPriceRuleList = $this->getQueryBus()->handle(
+            new GetCatalogPriceRuleListForProduct(
+                $productId,
+                $this->getContextLangId(),
+                $request->query->getInt('limit') ?: null,
+                $request->query->getInt('offset') ?: null
+            )
+        );
+
+        return $this->json(
+            [
+                'catalogPriceRules' => $this->formatCatalogPriceRule($catalogPriceRuleList),
+                'total' => $catalogPriceRuleList->getTotalCount(),
+            ]
+        );
     }
 
     /**
@@ -113,7 +149,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteCatalogPriceRuleCommand((int) $catalogPriceRuleId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -140,7 +176,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteCatalogPriceRuleCommand($catalogPriceRuleIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -166,7 +202,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
 
         try {
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_catalog_price_rules_index');
             }
@@ -210,7 +246,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         }
 
         if ($result->isSubmitted() && $result->isValid()) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_catalog_price_rules_index');
         }
@@ -288,5 +324,68 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder');
+    }
+
+    /**
+     * @param CatalogPriceRuleList $catalogPriceRuleList
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function formatCatalogPriceRule(CatalogPriceRuleList $catalogPriceRuleList): array
+    {
+        $list = [];
+        foreach ($catalogPriceRuleList->getCatalogPriceRules() as $catalogPriceRule) {
+            $list[] = [
+                'id' => $catalogPriceRule->getCatalogPriceRuleId(),
+                'shop' => $catalogPriceRule->getShopName() ?? $this->trans('All shops', 'Admin.Global'),
+                'currency' => $catalogPriceRule->getCurrencyName() ?? $this->trans('All currencies', 'Admin.Global'),
+                'country' => $catalogPriceRule->getCountryName() ?? $this->trans('All countries', 'Admin.Global'),
+                'group' => $catalogPriceRule->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),
+                'name' => $catalogPriceRule->getCatalogPriceRuleName(),
+                'fromQuantity' => $catalogPriceRule->getFromQuantity(),
+                'impact' => $this->formatImpact(
+                    $catalogPriceRule->getReductionType(),
+                    $catalogPriceRule->getReduction(),
+                    $catalogPriceRule->getCurrencyIso() ?: $this->getContextCurrencyIso(),
+                    $catalogPriceRule->isTaxIncluded()
+                ),
+                'startDate' => $catalogPriceRule->getDateStart()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                'endDate' => $catalogPriceRule->getDateEnd()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+            ];
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param string $reductionType
+     * @param DecimalNumber $reductionValue
+     * @param string $currencyIsoCode
+     *
+     * @return string
+     */
+    private function formatImpact(
+        string $reductionType,
+        DecimalNumber $reductionValue,
+        string $currencyIsoCode,
+        bool $taxIncl
+    ): string {
+        if ($reductionValue->equalsZero()) {
+            return self::UNSPECIFIED_VALUE_FORMAT;
+        }
+
+        $reductionValue = $reductionValue->toNegative();
+
+        $locale = $this->getContextLocale();
+        if ($reductionType === Reduction::TYPE_AMOUNT) {
+            $price = $locale->formatPrice((string) $reductionValue, $currencyIsoCode);
+            if ($taxIncl) {
+                return $this->trans('%price% (tax incl.)', 'Admin.Catalog.Feature', ['%price%' => $price]);
+            }
+
+            return $this->trans('%price% (tax excl.)', 'Admin.Catalog.Feature', ['%price%' => $price]);
+        }
+
+        return sprintf('%s %%', (string) $reductionValue);
     }
 }

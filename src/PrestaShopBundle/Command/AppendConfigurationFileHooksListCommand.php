@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use DOMDocument;
 use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -228,9 +229,18 @@ class AppendConfigurationFileHooksListCommand extends Command
             $addedHooks[] = $hookDescription;
         }
 
-        if (!$xmlFileContent->saveXML($this->hookFile)) {
+        $xmlContent = $xmlFileContent->asXML();
+        if (empty($xmlContent)) {
             throw new Exception(sprintf('Failed to save new xml content to file %s', $this->hookFile));
         }
+
+        $dom = new DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($xmlContent);
+
+        $formattedXMLContent = $dom->saveXML();
+        file_put_contents($this->hookFile, $formattedXMLContent);
 
         return $addedHooks;
     }

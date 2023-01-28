@@ -199,6 +199,13 @@ class Theme implements AddonInterface
         return $this->attributes->get('meta.available_layouts');
     }
 
+    /**
+     * Returns layout name for page from theme configuration
+     *
+     * @param string $page page identifier
+     *
+     * @return string layout name
+     */
     public function getLayoutNameForPage($page)
     {
         $layout_name = $this->get('theme_settings.default_layout');
@@ -210,9 +217,28 @@ class Theme implements AddonInterface
         return $layout_name;
     }
 
+    /**
+     * Returns layout relative path for provided page identifier
+     *
+     * @param string $page page identifier
+     *
+     * @return string layout relative path
+     */
     public function getLayoutRelativePathForPage($page)
     {
-        return 'layouts/' . $this->getLayoutNameForPage($page) . '.tpl';
+        return $this->getLayoutPath($this->getLayoutNameForPage($page));
+    }
+
+    /**
+     * Returns relative path for provided layout name
+     *
+     * @param string $layoutName layout name
+     *
+     * @return string layout relative path
+     */
+    public function getLayoutPath($layoutName)
+    {
+        return 'layouts/' . $layoutName . '.tpl';
     }
 
     private function getPageSpecificCss($pageId)
@@ -270,5 +296,15 @@ class Theme implements AddonInterface
         }
 
         return $js;
+    }
+
+    /**
+     * Defines if the theme requires core.js scripts or it provides it's own implementation.
+     *
+     * @return bool
+     */
+    public function requiresCoreScripts(): bool
+    {
+        return $this->attributes->get('theme_settings.core_scripts', true);
     }
 }

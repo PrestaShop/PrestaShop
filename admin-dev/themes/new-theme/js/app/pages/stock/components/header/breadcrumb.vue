@@ -40,9 +40,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
+  import translate from '@app/pages/stock/mixins/translate';
 
-  export default Vue.extend({
+  export default defineComponent({
+    mixins: [translate],
     computed: {
       isOverview(): boolean {
         return this.$route.name === 'overview';

@@ -7,10 +7,10 @@
         <target>Main menu</target>
         <note>Line: 76</note>
       </trans-unit>
-      <trans-unit id="e2456ba8b78357d7aefa983b1b14ac27">
-        <source>Adds a new menu to the top of your e-commerce website.</source>
-        <target>Adds a new menu to the top of your e-commerce website.</target>
-        <note>Line: 72</note>
+      <trans-unit id="a86077d19741d9f3ce6502335830949b">
+        <source>Make it easy for your visitors to find their way on your store, select the right link and turn it into a menu item.</source>
+        <target>Make it easy for your visitors to find their way on your store, select the right link and turn it into a menu item.</target>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="d9a776c185f73d018b2915f4d5e7cc05">
         <source>Unable to update settings for the following shop(s): %s</source>
@@ -139,11 +139,6 @@ Comment: BEGIN Menu Top Links</note>
         <source>Link list</source>
         <target>Link list</target>
         <note>Line: 1428</note>
-      </trans-unit>
-      <trans-unit id="a86077d19741d9f3ce6502335830949b">
-        <source>Make it easy for your visitors to find their way on your store, select the right link and turn it into a menu item.</source>
-        <target>Make it easy for your visitors to find their way on your store, select the right link and turn it into a menu item.</target>
-        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>

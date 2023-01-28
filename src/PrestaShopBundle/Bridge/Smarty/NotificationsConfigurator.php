@@ -61,7 +61,7 @@ class NotificationsConfigurator implements ConfiguratorInterface
      */
     public function configure(ControllerConfiguration $controllerConfiguration)
     {
-        $accesses = Profile::getProfileAccesses($controllerConfiguration->user->getData()->id_profile, 'class_name');
+        $accesses = Profile::getProfileAccesses($controllerConfiguration->getUser()->getData()->id_profile, 'class_name');
 
         $notificationsSettings = [
             'show_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'] ? '1' : false,
@@ -69,7 +69,7 @@ class NotificationsConfigurator implements ConfiguratorInterface
             'show_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'] ? '1' : false,
         ];
 
-        $controllerConfiguration->templatesVars = array_merge($controllerConfiguration->templatesVars, $notificationsSettings);
+        $controllerConfiguration->templateVars = array_merge($controllerConfiguration->templateVars, $notificationsSettings);
 
         Media::addJsDef($notificationsSettings);
     }

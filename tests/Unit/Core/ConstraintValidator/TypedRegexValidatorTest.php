@@ -27,12 +27,22 @@
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use Generator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 {
+    protected const ALLOW_ACCENTED_CHARS_CONFIG_NAME = 'PS_ALLOW_ACCENTED_CHARS_URL';
+
+    /**
+     * Modify this configuration data before creating new validator when needed to inject different configuration values into validator
+     */
+    protected $configurationData = [
+        self::ALLOW_ACCENTED_CHARS_CONFIG_NAME => '0',
+    ];
+
     public function testItSucceedsForNameTypeWhenValidCharactersGiven(): void
     {
         $value = 'goodname';
@@ -336,6 +346,23 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]), $invalidChar);
     }
 
+    public function testItSucceedsForZipCodeFormatTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('LLLNNNNCCClllnnnccc-1234567890', new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidZipCodeFormats
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForZipCodeFormatTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_ZIP_CODE_FORMAT]), $invalidChar);
+    }
+
     public function testItSucceedsForStateIsoCodeTypeWhenValidCharactersGiven(): void
     {
         $this->validator->validate('FRA', new TypedRegex(['type' => TypedRegex::TYPE_STATE_ISO_CODE]));
@@ -351,6 +378,47 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItFailsForStateIsoCodeTypeWhenInvalidCharactersGiven(string $invalidChar): void
     {
         $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_STATE_ISO_CODE]), $invalidChar);
+    }
+
+    /**
+     * @dataProvider getDataForLinkRewriteTest
+     *
+     * @param string $value
+     *
+     * @return void
+     */
+    public function testLinkRewriteType(string $value, string $allowAccentedChars, bool $expectSuccess): void
+    {
+        $this->configurationData[self::ALLOW_ACCENTED_CHARS_CONFIG_NAME] = $allowAccentedChars;
+        $this->reinitializeValidator([
+            self::ALLOW_ACCENTED_CHARS_CONFIG_NAME => $allowAccentedChars,
+        ]);
+
+        $constraint = new TypedRegex(TypedRegex::TYPE_LINK_REWRITE);
+        $this->validator->validate($value, $constraint);
+
+        if ($expectSuccess) {
+            $this->assertNoViolation();
+        } else {
+            $this->buildViolation($constraint->message)
+                ->setParameter('%s', '"' . $value . '"')
+                ->assertRaised();
+        }
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getDataForLinkRewriteTest(): array
+    {
+        return [
+            ['okay', '0', true],
+            ['Notebook-13', '0', true],
+            ['Notebook_3', '0', true],
+            ['notebook-ė', '0', false],
+            ['notebook-ė', '1', true],
+            ['notebook with spaces', '1', false],
+        ];
     }
 
     /**
@@ -703,11 +771,57 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @return Generator
+     */
+    public function getInvalidZipCodeFormats(): Generator
+    {
+        yield ['A'];
+        yield ['NNA'];
+        yield ['1QER'];
+        yield ['123QDQ'];
+        yield ['LA'];
+        yield ['£'];
+        yield ['!'];
+        yield ['@'];
+        yield ['$'];
+        yield ['%s'];
+        yield ['^'];
+        yield ['&'];
+        yield ['*'];
+        yield ['('];
+        yield [')'];
+        yield ['+'];
+        yield ['='];
+        yield ['{'];
+        yield ['}'];
+        yield ['['];
+        yield ['['];
+        yield ['<'];
+        yield ['>'];
+        yield ['?'];
+        yield ['/'];
+        yield ['\\'];
+        yield ['\''];
+        yield [';'];
+        yield [':'];
+        yield ['.'];
+        yield [','];
+    }
+
+    /**
      * @return TypedRegexValidator
      */
     protected function createValidator(): TypedRegexValidator
     {
-        return new TypedRegexValidator();
+        $configurationMock = $this->createMock(ConfigurationInterface::class);
+        $configurationMock->method('get')
+            ->willReturnMap(
+            [
+                ['PS_ALLOW_ACCENTED_CHARS_URL', $this->configurationData['PS_ALLOW_ACCENTED_CHARS_URL']],
+            ]
+        );
+
+        return new TypedRegexValidator($configurationMock);
     }
 
     /**
@@ -721,5 +835,15 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation($constraint->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised();
+    }
+
+    /**
+     * Reinitialize validator when custom configuration data needs to be injected
+     */
+    private function reinitializeValidator(array $configurationData): void
+    {
+        $this->configurationData = $configurationData;
+        $this->validator = $this->createValidator();
+        $this->validator->initialize($this->context);
     }
 }

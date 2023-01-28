@@ -32,6 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CategoryTreeSelectorType extends CollectionType
@@ -52,6 +53,9 @@ class CategoryTreeSelectorType extends CollectionType
         $this->translator = $translator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -87,6 +91,20 @@ class CategoryTreeSelectorType extends CollectionType
         ;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig',
+        ]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getBlockPrefix(): string
     {
         return 'category_tree_selector';

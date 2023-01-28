@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductSupplierCollectionType extends CollectionType
 {
@@ -66,6 +66,7 @@ class ProductSupplierCollectionType extends CollectionType
             ),
             'alert_position' => 'prepend',
             'block_prefix' => 'product_supplier_collection',
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_suppliers.html.twig',
         ]);
     }
 }

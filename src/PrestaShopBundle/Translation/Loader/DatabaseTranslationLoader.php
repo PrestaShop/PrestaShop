@@ -77,6 +77,10 @@ class DatabaseTranslationLoader implements LoaderInterface
             $langs[$locale] = $this->entityManager->getRepository(Lang::class)->findOneBy(['locale' => $locale]);
         }
 
+        if ($langs[$locale] === null) {
+            return $catalogue;
+        }
+
         /** @var EntityRepository $translationRepository */
         $translationRepository = $this->entityManager->getRepository(Translation::class);
 

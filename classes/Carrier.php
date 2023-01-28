@@ -30,26 +30,26 @@ class CarrierCore extends ObjectModel
     /**
      * getCarriers method filter.
      */
-    const PS_CARRIERS_ONLY = 1;
-    const CARRIERS_MODULE = 2;
-    const CARRIERS_MODULE_NEED_RANGE = 3;
-    const PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE = 4;
-    const ALL_CARRIERS = 5;
+    public const PS_CARRIERS_ONLY = 1;
+    public const CARRIERS_MODULE = 2;
+    public const CARRIERS_MODULE_NEED_RANGE = 3;
+    public const PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE = 4;
+    public const ALL_CARRIERS = 5;
 
-    const SHIPPING_METHOD_DEFAULT = 0;
-    const SHIPPING_METHOD_WEIGHT = 1;
-    const SHIPPING_METHOD_PRICE = 2;
-    const SHIPPING_METHOD_FREE = 3;
+    public const SHIPPING_METHOD_DEFAULT = 0;
+    public const SHIPPING_METHOD_WEIGHT = 1;
+    public const SHIPPING_METHOD_PRICE = 2;
+    public const SHIPPING_METHOD_FREE = 3;
 
-    const SHIPPING_PRICE_EXCEPTION = 0;
-    const SHIPPING_WEIGHT_EXCEPTION = 1;
-    const SHIPPING_SIZE_EXCEPTION = 2;
+    public const SHIPPING_PRICE_EXCEPTION = 0;
+    public const SHIPPING_WEIGHT_EXCEPTION = 1;
+    public const SHIPPING_SIZE_EXCEPTION = 2;
 
-    const SORT_BY_PRICE = 0;
-    const SORT_BY_POSITION = 1;
+    public const SORT_BY_PRICE = 0;
+    public const SORT_BY_POSITION = 1;
 
-    const SORT_BY_ASC = 0;
-    const SORT_BY_DESC = 1;
+    public const SORT_BY_ASC = 0;
+    public const SORT_BY_DESC = 1;
 
     /** @var int common id for carrier historization */
     public $id_reference;
@@ -72,7 +72,7 @@ class CarrierCore extends ObjectModel
     /** @var bool True if extra shipping handling cost should be applied to this Carrier */
     public $shipping_handling = true;
 
-    /** @var bool Behavior taken for unknown range */
+    /** @var bool Behavior for out-of-range weights: true to disable carrier, false to apply the cost of the highest defined range */
     public $range_behavior;
 
     /** @var bool Carrier module */

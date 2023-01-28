@@ -28,22 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
+use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This is the parent product form type
@@ -56,17 +58,25 @@ class EditProductFormType extends TranslatorAwareType
     private $productTypeListener;
 
     /**
+     * @var ToolbarButtonsProviderInterface
+     */
+    private $toolbarButtonsProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param EventSubscriberInterface $productTypeListener
+     * @param ToolbarButtonsProviderInterface $toolbarButtonsProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        EventSubscriberInterface $productTypeListener
+        EventSubscriberInterface $productTypeListener,
+        ToolbarButtonsProviderInterface $toolbarButtonsProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productTypeListener = $productTypeListener;
+        $this->toolbarButtonsProvider = $toolbarButtonsProvider;
     }
 
     /**
@@ -74,7 +84,8 @@ class EditProductFormType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $productId = $options['product_id'] ?? null;
+        $productId = $options['product_id'];
+
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
@@ -82,20 +93,26 @@ class EditProductFormType extends TranslatorAwareType
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
-            ->add('specifications', SpecificationsType::class)
+            ->add('details', DetailsType::class)
             ->add('combinations', CombinationsType::class, [
                 'product_id' => $productId,
             ])
             ->add('stock', StockType::class, [
                 'product_id' => $productId,
+                'product_type' => $options['product_type'],
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
             ->add('shipping', ShippingType::class)
-            ->add('pricing', PricingType::class)
+            ->add('pricing', PricingType::class, [
+                'tax_rules_group_id' => $options['tax_rules_group_id'],
+            ])
             ->add('seo', SEOType::class, [
                 'product_id' => $productId,
             ])
             ->add('options', OptionsType::class)
+            ->add('extra_modules', ExtraModulesType::class, [
+                'product_id' => $productId,
+            ])
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
                 'active' => $options['active'],
@@ -114,12 +131,10 @@ class EditProductFormType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        // Important to get data from form and not options as it's the most up to date
-        $formData = $form->getData();
-        $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
-            'product_type' => $productType,
-            'product_id' => $options['product_id'] ?? null,
+            'product_type' => $options['product_type'],
+            'product_id' => $options['product_id'],
+            'shop_id' => $options['shop_id'],
         ];
 
         $view->vars = array_replace($view->vars, $formVars);
@@ -135,17 +150,39 @@ class EditProductFormType extends TranslatorAwareType
         // We must allow extra fields because when we switch product type some former fields may be present in request
         $resolver
             ->setDefaults([
-                'product_id' => null,
-                'product_type' => null,
                 'virtual_product_file_id' => null,
                 'active' => false,
                 'allow_extra_fields' => true,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
+                'use_default_themes' => false,
+                'toolbar_buttons' => [],
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
-            ->setAllowedTypes('product_type', ['null', 'string'])
+            ->setRequired([
+                'product_id',
+                'shop_id',
+                'product_type',
+                'tax_rules_group_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
+            ->setAllowedTypes('product_type', 'string')
             ->setAllowedTypes('virtual_product_file_id', ['null', 'int'])
             ->setAllowedTypes('active', ['bool'])
+            ->setNormalizer('toolbar_buttons', function (Options $options, $toolbarButtons) {
+                return array_merge(
+                    $this->toolbarButtonsProvider->getToolbarButtonsOptions(['productId' => $options->offsetGet('product_id')]),
+                    $toolbarButtons
+                );
+            })
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getParent()
+    {
+        return NavigationTabType::class;
     }
 
     /**

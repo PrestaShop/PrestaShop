@@ -47,6 +47,11 @@ class Price extends NumberSpecification
     public const CURRENCY_DISPLAY_CODE = 'code';
 
     /**
+     * Price value placeholder without symbols
+     */
+    public const PATTERN_BASE_PLACEHOLDER = '#,##0.00';
+
+    /**
      * Type of display for currency symbol
      * cf. self::CURRENCY_DISPLAY_SYMBOL and self::CURRENCY_DISPLAY_CODE constants.
      *

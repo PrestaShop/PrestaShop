@@ -26,7 +26,10 @@
 
 namespace Tests\Integration\PrestaShopBundle\Model\Product;
 
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
+use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Integration\Utility\ContextMockerTrait;
@@ -178,8 +181,8 @@ class AdminModelAdapterTest extends KernelTestCase
         $this->product = $this->fakeProduct();
         $this->adminModelAdapter = new AdminModelAdapter(
             self::$kernel->getContainer()->get('prestashop.adapter.legacy.context'),
-            self::$kernel->getContainer()->get('prestashop.adapter.admin.wrapper.product'),
-            self::$kernel->getContainer()->get('prestashop.adapter.tools'),
+            self::$kernel->getContainer()->get(AdminProductWrapper::class),
+            self::$kernel->getContainer()->get(Tools::class),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.product'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.supplier'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.warehouse'),
@@ -188,7 +191,7 @@ class AdminModelAdapterTest extends KernelTestCase
             self::$kernel->getContainer()->get('prestashop.adapter.shop.context'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.tax'),
             self::$kernel->getContainer()->get('router'),
-            self::$kernel->getContainer()->get('prestashop.utils.float_parser')
+            self::$kernel->getContainer()->get(FloatParser::class)
         );
     }
 

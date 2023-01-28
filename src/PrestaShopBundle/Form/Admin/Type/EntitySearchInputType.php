@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form type is used for a OneToMany (or ManyToMany) association, it allows to search a list of entities
@@ -123,7 +123,6 @@ class EntitySearchInputType extends CollectionType
             // field name in record dataset which should be used to show suggestion in search dropdown
             'suggestion_field' => 'name',
         ]);
-
         $resolver->setAllowedTypes('allow_search', ['bool']);
         $resolver->setAllowedTypes('search_attr', ['array']);
         $resolver->setAllowedTypes('list_attr', ['array']);

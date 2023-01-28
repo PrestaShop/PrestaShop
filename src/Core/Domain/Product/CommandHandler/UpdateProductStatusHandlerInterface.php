@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major version.
  * Interface for service that set product to be enabled or disabled
  */
 interface UpdateProductStatusHandlerInterface

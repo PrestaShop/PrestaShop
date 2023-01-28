@@ -231,6 +231,7 @@ $(document).ready(() => {
       unbuildMobileMenu();
     } else if (!$('body').hasClass('mobile') && $(window).width() <= MAX_MOBILE_WIDTH) {
       mobileNav();
+      $('nav.nav-bar ul.main-menu').removeClass('sidebar-closed');
     }
   });
 

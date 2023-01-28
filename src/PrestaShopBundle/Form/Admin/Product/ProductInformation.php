@@ -50,8 +50,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form class is responsible to generate the basic product information form.
@@ -213,11 +213,21 @@ class ProductInformation extends CommonAbstractType
             ])
             ->add('name', TranslateType::class, [
                 'type' => FormType\TextType::class,
+                'help' => $this->translator->trans(
+                    'Invalid characters are: %invalidCharacters%',
+                    ['%invalidCharacters%' => '<>;=#{}'],
+                    'Admin.Catalog.Feature'
+                ),
                 'options' => [
                     'constraints' => [
                         new Assert\Regex([
                             'pattern' => '/[<>;=#{}]/',
                             'match' => false,
+                            'message' => $this->translator->trans(
+                                'This field contains invalid characters: %invalidCharacters%',
+                                ['%invalidCharacters%' => '<>;=#{}'],
+                                'Admin.Catalog.Feature'
+                            ),
                         ]),
                         new Assert\NotBlank(),
                         new Assert\Length(['min' => 3, 'max' => 128]),
@@ -329,10 +339,6 @@ class ProductInformation extends CommonAbstractType
                 'multiple' => false,
                 'required' => true,
                 'label' => $this->translator->trans('Default category', [], 'Admin.Catalog.Feature'),
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
             ])
             ->add('new_category', SimpleCategory::class, [
                 'ajax' => true,

@@ -1,0 +1,102 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{# Extend form_row template to move the form_alert behind the label #}
+{%- block employee_options_row -%}
+  {% apply spaceless %}
+    {# In horizontal theme when using a title for label it needs to be outside of the row div #}
+    {% if label_tag_name is defined %}
+      {{ form_label(form) }}
+    {% endif %}
+
+    {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+    {% set disabledField = false %}
+    {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
+      {% set disabledField = true %}
+    {% endif %}
+
+    <div class="{{ block('form_row_class') }}{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if (attr.visible is defined and not attr.visible) %} d-none{% endif %}">
+      {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
+      {% if attribute(form.parent, multistoreCheckboxName) is defined %}
+        {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
+        {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
+      {% endif %}
+
+      {% if label_tag_name is not defined %}
+        {{ form_label(form) }}
+      {% endif %}
+      <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
+        {{ form_widget(form) }}
+        {#  #}
+        {{ form_errors(form, {'attr': {'fieldError': true}}) }}
+        {{- block('form_alert') -}}
+      </div>
+      {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
+        {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}
+      {% endif %}
+
+      {{- block('form_external_link') -}}
+    </div>
+  {% endapply %}
+
+  {% if column_breaker %}
+    <div class="form-group form-column-breaker"></div>
+  {% endif %}
+{%- endblock employee_options_row -%}
+
+{# Override form_alert template to add a class #}
+{%- block form_alert -%}
+  {% if alert_message is defined %}
+    <div class="alert alert-{{ alert_type }}{% if alert_title is defined %} expandable-alert{% endif %} mt-1" role="alert">
+      {% if alert_title is defined %}
+        <p class="alert-text">
+          {{ alert_title|raw }}
+        </p>
+      {% else %}
+        {% for message in alert_message %}
+          <p class="alert-text">
+            {{ message|raw }}
+          </p>
+        {% endfor %}
+      {% endif %}
+
+      {% if alert_title is defined %}
+        <div class="alert-more collapse" id="expandable_{{form.vars.id}}" style="">
+          {% for message in alert_message %}
+            <p>
+              {{ message|raw }}
+            </p>
+          {% endfor %}
+        </div>
+        <div class="read-more-container">
+          <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{form.vars.id}}" aria-expanded="true" aria-controls="collapseDanger">
+            {{ 'Read more'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+{%- endblock form_alert -%}
+

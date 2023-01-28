@@ -1,21 +1,23 @@
-const faker = require('faker');
+const {faker} = require('@faker-js/faker');
 
 const records = [];
 
 function createRecord() {
   for (let i = 0; i < 10; i++) {
+    const name = `todelete ${faker.company.name()}`;
     records.push({
       id: i + 2,
-      active: faker.random.number({min: 0, max: 1}),
-      name: `todelete ${faker.company.companyName()}`,
+      active: faker.datatype.number({min: 0, max: 1}),
+      name,
       description: faker.lorem.sentence(),
       shortDescription: faker.lorem.sentence(),
-      metaTitle: this.name,
+      metaTitle: name,
       metaKeywords: [faker.lorem.word(), faker.lorem.word()],
       metaDescription: faker.lorem.sentence(),
       imageURL: '',
     });
   }
+
   return records;
 }
 

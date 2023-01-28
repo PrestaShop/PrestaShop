@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Webservice;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Validate;
 use WebserviceKey;
 

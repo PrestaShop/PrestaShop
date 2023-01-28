@@ -144,7 +144,7 @@ class CurrencyController extends FrameworkBundleAdminController
         try {
             $result = $this->getCurrencyFormHandler()->handle($currencyForm);
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
@@ -183,7 +183,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
@@ -220,6 +220,8 @@ class CurrencyController extends FrameworkBundleAdminController
         $localeRepository = $this->get('prestashop.core.localization.locale.repository');
         /** @var CldrLocaleRepository $cldrLocaleRepository */
         $cldrLocaleRepository = $this->get('prestashop.core.localization.cldr.locale_repository');
+        /** @var PatternTransformer $transformer */
+        $transformer = $this->get('prestashop.core.localization.currency.pattern_transformer');
 
         $languagesData = [];
         /** @var LanguageInterface $language */
@@ -229,7 +231,6 @@ class CurrencyController extends FrameworkBundleAdminController
             $cldrCurrency = $cldrLocale->getCurrency($currencyIsoCode);
             $priceSpecification = $locale->getPriceSpecification($currencyIsoCode);
 
-            $transformer = new PatternTransformer();
             $transformations = [];
             foreach (PatternTransformer::ALLOWED_TRANSFORMATIONS as $transformationType) {
                 $transformations[$transformationType] = $transformer->transform(
@@ -275,7 +276,7 @@ class CurrencyController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_currencies_index');
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_currencies_index');
     }
@@ -376,7 +377,7 @@ class CurrencyController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new RefreshExchangeRatesCommand());
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (CannotRefreshExchangeRatesException $exception) {
             $this->addFlash('error', $exception->getMessage());
         }
@@ -524,7 +525,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (CurrencyException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

@@ -28,19 +28,25 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
-use Tests\Resources\ProductResetter;
+use Tests\Resources\Resetter\ProductResetter;
 
 class ProductControllerTest extends FormGridControllerTestCase
 {
     private const TEST_NAME = 'testProductName';
     private const TEST_QUANTITY = 987;
-    private const TEST_PRICE = 87.7;
+    private const TEST_MINIMAL_QUANTITY = 2;
+    private const TEST_RETAIL_PRICE_TAX_EXCLUDED = 87.7;
 
     /**
      * @var bool
@@ -100,7 +106,7 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         // First create product
         $formData = [
-            'product[type]' => ProductType::TYPE_STANDARD,
+            'create_product[type]' => ProductType::TYPE_STANDARD,
         ];
         $createdProductId = $this->createEntityFromPage($formData);
         $this->assertNotNull($createdProductId);
@@ -131,11 +137,59 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $productId): int
     {
+        // @todo: need to add dedicated tests for different product types, they all cannot be tested in one scenario,
+        //       because inputs existence depends on product type
+        // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
+        //        need to handle that in a future too. (inputs like: low_stock_threshold, unit_price etc..)
+        // @todo: handle options like $isEcoTaxEnabled, $isTaxEnabled depending on them there are some fields that may exist or not.
+        // @todo: handle relation checks like priorities, categories, related products, suppliers, attachments, features, carriers etc.
         // First update the product with a few data
         $formData = [
+            'product[header][type]' => ProductType::TYPE_STANDARD,
+            'product[header][initial_type]' => ProductType::TYPE_STANDARD,
             'product[header][name][1]' => self::TEST_NAME,
+            'product[header][cover_thumbnail]' => 'http://myshop.com/img/p/en-default-cart_default.jpg',
+            'product[header][active]' => true,
+            'product[description][description][1]' => 'description 1',
+            'product[description][description_short][1]' => 'description short 1',
+            'product[description][manufacturer]' => 2,
+            'product[details][references][mpn]' => 'mpn',
+            'product[details][references][upc]' => '72527273070',
+            'product[details][references][ean_13]' => '978020137962',
+            'product[details][references][isbn]' => '9781234567897',
+            'product[details][references][reference]' => 'reference1',
+            'product[details][show_condition]' => true,
+            'product[details][condition]' => ProductCondition::NEW,
+            'product[shipping][dimensions][width]' => 10.4,
+            'product[shipping][dimensions][height]' => 10.2,
+            'product[shipping][dimensions][depth]' => 5.5,
+            'product[shipping][dimensions][weight]' => 2,
+            'product[shipping][additional_shipping_cost]' => 20.4,
+            'product[shipping][delivery_time_note_type]' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+            'product[shipping][delivery_time_notes][in_stock][1]' => 'in stock notes1',
+            'product[shipping][delivery_time_notes][out_of_stock][1]' => 'out of stock notes1',
+            'product[options][visibility][visibility]' => ProductVisibility::VISIBLE_IN_CATALOG,
+            'product[options][visibility][available_for_order]' => true,
+            'product[options][visibility][show_price]' => true,
+            'product[options][visibility][online_only]' => false,
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
-            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_PRICE,
+            'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
+            'product[stock][options][stock_location]' => 'test stock location',
+            'product[stock][availability][out_of_stock_type]' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            'product[stock][availability][available_now_label][1]' => 'Available now',
+            'product[stock][availability][available_later_label][1]' => 'Available later',
+            'product[stock][availability][available_date]' => '2022-11-11',
+            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
+            // tax included value should be calculated for viewing only, so it doesn't matter what its value is before submit
+            'product[pricing][retail_price][price_tax_included]' => 1992491249214,
+            'product[pricing][retail_price][tax_rules_group_id]' => 1,
+            'product[pricing][on_sale]' => false,
+            'product[pricing][wholesale_price]' => 30.5,
+            'product[seo][meta_title][1]' => 'meta title 1',
+            'product[seo][meta_description][1]' => 'meta description 1',
+            'product[seo][link_rewrite][1]' => 'link-rewrite-1',
+            'product[seo][redirect_option][type]' => RedirectType::TYPE_NOT_FOUND,
+            'product[seo][tags][1]' => 'tag 1, tag 2',
         ];
 
         $this->editEntityFromPage(['productId' => $productId], $formData);
@@ -143,9 +197,52 @@ class ProductControllerTest extends FormGridControllerTestCase
         // Then check that it was correctly updated
         // Price is reformatted with 6 digits
         $expectedFormData = [
+            'product[header][type]' => ProductType::TYPE_STANDARD,
+            'product[header][initial_type]' => ProductType::TYPE_STANDARD,
             'product[header][name][1]' => self::TEST_NAME,
-            'product[stock][quantities][delta_quantity][quantity]' => self::TEST_QUANTITY,
-            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_PRICE,
+            'product[header][cover_thumbnail]' => 'http://myshop.com/img/p/en-default-cart_default.jpg',
+            'product[header][active]' => true,
+            'product[description][description][1]' => 'description 1',
+            'product[description][description_short][1]' => 'description short 1',
+            'product[description][manufacturer]' => 2,
+            'product[details][references][mpn]' => 'mpn',
+            'product[details][references][upc]' => '72527273070',
+            'product[details][references][ean_13]' => '978020137962',
+            'product[details][references][isbn]' => '9781234567897',
+            'product[details][references][reference]' => 'reference1',
+            'product[details][show_condition]' => true,
+            'product[details][condition]' => ProductCondition::NEW,
+            'product[shipping][dimensions][width]' => 10.4,
+            'product[shipping][dimensions][height]' => 10.2,
+            'product[shipping][dimensions][depth]' => 5.5,
+            'product[shipping][dimensions][weight]' => 2,
+            'product[shipping][additional_shipping_cost]' => 20.4,
+            'product[shipping][delivery_time_note_type]' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+            'product[shipping][delivery_time_notes][in_stock][1]' => 'in stock notes1',
+            'product[shipping][delivery_time_notes][out_of_stock][1]' => 'out of stock notes1',
+            'product[options][visibility][visibility]' => ProductVisibility::VISIBLE_IN_CATALOG,
+            'product[options][visibility][available_for_order]' => true,
+            'product[options][visibility][show_price]' => true,
+            'product[options][visibility][online_only]' => false,
+            'product[stock][quantities][delta_quantity][delta]' => 0,
+            'product[stock][quantities][delta_quantity][quantity]' => 987,
+            'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
+            'product[stock][options][stock_location]' => 'test stock location',
+            'product[stock][availability][out_of_stock_type]' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            'product[stock][availability][available_now_label][1]' => 'Available now',
+            'product[stock][availability][available_later_label][1]' => 'Available later',
+            'product[stock][availability][available_date]' => '2022-11-11',
+            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
+            'product[pricing][retail_price][tax_rules_group_id]' => 1,
+            // tax rules group with id 1 value is 4%, so tax incl = retail_price_tax_excluded + (retail_price_tax_excluded*0.04)
+            'product[pricing][retail_price][price_tax_included]' => 91.208,
+            'product[pricing][on_sale]' => false,
+            'product[pricing][wholesale_price]' => 30.5,
+            'product[seo][meta_title][1]' => 'meta title 1',
+            'product[seo][meta_description][1]' => 'meta description 1',
+            'product[seo][link_rewrite][1]' => 'link-rewrite-1',
+            'product[seo][redirect_option][type]' => RedirectType::TYPE_NOT_FOUND,
+            'product[seo][tags][1]' => 'tag 1,tag 2',
         ];
         $this->assertFormValuesFromPage(
             ['productId' => $productId],
@@ -179,8 +276,8 @@ class ProductControllerTest extends FormGridControllerTestCase
                 'product[quantity][max_field]' => self::TEST_QUANTITY,
             ],
             [
-                'product[final_price_tax_excluded][min_field]' => self::TEST_PRICE,
-                'product[final_price_tax_excluded][max_field]' => self::TEST_PRICE,
+                'product[final_price_tax_excluded][min_field]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
+                'product[final_price_tax_excluded][max_field]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
             ],
         ];
 
@@ -225,7 +322,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     protected function getCreateSubmitButtonSelector(): string
     {
-        return 'product_create';
+        return 'create_product_create';
     }
 
     /**

@@ -40,18 +40,19 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       thumbnail: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
     },
     computed: {
       displayThumb(): boolean {
-        return !!this.thumbnail;
+        return this.thumbnail === '' ? false : !!this.thumbnail;
       },
     },
   });

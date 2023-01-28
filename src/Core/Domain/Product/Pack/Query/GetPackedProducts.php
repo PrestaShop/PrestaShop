@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Retrieves product from a pack
@@ -36,23 +38,48 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class GetPackedProducts
 {
     /**
-     * @var ProductId
+     * @var PackId
      */
     private $packId;
 
     /**
-     * @param int $packId id of product which represents the pack
+     * @var LanguageId
      */
-    public function __construct(int $packId)
+    protected $languageId;
+
+    /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    public function __construct(int $packId, int $languageId, ShopConstraint $shopConstraint)
     {
-        $this->packId = new ProductId($packId);
+        $this->packId = new PackId($packId);
+        $this->languageId = new LanguageId($languageId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
-     * @return ProductId
+     * @return PackId
      */
-    public function getPackId(): ProductId
+    public function getPackId(): PackId
     {
         return $this->packId;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

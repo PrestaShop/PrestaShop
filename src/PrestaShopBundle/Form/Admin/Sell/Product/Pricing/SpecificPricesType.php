@@ -30,9 +30,13 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SpecificPricesType extends TranslatorAwareType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -47,5 +51,16 @@ class SpecificPricesType extends TranslatorAwareType
                 'icon' => 'add_circle',
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/specific_prices.html.twig',
+        ]);
     }
 }

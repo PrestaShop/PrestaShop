@@ -62,6 +62,25 @@ class ModuleTest extends TestCase
     }
 
     /**
+     * Check if html in trans is escaped when the _raw parameter is used
+     *
+     * @dataProvider providerModulesOnDisk
+     *
+     * @param string $moduleName the module name
+     */
+    public function testTrans(string $moduleName): void
+    {
+        $module = Module::getInstanceByName($moduleName);
+        $transMethod = new \ReflectionMethod($module, 'trans');
+        $transMethod->setAccessible(true);
+        $trans = $transMethod->invoke($module, '<a href="test">%d Succesful deletion "%s"</a>', ['_raw' => true, 10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
+
+        $trans = $transMethod->invoke($module, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $this->assertEquals('&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;', $trans);
+    }
+
+    /**
      * @dataProvider providerModulesOnDisk
      * Note: improves module list fixtures in order to cancel any override.
      *

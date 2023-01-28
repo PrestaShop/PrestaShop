@@ -144,7 +144,8 @@
 {%- block number_widget -%}
   {%- set type = type|default('text') -%}
   <div class="input-group">
-    {{- block('form_widget_simple') -}}
+    {{- block('form_unit_prepend') -}}
+    <div class="w-100">{{- block('form_widget_simple') -}}</div>
     {{- block('form_unit') -}}
   </div>
   {{ block('form_help') }}
@@ -153,6 +154,7 @@
 {%- block integer_widget -%}
   {%- set type = type|default('number') -%}
   <div class="input-group">
+    {{- block('form_unit_prepend') -}}
     {{- block('form_widget_simple') -}}
     {{- block('form_unit') -}}
   </div>
@@ -160,9 +162,31 @@
 {%- endblock integer_widget -%}
 
 {% block form_unit %}
-  {% if form.vars.unit is defined %}
+  {% if form.vars.unit is defined and not form.vars.prepend_unit %}
     <div class="input-group-append">
       <span class="input-group-text">{{ form.vars.unit }}</span>
     </div>
   {% endif %}
 {% endblock form_unit %}
+
+{% block form_unit_prepend %}
+  {% if form.vars.unit is defined and form.vars.prepend_unit %}
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.vars.unit }}</span>
+    </div>
+  {% endif %}
+{% endblock form_unit_prepend %}
+
+{% block amount_currency_widget %}
+  <div class="input-group">
+    <input id="{{ form.amount.vars.id }}" type="text" class="form-control" name="{{ form.amount.vars.full_name }}" required>
+    <div class="input-group-append">
+      {% if form.amount.vars.unit is defined %}
+        <span class="input-group-text">{{ form.amount.vars.unit }}</span>
+        {{ form_widget(form.id_currency) }}
+      {% else %}
+        {{ form_widget(form.id_currency, {'attr': {'class': 'form-control'}}) }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

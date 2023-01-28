@@ -93,6 +93,7 @@ let fillTpl = function (
     if (undefined === tpl) {
       return;
     }
+    const router = new Router();
 
     /* eslint-disable max-len */
     eltAppendTo.children(GlobalMap.notifications.element).append(
@@ -117,15 +118,21 @@ let fillTpl = function (
         .replace(/_status_/g, value.status)
         .replace(
           /order_url/g,
-          `${window.baseAdminDir}index.php?tab=AdminOrders&token=${window.tokenAdminOrders}&vieworder&id_order=${value.id_order}`,
+          value.id_order ? router.generate('admin_orders_view', {
+            orderId: parseInt(value.id_order, 10),
+          }) : '',
         )
         .replace(
           /customer_url/g,
-          `${window.baseAdminDir}index.php?tab=AdminCustomers&token=${window.tokenAdminCustomers}&viewcustomer&id_customer=${value.id_customer}`,
+          value.id_customer ? router.generate('admin_customers_view', {
+            customerId: parseInt(value.id_customer, 10),
+          }) : '',
         )
         .replace(
           /message_url/g,
-          `${window.baseAdminDir}index.php?tab=AdminCustomerThreads&token=${window.tokenAdminCustomerThreads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`,
+          value.id_customer_thread ? router.generate('admin_customer_threads_view', {
+            customerThreadId: parseInt(value.id_customer_thread, 10),
+          }) : '',
         ),
     );
     /* eslint-ensable max-len */

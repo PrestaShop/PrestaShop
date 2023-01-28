@@ -38,16 +38,21 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
+use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Shop;
 use Smarty;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
 
@@ -85,6 +90,27 @@ class AdminControllerTest extends TestCase
     protected function tearDown(): void
     {
         ServiceLocator::setServiceContainerInstance($this->savedContainer);
+    }
+
+    /**
+     * Check if html in trans is not escaped when the _raw parameter is used
+     *
+     * @dataProvider getControllersClasses
+     *
+     * @param string $controllerClass
+     *
+     * @return void
+     */
+    public function testTrans(string $controllerClass): void
+    {
+        $testedController = new $controllerClass();
+        $transMethod = new \ReflectionMethod($testedController, 'trans');
+        $transMethod->setAccessible(true);
+        $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', ['_raw' => true, 10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
+
+        $trans = $transMethod->invoke($testedController, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $this->assertEquals('&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;', $trans);
     }
 
     /**
@@ -249,14 +275,26 @@ class AdminControllerTest extends TestCase
         $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->getMock();
         $mockContainerBuilder->method('get')
             ->willReturnCallback(function (string $param) {
-                if ($param == Controller::SERVICE_LOCALE_REPOSITORY) {
+                if ($param === Controller::SERVICE_LOCALE_REPOSITORY) {
                     return $this->getMockLocaleRepository();
                 }
-                if ($param == 'prestashop.core.admin.multistore') {
+                if ($param === 'prestashop.core.admin.multistore') {
                     return $this->getMockMultistoreController();
                 }
-                if ($param == 'prestashop.adapter.multistore_feature') {
+                if ($param === 'prestashop.adapter.multistore_feature') {
                     return $this->getMockFeatureInterface();
+                }
+                if ($param === 'prestashop.user_provider') {
+                    return $this->getMockedUserProvider();
+                }
+                if ($param === 'security.csrf.token_manager') {
+                    return $this->getMockedCsrfTokenManager();
+                }
+                if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
+                    return $this->getMockedAvifExtensionChecker();
+                }
+                if ($param === 'prestashop.core.admin.feature_flag.repository') {
+                    return $this->getMockedFeatureFlagRepository();
                 }
             });
 
@@ -327,6 +365,27 @@ class AdminControllerTest extends TestCase
         return $mockMultistoreController;
     }
 
+    private function getMockedAvifExtensionChecker(): AvifExtensionChecker
+    {
+        $mockAvifExtensionChecker = $this->getMockBuilder(AvifExtensionChecker::class)
+            ->getMock();
+
+        $mockAvifExtensionChecker->method('isAvailable')->willReturn(true);
+
+        return $mockAvifExtensionChecker;
+    }
+
+    private function getMockedFeatureFlagRepository(): FeatureFlagRepository
+    {
+        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
+
+        return $mockFeatureFlagRepository;
+    }
+
     private function getMockNumberSpecification(): NumberSpecification
     {
         $mockNumberSpecification = $this->getMockBuilder(NumberSpecification::class)->disableOriginalConstructor()->getMock();
@@ -366,5 +425,24 @@ class AdminControllerTest extends TestCase
         $mockMockFeatureInterface->method('isUsed')->willReturn(false);
 
         return $mockMockFeatureInterface;
+    }
+
+    private function getMockedUserProvider(): UserProvider
+    {
+        $userProvider = $this->createMock(UserProvider::class);
+        $userProvider->method('getUsername')->willReturn('testUser');
+
+        return $userProvider;
+    }
+
+    private function getMockedCsrfTokenManager(): CsrfTokenManager
+    {
+        $mockedCrfToken = $this->createMock(CsrfToken::class);
+        $mockedCrfToken->method('getValue')->willReturn('mockedToken');
+
+        $tokenManager = $this->createMock(CsrfTokenManager::class);
+        $tokenManager->method('getToken')->withAnyParameters()->willReturn($mockedCrfToken);
+
+        return $tokenManager;
     }
 }

@@ -1,6 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices-ecotax
 @restore-products-before-feature
-@update-product-prices
 @update-prices-ecotax
 Feature: Update product price fields from Back Office (BO).
   As a BO user I want to be able to update product fields associated with price.
@@ -24,7 +23,7 @@ Feature: Update product price fields from Back Office (BO).
     And I identify tax rules group named "US-KS Rate (5.3%)" as "us-ks-tax-rate"
 
   Scenario: I set ecotax value on a product it should impact its price tax included (no tax for ecotax)
-    When I update product "ecoProduct" prices with following information:
+    When I update product "ecoProduct" with following values:
       | price              | 51.42           |
       | ecotax             | 8.56            |
       | tax rules group    | US-AL Rate (4%) |
@@ -47,7 +46,7 @@ Feature: Update product price fields from Back Office (BO).
     Given I add product "ecoUnitProduct" with following information:
       | name[en-US] | beer machine |
       | type        | standard     |
-    When I update product "ecoUnitProduct" prices with following information:
+    When I update product "ecoUnitProduct" with following values:
       | price              | 0.00           |
       | ecotax             | 1.00           |
     Then product ecoUnitProduct should have following prices information:
@@ -67,7 +66,7 @@ Feature: Update product price fields from Back Office (BO).
       | ecotax_tax_included | 1.053 |
       | unit_price          | 0.0   |
       | unit_price_ratio    | 0.0   |
-    When I update product "ecoUnitProduct" prices with following information:
+    When I update product "ecoUnitProduct" with following values:
       | unit_price | 10 |
     Then product ecoUnitProduct should have following prices information:
       | price               | 0.00  |
@@ -79,7 +78,7 @@ Feature: Update product price fields from Back Office (BO).
       | unit_price_ratio    | 0.1   |
 
   Scenario: I set ecotax value on a product but the tax is disabled, the ecotax should be applied but without taxes
-    When I update product "ecoProduct" prices with following information:
+    When I update product "ecoProduct" with following values:
       | price              | 51.42           |
       | ecotax             | 8.56            |
       | tax rules group    | US-AL Rate (4%) |

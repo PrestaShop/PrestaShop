@@ -40,12 +40,14 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
 use State;
 use Tax;
+use TaxCalculator;
 use TaxRule;
 use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Resources\Resetter\TaxesResetter;
 
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
@@ -62,13 +64,27 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @BeforeFeature @restore-taxes-before-feature
+     */
+    public static function restoreTaxesTablesBeforeFeature(): void
+    {
+        TaxesResetter::resetTaxes();
+    }
+
+    /**
+     * @AfterFeature @restore-taxes-after-feature
+     */
+    public static function restoreTaxesTablesAfterFeature(): void
+    {
+        TaxesResetter::resetTaxes();
+    }
+
+    /**
      * @When I add new tax :taxReference with following properties:
      */
     public function createTax(string $taxReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
-
-        $this->createTaxUsingCommand($taxReference, $data);
+        $this->createTaxUsingCommand($taxReference, $table->getRowsHash());
     }
 
     /**
@@ -277,9 +293,36 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxRule = new TaxRule();
         $taxRule->id_tax = $tax->id;
         $taxRule->id_tax_rules_group = $taxRulesGroup->id;
-        $taxRule->behavior = 1;
+        $taxRule->behavior = TaxCalculator::ONE_TAX_ONLY_METHOD;
         $taxRule->id_country = Country::getByIso($data['country']);
         $taxRule->id_state = isset($data['state']) ? State::getIdByIso($data['state']) : 0;
         $taxRule->save();
+    }
+
+    /**
+     * @Then I add the tax rule :taxReference for tax rule group :taxGroupReference:
+     */
+    public function addTaxRuleToTaxRulesGroup(string $taxGroupReference, string $taxReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $taxGroupId = SharedStorage::getStorage()->get($taxGroupReference);
+
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxRule = new TaxRule();
+        $taxRule->id_tax = $tax->id;
+        $taxRule->id_tax_rules_group = $taxGroupId;
+        $taxRule->behavior = TaxCalculator::ONE_TAX_ONLY_METHOD;
+        $taxRule->id_country = Country::getByIso($data['country']);
+        $taxRule->id_state = isset($data['state']) ? State::getIdByIso($data['state']) : 0;
+        $taxRule->save();
+    }
+
+    /**
+     * @Then I delete tax rules that has tax :taxReference:
+     */
+    public function deleteTaxRuleFromTaxRulesGroup(string $taxReference)
+    {
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        TaxRule::deleteTaxRuleByIdTax($tax->id);
     }
 }

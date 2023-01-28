@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
+import {App, createApp} from 'vue';
 import Permission from './permission.vue';
 
 const {$} = window;
@@ -31,7 +31,7 @@ const {$} = window;
  * Vue component displaying a permission tree.
  */
 class PermissionApp {
-  vm?: Vue;
+  vm?: App;
 
   constructor(
     profileId: string,
@@ -39,28 +39,13 @@ class PermissionApp {
     profilePermissions: Record<string, any>,
     employeePermissions: string,
   ) {
+    // If the selector cannot be found, we do not load the Vue app
     if ($(target).length === 0) {
       return;
     }
 
-    const template = `<permission
-      :canEdit="canEdit"
-      :employee-permissions="employeePermissions"
-      :messages="messages"
-      :permission-key="permissionKey"
-      :permissions="permissions"
-      :profile-id="profileId"
-      :profile-permissions="profilePermissions"
-      :title="title"
-      :empty-data="emptyData"
-      :types="types"
-      :update-url="updateUrl" />`;
-
-    // If the selector cannot be found, we do not load the Vue app
-    this.vm = new Vue({
-      el: target,
-      template,
-      data: {
+    this.vm = createApp(Permission, {
+      data: () => ({
         profileId,
         permissionKey,
         profilePermissions,
@@ -72,11 +57,10 @@ class PermissionApp {
         title: $(target).data('title'),
         emptyData: $(target).data('empty'),
         updateUrl: $(target).data('update-url'),
-      },
-      components: {
-        Permission,
-      },
+      }),
     });
+
+    this.vm.mount(target);
   }
 }
 

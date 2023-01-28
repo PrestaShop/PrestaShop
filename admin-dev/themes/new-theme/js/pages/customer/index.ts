@@ -35,7 +35,6 @@ import SubmitGridExtension from '@components/grid/extension/submit-grid-action-e
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import LinkableItem from '@components/linkable-item';
-import ChoiceTable from '@components/choice-table';
 import DeleteCustomersBulkActionExtension
   from '@components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
@@ -45,6 +44,7 @@ import FiltersSubmitButtonEnablerExtension
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
+import CustomerFormMap from '@pages/customer/customer-form-map';
 
 const {$} = window;
 
@@ -76,9 +76,6 @@ $(() => {
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  // needed for "Group access" input in Add/Edit customer forms
-  new ChoiceTable();
-
   // in customer view page
   // there are a lot of tables
   // where you click any row
@@ -89,6 +86,9 @@ $(() => {
 
   // Scroll to the block
   scrollToBlock();
+
+  // Required fields : Display alert for optin checkbox
+  $(CustomerFormMap.requiredFieldsFormCheckboxOptin).on('click', () => handleRequiredFieldsFormCheckboxOptin());
 
   function scrollToBlock(): void {
     const documentURL = new URL(document.URL);
@@ -126,5 +126,12 @@ $(() => {
 
     // Scroll to the block
     window.scroll(0, positionTop);
+  }
+
+  function handleRequiredFieldsFormCheckboxOptin(): void {
+    $(CustomerFormMap.requiredFieldsFormAlertOptin).toggleClass(
+      'd-none',
+      !$(CustomerFormMap.requiredFieldsFormCheckboxOptin).is(':checked'),
+    );
   }
 });

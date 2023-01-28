@@ -255,7 +255,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $this->getCommandBus()->handle(
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
-        } catch (OrderException | OrderNotFoundException $e) {
+        } catch (OrderException|OrderNotFoundException $e) {
             $this->setLastException($e);
         }
     }

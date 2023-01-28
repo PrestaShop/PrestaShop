@@ -46,9 +46,8 @@ export default class TagsRenderer {
     this.listenTagRemoval();
   }
 
-  public render(categories: Array<Category>, defaultCategoryId: number): void {
+  public render(categories: Array<Category>): void {
     this.container.innerHTML = '';
-
     const tagTemplate = this.container.dataset.prototype;
     const {prototypeName} = this.container.dataset;
 
@@ -70,8 +69,8 @@ export default class TagsRenderer {
 
         const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn) as HTMLElement;
 
-        if (category.id === defaultCategoryId) {
-          // don't show the tag removal element for main category
+        // don't show the tag removal element when it is the last category
+        if (categories.length === 1) {
           tagRemoveBtn.classList.add('d-none');
         } else {
           tagRemoveBtn.classList.remove('d-none');
@@ -80,10 +79,19 @@ export default class TagsRenderer {
         const namePreviewElement = frag.querySelector(ProductCategoryMap.categoryNamePreview);
 
         if (namePreviewElement) {
-          namePreviewElement.innerHTML = category.name;
+          namePreviewElement.innerHTML = category.displayName;
 
-          const nameInput = frag.querySelector(ProductCategoryMap.categoryNameInput) as HTMLInputElement;
+          const nameInput = frag.querySelector<HTMLInputElement>(ProductCategoryMap.categoryNameInput)!;
+          const namePreviewInput = frag.querySelector<HTMLInputElement>(ProductCategoryMap.namePreviewInput)!;
+
+          if (!nameInput || !namePreviewInput) {
+            // eslint-disable-next-line max-len
+            console.error(`Missing ${ProductCategoryMap.categoryNameInput} or ${ProductCategoryMap.namePreviewInput} preview input`);
+            return;
+          }
+
           nameInput.value = category.name;
+          namePreviewInput.value = category.displayName;
         }
 
         this.container.append(frag);

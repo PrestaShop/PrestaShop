@@ -31,12 +31,12 @@ class CartRuleCore extends ObjectModel
 {
     /* Filters used when retrieving the cart rules applied to a cart of when calculating the value of a reduction */
 
-    const FILTER_ACTION_ALL = 1;
-    const FILTER_ACTION_SHIPPING = 2;
-    const FILTER_ACTION_REDUCTION = 3;
-    const FILTER_ACTION_GIFT = 4;
-    const FILTER_ACTION_ALL_NOCAP = 5;
-    const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
+    public const FILTER_ACTION_ALL = 1;
+    public const FILTER_ACTION_SHIPPING = 2;
+    public const FILTER_ACTION_REDUCTION = 3;
+    public const FILTER_ACTION_GIFT = 4;
+    public const FILTER_ACTION_ALL_NOCAP = 5;
+    public const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 
     /**
      * This variable controls that a free gift is offered only once, even when multi-shippping is activated
@@ -175,7 +175,7 @@ class CartRuleCore extends ObjectModel
     public function add($autodate = true, $null_values = false)
     {
         if (!$this->reduction_currency) {
-            $this->reduction_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+            $this->reduction_currency = Currency::getDefaultCurrencyId();
         }
 
         if (!parent::add($autodate, $null_values)) {
@@ -202,7 +202,7 @@ class CartRuleCore extends ObjectModel
         Cache::clean('getContextualValue_' . $this->id . '_*');
 
         if (!$this->reduction_currency) {
-            $this->reduction_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+            $this->reduction_currency = Currency::getDefaultCurrencyId();
         }
 
         if (!parent::update($null_values)) {
@@ -1314,12 +1314,7 @@ class CartRuleCore extends ObjectModel
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                             $price = $product['price'];
                             if ($use_tax) {
-                                $infos = Product::getTaxesInformations($product, $context);
-                                $tax_rate = $infos['rate'] / 100;
-                                // As the price is tax excluded but ecotax included, we need to substract the ecotax before getting the price tax included
-                                $price -= $product['ecotax'];
-                                $price *= (1 + $tax_rate);
-                                $price += $product['ecotax'];
+                                $price = $product['price_without_reduction'];
                             }
 
                             $selected_products_reduction += $price * $product['cart_quantity'];

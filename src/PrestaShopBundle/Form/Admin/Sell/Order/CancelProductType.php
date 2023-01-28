@@ -62,6 +62,7 @@ class CancelProductType extends TranslatorAwareType
                     'required' => false,
                     'data' => 0,
                     'scale' => 0,
+                    'unit' => '/ ' . $product->getQuantity(),
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), TextType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],

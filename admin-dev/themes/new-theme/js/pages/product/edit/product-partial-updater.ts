@@ -40,39 +40,76 @@ const {$} = window;
  * modified by the user.
  */
 export default class ProductPartialUpdater {
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  $productForm: JQuery;
+  private $productForm: JQuery;
 
-  $productFormSubmitButton: JQuery;
+  private $productFormSubmitButton: JQuery;
 
-  initialData: Record<string, any>;
+  private $productFormPreviewButton: JQuery;
+
+  private $productFormDuplicateButton: JQuery;
+
+  private $productFormNewProductButton: JQuery;
+
+  private $productFormGoToCatalogButton: JQuery;
+
+  private $productFormCancelButton: JQuery;
+
+  private initialData: Record<string, any>;
+
+  private listEditionMode: boolean = false;
 
   /**
    * @param eventEmitter {EventEmitter}
    * @param $productForm {JQuery}
    * @param $productFormSubmitButton {JQuery}
+   * @param $productFormPreviewButton {JQuery}
+   * @param $productFormDuplicateButton {JQuery}
+   * @param $productFormNewProductButton {JQuery}
+   * @param $productFormGoToCatalogButton {JQuery}
+   * @param $productFormCancelButton {JQuery}
    */
-  constructor(eventEmitter: EventEmitter, $productForm: JQuery, $productFormSubmitButton: JQuery) {
+  constructor(
+    eventEmitter: EventEmitter,
+    $productForm: JQuery,
+    $productFormSubmitButton: JQuery,
+    $productFormPreviewButton: JQuery,
+    $productFormDuplicateButton: JQuery,
+    $productFormNewProductButton: JQuery,
+    $productFormGoToCatalogButton: JQuery,
+    $productFormCancelButton: JQuery,
+  ) {
     this.eventEmitter = eventEmitter;
     this.$productForm = $productForm;
     this.$productFormSubmitButton = $productFormSubmitButton;
+    this.$productFormPreviewButton = $productFormPreviewButton;
+    this.$productFormDuplicateButton = $productFormDuplicateButton;
+    this.$productFormNewProductButton = $productFormNewProductButton;
+    this.$productFormGoToCatalogButton = $productFormGoToCatalogButton;
+    this.$productFormCancelButton = $productFormCancelButton;
     this.initialData = {};
+
+    this.watch();
   }
 
   /**
    * This the public method you need to use to start this component
    * ex: new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
    */
-  watch(): void {
+  private watch(): void {
     // Avoid submitting form when pressing Enter
     this.$productForm.keypress((e) => e.which !== 13);
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit(() => this.updatePartialForm());
     // 'dp.change' event allows tracking datepicker input changes
-    this.$productForm.on('keyup change dp.change', ':input', () => this.updateSubmitButtonState());
-    this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateSubmitButtonState());
+    this.$productForm.on('keyup change dp.change', ':input', () => this.updateFooterButtonStates());
+    this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateFooterButtonStates());
+    this.eventEmitter.on(ProductEventMap.combinations.listEditionMode, (editionMode) => {
+      this.listEditionMode = editionMode;
+      this.updateFooterButtonStates();
+    });
 
     this.watchCustomizations();
     this.watchCategories();
@@ -85,8 +122,8 @@ export default class ProductPartialUpdater {
    * @private
    */
   private watchCustomizations(): void {
-    this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateSubmitButtonState());
-    this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateFooterButtonStates());
+    this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateFooterButtonStates());
   }
 
   /**
@@ -95,7 +132,7 @@ export default class ProductPartialUpdater {
    * @private
    */
   private watchCategories(): void {
-    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.updateFooterButtonStates());
   }
 
   /**
@@ -105,7 +142,7 @@ export default class ProductPartialUpdater {
    */
   private initFormattedTextarea(): void {
     this.eventEmitter.on('tinymceEditorSetup', (event) => {
-      event.editor.on('change', () => this.updateSubmitButtonState());
+      event.editor.on('change', () => this.updateFooterButtonStates());
     });
   }
 
@@ -186,9 +223,31 @@ export default class ProductPartialUpdater {
    *
    * @private
    */
-  private updateSubmitButtonState(): void {
+  private updateFooterButtonStates(): void {
     const updatedData = this.getUpdatedFormData();
-    this.$productFormSubmitButton.prop('disabled', updatedData === null);
+
+    if (this.listEditionMode) {
+      this.$productFormSubmitButton.prop('disabled', true);
+      this.$productFormCancelButton.addClass('disabled');
+      this.$productFormGoToCatalogButton.addClass('disabled');
+      this.$productFormPreviewButton.addClass('disabled');
+      this.$productFormDuplicateButton.addClass('disabled');
+      this.$productFormNewProductButton.addClass('disabled');
+    } else if (updatedData === null) {
+      this.$productFormSubmitButton.prop('disabled', true);
+      this.$productFormCancelButton.addClass('disabled');
+      this.$productFormGoToCatalogButton.removeClass('disabled');
+      this.$productFormPreviewButton.removeClass('disabled');
+      this.$productFormDuplicateButton.removeClass('disabled');
+      this.$productFormNewProductButton.removeClass('disabled');
+    } else {
+      this.$productFormSubmitButton.prop('disabled', false);
+      this.$productFormCancelButton.removeClass('disabled');
+      this.$productFormGoToCatalogButton.addClass('disabled');
+      this.$productFormPreviewButton.addClass('disabled');
+      this.$productFormDuplicateButton.addClass('disabled');
+      this.$productFormNewProductButton.addClass('disabled');
+    }
   }
 
   /**

@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
@@ -40,12 +39,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\BulkCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -76,9 +80,11 @@ class CombinationController extends FrameworkBundleAdminController
         try {
             $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
         } catch (CombinationNotFoundException $e) {
-            return $this->render('@PrestaShop/Admin/Exception/not_found.html.twig', [
-                'errorMessage' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ]);
+            return $this->render(
+                '@PrestaShop/Admin/Sell/Catalog/Product/Combination/not_found.html.twig',
+                [],
+                new Response('', Response::HTTP_NOT_FOUND)
+            );
         }
 
         try {
@@ -105,6 +111,110 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param string $languageCode
+     *
+     * @return JsonResponse
+     */
+    public function searchCombinationProductsAction(
+        Request $request,
+        string $languageCode
+    ): JsonResponse {
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $language = $langRepository->getOneByLocaleOrIsoCode($languageCode);
+        if (null === $language) {
+            return $this->json([
+                'message' => sprintf(
+                    'Invalid language code %s was used which matches no existing language in this shop.',
+                    $languageCode
+                ),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
+        if (empty($shopId)) {
+            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+        }
+
+        try {
+            /** @var CombinationForAssociation[] $combinationProducts */
+            $combinationProducts = $this->getQueryBus()->handle(new SearchCombinationsForAssociation(
+                $request->get('query', ''),
+                $language->getId(),
+                (int) $shopId,
+                $request->get('filters', []),
+                (int) $request->get('limit', 20)
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($combinationProducts)) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($this->formatCombinationProductsForAssociation($combinationProducts));
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $productId
+     * @param int|null $shopId
+     * @param int|null $languageId
+     *
+     * @return JsonResponse
+     */
+    public function searchProductCombinationsAction(
+        Request $request,
+        int $productId,
+        ?int $shopId,
+        ?int $languageId
+    ): JsonResponse {
+        $searchPhrase = $request->query->get('q', '');
+        $shopConstraint = $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+
+        /** @var ProductCombinationsCollection $productCombinationsCollection */
+        $productCombinationsCollection = $this->getQueryBus()->handle(new SearchProductCombinations(
+            $productId,
+            $languageId ?: $this->getContextLangId(),
+            $shopConstraint,
+            $searchPhrase,
+            $request->query->getInt('limit', SearchProductCombinations::DEFAULT_RESULTS_LIMIT)
+        ));
+
+        return $this->json(['combinations' => $productCombinationsCollection->getProductCombinations()]);
+    }
+
+    /**
+     * @param CombinationForAssociation[] $combinationsForAssociation
+     *
+     * @return array<array<string, mixed>>
+     */
+    protected function formatCombinationProductsForAssociation(array $combinationsForAssociation): array
+    {
+        $productsData = [];
+        foreach ($combinationsForAssociation as $productForAssociation) {
+            $productsData[] = [
+                'product_id' => $productForAssociation->getProductId(),
+                'unique_identifier' => $productForAssociation->getProductId() . '_' . $productForAssociation->getCombinationId(),
+                'name' => $productForAssociation->getName(),
+                'reference' => $productForAssociation->getReference(),
+                'combination_id' => $productForAssociation->getCombinationId(),
+                'image' => $productForAssociation->getImageUrl(),
+                'quantity' => 1,
+            ];
+        }
+
+        return $productsData;
+    }
+
+    /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $productId
@@ -115,6 +225,7 @@ class CombinationController extends FrameworkBundleAdminController
     {
         $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], [
             'product_id' => $productId,
+            'country_id' => $this->get('prestashop.adapter.legacy.context')->getCountryId(),
             'method' => Request::METHOD_PATCH,
         ]);
         $bulkCombinationForm->handleRequest($request);
@@ -149,6 +260,7 @@ class CombinationController extends FrameworkBundleAdminController
                 $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
                     'method' => Request::METHOD_PATCH,
                     'product_id' => $productId,
+                    'country_id' => $this->get('prestashop.adapter.legacy.context')->getCountryId(),
                 ]);
             } catch (CombinationNotFoundException $e) {
                 $errors[] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
@@ -202,12 +314,16 @@ class CombinationController extends FrameworkBundleAdminController
     public function paginatedListAction(int $productId): Response
     {
         $combinationsForm = $this->getCombinationListFormBuilder()->getForm();
+        $contextShop = $this->getContext()->shop;
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'productId' => $productId,
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $combinationsForm->createView(),
+            'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive(),
+            'shopName' => $contextShop->name,
+            'shopId' => $contextShop->id,
         ]);
     }
 
@@ -252,6 +368,7 @@ class CombinationController extends FrameworkBundleAdminController
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
+            ShopConstraint::shop($combinationFilters->getShopId()),
             $combinationFilters->getLimit(),
             $combinationFilters->getOffset(),
             $combinationFilters->getOrderBy(),
@@ -272,29 +389,36 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
     {
-        /** @var CombinationRepository $repository */
-        $repository = $this->get('prestashop.adapter.product.combination.repository.combination_repository');
+        $combinationIds = $this->getQueryBus()->handle(new GetCombinationIds(
+            $productId,
+            $filters->getShopConstraint(),
+            $filters->getLimit(),
+            $filters->getOffset(),
+            $filters->getOrderBy(),
+            $filters->getOrderWay(),
+            $filters->getFilters()
+        ));
 
-        $combinationIds = $repository->getCombinationIds(new ProductId($productId), $filters);
-        $data = [];
-        foreach ($combinationIds as $combinationId) {
-            $data[] = $combinationId->getValue();
-        }
-
-        return $this->json($data);
+        return $this->json(array_map(static function (CombinationId $combinationId): int {
+            return $combinationId->getValue();
+        }, $combinationIds));
     }
 
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $combinationId
+     * @param int|null $shopId
      *
      * @return JsonResponse
      */
-    public function deleteAction(int $combinationId): JsonResponse
+    public function deleteAction(int $combinationId, ?int $shopId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteCombinationCommand($combinationId));
+            $this->getCommandBus()->handle(new DeleteCombinationCommand(
+                $combinationId,
+                $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops()
+            ));
         } catch (Exception $e) {
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
@@ -309,12 +433,13 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param int $productId
      * @param Request $request
+     * @param int $productId
+     * @param int|null $shopId
      *
      * @return JsonResponse
      */
-    public function bulkDeleteAction(int $productId, Request $request): JsonResponse
+    public function bulkDeleteAction(Request $request, int $productId, ?int $shopId): JsonResponse
     {
         $combinationIds = $request->request->get('combinationIds');
         if (!$combinationIds) {
@@ -324,7 +449,11 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, json_decode($combinationIds)));
+            $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
+                $productId,
+                json_decode($combinationIds),
+                $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops()
+            ));
         } catch (Exception $e) {
             if ($e instanceof BulkCombinationException) {
                 return $this->jsonBulkErrors($e);
@@ -351,7 +480,7 @@ class CombinationController extends FrameworkBundleAdminController
         foreach ($bulkCombinationException->getBulkExceptions() as $productId => $productException) {
             $errors[] = $this->trans(
                 'Error for combination %combination_id%: %error_message%',
-                'Admin.Notification.Error',
+                'Admin.Catalog.Notification',
                 [
                     '%combination_id%' => $productId,
                     '%error_message%' => $this->getErrorMessageForException($productException, $this->getErrorMessages($productException)),
@@ -422,7 +551,11 @@ class CombinationController extends FrameworkBundleAdminController
 
         try {
             /** @var CombinationId[] $combinationsIds */
-            $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand($productId, $attributes));
+            $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
+                $productId,
+                $attributes,
+                $request->request->get('applyToAllShops') ? ShopConstraint::allShops() : ShopConstraint::shop((int) $this->getContextShopId())
+            ));
         } catch (Exception $e) {
             return $this->json([
                 'error' => [
@@ -477,7 +610,7 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @param CombinationListForEditing $combinationListForEditing
      *
-     * @return array<string, array<int, array<string,bool|int|string>>|int>
+     * @return array<string, array<int, array<string,bool|int|string|float>>|int>
      */
     private function formatListForPresentation(CombinationListForEditing $combinationListForEditing): array
     {
@@ -497,6 +630,7 @@ class CombinationController extends FrameworkBundleAdminController
                 'quantity' => $combination->getQuantity(),
                 'is_default' => $combination->isDefault(),
                 'image_url' => $combination->getImageUrl() ?: $fallbackImageUrl,
+                'eco_tax' => (string) $combination->getEcoTax(),
             ];
         }
 
@@ -508,7 +642,7 @@ class CombinationController extends FrameworkBundleAdminController
      */
     private function getFallbackImageUrl(): string
     {
-        $imageUrlFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
+        $imageUrlFactory = $this->get(ProductImagePathFactory::class);
 
         return $imageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }

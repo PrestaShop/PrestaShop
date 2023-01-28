@@ -49,6 +49,7 @@ class PaginationType extends TranslatorAwareType
                     'Products per page',
                     'Admin.Shopparameters.Feature'
                 ),
+                'help' => $this->trans('Number of products displayed per page. Default is 12', 'Admin.Shopparameters.Help'),
                 'required' => false,
             ])
             ->add('default_order_by', ChoiceType::class, [

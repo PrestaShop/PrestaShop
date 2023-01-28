@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {Grid} from '@PSTypes/grid';
+import {Grid} from '@js/types/grid';
 import GridMap from '@components/grid/grid-map';
 import Router from '../../router';
 

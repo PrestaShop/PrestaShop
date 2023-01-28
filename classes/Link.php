@@ -411,7 +411,7 @@ class LinkCore
     /**
      * Create a link to a category.
      *
-     * @param CategoryCore|array|int $category Category object (can be an ID category, but deprecated)
+     * @param CategoryCore|array|int|string $category Category object (can be an ID category, but deprecated)
      * @param string|null $alias
      * @param int|null $idLang
      * @param string|null $selectedFilters Url parameter to autocheck filters of the module blocklayered
@@ -440,9 +440,9 @@ class LinkCore
         $params = [];
         if (Validate::isLoadedObject($category)) {
             $params['id'] = $category->id;
-        } elseif (isset($category['id_category'])) {
+        } elseif (is_array($category) && isset($category['id_category'])) {
             $params['id'] = $category['id_category'];
-        } elseif (is_int($category) or ctype_digit($category)) {
+        } elseif (is_int($category) || (is_string($category) && ctype_digit($category))) {
             $params['id'] = (int) $category;
         } else {
             throw new \InvalidArgumentException('Invalid category parameter');
@@ -986,7 +986,7 @@ class LinkCore
      *
      * @return string
      */
-    public function getImageLink($name, $ids, $type = null)
+    public function getImageLink($name, $ids, $type = null, string $extension = 'jpg')
     {
         $notDefault = false;
         $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
@@ -994,12 +994,12 @@ class LinkCore
         // legacy mode or default image
         $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
         if (($psLegacyImages
-                && (file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg')))
+                && (file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.' . $extension)))
             || ($notDefault = strpos($ids, 'default') !== false)) {
             if ($this->allow && !$notDefault) {
-                $uriPath = __PS_BASE_URI__ . $ids . ($type ? '-' . $type : '') . $theme . '/' . $name . '.jpg';
+                $uriPath = __PS_BASE_URI__ . $ids . ($type ? '-' . $type : '') . $theme . '/' . $name . '.' . $extension;
             } else {
-                $uriPath = _THEME_PROD_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg';
+                $uriPath = _THEME_PROD_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.' . $extension;
             }
         } else {
             // if ids if of the form id_product-id_image, we want to extract the id_image part
@@ -1007,9 +1007,9 @@ class LinkCore
             $idImage = (isset($splitIds[1]) ? $splitIds[1] : $splitIds[0]);
             $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
             if ($this->allow) {
-                $uriPath = __PS_BASE_URI__ . $idImage . ($type ? '-' . $type : '') . $theme . '/' . $name . '.jpg';
+                $uriPath = __PS_BASE_URI__ . $idImage . ($type ? '-' . $type : '') . $theme . '/' . $name . '.' . $extension;
             } else {
-                $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . $theme . '.jpg';
+                $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . $theme . '.' . $extension;
             }
         }
 
@@ -1472,6 +1472,15 @@ class LinkCore
         $urlParameters = http_build_query($params['params']);
 
         switch ($params['entity']) {
+            case 'supplier':
+                $link = $context->link->getSupplierLink(
+                    new Supplier($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
 
@@ -1513,6 +1522,15 @@ class LinkCore
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
 
+                break;
+            case 'manufacturer':
+                $link = $context->link->getManufacturerLink(
+                    new Manufacturer($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
                 break;
             case 'manufacturerImage':
                 $link = $context->link->getManufacturerImageLink(

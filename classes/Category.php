@@ -253,6 +253,10 @@ class CategoryCore extends ObjectModel
             $changed = true;
         }
 
+        if (Category::getParentId($this->id) !== (int) $this->id_parent) {
+            $changed = true;
+        }
+
         // If the parent category was changed, we don't want to have 2 categories with the same position
         if (!isset($changed)) {
             $changed = $this->getDuplicatePosition();
@@ -632,6 +636,26 @@ class CategoryCore extends ObjectModel
         }
 
         return $categories;
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return int
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getParentId(int $categoryId): int
+    {
+        $query = (new DbQuery())
+            ->select('id_parent')
+            ->from('category')
+            ->where('id_category = ' . $categoryId)
+        ;
+
+        $id = Db::getInstance()->getValue($query);
+
+        return (int) $id;
     }
 
     /**
@@ -1287,6 +1311,10 @@ class CategoryCore extends ObjectModel
 			VALUES ' . implode(',', $row)
         );
 
+        if ($flag) {
+            Cache::clean('Product::getProductCategories_' . (int) $idNew);
+        }
+
         return $flag;
     }
 
@@ -1393,6 +1421,15 @@ class CategoryCore extends ObjectModel
         }
 
         return isset($this->name[$idLang]) ? $this->name[$idLang] : '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function resetStaticCache(): void
+    {
+        parent::resetStaticCache();
+        Cache::clean('Category::*');
     }
 
     /**
@@ -1616,7 +1653,10 @@ class CategoryCore extends ObjectModel
      */
     public function cleanGroups()
     {
-        return Db::getInstance()->delete('category_group', 'id_category = ' . (int) $this->id);
+        $result = Db::getInstance()->delete('category_group', 'id_category = ' . (int) $this->id);
+        Cache::clean($this->getGroupsCacheId());
+
+        return $result;
     }
 
     /**
@@ -1641,6 +1681,8 @@ class CategoryCore extends ObjectModel
                 Db::getInstance()->insert('category_group', ['id_category' => (int) $this->id, 'id_group' => (int) $group]);
             }
         }
+
+        Cache::clean($this->getGroupsCacheId());
     }
 
     /**
@@ -1650,7 +1692,7 @@ class CategoryCore extends ObjectModel
      */
     public function getGroups()
     {
-        $cacheId = 'Category::getGroups_' . (int) $this->id;
+        $cacheId = $this->getGroupsCacheId();
         if (!Cache::isStored($cacheId)) {
             $sql = new DbQuery();
             $sql->select('cg.`id_group`');
@@ -1659,7 +1701,7 @@ class CategoryCore extends ObjectModel
             $result = Db::getInstance()->executeS($sql);
             $groups = [];
             foreach ($result as $group) {
-                $groups[] = $group['id_group'];
+                $groups[] = (int) $group['id_group'];
             }
             Cache::store($cacheId, $groups);
 
@@ -1695,6 +1737,11 @@ class CategoryCore extends ObjectModel
      */
     public function checkAccess($idCustomer)
     {
+        // If group feature is disabled in performance configuration, we don't check anything and allow access
+        if (!Group::isFeatureActive()) {
+            return true;
+        }
+
         $cacheId = 'Category::checkAccess_' . (int) $this->id . '-' . $idCustomer . (!$idCustomer ? '-' . (int) Group::getCurrent()->id : '');
         if (!Cache::isStored($cacheId)) {
             if (!$idCustomer) {
@@ -2017,9 +2064,9 @@ class CategoryCore extends ObjectModel
     {
         foreach ($this->name as $id_lang => $name) {
             if (empty($this->link_rewrite[$id_lang])) {
-                $this->link_rewrite[$id_lang] = Tools::link_rewrite($name);
+                $this->link_rewrite[$id_lang] = Tools::str2url($name);
             } elseif (!Validate::isLinkRewrite($this->link_rewrite[$id_lang])) {
-                $this->link_rewrite[$id_lang] = Tools::link_rewrite($this->link_rewrite[$id_lang]);
+                $this->link_rewrite[$id_lang] = Tools::str2url($this->link_rewrite[$id_lang]);
             }
         }
 
@@ -2409,5 +2456,13 @@ class CategoryCore extends ObjectModel
     public function isRootCategory(): bool
     {
         return 0 === (int) $this->id_parent;
+    }
+
+    /**
+     * @return string
+     */
+    private function getGroupsCacheId(): string
+    {
+        return 'Category::getGroups_' . (int) $this->id;
     }
 }

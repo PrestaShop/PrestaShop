@@ -35,6 +35,7 @@ use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\Exception\BridgeException;
 use Smarty;
 use Symfony\Component\HttpFoundation\Response;
 use Tools;
@@ -63,34 +64,9 @@ class SmartyBridge
     private $cookie;
 
     /**
-     * @var BreadcrumbsAndTitleConfigurator
+     * @var ConfiguratorInterface[]
      */
-    private $breadcrumbsAndTitleConfigurator;
-
-    /**
-     * @var FooterConfigurator
-     */
-    private $footerConfigurator;
-
-    /**
-     * @var HeaderConfigurator
-     */
-    private $headerConfigurator;
-
-    /**
-     * @var ModalConfigurator
-     */
-    private $modalConfigurator;
-
-    /**
-     * @var NotificationsConfigurator
-     */
-    private $notificationsConfigurator;
-
-    /**
-     * @var ToolbarFlagsConfigurator
-     */
-    private $toolbarFlagsConfigurator;
+    private $configurators;
 
     /**
      * @var Configuration
@@ -99,34 +75,20 @@ class SmartyBridge
 
     /**
      * @param LegacyContext $legacyContext
-     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
-     * @param FooterConfigurator $footerConfigurator
-     * @param HeaderConfigurator $headerConfigurator
-     * @param ModalConfigurator $modalConfigurator
-     * @param NotificationsConfigurator $notificationsConfigurator
-     * @param ToolbarFlagsConfigurator $toolbarFlagsConfigurator
      * @param Configuration $configuration
+     * @param ConfiguratorInterface[] $configurators
      */
     public function __construct(
         LegacyContext $legacyContext,
-        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator,
-        FooterConfigurator $footerConfigurator,
-        HeaderConfigurator $headerConfigurator,
-        ModalConfigurator $modalConfigurator,
-        NotificationsConfigurator $notificationsConfigurator,
-        ToolbarFlagsConfigurator $toolbarFlagsConfigurator,
-        Configuration $configuration
+        Configuration $configuration,
+        iterable $configurators
     ) {
+        $this->assertConfiguratorsType($configurators);
+        $this->configurators = $configurators;
+        $this->configuration = $configuration;
         $this->smarty = $legacyContext->getSmarty();
         $this->link = $legacyContext->getContext()->link;
         $this->cookie = $legacyContext->getContext()->cookie;
-        $this->breadcrumbsAndTitleConfigurator = $breadcrumbsAndTitleConfigurator;
-        $this->footerConfigurator = $footerConfigurator;
-        $this->headerConfigurator = $headerConfigurator;
-        $this->modalConfigurator = $modalConfigurator;
-        $this->notificationsConfigurator = $notificationsConfigurator;
-        $this->toolbarFlagsConfigurator = $toolbarFlagsConfigurator;
-        $this->configuration = $configuration;
     }
 
     /**
@@ -141,13 +103,11 @@ class SmartyBridge
         ControllerConfiguration $controllerConfiguration,
         Response $response = null
     ): Response {
-        $this->breadcrumbsAndTitleConfigurator->configure($controllerConfiguration);
-        $this->modalConfigurator->configure($controllerConfiguration);
-        $this->notificationsConfigurator->configure($controllerConfiguration);
-        $this->toolbarFlagsConfigurator->configure($controllerConfiguration);
-        $this->headerConfigurator->configure($controllerConfiguration);
-        $this->footerConfigurator->configure($controllerConfiguration);
-        $this->smarty->assign($controllerConfiguration->templatesVars);
+        foreach ($this->configurators as $configurator) {
+            $configurator->configure($controllerConfiguration);
+        }
+
+        $this->smarty->assign($controllerConfiguration->templateVars);
 
         if ($response === null) {
             $response = new Response();
@@ -165,7 +125,7 @@ class SmartyBridge
      *
      * @return string
      */
-    public function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
+    private function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
     {
         $helperShop = new HelperShop();
         $this->smarty->assign([
@@ -191,20 +151,20 @@ class SmartyBridge
         $template_dirs = $this->smarty->getTemplateDir() ?: [];
 
         // Check if header/footer have been overridden
-        $dir = $this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($controllerConfiguration->folderTemplate, '\\/') . DIRECTORY_SEPARATOR;
+        $dir = $this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($controllerConfiguration->templateFolder, '\\/') . DIRECTORY_SEPARATOR;
         $module_list_dir = $this->smarty->getTemplateDir(0) . 'helpers' . DIRECTORY_SEPARATOR . 'modules_list' . DIRECTORY_SEPARATOR;
 
         $header_tpl = file_exists($dir . 'header.tpl') ? $dir . 'header.tpl' : 'header.tpl';
         $page_header_toolbar = file_exists($dir . 'page_header_toolbar.tpl') ? $dir . 'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
         $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
-        $tpl_action = $controllerConfiguration->folderTemplate . $controllerConfiguration->display . '.tpl';
+        $tpl_action = $controllerConfiguration->templateFolder . $controllerConfiguration->displayType . '.tpl';
 
         // Check if action template has been overridden
         foreach ($template_dirs as $template_dir) {
-            if (file_exists($template_dir . DIRECTORY_SEPARATOR . $tpl_action) && $controllerConfiguration->display != 'view' && $controllerConfiguration->display != 'options') {
-                if (method_exists($this, $controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->controllerNameLegacy))) {
-                    $this->{$controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->controllerNameLegacy)}();
+            if (file_exists($template_dir . DIRECTORY_SEPARATOR . $tpl_action) && $controllerConfiguration->displayType != 'view' && $controllerConfiguration->displayType != 'options') {
+                if (method_exists($this, $controllerConfiguration->displayType . Tools::toCamelCase($controllerConfiguration->legacyControllerName))) {
+                    $this->{$controllerConfiguration->displayType . Tools::toCamelCase($controllerConfiguration->legacyControllerName)}();
                 }
                 $this->smarty->assign('content', $this->smarty->fetch($tpl_action));
 
@@ -215,6 +175,10 @@ class SmartyBridge
         $template = $this->createTemplate($controllerConfiguration, $controllerConfiguration->template);
         $page = $template->fetch();
 
+        /* @see ControllerConfiguration::$errors */
+        /* @see ControllerConfiguration::$warnings */
+        /* @see ControllerConfiguration::$informations */
+        /* @see ControllerConfiguration::$confirmations */
         foreach (['errors', 'warnings', 'informations', 'confirmations'] as $type) {
             if (!is_array($controllerConfiguration->$type)) {
                 $controllerConfiguration->$type = (array) $controllerConfiguration->$type;
@@ -261,11 +225,11 @@ class SmartyBridge
      */
     private function createTemplate(ControllerConfiguration $controllerConfiguration, $templateName)
     {
-        if ($controllerConfiguration->folderTemplate) {
-            if (!$this->configuration->get('PS_DISABLE_OVERRIDES') && file_exists($this->smarty->getTemplateDir(1) . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName)) {
-                return $this->smarty->createTemplate($controllerConfiguration->folderTemplate . $templateName, $this->smarty);
-            } elseif (file_exists($this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName)) {
-                return $this->smarty->createTemplate('controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName, $this->smarty);
+        if ($controllerConfiguration->templateFolder) {
+            if (!$this->configuration->get('PS_DISABLE_OVERRIDES') && file_exists($this->smarty->getTemplateDir(1) . DIRECTORY_SEPARATOR . $controllerConfiguration->templateFolder . $templateName)) {
+                return $this->smarty->createTemplate($controllerConfiguration->templateFolder . $templateName, $this->smarty);
+            } elseif (file_exists($this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->templateFolder . $templateName)) {
+                return $this->smarty->createTemplate('controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->templateFolder . $templateName, $this->smarty);
             }
         }
 
@@ -312,5 +276,31 @@ class SmartyBridge
         }
 
         return $modalRender;
+    }
+
+    /**
+     * Validates the type of configurators
+     *
+     * @param iterable $configurators
+     *
+     * @return void
+     *
+     * @throws BridgeException
+     */
+    private function assertConfiguratorsType(iterable $configurators): void
+    {
+        foreach ($configurators as $configurator) {
+            if ($configurator instanceof ConfiguratorInterface) {
+                continue;
+            }
+
+            throw new BridgeException(
+                sprintf(
+                    '%s expected, but got %s',
+                    ConfiguratorInterface::class,
+                    var_export($configurator, true)
+                )
+            );
+        }
     }
 }

@@ -7,10 +7,10 @@
         <target>Wire payment</target>
         <note>Line: 77</note>
       </trans-unit>
-      <trans-unit id="cedc96489132776ce19ebc2751f17454">
-        <source>Accept payments by bank transfer.</source>
-        <target>Accept payments by bank transfer.</target>
-        <note>Line: 76</note>
+      <trans-unit id="7d8eb5539dc2cc45a0ca92bb5ee15210">
+        <source>Accept wire payments by displaying your account details during the checkout.</source>
+        <target>Accept wire payments by displaying your account details during the checkout.</target>
+        <note>Line: 78</note>
       </trans-unit>
       <trans-unit id="cbe0a99684b145e77f3e14174ac212e3">
         <source>Are you sure about removing these details?</source>
@@ -40,67 +40,57 @@
       <trans-unit id="8bc212f48680748479bbd322d4d73d3f">
         <source>Account details</source>
         <target>Account details</target>
-        <note>Line: 298</note>
+        <note>Line: 280</note>
       </trans-unit>
       <trans-unit id="857216dd1b374de9bf54068fcd78a8f3">
         <source>Account owner</source>
         <target>Account owner</target>
-        <note>Line: 292</note>
+        <note>Line: 274</note>
       </trans-unit>
       <trans-unit id="6b154cafbab54ba3a1e76a78c290c02a">
         <source>Such as bank branch, IBAN number, BIC, etc.</source>
         <target>Such as bank branch, IBAN number, BIC, etc.</target>
-        <note>Line: 300</note>
+        <note>Line: 282</note>
       </trans-unit>
       <trans-unit id="f9a1a1bb716cbae0503d351ea2af4b34">
         <source>Bank address</source>
         <target>Bank address</target>
-        <note>Line: 305</note>
+        <note>Line: 287</note>
       </trans-unit>
       <trans-unit id="da22c93ccb398c72070f4000cc7b59a1">
         <source>Customization</source>
         <target>Customization</target>
-        <note>Line: 318</note>
+        <note>Line: 300</note>
       </trans-unit>
       <trans-unit id="873a2778bdb25b9dcca6de640216c4a9">
         <source>Reservation period</source>
         <target>Reservation period</target>
-        <note>Line: 324</note>
+        <note>Line: 306</note>
       </trans-unit>
       <trans-unit id="120cf2b5eab7f28e5fb03b8fb7bbd07b">
         <source>Number of days the items remain reserved</source>
         <target>Number of days the items remain reserved</target>
-        <note>Line: 325</note>
+        <note>Line: 307</note>
       </trans-unit>
       <trans-unit id="6b8d5618e646b2ad407158c1da89ca0c">
         <source>Information to the customer</source>
         <target>Information to the customer</target>
-        <note>Line: 330</note>
+        <note>Line: 312</note>
       </trans-unit>
       <trans-unit id="65ed2ab0c7edcccc96fcedaa594f94c6">
         <source>Information on the bank transfer (processing time, starting of the shipping...)</source>
         <target>Information on the bank transfer (processing time, starting of the shipping...)</target>
-        <note>Line: 332</note>
+        <note>Line: 314</note>
       </trans-unit>
       <trans-unit id="9b07982b472390295e7da7d430c8ec1d">
         <source>Display the invitation to pay in the order confirmation page</source>
         <target>Display the invitation to pay in the order confirmation page</target>
-        <note>Line: 337</note>
+        <note>Line: 319</note>
       </trans-unit>
       <trans-unit id="b8a891b1e28c2049da81774493d8779c">
         <source>Your country's legislation may require you to send the invitation to pay by email only. Disabling the option will hide the invitation on the confirmation page.</source>
         <target>Your country's legislation may require you to send the invitation to pay by email only. Disabling the option will hide the invitation on the confirmation page.</target>
-        <note>Line: 340</note>
-      </trans-unit>
-      <trans-unit id="efe2bc77638ccc2f2fe662833597ef5c">
-        <source>Accept wire payments by displaying your account details during the checkout and make it easy for your customers to purchase on your store.</source>
-        <target>Accept wire payments by displaying your account details during the checkout and make it easy for your customers to purchase on your store.</target>
-        <note>Line: 70</note>
-      </trans-unit>
-      <trans-unit id="7d8eb5539dc2cc45a0ca92bb5ee15210">
-        <source>Accept wire payments by displaying your account details during the checkout.</source>
-        <target>Accept wire payments by displaying your account details during the checkout.</target>
-        <note>Line: 78</note>
+        <note>Line: 322</note>
       </trans-unit>
     </body>
   </file>

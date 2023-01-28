@@ -29,7 +29,7 @@
  */
 class PDFGeneratorCore extends TCPDF
 {
-    const DEFAULT_FONT = 'helvetica';
+    public const DEFAULT_FONT = 'helvetica';
 
     /**
      * @var string

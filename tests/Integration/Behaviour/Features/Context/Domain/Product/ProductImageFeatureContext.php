@@ -33,10 +33,20 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveCoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DummyFileUploader;
@@ -48,15 +58,20 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     private $productImageRepository;
 
+    /**
+     * @var ShopProductImagesCollection
+     */
+    private $shopProductImagesCollection;
+
     public function __construct()
     {
-        $this->productImageRepository = $this->getContainer()->get('prestashop.adapter.product.image.repository.product_image_repository');
+        $this->productImageRepository = $this->getContainer()->get(ProductImageRepository::class);
     }
 
     /**
      * @Given following image types should be applicable to products:
      */
-    public function assertProductsImageTypesExists(TableNode $tableNode)
+    public function assertProductsImageTypesExists(TableNode $tableNode): void
     {
         $dataRows = $tableNode->getColumnsHash();
         $imageTypes = $this->productImageRepository->getProductImageTypes();
@@ -71,7 +86,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $actualType = $imageTypes[$key];
             Assert::assertEquals($expectedType['name'], $actualType->name, 'Unexpected image type name');
             Assert::assertEquals($expectedType['width'], $actualType->width, 'Unexpected image type width');
-            Assert::assertEquals($expectedType['height'], $actualType->width, 'Unexpected image type height');
+            Assert::assertEquals($expectedType['height'], $actualType->height, 'Unexpected image type height');
 
             $this->getSharedStorage()->set($expectedType['reference'], (int) $actualType->id);
         }
@@ -84,68 +99,96 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @param string $fileName
      * @param string $productReference
      */
-    public function uploadImage(string $imageReference, string $fileName, string $productReference): void
+    public function uploadImageForDefaultShop(string $imageReference, string $fileName, string $productReference): void
     {
-        $pathName = DummyFileUploader::upload($fileName);
+        $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
-            $this->getSharedStorage()->get($productReference),
-            $pathName
-        ));
+    /**
+     * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for shop "([^"]*)"$/
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     * @param string $shopReference
+     *
+     * @return void
+     *
+     * @throws ShopException
+     */
+    public function uploadImageForSpecificShop(string $imageReference, string $fileName, string $productReference, string $shopReference): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, $shopConstraint);
+    }
 
-        $this->getSharedStorage()->set($imageReference, $imageId->getValue());
-
-        // Save uploaded file MD5 for future checks
-        if ($this->getSharedStorage()->exists($fileName)) {
-            return;
-        }
-
-        /** @var ProductImage $productImage */
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
-
-        $imagePath = $this->getImagePath($productImage->getImageId());
-        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
+    /**
+     * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for all shops$/
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     *
+     * @return void
+     */
+    public function uploadImageForAllShops(string $imageReference, string $fileName, string $productReference): void
+    {
+        $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, ShopConstraint::allShops());
     }
 
     /**
      * @When I update image :imageReference with following information:
-     *
-     * @param string $imageReference
-     * @param TableNode $tableNode
      */
-    public function updateImage(string $imageReference, TableNode $tableNode)
+    public function updateImageForDefaultShop(string $imageReference, TableNode $tableNode): void
     {
-        $dataRows = $this->localizeByRows($tableNode);
-        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+        $this->updateImageByShopConstraint(
+            $imageReference,
+            ShopConstraint::shop($this->getDefaultShopId()),
+            $tableNode
+        );
+    }
 
-        $command = new UpdateProductImageCommand($imageId);
-        if (isset($dataRows['file'])) {
-            $pathName = DummyFileUploader::upload($dataRows['file']);
-            $command->setFilePath($pathName);
-        }
+    /**
+     * @When I update image :imageReference with following information for shop :shop:
+     */
+    public function updateImageByShopReference(string $imageReference, string $shopReference, TableNode $tableNode): void
+    {
+        $this->updateImageByShopConstraint(
+            $imageReference,
+            ShopConstraint::shop((int) $this->getSharedStorage()->get(trim($shopReference))),
+            $tableNode
+        );
+    }
 
-        if (isset($dataRows['cover'])) {
-            $command->setIsCover(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['cover']));
-        }
-
-        if (isset($dataRows['legend'])) {
-            $command->setLocalizedLegends($dataRows['legend']);
-        }
-
-        if (isset($dataRows['position'])) {
-            $command->setPosition((int) $dataRows['position']);
-        }
-
-        $this->getCommandBus()->handle($command);
+    /**
+     * @When I update image :imageReference with following information for all shops:
+     */
+    public function updateImageForAllShops(string $imageReference, TableNode $tableNode): void
+    {
+        $this->updateImageByShopConstraint(
+            $imageReference,
+            ShopConstraint::allShops(),
+            $tableNode
+        );
     }
 
     /**
      * @Then image :imageReference should have same file as :fileName
-     *
+     */
+    public function assertImageFile(string $imageReference, string $fileName): void
+    {
+        $this->assertImageFileByShopConstraint(
+            $imageReference,
+            $fileName
+        );
+    }
+
+    /**
      * @param string $imageReference
      * @param string $fileName
      */
-    public function assertImageFile(string $imageReference, string $fileName): void
+    private function assertImageFileByShopConstraint(string $imageReference, string $fileName): void
     {
         $imageId = (int) $this->getSharedStorage()->get($imageReference);
 
@@ -171,7 +214,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @param string[] $imageReferences
      * @param TableNode $tableNode
      */
-    public function assertProductImageTypesGenerated(array $imageReferences, TableNode $tableNode)
+    public function assertProductImageTypesGenerated(array $imageReferences, TableNode $tableNode): void
     {
         $dataRows = $tableNode->getColumnsHash();
 
@@ -233,6 +276,22 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Given /^the shop "([^"]*)" should have empty image details$/
+     */
+    public function theShopShouldNotHaveAnyImageDetails(string $shopReference)
+    {
+        $shopId = (int) $this->getSharedStorage()->get(trim($shopReference));
+        Assert::assertTrue($this->shopProductImagesCollection
+            ->filter(function (ShopProductImages $shopProductImages) use ($shopId): bool {
+                return $shopProductImages->getShopId() === $shopId;
+            })
+            ->first()
+            ->getProductImages()
+            ->isEmpty()
+        );
+    }
+
+    /**
      * @param int $imageId
      *
      * @return string
@@ -264,9 +323,27 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoImages(string $productReference): void
     {
         Assert::assertEmpty(
-            $this->getProductImages($productReference),
+            $this->getProductImages($productReference, ShopConstraint::shop($this->getDefaultShopId())),
             sprintf('No images expected for product "%s"', $productReference)
         );
+    }
+
+    /**
+     * @Then product :productReference should have no images for shops :shops
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     */
+    public function assertProductHasNoImagesForShops(string $productReference, string $shopReferences): void
+    {
+        $shopIds = $this->referencesToIds($shopReferences);
+
+        foreach ($shopIds as $shopId) {
+            Assert::assertEmpty(
+                $this->getProductImages($productReference, ShopConstraint::shop($shopId)),
+                sprintf('No images expected for product "%s"', $productReference)
+            );
+        }
     }
 
     /**
@@ -284,74 +361,142 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference should have following cover :coverUrl for shops :shop
+     *
+     * @param string $productReference
+     * @param string $coverUrl
+     */
+    public function assertProductCoverForShops(string $productReference, string $coverUrl, string $shopReferences): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $productForEditing = $this->getProductForEditing($productReference, $shopId);
+            $realImageUrl = $this->getRealImageUrl($coverUrl);
+
+            Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());
+        }
+    }
+
+    /**
      * @Then product :productReference should have following images:
      *
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function assertProductImages(string $productReference, TableNode $tableNode): void
+    public function assertProductImagesForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $images = $this->getProductImages($productReference);
-        $dataRows = $this->localizeByColumns($tableNode);
+        $this->assertAllProductImages($productReference, $tableNode);
+    }
 
-        Assert::assertEquals(
-            count($images),
-            count($dataRows),
-            'Expected and actual images count does not match'
-        );
-
-        $imagesById = [];
-        foreach ($images as $image) {
-            $imagesById[$image->getImageId()] = $image;
+    /**
+     * @Given /^product "([^"]*)" should have following images for shop "([^"]*)":$/
+     * @Given /^product "([^"]*)" should have following images for shops "([^"]*)":$/
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function assertProductImagesForAllShops(string $productReference, TableNode $table, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        $shopIds = [];
+        foreach ($shopReferences as $shopReference) {
+            $shopIds[] = $this->getSharedStorage()->get(trim($shopReference));
         }
 
+        foreach ($shopIds as $shopId) {
+            $this->assertProductImagesByShopId($productReference, $table, $shopId);
+        }
+    }
+
+    /**
+     * @When /^I apply the following matrix of images for product "([^"]*)":$/
+     */
+    public function iApplyTheFollowingMatrixOfImagesForProduct(string $productReference, TableNode $table): void
+    {
+        $command = new SetProductImagesForAllShopCommand(
+            $this->getSharedStorage()->get(trim($productReference))
+        );
+        foreach ($table as $data) {
+            $command->addProductSetting(
+                new ProductImageSetting(
+                    $this->getSharedStorage()->get(trim($data['imageReference'])),
+                    array_map(
+                        function (string $shopReference): int {
+                            return $this->getSharedStorage()->get(trim($shopReference));
+                        },
+                        explode(',', $data['shopReferences'])
+                    )
+                )
+            );
+        }
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CannotRemoveCoverException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I try to get every image details for product "([^"]*)" in every shop:$/
+     */
+    public function iTryToGetEveryImageDetailsForProductInEveryShop(string $productReference): void
+    {
+        $this->shopProductImagesCollection = $this->getQueryBus()->handle(new GetShopProductImages($this->getSharedStorage()->get($productReference)));
+    }
+
+    /**
+     * @Transform table:image reference,cover,shopReference
+     *
+     * @param TableNode $tableNode
+     *
+     * @return ShopProductImagesCollection
+     */
+    public function transformShopProductImagesCollection(TableNode $tableNode): ShopProductImagesCollection
+    {
+        $dataRows = $tableNode->getColumnsHash();
+        $productImagesByShop = [];
         foreach ($dataRows as $dataRow) {
-            $rowImageId = (int) $this->getSharedStorage()->get($dataRow['image reference']);
-            if (!isset($imagesById[$rowImageId])) {
-                throw new RuntimeException(sprintf('Cannot find image %s in product images.', $dataRow['image reference']));
-            }
-            $actualImage = $imagesById[$rowImageId];
+            $shopId = (int) $this->getSharedStorage()->get(trim($dataRow['shopReference']));
+            $productImagesByShop[$shopId][] = new ShopImageAssociation(
+                (int) $this->getSharedStorage()->get(trim($dataRow['image reference'])),
+                (int) $dataRow['cover'] === 1
+            );
+        }
+
+        $shopProductImagesArray = array_map(
+            function (int $shopId, array $productImages): ShopProductImages {
+                return new ShopProductImages($shopId, ShopImageAssociationCollection::from(...$productImages));
+            },
+            array_keys($productImagesByShop),
+            $productImagesByShop
+        );
+
+        return ShopProductImagesCollection::from(...$shopProductImagesArray);
+    }
+
+    /**
+     * @Then /^I should have the followings image details:/
+     */
+    public function iShouldHaveTheFollowingsImageDetailsForShop(ShopProductImagesCollection $expectedShopProductImagesCollection)
+    {
+        foreach ($expectedShopProductImagesCollection as $expectedShopProductImage) {
+            $actualShopProductImages = $this->shopProductImagesCollection
+                ->filter(function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
+                    return $shopProductImages->getShopId() === $expectedShopProductImage->getShopId();
+                })
+                ->first();
 
             Assert::assertEquals(
-                PrimitiveUtils::castStringBooleanIntoBoolean($dataRow['is cover']),
-                $actualImage->isCover(),
-                'Unexpected cover image'
-            );
-            Assert::assertEquals(
-                $dataRow['legend'],
-                $actualImage->getLocalizedLegends(),
-                'Unexpected image legend'
-            );
-            Assert::assertEquals(
-                PrimitiveUtils::castStringIntegerIntoInteger($dataRow['position']),
-                $actualImage->getPosition(),
-                'Unexpected image position'
+                $expectedShopProductImage->getProductImages()->count(),
+                $actualShopProductImages->getProductImages()->count()
             );
 
-            $imagePath = $this->getImagePath($actualImage->getImageId());
-            if (!file_exists($imagePath)) {
-                throw new RuntimeException(sprintf('File "%s" does not exist', $imagePath));
-            }
-
-            if (empty($dataRow['image url'])) {
-                Assert::assertNull($actualImage->getImageUrl(), 'Unexpected product image');
-            } else {
-                $realImageUrl = $this->getRealImageUrl($dataRow['image url']);
-                Assert::assertEquals(
-                    $realImageUrl,
-                    $actualImage->getImageUrl(),
-                    'Unexpected product image url'
-                );
-            }
-
-            if (empty($dataRow['thumbnail url'])) {
-                Assert::assertNull($actualImage->getThumbnailUrl(), 'Unexpected product thumbnail image');
-            } else {
-                $realImageUrl = $this->getRealImageUrl($dataRow['thumbnail url']);
-                Assert::assertEquals(
-                    $realImageUrl,
-                    $actualImage->getThumbnailUrl(),
-                    'Unexpected product thumbnail url'
+            foreach ($expectedShopProductImage->getProductImages() as $expectedProductImage) {
+                Assert::assertContainsEquals(
+                    new ShopImageAssociation($expectedProductImage->getImageId(), $expectedProductImage->isCover()),
+                    $actualShopProductImages->getProductImages()
                 );
             }
         }
@@ -374,10 +519,200 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return ProductImage[]
      */
-    private function getProductImages(string $productReference): array
+    private function getProductImages(string $productReference, ShopConstraint $shopConstraint): array
     {
         return $this->getQueryBus()->handle(new GetProductImages(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            $shopConstraint
         ));
+    }
+
+    /**
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return void
+     */
+    private function uploadImageByShopConstraint(string $imageReference, string $fileName, string $productReference, ShopConstraint $shopConstraint): void
+    {
+        $pathName = DummyFileUploader::upload($fileName);
+
+        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
+            $this->getSharedStorage()->get($productReference),
+            $pathName,
+            $shopConstraint
+        ));
+
+        $this->getSharedStorage()->set($imageReference, $imageId->getValue());
+
+        // Save uploaded file MD5 for future checks
+        if ($this->getSharedStorage()->exists($fileName)) {
+            return;
+        }
+
+        /** @var ProductImage $productImage */
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
+
+        $imagePath = $this->getImagePath($productImage->getImageId());
+        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     *
+     * @return void
+     */
+    private function assertAllProductImages(string $productReference, TableNode $tableNode): void
+    {
+        $images = $this->getProductImages($productReference, ShopConstraint::shop($this->getDefaultShopId()));
+        $this->assertProductImages($tableNode, $images);
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param int $shopId
+     *
+     * @return void
+     */
+    private function assertProductImagesByShopId(string $productReference, TableNode $tableNode, int $shopId): void
+    {
+        $images = array_filter(
+            $this->getProductImages($productReference, ShopConstraint::shop($shopId)),
+            static function (ProductImage $productImage) use ($shopId): bool {
+                return in_array($shopId, $productImage->getShopIds(), true);
+            }
+        );
+        $this->assertProductImages($tableNode, $images);
+    }
+
+    /**
+     * @Then /^I should get an error that you cannot remove an image which is a cover$/
+     */
+    public function iShouldGetAnErrorThatYouCannotRemoveAnImageWhichIsACover(): void
+    {
+        $this->assertLastErrorIs(CannotRemoveCoverException::class);
+    }
+
+    /**
+     * @param TableNode $tableNode
+     * @param ProductImage[] $images
+     *
+     * @return void
+     */
+    private function assertProductImages(TableNode $tableNode, array $images): void
+    {
+        $dataRows = $this->localizeByColumns($tableNode);
+        Assert::assertEquals(
+            count($images),
+            count($dataRows),
+            'Expected and actual images count does not match'
+        );
+
+        $imagesById = [];
+        foreach ($images as $image) {
+            $imagesById[$image->getImageId()] = $image;
+        }
+
+        foreach ($dataRows as $dataRow) {
+            $rowImageId = (int) $this->getSharedStorage()->get($dataRow['image reference']);
+            if (!isset($imagesById[$rowImageId])) {
+                throw new RuntimeException(sprintf('Cannot find image %s in product images.', $dataRow['image reference']));
+            }
+            $actualImage = $imagesById[$rowImageId];
+
+            if (isset($dataRow['is cover'])) {
+                Assert::assertEquals(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($dataRow['is cover']),
+                    $actualImage->isCover(),
+                    'Unexpected cover image'
+                );
+            }
+
+            if (isset($dataRow['legend'])) {
+                Assert::assertEquals(
+                    $dataRow['legend'],
+                    $actualImage->getLocalizedLegends(),
+                    'Unexpected image legend'
+                );
+            }
+
+            Assert::assertEquals(
+                PrimitiveUtils::castStringIntegerIntoInteger($dataRow['position']),
+                $actualImage->getPosition(),
+                'Unexpected image position'
+            );
+
+            $imagePath = $this->getImagePath($actualImage->getImageId());
+            if (!file_exists($imagePath)) {
+                throw new RuntimeException(sprintf('File "%s" does not exist', $imagePath));
+            }
+
+            if (isset($dataRow['image url'])) {
+                $realImageUrl = $this->getRealImageUrl($dataRow['image url']);
+                Assert::assertEquals(
+                    $realImageUrl,
+                    $actualImage->getImageUrl(),
+                    'Unexpected product image url'
+                );
+            }
+
+            if (isset($dataRow['thumbnail url'])) {
+                $realImageUrl = $this->getRealImageUrl($dataRow['thumbnail url']);
+                Assert::assertEquals(
+                    $realImageUrl,
+                    $actualImage->getThumbnailUrl(),
+                    'Unexpected product thumbnail url'
+                );
+            }
+
+            if (isset($dataRow['shops'])) {
+                $expectedShopIds = [];
+                $shops = explode(',', $dataRow['shops']);
+                foreach ($shops as $shopReference) {
+                    $expectedShopIds[] = $this->getSharedStorage()->get(trim($shopReference));
+                }
+                Assert::assertEquals(
+                    $expectedShopIds,
+                    $actualImage->getShopIds()
+                );
+            }
+        }
+    }
+
+    /**
+     * @param string $imageReference
+     * @param TableNode $tableNode
+     */
+    private function updateImageByShopConstraint(string $imageReference, ShopConstraint $shopConstraint, TableNode $tableNode): void
+    {
+        $dataRows = $this->localizeByRows($tableNode);
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        $command = new UpdateProductImageCommand(
+            $imageId,
+            $shopConstraint
+        );
+        if (isset($dataRows['file'])) {
+            $pathName = DummyFileUploader::upload($dataRows['file']);
+            $command->setFilePath($pathName);
+        }
+
+        if (isset($dataRows['cover'])) {
+            $command->setIsCover(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['cover']));
+        }
+
+        if (isset($dataRows['legend'])) {
+            $command->setLocalizedLegends($dataRows['legend']);
+        }
+
+        if (isset($dataRows['position'])) {
+            $command->setPosition((int) $dataRows['position']);
+        }
+
+        $this->getCommandBus()->handle($command);
     }
 }

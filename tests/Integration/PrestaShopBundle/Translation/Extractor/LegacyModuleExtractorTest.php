@@ -41,8 +41,8 @@ class LegacyModuleExtractorTest extends KernelTestCase
     /**
      * @var string Domain name of the modules translations
      */
-    const DOMAIN_NAME = 'ModulesTranslationtest';
-    const MODULE_NAME = 'translationtest';
+    public const DOMAIN_NAME = 'ModulesTranslationtest';
+    public const MODULE_NAME = 'translationtest';
 
     /**
      * @var CatalogueVerifier

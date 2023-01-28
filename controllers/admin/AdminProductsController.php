@@ -580,6 +580,11 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool|ObjectModel|void|null
+     *
+     * @throws PrestaShopException
+     */
     public function processDelete()
     {
         $object = $this->loadObject();
@@ -655,6 +660,11 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool|void
+     *
+     * @throws PrestaShopException
+     */
     protected function processBulkDelete()
     {
         if ($this->access('delete')) {
@@ -686,7 +696,7 @@ class AdminProductsControllerCore extends AdminController
                              * - physical stock for this product
                              * - supply order(s) for this product
                              */
-                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management && isset($stock_manager)) {
+                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management && isset($stock_manager)) { // @phpstan-ignore-line
                                 $physical_quantity = $stock_manager->getProductPhysicalQuantities($product->id, 0);
                                 $real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
                                 if ($physical_quantity > 0 || $real_quantity > $physical_quantity) {
@@ -1113,6 +1123,10 @@ class AdminProductsControllerCore extends AdminController
 
     /**
      * Overrides parent for custom redirect link.
+     *
+     * @return bool|ObjectModel|void|null
+     *
+     * @throws PrestaShopException
      */
     public function processPosition()
     {
@@ -1777,7 +1791,7 @@ class AdminProductsControllerCore extends AdminController
                     $warehouse_location_entity->id_product = $this->object->id;
                     $warehouse_location_entity->id_product_attribute = 0;
                     $warehouse_location_entity->id_warehouse = (int) Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
-                    $warehouse_location_entity->location = pSQL('');
+                    $warehouse_location_entity->location = '';
                     $warehouse_location_entity->save();
                 }
 
@@ -1881,7 +1895,10 @@ class AdminProductsControllerCore extends AdminController
                 $object->indexed = 0;
 
                 if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-                    $object->setFieldsToUpdate((array) Tools::getValue('multishop_check', []));
+                    $values = (array) Tools::getValue('multishop_check', []);
+                    $values['state'] = Product::STATE_SAVED;
+
+                    $object->setFieldsToUpdate($values);
                 }
 
                 // Duplicate combinations if not associated to shop
@@ -2446,7 +2463,22 @@ class AdminProductsControllerCore extends AdminController
             foreach ($associated_suppliers as $key => $associated_supplier) {
                 /** @var ProductSupplier $associated_supplier */
                 if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate)) {
-                    $associated_supplier->delete();
+                    // Code taken from https://github.com/PrestaShop/PrestaShop/pull/26609/commits/e966aa7d3c2204ddb7318dd7203639845739137b
+                    // ProductSupplier objectModel is shared between v1 & v2 product pages.
+                    // This code ensures keeping old behavior in v1 product page without breaking v2 product page.
+
+                    $res = $associated_supplier->delete();
+
+                    if ($res && $associated_supplier->id_product_attribute == 0) {
+                        $items = ProductSupplier::getSupplierCollection($associated_supplier->id_product, false);
+                        foreach ($items as $item) {
+                            /** @var ProductSupplier $item */
+                            if ($item->id_product_attribute > 0) {
+                                $item->delete();
+                            }
+                        }
+                    }
+
                     unset($associated_suppliers[$key]);
                 }
             }
@@ -2469,7 +2501,7 @@ class AdminProductsControllerCore extends AdminController
                     if ($this->context->currency->id) {
                         $product_supplier->id_currency = (int) $this->context->currency->id;
                     } else {
-                        $product_supplier->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                        $product_supplier->id_currency = Currency::getDefaultCurrencyId();
                     }
                     $product_supplier->save();
 

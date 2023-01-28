@@ -48,7 +48,7 @@
             <FilterComponent
               ref="suppliers"
               :placeholder="trans('filter_search_suppliers')"
-              :list="this.$store.getters.suppliers"
+              :list="$store.getters.suppliers"
               class="filter-suppliers"
               item-id="supplier_id"
               label="name"
@@ -126,21 +126,21 @@
               :label="trans('filter_status_enable')"
               :checked="false"
               value="1"
-              @change="onRadioChange"
+              @change="onRadioChange(1)"
             />
             <PSRadio
               id="disable"
               :label="trans('filter_status_disable')"
               :checked="false"
               value="0"
-              @change="onRadioChange"
+              @change="onRadioChange(0)"
             />
             <PSRadio
               id="all"
               :label="trans('filter_status_all')"
               :checked="true"
               value="null"
-              @change="onRadioChange"
+              @change="onRadioChange(undefined)"
             />
           </div>
         </div>
@@ -151,10 +151,12 @@
 
 <script lang="ts">
   /* eslint-disable camelcase */
-  import Vue from 'vue';
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';
   import PSRadio from '@app/widgets/ps-radio.vue';
+  import {defineComponent} from 'vue';
+  import translate from '@app/pages/stock/mixins/translate';
+  import {Moment} from 'moment';
   import FilterComponent, {FilterComponentInstanceType} from './filters/filter-component.vue';
 
   export interface StockCategory {
@@ -168,7 +170,22 @@
     visible: boolean;
   }
 
-  const Filters = Vue.extend({
+  type DateFilter = {
+    [key:string]: number;
+  }
+
+  type DatepickerEvent = {
+    dateType: string;
+    date: Moment;
+    oldDate: Moment;
+  }
+
+  // sup is the starting date while inf is the end date
+  // Cf: src/PrestaShopBundle/Api/QueryParamsCollection::appendSqlDateAddFilter
+  const DATE_TYPE_SUP = 'sup';
+  const DATE_TYPE_INF = 'inf';
+
+  const Filters = defineComponent({
     computed: {
       locale(): string {
         return window.data.locale;
@@ -192,19 +209,20 @@
         return <FilterComponentInstanceType>(this.$refs.categories);
       },
     },
+    mixins: [translate],
     methods: {
       reset(): void {
         const dataOption = this.$options.data;
 
         Object.assign(
           this.$data,
-          dataOption instanceof Function ? dataOption.apply(this) : dataOption,
+          dataOption instanceof Function ? (<any>dataOption).apply(this) : dataOption,
         );
         this.suppliersFilterRef?.reset();
         this.categoriesFilterRef?.reset();
       },
       onClear(event: any): void {
-        delete this.date_add[<number>event.dateType];
+        delete this.date_add[<string>event.dateType];
         this.applyFilter();
       },
       onClick(): void {
@@ -238,11 +256,18 @@
         }
         this.applyFilter();
       },
-      onDpChange(event: any) {
-        this.date_add[<number>event.dateType] = event.date.unix();
-        if (event.oldDate) {
-          this.applyFilter();
+      onDpChange(event: DatepickerEvent) {
+        if (event.dateType === DATE_TYPE_SUP) {
+          event.date.minutes(0).hours(0).seconds(1);
+          $(`.datepicker-${DATE_TYPE_INF}`).data('DateTimePicker').minDate(event.date);
+        } else if (event.dateType === DATE_TYPE_INF) {
+          event.date.minutes(59).hours(23).seconds(59);
+          $(`.datepicker-${DATE_TYPE_SUP}`).data('DateTimePicker').maxDate(event.date);
         }
+
+        this.date_add[event.dateType] = event.date.unix();
+
+        this.applyFilter();
       },
       onRadioChange(value: any): void {
         this.active = value;
@@ -256,18 +281,26 @@
       PSRadio,
     },
     mounted() {
-      this.date_add = [];
+      this.date_add = {};
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },
-    data() {
+    data(): {
+      disabled: boolean,
+      suppliers: Array<any>,
+      categories: Array<any>,
+      id_stock_mvt_reason: Array<any>,
+      id_employee: Array<any>,
+      date_add: DateFilter,
+      active: boolean | null,
+    } {
       return {
         disabled: true,
-        suppliers: [] as Array<any>,
-        categories: [] as Array<any>,
-        id_stock_mvt_reason: [] as Array<any>,
-        id_employee: [] as Array<any>,
-        date_add: [] as Array<any>,
+        suppliers: [],
+        categories: [],
+        id_stock_mvt_reason: [],
+        id_employee: [],
+        date_add: {},
         active: null,
       };
     },

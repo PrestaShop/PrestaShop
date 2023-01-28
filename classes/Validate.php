@@ -39,6 +39,7 @@ use ZxcvbnPhp\Zxcvbn;
 class ValidateCore
 {
     public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
+    public const OBJECT_CLASS_NAME_REGEXP = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
     /**
      * Maximal 32 bits value: (2^32)-1
      *
@@ -49,20 +50,28 @@ class ValidateCore
     /**
      * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
      */
-    const ADMIN_PASSWORD_LENGTH = 8;
+    public const ADMIN_PASSWORD_LENGTH = 8;
 
     /**
      * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
      */
-    const PASSWORD_LENGTH = 5;
+    public const PASSWORD_LENGTH = 5;
 
     public static function isIp2Long($ip)
     {
         return preg_match('#^-?[0-9]+$#', (string) $ip);
     }
 
+    /**
+     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
+     */
     public static function isAnything()
     {
+        @trigger_error(
+            'This function is deprecated PrestaShop 8.1 and will be removed in Prestashop 9.0.',
+            E_USER_DEPRECATED
+        );
+
         return true;
     }
 
@@ -1078,7 +1087,7 @@ class ValidateCore
      */
     public static function isSortDirection($value)
     {
-        return $value !== null && ($value === 'ASC' || $value === 'DESC');
+        return $value === 'ASC' || $value === 'DESC';
     }
 
     /**
@@ -1341,5 +1350,17 @@ class ValidateCore
         }
 
         return true;
+    }
+
+    /**
+     * Check the given string is a valid PHP class name
+     *
+     * @param string $objectClassName object class name
+     *
+     * @return bool
+     */
+    public static function isValidObjectClassName(string $objectClassName): bool
+    {
+        return preg_match(static::OBJECT_CLASS_NAME_REGEXP, $objectClassName);
     }
 }

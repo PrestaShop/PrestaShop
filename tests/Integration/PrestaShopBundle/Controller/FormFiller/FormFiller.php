@@ -28,8 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\FormFiller;
 
+use DOMElement;
+use InvalidArgumentException;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
+use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Form;
 
 class FormFiller
@@ -47,6 +52,7 @@ class FormFiller
                 /** @var FormField $formField */
                 $formField = $form->get($fieldName);
                 $formField->setValue($formValue);
+                $this->enabledAssociatedField($form, $formField);
 
                 continue;
             }
@@ -78,5 +84,46 @@ class FormFiller
         }
 
         return $form;
+    }
+
+    /**
+     * Some fields are based on the DisablingSwitchExtension in regular FO the field are enabled by JS but here
+     * we need to force this or the data will be removed from the $form->getData()
+     *
+     * @param Form $form
+     * @param FormField $formField
+     */
+    private function enabledAssociatedField(Form $form, FormField $formField): void
+    {
+        if (strpos($formField->getName(), DisablingSwitchExtension::FIELD_PREFIX) === false) {
+            return;
+        }
+
+        $associatedFieldName = str_replace(DisablingSwitchExtension::FIELD_PREFIX, '', $formField->getName());
+        try {
+            /** @var InputFormField $associatedField */
+            $associatedField = $form->get($associatedFieldName);
+        } catch (InvalidArgumentException $e) {
+            return;
+        }
+
+        $formCrawler = new Crawler($form->getFormNode());
+        $fieldCrawler = $formCrawler->filter(sprintf('[name="%s"]', $associatedFieldName));
+        if (!$fieldCrawler->count()) {
+            return;
+        }
+
+        $fieldNode = $fieldCrawler->getNode(0);
+        if (!$fieldNode instanceof DOMElement) {
+            return;
+        }
+
+        $isDisabled = $associatedField->isDisabled();
+        $isDisabling = (bool) $formField->getValue() === false;
+        if ($isDisabled && !$isDisabling) {
+            $fieldNode->removeAttribute('disabled');
+        } elseif (!$isDisabled && $isDisabling) {
+            $fieldNode->setAttribute('disabled', 'disabled');
+        }
     }
 }

@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
  *  Holds product combination identification data
@@ -49,6 +48,8 @@ class CombinationId implements CombinationIdInterface
 
     /**
      * @param int $combinationId
+     *
+     * @throws CombinationConstraintException
      */
     public function __construct(int $combinationId)
     {
@@ -67,12 +68,15 @@ class CombinationId implements CombinationIdInterface
     /**
      * @param int $value
      *
-     * @throws ProductConstraintException
+     * @throws CombinationConstraintException
      */
     private function assertValueIsPositive(int $value)
     {
         if (0 >= $value) {
-            throw new CombinationConstraintException(sprintf('Combination id must be positive integer. "%s" given', $value), CombinationConstraintException::INVALID_ID);
+            throw new CombinationConstraintException(
+                sprintf('Combination id must be positive integer. "%s" given', $value),
+                CombinationConstraintException::INVALID_ID
+            );
         }
     }
 }

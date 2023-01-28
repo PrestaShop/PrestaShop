@@ -28,11 +28,13 @@ import ComponentsMap from '@components/components-map';
 import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
+import {isUndefined} from '@PSTypes/typeguard';
 
 const EntitySearchInputMap = ComponentsMap.entitySearchInput;
 
 type RemoveFunction = (item: any) => void;
 type SelectFunction = ($node: JQuery, item: any) => void;
+type SuggestionFunction = (entity: any) => string;
 export interface EntitySearchInputOptions extends OptionsObject {
   prototypeTemplate: string,
   prototypeIndex: string,
@@ -58,6 +60,8 @@ export interface EntitySearchInputOptions extends OptionsObject {
 
   onRemovedContent: RemoveFunction | undefined,
   onSelectedContent: SelectFunction | undefined,
+
+  suggestionTemplate: SuggestionFunction | undefined,
 }
 export interface ModalOptions extends OptionsObject {
   id: string;
@@ -206,6 +210,9 @@ export default class EntitySearchInput {
       onRemovedContent: undefined,
       onSelectedContent: undefined,
       responseTransformer: (response: any) => response || [],
+
+      // Template function
+      suggestionTemplate: undefined,
     };
 
     Object.keys(defaultOptions).forEach((optionName) => {
@@ -281,15 +288,7 @@ export default class EntitySearchInput {
       value: this.options.identifierField,
       minLength: this.options.minLength,
       templates: {
-        suggestion: (entity: any) => {
-          let entityImage = '';
-
-          if (Object.prototype.hasOwnProperty.call(entity, 'image')) {
-            entityImage = `<img src="${entity.image}" /> `;
-          }
-
-          return `<div class="search-suggestion">${entityImage}${entity[this.options.suggestionField]}</div>`;
-        },
+        suggestion: (entity: any) => this.showSuggestion(entity),
       },
       onSelect: (selectedItem: any) => {
         // When limit is one we cannot select additional elements so we replace them instead
@@ -307,6 +306,20 @@ export default class EntitySearchInput {
         autoSearchConfig,
       );
     }
+  }
+
+  private showSuggestion(entity: any): string {
+    if (!isUndefined(this.options.suggestionTemplate)) {
+      return this.options.suggestionTemplate(entity);
+    }
+
+    let entityImage = '';
+
+    if (Object.prototype.hasOwnProperty.call(entity, 'image')) {
+      entityImage = `<img src="${entity.image}" /> `;
+    }
+
+    return `<div class="search-suggestion">${entityImage}${entity[this.options.suggestionField]}</div>`;
   }
 
   /**

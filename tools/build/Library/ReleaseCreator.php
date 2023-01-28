@@ -370,17 +370,8 @@ class ReleaseCreator
      */
     protected function getCurrentVersion()
     {
-        $kernelFile = $this->projectPath.'/app/AppKernel.php';
-        $matches = [];
-
-        $kernelFileContent = file_get_contents($kernelFile);
-        $kernelFileContent = preg_match(
-            '~const VERSION = \'(.*)\';~',
-            $kernelFileContent,
-            $matches
-        );
-
-        return $matches[1];
+        require_once $this->projectPath.'/src/Core/Version.php';
+        return \PrestaShop\PrestaShop\Core\Version::VERSION;
     }
 
     /**

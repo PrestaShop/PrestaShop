@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
@@ -42,12 +43,20 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param int $contextShopId
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        int $contextShopId
     ) {
         $this->queryBus = $queryBus;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -117,6 +126,10 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
                 ],
                 'fixed_price_tax_excluded' => (float) InitialPrice::INITIAL_PRICE_VALUE,
             ],
+            'groups' => [
+                'shop_id' => $this->contextShopId,
+            ],
+            'combination_id' => NoCombinationId::NO_COMBINATION_ID,
         ];
     }
 }

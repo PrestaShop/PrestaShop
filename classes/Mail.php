@@ -92,19 +92,19 @@ class MailCore extends ObjectModel
     /**
      * Mail content type.
      */
-    const TYPE_HTML = 1;
-    const TYPE_TEXT = 2;
-    const TYPE_BOTH = 3;
+    public const TYPE_HTML = 1;
+    public const TYPE_TEXT = 2;
+    public const TYPE_BOTH = 3;
 
     /**
      * Send mail under SMTP server.
      */
-    const METHOD_SMTP = 2;
+    public const METHOD_SMTP = 2;
 
     /**
      * Disable mail, will return immediately after calling send method.
      */
-    const METHOD_DISABLE = 3;
+    public const METHOD_DISABLE = 3;
 
     /**
      * Send Email.
@@ -494,7 +494,9 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . strip_tags($configuration['PS_SHOP_NAME']) . '] ' . $subject;
+            if (Configuration::get('PS_MAIL_SUBJECT_PREFIX')) {
+                $subject = '[' . strip_tags($configuration['PS_SHOP_NAME']) . '] ' . $subject;
+            }
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');

@@ -298,7 +298,7 @@
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.selected|@count || ($shops.selected|@count + $shops.unselected|@count < $all_shops|@count)}checked="checked"{/if} />
-					{l s='Shop selection' d='Admin.Catalog.Feature'}
+					{l s='Store selection' d='Admin.Catalog.Feature'}
 				</label>
 			</p>
 			<div id="shop_restriction_div">

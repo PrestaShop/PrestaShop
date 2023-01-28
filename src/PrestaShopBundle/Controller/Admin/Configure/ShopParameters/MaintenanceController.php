@@ -94,7 +94,7 @@ class MaintenanceController extends FrameworkBundleAdminController
         $saveErrors = $this->get('prestashop.adapter.maintenance.form_handler')->save($data);
 
         if (0 === count($saveErrors)) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
             return $redirectResponse;
         }

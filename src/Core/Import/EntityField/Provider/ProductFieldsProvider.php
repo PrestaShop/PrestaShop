@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class ProductFieldsProvider defines a product fields provider.
@@ -92,7 +92,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('low_stock_threshold', $this->trans('Low stock level', 'Admin.Catalog.Feature')),
             new EntityField(
                 'low_stock_alert',
-                $this->trans('Send me an email when the quantity is under this level', 'Admin.Catalog.Feature')
+                $this->trans('Receive a low stock alert by email', 'Admin.Catalog.Feature')
             ),
             new EntityField('visibility', $this->trans('Visibility', 'Admin.Catalog.Feature')),
             new EntityField('additional_shipping_cost', $this->trans('Additional shipping cost', 'Admin.Advparameters.Feature')),

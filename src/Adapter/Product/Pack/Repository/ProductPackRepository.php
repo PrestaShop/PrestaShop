@@ -28,16 +28,100 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Repository;
 
+use Doctrine\DBAL\Connection;
 use Pack;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
+use Throwable;
 
-class ProductPackRepository
+class ProductPackRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var string
+     */
+    protected $dbPrefix;
+
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
+     * @param PackId $productId
+     * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return array<array<string, string>>
+     *                                      e.g [
+     *                                      ['id_product_item' => '1', 'id_product_attribute_item' => '1', 'name' => 'Product name', 'reference' => 'demo15', 'quantity' => '1'],
+     *                                      ['id_product_item' => '2', 'id_product_attribute_item' => '1', 'name' => 'Product name2', 'reference' => 'demo16', 'quantity' => '1'],
+     *                                      ]
+     *
+     * @throws CoreException
+     */
+    public function getPackedProducts(PackId $productId, LanguageId $languageId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+            throw new InvalidShopConstraintException('Product Pack has no features related with shop group or all shops, use single shop constraint');
+        }
+
+        $this->assertProductExists($productId);
+        $productIdValue = $productId->getValue();
+
+        try {
+            $qb = $this->connection->createQueryBuilder();
+            $qb->select('pack.id_product_item, pack.id_product_attribute_item, pack.quantity, attribute.reference as combination_reference, product.reference as product_reference, language.name')
+                ->from($this->dbPrefix . 'pack', 'pack')
+                ->leftJoin('pack', $this->dbPrefix . 'product', 'product', 'pack.id_product_item = product.id_product')
+                ->leftJoin('pack', $this->dbPrefix . 'product_attribute', 'attribute', 'pack.id_product_attribute_item = attribute.id_product_attribute')
+                ->leftJoin(
+                    'pack',
+                    $this->dbPrefix . 'product_lang',
+                    'language',
+                    // We use product default shop as fallback in case the required shop is not associated to the product
+                    'product.id_product = language.id_product AND language.id_lang = :idLanguage AND (language.id_shop = :idShop OR language.id_shop = product.id_shop_default)'
+                )
+                ->where('pack.id_product_pack = :idProduct')
+                ->orderBy('pack.id_product_item', 'ASC')
+                ->setParameter('idProduct', $productId->getValue())
+                ->setParameter('idLanguage', $languageId->getValue())
+                ->setParameter('idShop', $shopConstraint->getShopId()->getValue())
+                ->addGroupBy('product.id_product')
+                ->addGroupBy('attribute.id_product_attribute')
+            ;
+            $packedProducts = $qb->execute()->fetchAll();
+        } catch (Throwable $exception) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when fetching packed products for pack #%d',
+                    $productIdValue
+                ),
+                $exception->getCode(),
+                $exception
+            );
+        }
+
+        return $packedProducts;
+    }
+
     /**
      * @param PackId $packId
      * @param QuantifiedProduct $productForPacking
@@ -84,7 +168,8 @@ class ProductPackRepository
         $packIdValue = $packId->getValue();
 
         try {
-            if (!Pack::deleteItems($packIdValue)) {
+            // We don't reset cache_is_pack for product we want to keep it tru as long as product type doesn't change
+            if (!Pack::deleteItems($packIdValue, false)) {
                 throw new ProductPackException(
                     sprintf('Failed to remove products from pack #%d', $packIdValue),
                     ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
@@ -97,6 +182,28 @@ class ProductPackRepository
                 $e
             );
         }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return array
+     */
+    public function getPacksContaining(ProductId $productId): array
+    {
+        $this->assertProductExists($productId);
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pack.id_product_pack')
+            ->from($this->dbPrefix . 'pack', 'pack')
+            ->where('pack.id_product_item = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $packs = $qb->execute()->fetchAllAssociative();
+
+        return array_map(function (array $packData) {
+            return new PackId((int) $packData['id_product_pack']);
+        }, $packs);
     }
 
     /**
@@ -120,5 +227,13 @@ class ProductPackRepository
             $product->getProductId()->getValue(),
             isset($combinationId) ? $combinationId : ''
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    protected function assertProductExists(ProductId $productId): void
+    {
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
     }
 }

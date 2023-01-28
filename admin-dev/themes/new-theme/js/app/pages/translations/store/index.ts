@@ -22,13 +22,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue, {PluginObject} from 'vue';
-import Vuex from 'vuex';
+import {createStore} from 'vuex';
 import _ from 'lodash';
 import * as actions from './actions';
 import mutations from './mutations';
-
-Vue.use(<PluginObject<any>><unknown>Vuex);
 
 // root state object.
 
@@ -74,7 +71,7 @@ const getters = {
   catalog(rootState: Record<string, any>) {
     return rootState.catalog;
   },
-  domainsTree(): Array<Record<string, any>> {
+  domainsTree(rootState: Record<string, any>): Array<Record<string, any>> {
     function convert(domains: Array<Record<string, any>>): Array<Record<string, any>> {
       domains.forEach((domain: Record<string, any>) => {
         /* eslint-disable */
@@ -90,7 +87,7 @@ const getters = {
       return domains;
     }
 
-    return convert(state.domainsTree);
+    return convert(rootState.domainsTree);
   },
   isReady(rootState: Record<string, any>): boolean {
     return rootState.isReady;
@@ -102,8 +99,10 @@ const getters = {
 
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.
-export default new Vuex.Store({
-  state,
+export default createStore({
+  state() {
+    return state;
+  },
   getters,
   actions,
   mutations,

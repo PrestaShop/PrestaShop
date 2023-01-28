@@ -7,10 +7,10 @@
         <target>Sales and orders</target>
         <note>Line: 63</note>
       </trans-unit>
-      <trans-unit id="d2fb07753354576172a2b144c373a610">
-        <source>Adds graphics presenting the evolution of sales and orders to the Stats dashboard.</source>
-        <target>Adds graphics presenting the evolution of sales and orders to the Stats dashboard.</target>
-        <note>Line: 50</note>
+      <trans-unit id="875c961c33f0a7b99577b1a370d2cfc4">
+        <source>Enrich your stats, add graphics presenting the evolution of your sales and orders.</source>
+        <target>Enrich your stats, add graphics presenting the evolution of your sales and orders.</target>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="bdaa0cab56c2880f8f60e6a2cef40e63">
         <source>About order statuses</source>
@@ -91,11 +91,6 @@
         <source>Percentage of orders per status.</source>
         <target>Percentage of orders per status.</target>
         <note>Line: 253</note>
-      </trans-unit>
-      <trans-unit id="875c961c33f0a7b99577b1a370d2cfc4">
-        <source>Enrich your stats, add graphics presenting the evolution of your sales and orders.</source>
-        <target>Enrich your stats, add graphics presenting the evolution of your sales and orders.</target>
-        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>

@@ -29,7 +29,7 @@
  */
 class AddressChecksumCore implements ChecksumInterface
 {
-    const SEPARATOR = '_';
+    public const SEPARATOR = '_';
 
     /**
      * Generate a checksum.

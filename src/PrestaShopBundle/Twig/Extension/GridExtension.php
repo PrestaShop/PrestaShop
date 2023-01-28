@@ -28,9 +28,12 @@ namespace PrestaShopBundle\Twig\Extension;
 
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Twig\TwigTest;
 
 /**
  * Class GridExtension is responsible for providing grid helpers functions.
@@ -78,6 +81,21 @@ class GridExtension extends AbstractExtension
             new TwigFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
                 'is_safe' => ['html'],
             ]),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTests()
+    {
+        return [
+            new TwigTest('formview', static function ($value) {
+                return $value instanceof FormView;
+            }),
+            new TwigTest('form', static function ($value) {
+                return $value instanceof FormInterface;
+            }),
         ];
     }
 

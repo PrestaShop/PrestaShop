@@ -25,25 +25,27 @@
 
 {% block material_choice_tree_widget %}
   <div class="material-choice-tree-container js-choice-tree-container{% if required %} required{% endif %}" id="{{ form.vars.id }}">
-  <div class="choice-tree-actions">
-    <span class="form-control-label js-toggle-choice-tree-action"
-          data-expanded-text="{{ 'Expand'|trans({}, 'Admin.Actions') }}"
-          data-expanded-icon="expand_more"
-          data-collapsed-text="{{ 'Collapse'|trans({}, 'Admin.Actions') }}"
-          data-collapsed-icon="expand_less"
-          data-action="expand"
-    >
-      <i class="material-icons">expand_more</i>
-      <span class="js-toggle-text">{{ 'Expand'|trans({}, 'Admin.Actions') }}</span>
-    </span>
+    <div class="choice-tree-actions">
+      <span class="form-control-label js-toggle-choice-tree-action"
+            data-expanded-text="{{ 'Expand'|trans({}, 'Admin.Actions') }}"
+            data-expanded-icon="expand_more"
+            data-collapsed-text="{{ 'Collapse'|trans({}, 'Admin.Actions') }}"
+            data-collapsed-icon="expand_less"
+            data-action="expand"
+      >
+        <i class="material-icons">expand_more</i>
+        <span class="js-toggle-text">{{ 'Expand'|trans({}, 'Admin.Actions') }}</span>
+      </span>
+    </div>
+
+    <ul class="choice-tree">
+      {% for choice in choices_tree %}
+        {{ block('material_choice_tree_item_widget') }}
+      {% endfor %}
+    </ul>
   </div>
 
-  <ul class="choice-tree">
-    {% for choice in choices_tree %}
-      {{ block('material_choice_tree_item_widget') }}
-    {% endfor %}
-  </ul>
-</div>
+  {{- block('form_help') -}}
 {% endblock material_choice_tree_widget %}
 
 {% block material_choice_tree_item_widget %}

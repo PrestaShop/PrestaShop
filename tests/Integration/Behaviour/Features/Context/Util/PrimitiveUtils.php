@@ -31,16 +31,16 @@ use RuntimeException;
 
 class PrimitiveUtils
 {
-    const TYPE_BOOLEAN = 'boolean';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_DOUBLE = 'double';
-    const TYPE_STRING = 'string';
-    const TYPE_DATETIME = 'datetime';
-    const TYPE_ARRAY = 'array';
-    const TYPE_NULL = 'NULL';
-    const TYPE_OBJECT = 'object';
-    const TYPE_RESOURCE = 'resource';
-    const TYPE_UNKNOWN = 'unknown type';
+    public const TYPE_BOOLEAN = 'boolean';
+    public const TYPE_INTEGER = 'integer';
+    public const TYPE_DOUBLE = 'double';
+    public const TYPE_STRING = 'string';
+    public const TYPE_DATETIME = 'datetime';
+    public const TYPE_ARRAY = 'array';
+    public const TYPE_NULL = 'NULL';
+    public const TYPE_OBJECT = 'object';
+    public const TYPE_RESOURCE = 'resource';
+    public const TYPE_UNKNOWN = 'unknown type';
 
     /**
      * @param mixed $element

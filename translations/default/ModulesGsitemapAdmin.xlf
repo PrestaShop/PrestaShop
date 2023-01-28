@@ -41,27 +41,25 @@
         <target>Sitemaps were already created.</target>
         <note>Line: 43</note>
       </trans-unit>
-      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
-        <source>Continue</source>
-        <target>Continue</target>
-        <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
-      </trans-unit>
       <trans-unit id="bdf0482e95f48fd33fae3765df4dcf06">
         <source>Please set up the following sitemap URL in your Google Webmaster account:</source>
         <target>Please set up the following sitemap URL in your Google Webmaster account:</target>
         <note>Line: 52</note>
       </trans-unit>
-      <trans-unit id="8d260d2aae84bcc75ba695a141c1fa11">
-        <source>This URL is the master sitemaps file. It refers to the following sub-sitemap files:</source>
-        <target>This URL is the master sitemaps file. It refers to the following sub-sitemap files:</target>
-        <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
+      <trans-unit id="8ef76e3a7b01e9b08a23ddf87cbc242e">
+        <source>The above URL is the master sitemap file. It refers to the following sub-sitemap files:</source>
+        <target>The above URL is the master sitemap file. It refers to the following sub-sitemap files:</target>
+        <note>Line: 54</note>
       </trans-unit>
       <trans-unit id="0dbf904a2b27f036cf06741aad221ecc">
         <source>Your last update was made on this date:</source>
         <target>Your last update was made on this date:</target>
         <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="b79b56dbede0077a92563175fda9b54f">
+        <source>This shop has no sitemap yet.</source>
+        <target>This shop has no sitemap yet.</target>
+        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="6d37779958434303f8397436a1484ed8">
         <source>For a better use of the module, please make sure that you have</source>
@@ -138,26 +136,30 @@
         <target>Check this box if you wish to check the presence of the image files on the server</target>
         <note>Line: 104</note>
       </trans-unit>
-      <trans-unit id="b7d7436a18bf546dd6438d92218868c1">
-        <source>Check all</source>
-        <target>Check all</target>
-        <note>Line: 146</note>
-      </trans-unit>
       <trans-unit id="0cbc12a507b5e6c5e2cd4fe3f7a62d1f">
         <source>Indicate the pages that you do not want to include in your sitemap files:</source>
         <target>Indicate the pages that you do not want to include in your sitemap files:</target>
         <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="13a3549902fb75af1df329df5f3b265a">
+        <source>Uncheck all</source>
+        <target>Uncheck all</target>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="8123c8ac806194dca71afdba4dad85a3">
         <source>Generate sitemap</source>
         <target>Generate sitemap</target>
         <note>Line: 120</note>
       </trans-unit>
-      <trans-unit id="ca99f8a0d484faef3a057fe7a5da3141">
-        <source>This can take several minutes</source>
-        <target>This can take several minutes</target>
-        <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
+      <trans-unit id="53fdf9abbbe9a13fccaf2a6dd5b6220f">
+        <source>Generating a sitemap can take several minutes</source>
+        <target>Generating a sitemap can take several minutes</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="221dffef949377570bdc389d3f983c66">
         <source>You have two ways to generate sitemaps.</source>
@@ -184,46 +186,20 @@
         <target>Automatically:</target>
         <note>Line: 136</note>
       </trans-unit>
-      <trans-unit id="024d2d2f6d7fd575701fd1b30cc5c0c2">
-        <source>Ask your hosting provider to setup a "Cron task" to load the following URL at the time you would like:</source>
-        <target>Ask your hosting provider to setup a "Cron task" to load the following URL at the time you would like:</target>
-        <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
+      <trans-unit id="03f772c9541dddad66266c0cf698bba6">
+        <source>Ask your hosting provider to setup a "Cron job" to load the following URL at the time you would like:</source>
+        <target>Ask your hosting provider to setup a "Cron job" to load the following URL at the time you would like:</target>
+        <note>Line: 136</note>
       </trans-unit>
       <trans-unit id="ad71f6d43a4db5fe6bf961882adfa113">
         <source>It will automatically generate your XML sitemaps.</source>
         <target>It will automatically generate your XML sitemaps.</target>
         <note>Line: 138</note>
       </trans-unit>
-      <trans-unit id="13a3549902fb75af1df329df5f3b265a">
-        <source>Uncheck all</source>
-        <target>Uncheck all</target>
-        <note>Line: 147</note>
-      </trans-unit>
-      <trans-unit id="b79b56dbede0077a92563175fda9b54f">
-        <source>This shop has no sitemap yet.</source>
-        <target>This shop has no sitemap yet.</target>
-        <note>Line: 65</note>
-      </trans-unit>
-      <trans-unit id="53fdf9abbbe9a13fccaf2a6dd5b6220f">
-        <source>Generating a sitemap can take several minutes</source>
-        <target>Generating a sitemap can take several minutes</target>
-        <note>Line: 123</note>
-      </trans-unit>
-      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
-        <source>Information</source>
-        <target>Information</target>
-        <note>Line: 131</note>
-      </trans-unit>
-      <trans-unit id="8ef76e3a7b01e9b08a23ddf87cbc242e">
-        <source>The above URL is the master sitemap file. It refers to the following sub-sitemap files:</source>
-        <target>The above URL is the master sitemap file. It refers to the following sub-sitemap files:</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="03f772c9541dddad66266c0cf698bba6">
-        <source>Ask your hosting provider to setup a "Cron job" to load the following URL at the time you would like:</source>
-        <target>Ask your hosting provider to setup a "Cron job" to load the following URL at the time you would like:</target>
-        <note>Line: 136</note>
+      <trans-unit id="b7d7436a18bf546dd6438d92218868c1">
+        <source>Check all</source>
+        <target>Check all</target>
+        <note>Line: 146</note>
       </trans-unit>
     </body>
   </file>

@@ -222,7 +222,7 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
       - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
-      - '@prestashop.adapter.product.attribute_group.attribute_group_view_data_provider'
+      - '@PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AttributeGroupViewDataProvider'
     public: true
 
   prestashop.core.grid.definition.factory.attribute_group:
@@ -300,6 +300,15 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
+      - '@prestashop.adapter.shop.context'
+      - '@form.factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultiShopPreviewAccessibilityChecker'
+    public: true
+
+  prestashop.core.grid.definition.factory.product.shops:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductShopsGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.product'
     public: true
 
   prestashop.core.grid.definition.factory.product_light:
@@ -337,3 +346,18 @@ services:
     arguments:
       - '@prestashop.core.form.choice_provider.gender_choice_provider'
     public: true
+
+  prestashop.core.grid.definition.factory.customer_thread:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerThreadGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.core.form.choice_provider.contact_type_choice_provider'
+      - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
+      - '@prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider'
+    public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: false
+    autowire: true

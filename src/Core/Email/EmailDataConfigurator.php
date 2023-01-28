@@ -55,6 +55,7 @@ final class EmailDataConfigurator implements DataConfigurationInterface
         return [
             'send_emails_to' => $this->configuration->get('PS_MAIL_EMAIL_MESSAGE'),
             'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD'),
+            'subject_prefix' => (bool) $this->configuration->get('PS_MAIL_SUBJECT_PREFIX'),
             'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE'),
             'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS'),
             'smtp_config' => [
@@ -82,6 +83,7 @@ final class EmailDataConfigurator implements DataConfigurationInterface
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_MAIL_EMAIL_MESSAGE', $config['send_emails_to']);
             $this->configuration->set('PS_MAIL_METHOD', $config['mail_method']);
+            $this->configuration->set('PS_MAIL_SUBJECT_PREFIX', $config['subject_prefix']);
             $this->configuration->set('PS_MAIL_TYPE', $config['mail_type']);
             $this->configuration->set('PS_LOG_EMAILS', $config['log_emails']);
             $this->configuration->set('PS_MAIL_DKIM_ENABLE', $config['dkim_enable']);
@@ -111,6 +113,7 @@ final class EmailDataConfigurator implements DataConfigurationInterface
         return isset(
             $config['send_emails_to'],
             $config['mail_method'],
+            $config['subject_prefix'],
             $config['mail_type'],
             $config['log_emails'],
             $config['dkim_enable'],

@@ -1,6 +1,8 @@
-FROM prestashop/prestashop-git:latest
-
 # To run files with the same group as your primary user
+ARG VERSION
+
+FROM prestashop/base:$VERSION
+
 ARG GROUP_ID
 ARG USER_ID
 
@@ -23,4 +25,5 @@ RUN apt install -y \
     apt-utils \
     mailutils
 
+RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
 CMD ["/tmp/docker_run_git.sh"]

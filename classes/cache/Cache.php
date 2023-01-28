@@ -28,12 +28,12 @@ abstract class CacheCore
     /**
      * Name of keys index.
      */
-    const KEYS_NAME = '__keys__';
+    public const KEYS_NAME = '__keys__';
 
     /**
      * Name of SQL cache index.
      */
-    const SQL_TABLES_NAME = 'tablesCached';
+    public const SQL_TABLES_NAME = 'tablesCached';
 
     /**
      * Store the number of time a query is fetched from the cache.

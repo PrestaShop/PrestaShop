@@ -44,11 +44,11 @@ use PrestaShop\PrestaShop\Core\Session\SessionInterface;
  */
 class CookieCore
 {
-    const SAMESITE_NONE = 'None';
-    const SAMESITE_LAX = 'Lax';
-    const SAMESITE_STRICT = 'Strict';
+    public const SAMESITE_NONE = 'None';
+    public const SAMESITE_LAX = 'Lax';
+    public const SAMESITE_STRICT = 'Strict';
 
-    const SAMESITE_AVAILABLE_VALUES = [
+    public const SAMESITE_AVAILABLE_VALUES = [
         self::SAMESITE_NONE => self::SAMESITE_NONE,
         self::SAMESITE_LAX => self::SAMESITE_LAX,
         self::SAMESITE_STRICT => self::SAMESITE_STRICT,
@@ -85,6 +85,9 @@ class CookieCore
 
     /** @var bool */
     protected $_secure = false;
+
+    /** @var SessionInterface|null */
+    protected $session = null;
 
     /**
      * Get data if the cookie exists and else initialize an new one.
@@ -556,19 +559,21 @@ class CookieCore
      */
     public function getSession($sessionId)
     {
+        if ($this->session !== null) {
+            return $this->session;
+        }
+
         if (isset($this->id_employee)) {
-            $session = new EmployeeSession($sessionId);
+            $this->session = new EmployeeSession($sessionId);
         } elseif (isset($this->id_customer)) {
-            $session = new CustomerSession($sessionId);
+            $this->session = new CustomerSession($sessionId);
         }
 
-        if (isset($session) && Validate::isLoadedObject($session)) {
+        if (isset($this->session) && Validate::isLoadedObject($this->session)) {
             // Update session date_upd
-            $session->save();
-
-            return $session;
+            $this->session->save();
         }
 
-        return null;
+        return $this->session;
     }
 }

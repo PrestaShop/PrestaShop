@@ -83,7 +83,7 @@
 						<p>
 							{l s='Some of these expressions use this special syntax: %s.' sprintf=['%d'] d='Admin.International.Help'}
 							<br />
-							{l s='You MUST use this syntax in your translations. Here are several examples:'}
+							{l s='You must use this syntax in your translations. Here are several examples:'}
 						</p>
 						<ul>
               <li>"{l s='There are [1]%replace%[/1] products' html=true sprintf=['%replace%' => '%d', '[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.International.Help'}": {l s='"%s" will be replaced by a number.' sprintf=['%d'] d='Admin.International.Help'}</li>

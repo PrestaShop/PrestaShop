@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DuplicateProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -43,10 +44,61 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param string $newProductReference
      */
-    public function duplicate(string $productReference, string $newProductReference): void
+    public function duplicateForDefaultShop(string $productReference, string $newProductReference): void
     {
         $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($this->getDefaultShopId())
+        ));
+
+        $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
+    }
+
+    /**
+     * @When I duplicate product :productReference to a :newProductReference for shop :shopReference
+     *
+     * @param string $productReference
+     * @param string $newProductReference
+     * @param string $shopReference
+     */
+    public function duplicateForShop(string $productReference, string $newProductReference, string $shopReference): void
+    {
+        $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($this->referenceToId($shopReference))
+        ));
+
+        $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
+    }
+
+    /**
+     * @When I duplicate product :productReference to a :newProductReference for all shops
+     *
+     * @param string $productReference
+     * @param string $newProductReference
+     */
+    public function duplicateForAllShops(string $productReference, string $newProductReference): void
+    {
+        $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::allShops()
+        ));
+
+        $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
+    }
+
+    /**
+     * @When I duplicate product :productReference to a :newProductReference for shop group :shopGroupReference
+     *
+     * @param string $productReference
+     * @param string $newProductReference
+     * @param string $shopGroupReference
+     */
+    public function duplicateForShopGroup(string $productReference, string $newProductReference, string $shopGroupReference): void
+    {
+        $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shopGroup($this->referenceToId($shopGroupReference))
         ));
 
         $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
@@ -65,7 +117,7 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $newProductIds = $this->getCommandBus()->handle(new BulkDuplicateProductCommand($productIds));
+            $newProductIds = $this->getCommandBus()->handle(new BulkDuplicateProductCommand($productIds, ShopConstraint::shop($this->getDefaultShopId())));
         } catch (ProductException $e) {
             $this->setLastException($e);
 
@@ -94,8 +146,8 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
      */
     public function assertDuplicatedCustomizationFields(string $newProductReference, string $oldProductReference): void
     {
-        $oldCustomizationFields = $this->getProductCustomizationFields($oldProductReference);
-        $newCustomizationFields = $this->getProductCustomizationFields($newProductReference);
+        $oldCustomizationFields = $this->getProductCustomizationFields($oldProductReference, ShopConstraint::shop($this->getDefaultShopId()));
+        $newCustomizationFields = $this->getProductCustomizationFields($newProductReference, ShopConstraint::shop($this->getDefaultShopId()));
 
         Assert::assertEquals(
             count($oldCustomizationFields),

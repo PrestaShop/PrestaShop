@@ -32,6 +32,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
+use PrestaShopBundle\Routing\Converter\CacheCleanerInterface;
 
 /**
  * Passes data between the application layer in charge of the feature flags form
@@ -51,30 +52,39 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     protected $isMultiShopUsed;
 
     /**
+     * @var CacheCleanerInterface
+     */
+    private $cacheCleaner;
+
+    /**
      * @param EntityManagerInterface $doctrineEntityManager
      * @param string $stability
      * @param bool $isMultiShopUsed
+     * @param CacheCleanerInterface $cacheCleaner
      */
-    public function __construct(EntityManagerInterface $doctrineEntityManager, string $stability, bool $isMultiShopUsed)
-    {
+    public function __construct(
+        EntityManagerInterface $doctrineEntityManager,
+        string $stability,
+        bool $isMultiShopUsed,
+        CacheCleanerInterface $cacheCleaner
+    ) {
         $this->doctrineEntityManager = $doctrineEntityManager;
         $this->stability = $stability;
         $this->isMultiShopUsed = $isMultiShopUsed;
+        $this->cacheCleaner = $cacheCleaner;
     }
 
     public function getData()
     {
         $featureFlags = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['stability' => $this->stability]);
 
-        // We disable product v2 switch based on multishop state and stability, someday we will need
-        // to implement a more generic feature for any feature flag
-        $isDisabled = false;
-        if ($this->stability === 'stable' && $this->isMultiShopUsed || $this->stability === 'beta' && !$this->isMultiShopUsed) {
-            $isDisabled = true;
-        }
-
         $featureFlagsData = [];
         foreach ($featureFlags as $featureFlag) {
+            // We disable product v2 switch based on multishop state and feature name, someday we will need
+            // to implement a more generic feature for any feature flag
+            $isDisabled = strpos($featureFlag->getName(), '_multi_shop') !== false && !$this->isMultiShopUsed
+                || strpos($featureFlag->getName(), '_multi_shop') === false && $this->isMultiShopUsed
+            ;
             $featureFlagsData[$featureFlag->getName()] = [
                 'enabled' => $featureFlag->isEnabled(),
                 'name' => $featureFlag->getName(),
@@ -112,6 +122,9 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
         }
 
         $this->doctrineEntityManager->flush();
+        // Clear cache of legacy routes since they can depend on an associated feature flag
+        // when the attribute _legacy_feature_flag is used
+        $this->cacheCleaner->clearCache();
 
         return [];
     }
@@ -123,7 +136,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 return false;
             }
 
-            if (!is_bool($flagData['enabled'])) {
+            if ($flagData['enabled'] !== null && !is_bool($flagData['enabled'])) {
                 return false;
             }
         }

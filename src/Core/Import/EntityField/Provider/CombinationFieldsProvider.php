@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CombinationFieldsProvider defines a combination fields provider.
@@ -71,7 +71,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('low_stock_threshold', $this->trans('Low stock level', 'Admin.Catalog.Feature')),
             new EntityField(
                 'low_stock_alert',
-                $this->trans('Send me an email when the quantity is under this level', 'Admin.Catalog.Feature')
+                $this->trans('Receive a low stock alert by email', 'Admin.Catalog.Feature')
             ),
             new EntityField('weight', $this->trans('Impact on weight', 'Admin.Catalog.Feature')),
             new EntityField('default_on', $this->trans('Default (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),

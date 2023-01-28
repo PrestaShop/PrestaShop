@@ -142,6 +142,13 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
       - '@prestashop.core.form.identifiable_object.data_provider.order_message_form_data_provider'
 
+  prestashop.core.form.identifiable_object.builder.order_return_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\OrderReturnType'
+      - '@prestashop.core.form.identifiable_object.data_provider.order_return_form_data_provider'
+
   prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
@@ -201,6 +208,13 @@ services:
       - '@prestashop.core.form.identifiable_object.data_provider.product_form_data_provider'
       - '@prestashop.core.form.identifiable_object.option_provider.product_form_options_provider'
 
+  prestashop.core.form.identifiable_object.builder.product_shops_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType'
+      - '@prestashop.core.form.identifiable_object.data_provider.product_shops_form_data_provider'
+
   prestashop.core.form.identifiable_object.builder.combination_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
@@ -236,6 +250,13 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType'
       - '@prestashop.core.form.identifiable_object.data_provider.zone_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.country_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType'
+      - '@prestashop.core.form.identifiable_object.data_provider.country_form_data_provider'
 
   prestashop.core.form.identifiable_object.builder.search_engine_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'

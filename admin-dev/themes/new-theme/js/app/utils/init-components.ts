@@ -35,7 +35,6 @@ import CountryStateSelectionToggler from '@components/country-state-selection-to
 import DateRange from '@js/components/form/date-range';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import DisablingSwitch from '@components/form/disabling-switch';
-import FormFieldDisabler from '@components/form/form-field-disabler';
 import GeneratableInput from '@js/components/generatable-input';
 import Grid from '@components/grid/grid';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
@@ -43,6 +42,7 @@ import MultipleChoiceTable from '@js/components/multiple-choice-table';
 import MultistoreConfigField from '@js/components/form/multistore-config-field';
 import PreviewOpener from '@components/form/preview-opener';
 import Router from '@components/router';
+import ShopSelector from '@components/shop-selector/shop-selector';
 import TaggableField from '@js/components/taggable-field';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import TinyMCEEditor from '@js/components/tinymce-editor';
@@ -69,6 +69,7 @@ import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-ac
 import AjaxBulkActionExtension from '@components/grid/extension/ajax-bulk-action-extension';
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import FormFieldToggler from '@components/form/form-field-toggler';
 
 const GridExtensions = {
   AjaxBulkActionExtension,
@@ -140,7 +141,7 @@ const initPrestashopComponents = (): void => {
     DeltaQuantityInput,
     DisablingSwitch,
     EventEmitter,
-    FormFieldDisabler,
+    FormFieldToggler,
     GeneratableInput,
     DateRange,
     Grid,
@@ -151,6 +152,7 @@ const initPrestashopComponents = (): void => {
     MultistoreConfigField,
     PreviewOpener,
     Router,
+    ShopSelector,
     TaggableField,
     TextWithLengthCounter,
     TinyMCEEditor,

@@ -36,6 +36,7 @@ services:
   prestashop.adapter.profile.query_handler.get_profile_for_editing_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\QueryHandler\GetProfileForEditingHandler'
     arguments:
+      - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - !php/const _PS_PROFILE_IMG_DIR_
     tags:

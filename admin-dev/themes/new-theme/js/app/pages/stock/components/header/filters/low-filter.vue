@@ -70,10 +70,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSCheckbox from '@app/widgets/ps-checkbox.vue';
+  import {defineComponent} from 'vue';
+  import translate from '@app/pages/stock/mixins/translate';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       filters: {
         type: Object,
@@ -81,6 +82,7 @@
         default: () => ({}),
       },
     },
+    mixins: [translate],
     computed: {
       stockImportTitle(): string {
         return this.trans('title_import');
@@ -92,7 +94,8 @@
         return window.data.stockImportUrl;
       },
       stockExportUrl(): string {
-        const params = $.param(this.filters);
+        const filtersClone = {...this.filters};
+        const params = $.param(filtersClone);
 
         return `${window.data.stockExportUrl}&${params}`;
       },

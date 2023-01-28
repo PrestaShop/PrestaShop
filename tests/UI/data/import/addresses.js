@@ -1,8 +1,9 @@
-const faker = require('faker');
-const {DefaultCustomer} = require('@data/demo/customer');
-const {countries} = require('@data/demo/countries');
+import Countries from '@data/demo/countries';
+import Customers from '@data/demo/customers';
 
-const countriesNames = Object.values(countries).map(country => country.name);
+import {faker} from '@faker-js/faker';
+
+const countriesNames = Object.values(Countries).map((country) => country.name);
 
 const records = [];
 
@@ -11,27 +12,28 @@ function createRecord() {
     records.push({
       id: i + 3,
       alias: faker.address.streetAddress(),
-      active: faker.random.number({min: 0, max: 1}),
-      email: DefaultCustomer.email,
-      customerID: DefaultCustomer.id,
+      active: faker.datatype.number({min: 0, max: 1}),
+      email: Customers.johnDoe.email,
+      customerID: Customers.johnDoe.id,
       manufacturer: '',
       supplier: '',
-      company: faker.company.companyName(),
+      company: faker.company.name(),
       lastname: 'test',
       firstname: faker.name.firstName(),
       address1: faker.address.streetAddress(),
       address2: faker.address.secondaryAddress(),
       zipCode: faker.address.zipCode('#####'),
       city: faker.address.city(),
-      country: faker.random.arrayElement(countriesNames),
+      country: faker.helpers.arrayElement(countriesNames),
       state: '',
       other: '',
-      phone: faker.phone.phoneNumber('01########'),
-      mobilePhone: faker.phone.phoneNumber('01########'),
+      phone: faker.phone.number('01########'),
+      mobilePhone: faker.phone.number('01########'),
       vatNumber: '',
       dni: '',
     });
   }
+
   return records;
 }
 

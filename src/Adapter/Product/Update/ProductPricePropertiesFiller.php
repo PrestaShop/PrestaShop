@@ -30,11 +30,15 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\PricesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
 /**
+ * @deprecated should be removed when unified UpdateProductCommand is fully done
+ * @see PricesFiller instead
+ *
  * Fills Product price properties which needs specific handling for update
  */
 class ProductPricePropertiesFiller

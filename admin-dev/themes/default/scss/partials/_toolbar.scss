@@ -44,6 +44,10 @@
     color: #363a41;
     white-space: nowrap;
 
+    @at-root .adminmodules & {
+      margin: 0 0 1.25rem;
+    }
+
     a {
       border-bottom: dotted 1px #fff;
 
@@ -64,9 +68,13 @@
     position: absolute;
     margin-top: 60px;
     font-family: $url-font-content-name;
-    @include left($widthSidebarNav + 20px);
+    @include left($widthSidebarNav + 17px);
     @media (max-width: $screen-tablet) {
       @include left(70px);
+    }
+
+    @at-root .adminmodules & {
+      margin-top: 67px;
     }
   }
 

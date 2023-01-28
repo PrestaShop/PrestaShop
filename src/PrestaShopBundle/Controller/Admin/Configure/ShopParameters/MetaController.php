@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
@@ -71,7 +72,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -122,7 +123,7 @@ class MetaController extends FrameworkBundleAdminController
             $result = $this->getMetaFormHandler()->handle($metaForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_metas_index');
             }
@@ -160,7 +161,7 @@ class MetaController extends FrameworkBundleAdminController
             $result = $this->getMetaFormHandler()->handleFor($metaId, $metaForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_metas_index');
             }
@@ -196,7 +197,7 @@ class MetaController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         }
 
@@ -225,7 +226,7 @@ class MetaController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         }
 
@@ -262,7 +263,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $formProcessResult, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $formProcessResult, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -295,7 +296,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $formProcessResult, $seoOptionsForm, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $formProcessResult, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -323,7 +324,7 @@ class MetaController extends FrameworkBundleAdminController
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $formProcessResult);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $formProcessResult);
     }
 
     /**
@@ -356,7 +357,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $formProcessResult, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $formProcessResult, $urlSchemaForm);
     }
 
     /**
@@ -392,10 +393,48 @@ class MetaController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'success',
-            $this->trans('Successful update.', 'Admin.Notifications.Success')
+            $this->trans('Successful update', 'Admin.Notifications.Success')
         );
 
         return $this->redirectToRoute('admin_metas_index');
+    }
+
+    /**
+     * @deprecated since 8.1.0 and will be removed in next major version.
+     *
+     * @param Request $request
+     * @param MetaFilters $filters
+     * @param FormInterface $setUpUrlsForm
+     * @param FormInterface $shopUrlsForm
+     * @param FormInterface $seoOptionsForm
+     * @param FormInterface|null $urlSchemaForm
+     *
+     * @return Response
+     */
+    protected function renderForm(
+        Request $request,
+        MetaFilters $filters,
+        FormInterface $setUpUrlsForm,
+        FormInterface $shopUrlsForm,
+        FormInterface $seoOptionsForm,
+        ?FormInterface $urlSchemaForm = null
+    ): Response {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0 and will be removed in the next major version. Use doRenderForm() instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return $this->doRenderForm(
+            $request,
+            $filters,
+            $setUpUrlsForm,
+            $shopUrlsForm,
+            $seoOptionsForm,
+            $urlSchemaForm
+        );
     }
 
     /**
@@ -408,7 +447,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    protected function renderForm(
+    private function doRenderForm(
         Request $request,
         MetaFilters $filters,
         FormInterface $setUpUrlsForm,
@@ -432,7 +471,7 @@ class MetaController extends FrameworkBundleAdminController
             $presentedGrid = $this->presentGrid($grid);
         }
 
-        $tools = $this->get('prestashop.adapter.tools');
+        $tools = $this->get(Tools::class);
         $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');

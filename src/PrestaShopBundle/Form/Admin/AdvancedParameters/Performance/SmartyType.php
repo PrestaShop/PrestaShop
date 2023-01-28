@@ -66,19 +66,6 @@ class SmartyType extends TranslatorAwareType
                     'class' => 'smarty-cache-option',
                 ],
             ])
-            ->add('caching_type', ChoiceType::class, [
-                'choices' => [
-                    'File System' => 'filesystem',
-                    'MySQL' => 'mysql',
-                ],
-                'placeholder' => false,
-                'required' => false,
-                'label' => $this->trans('Caching type', 'Admin.Advparameters.Feature'),
-                'row_attr' => [
-                    'class' => 'smarty-cache-option',
-                ],
-                'choice_translation_domain' => 'Admin.Advparameters.Feature',
-            ])
             ->add('clear_cache', ChoiceType::class, [
                 'choices' => [
                     'Never clear cache files' => 'never',

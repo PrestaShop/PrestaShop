@@ -29,12 +29,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use Cache;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
@@ -45,7 +45,114 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assignToCategoriesIncludingNonExistingOnes(string $productReference, TableNode $table)
+    public function assignToCategoriesForDefaultShop(string $productReference, TableNode $table)
+    {
+        $this->assignToCategories($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I assign product :productReference to following categories for shop :shopReference:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     * @param string $shopReference
+     */
+    public function assignToCategoriesForSpecificShop(string $productReference, TableNode $table, string $shopReference)
+    {
+        $this->assignToCategories($productReference, $table, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
+
+    /**
+     * @When I assign product :productReference to following categories for all shops:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assignToCategoriesForAllShops(string $productReference, TableNode $table)
+    {
+        $this->assignToCategories($productReference, $table, ShopConstraint::allShops());
+    }
+
+    /**
+     * @Then product :productReference should be assigned to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductCategoriesForDefaultShop(string $productReference, TableNode $table)
+    {
+        $this->assertProductCategories($productReference, $table, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should be assigned to following categories for shop(s) :shopReferences:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     * @param string $shopReferences
+     */
+    public function assertProductCategoriesForShops(string $productReference, TableNode $table, string $shopReferences)
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertProductCategories($productReference, $table, $shopId);
+        }
+    }
+
+    /**
+     * @When I delete all categories from product :productReference
+     *
+     * @param string $productReference
+     */
+    public function deleteAllProductCategoriesForDefaultShop(string $productReference)
+    {
+        $this->deleteAllProductCategories($productReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I delete all categories from product :productReference for shop :shopReference
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     */
+    public function deleteAllProductCategoriesForShop(string $productReference, string $shopReference)
+    {
+        $this->deleteAllProductCategories($productReference, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
+
+    /**
+     * @When I delete all categories from product :productReference for all shops
+     *
+     * @param string $productReference
+     */
+    public function deleteAllProductCategoriesForAllShops(string $productReference)
+    {
+        $this->deleteAllProductCategories($productReference, ShopConstraint::allShops());
+    }
+
+    /**
+     * @Then I should get error that assigning product to categories failed
+     */
+    public function assertFailedUpdateCategoriesError()
+    {
+        $this->assertLastErrorIs(
+            CannotUpdateProductException::class,
+            CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
+        );
+    }
+
+    private function deleteAllProductCategories(string $productReference, ShopConstraint $shopConstraint)
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveAllAssociatedProductCategoriesCommand(
+                $this->getSharedStorage()->get($productReference),
+                $shopConstraint
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function assignToCategories(string $productReference, TableNode $table, ShopConstraint $shopConstraint)
     {
         $data = $table->getRowsHash();
         $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
@@ -71,32 +178,26 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
         $this->assignProductToCategories(
             $this->getSharedStorage()->get($productReference),
             $defaultCategoryId,
-            $categoryIds
+            $categoryIds,
+            $shopConstraint
         );
     }
 
-    /**
-     * @Then product :productReference should be assigned to following categories:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function assertProductCategories(string $productReference, TableNode $table)
+    private function assertProductCategories(string $productReference, TableNode $table, int $shopId)
     {
-        Cache::clear();
-        $productForEditing = $this->getProductForEditing($productReference);
-        $expectedCategories = $this->localizeByColumns($table);
+        $productForEditing = $this->getProductForEditing($productReference, $shopId);
+        $expectedCategories = $table->getColumnsHash();
         $categoriesInfo = $productForEditing->getCategoriesInformation();
         $actualCategories = $categoriesInfo->getCategoriesInformation();
 
         Assert::assertCount(
             count($expectedCategories),
             $actualCategories,
-            'Expected and actual categories count doesn\'t match'
+            sprintf('Expected and actual categories count doesn\'t match for shop %d', $shopId)
         );
 
         $expectedDefaultCategoryId = null;
-        foreach ($actualCategories as $key => $categoryInformation) {
+        foreach ($actualCategories as $categoryInformation) {
             $actualId = $categoryInformation->getId();
             // We cannot anticipate categories ordering (and we don't really care) so we find related expected category by id
             $relativeExpectedCategories = array_filter(
@@ -104,6 +205,11 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
                 function (array $expectedCategory) use ($actualId) {
                     return $actualId === $this->getSharedStorage()->get($expectedCategory['id reference']);
                 });
+            Assert::assertNotEmpty($relativeExpectedCategories, sprintf(
+                'Did not expect to find category %s in the list for shop %d',
+                $categoryInformation->getName(),
+                $shopId
+            ));
             // Only one category should be provided in feature, but array filter returns array of found items, so we get first
             $expectedCategory = reset($relativeExpectedCategories);
 
@@ -114,7 +220,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
             );
             Assert::assertEquals(
                 $expectedCategory['name'],
-                $categoryInformation->getLocalizedNames(),
+                $categoryInformation->getName(),
                 'Category localized names doesn\'t match'
             );
 
@@ -131,42 +237,18 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I delete all categories from product :productReference
-     *
-     * @param string $productReference
-     */
-    public function deleteAllProductCategoriesExceptDefault(string $productReference)
-    {
-        try {
-            $this->getCommandBus()->handle(new RemoveAllAssociatedProductCategoriesCommand($this->getSharedStorage()->get($productReference)));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Then I should get error that assigning product to categories failed
-     */
-    public function assertFailedUpdateCategoriesError()
-    {
-        $this->assertLastErrorIs(
-            CannotUpdateProductException::class,
-            CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
-        );
-    }
-
-    /**
      * @param int $productId
      * @param int $defaultCategoryId
      * @param array $categoryIds
      */
-    private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
+    private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds, ShopConstraint $shopConstraint): void
     {
         try {
             $this->getCommandBus()->handle(new SetAssociatedProductCategoriesCommand(
                 $productId,
                 $defaultCategoryId,
-                $categoryIds
+                $categoryIds,
+                $shopConstraint
             ));
         } catch (ProductException $e) {
             $this->setLastException($e);

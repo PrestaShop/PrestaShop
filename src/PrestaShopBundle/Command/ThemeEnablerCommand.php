@@ -64,7 +64,7 @@ final class ThemeEnablerCommand extends Command
         $this
             ->setName('prestashop:theme:enable')
             ->setDescription('Manage your themes via command line')
-            ->addArgument('theme', InputArgument::REQUIRED, 'Module on which the action will be executed')
+            ->addArgument('theme', InputArgument::REQUIRED, 'Theme on which the action will be executed')
         ;
     }
 

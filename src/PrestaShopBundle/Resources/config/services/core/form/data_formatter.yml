@@ -1,9 +1,9 @@
 services:
   _defaults:
-    public: true
+    autowire: true
+    bind:
+      $modifyAllNamePrefix: !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
-  prestashop.core.form.data_formatter.bulk_combination_form_data_formatter:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter: ~
 
-  prestashop.core.form.data_formatter.combination_list_form_data_formatter:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter: ~

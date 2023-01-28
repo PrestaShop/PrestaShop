@@ -29,21 +29,17 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use PrestaShopBundle\Bridge\AdminController\Field\Field;
-use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
-use PrestaShopBundle\Bridge\AdminController\LegacyListControllerBridgeInterface;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
-use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\FeatureHelperListBridge;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,101 +49,32 @@ use Tools;
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController implements LegacyControllerBridgeInterface, LegacyListControllerBridgeInterface
+class FeatureController extends FrameworkBundleAdminController implements FrameworkBridgeControllerInterface
 {
-    use AdminControllerTrait;
-    use SmartyTrait;
-
-    /**
-     * This parameter is needed by legacy hook, so we can't remove it.
-     *
-     * @var string
-     */
-    public $php_self;
-
-    /**
-     * This parameter is needed by legacy helper shop, so we can't remove it.
-     *
-     * @var bool
-     */
-    public $multishop_context_group = true;
-
-    /**
-     * This parameter is needed by legacy helper shop, we can't remove it.
-     *
-     * @var int
-     */
-    public $multishop_context;
-
-    /**
-     * @var ControllerConfiguration
-     */
-    public $controllerConfiguration;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTable(): string
-    {
-        return 'feature';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getClassName(): string
-    {
-        return 'Feature';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier(): string
-    {
-        return 'id_feature';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPositionIdentifier(): string
-    {
-        return 'id_feature';
-    }
+    use FrameworkBridgeControllerTrait;
+    use FrameworkBridgeControllerListTrait;
+    use FrameworkControllerSmartyTrait;
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
-        $this->buildGenericAction();
-        $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
-            $this->getTable(),
-            $this->getClassName(),
-            $this->controllerConfiguration,
-            $this->getIdentifier(),
-            $this->getPositionIdentifier(),
+        $this->setHeaderToolbarActions();
+
+        $helperListConfiguration = $this->buildListConfiguration(
+            'id_feature',
+            //@todo: position update is still handled by legacy ajax controller action. Need to handle in dedicated PR
             'position',
-            true
+            $request->attributes->get('_route'),
+            'id_feature'
         );
+
         $this->setListFields($helperListConfiguration);
-        $this->buildActionList($helperListConfiguration);
+        $this->setListActions($helperListConfiguration);
+        $this->processFilters($request, $helperListConfiguration);
 
-        if ($request->request->has('submitResetfeature')) {
-            $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
-        }
-
-        $this->getFiltersHelper()->processFilter(
-            $request,
-            $helperListConfiguration
-        );
-
-        return $this->renderSmarty(
-            $this->getHelperListBridge()->generateList(
-                $helperListConfiguration
-            )
-        );
+        return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
     }
 
     /**
@@ -159,7 +86,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         if (!$this->isFeatureEnabled()) {
             return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
@@ -177,10 +104,9 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
             $handlerResult = $featureFormHandler->handle($featureForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
-                //@todo change route to index when it's migrated
-                return $this->redirectToRoute('admin_features_create');
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -201,15 +127,14 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
      *
      * @return Response
      */
-    public function editAction($featureId, Request $request)
+    public function editAction($featureId, Request $request): Response
     {
         try {
             $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            // @todo change route to features index when it's migrated
-            return $this->redirectToRoute('admin_features_create');
+            return $this->redirectToRoute('admin_features_index');
         }
 
         if (!$this->isFeatureEnabled()) {
@@ -229,7 +154,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
             $handlerResult = $featureFormHandler->handleFor($featureId, $featureForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_features_edit', [
                     'featureId' => $featureId,
@@ -245,92 +170,103 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
         ]);
     }
 
-    public function getHelperListBridge(): HelperListFeatureBridge
+    /**
+     * @return ControllerConfiguration
+     */
+    public function getControllerConfiguration(): ControllerConfiguration
     {
-        return $this->get('prestashop.core.bridge.helper_list_feature');
+        return $this->buildControllerConfiguration(
+            'feature',
+            Feature::class,
+            'AdminFeatures'
+        );
     }
 
-    private function buildGenericAction(): void
+    /**
+     * @return FeatureHelperListBridge
+     */
+    private function getHelperListBridge(): FeatureHelperListBridge
     {
-        $this->addAction(new HeaderToolbarAction('new_feature', [
-            //Used $this->generateUrl('admin_features_add')
-            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
-            'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
-            'icon' => 'process-icon-new',
-        ]));
-        $this->addAction(new HeaderToolbarAction('new_feature_value', [
-            //Used $this->generateUrl('admin_features_add_value')
-            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->controllerConfiguration->token,
-            'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
-            'icon' => 'process-icon-new',
-        ]));
+        return $this->get('prestashop.bridge.helper.listing.helper_bridge.feature_helper_list_bridge');
+    }
+
+    /**
+     * @return void
+     */
+    private function setHeaderToolbarActions(): void
+    {
+        $controllerConfiguration = $this->getControllerConfiguration();
+        $index = $controllerConfiguration->legacyCurrentIndex;
+        $token = $controllerConfiguration->token;
+
+        $controllerConfiguration
+            ->addHeaderToolbarAction('new_feature', [
+                'href' => $this->generateUrl('admin_features_add'),
+                'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
+                'icon' => 'process-icon-new',
+            ])
+            ->addHeaderToolbarAction('new_feature_value', [
+                'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
+                'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
+                'icon' => 'process-icon-new',
+            ])
+        ;
     }
 
     /**
      * Build actions for list.
      *
      * @return void
-     *
-     * @throws \Exception
      */
-    private function buildActionList(HelperListConfiguration $helperListConfiguration): void
+    private function setListActions(HelperListConfiguration $helperListConfiguration): void
     {
-        $this->addActionList(new ListHeaderToolbarAction('new', [
-            //Replace by $this->generateUrl('admin_features_add')
-            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
-            'desc' => $this->trans('Add new', 'Admin.Actions'),
-        ]), $helperListConfiguration);
-
-        $this->addActionList(new ListRowAction('view'), $helperListConfiguration);
-        $this->addActionList(new ListRowAction('edit'), $helperListConfiguration);
-        $this->addActionList(new ListRowAction('delete'), $helperListConfiguration);
-
-        $this->addActionList(new ListBulkAction('delete', [
-            'text' => $this->trans('Delete selected', 'Admin.Actions'),
-            'icon' => 'icon-trash',
-            'confirm' => $this->trans('Delete selected items?', 'Admin.Notifications.Warning'),
-        ]), $helperListConfiguration);
+        $helperListConfiguration
+            ->addRowAction('view')
+            ->addRowAction('edit')
+            ->addRowAction('delete')
+            ->addToolbarAction('new', [
+                'href' => $this->generateUrl('admin_features_add'),
+                'desc' => $this->trans('Add new', 'Admin.Actions'),
+            ])
+            ->addBulkAction('delete', [
+                'text' => $this->trans('Delete selected', 'Admin.Actions'),
+                'icon' => 'icon-trash',
+                'confirm' => $this->trans('Delete selected items?', 'Admin.Notifications.Warning'),
+            ])
+        ;
     }
 
     /**
-     * Define fields in the list.
-     *
-     * @return void
+     * @param HelperListConfiguration $helperListConfiguration
      */
     private function setListFields(HelperListConfiguration $helperListConfiguration): void
     {
-        $this->addListField(new Field(
-            'id_feature', [
-                'title' => $this->trans('ID', 'Admin.Global', []),
+        $helperListConfiguration->setFieldsList([
+            'id_feature' => [
+                'title' => $this->trans('ID', 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ]
-        ), $helperListConfiguration);
-        $this->addListField(new Field(
-            'name', [
-                'title' => $this->trans('Name', 'Admin.Global', []),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', 'Admin.Global'),
                 'width' => 'auto',
                 'filter_key' => 'b!name',
-            ]
-        ), $helperListConfiguration);
-        $this->addListField(new Field(
-            'value', [
-                'title' => $this->trans('Values', 'Admin.Global', []),
+            ],
+            'value' => [
+                'title' => $this->trans('Values', 'Admin.Global'),
                 'orderby' => false,
                 'search' => false,
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ]
-        ), $helperListConfiguration);
-        $this->addListField(new Field(
-            'position', [
-                'title' => $this->trans('Position', 'Admin.Global', []),
+            ],
+            'position' => [
+                'title' => $this->trans('Position', 'Admin.Global'),
                 'filter_key' => 'a!position',
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'position' => 'position',
-            ]
-        ), $helperListConfiguration);
+            ],
+        ]);
     }
 
     /**

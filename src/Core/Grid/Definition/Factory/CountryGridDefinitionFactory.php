@@ -39,8 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
@@ -99,7 +98,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('iso_code'))
-                    ->setName($this->trans('ISO Code', [], 'Admin.International.Feature'))
+                    ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
                     ->setOptions([
                         'field' => 'iso_code',
                     ])
@@ -215,7 +214,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @return RowActionCollection
      */
-    private function getRowActions(): RowActionCollection
+    protected function getRowActions(): RowActionCollection
     {
         $rowActionCollection = new RowActionCollection();
         $rowActionCollection
@@ -224,7 +223,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
-                        'route' => 'admin_country_edit',
+                        'route' => 'admin_countries_edit',
                         'route_param_name' => 'countryId',
                         'route_param_field' => 'id_country',
                         'clickable_row' => true,

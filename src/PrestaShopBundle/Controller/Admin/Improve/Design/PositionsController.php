@@ -54,7 +54,7 @@ class PositionsController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Improve/Design/positions.html.twig")
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')~'_') && is_granted('update', request.get('_legacy_controller')~'_') && is_granted('create', request.get('_legacy_controller')~'_') && is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied.")
      *
      * @param Request $request
@@ -92,8 +92,7 @@ class PositionsController extends FrameworkBundleAdminController
         $hooks = $hookProvider->getHooks();
         foreach ($hooks as $key => $hook) {
             $hooks[$key]['modules'] = $hookProvider->getModulesFromHook(
-                $hook['id_hook'],
-                $this->selectedModule
+                $hook['id_hook']
             );
             // No module found, no need to continue
             if (!is_array($hooks[$key]['modules'])) {
@@ -131,6 +130,7 @@ class PositionsController extends FrameworkBundleAdminController
         return [
             'layoutHeaderToolbarBtn' => [
                 'save' => [
+                    'class' => 'btn-primary transplant-module-button',
                     'href' => $saveUrl,
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
                 ],

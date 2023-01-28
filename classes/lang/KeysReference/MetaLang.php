@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 trans('404 error', 'Shop.Navigation');
-trans('Best sales', 'Shop.Navigation');
+trans('Best sellers', 'Shop.Navigation');
 trans('Contact us', 'Shop.Navigation');
 trans('Brands', 'Shop.Navigation');
 trans('New products', 'Shop.Navigation');
@@ -54,8 +54,6 @@ trans('Our best sales', 'Shop.Navigation');
 
 trans('Use our form to contact us', 'Shop.Navigation');
 
-trans('Shop powered by PrestaShop', 'Shop.Navigation');
-
 trans('Brands list', 'Shop.Navigation');
 
 trans('Our new products', 'Shop.Navigation');
@@ -68,7 +66,7 @@ trans('Lost ? Find what your are looking for', 'Shop.Navigation');
 
 trans('Suppliers list', 'Shop.Navigation');
 trans('page-not-found', 'Shop.Navigation');
-trans('best-sales', 'Shop.Navigation');
+trans('best-sellers', 'Shop.Navigation');
 trans('contact-us', 'Shop.Navigation');
 trans('brands', 'Shop.Navigation');
 trans('new-products', 'Shop.Navigation');

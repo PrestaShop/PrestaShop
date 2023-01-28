@@ -29,4 +29,6 @@
 export default {
   passwordInput: '#customer_password',
   passwordStrengthFeedbackContainer: '.password-strength-feedback',
+  requiredFieldsFormAlertOptin: '#customerRequiredFieldsAlertMessageOptin',
+  requiredFieldsFormCheckboxOptin: '#customerRequiredFieldsContainer input[type="checkbox"][value="optin"]',
 };

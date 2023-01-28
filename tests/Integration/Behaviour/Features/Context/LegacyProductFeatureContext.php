@@ -42,6 +42,7 @@ use Product;
 use RuntimeException;
 use SpecificPrice;
 use StockAvailable;
+use Symfony\Component\HttpFoundation\Request;
 use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
@@ -265,7 +266,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->addProduct($product);
 
         // Shared Storage
-        SharedStorage::getStorage()->set($productName, $this->getProductWithName($productName)->id);
+        SharedStorage::getStorage()->set($productName, (int) $this->getProductWithName($productName)->id);
 
         // Fix issue pack cache is set when adding products.
         Pack::resetStaticCache();
@@ -984,6 +985,23 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
                 throw new RuntimeException(sprintf('Expects %s, got %s instead', $priceWithReduction, $productPrices['price_with_reduction']));
             }
         }
+    }
+
+    /**
+     * @Then product :productName should be editable
+     */
+    public function productShouldBeEditable($productName)
+    {
+        $this->checkProductWithNameExists($productName);
+        $productId = (int) $this->getProductWithName($productName)->id;
+
+        $formBuilder = CommonFeatureContext::getContainer()->get('prestashop.core.form.identifiable_object.builder.edit_product_form_builder');
+
+        $productForm = $formBuilder->getFormFor($productId, [], [
+            'product_id' => $productId,
+            'shop_id' => (int) Configuration::get('PS_SHOP_DEFAULT'),
+            'method' => Request::METHOD_POST,
+        ]);
     }
 
     /**

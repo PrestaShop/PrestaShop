@@ -31,10 +31,21 @@ class CmsControllerCore extends FrontController
     /** @var string */
     public $php_self = 'cms';
     public $assignCase;
+
+    /**
+     * @deprecated Since 8.1, it will become protected in next major version. Use getCms() method instead.
+     *
+     * @var CMS|null
+     */
     public $cms;
 
-    /** @var CMSCategory */
+    /**
+     * @deprecated Since 8.1, it will become protected in next major version. Use getCmsCategory() method instead.
+     *
+     * @var CMSCategory|null
+     */
     public $cms_category;
+
     /** @var bool */
     public $ssl = false;
 
@@ -168,11 +179,13 @@ class CmsControllerCore extends FrontController
 
         if ($cmsCategory->id_parent != 0) {
             foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
-                $cmsSubCategory = new CMSCategory($category['id_cms_category']);
-                $breadcrumb['links'][] = [
-                    'title' => $cmsSubCategory->getName(),
-                    'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory),
-                ];
+                if ($category['active']) {
+                    $cmsSubCategory = new CMSCategory($category['id_cms_category']);
+                    $breadcrumb['links'][] = [
+                        'title' => $cmsSubCategory->getName(),
+                        'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory),
+                    ];
+                }
             }
         }
 
@@ -221,5 +234,21 @@ class CmsControllerCore extends FrontController
         }
 
         return $categoryCms;
+    }
+
+    /**
+     * @return CMS|null
+     */
+    public function getCms()
+    {
+        return $this->cms;
+    }
+
+    /**
+     * @return CMSCategory|null
+     */
+    public function getCmsCategory()
+    {
+        return $this->cms_category;
     }
 }

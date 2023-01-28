@@ -49,6 +49,7 @@
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/entity_search_input.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/multishop.html.twig' %}
 
 {# overrides from bootstrap_4_layout #}
 
@@ -86,6 +87,12 @@
   </div>
   {{ block('form_help') }}
 {% endblock ip_address_text_widget %}
+
+{%- block password_widget -%}
+  {%- set type = type|default('password') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock password_widget -%}
 
 {# Rows #}
 
@@ -459,7 +466,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
@@ -497,7 +504,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item"
                   data-locale="{{ locale.iso_code }}"
@@ -926,7 +933,7 @@
         {% if default_locale.id_lang != translateField.vars.name %}
           {% set classes = classes ~ ' d-none' %}
         {% endif %}
-        <div class="{{ classes }}" style="flex-grow: 1;">
+        <div data-lang-id="{{ translateField.vars.name }}" class="{{ classes }}" style="flex-grow: 1;">
           {{ form_widget(translateField) }}
         </div>
       {% endfor %}
@@ -944,7 +951,7 @@
           >
             {{ form.vars.default_locale.iso_code }}
           </button>
-          <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
+          <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
             {% for locale in locales %}
               <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
             {% endfor %}
@@ -1126,6 +1133,7 @@
 {%- block number_widget -%}
   {%- set type = type|default('text') -%}
   <div class="input-group">
+    {{- block('form_unit_prepend') -}}
     {{- block('form_widget_simple') -}}
     {{- block('form_unit') -}}
   </div>
@@ -1135,6 +1143,7 @@
 {%- block integer_widget -%}
   {%- set type = type|default('number') -%}
   <div class="input-group">
+    {{- block('form_unit_prepend') -}}
     {{- block('form_widget_simple') -}}
     {{- block('form_unit') -}}
   </div>
@@ -1142,16 +1151,25 @@
 {%- endblock integer_widget -%}
 
 {% block form_unit %}
-  {% if form.vars.unit is defined %}
+  {% if form.vars.unit is defined and not form.vars.prepend_unit %}
     <div class="input-group-append">
       <span class="input-group-text">{{ form.vars.unit }}</span>
     </div>
   {% endif %}
 {% endblock form_unit %}
 
+{% block form_unit_prepend %}
+  {% if form.vars.unit is defined and form.vars.prepend_unit %}
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.vars.unit }}</span>
+    </div>
+  {% endif %}
+{% endblock form_unit_prepend %}
+
 {% block form_help %}
   {% if help is not null %}
-    <small class="form-text">{{ help|raw }}</small>
+    {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' form-text')|trim}) -%}
+      <small id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}
@@ -1274,20 +1292,33 @@
 {% block text_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <span class="label {{ preview_class }}">
+  <span class="label text-preview {{ preview_class }}">
     {# Allows to insert content as prefix, like an icon #}
     {% if prefix is defined %}
       {{ prefix|raw }}
     {% endif %}
 
-    {# This just outputs the value #}
-    {{ value|e('html') }}
+    {% if  form.vars.allow_html %}
+      {# This outputs raw value #}
+      {{ value|raw }}
+    {% else %}
+      {# This just outputs the value #}
+      {{ value|e('html') }}
+    {% endif %}
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
       {{ suffix|raw }}
     {% endif %}
   </span>
+{% endblock %}
+
+{% block link_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <a href="{{ form.vars.value }}" class="{{ attr.class|default('') }}">
+    {{ form.vars.button_label }}
+  </a>
 {% endblock %}
 
 {% block image_preview_widget %}
@@ -1374,6 +1405,57 @@
   </div>
 {% endblock %}
 
+{%- block navigation_tab_widget -%}
+{% set attr = attr|merge({class: (attr.class|default('') ~ ' navigation-tab-widget')|trim}) %}
+<div {{ block('widget_container_attributes') }}>
+  <div id="{{ form.vars.id }}-tabs" class="tabs js-tabs">
+    <div class="arrow d-xl-none js-arrow left-arrow float-left">
+      <i class="material-icons rtl-flip hide">chevron_left</i>
+    </div>
+
+    <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
+    {% set firstRenderedChild = true %}
+    {% for child in form.children %}
+      {% if not child.rendered and child.vars.name != '_toolbar_buttons' and child.vars.name != '_token' %}
+      <li id="{{ child.vars.id }}-tab-nav" class="nav-item{% if not child.vars.valid %} has-error{% endif %}">
+        <a href="#{{ child.vars.id }}-tab" role="tab" data-toggle="tab" class="nav-link{% if firstRenderedChild %} active{% endif %}">
+          {{ child.vars.label }}
+        </a>
+      </li>
+      {% set firstRenderedChild = false %}
+      {% endif %}
+    {% endfor %}
+    </ul>
+
+    <div class="arrow d-xl-none js-arrow right-arrow visible float-right">
+      <i class="material-icons rtl-flip hide">chevron_right</i>
+    </div>
+
+    {% if form.offsetExists('_toolbar_buttons') %}
+    <div class="navigation-tab-widget-toolbar toolbar text-md-right">
+      {{ form_widget(form._toolbar_buttons) }}
+    </div>
+    {% endif %}
+  </div>
+
+  <div id="{{ form.vars.id }}-tabs-content" class="tab-content">
+    {% set firstRenderedChild = true %}
+    {% for child in form.children %}
+      {% if not child.rendered and child.vars.name != '_token' %}
+      <div role="tabpanel" class="form-contenttab tab-pane container-fluid{% if firstRenderedChild %} active{% endif %}" id="{{ child.vars.id }}-tab">
+        {% if child.vars.label_tab is defined %}
+          {{ form_label(child, child.vars.label_tab) }}
+        {% endif %}
+        {{ form_widget(child) }}
+        {{ form_errors(child) }}
+      </div>
+      {% set firstRenderedChild = false %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
 {%- block accordion_widget -%}
   <div class="accordion accordion-form" id="{{ form.vars.id }}">
     {% set firstChild = true %}
@@ -1414,7 +1496,7 @@
   </div>
 {%- endblock -%}
 
-{% block button_collection_row %}
+{% block button_collection_widget %}
   {%- set attr = attr|merge({
     class: (attr.class|default('') ~ ' form-group btn-collection btn-toolbar')|trim,
     role: 'group',
@@ -1423,11 +1505,89 @@
   <div {{ block('widget_attributes') }}>
     {% for group, buttons in button_groups %}
       <div class="btn-group group-{{ group }}">
-        {% for button in buttons %}
-          {{- form_widget(attribute(form, button)) -}}
+        {# Render inline actions #}
+        {% set inlineButtonsLimit = form.vars.inline_buttons_limit %}
+        {% for action in form.children %}
+          {% if inlineButtonsLimit is same as(null) or loop.index <= inlineButtonsLimit %}
+            {# Remove labels from inline elements if they are not forced #}
+            {% if form.vars.use_inline_labels %}
+              {% set actionLabel = action.vars.label %}
+            {% else %}
+              {% set actionLabel = '' %}
+            {% endif %}
+            {{ form_widget(action, {'label': actionLabel}) }}
+          {% endif %}
         {% endfor %}
+
+        {# Render remaining actions in dropdown #}
+        {% if inlineButtonsLimit is not same as(null) and form.children|length > inlineButtonsLimit %}
+          <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+          >
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            {% for action in form.children|slice(inlineButtonsLimit) %}
+              {{ form_widget(action, {'attr': {
+                'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
+              }}) }}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     {% endfor %}
+  </div>
+{% endblock %}
+
+{% block avatar_url_row %}
+  {{ form_row(form, {'attr': attr}) }}
+
+  <div class="form-group row">
+    <label class="form-control-label"></label>
+    <div class="col-sm">
+      <img class="img-thumbnail clickable-avatar" src="{{ form.parent.vars.value.avatar_url }}" alt="">
+    </div>
+  </div>
+{% endblock %}
+
+{% block change_password_row %}
+  <div class="form-group row">
+    <label class="form-control-label">
+      {{ 'Password'|trans({}, 'Admin.Global') }}
+    </label>
+    <div class="col-sm">
+      {# "Change password" button #}
+      {{ form_row(form.children.change_password_button) }}
+
+      <div class="card card-body js-change-password-block d-none">
+        {# Current password input #}
+        {{ form_row(form.children.old_password) }}
+
+        {# New password first input #}
+        {# New password second input (confirmation) #}
+        {{ form_row(form.children.new_password) }}
+
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            {{ form_widget(form.children.generated_password) }}
+          </div>
+          <div class="col-sm">
+            {{ form_widget(form.children.generate_password_button) }}
+          </div>
+        </div>
+        {{ form_row(form.children.cancel_button) }}
+
+        {# Password strength feedback messages - used in JS #}
+        <div class="js-password-strength-feedback d-none">
+          <span class="strength-low">{{ 'Invalid'|trans({}, 'Admin.Advparameters.Help') }}</span>
+          <span class="strength-medium">{{ 'Okay'|trans({}, 'Admin.Advparameters.Help') }}</span>
+          <span class="strength-high">{{ 'Good'|trans({}, 'Admin.Advparameters.Help') }}</span>
+          <span class="strength-extreme">{{ 'Fabulous'|trans({}, 'Admin.Advparameters.Help') }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}
 

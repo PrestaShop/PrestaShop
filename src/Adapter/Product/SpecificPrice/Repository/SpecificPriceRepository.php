@@ -193,6 +193,24 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @return SpecificPriceId[]
+     */
+    public function getProductSpecificPricesIds(ProductId $productId): array
+    {
+        return array_map(static function (array $specificPrice): SpecificPriceId {
+            return new SpecificPriceId((int) $specificPrice['id_specific_price']);
+        }, $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'specific_price', 'sp')
+            ->select('sp.id_specific_price')
+            ->where('sp.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()->fetchAllAssociative());
+    }
+
+    /**
+     * @param ProductId $productId
      * @param LanguageId $langId
      * @param array<string, mixed> $filters
      *
@@ -318,7 +336,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      */
     private function getSpecificPricesQueryBuilder(ProductId $productId, LanguageId $langId, array $filters): QueryBuilder
     {
-        //@todo: filters are not handled.
+        //@todo: filters are not fully handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'specific_price', 'sp')
             ->leftJoin(
@@ -360,6 +378,12 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
             ->setParameter('langId', $langId->getValue())
         ;
+
+        if (!empty($filters['shopIds'])) {
+            $qb->andWhere($qb->expr()->in('sp.id_shop', ':shopIds'))
+                ->setParameter('shopIds', $filters['shopIds'], Connection::PARAM_INT_ARRAY)
+            ;
+        }
 
         return $qb;
     }

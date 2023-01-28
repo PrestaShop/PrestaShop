@@ -113,6 +113,20 @@ class ImageTypeCore extends ObjectModel
     }
 
     /**
+     * Returns image type by id.
+     *
+     * @param int $id id
+     *
+     * @return array Image type definitions
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getImageTypeById(int $id): array
+    {
+        return Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'image_type` WHERE `id_image_type` = ' . $id);
+    }
+
+    /**
      * Check if type already is already registered in database.
      *
      * @param string $typeName Name

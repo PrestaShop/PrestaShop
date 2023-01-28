@@ -104,8 +104,8 @@ TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run test:specif
 This script will detect not found and erroneous pages, by crawling your back office and front office. It's still a Work In Progress.
 
 ### Launch script
-If you want to run the links checker test you can run the script **`tools/linkchecker.js`**.
-It uses a `urls.js` file describing all the URLs it can crawl.
+If you want to run the links checker test you can run the script **`tools/linkchecker.ts`**.
+It uses a `urls.ts` file describing all the URLs it can crawl.
 
 You **must** disable the Security Token before running this script ! Add this line in your `.htaccess` file:
 

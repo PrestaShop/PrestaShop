@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFormCore implements FormInterface
 {
@@ -254,7 +254,7 @@ abstract class AbstractFormCore implements FormInterface
      */
     protected function checkFieldLength($field)
     {
-        $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
+        $error = $field->getMaxLength() != null && Tools::strlen($field->getValue()) > (int) $field->getMaxLength();
 
         return !$error;
     }

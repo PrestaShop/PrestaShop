@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

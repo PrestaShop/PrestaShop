@@ -59,6 +59,7 @@ interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
      *
      * @return DataCellInterface
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset);
 
     /**

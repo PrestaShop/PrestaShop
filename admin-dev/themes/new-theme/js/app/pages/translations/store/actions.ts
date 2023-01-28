@@ -22,138 +22,131 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
 import {Commit} from 'vuex/types';
-import VueResource from 'vue-resource';
 import * as types from '@app/pages/translations/store/mutation-types';
 import {showGrowl} from '@app/utils/growl';
+import {
+  omitBy, isNil,
+} from 'lodash';
 
-Vue.use(VueResource);
+const isParamInvalid = (value: any) => isNil(value) || value.length <= 0;
 
-export const getTranslations = ({commit}: {commit: Commit}): void => {
+export const getTranslations = async ({commit}: {commit: Commit}): Promise<void> => {
   const url = window.data.translationUrl;
-  Vue.http.get(url).then(
-    (response: Record<string, any>) => {
-      commit(types.SET_TRANSLATIONS, response.body);
-      commit(types.APP_IS_READY);
-    },
-    (error) => {
-      showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-    },
-  );
+
+  try {
+    const response = await fetch(url);
+    const datas = await response.json();
+    commit(types.SET_TRANSLATIONS, datas);
+    commit(types.APP_IS_READY);
+  } catch (error: any) {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }
 };
 
-export const getCatalog = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
+export const getCatalog = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   commit(types.PRINCIPAL_LOADING, true);
-  Vue.http
-    .get(payload.url, {
-      params: {
-        page_size: payload.page_size,
-        page_index: payload.page_index,
-      },
-    })
-    .then(
-      (response: Record<string, any>) => {
-        commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
-        commit(types.SET_CATALOG, response.body);
-        commit(types.PRINCIPAL_LOADING, false);
-      },
-      (error) => {
-        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-      },
-    );
+
+  try {
+    const response = await fetch(`${payload.url}&${new URLSearchParams(omitBy({
+      page_size: payload.page_size,
+      page_index: payload.page_index,
+    }, isParamInvalid))}`);
+    const datas = await response.json();
+
+    commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
+    commit(types.SET_CATALOG, datas);
+    commit(types.PRINCIPAL_LOADING, false);
+  } catch (error: any) {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }
 };
 
-export const getDomainsTree = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
+export const getDomainsTree = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   const url = window.data.domainsTreeUrl;
-  const params: {search: Array<string>} = {search: []};
+  const params = new URLSearchParams();
 
   commit(types.SIDEBAR_LOADING, true);
   commit(types.PRINCIPAL_LOADING, true);
 
   if (payload.store.getters.searchTags.length) {
-    params.search = payload.store.getters.searchTags;
+    payload.store.getters.searchTags.forEach((searchTag: string) => {
+      params.append('search[]', searchTag);
+    });
   }
 
-  Vue.http
-    .get(url, {
-      params,
-    })
-    .then(
-      (response: Record<string, any>) => {
-        commit(types.SET_DOMAINS_TREE, response.body);
-        commit(types.SIDEBAR_LOADING, false);
-        commit(types.RESET_CURRENT_DOMAIN);
-      },
-      (error) => {
-        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-      },
-    );
+  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
+
+  try {
+    const response = await fetch(fetchUrl);
+    const datas = await response.json();
+
+    commit(types.SET_DOMAINS_TREE, datas);
+    commit(types.SIDEBAR_LOADING, false);
+    commit(types.RESET_CURRENT_DOMAIN);
+  } catch (error: any) {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }
 };
 
-export const refreshCounts = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
+export const refreshCounts = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   const url = window.data.domainsTreeUrl;
-  const params: {search: Array<string>} = {search: []};
+  const params = new URLSearchParams();
 
   if (payload.store.getters.searchTags.length) {
-    params.search = payload.store.getters.searchTags;
+    payload.store.getters.searchTags.forEach((searchTag: string) => {
+      params.append('search[]', searchTag);
+    });
   }
+  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
 
-  Vue.http
-    .get(url, {
-      params,
-    })
-    .then(
-      (response: Record<string, any>) => {
-        commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);
-        commit(types.SET_DOMAINS_TREE, response.body);
-      },
-      (error) => {
-        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-      },
-    );
+  try {
+    const response = await fetch(fetchUrl);
+    const datas = await response.json();
+
+    commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);
+    commit(types.SET_DOMAINS_TREE, datas);
+  } catch (error: any) {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }
 };
 
-export const saveTranslations = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
+export const saveTranslations = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   const {url} = payload;
   const {translations} = payload;
 
-  Vue.http
-    .post(url, {
-      translations,
-    })
-    .then(
-      () => {
-        payload.store.dispatch('refreshCounts', {
-          successfullySaved: translations.length,
-          store: payload.store,
-        });
-        commit(types.RESET_MODIFIED_TRANSLATIONS);
-        return showGrowl('success', 'Translations successfully updated');
-      },
-      (error) => {
-        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-      },
-    );
+  try {
+    await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({translations}),
+    });
+
+    payload.store.dispatch('refreshCounts', {
+      successfullySaved: translations.length,
+      store: payload.store,
+    });
+    commit(types.RESET_MODIFIED_TRANSLATIONS);
+    showGrowl('success', 'Translations successfully updated');
+  } catch (error: any) {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }
 };
 
 /* eslint-disable-next-line no-unused-vars */
-export const resetTranslation = (params: Record<string, any>, payload: Record<string, any>): void => {
+export const resetTranslation = async (params: Record<string, any>, payload: Record<string, any>): Promise<void> => {
   const {url} = payload;
   const {translations} = payload;
 
-  Vue.http
-    .post(url, {
-      translations,
-    })
-    .then(
-      () => {
-        showGrowl('success', 'Translations successfully reset');
-      },
-      (error) => {
-        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-      },
-    );
+  try {
+    await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({translations}),
+    });
+
+    showGrowl('success', 'Translations successfully reset');
+  } catch (error: any) {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }
 };
 
 export const updatePageIndex = ({commit}: {commit: Commit}, pageIndex: string): void => {

@@ -24,15 +24,18 @@
  */
 
 const combinationListFormId = '#combination_list';
-const attachmentsBlockId = '#product_specifications_attachments';
+const attachmentsBlockId = '#product_details_attachments';
 // It does not include "#" so it can be selected by getElementById
 const isSelectedCombinationClass = 'combination-is-selected';
 const commonBulkSelectAllClass = 'bulk-select-all';
 const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
+const shopPreviewRowClass = 'shop-preview-row';
 
 export default {
   productForm: 'form[name=product]',
+  productLocalizedNameInput: 'input[name^="product[header][name]"]',
+  productLocalizedLinkRewriteInput: 'input[name^="product[seo][link_rewrite]"]',
   productTypePreview: '.product-type-preview',
   productType: {
     headerSelector: '#product_header_type',
@@ -50,13 +53,39 @@ export default {
     },
   },
   create: {
-    newProductButton: 'a.new-product',
-    createModalSelector: '#product_type',
+    newProductButton: '.new-product-button',
+    createModalSelector: '#create_product_type',
+    modalId: 'modal-create-product',
+    form: 'form.product-form',
+    createFieldId: '#create_product',
+    modalSizeContainer: '.create-product-form',
+  },
+  shops: {
+    modalButtons: 'a.product-shops-action',
+    modalId: 'modal-product-shops',
+    form: 'form[name="product_shops"]',
+    modalSizeContainer: '.product-shops-form',
+    cancelButton: '#product_shops_buttons_cancel',
+    editProductClass: 'multi-shop-edit-product',
+    selectorItem: '.shop-selector-item',
+    shopItemClass: 'shop-selector-shop-item',
+    groupShopItemClass: 'shop-selector-group-item',
+    shopListCell: '.column-associated_shops .product-shop-list',
+    contextWarning: '.multi-shop-context-warning',
+    shopPreviews: {
+      toggleButtons: '.product-shop-details-toggle',
+      loadingRowClass: 'loading-shop-row',
+      expandedShopRowClass: 'expanded-shop-row',
+      shopPreviewRowClass,
+      productPreviewsSelector: (productId: string): string => `.${shopPreviewRowClass}[data-product-id="${productId}"]`,
+    },
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '.product-image-dropzone',
+  manageShopImagesButtonContainer: '.manage-shop-images-button-container',
+  manageShopImagesButton: '.manage-shop-images-button',
   featureValues: {
     collectionContainer: '.feature-values-collection',
     collectionRowsContainer: '.feature-values-collection > .col-sm',
@@ -75,9 +104,12 @@ export default {
     removeCustomizationBtn: '.remove-customization-btn',
     customizationFieldRow: '.customization-field-row',
   },
+  stock: {
+    navigationTarget: '#product_stock-tab',
+  },
   combinations: {
-    navigationTab: '#combinations-tab-nav',
-    externalCombinationTab: '#external-combination-tab',
+    navigationTab: '#product_combinations-tab-nav',
+    navigationTarget: '#product_combinations-tab',
     combinationManager: '#product_combinations_combination_manager',
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
@@ -91,7 +123,8 @@ export default {
     combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
-    combinationName: 'form .card-header span',
+    deleteCombinationAllShopsSelector: '.delete-combination-all-shops',
+    combinationName: 'form .combination-name-row .text-preview',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
@@ -130,6 +163,7 @@ export default {
       priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
       priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',
       isDefault: '.combination-is-default-input',
+      ecoTax: '.combination-eco-tax',
       finalPrice: '.combination-final-price',
       finalPricePreview: '.text-preview',
       modifiedFieldClass: 'combination-value-changed',
@@ -155,7 +189,8 @@ export default {
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
-    bulkDeleteBtn: '#combination-bulk-delete-btn',
+    bulkDeleteBtn: '.bulk-delete-btn',
+    bulkDeleteBtnAllShopsId: 'combination-bulk-delete-btn-all-shops',
     bulkActionBtn: '.bulk-action-btn',
     bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
     bulkAllPreviewInput: '#bulk-all-preview',
@@ -193,10 +228,21 @@ export default {
     coveredPreview: '.dz-preview.is-cover',
     windowFileManager: '.dropzone-window-filemanager',
   },
+  options: {
+    availableForOrderInput: 'input[name="product[options][visibility][available_for_order]"]',
+    showPriceInput: 'input[name="product[options][visibility][show_price]"]',
+    showPriceSwitchContainer: '.show-price-switch-container',
+    visibilityRadio: 'input[name="product[options][visibility][visibility]"]',
+    visibilityDescriptionField: '.js-visibility-description',
+  },
   suppliers: {
     productSuppliers: '#product_options_product_suppliers',
     supplierIdsInput: '#product_options_suppliers_supplier_ids',
     defaultSupplierInput: '#product_options_suppliers_default_supplier_id',
+  },
+  shipping: {
+    deliveryTimeTypeInput: 'input[name="product[shipping][delivery_time_note_type]"]',
+    deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
   },
   seo: {
     container: '#product_seo_serp',
@@ -215,17 +261,24 @@ export default {
       labelSelector: 'label',
       helpSelector: 'small.form-text',
     },
+    resetLinkRewriteBtn: '.reset-link-rewrite',
   },
   jsTabs: '.js-tabs',
   jsArrow: '.js-arrow',
   jsNavTabs: '.js-nav-tabs',
   toggleTab: '[data-toggle="tab"]',
-  formContentTab: '#form_content > .form-contenttab',
+  formContentTab: '#product-tabs-content > .form-contenttab',
   leftArrow: '.left-arrow',
   rightArrow: '.right-arrow',
   footer: {
     previewUrlButton: '.preview-url-button',
     deleteProductButton: '.delete-product-button',
+    deleteProductModalId: 'delete-product-footer-modal',
+    duplicateProductButton: '.duplicate-product-button',
+    duplicateProductModalId: 'duplicate-product-footer-modal',
+    newProductButton: '.new-product-button',
+    goToCatalogButton: '.go-to-catalog-button',
+    cancelButton: '.cancel-button',
   },
   categories: {
     categoriesContainer: '#product_description_categories',
@@ -253,6 +306,8 @@ export default {
     tagCategoryIdInput: '.category-id-input',
     tagItem: '.tag-item',
     categoryNamePreview: '.category-name-preview',
+    // eslint-disable-next-line max-len
+    namePreviewInput: '.category-name-preview-input',
     categoryNameInput: '.category-name-input',
     searchInput: '#ps-select-product-category',
     fieldset: '.tree-fieldset',
@@ -263,7 +318,7 @@ export default {
       container: '.product_list_category_filter',
       categoryRadio: '.category-label input:radio',
       filterForm: '#product_filter_form',
-      categoryInput: 'input[name="product[id_category]"]',
+      positionInput: 'input[name="product[position]"]',
       expandedClass: 'less',
       collapsedClass: 'more',
       categoryChildren: '.category-children',
@@ -291,6 +346,8 @@ export default {
     searchAttributeInput: `${attachmentsBlockId}_attached_files`,
     addAttachmentBtn: '.add-attachment',
   },
+  conditionSwitch: 'input[name="product[details][show_condition]"]',
+  conditionChoiceSelect: '#product_details_condition',
   relatedProducts: {
     searchInput: '#product_description_related_products',
   },
@@ -302,6 +359,7 @@ export default {
     margin: '.margin-value',
     marginRate: '.margin-rate-value',
     wholesalePrice: '.wholesale-price-value',
+    taxRuleGroupHelpLabel: '.js-tax-rule-help',
   },
   specificPrice: {
     container: '#specific-prices-container',
@@ -335,6 +393,31 @@ export default {
     priority: {
       priorityListWrapper: '.specific-price-priority-list',
       priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][use_custom_priority]"]',
+    },
+  },
+  packedProducts: {
+    searchInput: '#product_stock_packed_products',
+  },
+  catalogPriceRule: {
+    listContainer: '#catalog-price-rule-list-container',
+    paginationContainer: '#catalog-price-rules-pagination',
+    loadingSpinner: '#catalog-price-rules-loading',
+    listTable: '#catalog-price-rules-list-table',
+    listRowTemplate: '#catalog-price-rule-tr-template',
+    showCatalogPriceRules: '#product_pricing_show_catalog_price_rules',
+    blockContainer: '#product_pricing_catalog_price_rules',
+    listFields: {
+      catalogPriceRuleId: '.catalog-price-rule-id',
+      shop: '.shop',
+      currency: '.currency',
+      country: '.country',
+      group: '.group',
+      name: '.name',
+      impact: '.impact',
+      from: '.from',
+      to: '.to',
+      fromQuantity: '.from-qty',
+      editBtn: '.js-edit-catalog-price-rule-btn',
     },
   },
 };

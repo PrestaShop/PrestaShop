@@ -29,7 +29,7 @@
  */
 class UpgraderCore
 {
-    const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
+    public const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
     public $rss_version_link;
     public $rss_md5file_link_dir;
     /**

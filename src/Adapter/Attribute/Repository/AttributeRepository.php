@@ -117,26 +117,16 @@ class AttributeRepository extends AbstractObjectModelRepository
     public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
     {
         $attributeCombinationAssociations = $this->getAttributeCombinationAssociations($combinationIds);
-
-        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
+        $attributeIds = array_unique(array_map(static function (array $attributeByCombination): int {
             return (int) $attributeByCombination['id_attribute'];
         }, $attributeCombinationAssociations));
 
         $attributesInfoByAttributeId = $this->getAttributesInformation($attributeIds, $langId->getValue());
 
-        $attributesInfoByCombinationId = [];
-        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
-            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
-            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInfoByCombinationId[$combinationId][] = new CombinationAttributeInformation(
-                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute_group'],
-                $attributesInfoByAttributeId[$attributeId]['attribute_group_name'],
-                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute'],
-                $attributesInfoByAttributeId[$attributeId]['attribute_name']
-            );
-        }
-
-        return $attributesInfoByCombinationId;
+        return $this->buildCombinationAttributeInformationList(
+            $attributeCombinationAssociations,
+            $attributesInfoByAttributeId
+        );
     }
 
     /**
@@ -210,5 +200,30 @@ class AttributeRepository extends AbstractObjectModelRepository
         }
 
         return $attributesInfoByAttributeId;
+    }
+
+    /**
+     * @param array<int, array<string, int>> $attributeCombinationAssociations
+     * @param array<int, array<string, mixed>> $attributesInfoByAttributeId
+     *
+     * @return array<int, CombinationAttributeInformation[]>
+     */
+    private function buildCombinationAttributeInformationList(
+        array $attributeCombinationAssociations,
+        array $attributesInfoByAttributeId
+    ): array {
+        $attributesInfoByCombinationId = [];
+        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
+            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
+            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
+            $attributesInfoByCombinationId[$combinationId][] = new CombinationAttributeInformation(
+                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute_group'],
+                $attributesInfoByAttributeId[$attributeId]['attribute_group_name'],
+                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute'],
+                $attributesInfoByAttributeId[$attributeId]['attribute_name']
+            );
+        }
+
+        return $attributesInfoByCombinationId;
     }
 }

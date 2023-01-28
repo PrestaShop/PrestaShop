@@ -29,11 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
+use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -68,6 +70,11 @@ class ProductTypeUpdater
     private $productStockUpdater;
 
     /**
+     * @var ProductPackRepository
+     */
+    private $productPackRepository;
+
+    /**
      * @param ProductRepository $productRepository
      * @param ProductPackUpdater $productPackUpdater
      * @param CombinationDeleter $combinationDeleter
@@ -79,13 +86,15 @@ class ProductTypeUpdater
         ProductPackUpdater $productPackUpdater,
         CombinationDeleter $combinationDeleter,
         VirtualProductUpdater $virtualProductUpdater,
-        ProductStockUpdater $productStockUpdater
+        ProductStockUpdater $productStockUpdater,
+        ProductPackRepository $productPackRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productPackUpdater = $productPackUpdater;
         $this->combinationDeleter = $combinationDeleter;
         $this->virtualProductUpdater = $virtualProductUpdater;
         $this->productStockUpdater = $productStockUpdater;
+        $this->productPackRepository = $productPackRepository;
     }
 
     /**
@@ -94,9 +103,12 @@ class ProductTypeUpdater
      *
      * @throws CannotUpdateProductException
      * @throws ProductConstraintException
+     * @throws InvalidProductTypeException
      */
     public function updateType(ProductId $productId, ProductType $productType): void
     {
+        $this->checkExistingPackAssociation($productId, $productType);
+
         $product = $this->productRepository->get($productId);
 
         // First remove the associations before the type is updated (since these actions are only allowed for a certain type)
@@ -109,7 +121,7 @@ class ProductTypeUpdater
             // anymore to create the appropriate stock movement
             $this->resetProductStock($productId);
 
-            $this->combinationDeleter->deleteAllProductCombinations($productId);
+            $this->combinationDeleter->deleteAllProductCombinations($productId, ShopConstraint::allShops());
         }
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
             $this->virtualProductUpdater->deleteFileForProduct($productId);
@@ -150,5 +162,20 @@ class ProductTypeUpdater
     {
         // Product type is bound to all shops, so when we reset stock because of type change it must be applied to all associated shops
         $this->productStockUpdater->resetStock($productId, ShopConstraint::allShops());
+    }
+
+    private function checkExistingPackAssociation(ProductId $productId, ProductType $productType): void
+    {
+        if ($productType->getValue() !== ProductType::TYPE_PACK) {
+            return;
+        }
+
+        $packsAssociatedToProduct = $this->productPackRepository->getPacksContaining($productId);
+        if (!empty($packsAssociatedToProduct)) {
+            throw new InvalidProductTypeException(
+                InvalidProductTypeException::EXPECTED_NO_EXISTING_PACK_ASSOCIATIONS,
+                'You cannot change this product into a pack because it is already associated as a pack content'
+            );
+        }
     }
 }

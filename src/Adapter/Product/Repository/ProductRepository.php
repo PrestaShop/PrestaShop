@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception as ExceptionAlias;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
@@ -41,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerExcepti
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -108,33 +109,6 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->productValidator = $productValidator;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->manufacturerRepository = $manufacturerRepository;
-    }
-
-    /**
-     * @todo: Not sure this should be in the repository as it gives a false feeling the the repository can duplicate a
-     *        product on its own, but you actually need to use the ProductDuplicator service to do it right, this method
-     *        should be removed and the duplicator service should rely on repository to add/update but it is the one that
-     *        must perform the required modifications on the object instance
-     * Duplicates product entity without relations
-     *
-     * @param Product $product
-     *
-     * @return Product
-     *
-     * @throws CoreException
-     * @throws CannotDuplicateProductException
-     * @throws ProductConstraintException
-     * @throws ProductException
-     */
-    public function duplicate(Product $product): Product
-    {
-        unset($product->id, $product->id_product);
-
-        $this->productValidator->validateCreation($product);
-        $this->productValidator->validate($product);
-        $this->addObjectModel($product, CannotDuplicateProductException::class);
-
-        return $product;
     }
 
     /**
@@ -227,11 +201,11 @@ class ProductRepository extends AbstractObjectModelRepository
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
             throw new ProductNotFoundException(
-                    sprintf(
-                        'Some of these products do not exist: %s',
-                        implode(',', $ids)
-                    )
-                );
+                sprintf(
+                    'Some of these products do not exist: %s',
+                    implode(',', $ids)
+                )
+            );
         }
     }
 
@@ -240,10 +214,10 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param LanguageId $languageId
      *
      * @return array<array<string, string>>
-     *                             e.g [
-     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
-     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
-     *                             ]
+     *                                      e.g [
+     *                                      ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                                      ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                                      ]
      *
      * @throws CoreException
      */
@@ -283,17 +257,24 @@ class ProductRepository extends AbstractObjectModelRepository
         return $this->loadProduct($product);
     }
 
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductType
+     *
+     * @throws ProductNotFoundException
+     */
     public function getProductType(ProductId $productId): ProductType
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->addSelect('p.product_type')
+        $result = $this->connection->createQueryBuilder()
+            ->select('p.product_type')
             ->from($this->dbPrefix . 'product', 'p')
             ->where('p.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchAssociative()
         ;
 
-        $result = $qb->execute()->fetchAssociative();
         if (empty($result)) {
             throw new ProductNotFoundException(sprintf(
                 'Cannot find product type for product %d because it does not exist',
@@ -301,7 +282,12 @@ class ProductRepository extends AbstractObjectModelRepository
             ));
         }
 
-        return new ProductType($result['product_type']);
+        if (!empty($result['product_type'])) {
+            return new ProductType($result['product_type']);
+        }
+
+        // Older products that were created before product page v2, might have no type, so we determine it dynamically
+        return new ProductType($this->get($productId)->getDynamicProductType());
     }
 
     /**
@@ -341,7 +327,12 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function searchProducts(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
     {
-        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit);
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
             ->addGroupBy('p.id_product')
@@ -356,13 +347,28 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param string $searchPhrase
      * @param LanguageId $languageId
      * @param ShopId $shopId
+     * @param array $filters
      * @param int|null $limit
      *
      * @return array<int, array<string, int|string>>
+     *
+     * @throws Exception
+     * @throws ExceptionAlias
      */
-    public function searchCombinations(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
-    {
-        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+    public function searchCombinations(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): array {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            $filters,
+            $limit
+        );
         $qb
             ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
             ->addSelect('p.reference as product_reference')
@@ -378,16 +384,36 @@ class ProductRepository extends AbstractObjectModelRepository
         return $qb->execute()->fetchAllAssociative();
     }
 
+    public function getProductTaxRulesGroupId(ProductId $productId): TaxRulesGroupId
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->addSelect('p.id_tax_rules_group')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchOne()
+        ;
+
+        return new TaxRulesGroupId((int) $result);
+    }
+
     /**
      * @param string $searchPhrase
      * @param LanguageId $languageId
      * @param ShopId $shopId
+     * @param array $filters
      * @param int|null $limit
      *
      * @return QueryBuilder
      */
-    private function getSearchQueryBuilder(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit): QueryBuilder
-    {
+    protected function getSearchQueryBuilder(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
@@ -423,6 +449,19 @@ class ProductRepository extends AbstractObjectModelRepository
             $qb->expr()->like('pa.ean13', $dbSearchPhrase),
             $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
         ));
+
+        if (!empty($filters)) {
+            foreach ($filters as $type => $filter) {
+                switch ($type) {
+                    case 'filteredTypes':
+                        $qb->andWhere('p.product_type not in(:filter)')
+                            ->setParameter('filter', implode(', ', $filter));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         if (!empty($limit)) {
             $qb->setMaxResults($limit);

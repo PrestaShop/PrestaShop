@@ -5,14 +5,12 @@
       <trans-unit id="d7b2933ba512ada478c97fa43dd7ebe6">
         <source>Best Sellers</source>
         <target>Best Sellers</target>
-        <note>Context:
-File: modules/ps_bestsellers/views/templates/hook/ps_bestsellers.tpl:26</note>
+        <note>Line: 26</note>
       </trans-unit>
       <trans-unit id="eae99cd6a931f3553123420b16383812">
         <source>All best sellers</source>
         <target>All best sellers</target>
-        <note>Context:
-File: modules/ps_bestsellers/views/templates/hook/ps_bestsellers.tpl:32</note>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>

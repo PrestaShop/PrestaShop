@@ -41,6 +41,7 @@
         :label="filter.name"
         @addFilter="addFilter"
         @removeFilter="removeFilter"
+        :event-emitter="eventEmitter"
       />
       <button
         type="button"
@@ -49,20 +50,20 @@
         @click="clearAll"
       >
         <i class="material-icons">close</i>
-        {{ $tc('filters.clear', selectedFiltersNumber, { '%filtersNb%': selectedFiltersNumber }) }}
+        {{ $tc('filters.clear', selectedFiltersNumber, { 'filtersNb': selectedFiltersNumber }) }}
       </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
+  import {defineComponent, PropType} from 'vue';
 
   const CombinationEvents = ProductEventMap.combinations;
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Filters',
     data(): {selectedFilters: Record<string, any>} {
       return {
@@ -71,7 +72,7 @@
     },
     props: {
       filters: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
       eventEmitter: {
@@ -83,12 +84,12 @@
       FilterDropdown,
     },
     computed: {
-      selectedFiltersNumber(): Record<string, any> | number {
+      selectedFiltersNumber(): number {
         if (!this.selectedFilters) {
           return 0;
         }
 
-        return Object.values(this.selectedFilters).reduce((total, attributes) => total + attributes.length, 0);
+        return Object.values(this.selectedFilters).reduce<number>((total, attributes) => total + attributes.length, 0);
       },
     },
     mounted() {
@@ -101,7 +102,7 @@
       addFilter(filter: Record<string, any>, parentId: number): void {
         // If absent set new field with set method so that it's reactive
         if (!this.selectedFilters[parentId]) {
-          this.$set(this.selectedFilters, parentId, []);
+          this.selectedFilters[parentId] = [];
         }
 
         this.selectedFilters[parentId].push(filter);
@@ -126,6 +127,7 @@
       clearAll(): void {
         this.selectedFilters = [];
         this.$emit('clearAll');
+        this.eventEmitter.emit(CombinationEvents.clearAllCombinationFilters);
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
       updateFilters(): void {
@@ -142,7 +144,7 @@
   .control-label {
     font-weight: 600;
     color: #000;
-    margin-botton: 1rem;
+    margin-bottom: 1rem;
   }
 
   &-line {

@@ -142,8 +142,8 @@ class HelperCore
 
         $translations = [
             'selected' => $translator->trans('Selected', [], 'Admin.Global'),
-            'Collapse All' => $translator->trans('Collapse All', [], 'Admin.Actions'),
-            'Expand All' => $translator->trans('Expand All', [], 'Admin.Actions'),
+            'Collapse all' => $translator->trans('Collapse all', [], 'Admin.Actions'),
+            'Expand all' => $translator->trans('Expand all', [], 'Admin.Actions'),
             'Check All' => $translator->trans('Check All', [], 'Admin.Actions'),
             'Uncheck All' => $translator->trans('Uncheck All', [], 'Admin.Actions'),
             'search' => $translator->trans('Find a category', [], 'Admin.Actions'),
@@ -192,8 +192,8 @@ class HelperCore
 
         $html .= '
         <div class="category-filter">
-            <a class="btn btn-link" href="#" id="collapse_all"><i class="icon-collapse"></i> ' . $translations['Collapse All'] . '</a>
-            <a class="btn btn-link" href="#" id="expand_all"><i class="icon-expand"></i> ' . $translations['Expand All'] . '</a>
+            <a class="btn btn-link" href="#" id="collapse_all"><i class="icon-collapse"></i> ' . $translations['Collapse all'] . '</a>
+            <a class="btn btn-link" href="#" id="expand_all"><i class="icon-expand"></i> ' . $translations['Expand all'] . '</a>
             ' . (!$use_radio ? '
                 <a class="btn btn-link" href="#" id="check_all"><i class="icon-check"></i> ' . $translations['Check All'] . '</a>
                 <a class="btn btn-link" href="#" id="uncheck_all"><i class="icon-check-empty"></i> ' . $translations['Uncheck All'] . '</a>' : '')

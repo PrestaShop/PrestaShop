@@ -48,6 +48,8 @@ class PositionsListHandler {
 
   $moduleButtonsUpdate: JQuery;
 
+  $transplantModuleButton: JQuery;
+
   $hooksList: Array<Record<string, any>>;
 
   constructor() {
@@ -72,6 +74,7 @@ class PositionsListHandler {
     this.$moduleUnhookButton = $('#unhook-button-position-bottom');
     this.$moduleButtonsUpdate = $('.module-buttons-update .btn');
     this.$hooksList = [];
+    this.$transplantModuleButton = $('.transplant-module-button');
 
     this.handleList();
     this.handleSortable();
@@ -150,6 +153,9 @@ class PositionsListHandler {
     self.$hookSearch.on('input', () => {
       self.modulesPositionFilterHooks();
     });
+
+    // Filter modules list on the page load
+    self.modulesPositionFilterHooks();
 
     self.$hookSearch.on('keypress', (e) => {
       const keyCode = e.keyCode || e.which;
@@ -264,8 +270,13 @@ class PositionsListHandler {
   modulesPositionFilterHooks(): void {
     const self = this;
     const $hookName = <string>self.$hookSearch.val();
-    const $moduleId = self.$showModules.val();
+    const $moduleId = <string>self.$showModules.val();
     const $regex = new RegExp(`(${$hookName})`, 'gi');
+
+    // Update "Transplant module" button
+    const transplantModuleHref = new URL(this.$transplantModuleButton.prop('href'));
+    transplantModuleHref.searchParams.set('show_modules', $moduleId);
+    this.$transplantModuleButton.attr('href', transplantModuleHref.toString());
 
     for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
       self.$hooksList[$id].container.toggle(

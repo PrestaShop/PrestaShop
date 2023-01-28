@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @todo Move to Unit Tests when HookManager will be instanciated in ProductPresenter
@@ -82,6 +82,7 @@ class ProductPresenterTest extends TestCase
             'new' => false,
             'pack' => false,
             'show_price' => true,
+            'active' => true,
         ];
     }
 

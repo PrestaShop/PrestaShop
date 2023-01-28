@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -46,6 +47,14 @@ class SqlRequestSettingsType extends TranslatorAwareType
                     CharsetEncoding::ISO_8859_1 => CharsetEncoding::ISO_8859_1,
                 ],
                 'translation_domain' => false,
-            ]);
+            ])
+            ->add('enable_multi_statements', SwitchType::class, [
+                'label' => $this->trans('Enable multi-statements queries', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans(
+                    'Enabling multi-statements queries increases the risk of SQL injection vulnerability to be exploited',
+                    'Admin.Advparameters.Help'
+                ),
+            ])
+        ;
     }
 }

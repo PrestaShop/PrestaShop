@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Address;
 
 /**
- * Class responsible of creation of Address ObjectModel.
+ * Class responsible for creating Address ObjectModel.
  */
 class AddressFactory
 {
@@ -53,11 +53,12 @@ class AddressFactory
      * Check if an address exists depending on given $id_address.
      *
      * @param int $id_address
+     * @param bool $useCache [default=false] If true, use Cache for optimizing queries
      *
      * @return bool
      */
-    public function addressExists($id_address)
+    public function addressExists($id_address, bool $useCache = false)
     {
-        return Address::addressExists($id_address);
+        return Address::addressExists($id_address, $useCache);
     }
 }

@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
@@ -31,26 +30,35 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShopException;
-use Product;
 
-/**
- * Provides access to Combination data source
- */
-class CombinationRepository extends AbstractObjectModelRepository
+class CombinationRepository extends AbstractMultiShopObjectModelRepository
 {
+    use ShopConstraintTrait;
+
     /**
      * @var Connection
      */
@@ -62,282 +70,91 @@ class CombinationRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
-
-    /**
      * @var CombinationValidator
      */
     private $combinationValidator;
 
     /**
-     * @var ProductCombinationQueryBuilder
+     * @var AttributeRepository
      */
-    private $combinationQueryBuilder;
+    private $attributeRepository;
+
+    /**
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param AttributeRepository $attributeRepository
      * @param CombinationValidator $combinationValidator
-     * @param ProductCombinationQueryBuilder $combinationQueryBuilder
+     * @param AttributeRepository $attributeRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        AttributeRepository $attributeRepository,
         CombinationValidator $combinationValidator,
-        ProductCombinationQueryBuilder $combinationQueryBuilder
+        AttributeRepository $attributeRepository,
+        ProductMultiShopRepository $productRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->attributeRepository = $attributeRepository;
         $this->combinationValidator = $combinationValidator;
-        $this->combinationQueryBuilder = $combinationQueryBuilder;
+        $this->attributeRepository = $attributeRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
      * @param CombinationId $combinationId
-     *
-     * @return Combination
-     *
-     * @throws CombinationNotFoundException
-     */
-    public function get(CombinationId $combinationId): Combination
-    {
-        /** @var Combination $combination */
-        $combination = $this->getObjectModel(
-            $combinationId->getValue(),
-            Combination::class,
-            CombinationNotFoundException::class
-        );
-
-        return $combination;
-    }
-
-    public function getProductId(CombinationId $combinationId): ProductId
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('pa.id_product')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->andWhere('pa.id_product_attribute = :combinationId')
-            ->setParameter('combinationId', $combinationId->getValue())
-        ;
-        $result = $qb->execute()->fetchAssociative();
-        if (empty($result) || empty($result['id_product'])) {
-            throw new CombinationNotFoundException(sprintf('Combination #%d was not found', $combinationId->getValue()));
-        }
-
-        return new ProductId((int) $result['id_product']);
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param bool $isDefault
+     * @param ShopId $shopId
      *
      * @return Combination
      *
      * @throws CoreException
      */
-    public function create(ProductId $productId, bool $isDefault): Combination
+    public function get(CombinationId $combinationId, ShopId $shopId): Combination
+    {
+        /** @var Combination $combination */
+        $combination = $this->getObjectModelForShop(
+            $combinationId->getValue(),
+            Combination::class,
+            CombinationNotFoundException::class,
+            $shopId
+        );
+
+        return $combination;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId[] $shopIds
+     *
+     * @return Combination
+     *
+     * @throws CannotAddCombinationException
+     */
+    public function create(ProductId $productId, array $shopIds): Combination
     {
         $combination = new Combination();
         $combination->id_product = $productId->getValue();
-        $combination->default_on = $isDefault;
+        $combination->default_on = false;
+        $combination->id_shop_list = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
 
-        $this->addObjectModel($combination, CannotAddCombinationException::class);
+        $this->addObjectModelToShops($combination, $shopIds, CannotAddCombinationException::class);
 
         return $combination;
     }
 
     /**
-     * @param Combination $combination
-     * @param array $updatableProperties
-     * @param int $errorCode
-     */
-    public function partialUpdate(Combination $combination, array $updatableProperties, int $errorCode): void
-    {
-        $this->combinationValidator->validate($combination);
-        $this->partiallyUpdateObjectModel(
-            $combination,
-            $updatableProperties,
-            CannotAddCombinationException::class,
-            $errorCode
-        );
-    }
-
-    /**
-     * @param CombinationId $combinationId
-     * @param int $errorCode
-     *
-     * @throws CoreException
-     */
-    public function delete(CombinationId $combinationId, int $errorCode = 0): void
-    {
-        $this->deleteObjectModel($this->get($combinationId), CannotDeleteCombinationException::class, $errorCode);
-    }
-
-    /**
      * @param ProductId $productId
-     */
-    public function deleteByProductId(ProductId $productId): void
-    {
-        $combinationIds = $this->getCombinationIds($productId);
-
-        $this->bulkDelete($combinationIds);
-    }
-
-    /**
-     * @param CombinationId[] $combinationIds
-     *
-     * @throws CannotBulkDeleteCombinationException
-     */
-    public function bulkDelete(array $combinationIds): void
-    {
-        $bulkException = null;
-
-        foreach ($combinationIds as $combinationId) {
-            try {
-                $this->delete($combinationId);
-            } catch (CannotDeleteCombinationException $e) {
-                if (null === $bulkException) {
-                    $bulkException = new CannotBulkDeleteCombinationException('Errors occurred during bulk deletion of combinations');
-                }
-                $bulkException->addException($combinationId, $e);
-            }
-        }
-
-        if (null !== $bulkException) {
-            throw $bulkException;
-        }
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param ProductCombinationFilters|null $filters
-     *
-     * @return CombinationId[]
-     */
-    public function getCombinationIds(ProductId $productId, ?ProductCombinationFilters $filters = null): array
-    {
-        if ($filters) {
-            $qb = $this->combinationQueryBuilder->getSearchQueryBuilder($filters)
-                ->select('pa.id_product_attribute')
-            ;
-        } else {
-            $qb = $this->connection->createQueryBuilder();
-            $qb
-                ->select('pa.id_product_attribute')
-                ->from($this->dbPrefix . 'product_attribute', 'pa')
-                ->andWhere('pa.id_product = :productId')
-                ->setParameter('productId', $productId->getValue())
-                ->addOrderBy('pa.id_product_attribute', 'ASC')
-            ;
-        }
-
-        $combinationIds = $qb->execute()->fetchAllAssociative();
-
-        return array_map(
-            function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },
-            $combinationIds
-        );
-    }
-
-    /**
-     * @param CombinationId $combinationId
-     *
-     * @throws CoreException
-     */
-    public function assertCombinationExists(CombinationId $combinationId): void
-    {
-        $this->assertObjectModelExists(
-            $combinationId->getValue(),
-            'product_attribute',
-            CombinationNotFoundException::class
-        );
-    }
-
-    /**
-     * @param CombinationId $combinationId
-     * @param int[] $attributeIds
-     */
-    public function saveProductAttributeAssociation(CombinationId $combinationId, array $attributeIds): void
-    {
-        $this->assertCombinationExists($combinationId);
-        $this->attributeRepository->assertAllAttributesExist($attributeIds);
-
-        $attributesList = [];
-        foreach ($attributeIds as $attributeId) {
-            $attributesList[] = [
-                'id_product_attribute' => $combinationId->getValue(),
-                'id_attribute' => $attributeId,
-            ];
-        }
-
-        try {
-            if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
-                throw new CannotAddCombinationException('Failed saving product-combination associations');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred when saving product-combination associations', 0, $e);
-        }
-    }
-
-    /**
-     * Returns default combination ID identified as such in DB by default_on property
-     *
-     * @param ProductId $productId
-     *
-     * @return CombinationId|null
-     */
-    public function getDefaultCombinationId(ProductId $productId): ?CombinationId
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('pa.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
-            ->andWhere('pa.default_on = 1')
-            ->addOrderBy('pa.id_product_attribute', 'ASC')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetchAssociative();
-        if (empty($result['id_product_attribute'])) {
-            return null;
-        }
-
-        return new CombinationId((int) $result['id_product_attribute']);
-    }
-
-    /**
-     * Find the best candidate for default combination amongst existing ones (not based on default_on only)
-     *
-     * @param ProductId $productId
-     *
-     * @return Combination|null
-     *
-     * @throws CoreException
-     */
-    public function findDefaultCombination(ProductId $productId): ?Combination
-    {
-        try {
-            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
-        }
-
-        return $id ? $this->get(new CombinationId($id)) : null;
-    }
-
-    /**
      * @param int[] $attributeIds
      *
-     * @return CombinationId[]
+     * @return CombinationId
      */
-    public function getCombinationIdsByAttributes(ProductId $productId, array $attributeIds): array
+    public function findCombinationIdByAttributes(ProductId $productId, array $attributeIds): ?CombinationId
     {
         sort($attributeIds);
         $qb = $this->connection->createQueryBuilder();
@@ -357,13 +174,676 @@ class CombinationRepository extends AbstractObjectModelRepository
             ->setParameter('attributeIds', implode('-', $attributeIds))
             ->addGroupBy('pa.id_product_attribute')
         ;
-        $result = $qb->execute()->fetchAll();
+        $result = $qb->execute()->fetchAssociative();
+
         if (empty($result)) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param int[] $attributeIds
+     */
+    public function saveProductAttributeAssociation(CombinationId $combinationId, array $attributeIds): void
+    {
+        $this->assertCombinationExists($combinationId);
+        $this->attributeRepository->assertAllAttributesExist($attributeIds);
+
+        // @todo: need to check if these doesn't exist?
+        // especially when dealing with combination which has to be only added to another shop,
+        // then we get duplicate insert error :/
+        $attributesList = [];
+        foreach ($attributeIds as $attributeId) {
+            $attributesList[] = [
+                'id_product_attribute' => $combinationId->getValue(),
+                'id_attribute' => $attributeId,
+            ];
+        }
+
+        try {
+            if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
+                throw new CannotAddCombinationException('Failed saving product-combination associations');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when saving product-combination associations', 0, $e);
+        }
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return ProductId
+     */
+    public function getProductId(CombinationId $combinationId): ProductId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result) || empty($result['id_product'])) {
+            throw new CombinationNotFoundException(sprintf('Combination #%d was not found', $combinationId->getValue()));
+        }
+
+        return new ProductId((int) $result['id_product']);
+    }
+
+    /**
+     * Creates a new combination in product_attribute_shop assuming it already exists in product_attribute table
+     *
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     */
+    public function addToShop(CombinationId $combinationId, ShopId $shopId): void
+    {
+        $productId = $this->getProductId($combinationId);
+
+        $combination = new Combination();
+        $combination->id = $combinationId->getValue();
+        $combination->force_id = true;
+        $combination->id_product = $productId->getValue();
+        $combination->default_on = false;
+
+        $this->updateObjectModelForShops($combination, [$shopId], CannotUpdateCombinationException::class);
+    }
+
+    /**
+     * Copy combination data from one shop to another.
+     *
+     * @param CombinationId $combinationId
+     * @param ShopId $sourceId
+     * @param ShopId $targetId
+     */
+    public function copyToShop(CombinationId $combinationId, ShopId $sourceId, ShopId $targetId): void
+    {
+        $combination = $this->get($combinationId, $sourceId);
+        $this->updateObjectModelForShops($combination, [$targetId], CannotUpdateCombinationException::class);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return Combination
+     *
+     * @throws CoreException
+     */
+    public function getByShopConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): Combination
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Combination has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            $shopId = $this->getDefaultShopIdForCombination($combinationId);
+        } else {
+            $shopId = $shopConstraint->getShopId();
+        }
+
+        return $this->get($combinationId, $shopId);
+    }
+
+    /**
+     * @param Combination $combination
+     * @param array $updatableProperties
+     * @param ShopConstraint $shopConstraint
+     * @param int $errorCode
+     */
+    public function partialUpdate(Combination $combination, array $updatableProperties, ShopConstraint $shopConstraint, int $errorCode): void
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product combination has no features related with shop group use single shop and all shops constraints');
+        }
+
+        $this->combinationValidator->validate($combination);
+        $combinationId = new CombinationId((int) $combination->id);
+
+        $this->partiallyUpdateObjectModelForShops(
+            $combination,
+            $updatableProperties,
+            $this->getShopIdsByConstraint($combinationId, $shopConstraint),
+            CannotAddCombinationException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return ShopId
+     *
+     * @throws ProductNotFoundException
+     */
+    public function getDefaultShopIdForCombination(CombinationId $combinationId): ShopId
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb
+            ->select('p.id_shop_default')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_attribute',
+                'pa',
+                'pa.id_product = p.id_product'
+            )
+            ->where('pa.id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (empty($result['id_shop_default'])) {
+            throw new ProductNotFoundException(sprintf(
+                'Could not find Product by combination id %d',
+                $combinationId->getValue()
+            ));
+        }
+
+        return new ShopId((int) $result['id_shop_default']);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    public function delete(CombinationId $combinationId, ShopConstraint $shopConstraint, int $errorCode = 0): void
+    {
+        $removedShops = $this->getShopIdsByConstraint($combinationId, $shopConstraint);
+        $this->deleteObjectModelFromShops(
+            // We get the combination any of the removed ones, it doesn't change much so the first is fine
+            $this->get($combinationId, reset($removedShops)),
+            $removedShops,
+            CannotDeleteCombinationException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * @param CombinationId[] $combinationIds
+     * @param ShopConstraint $shopConstraint
+     *
+     * @throws CannotBulkDeleteCombinationException
+     */
+    public function bulkDelete(array $combinationIds, ShopConstraint $shopConstraint): void
+    {
+        $bulkDeleteException = new CannotBulkDeleteCombinationException();
+
+        foreach ($combinationIds as $combinationId) {
+            try {
+                $this->delete($combinationId, $shopConstraint);
+            } catch (CannotDeleteCombinationException $e) {
+                $bulkDeleteException->addException($combinationId, $e);
+            }
+        }
+
+        if ($bulkDeleteException->isEmpty()) {
+            return;
+        }
+
+        throw $bulkDeleteException;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteByProductId(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        $combinationIds = $this->getCombinationIds($productId, $shopConstraint);
+
+        $this->bulkDelete($combinationIds, $shopConstraint);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return CombinationId[]
+     */
+    public function getCombinationIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+        $shopIds = array_map(function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $shopIds);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->andWhere('pas.id_product = :productId')
+            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('pas.id_product_attribute', 'ASC')
+        ;
+
+        $combinationIds = $qb->execute()->fetchAllAssociative();
+
+        return array_map(
+            function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },
+            $combinationIds
+        );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return CombinationId|null
+     */
+    public function findFirstCombinationId(ProductId $productId, ShopConstraint $shopConstraint): ?CombinationId
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Combination has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->getShopId()) {
+            $shopId = $shopConstraint->getShopId();
+        } else {
+            $shopId = $this->productRepository->getProductDefaultShopId($productId);
+        }
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->where('pas.id_shop = :shopId')
+            ->andWhere('pas.id_product = :productId')
+            ->orderBy('id_product_attribute', 'ASC')
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
+     * Check if combination is associated with certain shop
+     *
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return bool
+     */
+    public function isAssociatedWithShop(CombinationId $combinationId, ShopId $shopId): bool
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->where('pas.id_product_attribute = :combinationId')
+            ->andWhere('pas.id_shop = :shopId')
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        return isset($result['id_product_attribute']);
+    }
+
+    /**
+     * Returns default combination ID identified as such in DB by default_on property
+     *
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return CombinationId|null
+     */
+    public function findDefaultCombinationIdForShop(ProductId $productId, ShopId $shopId): ?CombinationId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->where('pas.id_product = :productId')
+            ->andWhere('pas.id_shop = :shopId')
+            ->andWhere('pas.default_on = 1')
+            ->addOrderBy('pas.id_product_attribute', 'ASC')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result['id_product_attribute'])) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return ShopId[]
+     *
+     * @throws Exception
+     * @throws ShopException
+     */
+    public function getAssociatedShopIds(CombinationId $combinationId): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'product_attribute_shop')
+            ->where('id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+
+        return array_map(
+            static function (array $result): ShopId {
+                return new ShopId((int) $result['id_shop']);
+            },
+            $qb->execute()->fetchAll()
+        );
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @throws CoreException
+     */
+    public function assertCombinationExists(CombinationId $combinationId): void
+    {
+        $this->assertObjectModelExists(
+            $combinationId->getValue(),
+            'product_attribute',
+            CombinationNotFoundException::class
+        );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CombinationId $newDefaultCombinationId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @throws InvalidShopConstraintException
+     * @throws ProductNotFoundException
+     */
+    public function setDefaultCombination(
+        ProductId $productId,
+        CombinationId $newDefaultCombinationId,
+        ShopConstraint $shopConstraint
+    ): void {
+        $defaultShopId = $this->getDefaultShopIdForCombination($newDefaultCombinationId);
+        $shopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
+
+        foreach ($shopIds as $shopId) {
+            // we need to update the common table only for default shop, but only when default shop is impacted by the constraint
+            if ($defaultShopId->getValue() === $shopId->getValue()) {
+                $this->setDefaultCombinationInCommonTable($productId, $newDefaultCombinationId);
+
+                break;
+            }
+        }
+
+        $this->setDefaultCombinationInShopTable($productId, $newDefaultCombinationId, $shopIds);
+    }
+
+    public function updateCombinationOutOfStockType(
+        ProductId $productId,
+        OutOfStockType $outOfStockType,
+        ShopConstraint $shopConstraint
+    ): void {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->update(sprintf('%sstock_available', $this->dbPrefix), 'ps')
+            ->set('ps.out_of_stock', (string) $outOfStockType->getValue())
+            ->where('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $this->applyShopConstraint($qb, $shopConstraint)->execute();
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
+     * @param string $searchPhrase
+     *
+     * @return array<int, CombinationAttributeInformation[]>
+     *
+     * @throws CombinationException
+     */
+    public function searchProductCombinations(
+        ProductId $productId,
+        LanguageId $languageId,
+        ShopConstraint $shopConstraint,
+        string $searchPhrase,
+        ?int $limit = null
+    ): array {
+        $combinationIds = $this->searchCombinationIdsByAttributes(
+            $productId,
+            $languageId,
+            $shopConstraint,
+            $searchPhrase,
+            $limit
+        );
+
+        return $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $languageId);
+    }
+
+    /**
+     * Sets default_on property to a provided combination in product_attribute table
+     *
+     * @param ProductId $productId
+     * @param CombinationId $newDefaultCombinationId
+     */
+    private function setDefaultCombinationInCommonTable(ProductId $productId, CombinationId $newDefaultCombinationId): void
+    {
+        $commonCombinationTable = sprintf('%sproduct_attribute', $this->dbPrefix);
+
+        // find current default combination and make it non-default
+        // important to check NULL, because it is impossible to have "0" as falsy value due to sql constraint
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = NULL WHERE default_on = 1 AND id_product = %d',
+            $commonCombinationTable,
+            $productId->getValue()
+        ));
+        // set new default combination
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = 1 WHERE id_product_attribute = %d',
+            $commonCombinationTable,
+            $newDefaultCombinationId->getValue()
+        ));
+    }
+
+    /**
+     * Sets default_on property to a provided combination in product_attribute_shop table
+     *
+     * @param ProductId $productId
+     * @param CombinationId $newDefaultCombinationId
+     * @param ShopId[] $shopIds
+     */
+    private function setDefaultCombinationInShopTable(
+        ProductId $productId,
+        CombinationId $newDefaultCombinationId,
+        array $shopIds
+    ): void {
+        if (empty($shopIds)) {
+            return;
+        }
+
+        $shopCombinationTable = sprintf('%sproduct_attribute_shop', $this->dbPrefix);
+        $shopIdsString = implode(
+            ',',
+            array_map(function (ShopId $shopId): int { return $shopId->getValue(); }, $shopIds)
+        );
+        // find current default combination and make it non-default
+        // important to check NULL, because it is impossible to have "0" as falsy value due to sql constraint
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = NULL WHERE default_on = 1 AND id_product = %d AND id_shop IN (%s)',
+            $shopCombinationTable,
+            $productId->getValue(),
+            $shopIdsString
+        ));
+
+        // set new default combination
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = 1 WHERE id_product_attribute = %d AND id_shop IN (%s)',
+            $shopCombinationTable,
+            $newDefaultCombinationId->getValue(),
+            $shopIdsString
+        ));
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     *
+     * @throws InvalidShopConstraintException
+     */
+    private function getShopIdsByConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product combinations has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return $this->getAssociatedShopIds($combinationId);
+        }
+
+        return [$shopConstraint->getShopId()];
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
+     * @param string $searchPhrase
+     *
+     * @return CombinationId[]
+     */
+    private function searchCombinationIdsByAttributes(
+        ProductId $productId,
+        LanguageId $languageId,
+        ShopConstraint $shopConstraint,
+        string $searchPhrase,
+        ?int $limit
+    ): array {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Group shop constraint is not supported');
+        }
+
+        $attributeIds = $this->searchAttributes($languageId, $shopConstraint, $searchPhrase);
+
+        if (empty($attributeIds)) {
             return [];
         }
 
-        return array_map(function (array $combination) {
-            return new CombinationId((int) $combination['id_product_attribute']);
-        }, $result);
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pac.id_product_attribute, pac.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+        ;
+
+        if ($shopConstraint->forAllShops()) {
+            $qb->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute',
+                'pa',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            );
+        } else {
+            $qb->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute_shop',
+                'pa',
+                'pac.id_product_attribute = pa.id_product_attribute AND pa.id_shop = :shopId'
+            )->setParameter('shopId', $shopConstraint->getShopId()->getValue());
+        }
+
+        $qb
+            ->where('pa.id_product = :productId')
+            ->andWhere($qb->expr()->in('pac.id_attribute', ':attributes'))
+            ->setParameter('attributes', $attributeIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        $results = $qb->execute()->fetchAll();
+        if (!$results) {
+            return [];
+        }
+
+        return array_map(static function (array $result): CombinationId {
+            return new CombinationId((int) $result['id_product_attribute']);
+        }, $results);
+    }
+
+    /**
+     * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
+     * @param string $searchPhrase
+     *
+     * @return int[]
+     */
+    private function searchAttributes(LanguageId $languageId, ShopConstraint $shopConstraint, string $searchPhrase): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Shop group constraint is not supported');
+        }
+
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select('a.id_attribute')
+            ->from($this->dbPrefix . 'attribute', 'a')
+            ->innerJoin(
+                'a',
+                $this->dbPrefix . 'attribute_lang',
+                'al',
+                'a.id_attribute = al.id_attribute AND al.id_lang = :languageId'
+            )
+            ->innerJoin(
+                'a',
+                $this->dbPrefix . 'attribute_group_lang',
+                'agl',
+                'a.id_attribute_group = agl.id_attribute_group and agl.id_lang = :languageId'
+            )
+            ->where('al.name LIKE :searchPhrase')
+            ->orWhere('agl.name LIKE :searchPhrase')
+            ->orWhere('agl.public_name LIKE :searchPhrase')
+            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
+            ->setParameter('languageId', $languageId->getValue())
+        ;
+
+        if ($shopConstraint->getShopId()) {
+            // this makes sure we are searching only in certain shop, so it doesn't return irrelevant attribute ids
+            $qb->innerJoin(
+                'a',
+                $this->dbPrefix . 'attribute_shop',
+                'attrShop',
+                'a.id_attribute = attrShop.id_attribute AND attrShop.id_shop = :shopId'
+            )
+                ->innerJoin(
+                    'agl',
+                    $this->dbPrefix . 'attribute_group_shop', 'ags',
+                    'agl.id_attribute_group = ags.id_attribute_group AND ags.id_shop = :shopId'
+                )
+                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+            ;
+        }
+
+        $results = $qb->execute()->fetchAllAssociative();
+
+        return array_map('intval', array_column($results, 'id_attribute'));
     }
 }

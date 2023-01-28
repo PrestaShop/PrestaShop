@@ -220,7 +220,7 @@ class ConfigurationCore extends ObjectModel
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
-        if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_) {
+        if (_PS_DO_NOT_LOAD_CONFIGURATION_) {
             return false;
         }
 
@@ -228,26 +228,19 @@ class ConfigurationCore extends ObjectModel
         if (!self::$_initialized) {
             Configuration::loadConfiguration();
         }
-        $idLang = (int) $idLang;
 
-        if (!self::isLangKey($key)) {
-            $idLang = 0;
-        }
+        $idLang = self::isLangKey($key) ? (int) $idLang : 0;
 
         if (self::$_new_cache_shop === null) {
             $idShop = 0;
-        } else {
-            if ($idShop === null || !Shop::isFeatureActive()) {
-                $idShop = Shop::getContextShopID(true);
-            }
+        } elseif ($idShop === null || !Shop::isFeatureActive()) {
+            $idShop = Shop::getContextShopID(true);
         }
 
         if (self::$_new_cache_group === null) {
             $idShopGroup = 0;
-        } else {
-            if ($idShopGroup === null || !Shop::isFeatureActive()) {
-                $idShopGroup = Shop::getContextShopGroupID(true);
-            }
+        } elseif ($idShopGroup === null || !Shop::isFeatureActive()) {
+            $idShopGroup = Shop::getContextShopGroupID(true);
         }
 
         if ($idShop && Configuration::hasKey($key, $idLang, null, $idShop)) {
@@ -657,25 +650,10 @@ class ConfigurationCore extends ObjectModel
      */
     public static function hasContext($key, $idLang, $context)
     {
-        if (Shop::getContext() == Shop::CONTEXT_ALL) {
-            $idShop = $idShopGroup = null;
-        } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
-            $idShopGroup = Shop::getContextShopGroupID(true);
-            $idShop = null;
-        } else {
-            $idShopGroup = Shop::getContextShopGroupID(true);
-            $idShop = Shop::getContextShopID(true);
-        }
+        $idShopGroup = $context == Shop::CONTEXT_GROUP && Shop::getContext() != Shop::CONTEXT_ALL ? Shop::getContextShopGroupID(true) : null;
+        $idShop = $context == Shop::CONTEXT_SHOP && Shop::getContext() == Shop::CONTEXT_SHOP ? Shop::getContextShopID(true) : null;
 
-        if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $idLang, null, $idShop)) {
-            return true;
-        } elseif ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $idLang, $idShopGroup)) {
-            return true;
-        } elseif ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $idLang)) {
-            return true;
-        }
-
-        return false;
+        return Configuration::hasKey($key, $idLang, $idShopGroup, $idShop);
     }
 
     /**
@@ -718,18 +696,12 @@ class ConfigurationCore extends ObjectModel
      */
     public static function isCatalogMode()
     {
-        if (is_a(Context::getContext()->controller, 'FrontController')) {
-            $isCatalogMode =
-                Configuration::get('PS_CATALOG_MODE') ||
-                !Configuration::showPrices() ||
-                (Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE);
-        } else {
-            $isCatalogMode =
-                Configuration::get('PS_CATALOG_MODE') ||
-                !Configuration::showPrices();
-        }
-
-        return $isCatalogMode;
+        return Configuration::get('PS_CATALOG_MODE') ||
+            !Configuration::showPrices() ||
+            (
+                is_a(Context::getContext()->controller, 'FrontController') &&
+                Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE
+            );
     }
 
     /**

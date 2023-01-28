@@ -32,6 +32,7 @@ use Configuration;
 use Db;
 use Language;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Install\SqlLoader;
 use Shop;
 use Tests\Resources\classes\TestableObjectModel;
 use Tests\Resources\DatabaseDump;
@@ -92,6 +93,25 @@ class ObjectModelTest extends TestCase
         $this->secondLanguageId = (int) Language::getIdByIso('fr');
         $this->defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
         $this->secondShopId = Shop::getIdByName('Shop 2');
+    }
+
+    /**
+     * Check if html in trans is not escaped when the _raw parameter is used
+     *
+     * @return void
+     *
+     * @throws \ReflectionException
+     */
+    public function testTrans(): void
+    {
+        $newObject = new TestableObjectModel();
+        $transMethod = new \ReflectionMethod($newObject, 'trans');
+        $transMethod->setAccessible(true);
+        $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', ['_raw' => true, 10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
+
+        $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $this->assertEquals('&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;', $trans);
     }
 
     public function testAdd(): void
@@ -679,19 +699,15 @@ class ObjectModelTest extends TestCase
 
     protected static function installTestableObjectTables(): void
     {
-        $testableObjectSqlFile = dirname(__DIR__, 2) . '/Resources/sql/install_testable_object.sql';
-        $sqlRequest = file_get_contents($testableObjectSqlFile);
-        $sqlRequest = preg_replace('/PREFIX_/', _DB_PREFIX_, $sqlRequest);
-
-        $dbCollation = Db::getInstance()->getValue('SELECT @@collation_database');
         $allowedCollations = ['utf8mb4_general_ci', 'utf8mb4_unicode_ci'];
-        $collateReplacement = (empty($dbCollation) || !in_array($dbCollation, $allowedCollations)) ? '' : 'COLLATE ' . $dbCollation;
-        $sqlRequest = preg_replace('/COLLATION/', $collateReplacement, $sqlRequest);
-
-        $sqlRequest = preg_replace('/ENGINE_TYPE/', _MYSQL_ENGINE_, $sqlRequest);
-
-        $db = Db::getInstance();
-        $db->execute($sqlRequest);
+        $databaseCollation = Db::getInstance()->getValue('SELECT @@collation_database');
+        $sqlLoader = new SqlLoader();
+        $sqlLoader->setMetaData([
+            'PREFIX_' => _DB_PREFIX_,
+            'ENGINE_TYPE' => _MYSQL_ENGINE_,
+            'COLLATION' => (empty($databaseCollation) || !in_array($databaseCollation, $allowedCollations)) ? '' : 'COLLATE ' . $databaseCollation,
+        ]);
+        $sqlLoader->parseFile(dirname(__DIR__, 2) . '/Resources/sql/install_testable_object.sql');
     }
 
     protected static function installLanguages(): void

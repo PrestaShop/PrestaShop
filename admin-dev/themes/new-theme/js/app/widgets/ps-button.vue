@@ -27,16 +27,15 @@
     type="button"
     class="btn"
     :class="classObject"
-    @click="onClick"
   >
     <slot />
   </button>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       primary: {type: Boolean},
       ghost: {type: Boolean},
@@ -59,11 +58,6 @@
           'btn-primary': this.primary,
           'btn-secondary': !this.primary,
         };
-      },
-    },
-    methods: {
-      onClick(): void {
-        this.$emit('click');
       },
     },
   });

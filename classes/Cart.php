@@ -175,16 +175,16 @@ class CartCore extends ObjectModel
 
     protected $shouldExcludeGiftsDiscount = false;
 
-    const ONLY_PRODUCTS = 1;
-    const ONLY_DISCOUNTS = 2;
-    const BOTH = 3;
-    const BOTH_WITHOUT_SHIPPING = 4;
-    const ONLY_SHIPPING = 5;
-    const ONLY_WRAPPING = 6;
+    public const ONLY_PRODUCTS = 1;
+    public const ONLY_DISCOUNTS = 2;
+    public const BOTH = 3;
+    public const BOTH_WITHOUT_SHIPPING = 4;
+    public const ONLY_SHIPPING = 5;
+    public const ONLY_WRAPPING = 6;
 
     /** @deprecated since 1.7 **/
-    const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
-    const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
+    public const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
+    public const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
     private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
 
@@ -508,7 +508,7 @@ class CartCore extends ObjectModel
             $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
             // Retro compatibility < 1.5.0.2
             $row['id_discount'] = $row['id_cart_rule'];
-            $row['description'] = $row['name'];
+            $row['description'] = $row['obj']->description;
         }
 
         return $result;
@@ -2383,7 +2383,7 @@ class CartCore extends ObjectModel
         }
 
         // Get delivery address of the product from the cart
-        if (!$this->addressFactory->addressExists($addressId)) {
+        if (!$this->addressFactory->addressExists($addressId, true)) {
             $addressId = null;
         }
 
@@ -4311,8 +4311,6 @@ class CartCore extends ObjectModel
      */
     public function deleteCustomizationToProduct($id_product, $index)
     {
-        $result = true;
-
         $cust_data = Db::getInstance()->getRow(
             'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `' . _DB_PREFIX_ . 'customization` cu
             LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd
@@ -4323,8 +4321,14 @@ class CartCore extends ObjectModel
             AND `in_cart` = 0'
         );
 
+        if (!$cust_data) {
+            return true;
+        }
+
+        $result = true;
+
         // Delete customization picture if necessary
-        if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
+        if ($cust_data['type'] == Product::CUSTOMIZE_FILE) {
             $result = !file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']);
             $result = !($result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small')) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small');
         }
@@ -4362,6 +4366,11 @@ class CartCore extends ObjectModel
     public function getProductCustomization($id_product, $type = null, $not_in_cart = false)
     {
         if (!Customization::isFeatureActive()) {
+            return [];
+        }
+
+        // if cart is not set, return nothing to prevent loading of other users data.
+        if (0 === (int) $this->id) {
             return [];
         }
 
@@ -4565,12 +4574,13 @@ class CartCore extends ObjectModel
     public function setWsCartRows($values)
     {
         if ($this->deleteAssociations()) {
-            $query = 'INSERT INTO `' . _DB_PREFIX_ . 'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `id_address_delivery`, `quantity`, `date_add`, `id_shop`) VALUES ';
+            $query = 'INSERT INTO `' . _DB_PREFIX_ . 'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `id_address_delivery`, `id_customization`, `quantity`, `date_add`, `id_shop`) VALUES ';
 
             foreach ($values as $value) {
                 $query .= '(' . (int) $this->id . ', ' . (int) $value['id_product'] . ', ' .
                     (isset($value['id_product_attribute']) ? (int) $value['id_product_attribute'] : 'NULL') . ', ' .
                     (isset($value['id_address_delivery']) ? (int) $value['id_address_delivery'] : 0) . ', ' .
+                    (isset($value['id_customization']) ? (int) $value['id_customization'] : 0) . ', ' .
                     (int) $value['quantity'] . ', NOW(), ' . (int) Context::getContext()->shop->id . '),';
             }
 

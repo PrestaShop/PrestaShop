@@ -14,15 +14,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="60496e92d8c44007e78f095a1cb6adc2">
-        <source>The module '%s' must be activated and configurated in order to have all the statistics</source>
-        <target>The module '%s' must be activated and configurated in order to have all the statistics</target>
-        <note>Line: 133</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/shop/helpers/list/list_action_delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b869af59d40b52d2ad275c9f5ed81461">
@@ -46,7 +37,7 @@
       <trans-unit id="f164e438206718c5539f6761d83e26b7">
         <source>Width and height must be numeric values.</source>
         <target>Width and height must be numeric values.</target>
-        <note>Line: 200</note>
+        <note>Line: 211</note>
       </trans-unit>
     </body>
   </file>
@@ -55,41 +46,27 @@
       <trans-unit id="2a266db001f17e9fdcbc17ac7f169922">
         <source>The discount value is incorrect (must be a percentage).</source>
         <target>The discount value is incorrect (must be a percentage).</target>
-        <note>Line: 529</note>
+        <note>Line: 557</note>
       </trans-unit>
       <trans-unit id="5f455758d7337262fdeedba6d54ec89f">
         <source>Wrong category ID.</source>
         <target>Wrong category ID.</target>
-        <note>Line: 526</note>
+        <note>Line: 554</note>
       </trans-unit>
       <trans-unit id="14d9080664b90f7ff1bcd739aa34f5d0">
         <source>The discount value is incorrect.</source>
         <target>The discount value is incorrect.</target>
-        <note>Line: 580</note>
+        <note>Line: 608</note>
       </trans-unit>
       <trans-unit id="5d4aa63b116fb3fe40589e20c1574661">
         <source>You cannot save group reductions.</source>
         <target>You cannot save group reductions.</target>
-        <note>Line: 589</note>
+        <note>Line: 617</note>
       </trans-unit>
       <trans-unit id="a5ee25b466967f2e940d8c7f973a6906">
         <source>An error occurred while updating this group.</source>
         <target>An error occurred while updating this group.</target>
-        <note>Line: 607</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminReferrersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="787e0ec1d05653f65a03b10c179356e1">
-        <source>Please install the "%modulename%" module in order to give your affiliates access to their own statistics.</source>
-        <target>Please install the "%modulename%" module in order to give your affiliates access to their own statistics.</target>
-        <note>Line: 217</note>
-      </trans-unit>
-      <trans-unit id="ab20dd433a5e44c6166509b6c0075b9d">
-        <source>Percent of the sales.</source>
-        <target>Percent of the sales.</target>
-        <note>Line: 248</note>
+        <note>Line: 635</note>
       </trans-unit>
     </body>
   </file>
@@ -98,27 +75,17 @@
       <trans-unit id="d2317f906b956432eebb5c8814bfb65e">
         <source>Aliases and results are both required.</source>
         <target>Aliases and results are both required.</target>
-        <note>Line: 456</note>
+        <note>Line: 453</note>
       </trans-unit>
       <trans-unit id="a43994b123cc1e321a83cd6d10edb6a5">
         <source>Is not a valid result</source>
         <target>Is not a valid result</target>
-        <note>Line: 459</note>
+        <note>Line: 456</note>
       </trans-unit>
       <trans-unit id="3b50177d99c96fbf78912e239d59804a">
         <source>Is not a valid alias</source>
         <target>Is not a valid alias</target>
-        <note>Line: 463</note>
-      </trans-unit>
-      <trans-unit id="84b4d8c8cdd02488c0f868e97b22a3c2">
-        <source>Creation successful</source>
-        <target>Creation successful</target>
-        <note>Line: 475</note>
-      </trans-unit>
-      <trans-unit id="a7c14cc18f4351bf0a0353f3c3e76e62">
-        <source>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</source>
-        <target>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</target>
-        <note>Line: 128</note>
+        <note>Line: 460</note>
       </trans-unit>
     </body>
   </file>
@@ -127,7 +94,7 @@
       <trans-unit id="ef553500695e07c58644bbdd166581be">
         <source>This is not a valid IP address:</source>
         <target>This is not a valid IP address:</target>
-        <note>Line: 204</note>
+        <note>Line: 215</note>
       </trans-unit>
     </body>
   </file>
@@ -136,27 +103,27 @@
       <trans-unit id="837e57427bf283453398a561c9516398">
         <source>You cannot delete this shop (customer and/or order dependency).</source>
         <target>You cannot delete this shop (customer and/or order dependency).</target>
-        <note>Line: 274</note>
+        <note>Line: 283</note>
       </trans-unit>
       <trans-unit id="e3651705f1156de17be5bf1943c480b3">
         <source>Please create some sub-categories for this root category.</source>
         <target>Please create some sub-categories for this root category.</target>
-        <note>Line: 316</note>
+        <note>Line: 325</note>
       </trans-unit>
       <trans-unit id="cf52c411b5659457074fd9962435307f">
         <source>You need to select at least the root category.</source>
         <target>You need to select at least the root category.</target>
-        <note>Line: 324</note>
+        <note>Line: 333</note>
       </trans-unit>
       <trans-unit id="18f086b62387b20309c709bbf9fe4fdb">
         <source>Warning: You won't be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.</source>
         <target>Warning: You won't be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.</target>
-        <note>Line: 417</note>
+        <note>Line: 426</note>
       </trans-unit>
       <trans-unit id="1ff40978236e0d196983386376b0a5e3">
         <source>You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.</source>
         <target>You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.</target>
-        <note>Line: 419</note>
+        <note>Line: 428</note>
       </trans-unit>
     </body>
   </file>
@@ -193,17 +160,17 @@
       <trans-unit id="b8a27e47e64caa3e36c8894c3745357b">
         <source>Before being able to use this tool, you need to:</source>
         <target>Before being able to use this tool, you need to:</target>
-        <note>Line: 104</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="d7faa8eb2f73f2c764e387d3d7c57556">
         <source>Create a blank .htaccess in your root directory.</source>
         <target>Create a blank .htaccess in your root directory.</target>
-        <note>Line: 112</note>
+        <note>Line: 120</note>
       </trans-unit>
       <trans-unit id="5dab5160dfb25b3a4d6c51416dac5c87">
         <source>Give it write permissions (CHMOD 666 on Unix system).</source>
         <target>Give it write permissions (CHMOD 666 on Unix system).</target>
-        <note>Line: 120</note>
+        <note>Line: 128</note>
       </trans-unit>
     </body>
   </file>
@@ -221,7 +188,7 @@
       <trans-unit id="195ce23d531eabbf8bea97d6fbbb205a">
         <source>An order status with the same name already exists: %s</source>
         <target>An order status with the same name already exists: %s</target>
-        <note>Line: 378</note>
+        <note>Line: 545</note>
       </trans-unit>
     </body>
   </file>
@@ -248,50 +215,41 @@
       <trans-unit id="10ebcb160107c452a2fc3c51804fc780">
         <source>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</source>
         <target>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</target>
-        <note>Line: 40</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="54a81582e2ea2a98cebaabab9c454957">
         <source>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</source>
         <target>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="d999a32b68fd420ce389f774c231c637">
-        <source>1) Create a blank robots.txt file in your root directory.</source>
-        <target>1) Create a blank robots.txt file in your root directory.</target>
-        <note>Line: 47</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="73ca86c0d6a5d58e868c54c3a1524c6c">
         <source>Before you can use this tool, you need to:</source>
         <target>Before you can use this tool, you need to:</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="d999a32b68fd420ce389f774c231c637">
+        <source>1) Create a blank robots.txt file in your root directory.</source>
+        <target>1) Create a blank robots.txt file in your root directory.</target>
         <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="1a53c64bc79e181125e94976211eb401">
         <source>2) Give it write permissions (CHMOD 666 on Unix system).</source>
         <target>2) Give it write permissions (CHMOD 666 on Unix system).</target>
-        <note>Line: 48</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="636fc324804393cc1d3306a541cc871f">
-        <source>1) Create a blank .htaccess file in your root directory.</source>
-        <target>1) Create a blank .htaccess file in your root directory.</target>
-        <note>Line: 44</note>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4836c0b3d56db59ba29844b8bcec084d">
-        <source>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</source>
-        <target>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</target>
-        <note>Line: 64</note>
-      </trans-unit>
       <trans-unit id="117fb47c0109ce0c9415a7f60f084c39">
         <source>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</source>
         <target>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</target>
         <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="4836c0b3d56db59ba29844b8bcec084d">
+        <source>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</source>
+        <target>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</target>
+        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -312,6 +270,46 @@
         <target>To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.</target>
         <note>Line: 40</note>
       </trans-unit>
+      <trans-unit id="3d945081beb9493f8b4403f9c8f9a2fa">
+        <source>Before making any changes to the default pattern of your URLs, make sure to meet the following requirements:</source>
+        <target>Before making any changes to the default pattern of your URLs, make sure to meet the following requirements:</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="ff53d55e26ced8920ea249946028a27a">
+        <source>The Friendly URL feature must be enabled</source>
+        <target>The Friendly URL feature must be enabled</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="5418e9af017993f85b857571f1e7b348">
+        <source>URL rewriting must be activated on your web server</source>
+        <target>URL rewriting must be activated on your web server</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="2e3096438feceba0beda8f06bec656e1">
+        <source>All mandatory keywords (*) must be included in the route</source>
+        <target>All mandatory keywords (*) must be included in the route</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="a4a9b66d4d26374454cf20fb1edf996d">
+        <source>You should also comply with the syntax:</source>
+        <target>You should also comply with the syntax:</target>
+        <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="43b7df4a7c26d5cc6256dad5ef1508c6">
+        <source>Keywords must be in braces {keyword}</source>
+        <target>Keywords must be in braces {keyword}</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="7efa9cffcc1112a5b8d13449ef3f789e">
+        <source>All keywords must be separated</source>
+        <target>All keywords must be separated</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="0941202f74afa2e0eaad772eaec54d2a">
+        <source>As long as a keyword has an associated value, you can use the syntax {prepend:keyword:append} to add text before and after it</source>
+        <target>As long as a keyword has an associated value, you can use the syntax {prepend:keyword:append} to add text before and after it</target>
+        <note>Line: 69</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -319,7 +317,8 @@
       <trans-unit id="843afaeb1d84245d7cf7d0877a7258dd">
         <source>You can only display the page list in a shop context.</source>
         <target>You can only display the page list in a shop context.</target>
-        <note>Line: 40</note>
+        <note>Line: 34
+Comment: Stable feature flags form</note>
       </trans-unit>
     </body>
   </file>

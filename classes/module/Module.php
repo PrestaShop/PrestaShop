@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\Autoload\PrestashopAutoload;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -221,11 +222,11 @@ abstract class ModuleCore implements ModuleInterface
     /** @var int Defines the multistore compatibility level of the module */
     public $multistoreCompatibility = self::MULTISTORE_COMPATIBILITY_UNKNOWN;
 
-    const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
+    public const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
-    const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
+    public const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
 
-    const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
+    public const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
 
     public const MULTISTORE_COMPATIBILITY_NO = -20;
     public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = -10;
@@ -879,6 +880,9 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
+        // set active to 1 in the module table
+        Db::getInstance()->update('module', ['active' => 1], 'id_module = ' . (int) $this->id);
+
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
         }
@@ -981,9 +985,22 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Disable module for all shops
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $this->id . ' ' . ((!$force_all) ? ' AND `id_shop` IN(' . implode(', ', Shop::getContextListShopID()) . ')' : '');
+        $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id);
 
-        return $result && Db::getInstance()->execute($sql);
+        // if module has no more shop associations, set module.active = 0
+        if (!$this->hasShopAssociations()) {
+            $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
+        }
+
+        return (bool) $result;
+    }
+
+    public function hasShopAssociations(): bool
+    {
+        $sql = "SELECT m.id_module FROM %smodule m INNER JOIN %smodule_shop ms ON ms.id_module = m.id_module WHERE m.id_module = '%s'";
+        $result = Db::getInstance()->getRow(sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id));
+
+        return isset($result['id_module']);
     }
 
     /**
@@ -2674,18 +2691,16 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_hook Hook ID
      *
-     * @return int position
+     * @return int position or 0 if hook not found
      */
     public function getPosition($id_hook)
     {
-        $result = Db::getInstance()->getRow('
+        return (int) Db::getInstance()->getValue('
             SELECT `position`
             FROM `' . _DB_PREFIX_ . 'hook_module`
             WHERE `id_hook` = ' . (int) $id_hook . '
             AND `id_module` = ' . (int) $this->id . '
             AND `id_shop` = ' . (int) Context::getContext()->shop->id);
-
-        return $result['position'];
     }
 
     /**
@@ -2981,7 +2996,7 @@ abstract class ModuleCore implements ModuleInterface
             file_put_contents($override_dest, preg_replace($pattern_escape_com, '', $module_file));
 
             // Re-generate the class index
-            Tools::generateIndex();
+            PrestashopAutoload::getInstance()->generateIndex();
         }
 
         return true;
@@ -3228,7 +3243,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Re-generate the class index
-        Tools::generateIndex();
+        PrestashopAutoload::getInstance()->generateIndex();
 
         return true;
     }
@@ -3269,7 +3284,7 @@ abstract class ModuleCore implements ModuleInterface
 
             // Get Parent directory
             $splDir = $splDir->getPathInfo();
-        } while ($splDir->getPathname() !== $directoryOverride);
+        } while ($splDir->getRealPath() !== $directoryOverride);
     }
 
     private function getWidgetHooks()
@@ -3346,9 +3361,17 @@ abstract class ModuleCore implements ModuleInterface
 
     protected function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
-        $parameters['legacy'] = 'htmlspecialchars';
+        if (isset($parameters['_raw'])) {
+            @trigger_error(
+                'The _raw parameter is deprecated and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+            unset($parameters['_raw']);
 
-        return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
+            return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
+        }
+
+        return htmlspecialchars($this->getTranslator()->trans($id, $parameters, $domain, $locale), ENT_NOQUOTES);
     }
 
     /**

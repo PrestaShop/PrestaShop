@@ -25,6 +25,8 @@
  */
 global $smarty;
 
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+
 $template_dirs = array(_PS_THEME_DIR_.'templates');
 $plugin_dirs = array(_PS_THEME_DIR_.'plugins');
 if (_PS_PARENT_THEME_DIR_ !== '') {
@@ -171,6 +173,14 @@ function smartyTranslate($params, $smarty)
     if (!isset($params['sprintf'])) {
         $params['sprintf'] = array();
     }
+
+    // fix inheritance template filename in case of includes from different cross sources between theme, modules, ...
+    $filename = $smarty->template_resource;
+    if (!isset($smarty->inheritance->sourceStack[0]) || $filename === $smarty->inheritance->sourceStack[0]->resource) {
+        $filename = $smarty->source->name;
+    }
+    $basename = basename($filename, '.tpl');
+
     if (!isset($params['d'])) {
         $params['d'] = null;
     }
@@ -214,14 +224,6 @@ function smartyTranslate($params, $smarty)
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
-
-    // fix inheritance template filename in case of includes from different cross sources between theme, modules, ...
-    $filename = $smarty->template_resource;
-    if (!isset($smarty->inheritance->sourceStack[0]) || $filename === $smarty->inheritance->sourceStack[0]->resource) {
-        $filename = $smarty->source->name;
-    }
-
-    $basename = basename($filename, '.tpl');
     $key = $basename.'_'.md5($string);
 
     if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
@@ -229,7 +231,7 @@ function smartyTranslate($params, $smarty)
     }
 
     if ($params['mod']) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getModuleTranslation(
                 $params['mod'],
                 $params['s'],
@@ -240,7 +242,7 @@ function smartyTranslate($params, $smarty)
             $params
         );
     } elseif ($params['pdf']) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getPdfTranslation(
                 $params['s'],
                 $params['sprintf']
@@ -267,5 +269,5 @@ function smartyTranslate($params, $smarty)
         $msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
     }
 
-    return Translate::smartyPostProcessTranslation($params['js'] ? $msg : Tools::safeOutput($msg), $params);
+    return Translate::postProcessTranslation($params['js'] ? $msg : Tools::safeOutput($msg), $params);
 }

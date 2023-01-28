@@ -26,8 +26,8 @@
   <div class="col-sm-3">
     <div class="card p-3">
       <PSTree
-        ref="domainTree"
-        :model="domainsTree"
+        ref="domainsTree"
+        :model="$store.getters.domainsTree"
         class-name="translationTree"
         :translations="translations"
         :current-item="currentItem"
@@ -39,12 +39,13 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
   import PSSpinner from '@app/widgets/ps-spinner.vue';
-  import {EventBus} from '@app/utils/event-bus';
+  import {EventEmitter} from '@components/event-emitter';
+  import TranslationMixin from '@app/pages/translations/mixins/translate';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       modal: {
         type: Object,
@@ -57,20 +58,21 @@
         default: () => ({}),
       },
     },
+    mixins: [TranslationMixin],
     computed: {
       treeReady(): boolean {
         return !this.$store.state.sidebarLoading;
       },
       currentItem(): string {
         if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
-          if (this.domainsTree.length) {
-            const domain = this.getFirstDomainToDisplay(this.domainsTree);
-            EventBus.$emit('reduce');
+          if (this.$store.getters.domainsTree.length) {
+            const domain = this.getFirstDomainToDisplay(this.$store.getters.domainsTree);
+            EventEmitter.emit('reduce');
             this.$store.dispatch('updateCurrentDomain', domain);
 
             if (domain !== '') {
               this.$store.dispatch('getCatalog', {url: (<Record<string, any>>domain).dataValue});
-              EventBus.$emit('setCurrentElement', (<Record<string, any>>domain).full_name);
+              EventEmitter.emit('setCurrentElement', (<Record<string, any>>domain).full_name);
               return (<Record<string, any>>domain).full_name;
             }
 
@@ -80,9 +82,6 @@
         }
 
         return this.$store.getters.currentDomain;
-      },
-      domainsTree(): Record<string, any> {
-        return this.$store.getters.domainsTree;
       },
       translations(): Record<string, any> {
         return {
@@ -97,7 +96,7 @@
       this.$store.dispatch('getDomainsTree', {
         store: this.$store,
       });
-      EventBus.$on('lastTreeItemClick', (el: any): void => {
+      EventEmitter.on('lastTreeItemClick', (el: any): void => {
         if (this.edited()) {
           this.modal.showModal();
           this.modal.$once('save', () => {
@@ -118,20 +117,20 @@
        * and reset the modified translations
        * @param {object} el - Domain to set
        */
-      itemClick: function itemClick(el: any): void {
+      itemClick(el: any): void {
         this.$store.dispatch('updateCurrentDomain', el.item);
         this.$store.dispatch('getCatalog', {url: el.item.dataValue});
         this.$store.dispatch('updatePageIndex', 1);
         this.$store.state.modifiedTranslations = [];
       },
-      getFirstDomainToDisplay: function getFirstDomainToDisplay(tree: any): string | Record<string, any> {
+      getFirstDomainToDisplay(tree: any): string | Record<string, any> {
         const keys = Object.keys(tree);
         let toDisplay = '';
 
         for (let i = 0; i < tree.length; i += 1) {
           if (!tree[keys[i]].disable) {
             if (tree[keys[i]].children && tree[keys[i]].children.length > 0) {
-              return getFirstDomainToDisplay(tree[keys[i]].children);
+              return this.getFirstDomainToDisplay(tree[keys[i]].children);
             }
 
             toDisplay = tree[keys[i]];

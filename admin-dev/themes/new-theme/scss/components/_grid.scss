@@ -126,7 +126,7 @@ table .column-filters {
               display: inline-block;
             }
 
-            & ~ .form-control {
+            ~ .form-control {
               display: inline-block;
               /* stylelint-disable-next-line */
               width: calc(100% - 32px);
@@ -280,6 +280,16 @@ table .column-filters {
 
           &.date_time-type {
             word-break: normal;
+          }
+
+          &.api_accesses_states-type {
+            .active {
+              color: #21834d;
+            }
+
+            .inactive {
+              color: #f44336;
+            }
           }
         }
       }

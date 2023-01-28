@@ -47,7 +47,9 @@ class UnitTypeExtension extends AbstractTypeExtension
     {
         $resolver
             ->setDefined('unit')
+            ->setDefault('prepend_unit', false)
             ->setAllowedTypes('unit', 'string')
+            ->setAllowedTypes('prepend_unit', 'bool')
         ;
     }
 
@@ -58,6 +60,7 @@ class UnitTypeExtension extends AbstractTypeExtension
     {
         if (isset($options['unit'])) {
             $view->vars['unit'] = $options['unit'];
+            $view->vars['prepend_unit'] = $options['prepend_unit'];
         }
     }
 

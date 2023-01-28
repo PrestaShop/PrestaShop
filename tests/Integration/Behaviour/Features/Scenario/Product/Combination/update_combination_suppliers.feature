@@ -25,7 +25,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     And attribute "Red" named "Red" in en language exists
 
   Scenario: I update combination suppliers:
-    Given I add new supplier supplier1 with following properties:
+    Given I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
@@ -36,7 +36,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier2 with following properties:
+    And I add new supplier supplier2 with the following properties:
       | name                    | my supplier 2      |
       | address                 | Donelaicio st. 2   |
       | city                    | Kaunas             |
@@ -47,7 +47,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,2              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier3 with following properties:
+    And I add new supplier supplier3 with the following properties:
       | name                    | my supplier 3    |
       | address                 | Donelaicio st. 3 |
       | city                    | Kaunas           |
@@ -285,271 +285,6 @@ Feature: Update product combination suppliers in Back Office (BO)
       | default supplier reference | second supplier2 |
     But product product1 should not have suppliers infos
 
-  Scenario: Combinations wholesale price should depend on default supplier price (product wholesale price remains independent)
-    And I add product "product2" with following information:
-      | name[en-US] | universal T-shirt |
-      | type        | combinations      |
-    And product product2 type should be combinations
-    When I update product "product2" prices with following information:
-      | wholesale_price | 70  |
-    Then product product2 should have following prices information:
-      | wholesale_price | 70 |
-    And I generate combinations for product product2 using following attributes:
-      | Size  | [S,M]         |
-      | Color | [White,Black] |
-    And product "product2" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product2SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
-      | product2SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
-      | product2MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product2MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-    And combination "product2SWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 0     |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And product product2 should have following prices information:
-      | wholesale_price | 70 |
-    When I associate suppliers to product "product2"
-      | supplier  | combination_suppliers                                                         |
-      | supplier2 | product2SWhite:product2SWhiteSupplier2;product2SBlack:product2SBlackSupplier2 |
-      | supplier1 | product2SWhite:product2SWhiteSupplier1;product2SBlack:product2SBlackSupplier1 |
-    Given product product2 should have the following suppliers assigned:
-      | supplier1 |
-      | supplier2 |
-    And combination "product2SWhite" should have following suppliers:
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product2SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
-      | product2SWhiteSupplier2 | supplier2 |           | USD      | 0                  |
-    And product product2 should have following supplier values:
-      | default supplier           | supplier2 |
-    Then product product2 should have following prices information:
-      | wholesale_price | 70 |
-    # Now I update suppliers values, the wholesale price of the combination should have the same value as the default supplier
-    When I update following suppliers for combination "product2SWhite":
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product2SWhiteSupplier1 | supplier1 |           | USD      | 51                 |
-      | product2SWhiteSupplier2 | supplier2 |           | USD      | 69                 |
-    And I update following suppliers for combination "product2SBlack":
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product2SBlackSupplier1 | supplier1 |           | USD      | 44                 |
-      | product2SBlackSupplier2 | supplier2 |           | USD      | 49                 |
-    Then combination "product2SWhite" should have following suppliers:
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product2SWhiteSupplier1 | supplier1 |           | USD      | 51                 |
-      | product2SWhiteSupplier2 | supplier2 |           | USD      | 69                 |
-    And combination "product2SBlack" should have following suppliers:
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product2SBlackSupplier1 | supplier1 |           | USD      | 44                 |
-      | product2SBlackSupplier2 | supplier2 |           | USD      | 49                 |
-    And combination "product2SWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 69    |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And combination "product2SBlack" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 49    |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And combination "product2MWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 0     |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And combination "product2MBlack" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 0     |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And product product2 should have following prices information:
-      | wholesale_price | 70 |
-    # Change the default supplier the wholesale price should also be updated
-    When I set product product2 default supplier to supplier1
-    And product product2 should have following supplier values:
-      | default supplier           | supplier1 |
-      | default supplier reference |           |
-    And combination "product2SWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 51    |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And combination "product2SBlack" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 44    |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And combination "product2MWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 0     |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And combination "product2MBlack" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 0     |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And product product2 should have following prices information:
-      | wholesale_price | 70 |
-
-  Scenario: Updating combination wholesale price should update default supplier price (product wholesale remains independent)
-    Given I add product "product3" with following information:
-      | name[en-US] | universal T-shirt |
-      | type        | combinations      |
-    And product product3 type should be combinations
-    When I update product "product3" prices with following information:
-      | wholesale_price | 70  |
-    Then product product3 should have following prices information:
-      | wholesale_price | 70 |
-    And I generate combinations for product product3 using following attributes:
-      | Size  | [S,M]         |
-      | Color | [White,Black] |
-    Then product "product3" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
-      | product3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
-      | product3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-    And combination "product3SWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 0     |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    When I associate suppliers to product "product3"
-      | supplier  | combination_suppliers                  |
-      | supplier2 | product3SWhite:product3SWhiteSupplier2 |
-      | supplier1 | product3SWhite:product3SWhiteSupplier1 |
-    Then product product3 should have the following suppliers assigned:
-      | supplier1 |
-      | supplier2 |
-    And combination "product3SWhite" should have following suppliers:
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product3SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
-      | product3SWhiteSupplier2 | supplier2 |           | USD      | 0                  |
-    And product product3 should have following supplier values:
-      | default supplier           | supplier2 |
-    # Supplier with value zero has overridden the product wholesale price
-    And product product3 should have following prices information:
-      | wholesale_price | 70 |
-    # Now I update combination wholesale price it should update the default supplier price
-    When I update combination "product3SWhite" prices with following details:
-      | wholesale price      | 20  |
-    Then combination "product3SWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 20    |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And combination "product3SWhite" should have following suppliers:
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product3SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
-      | product3SWhiteSupplier2 | supplier2 |           | USD      | 20                 |
-    And product product3 should have following prices information:
-      | wholesale_price | 70 |
-    When I set product product3 default supplier to supplier1
-    Then product product3 should have following supplier values:
-      | default supplier           | supplier1 |
-    # Back to 0 since it's the value for supplier1
-    And combination "product3SWhite" should have following prices:
-      | combination price detail        | value |
-      | impact on price                 | 0     |
-      | impact on price with taxes      | 0     |
-      | impact on unit price            | 0     |
-      | impact on unit price with taxes | 0     |
-      | eco tax                         | 0     |
-      | eco tax with taxes              | 0     |
-      | wholesale price                 | 0     |
-      | product tax rate                | 0     |
-      | product price                   | 0     |
-      | product ecotax                  | 0     |
-    And product product3 should have following prices information:
-      | wholesale_price | 70 |
-    When I update combination "product3SWhite" prices with following details:
-      | wholesale price      | 44  |
-    # The new default supplier is updated
-    And combination "product3SWhite" should have following suppliers:
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product3SWhiteSupplier1 | supplier1 |           | USD      | 44                 |
-      | product3SWhiteSupplier2 | supplier2 |           | USD      | 20                 |
-    And product product3 should have following prices information:
-      | wholesale_price | 70 |
-
   Scenario: When new combinations are generated the suppliers must be associated to them
     Given I add product "product4" with following information:
       | name[en-US] | universal T-shirt |
@@ -632,7 +367,7 @@ Feature: Update product combination suppliers in Back Office (BO)
 
   Scenario: I should be able to associate suppliers (and default supplier) even when no combinations has been created
     # We create new empty suppliers which have no other products
-    Given I add new supplier supplier4 with following properties:
+    Given I add new supplier supplier4 with the following properties:
       | name                    | my supplier 4       |
       | address                 | Donelaicio st. 4    |
       | city                    | Kaunas              |
@@ -643,7 +378,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | meta description[en-US] |                     |
       | meta keywords[en-US]    | sup,4               |
       | shops                   | [shop1]             |
-    And I add new supplier supplier5 with following properties:
+    And I add new supplier supplier5 with the following properties:
       | name                    | my supplier 5       |
       | address                 | Donelaicio st. 5    |
       | city                    | Kaunas              |

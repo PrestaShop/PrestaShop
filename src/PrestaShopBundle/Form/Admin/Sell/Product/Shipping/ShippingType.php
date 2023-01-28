@@ -33,9 +33,10 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Form type containing product shipping information
@@ -90,7 +91,7 @@ class ShippingType extends TranslatorAwareType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => false,
-                'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Delivery time', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
             ])
@@ -99,7 +100,7 @@ class ShippingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'label_subtitle' => $this->trans('Does this product incur additional shipping costs?', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('Additional shipping costs', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping.', 'Admin.Catalog.Help'),
                 'currency' => $this->currencyIsoCode,
                 'constraints' => [
@@ -121,5 +122,16 @@ class ShippingType extends TranslatorAwareType
                 'modify_all_shops' => true,
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Shipping', 'Admin.Catalog.Feature'),
+        ]);
     }
 }

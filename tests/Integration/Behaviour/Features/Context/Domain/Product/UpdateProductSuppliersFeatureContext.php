@@ -81,7 +81,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             );
 
             $this->getCommandBus()->handle($command);
-        } catch (ProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
+        } catch (ProductSupplierNotAssociatedException|InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }
@@ -181,7 +181,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
                 $productSupplierAssociations,
                 'Number of updated associations does not match the input number of associations'
             );
-        } catch (ProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
+        } catch (ProductSupplierNotAssociatedException|InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }

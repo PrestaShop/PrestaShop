@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminModulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5ea77a701ee37e948810656ccde89075">
-        <source>Click here to log in.</source>
-        <target>Click here to log in.</target>
-        <note>Line: 775</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9e3c05bc84491dcd2464d72fae22e6b6">
@@ -23,17 +14,17 @@
       <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
         <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
         <target>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
-        <note>Line: 54</note>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
         <source>Your module will be installed right after that.</source>
         <target>Your module will be installed right after that.</target>
-        <note>Line: 55</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
         <source>What happened?</source>
         <target>What happened?</target>
-        <note>Line: 75</note>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -90,7 +81,7 @@
       <trans-unit id="5117b40edade2ab3a4f738db0542ca03">
         <source>These modules require your attention: you need to take some action to ensure they are fully operational.</source>
         <target>These modules require your attention: you need to take some action to ensure they are fully operational.</target>
-        <note>Line: 39</note>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -99,7 +90,7 @@
       <trans-unit id="94fcfae9285e19b611afe17a8565a394">
         <source>Update these modules to enjoy their latest versions.</source>
         <target>Update these modules to enjoy their latest versions.</target>
-        <note>Line: 39</note>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>

@@ -103,7 +103,7 @@ class AttachmentController extends FrameworkBundleAdminController
             $handlerResult = $attachmentFormHandler->handle($attachmentForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 if ($request->get('saveAndStay') !== null) {
                     // Keep the initial query parameters (to keep liteDisplay or saveAndStay for example)
@@ -162,7 +162,7 @@ class AttachmentController extends FrameworkBundleAdminController
             $result = $attachmentFormHandler->handleFor((int) $attachmentId, $attachmentForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_attachments_index');
             }
@@ -232,7 +232,7 @@ class AttachmentController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteAttachmentCommand((int) $attachmentId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -258,7 +258,7 @@ class AttachmentController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteAttachmentsCommand($attachmentIds));
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

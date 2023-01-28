@@ -39,7 +39,7 @@
 
       {foreach from=$run.profiler item=row}
         {if $row['block'] == 'checkAccess' && $row['time'] == $last['time']}
-          {$continue}
+          {continue}
         {/if}
 
         <tr>

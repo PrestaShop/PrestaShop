@@ -2,17 +2,24 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\Configuration: ~
+
   prestashop.adapter.legacy.configuration:
-    class: PrestaShop\PrestaShop\Adapter\Configuration
+    alias: PrestaShop\PrestaShop\Adapter\Configuration
+
+  PrestaShop\PrestaShop\Adapter\Tools: ~
 
   prestashop.adapter.tools:
-    class: PrestaShop\PrestaShop\Adapter\Tools
+    alias: PrestaShop\PrestaShop\Adapter\Tools
+    deprecated: ~
 
-  prestashop.adapter.legacy.context:
-    class: PrestaShop\PrestaShop\Adapter\LegacyContext
+  PrestaShop\PrestaShop\Adapter\LegacyContext:
     arguments:
       - "%mail_themes_uri%"
-      - '@prestashop.adapter.tools'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
+
+  prestashop.adapter.legacy.context:
+    alias: PrestaShop\PrestaShop\Adapter\LegacyContext
 
   prestashop.adapter.environment:
     class: PrestaShop\PrestaShop\Adapter\Environment
@@ -22,7 +29,9 @@ services:
   prestashop.adapter.validate:
     class: PrestaShop\PrestaShop\Adapter\Validate
 
-  prestashop.adapter.context_state_manager:
-    class: PrestaShop\PrestaShop\Adapter\ContextStateManager
+  PrestaShop\PrestaShop\Adapter\ContextStateManager:
     arguments:
-      - '@prestashop.adapter.legacy.context'
+      - '@PrestaShop\PrestaShop\Adapter\LegacyContext'
+
+  prestashop.adapter.context_state_manager:
+    alias: PrestaShop\PrestaShop\Adapter\ContextStateManager

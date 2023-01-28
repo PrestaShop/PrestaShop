@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 
 use PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms
@@ -86,9 +86,9 @@ class PaginationFormDataProvider implements FormDataProviderInterface
     {
         $errors = [];
         $productsPerPage = $data['products_per_page'];
-        if (!is_numeric($productsPerPage) || 0 > $productsPerPage) {
+        if (!is_numeric($productsPerPage) || 0 >= $productsPerPage) {
             $errors[] = [
-                'key' => 'The %s field is invalid.',
+                'key' => 'The %s field is invalid. Please enter a positive integer.',
                 'domain' => 'Admin.Notifications.Error',
                 'parameters' => [$this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature')],
             ];

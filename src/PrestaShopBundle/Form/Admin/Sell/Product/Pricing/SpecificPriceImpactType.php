@@ -38,12 +38,12 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SpecificPriceImpactType extends TranslatorAwareType
 {
@@ -70,17 +70,17 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $builder
             ->add('reduction', PriceReductionType::class, [
                 'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'label_subtitle' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.',
+                'label_subtitle' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'constraints' => [
                     new Reduction([
                         'invalidPercentageValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value must be more than zero and maximum %max%.',
+                            'Reduction value "%value%" is invalid. It must be greater than 0 and maximum %max%.',
                             'Admin.Notifications.Error',
                             ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%']
                         ),
                         'invalidAmountValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value must be more than zero.',
+                            'Reduction value "%value%" is invalid. It must be greater than 0.',
                             'Admin.Notifications.Error'
                         ),
                         'groups' => [self::REDUCTION_GROUP],
@@ -150,7 +150,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $isUsingReduction = $this->isUsingReduction($impactData);
         if (!$isUsingFixedPrice && !$isUsingReduction) {
             $context
-                ->buildViolation($this->trans('You must select at least one impact on price.', 'Admin.Catalog.Feature'))
+                ->buildViolation($this->trans('Apply a discount to the initial price or set a specific price.', 'Admin.Catalog.Feature'))
                 ->addViolation()
             ;
         }

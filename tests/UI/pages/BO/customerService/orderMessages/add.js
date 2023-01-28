@@ -16,13 +16,14 @@ class AddOrderMessage extends BOBasePage {
 
     this.pageTitle = 'Add new';
     this.pageTitleEdit = 'Edit:';
+    this.pageTitleView = 'View';
 
     // Selectors
     this.nameLangButton = '#order_message_name_dropdown';
     this.langDropdownDiv = 'div.locale-dropdown-menu';
-    this.nameLangSpan = lang => `${this.langDropdownDiv} span[data-locale='${lang}']`;
-    this.nameInput = id => `#order_message_name_${id}`;
-    this.messageTextarea = id => `#order_message_message_${id}`;
+    this.nameLangSpan = (lang) => `${this.langDropdownDiv} span[data-locale='${lang}']`;
+    this.nameInput = (id) => `#order_message_name_${id}`;
+    this.messageTextarea = (id) => `#order_message_message_${id}`;
     this.saveButton = '#save-button';
   }
 

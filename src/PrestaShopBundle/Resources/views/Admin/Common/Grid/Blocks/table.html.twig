@@ -35,6 +35,9 @@
 <table class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
        id="{{ grid.id }}_grid_table"
        data-query="{{ grid.data.query }}"
+       data-limit="{{ grid.pagination.limit }}"
+       data-offset="{{ grid.pagination.offset }}"
+       data-total="{{ grid.data.records_total }}"
 >
   <thead class="thead-default">
   {% block grid_table_head %}

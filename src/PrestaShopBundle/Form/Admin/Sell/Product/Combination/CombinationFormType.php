@@ -28,15 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType;
+use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Form to edit Combination details.
@@ -69,13 +69,20 @@ class CombinationFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('is_default', CheckboxType::class, [
-                'label' => $this->trans('Set as default combination', 'Admin.Catalog.Feature'),
+            ->add('cover_thumbnail_url', ImagePreviewType::class, [
+                'label' => false,
+                'row_attr' => [
+                    'class' => 'combination-cover-row',
+                ],
             ])
-            ->add('name', HiddenType::class)
-            ->add('stock', CombinationStockType::class)
+            ->add('header', CombinationHeaderType::class)
+            ->add('stock', CombinationStockType::class, [
+                'product_id' => $options['product_id'],
+            ])
             ->add('price_impact', CombinationPriceImpactType::class)
-            ->add('references', ReferencesType::class)
+            ->add('references', ReferencesType::class, [
+                'columns_number' => 3,
+            ])
             ->add('default_supplier_id', HiddenType::class)
             ->add('product_suppliers', ProductSupplierCollectionType::class, [
                 'alert_message' => $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
@@ -99,11 +106,15 @@ class CombinationFormType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired(['product_id'])
-            ->setAllowedTypes('product_id', ['int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
             ->setDefaults([
                 'required' => false,
                 'label' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig',
+                'use_default_themes' => false,
             ])
         ;
     }

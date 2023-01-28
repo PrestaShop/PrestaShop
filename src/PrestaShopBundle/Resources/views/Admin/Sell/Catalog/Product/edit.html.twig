@@ -24,10 +24,8 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{# It is very important to use product theme ONLY or the default theme from Symfony config is always preloaded #}
-{% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig'] only %}
-
 {% block stylesheets %}
+  {{ parent() }}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
 {% endblock %}
 
@@ -39,20 +37,32 @@
 <div class="product-page-v2">
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
-  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
+  {% set shopId = productForm.vars.shop_id %}
 
   <div class="header-toolbar d-print-none">
-    {{ multistoreHeader() }}
+    {{ multistoreProductHeader(productId) }}
   </div>
 
   {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page justify-content-md-center', 'novalidate': 'novalidate',
+    'class': 'form-horizontal product-page justify-content-md-center product-form',
+    'novalidate': 'novalidate',
     'data-product-id': productId,
+    'data-shop-id': shopId,
     'data-product-type': productType
   }}) }}
 
+  {# Header form child is rendered separately because it's not one of the tabs so it needs to be rendered before #}
   {% block product_header %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {'productForm': productForm}) }}
+  {% endblock %}
+
+  {# Footer form child is rendered separately because it's not one of the tabs so it needs to be rendered before #}
+  {% block product_footer %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
+      'productForm': productForm,
+      'editable': editable,
+      'productId': productId,
+    }) }}
   {% endblock %}
 
   {{ block('session_alert') }}
@@ -69,87 +79,14 @@
   {% endif %}
   <div id="contextual-notification-box"></div>
 
-    {% block product_tabs_container %}
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
-        'productForm': productForm,
-        'productType': productType,
-        'extraModulesHooks': extraModulesHooks
-      }) }}
-    {% endblock %}
-
-    <div id="form_content" class="product-tabs tab-content">
-      {% block product_tab_description %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/description.html.twig', {
-          'productForm': productForm,
-        }) }}
-      {% endblock %}
-
-      {% block product_tab_specifications %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/specifications.html.twig', {
-          'productForm': productForm,
-        }) }}
-      {% endblock %}
-
-      {% if productType == 'combinations' %}
-        {% block product_tab_combinations %}
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
-        {% endblock %}
-      {% endif %}
-
-      {% if productForm.stock is defined %}
-        {% block product_tab_stock %}
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig') }}
-        {% endblock %}
-      {% endif %}
-
-      {% if productForm.shipping is defined %}
-        {% block product_tab_shipping %}
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/shipping.html.twig', {
-            'productForm': productForm,
-          }) }}
-        {% endblock %}
-      {% endif %}
-
-      {% block product_tab_pricing %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
-          'productForm': productForm,
-        }) }}
-      {% endblock %}
-
-      {% block product_tab_seo %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/seo.html.twig', {
-          'productForm': productForm,
-        }) }}
-      {% endblock %}
-
-      {% block product_tab_options %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/options.html.twig', {
-          'productForm': productForm,
-        }) }}
-      {% endblock %}
-
-      {% block product_extra_tab %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/modules.html.twig', {
-          'productForm': productForm,
-          'extraModulesHooks': extraModulesHooks,
-        }) }}
-      {% endblock %}
-    </div>
-
-  {% block product_footer %}
-  {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
-    'productForm': productForm,
-    'editable': editable,
-    'productId': productId,
-  }) }}
-  {% endblock %}
+  {{ form_widget(productForm) }}
 
   {% block product_rest %}
   {{ form_end(productForm) }}
   {% endblock %}
 
   {% block category_tree_form %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Category/category_tree_form.html.twig') }}
+    {{ form_row(categoryTreeSelectorForm) }}
   {% endblock %}
 </div>
 {% endblock %}

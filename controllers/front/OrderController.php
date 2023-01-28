@@ -151,24 +151,9 @@ class OrderControllerCore extends FrontController
     protected function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
-        $addressValidator = new AddressValidator();
-        $customer = $this->context->customer;
         $cart = $this->context->cart;
 
-        $shouldGenerateChecksum = false;
-
-        if ($customer->isGuest()) {
-            $shouldGenerateChecksum = true;
-        } else {
-            $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
-            if (empty($invalidAddressIds)) {
-                $shouldGenerateChecksum = true;
-            }
-        }
-
-        $data['checksum'] = $shouldGenerateChecksum
-            ? $this->cartChecksum->generateChecksum($cart)
-            : null;
+        $data['checksum'] = $this->cartChecksum->generateChecksum($cart);
 
         Db::getInstance()->execute(
             'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
@@ -206,10 +191,6 @@ class OrderControllerCore extends FrontController
                     'Shop.Notifications.Error'
                 ),
             ];
-
-            $checksum = null;
-        } else {
-            $checksum = $this->cartChecksum->generateChecksum($cart);
         }
 
         // Prevent check for guests
@@ -220,7 +201,7 @@ class OrderControllerCore extends FrontController
             $this->checkoutWarning['invalid_addresses'] = $allInvalidAddressIds;
         }
 
-        if (isset($data['checksum']) && $data['checksum'] === $checksum) {
+        if (isset($data['checksum']) && $data['checksum'] === $this->cartChecksum->generateChecksum($cart)) {
             $process->restorePersistedData($data);
         }
     }

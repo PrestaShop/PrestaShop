@@ -32,8 +32,8 @@ class WebserviceOutputBuilderCore
     /**
      * @var int constant
      */
-    const VIEW_LIST = 1;
-    const VIEW_DETAILS = 2;
+    public const VIEW_LIST = 1;
+    public const VIEW_DETAILS = 2;
 
     protected $wsUrl;
     protected $output;
@@ -666,7 +666,7 @@ class WebserviceOutputBuilderCore
                             $value = $object_assoc;
                         }
                         if (empty($fields_assoc)) {
-                            $fields_assoc = [['id' => $value['id']]];
+                            $fields_assoc = [['id' => ($value['id'] ?? null)]];
                         }
                         $output_details .= $this->renderFlatAssociation($object, $depth, $assoc_name, $association['resource'], $fields_assoc, $value, $parent_details);
                     } else {
@@ -711,7 +711,7 @@ class WebserviceOutputBuilderCore
 
         foreach ($fields_assoc as $field_name => $field) {
             if (!is_array($this->fieldsToDisplay) || in_array($field_name, $this->fieldsToDisplay[$assoc_name])) {
-                if ($field_name == 'id' && !isset($field['sqlId'])) {
+                if (isset($field['id']) && !isset($field['sqlId'])) {
                     $field['sqlId'] = 'id';
                     $field['value'] = isset($object_assoc['id']) ? $object_assoc['id'] : null;
                 } elseif (!isset($field['sqlId'])) {

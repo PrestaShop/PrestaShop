@@ -86,7 +86,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
                 $this->buildSystemFileReference($productReference, $fileReference),
                 _PS_DOWNLOAD_DIR_ . $filename
             );
-        } catch (VirtualProductFileException | InvalidProductTypeException $e) {
+        } catch (VirtualProductFileException|InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }
@@ -221,19 +221,39 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
      * @param string $fileReference
      * @param TableNode $dataTable
      */
-    public function assertFile(string $productReference, string $fileReference, TableNode $dataTable): void
+    public function assertFileAndReference(string $productReference, string $fileReference, TableNode $dataTable): void
     {
         $actualFile = $this->getProductForEditing($productReference)->getVirtualProductFile();
         if (!$actualFile) {
             throw new RuntimeException('Expected virtual product to have a file');
         }
-
         Assert::assertEquals(
             $this->getSharedStorage()->get($fileReference),
             $actualFile->getId(),
             'Unexpected virtual product file (ids do not match)'
         );
+        $this->assertVirtualFile($actualFile, $dataTable);
+    }
 
+    /**
+     * @Then product :productReference should have a virtual product file which reference is :fileReference and has following details:
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     * @param TableNode $dataTable
+     */
+    public function assertNewFile(string $productReference, string $fileReference, TableNode $dataTable): void
+    {
+        $actualFile = $this->getProductForEditing($productReference)->getVirtualProductFile();
+        if (!$actualFile) {
+            throw new RuntimeException('Expected virtual product to have a file');
+        }
+        $this->getSharedStorage()->set($fileReference, $actualFile->getId());
+        $this->assertVirtualFile($actualFile, $dataTable);
+    }
+
+    private function assertVirtualFile(VirtualProductFileForEditing $actualFile, TableNode $dataTable): void
+    {
         $dataRows = $dataTable->getRowsHash();
         Assert::assertEquals($dataRows['display name'], $actualFile->getDisplayName(), 'Unexpected display file name');
         unset($dataRows['display name']);

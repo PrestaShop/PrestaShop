@@ -163,7 +163,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 //          return empty($data['reduction_type']) || empty($data['reduction_value']);
                 //      },
                 static::DISABLED_VALUE_OPTION => null,
-                // You can define an JS event triggered on witch changes
+                // You can define an JS event triggered on which changes
                 static::SWITCH_EVENT_OPTION => null,
                 // Define the state of the switch component when value is disabled (by default on off)
                 static::SWITCH_STATE_ON_DISABLE_OPTION => 'off',

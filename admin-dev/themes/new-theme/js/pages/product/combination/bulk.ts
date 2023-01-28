@@ -24,17 +24,59 @@
  */
 
 import ImageSelector from '@pages/product/combination/form/image-selector';
-import QuantityModeSwitcher from '@pages/product/combination/QuantityModeSwitcher';
+import QuantityModeSwitcher from '@pages/product/combination/quantity-mode-switcher';
+import CombinationFormMapping from '@pages/product/combination/form/combination-form-mapping';
+import FormFieldToggler from '@components/form/form-field-toggler';
 
 // @ts-ignore
 const {$} = window;
 
 $(() => {
   window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TranslatableInput',
     'EventEmitter',
     'DeltaQuantityInput',
     'DisablingSwitch',
+    'ModifyAllShopsCheckbox',
   ]);
   new ImageSelector();
   new QuantityModeSwitcher();
+
+  // DisablingSwitch is already used in low_stock_alert field to decide if form field is intended to be updated or not
+  // so we toggle low_stock_threshold availability by low_stock_alert field here by initiating toggler manually.
+  new FormFieldToggler({
+    disablingInputSelector: 'input[name="bulk_combination[stock][low_stock_threshold][low_stock_alert]"]',
+    targetSelector: '#bulk_combination_stock_low_stock_threshold_threshold_value',
+  });
+
+  const priceExcludedTaxId = CombinationFormMapping['price.excludedTaxId'];
+  const priceIncludedTaxId = CombinationFormMapping['price.includedTaxId'];
+  const vatRate = CombinationFormMapping['price.vatRateFormId'];
+  const priceDiv: HTMLDivElement = document.getElementById(vatRate) as HTMLDivElement;
+  const priceExcludedTaxInput: HTMLInputElement = document.getElementById(priceExcludedTaxId) as HTMLInputElement;
+  const priceIncludedTaxInput: HTMLInputElement = document.getElementById(priceIncludedTaxId) as HTMLInputElement;
+  const rate: number = 1 + parseFloat((priceDiv.dataset.rate as string));
+
+  priceExcludedTaxInput.addEventListener('keyup', () => {
+    let value;
+
+    if (priceExcludedTaxInput.value === '') {
+      value = 0;
+    } else {
+      value = parseFloat(priceExcludedTaxInput.value);
+    }
+    priceIncludedTaxInput.value = (value * rate).toString();
+  });
+
+  priceIncludedTaxInput.addEventListener('keyup', () => {
+    let value;
+
+    if (priceIncludedTaxInput.value === '') {
+      value = 0;
+    } else {
+      value = parseFloat(priceIncludedTaxInput.value);
+    }
+    priceExcludedTaxInput.value = (value / rate).toString();
+  });
 });

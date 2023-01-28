@@ -38,8 +38,13 @@ class ProductCategoryType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextPreviewType::class, [
+            ->add('display_name', TextPreviewType::class, [
+                'attr' => [
+                    'class' => 'category-name-preview-input',
+                ],
                 'preview_class' => 'category-name-preview',
+            ])
+            ->add('name', HiddenType::class, [
                 'attr' => [
                     'class' => 'category-name-input',
                 ],

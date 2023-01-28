@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
+use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -134,7 +136,7 @@ class ProfileController extends FrameworkBundleAdminController
             $handlerResult = $formHandler->handle($form);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
@@ -190,7 +192,7 @@ class ProfileController extends FrameworkBundleAdminController
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
@@ -216,7 +218,6 @@ class ProfileController extends FrameworkBundleAdminController
             ),
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
-            'editableProfile' => $editableProfile,
         ]);
     }
 
@@ -224,7 +225,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Delete a profile.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")
@@ -252,7 +253,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Bulk delete profiles.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")
@@ -286,6 +287,11 @@ class ProfileController extends FrameworkBundleAdminController
     protected function getErrorMessages()
     {
         return [
+            UploadedImageConstraintException::class => $this->trans(
+                'Image format not recognized, allowed formats are: %s',
+                'Admin.Notifications.Error',
+                [implode(', ', ImageManager::EXTENSIONS_SUPPORTED)]
+            ),
             ProfileConstraintException::class => [
                 ProfileConstraintException::INVALID_NAME => $this->trans(
                     'This field cannot be longer than %limit% characters (incl. HTML tags)',

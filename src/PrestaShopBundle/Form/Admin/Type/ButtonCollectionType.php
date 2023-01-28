@@ -67,8 +67,16 @@ class ButtonCollectionType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
-        $view->vars['button_groups'] = $options['button_groups'];
+
+        $buttonsOptions = $options['buttons'];
+        $buttonGroups = [];
+        foreach ($buttonsOptions as $buttonOptions) {
+            $buttonGroups[$buttonOptions['group']][] = $buttonOptions['name'];
+        }
+        $view->vars['button_groups'] = $buttonGroups;
         $view->vars['justify_content'] = $options['justify_content'];
+        $view->vars['inline_buttons_limit'] = $options['inline_buttons_limit'];
+        $view->vars['use_inline_labels'] = $options['use_inline_labels'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -78,20 +86,11 @@ class ButtonCollectionType extends AbstractType
                 'label' => false,
                 'buttons' => [],
                 'justify_content' => 'space-between',
-                // Internal option automatically built based on the group option of each button
-                'button_groups' => [],
+                'inline_buttons_limit' => null,
+                'use_inline_labels' => true,
             ])
             ->setAllowedTypes('buttons', 'array')
-            ->setNormalizer('button_groups', function (Options $options) {
-                // This option is built automatically via this normalizer
-                $buttonsOptions = $options->offsetGet('buttons');
-                $buttonGroups = [];
-                foreach ($buttonsOptions as $buttonOptions) {
-                    $buttonGroups[$buttonOptions['group']][] = $buttonOptions['name'];
-                }
-
-                return $buttonGroups;
-            })
+            ->setAllowedTypes('inline_buttons_limit', ['int', 'null'])
             ->setNormalizer('buttons', function (Options $options, $buttons) {
                 $resolver = $this->getButtonOptionsResolver();
                 $normalizedOptions = [];

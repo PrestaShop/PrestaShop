@@ -283,3 +283,6 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand
+
+  prestashop.adapter.order.repository.order_repository:
+    class: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository

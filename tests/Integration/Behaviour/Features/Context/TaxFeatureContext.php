@@ -203,4 +203,14 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $carrier = $this->carrierFeatureContext->getCarrierWithName($carrierName);
         $carrier->setTaxRulesGroup($this->taxRuleGroups[$taxName]->id);
     }
+
+    /**
+     * @Given /^Ecotax belongs to tax group "(.+)"$/
+     */
+    public function setEcotaxTaxRuleGroup($taxName)
+    {
+        $this->checkTaxRuleWithNameExists($taxName);
+        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+        $configuration->set('PS_ECOTAX_TAX_RULES_GROUP_ID', $this->taxRuleGroups[$taxName]->id);
+    }
 }

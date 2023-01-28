@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\DeleteManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
@@ -68,6 +69,7 @@ use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Manages "Sell > Catalog > Brands & Suppliers > Brands" page
@@ -146,7 +148,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handle($manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -217,7 +219,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handleFor((int) $manufacturerId, $manufacturerForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -258,7 +260,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturerId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -283,7 +285,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($manufacturerIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -420,6 +422,46 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes manufacturer logo image.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_manufacturers_edit",
+     *     redirectQueryParamsToKeep={"manufacturerId"}
+     * )
+     *
+     * @param Request $request
+     * @param int $manufacturerId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteLogoImageAction(Request $request, int $manufacturerId): RedirectResponse
+    {
+        if (!$this->isCsrfTokenValid('delete-logo-thumbnail', $request->request->get('_csrf_token'))) {
+            return $this->redirectToRoute('admin_security_compromised', [
+                'uri' => $this->generateUrl('admin_manufacturers_edit', [
+                    'manufacturerId' => $manufacturerId,
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new DeleteManufacturerLogoImageCommand($manufacturerId));
+            $this->addFlash(
+                'success',
+                $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_manufacturers_edit', [
+            'manufacturerId' => $manufacturerId,
+        ]);
+    }
+
+    /**
      * Deletes address
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
@@ -435,7 +477,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteAddressCommand((int) $addressId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -507,7 +549,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -541,7 +583,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handle($addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -591,7 +633,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -620,7 +662,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
 
@@ -681,7 +723,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                         $iniConfig->getUploadMaxSizeInBytes(),
                     ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp',
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -697,9 +739,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return array
+     * @return array<int, int>
      */
-    private function getBulkManufacturersFromRequest(Request $request)
+    private function getBulkManufacturersFromRequest(Request $request): array
     {
         $manufacturerIds = $request->request->get('manufacturer_bulk');
 
@@ -715,9 +757,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return array
+     * @return array<int, int>
      */
-    private function getBulkAddressesFromRequest(Request $request)
+    private function getBulkAddressesFromRequest(Request $request): array
     {
         $addressIds = $request->request->get('manufacturer_address_bulk');
 
@@ -735,7 +777,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getFormHandler()
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_form_handler');
     }
@@ -743,7 +785,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * @return FormBuilderInterface
      */
-    private function getFormBuilder()
+    private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_form_builder');
     }
@@ -751,7 +793,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * @return FormBuilderInterface
      */
-    private function getAddressFormBuilder()
+    private function getAddressFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder');
     }
@@ -759,12 +801,15 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getAddressFormHandler()
+    private function getAddressFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_address_form_handler');
     }
 
-    private function getSettingsTipMessage()
+    /**
+     * @return string
+     */
+    private function getSettingsTipMessage(): string
     {
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
         $urlEnding = '</a>';

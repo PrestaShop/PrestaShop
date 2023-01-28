@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DuplicateProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -57,6 +57,6 @@ final class DuplicateProductHandler implements DuplicateProductHandlerInterface
      */
     public function handle(DuplicateProductCommand $command): ProductId
     {
-        return $this->productDuplicator->duplicate($command->getProductId());
+        return $this->productDuplicator->duplicate($command->getProductId(), $command->getShopConstraint());
     }
 }

@@ -1,5 +1,6 @@
 imports:
   - { resource: config.yml }
+  - { resource: security_dev.yml }
 
 framework:
   router:
@@ -14,7 +15,8 @@ web_profiler:
 monolog:
   handlers:
     main:
-      type: stream
+      type: rotating_file
+      max_files: '%env(PS_LOG_MAX_FILES)%'
       path: '%env(PS_LOG_OUTPUT)%'
       level: debug
       channels: [ "!event" ]

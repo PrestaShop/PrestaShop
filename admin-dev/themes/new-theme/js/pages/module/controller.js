@@ -56,6 +56,7 @@ class AdminModuleController {
     this.pstaggerInput = null;
     this.lastBulkAction = null;
     this.isUploadStarted = false;
+    this.findModuleUsed = false;
 
     this.recentlyUsedSelector = '#module-recently-used-list .modules-list';
 
@@ -477,6 +478,16 @@ class AdminModuleController {
     let newValue;
     let defaultMax;
 
+    const paramsUrl = (new URL(document.location)).searchParams;
+    const findModule = paramsUrl.get('find');
+
+    if (findModule && self.findModuleUsed !== true) {
+      self.currentTagsList.push(findModule);
+      self.findModuleUsed = true;
+    } else if (findModule) {
+      self.currentTagsList.pop(findModule);
+    }
+
     const modulesListLength = self.modulesList.length;
     const counter = {};
     const checkTag = (index, value) => {
@@ -708,6 +719,7 @@ class AdminModuleController {
        */
       timeout: 0,
       addedfile: () => {
+        $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}`).hide();
         self.animateStartUpload();
       },
       processing: () => {

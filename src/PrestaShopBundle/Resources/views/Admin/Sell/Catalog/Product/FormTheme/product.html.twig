@@ -36,6 +36,9 @@
     'data-token': csrf_token(update_form_name)
   }) %}
 
+  {% if form.shop_images is defined %}
+    {{ form_row(form.shop_images) }}
+  {% endif %}
   <div {{ block('widget_attributes') }}>
   </div>
 {% endblock %}
@@ -53,8 +56,30 @@
   </li>
 {% endblock %}
 
+{% block packed_product_row %}
+  <li class="packed-product entity-item">
+    <div class="packed-product-image">
+      {{ form_widget(form.image) }}
+    </div>
+    <div class="packed-product-legend">
+      {{ form_widget(form.name, {prefix: '<i class="material-icons entity-item-delete">delete</i>'}) }}
+      {{ form_widget(form.reference)}}
+    </div>
+    <div class="form-group">
+      <div class="packed-product-quantity">
+        {{ form_widget(form.quantity) }}
+        {{ form_errors(form.quantity) }}
+      </div>
+    </div>
+    {{ form_widget(form.product_id) }}
+    {{ form_widget(form.unique_identifier) }}
+    {{ form_widget(form.combination_id) }}
+  </li>
+{% endblock %}
+
+
 {% block product_type_row %}
-  <div class="product-type-selector">
+  <div class="product-type-selector form-group">
     <div class="product-type-choices">
       {% for choice in form.vars.choices %}
         <button type="button" class="product-type-choice btn btn-outline-secondary" data-value="{{ choice.value }}" data-description="{{ choice.attr['data-description']|default(choice.label) }}">

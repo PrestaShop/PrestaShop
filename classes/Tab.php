@@ -64,7 +64,7 @@ class TabCore extends ObjectModel
     /**
      * @deprecated Since 1.7.7
      */
-    const TAB_MODULE_LIST_URL = '';
+    public const TAB_MODULE_LIST_URL = '';
 
     /**
      * @see ObjectModel::$definition
@@ -205,6 +205,11 @@ class TabCore extends ObjectModel
     public static function resetStaticCache()
     {
         self::$_getIdFromClassName = null;
+    }
+
+    public static function resetTabCache()
+    {
+        self::$_cache_tabs = [];
     }
 
     /**

@@ -30,8 +30,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 class AdminTranslationsControllerCore extends AdminController
 {
     /** Name of theme by default */
-    const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
-    const TEXTAREA_SIZED = 70;
+    public const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
+    public const TEXTAREA_SIZED = 70;
 
     /** @var string : Link which list all pack of language */
     protected $link_lang_pack = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
@@ -271,11 +271,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (!isset($_MODULE) && !isset($GLOBALS[$name_var])) {
             $GLOBALS[$name_var] = [];
         } elseif (isset($_MODULE)) {
-            if (is_array($GLOBALS[$name_var]) && is_array($_MODULE)) {
-                $GLOBALS[$name_var] = array_merge($GLOBALS[$name_var], $_MODULE);
-            } else {
-                $GLOBALS[$name_var] = $_MODULE;
-            }
+            $GLOBALS[$name_var] = $_MODULE;
         }
     }
 
@@ -374,7 +370,7 @@ class AdminTranslationsControllerCore extends AdminController
             // translations array is ordered by key (easy merge)
             ksort($to_insert);
             $tab = $translation_informations['var'];
-            fwrite($fd, "<?php\n\nglobal \$" . $tab . ";\n\$" . $tab . " = array();\n");
+            fwrite($fd, "<?php\n\nglobal \$" . $tab . ";\n\$" . $tab . " = [];\n");
             foreach ($to_insert as $key => $value) {
                 fwrite($fd, '$' . $tab . '[\'' . pSQL($key, true) . '\'] = \'' . pSQL($value, true) . '\';' . "\n");
             }
@@ -1210,8 +1206,8 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = [
                     _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
                     _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
-                    _PS_OVERRIDE_DIR_ . 'controllers/front/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE),
-                    _PS_OVERRIDE_DIR_ . 'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_ . 'controllers/front/' => is_dir(_PS_OVERRIDE_DIR_ . 'controllers/front/') ? scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE) : [],
+                    _PS_OVERRIDE_DIR_ . 'controllers/admin/' => is_dir(_PS_OVERRIDE_DIR_ . 'controllers/admin/') ? scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE) : [],
                     _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR, SCANDIR_SORT_NONE),
                 ];
 
@@ -2313,11 +2309,6 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 $class_name = substr($file, 0, -4);
-
-                if (!class_exists($class_name, false) && !class_exists($class_name . 'Core', false)) {
-                    PrestaShopAutoload::getInstance()->load($class_name);
-                }
-
                 if (!is_subclass_of($class_name . 'Core', 'ObjectModel')) {
                     continue;
                 }
@@ -3262,7 +3253,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $dir = rtrim($dir, '/') . DIRECTORY_SEPARATOR;
 
-        $to_parse = scandir($dir, SCANDIR_SORT_NONE);
+        $to_parse = is_dir($dir) ? scandir($dir, SCANDIR_SORT_NONE) : [];
         // copied (and kind of) adapted from AdminImages.php
         foreach ($to_parse as $file) {
             if (!in_array($file, self::$ignore_folder)) {

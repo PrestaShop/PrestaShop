@@ -34,6 +34,8 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 class SearchCombinationFeatureContext extends AbstractProductFeatureContext
@@ -136,6 +138,109 @@ class SearchCombinationFeatureContext extends AbstractProductFeatureContext
             (int) $language->id,
             (int) Configuration::get('PS_SHOP_DEFAULT')
         ));
+
         Assert::assertEmpty($foundProducts);
+    }
+
+    /**
+     * @When I search for products with locale :localeReference matching :search for :packedProductReference I should get following results:
+     *
+     * @param string $localeReference
+     * @param string $search
+     * @param TableNode $tableNode
+     */
+    public function assertSearchProductsForPack(string $localeReference, string $search, string $packedProductReference, TableNode $tableNode): void
+    {
+        $language = $this->getSharedStorage()->get($localeReference);
+        $filters = [
+            'filteredTypes' => [ProductType::TYPE_PACK],
+        ];
+
+        /** @var ProductForAssociation[] $foundProducts */
+        $foundProducts = $this->getQueryBus()->handle(new SearchCombinationsForAssociation(
+            $search,
+            (int) $language->id,
+            (int) Configuration::get('PS_SHOP_DEFAULT'),
+            $filters,
+            20
+        ));
+
+        $expectedRelatedProducts = $tableNode->getColumnsHash();
+
+        Assert::assertEquals(count($expectedRelatedProducts), count($foundProducts));
+
+        $index = 0;
+        foreach ($expectedRelatedProducts as $expectedRelatedProduct) {
+            $foundProductForAssociation = $foundProducts[$index];
+
+            $expectedProductId = $this->getSharedStorage()->get($expectedRelatedProduct['product']);
+            Assert::assertEquals(
+                $expectedProductId,
+                $foundProductForAssociation->getProductId(),
+                sprintf(
+                    'Invalid product ID, expected %d but got %d instead.',
+                    $expectedProductId,
+                    $foundProductForAssociation->getProductId()
+                )
+            );
+
+            Assert::assertEquals(
+                $expectedRelatedProduct['name'],
+                $foundProductForAssociation->getName(),
+                sprintf(
+                    'Invalid product name, expected %s but got %s instead.',
+                    $expectedRelatedProduct['name'],
+                    $foundProductForAssociation->getName()
+                )
+            );
+
+            Assert::assertEquals(
+                $expectedRelatedProduct['reference'],
+                $foundProductForAssociation->getReference(),
+                sprintf(
+                    'Invalid product reference, expected %s but got %s instead.',
+                    $expectedRelatedProduct['reference'],
+                    $foundProductForAssociation->getReference()
+                )
+            );
+
+            $realImageUrl = $this->getRealImageUrl($expectedRelatedProduct['image url']);
+            Assert::assertEquals(
+                $realImageUrl,
+                $foundProductForAssociation->getImageUrl(),
+                sprintf(
+                    'Invalid product image url, expected %s but got %s instead.',
+                    $realImageUrl,
+                    $foundProductForAssociation->getImageUrl()
+                )
+            );
+
+            ++$index;
+        }
+    }
+
+    /**
+     * @When I search for combinations with locale :localeReference matching :search for packs I should get no results
+     *
+     * @param string $localeReference
+     * @param string $search
+     */
+    public function assertSearchProductsForPackNoResults(string $localeReference, string $search): void
+    {
+        $language = $this->getSharedStorage()->get($localeReference);
+        $filters = [
+            'filteredTypes' => [ProductType::TYPE_PACK],
+        ];
+
+        /** @var ProductForAssociation[] $foundProducts */
+        $foundProducts = $this->getQueryBus()->handle(new SearchCombinationsForAssociation(
+            $search,
+            (int) $language->id,
+            (int) Configuration::get('PS_SHOP_DEFAULT'),
+            $filters,
+            20
+        ));
+
+        Assert::assertEquals(0, count($foundProducts));
     }
 }

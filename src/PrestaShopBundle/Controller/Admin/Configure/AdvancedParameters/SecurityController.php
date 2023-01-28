@@ -182,7 +182,7 @@ class SecurityController extends FrameworkBundleAdminController
             [
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Employee Sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
@@ -212,7 +212,7 @@ class SecurityController extends FrameworkBundleAdminController
             [
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Customer Sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',

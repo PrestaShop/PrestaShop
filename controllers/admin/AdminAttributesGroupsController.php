@@ -102,6 +102,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
         return parent::renderList();
     }
 
+    /**
+     * @return false|string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function renderView()
     {
         if (($id = (int) Tools::getValue('id_attribute_group'))) {
@@ -170,6 +176,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
      * AdminController::renderForm() override.
      *
      * @see AdminController::renderForm()
+     *
+     * @return string|void
+     *
+     * @throws SmartyException
      */
     public function renderForm()
     {
@@ -507,7 +517,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         } else {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
             $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' . $this->trans('Performance', [], 'Admin.Global') . '</a>';
-            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', ['%link%' => $url], 'Admin.Catalog.Notification'));
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', ['_raw' => true, '%link%' => $url], 'Admin.Catalog.Notification'));
         }
 
         $this->context->smarty->assign([
@@ -577,7 +587,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             case 'view':
                 $this->toolbar_btn['newAttributes'] = [
                     'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, [], ['updateattribute' => 1, 'id_attribute_group' => (int) Tools::getValue('id_attribute_group')]),
-                    'desc' => $this->trans('Add New Values', [], 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Add new values', [], 'Admin.Catalog.Feature'),
                     'class' => 'toolbar-new',
                 ];
 
@@ -645,10 +655,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             );
                         }
                     } else {
-                        $bread_extended[] = $this->trans('Edit Value', [], 'Admin.Catalog.Feature');
+                        $bread_extended[] = $this->trans('Edit value', [], 'Admin.Catalog.Feature');
                     }
                 } else {
-                    $bread_extended[] = $this->trans('Add New Value', [], 'Admin.Catalog.Feature');
+                    $bread_extended[] = $this->trans('Add new value', [], 'Admin.Catalog.Feature');
                 }
 
                 break;

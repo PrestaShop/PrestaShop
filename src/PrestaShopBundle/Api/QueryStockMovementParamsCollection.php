@@ -35,6 +35,7 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
     {
         return [
             'productId',
+            'product_name',
             'supplier_id',
             'category_id',
             'keywords',
@@ -52,7 +53,8 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
     protected function getValidOrderParams()
     {
         return [
-            'product',
+            'product_id',
+            'product_name',
             'reference',
             'date_add',
             'id_stock_mvt',

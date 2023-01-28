@@ -36,7 +36,7 @@ use Tests\TestCase\ContextStateTestCase;
 
 class ThemeRepositoryTest extends ContextStateTestCase
 {
-    const NOTICE = '[ThemeRepository] ';
+    public const NOTICE = '[ThemeRepository] ';
     /**
      * @var ThemeRepository|null
      */

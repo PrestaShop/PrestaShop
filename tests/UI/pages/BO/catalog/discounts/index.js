@@ -17,7 +17,7 @@ class CartRules extends BOBasePage {
     this.pageTitle = 'Cart Rules •';
 
     // Selectors
-    this.addNewCartRuleButton = 'a[data-role=page-header-desc-cart_rule-link]';
+    this.addNewCartRuleButton = '#page-header-desc-cart_rule-new_cart_rule';
     this.catalogPriceRulesTab = '#subtab-AdminSpecificPriceRule';
 
     // Form selectors
@@ -30,33 +30,33 @@ class CartRules extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='cart_ruleFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='cart_ruleFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncart_rule';
     this.filterResetButton = 'button[name=\'submitResetcart_rule\']';
 
     // Table body selectors
     this.tableBodyRows = `${this.gridTable} tbody tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='cart_ruleBox[]']`;
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnPriority = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnCode = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnQuantity = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnExpirationDate = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnStatusLink = row => `${this.tableBodyColumn(row)}:nth-child(8) a`;
-    this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
-    this.tableColumnStatusDisableLink = row => `${this.tableColumnStatusLink(row)}.action-disabled`;
+    this.tableColumnSelectRowCheckbox = (row) => `${this.tableBodyColumn(row)} input[name='cart_ruleBox[]']`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnPriority = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnCode = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnQuantity = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnExpirationDate = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnStatusLink = (row) => `${this.tableBodyColumn(row)}:nth-child(8) a`;
+    this.tableColumnStatusEnableLink = (row) => `${this.tableColumnStatusLink(row)}.action-enabled`;
+    this.tableColumnStatusDisableLink = (row) => `${this.tableColumnStatusLink(row)}.action-disabled`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -74,14 +74,14 @@ class CartRules extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header methods */
@@ -256,7 +256,7 @@ class CartRules extends BOBasePage {
       case 'select':
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
 

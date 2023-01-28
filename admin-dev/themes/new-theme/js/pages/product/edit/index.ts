@@ -37,17 +37,19 @@ import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
-import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
+import ProductShopsModal from '@pages/product/components/product-shops-modal';
 import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
-import CreateProductModal from '@pages/product/components/create-product-modal';
+import PackedProductsManager from '@pages/product/edit/packed-products-manager';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
-import SuppliersSelector from '@pages/product/components/suppliers/suppliers-selector';
-import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/supplier-types';
 import initDropzone from '@pages/product/components/dropzone';
+import initImagesShopAssociation from '@pages/product/components/images-shop-association';
 import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
+import ProductOptionsManager from '@pages/product/edit/product-options-manager';
+import ProductShippingManager from '@pages/product/edit/product-shipping-manager';
+import ProductDetailsManager from '@pages/product/edit/product-details-manager';
 
 const {$} = window;
 
@@ -65,11 +67,8 @@ $(() => {
 
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
+  const shopId = parseInt($productForm.data('shopId'), 10);
   const productType = $productForm.data('productType');
-
-  // Responsive navigation tabs
-  initTabs();
-
   const {eventEmitter} = window.prestashop.instance;
 
   // Init product model along with input watching and syncing
@@ -78,63 +77,72 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
-    new CombinationsList(productId, productFormModel);
+    new CombinationsList(productId, productFormModel, shopId);
   }
 
-  new NavbarHandler($(ProductMap.navigationBar));
+  // Responsive navigation tabs
+  initTabs();
+  const navbar = new NavbarHandler($(ProductMap.navigationBar));
+
+  // When combination page is opened on quantity tab we automatically switch to the combination one which replaces it for product with combinations
+  if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS && navbar.getHashTarget() === ProductMap.stock.navigationTarget) {
+    navbar.switchToTarget(ProductMap.combinations.navigationTarget);
+  }
+
   new ProductSEOManager(eventEmitter);
+  new ProductOptionsManager(productType, productFormModel);
+  new ProductShippingManager();
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeSwitcher($productForm);
-  new CategoriesManager(eventEmitter);
+
+  // try-catch block prevents javascript termination when error is thrown.
+  // So only the related component won't work instead of breaking whole product page
+  try {
+    new CategoriesManager(eventEmitter);
+  } catch (e: any) {
+    console.error('Failed to initialize categories manager');
+  }
+
   new ProductFooterManager();
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
-  new CreateProductModal();
+  if (productType === ProductConst.PRODUCT_TYPE.PACK) {
+    new PackedProductsManager(eventEmitter);
+  }
   new PriceSummary(productFormModel);
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
+  const $productFormPreviewButton = $(ProductMap.footer.previewUrlButton);
+  const $productFormDuplicateButton = $(ProductMap.footer.duplicateProductButton);
+  const $productFormNewProductButton = $(ProductMap.footer.newProductButton);
+  const $productFormGoToCatalogButton = $(ProductMap.footer.goToCatalogButton);
+  const $productFormCancelButton = $(ProductMap.footer.cancelButton);
+
   new ProductPartialUpdater(
     eventEmitter,
     $productForm,
     $productFormSubmitButton,
-  ).watch();
+    $productFormPreviewButton,
+    $productFormDuplicateButton,
+    $productFormNewProductButton,
+    $productFormGoToCatalogButton,
+    $productFormCancelButton,
+  );
 
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);
+  initImagesShopAssociation(ProductMap.manageShopImagesButtonContainer);
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
   new AttachmentsManager();
   new SpecificPricesManager(productId);
-
-  let productSuppliers: ProductSuppliersCollection;
-
-  if (productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {
-    productSuppliers = new ProductSuppliersCollection(
-      ProductMap.suppliers.productSuppliers,
-      productFormModel.getProduct().suppliers?.defaultSupplierId || 0,
-      productFormModel.getProduct().price.wholesalePrice,
-      (defaultProductSupplier: ProductSupplier) => {
-        productFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
-      },
-    );
-
-    productFormModel.watch('price.wholesalePrice', (event) => {
-      productSuppliers.updateWholesalePrice(event.value);
-    });
-    productFormModel.watch('suppliers.defaultSupplierId', (event) => {
-      productSuppliers.setDefaultSupplierId(event.value);
-    });
-  }
-
-  new SuppliersSelector((suppliers: Supplier[]) => {
-    if (productSuppliers) {
-      productSuppliers.setSelectedSuppliers(suppliers);
-    }
-  });
+  new ProductDetailsManager();
 
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
+
+  new ProductShopsModal();
 });

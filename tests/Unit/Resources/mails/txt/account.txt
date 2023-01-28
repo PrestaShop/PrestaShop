@@ -5,7 +5,7 @@ Thank you for creating a customer account at {shop_name}.
 Your {shop_name} login details
 
 Here are your login details:
-E-mail address: {email}
+Email address: {email}
 
 Important Security Tips:
 

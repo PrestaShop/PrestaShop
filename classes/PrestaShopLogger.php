@@ -32,10 +32,10 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * List of log level types.
      */
-    const LOG_SEVERITY_LEVEL_INFORMATIVE = 1;
-    const LOG_SEVERITY_LEVEL_WARNING = 2;
-    const LOG_SEVERITY_LEVEL_ERROR = 3;
-    const LOG_SEVERITY_LEVEL_MAJOR = 4;
+    public const LOG_SEVERITY_LEVEL_INFORMATIVE = 1;
+    public const LOG_SEVERITY_LEVEL_WARNING = 2;
+    public const LOG_SEVERITY_LEVEL_ERROR = 3;
+    public const LOG_SEVERITY_LEVEL_MAJOR = 4;
 
     /** @var int Log id */
     public $id_log;
@@ -92,7 +92,7 @@ class PrestaShopLoggerCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
             'in_all_shops' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isValidObjectClassName'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],

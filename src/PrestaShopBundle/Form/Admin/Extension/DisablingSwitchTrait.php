@@ -46,7 +46,7 @@ trait DisablingSwitchTrait
                 $shouldBeDisabled = $disabledValue($data, $form);
             } catch (TypeError $typeError) {
                 throw new InvalidConfigurationException(
-                    'The callable provided for disabled_value option seems invalid, its prototype should be compatible with function($data, FormInterface $form): void And $data is usually nullable',
+                    'The callable provided for disabled_value option seems invalid, its prototype should be compatible with function($data, FormInterface $form): bool And $data is usually nullable',
                     0,
                     $typeError
                 );

@@ -28,7 +28,7 @@ import ProductMap from '@pages/product/product-map';
 import ConfirmModal from '@components/modal/confirm-modal';
 import ProductEventMap from '@pages/product/product-event-map';
 import {isUndefined} from '@PSTypes/typeguard';
-import RendererType from '@PSTypes/renderers';
+import RendererType from '@js/types/renderers';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
@@ -37,7 +37,7 @@ export default class SpecificPriceListRenderer implements RendererType {
 
   private productId: number;
 
-  private listContainer: HTMLElement
+  private listContainer: HTMLElement;
 
   private $loadingSpinner: JQuery;
 

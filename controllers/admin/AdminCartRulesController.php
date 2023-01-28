@@ -222,7 +222,7 @@ class AdminCartRulesControllerCore extends AdminController
                             break;
                         case 'shop':
                         default:
-                            $restriction_name = $this->trans('Shop selection', [], 'Admin.Catalog.Feature');
+                            $restriction_name = $this->trans('Store selection', [], 'Admin.Catalog.Feature');
                             break;
                     }
                     $this->errors[] = $this->trans('The "%s" restriction is checked, but no item is selected.', [$restriction_name], 'Admin.Catalog.Notification');
@@ -277,6 +277,13 @@ class AdminCartRulesControllerCore extends AdminController
         return $res;
     }
 
+    /**
+     * @param $current_object
+     *
+     * @return bool|void
+     *
+     * @throws PrestaShopDatabaseException
+     */
     protected function afterUpdate($current_object)
     {
         // All the associations are deleted for an update, then recreated when we call the "afterAdd" method
@@ -314,6 +321,8 @@ class AdminCartRulesControllerCore extends AdminController
      * @TODO Move this function into CartRule
      *
      * @param ObjectModel $currentObject
+     *
+     * @return bool|void
      *
      * @throws PrestaShopDatabaseException
      */
@@ -785,7 +794,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'gift_product_select' => $gift_product_select,
                 'gift_product_attribute_select' => $gift_product_attribute_select,
                 'reductionProductFilter' => $reduction_product_filter,
-                'defaultCurrency' => Configuration::get('PS_CURRENCY_DEFAULT'),
+                'defaultCurrency' => Currency::getDefaultCurrencyId(),
                 'id_lang_default' => Configuration::get('PS_LANG_DEFAULT'),
                 'languages' => $languages,
                 'currencies' => $currencies,

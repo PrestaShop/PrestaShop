@@ -100,7 +100,7 @@ class ModuleController extends ModuleAbstractController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('read', 'ADMINMODULESSF_') && is_granted('create', 'ADMINMODULESSF_') && is_granted('update', 'ADMINMODULESSF_') && is_granted('delete', 'ADMINMODULESSF_')"
+     *     "is_granted('read', 'ADMINMODULESSF_') || is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')"
      * )
      *
      * @param Request $module_name
@@ -209,9 +209,16 @@ class ModuleController extends ModuleAbstractController
 
         try {
             $args = [$module];
-            if ($action === 'uninstall') {
+            if ($action === ModuleAdapter::ACTION_UNINSTALL) {
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
+            }
+            $systemCacheClearEnabled = filter_var(
+                $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
+                FILTER_VALIDATE_BOOLEAN
+            );
+            if (!$systemCacheClearEnabled) {
+                $moduleManager->disableSystemClearCache();
             }
             $response[$module]['status'] = call_user_func([$moduleManager, $action], ...$args);
         } catch (Exception $e) {
@@ -248,11 +255,15 @@ class ModuleController extends ModuleAbstractController
             }
 
             $collection = ModuleCollection::createFrom([$moduleInstance]);
+            $collectionWithActionUrls = $modulesProvider->setActionUrls($collection);
+
+            $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+            $collectionPresented = $modulePresenter->presentCollection($collectionWithActionUrls);
+
             $response[$module]['action_menu_html'] = $this->container->get('twig')->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
-                    'module' => $this->container->get('prestashop.adapter.presenter.module')
-                        ->presentCollection($modulesProvider->setActionUrls($collection))[0],
+                    'module' => $collectionPresented[0],
                     'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 ]
             );
@@ -395,7 +406,7 @@ class ModuleController extends ModuleAbstractController
                 [
                     '%module%' => $moduleName,
                     '%error%' => $this->trans(
-                        'Impossible to install form source',
+                        'Impossible to install from source',
                         'Admin.Modules.Notification'
                     ),
                 ]

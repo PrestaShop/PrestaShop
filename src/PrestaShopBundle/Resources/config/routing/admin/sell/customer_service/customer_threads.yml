@@ -1,12 +1,35 @@
+admin_customer_threads:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::indexAction
+    _legacy_controller: AdminCustomerThreads
+  #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_filter:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer_thread
+    redirectRoute: admin_customer_threads
+    _legacy_controller: AdminCustomerThreads
+
 admin_customer_threads_view:
   path: /{customerThreadId}/view
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::viewAction
     _legacy_controller: AdminCustomerThreads
-  #  _legacy_link: AdminCustomerThreads
+    _legacy_parameters:
+      id_customer_thread: customerThreadId
+    _legacy_link: AdminCustomerThreads:viewcustomer_thread
   requirements:
     customerThreadId: \d+
+  options:
+    expose: true
 
 admin_customer_threads_reply:
   path: /{customerThreadId}/reply
@@ -18,11 +41,21 @@ admin_customer_threads_reply:
   requirements:
     customerThreadId: \d+
 
-admin_customer_threads_update_status:
-  path: /{customerThreadId}/update-status/{newStatus}
+admin_customer_threads_view_update_status:
+  path: /{customerThreadId}/update-status
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusFromViewAction
+    _legacy_controller: AdminCustomerThreads
+  #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_list_update_status:
+  path: /list/{customerThreadId}/update-status
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusFromListAction
     _legacy_controller: AdminCustomerThreads
   #  _legacy_link: AdminCustomerThreads
   requirements:
@@ -37,3 +70,21 @@ admin_customer_threads_forward:
     #  _legacy_link: AdminCustomerThreads
   requirements:
     customerThreadId: \d+
+
+admin_customer_threads_delete:
+  path: /{customerThreadId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::deleteAction
+    _legacy_controller: AdminCustomerThreads
+    #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_bulk_delete:
+  path: /bulk_delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::bulkDeleteAction
+    _legacy_controller: AdminCustomerThreads
+    #  _legacy_link: AdminCustomerThreads

@@ -36,8 +36,8 @@ class WebserviceExceptionCore extends Exception
     protected $available_values;
     protected $type;
 
-    const SIMPLE = 0;
-    const DID_YOU_MEAN = 1;
+    public const SIMPLE = 0;
+    public const DID_YOU_MEAN = 1;
 
     public function __construct($message, $code)
     {

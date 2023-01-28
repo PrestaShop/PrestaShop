@@ -11,25 +11,20 @@
   </file>
   <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
-        <source>Catalog</source>
-        <target>Catalog</target>
-        <note>Line: 41</note>
-      </trans-unit>
       <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
         <source>Invoices</source>
         <target>Invoices</target>
         <note>Line: 60</note>
       </trans-unit>
+      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
+        <source>Catalog</source>
+        <target>Catalog</target>
+        <note>Line: 41</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/lang/KeysReference/TabLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
-        <source>Stock</source>
-        <target>Stock</target>
-        <note>Line: 119</note>
-      </trans-unit>
       <trans-unit id="3068c5a98c003498f1fec0c489212e8b">
         <source>Sell</source>
         <target>Sell</target>
@@ -228,7 +223,7 @@
       <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
         <source>Modules</source>
         <target>Modules</target>
-        <note>Line: 139
+        <note>Line: 140
 Comment: subtab</note>
       </trans-unit>
       <trans-unit id="423e555c5ec3885f2bb5d9d2d6627f63">
@@ -261,11 +256,6 @@ Comment: subtab</note>
         <target>Discounts</target>
         <note>Line: 98</note>
       </trans-unit>
-      <trans-unit id="068f80c7519d0528fb08e82137a72131">
-        <source>Products</source>
-        <target>Products</target>
-        <note>Line: 100</note>
-      </trans-unit>
       <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
         <source>Quick Access</source>
         <target>Quick Access</target>
@@ -280,11 +270,6 @@ Comment: subtab</note>
         <source>Search</source>
         <target>Search</target>
         <note>Line: 104</note>
-      </trans-unit>
-      <trans-unit id="60d744a6a3775f721ca67718b9c38295">
-        <source>Search Engines</source>
-        <target>Search Engines</target>
-        <note>Line: 105</note>
       </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
@@ -310,11 +295,6 @@ Comment: subtab</note>
         <source>Shops</source>
         <target>Shops</target>
         <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="b8464cdd84b5f068ad72bf5c4f32163d">
-        <source>States</source>
-        <target>States</target>
-        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="452a7601dbc6f2c38aa89e68bda8b603">
         <source>Stats</source>
@@ -361,11 +341,6 @@ Comment: subtab</note>
         <target>Theme Catalog</target>
         <note>Line: 126</note>
       </trans-unit>
-      <trans-unit id="8612579044efe457f11398b5a2377226">
-        <source>Titles</source>
-        <target>Titles</target>
-        <note>Line: 128</note>
-      </trans-unit>
       <trans-unit id="c11004c9bfd6ca3b95f052f0df3e8f21">
         <source><![CDATA[Traffic & SEO]]></source>
         <target><![CDATA[Traffic & SEO]]></target>
@@ -386,30 +361,25 @@ Comment: subtab</note>
         <target>Modules Catalog</target>
         <note>Line: 134</note>
       </trans-unit>
-      <trans-unit id="e699cbe9208f8353248889781f83d636">
-        <source>Module manager</source>
-        <target>Module manager</target>
-        <note>Line: 135</note>
-      </trans-unit>
       <trans-unit id="5f265dfcb9ab68a1258ec25393ffb886">
         <source>Module Manager</source>
         <target>Module Manager</target>
         <note>Line: 135</note>
       </trans-unit>
-      <trans-unit id="559c42f0eb9cc586d7994f4e9e496609">
-        <source>Experimental Features</source>
-        <target>Experimental Features</target>
+      <trans-unit id="997320bab8342395326fd0a109068200">
+        <source><![CDATA[New & Experimental Features]]></source>
+        <target><![CDATA[New & Experimental Features]]></target>
         <note>Line: 136</note>
       </trans-unit>
       <trans-unit id="9ac41b6a577daadd588f0fcde0071e8b">
         <source>Updates</source>
         <target>Updates</target>
-        <note>Line: 140</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="df583ae7ba964fd4806b55904da81813">
         <source>Alerts</source>
         <target>Alerts</target>
-        <note>Line: 141</note>
+        <note>Line: 142</note>
       </trans-unit>
     </body>
   </file>
@@ -445,7 +415,7 @@ Comment: subtab</note>
       <trans-unit id="9aa698f602b1e5694855cee73a683488">
         <source>Contacts</source>
         <target>Contacts</target>
-        <note>Line: 90</note>
+        <note>Line: 66</note>
       </trans-unit>
     </body>
   </file>
@@ -469,15 +439,10 @@ Comment: subtab</note>
   </file>
   <file original="src/Core/Grid/Definition/Factory/EmailLogsDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1e884e3078d9978e216a027ecd57fb34">
-        <source>E-mail</source>
-        <target>E-mail</target>
-        <note>Line: 100</note>
-      </trans-unit>
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
         <source>Email</source>
         <target>Email</target>
-        <note>Line: 101</note>
+        <note>Line: 87</note>
       </trans-unit>
     </body>
   </file>
@@ -486,7 +451,7 @@ Comment: subtab</note>
       <trans-unit id="b2d37ae1cedf42ff874289b721860af2">
         <source>Logs</source>
         <target>Logs</target>
-        <note>Line: 65</note>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
@@ -513,7 +478,16 @@ Comment: subtab</note>
       <trans-unit id="a860ed9926b241b7d4dca2d00610ab2c">
         <source>Outstanding</source>
         <target>Outstanding</target>
-        <note>Line: 93</note>
+        <note>Line: 105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/ProductLightGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="068f80c7519d0528fb08e82137a72131">
+        <source>Products</source>
+        <target>Products</target>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -522,7 +496,7 @@ Comment: subtab</note>
       <trans-unit id="d0f25115288c15321ecf672f0d6a83ea">
         <source>Profiles</source>
         <target>Profiles</target>
-        <note>Line: 99</note>
+        <note>Line: 66</note>
       </trans-unit>
     </body>
   </file>
@@ -532,6 +506,42 @@ Comment: subtab</note>
         <source>SQL Manager</source>
         <target>SQL Manager</target>
         <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/SearchEngineGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60d744a6a3775f721ca67718b9c38295">
+        <source>Search Engines</source>
+        <target>Search Engines</target>
+        <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45cb5d14ff1775023a6e4f7cac6ac596">
+        <source>Customer Sessions</source>
+        <target>Customer Sessions</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/Security/Session/EmployeeGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="41a7cb98f3eb181d020a922fdb7cf9a6">
+        <source>Employee Sessions</source>
+        <target>Employee Sessions</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/StateGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b8464cdd84b5f068ad72bf5c4f32163d">
+        <source>States</source>
+        <target>States</target>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
@@ -553,6 +563,15 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/TitleGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8612579044efe457f11398b5a2377226">
+        <source>Titles</source>
+        <target>Titles</target>
+        <note>Line: 85</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7258e7251413465e0a3eb58094430bde">
@@ -567,7 +586,7 @@ Comment: subtab</note>
       <trans-unit id="72d6d7a1885885bb55a565fd1070581a">
         <source>Import</source>
         <target>Import</target>
-        <note>Line: 317</note>
+        <note>Line: 323</note>
       </trans-unit>
     </body>
   </file>
@@ -576,7 +595,16 @@ Comment: subtab</note>
       <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
         <source>Performance</source>
         <target>Performance</target>
-        <note>Line: 72</note>
+        <note>Line: 74</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SecurityController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2fae32629d4ef4fc6341f1751b405e45">
+        <source>Security</source>
+        <target>Security</target>
+        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>
@@ -594,7 +622,7 @@ Comment: subtab</note>
       <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
         <source>Customers</source>
         <target>Customers</target>
-        <note>Line: 96</note>
+        <note>Line: 98</note>
       </trans-unit>
     </body>
   </file>
@@ -639,16 +667,7 @@ Comment: subtab</note>
       <trans-unit id="3160eb21973806e4291c3979d4aa242e">
         <source>Positions</source>
         <target>Positions</target>
-        <note>Line: 131</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeCatalogController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e407e3879ca4125520f85ab0c57c3a5c">
-        <source>Themes Catalog</source>
-        <target>Themes Catalog</target>
-        <note>Line: 54</note>
+        <note>Line: 139</note>
       </trans-unit>
     </body>
   </file>
@@ -670,21 +689,12 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/TranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
-        <source>Modules catalog</source>
-        <target>Modules catalog</target>
-        <note>Line: 73</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Modules/AddonsStoreController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8e750875217fe72ff73cda7e57e4d61f">
-        <source>Module selection</source>
-        <target>Module selection</target>
-        <note>Line: 61</note>
+      <trans-unit id="0b8d92bc19b720bb1065649535463409">
+        <source>Translations</source>
+        <target>Translations</target>
+        <note>Line: 113</note>
       </trans-unit>
     </body>
   </file>
@@ -702,7 +712,16 @@ Comment: subtab</note>
       <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
         <source>Preferences</source>
         <target>Preferences</target>
-        <note>Line: 159</note>
+        <note>Line: 161</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
+        <source>Stock</source>
+        <target>Stock</target>
+        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>
@@ -720,16 +739,7 @@ Comment: subtab</note>
       <trans-unit id="8fddfc8225dcf89be0e15709c671af4e">
         <source>Delivery Slips</source>
         <target>Delivery Slips</target>
-        <note>Line: 78</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/TranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0b8d92bc19b720bb1065649535463409">
-        <source>Translations</source>
-        <target>Translations</target>
-        <note>Line: 111</note>
+        <note>Line: 83</note>
       </trans-unit>
     </body>
   </file>
@@ -774,7 +784,7 @@ Comment: subtab</note>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
         <target>Addresses</target>
-        <note>Line: 32</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>

@@ -20,7 +20,7 @@ class AddProduct extends BOBasePage {
     this.settingUpdatedMessage = 'Settings updated.';
     this.duplicateSuccessfulMessage = 'Product successfully duplicated.';
     this.errorMessage = 'Unable to update settings.';
-    this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
+    this.errorMessageWhenSummaryTooLong = (number) => 'This value is too long.'
       + ` It should have ${number} characters or less.`;
 
     // Selectors
@@ -51,7 +51,7 @@ class AddProduct extends BOBasePage {
 
     // Form nav
     this.formNavList = '#form-nav';
-    this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
+    this.forNavListItemLink = (id) => `${this.formNavList} #tab_step${id} a`;
 
     // Selectors of Step 2 : Pricing
     this.ecoTaxInput = '#form_step2_ecotax';
@@ -64,12 +64,12 @@ class AddProduct extends BOBasePage {
     this.applyButton = '#form_step2_specific_price_save';
 
     // Selector of Step 3 : Combinations
-    this.addCombinationsInput = '#form_step3_attributes-tokenfield';
+    this.selectAttributeInput = '#form_step3_attributes-tokenfield';
     this.generateCombinationsButton = '#create-combinations';
     this.productCombinationBulkQuantityInput = '#product_combination_bulk_quantity';
     this.productCombinationSelectAllCheckbox = 'input#toggle-all-combinations';
     this.applyOnCombinationsButton = '#apply-on-combinations';
-    this.productCombinationTableRow = id => `#accordion_combinations tr:nth-of-type(${id})`;
+    this.productCombinationTableRow = (id) => `#accordion_combinations tr:nth-of-type(${id})`;
     this.deleteCombinationsButton = '#delete-combinations';
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
@@ -80,7 +80,7 @@ class AddProduct extends BOBasePage {
     this.minimumQuantityInput = '#form_step3_minimal_quantity';
     this.stockLocationInput = '#form_step3_location';
     this.lowStockLevelInput = '#form_step3_low_stock_threshold';
-    this.behaviourOutOfStockInput = id => `#form_step3_out_of_stock_${id}`;
+    this.behaviourOutOfStockInput = (id) => `#form_step3_out_of_stock_${id}`;
     this.labelWhenInStockInput = '#form_step3_available_now_1';
     this.labelWhenOutOfStock = '#form_step3_available_later_1';
 
@@ -91,9 +91,10 @@ class AddProduct extends BOBasePage {
     // Selectors of step 6 : Options
     this.customFieldsBlock = '#custom_fields';
     this.addCustomizationFieldButton = `${this.customFieldsBlock} a[data-role='add-customization-field']`;
-    this.customFieldInput = row => `#form_step6_custom_fields_${row}_label_1`;
-    this.customFieldTypeSelect = row => `select#form_step6_custom_fields_${row}_type`;
-    this.customRequiredLabel = row => `${this.customFieldsBlock} li:nth-child(${row}) div.required-custom-field label`;
+    this.customFieldInput = (row) => `#form_step6_custom_fields_${row}_label_1`;
+    this.customFieldTypeSelect = (row) => `select#form_step6_custom_fields_${row}_type`;
+    this.customRequiredLabel = (row) => `${this.customFieldsBlock} li:nth-child(${row}) div.required-custom-field `
+      + 'label';
   }
 
   /*
@@ -134,7 +135,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async addProductImages(page, imagesPaths = []) {
-    const filteredImagePaths = imagesPaths.filter(el => el !== null);
+    const filteredImagePaths = imagesPaths.filter((el) => el !== null);
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
       const numberOfImages = await this.getNumberOfImages(page);
@@ -217,21 +218,21 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Set Combinations for product
+   * Set attributes for product
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set on combination form
    * @returns {Promise<string>}
    */
-  async setCombinationsInProduct(page, productData) {
+  async setAttributesInProduct(page, productData) {
     await page.click(this.productWithCombinationsInput);
     // GOTO Combination tab : id = 3
     await this.goToFormStep(page, 3);
     // Delete All combinations if exists
-    await this.deleteAllCombinations(page);
+    await this.deleteAllAttributes(page);
     // Add combinations
-    await this.addCombinations(page, productData.combinations);
+    await this.selectAttributes(page, productData.attributes);
     // Set quantity
-    await this.setCombinationsQuantity(page, productData.quantity);
+    await this.setAttributesQuantity(page, productData.quantity);
     // GOTO Basic settings Tab : id = 1
     await this.goToFormStep(page, 1);
 
@@ -241,44 +242,44 @@ class AddProduct extends BOBasePage {
   /**
    * Generate combinations in input
    * @param page {Page} Browser tab
-   * @param combinations {Object|{color: Array<string>, size: Array<string>}} Data to set on combination form
+   * @param attributes {ProductAttributes[]} Data to set on combination form
    * @return {Promise<void>}
    */
-  async addCombinations(page, combinations) {
-    const keys = Object.keys(combinations);
-    /*eslint-disable*/
-    for (const key of keys) {
-      for (const value of combinations[key]) {
-        await this.addCombination(page, `${key} : ${value}`);
+  async selectAttributes(page, attributes) {
+    if (attributes.length > 0) {
+      for (let i = 0; i < attributes.length; i++) {
+        for (let j = 0; j < attributes[i].values.length; j++) {
+          await this.addAttribute(page, `${attributes[i].name} : ${attributes[i].values[j]}`);
+        }
       }
     }
     /* eslint-enable */
-    await page.$eval(this.generateCombinationsButton, el => el.click());
+    await page.$eval(this.generateCombinationsButton, (el) => el.click());
     await this.closeGrowlMessage(page);
   }
 
   /**
-   * Add one combination
+   * Add one attribute
    * @param page {Page} Browser tab
-   * @param combination {string} Data to set on combination form
+   * @param attribute {string} Data to set on combination form
    * @return {Promise<void>}
    */
-  async addCombination(page, combination) {
-    await page.type(this.addCombinationsInput, combination);
+  async addAttribute(page, attribute) {
+    await page.type(this.selectAttributeInput, attribute);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }
 
   /**
-   * Set quantity for all combinations
+   * Set quantity for all attributes
    * @param page {Page} Browser tab
    * @param quantity {number} Value of quantity to set on quantity input
    * @return {Promise<void>}
    */
-  async setCombinationsQuantity(page, quantity) {
+  async setAttributesQuantity(page, quantity) {
     // Select all combinations
     await this.waitForVisibleSelector(page, this.productCombinationSelectAllCheckbox);
-    await page.$eval(this.productCombinationSelectAllCheckbox, el => el.click());
+    await page.$eval(this.productCombinationSelectAllCheckbox, (el) => el.click());
 
     // Open combinations bulk form
     if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
@@ -349,11 +350,11 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Delete all combinations
+   * Delete all attributes
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async deleteAllCombinations(page) {
+  async deleteAllAttributes(page) {
     if (await this.hasCombinations(page)) {
       // Select all combinations
       await this.setChecked(page, this.productCombinationSelectAllCheckbox);
@@ -414,7 +415,7 @@ class AddProduct extends BOBasePage {
   /**
    * Add customized value
    * @param page {Page} Browser tab
-   * @param customizationData {{label: string, type: string, required: boolean}} Data to set on customized form
+   * @param customizationData {ProductCustomization} Data to set on customized form
    * @param row {number} Row of input
    * @returns {Promise<string>}
    */
@@ -439,8 +440,7 @@ class AddProduct extends BOBasePage {
   /**
    * Add specific prices
    * @param page {Page} Browser tab
-   * @param specificPriceData {Object|{combinations: ?string, discount: ?number, startingAt: ?number,
-   * reductionType: ?string}} Data to set on specific price form
+   * @param specificPriceData {ProductSpecificPrice} Data to set on specific price form
    * @return {Promise<string>}
    */
   async addSpecificPrices(page, specificPriceData) {
@@ -454,10 +454,10 @@ class AddProduct extends BOBasePage {
     ]);
 
     // Choose combinations if exist
-    if (specificPriceData.combinations) {
+    if (specificPriceData.attributes) {
       await this.waitForVisibleSelector(page, this.combinationSelect);
       await this.scrollTo(page, this.combinationSelect);
-      await this.selectByVisibleText(page, this.combinationSelect, specificPriceData.combinations);
+      await this.selectByVisibleText(page, this.combinationSelect, specificPriceData.attributes);
     }
     await this.setValue(page, this.startingAtInput, specificPriceData.startingAt);
     await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount);
@@ -529,14 +529,12 @@ class AddProduct extends BOBasePage {
   /**
    * Add pack of products
    * @param page {Page} Browser tab
-   * @param pack {Object} Data to set on pack form
+   * @param pack {ProductPackItem[]} Data to set on pack form
    * @returns {Promise<void>}
    */
   async addPackOfProducts(page, pack) {
-    const keys = Object.keys(pack);
-
-    for (let i = 0; i < keys.length; i += 1) {
-      await this.addProductToPack(page, keys[i], pack[keys[i]]);
+    for (let i = 0; i < pack.length; i++) {
+      await this.addProductToPack(page, pack[i].reference, pack[i].quantity);
     }
   }
 
@@ -584,12 +582,12 @@ class AddProduct extends BOBasePage {
         throw new Error(`Column ${productData.behaviourOutOfStock} was not found`);
     }
 
-    await page.$eval(columnSelector, el => el.click());
+    await page.$eval(columnSelector, (el) => el.click());
 
     // Set value on label In and out of stock inputs
     await this.scrollTo(page, this.labelWhenInStockInput);
     await this.setValue(page, this.labelWhenInStockInput, productData.labelWhenInStock);
-    await this.setValue(page, this.labelWhenOutOfStock, productData.LabelWhenOutOfStock);
+    await this.setValue(page, this.labelWhenOutOfStock, productData.labelWhenOutOfStock);
   }
 
   /**
@@ -604,7 +602,7 @@ class AddProduct extends BOBasePage {
       await this.addPackOfProducts(page, productData.pack);
     }
     if (productData.productHasCombinations) {
-      await this.setCombinationsInProduct(page, productData);
+      await this.setAttributesInProduct(page, productData);
     }
     await this.setProductStatus(page, productData.status);
     if (!productData.productHasCombinations) {

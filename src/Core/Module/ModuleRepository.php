@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use Symfony\Component\Finder\Finder;
+use Throwable;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -70,6 +71,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var array|null */
     private $installedModules;
 
+    /** @var Module[] */
+    private $modulesFromHook;
+
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
@@ -102,7 +106,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             $modules[] = $this->getModule($moduleName);
         }
 
-        return ModuleCollection::createFrom($this->mergeWithModulesFromHook($modules));
+        return ModuleCollection::createFrom($this->addModulesFromHook($modules));
     }
 
     public function getInstalledModules(): ModuleCollection
@@ -115,7 +119,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getMustBeConfiguredModules(): ModuleCollection
     {
         return $this->getList()->filter(static function (Module $module) {
-            return $module->isConfigurable() && $module->hasValidInstance() && !empty($module->getInstance()->warning);
+            return $module->isConfigurable() && $module->isActive() && $module->hasValidInstance() && !empty($module->getInstance()->warning);
         });
     }
 
@@ -145,26 +149,31 @@ class ModuleRepository implements ModuleRepositoryInterface
             /** @var Module $module */
             $module = $this->cacheProvider->fetch($cacheKey);
             if ($module->getDiskAttributes()->get('filemtime') === $filemtime) {
-                return $module;
+                return $this->enrichModuleAttributesFromHook($module);
             }
         }
 
         $isValid = $filemtime > 0 && $this->moduleDataProvider->isModuleMainClassValid($moduleName);
         $attributes = $this->getModuleAttributes($moduleName, $isValid);
+        if (empty($attributes)) {
+            $isValid = false;
+        }
+        $attributes = array_merge(['name' => $moduleName], $attributes);
         $disk = $this->getModuleDiskAttributes($moduleName, $isValid, $filemtime);
         $database = $this->getModuleDatabaseAttributes($moduleName);
 
-        $this->cacheProvider->save($cacheKey, new Module($attributes, $disk, $database));
+        $coreModule = new Module($attributes, $disk, $database);
+        $this->cacheProvider->save($cacheKey, $coreModule);
 
-        return $this->cacheProvider->fetch($cacheKey);
+        return $this->enrichModuleAttributesFromHook($coreModule);
     }
 
     public function getModulePath(string $moduleName): ?string
     {
         $path = $this->modulePath . '/' . $moduleName;
-        $filePath = $path . '/' . $moduleName . '.php';
+        $filePath = $this->modulePath . '/' . $moduleName . '/' . $moduleName . '.php';
 
-        if (!is_dir($path) || !is_file($filePath)) {
+        if (!is_file($filePath)) {
             return null;
         }
 
@@ -223,9 +232,13 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
     {
-        $attributes = ['name' => $moduleName];
+        $attributes = [];
         if ($isValid) {
-            $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
+            try {
+                $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
+            } catch (Throwable $e) {
+                return $attributes;
+            }
             foreach (self::MODULE_ATTRIBUTES as $attribute) {
                 if (isset($tmpModule->{$attribute})) {
                     $attributes[$attribute] = $tmpModule->{$attribute};
@@ -245,7 +258,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         return [
             'filemtime' => $filemtime,
-            'is_present' => $this->moduleDataProvider->isOnDisk($moduleName),
+            'is_present' => $filemtime > 0,
             'is_valid' => $isValid,
             'version' => $isValid ? ModuleLegacy::getInstanceByName($moduleName)->version : null,
             'path' => $path,
@@ -262,23 +275,32 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * @return array
+     */
+    private function getModulesFromHook()
+    {
+        if ($this->modulesFromHook === null) {
+            $modulesFromHook = $this->hookManager->exec('actionListModules', [], null, true);
+            $modulesFromHook = array_values($modulesFromHook ?? []);
+            $this->modulesFromHook = empty(reset($modulesFromHook)) ? [] : array_merge(...$modulesFromHook);
+        }
+
+        return $this->modulesFromHook;
+    }
+
+    /**
      * @param Module[] $modules
      *
      * @return Module[]
      */
-    private function mergeWithModulesFromHook(array $modules): array
+    protected function addModulesFromHook(array $modules): array
     {
-        $actionListModules = $this->hookManager->exec('actionListModules', [], null, true);
-        $externalModules = array_values($actionListModules ?? []);
-        if (empty(reset($externalModules))) {
-            return $modules;
-        }
+        $externalModules = $this->getModulesFromHook();
 
-        foreach (array_merge(...$externalModules) as $externalModule) {
+        foreach ($externalModules as $externalModule) {
             $merged = false;
             foreach ($modules as $module) {
                 if ($module->get('name') === $externalModule['name']) {
-                    $module->getAttributes()->add($externalModule);
                     $merged = true;
                     break;
                 }
@@ -289,5 +311,22 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $modules;
+    }
+
+    /**
+     * @param Module $module
+     *
+     * @return Module
+     */
+    protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
+    {
+        $modulesFromHook = $this->getModulesFromHook();
+        foreach ($modulesFromHook as $moduleFromHook) {
+            if ($module->get('name') === $moduleFromHook['name']) {
+                $module->getAttributes()->add($moduleFromHook);
+            }
+        }
+
+        return $module;
     }
 }

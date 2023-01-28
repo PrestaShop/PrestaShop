@@ -7,9 +7,9 @@
         <target>Pages not found</target>
         <note>Line: 44</note>
       </trans-unit>
-      <trans-unit id="607cc8b8993662a37cac86032fb071d2">
-        <source>Adds a tab to the Stats dashboard, showing the pages requested by your visitors that have not been found.</source>
-        <target>Adds a tab to the Stats dashboard, showing the pages requested by your visitors that have not been found.</target>
+      <trans-unit id="dc92eff3bcc2cc81af76105a54fd5b89">
+        <source>Enrich your stats, display the pages requested by your visitors that could not be found.</source>
+        <target>Enrich your stats, display the pages requested by your visitors that could not be found.</target>
         <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="dc3a3db6b98723bf91f924537a630600">
@@ -91,11 +91,6 @@
         <source>Empty ALL "pages not found" notices</source>
         <target>Empty ALL "pages not found" notices</target>
         <note>Line: 173</note>
-      </trans-unit>
-      <trans-unit id="dc92eff3bcc2cc81af76105a54fd5b89">
-        <source>Enrich your stats, display the pages requested by your visitors that could not be found.</source>
-        <target>Enrich your stats, display the pages requested by your visitors that could not be found.</target>
-        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

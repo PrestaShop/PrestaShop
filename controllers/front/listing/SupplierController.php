@@ -115,6 +115,9 @@ class SupplierControllerCore extends ProductListingFrontController
         }
     }
 
+    /**
+     * @return ProductSearchQuery
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -126,6 +129,9 @@ class SupplierControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return SupplierProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new SupplierProductSearchProvider(
@@ -230,5 +236,23 @@ class SupplierControllerCore extends ProductListingFrontController
         }
 
         return $breadcrumb;
+    }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        $page['body_classes']['supplier-id-' . $this->supplier->id] = true;
+        $page['body_classes']['supplier-' . $this->supplier->name] = true;
+
+        return $page;
+    }
+
+    /**
+     * @return Supplier
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
     }
 }

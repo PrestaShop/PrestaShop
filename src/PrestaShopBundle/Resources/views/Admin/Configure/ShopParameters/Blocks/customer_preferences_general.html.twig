@@ -35,6 +35,17 @@
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
+        <div class="alert alert-danger d-none" role="alert" id="configurationFormAlertMessageOptin">
+          <div class="alert-text">
+            <p>{{ '[1]Make[/1] sure partner offers are not set as required in the [2]Customers[/2] section of the back office before disabling them. Otherwise, new customers won\'t be able to create an account and [1]proceed[/1] to checkout.'|trans({
+                '[1]': '<strong>',
+                '[/1]': '</strong>',
+                '[2]': '<a href="' ~ path('admin_customers_index') ~ '">',
+                '[/2]': '</a>',
+              }, 'Admin.Shopparameters.Help')|raw }}</p>
+          </div>
+        </div>
+
         {{ form_widget(generalForm) }}
       </div>
     </div>

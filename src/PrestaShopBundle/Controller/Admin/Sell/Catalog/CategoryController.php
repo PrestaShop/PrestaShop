@@ -79,7 +79,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show categories listing.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to list this."
      * )
      *
@@ -175,7 +175,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $categoryFormHandler->handle($categoryForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $categoryForm->getData()['id_parent'],
@@ -223,7 +223,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $rootCategoryFormHandler->handle($rootCategoryForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
@@ -297,7 +297,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $categoryFormHandler->handleFor((int) $categoryId, $categoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $categoryForm->getData()['id_parent'],
@@ -353,7 +353,7 @@ class CategoryController extends FrameworkBundleAdminController
             if (!$editableCategory->isRootCategory()) {
                 return $this->redirectToRoute('admin_categories_edit', ['categoryId' => $categoryId]);
             }
-        } catch (CannotEditRootCategoryException | CategoryNotFoundException $e) {
+        } catch (CannotEditRootCategoryException|CategoryNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_categories_index');
@@ -375,7 +375,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
@@ -636,7 +636,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash(
                     'success',
-                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                    $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
                 );
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -678,7 +678,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->getCommandBus()->handle($command);
 
-                $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
@@ -764,7 +764,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         return $this->json([
             'success' => true,
-            'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+            'message' => $this->trans('Successful update', 'Admin.Notifications.Success'),
         ]);
     }
 
@@ -778,7 +778,7 @@ class CategoryController extends FrameworkBundleAdminController
     public function getCategoriesTreeAction(Request $request): JsonResponse
     {
         $langId = $request->query->getInt('langId') ?: (int) $this->getContextLangId();
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getContextShopId()));
 
         return $this->json($this->formatCategoriesTreeForPresentation($categoriesTree, $langId));
     }
@@ -799,12 +799,12 @@ class CategoryController extends FrameworkBundleAdminController
         foreach ($categoriesTree as $categoryForTree) {
             $children = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildren(), $langId);
 
-            $names = $categoryForTree->getLocalizedNames();
             $active = $categoryForTree->getActive();
             $formattedCategories[] = [
                 'id' => $categoryForTree->getCategoryId(),
                 'active' => $active,
-                'name' => $names[$langId] ?? reset($names),
+                'name' => $categoryForTree->getName(),
+                'displayName' => $categoryForTree->getDisplayName(),
                 'children' => $children,
             ];
         }

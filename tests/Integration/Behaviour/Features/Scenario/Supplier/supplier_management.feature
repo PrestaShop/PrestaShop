@@ -11,7 +11,7 @@ Feature: Supplier management
     And single shop context is loaded
 
   Scenario: Adding new supplier
-    When I add new supplier supplier1 with following properties:
+    When I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
@@ -39,6 +39,27 @@ Feature: Supplier management
       | meta keywords[fr-FR]    |                    |
       | shops                   | [shop1]            |
 #@todo: finish up create with optional params too, different cases + update and delete scenarios.
+
+  Scenario: Delete manufacturer logo image
+    Given I edit supplier "supplier1" with the following properties:
+      | name                    | my supplier 1      |
+      | address                 | Donelaicio st. 1   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | description[fr-FR]      | la supplier :D     |
+      | meta title[en-US]       | my supplier nr one |
+      | meta title[fr-FR]       |                    |
+      | meta description[en-US] |                    |
+      | meta description[fr-FR] |                    |
+      | meta keywords[en-US]    | sup,1              |
+      | meta keywords[fr-FR]    |                    |
+      | shops                   | [shop1]            |
+      | logo image              | logo.jpg           |
+    And the supplier "supplier1" has a logo image
+    When I delete the supplier "supplier1" logo image
+    Then the supplier "supplier1" does not have a logo image
 
   Scenario: Viewing supplier
     Given supplier "acc1" with name "Accessories supplier" exists

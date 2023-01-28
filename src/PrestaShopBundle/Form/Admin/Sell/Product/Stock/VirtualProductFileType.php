@@ -43,11 +43,11 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VirtualProductFileType extends TranslatorAwareType implements EventSubscriberInterface
 {
@@ -110,7 +110,7 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
 
         $builder
             ->add('has_file', SwitchType::class, [
-                'label' => $this->trans('Does this product have an associated file?', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Add downloadable file', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
             ])
             ->add('virtual_product_file_id', HiddenType::class)
@@ -224,6 +224,7 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                 'class' => 'virtual-product-file-content',
             ],
             'columns_number' => 3,
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/virtual_product_file.html.twig',
         ]);
         $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }

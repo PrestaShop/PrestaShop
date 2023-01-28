@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.help.documentation:
+    class: PrestaShop\PrestaShop\Core\Help\Documentation
+    arguments:
+      - "@prestashop.core.foundation.version"
+      - "https://help.prestashop-project.org/"

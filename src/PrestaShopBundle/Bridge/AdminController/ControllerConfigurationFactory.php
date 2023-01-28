@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use Link;
+use PrestaShopBundle\Bridge\Exception\BridgeException;
+use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Tools;
 
@@ -42,37 +45,86 @@ class ControllerConfigurationFactory
     private $userProvider;
 
     /**
+     * @var Link
+     */
+    private $link;
+
+    /**
      * @param UserProvider $userProvider
+     * @param Link $link
      */
     public function __construct(
-        UserProvider $userProvider
+        UserProvider $userProvider,
+        Link $link
     ) {
         $this->userProvider = $userProvider;
+        $this->link = $link;
     }
 
     /**
-     * @param int $id
-     * @param string $controllerName
-     * @param string $controllerNameLegacy
-     * @param string $table
+     * @param int $tabId
+     * @param string $objectModelClassName
+     * @param string $legacyControllerName
+     * @param string $tableName
      *
      * @return ControllerConfiguration
      */
     public function create(
-        int $id,
-        string $controllerName,
-        string $controllerNameLegacy,
-        string $table
+        int $tabId,
+        string $objectModelClassName,
+        string $legacyControllerName,
+        string $tableName
     ): ControllerConfiguration {
-        $configuratorController = new ControllerConfiguration();
+        $employee = $this->userProvider->getUser();
+        if (!$employee instanceof Employee) {
+            throw new BridgeException(
+                sprintf(
+                    'Unexpected user type. Expected "%s", got "%s',
+                    Employee::class,
+                    get_class($employee))
+            );
+        }
 
-        $configuratorController->id = $id;
-        $configuratorController->controllerName = $controllerName;
-        $configuratorController->controllerNameLegacy = $controllerNameLegacy;
-        $configuratorController->table = $table;
-        $configuratorController->user = $this->userProvider->getUser();
-        $configuratorController->folderTemplate = Tools::toUnderscoreCase(substr($configuratorController->controllerNameLegacy, 5)) . '/';
+        $controllerConfiguration = new ControllerConfiguration(
+            $employee,
+            $tabId,
+            $objectModelClassName,
+            $legacyControllerName,
+            $tableName,
+            Tools::toUnderscoreCase(substr($legacyControllerName, 5)) . '/'
+        );
 
-        return $configuratorController;
+        $this->setLegacyCurrentIndex($controllerConfiguration);
+        $this->initToken($controllerConfiguration);
+
+        return $controllerConfiguration;
+    }
+
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return void
+     */
+    private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
+    {
+        $legacyCurrentIndex = $this->link->getAdminLink($controllerConfiguration->legacyControllerName);
+
+        if ($back = Tools::getValue('back')) {
+            $legacyCurrentIndex .= '&back=' . urlencode($back);
+        }
+
+        $controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
+    }
+
+    /**
+     * @return void
+     */
+    private function initToken(ControllerConfiguration $controllerConfiguration): void
+    {
+        $controllerConfiguration->token = Tools::getAdminToken(
+            $controllerConfiguration->legacyControllerName .
+            (int) $controllerConfiguration->tabId .
+            (int) $controllerConfiguration->getUser()->getData()->id
+        );
     }
 }

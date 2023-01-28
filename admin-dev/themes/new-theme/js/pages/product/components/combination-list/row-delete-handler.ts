@@ -50,16 +50,20 @@ export default class RowDeleteHandler {
 
     const $combinationsFormContainer = $(CombinationsMap.combinationsFormContainer);
     $combinationsFormContainer.on('click', CombinationsMap.deleteCombinationSelector, async (e) => {
-      await this.deleteCombination(e.currentTarget);
+      await this.deleteCombination(e.currentTarget, false);
+    });
+    $combinationsFormContainer.on('click', CombinationsMap.deleteCombinationAllShopsSelector, async (e) => {
+      await this.deleteCombination(e.currentTarget, true);
     });
   }
 
   /**
    * @param {HTMLElement} button
+   * @param {boolean} allShops
    *
    * @private
    */
-  private async deleteCombination(button: HTMLButtonElement): Promise<void> {
+  private async deleteCombination(button: HTMLButtonElement, allShops: boolean): Promise<void> {
     try {
       const $deleteButton = $(button);
       const modal = new ConfirmModal({
@@ -74,12 +78,13 @@ export default class RowDeleteHandler {
       async () => {
         const response = await this.combinationsService.deleteCombination(
           this.findCombinationId(button),
+          allShops ? null : <number> <unknown> button.dataset.shopId,
         );
         $.growl({message: response.message});
         this.eventEmitter.emit(CombinationEvents.combinationDeleted);
       });
       modal.show();
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error.response?.JSON ?? error;
       $.growl.error({message: errorMessage});
     }

@@ -22,6 +22,7 @@ class Products extends BOBasePage {
     this.productActivatedSuccessfulMessage = 'Product successfully activated.';
     this.productMultiActivatedSuccessfulMessage = 'Product(s) successfully activated.';
     this.productMultiDeactivatedSuccessfulMessage = 'Product(s) successfully deactivated.';
+    this.productMultiDuplicatedSuccessfulMessage = 'Product(s) successfully duplicated.';
 
     // Selectors
     // List of products
@@ -30,25 +31,26 @@ class Products extends BOBasePage {
     this.productRow = `${this.productTable} tbody tr`;
     this.productListfooterRow = `${this.productListForm} div.pagination-block`;
     this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
-    this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
-    this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
-    this.dropdownMenuDeleteLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
-    this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
-    this.dropdownMenuDuplicateLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
-    this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
+    this.dropdownToggleButton = (row) => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
+    this.dropdownMenu = (row) => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
+    this.dropdownMenuDeleteLink = (row) => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
+    this.dropdownMenuPreviewLink = (row) => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
+    this.dropdownMenuDuplicateLink = (row) => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
+    this.productRowEditLink = (row) => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = `${this.productListForm} .column-filters .md-checkbox label`;
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
-    this.productBulkMenuButtonState = state => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
+    this.productBulkMenuButtonState = (state) => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     this.productBulkEnableLink = `${this.productBulkDropdownMenu} a[onclick*='activate_all']`;
     this.productBulkDisableLink = `${this.productBulkDropdownMenu} a[onclick*='deactivate_all']`;
+    this.productBulkDuplicateLink = `${this.productBulkDropdownMenu} a[onclick*='duplicate_all']`;
 
     // Filters input
     this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
     this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
-    this.productFilterInput = filterBy => `${this.productListForm} input[name='filter_column_${filterBy}']`;
-    this.productFilterSelect = filterBy => `${this.productListForm} select[name='filter_column_${filterBy}']`;
+    this.productFilterInput = (filterBy) => `${this.productListForm} input[name='filter_column_${filterBy}']`;
+    this.productFilterSelect = (filterBy) => `${this.productListForm} select[name='filter_column_${filterBy}']`;
     this.productFilterPriceMinInput = `${this.productListForm} #filter_column_price_min`;
     this.productFilterPriceMaxInput = `${this.productListForm} #filter_column_price_max`;
     this.productFilterQuantityMinInput = `${this.productListForm} #filter_column_sav_quantity_min`;
@@ -57,16 +59,16 @@ class Products extends BOBasePage {
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
 
     // Products list
-    this.productsListTableRow = row => `${this.productRow}:nth-child(${row})`;
-    this.productsListTableColumnID = row => `${this.productsListTableRow(row)}[data-product-id]`;
-    this.productsListTableColumnName = row => `${this.productsListTableRow(row)} td:nth-child(4) a`;
-    this.productsListTableColumnReference = row => `${this.productsListTableRow(row)} td:nth-child(5)`;
-    this.productsListTableColumnCategory = row => `${this.productsListTableRow(row)} td:nth-child(6)`;
-    this.productsListTableColumnPrice = row => `${this.productsListTableRow(row)} td:nth-child(7)`;
-    this.productsListTableColumnPriceATI = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
-    this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
-    this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10) .ps-switch`;
-    this.productsListTableColumnStatusInput = row => `${this.productsListTableColumnStatus(row)} input`;
+    this.productsListTableRow = (row) => `${this.productRow}:nth-child(${row})`;
+    this.productsListTableColumnID = (row) => `${this.productsListTableRow(row)}[data-product-id]`;
+    this.productsListTableColumnName = (row) => `${this.productsListTableRow(row)} td:nth-child(4) a`;
+    this.productsListTableColumnReference = (row) => `${this.productsListTableRow(row)} td:nth-child(5)`;
+    this.productsListTableColumnCategory = (row) => `${this.productsListTableRow(row)} td:nth-child(6)`;
+    this.productsListTableColumnPrice = (row) => `${this.productsListTableRow(row)} td:nth-child(7)`;
+    this.productsListTableColumnPriceATI = (row) => `${this.productsListTableRow(row)} td:nth-child(8)`;
+    this.productsListTableColumnQuantity = (row) => `${this.productsListTableRow(row)} td.product-sav-quantity`;
+    this.productsListTableColumnStatus = (row) => `${this.productsListTableRow(row)} td:nth-child(10) .ps-switch`;
+    this.productsListTableColumnStatusInput = (row) => `${this.productsListTableColumnStatus(row)} input`;
 
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
@@ -78,23 +80,20 @@ class Products extends BOBasePage {
     // HEADER buttons
     this.addProductButton = '#page-header-desc-configuration-add';
 
-    // pagination
-    this.paginationNextLink = '.page-item.next:not(.disabled) #pagination_next_url';
-
     // Modal Dialog
     this.catalogDeletionModalDialog = '#catalog_deletion_modal div.modal-dialog';
     this.modalDialogDeleteNowButton = `${this.catalogDeletionModalDialog} button[value='confirm']`;
 
     // Sort Selectors
     this.tableHead = `${this.productTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.productListForm} .col-form-label`;
-    this.paginationNextLink = `${this.productListForm} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.productListForm} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.productListForm} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.productListForm} [data-role='previous-page-link']`;
   }
 
   /*
@@ -373,17 +372,21 @@ class Products extends BOBasePage {
 
     // Choose category to filter with
     const args = {allCategoriesSelector: this.filterByCategoriesCategoryLabel, val: categoryName};
-    const found = await page.evaluate(async (args) => {
-      /* eslint-env browser */
-      const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
-      const category = await allCategories.find(el => el.textContent.includes(args.val));
+    // eslint-disable-next-line no-eval
+    const fn = eval(`({
+      async categoryClick(args) {
+        /* eslint-env browser */
+        const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
+        const category = await allCategories.find((el) => el.textContent.includes(args.val));
 
-      if (category === undefined) {
-        return false;
+        if (category === undefined) {
+          return false;
+        }
+        await category.querySelector('input').click();
+        return true;
       }
-      await category.querySelector('input').click();
-      return true;
-    }, args);
+    })`);
+    const found = await page.evaluate(fn.categoryClick, args);
 
     if (!found) {
       throw new Error(`${categoryName} not found as a category`);
@@ -501,7 +504,7 @@ class Products extends BOBasePage {
   async selectAllProducts(page) {
     await Promise.all([
       this.waitForVisibleSelector(page, this.productBulkMenuButton),
-      page.$eval(this.selectAllBulkCheckboxLabel, el => el.click()),
+      page.$eval(this.selectAllBulkCheckboxLabel, (el) => el.click()),
     ]);
   }
 
@@ -524,6 +527,23 @@ class Products extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Duplicate all products with Bulk Actions
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async duplicateAllProductsWithBulkActions(page) {
+    await this.selectAllProducts(page);
+
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
+      page.click(this.productBulkMenuButton),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.productBulkDuplicateLink);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

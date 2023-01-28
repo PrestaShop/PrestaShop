@@ -74,6 +74,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
             'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
             'specific_price_priorities' => $this->getPrioritiesData(),
+            'disabled_products_behavior' => $this->configuration->get('PS_PRODUCT_REDIRECTION_DEFAULT'),
         ];
     }
 
@@ -93,6 +94,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
             $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (int) $config['force_friendly_url']);
             $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (int) $config['default_status']);
+            $this->configuration->set('PS_PRODUCT_REDIRECTION_DEFAULT', (string) $config['disabled_products_behavior']);
             try {
                 $this->specificPricePriorityUpdater->updateDefaultPriorities(new PriorityList($config['specific_price_priorities']));
             } catch (SpecificPriceConstraintException $e) {
@@ -126,6 +128,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'force_friendly_url',
             'default_status',
             'specific_price_priorities',
+            'disabled_products_behavior',
         ]);
 
         $resolver->resolve($configuration);

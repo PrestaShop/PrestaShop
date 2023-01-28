@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\OptionsProvider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ProductFormOptionsProvider;
 
 class ProductFormOptionsProviderTest extends TestCase
@@ -69,11 +70,27 @@ class ProductFormOptionsProviderTest extends TestCase
         $this->assertFalse($options['active']);
 
         $options = $provider->getOptions(self::PRODUCT_ID, [
-            'footer' => [
+            'header' => [
                 'active' => true,
             ],
         ]);
         $this->assertArrayHasKey('active', $options);
         $this->assertTrue($options['active']);
+    }
+
+    public function testProductTypeOption(): void
+    {
+        $provider = new ProductFormOptionsProvider();
+        $options = $provider->getOptions(self::PRODUCT_ID, []);
+        $this->assertArrayHasKey('product_type', $options);
+        $this->assertEquals(ProductType::TYPE_STANDARD, $options['product_type']);
+
+        $options = $provider->getOptions(self::PRODUCT_ID, [
+            'header' => [
+                'type' => ProductType::TYPE_COMBINATIONS,
+            ],
+        ]);
+        $this->assertArrayHasKey('product_type', $options);
+        $this->assertEquals(ProductType::TYPE_COMBINATIONS, $options['product_type']);
     }
 }

@@ -27,49 +27,53 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Domain\Product\Stock\ValueObject;
 
-use Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\MovementReasonConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\MovementReasonId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 class StockModificationTest extends TestCase
 {
     /**
-     * @dataProvider getValidValues
+     * @dataProvider getValidDeltaQuantityValues
      *
      * @param int $deltaQuantity
      */
-    public function testItIsSuccessfullyConstructed(int $deltaQuantity): void
+    public function testItIsSuccessfullyConstructedUsingDeltaQuantity(int $deltaQuantity): void
     {
-        $movementReasonId = new MovementReasonId(1);
-        $stockModification = new StockModification($deltaQuantity, $movementReasonId);
+        $stockModification = StockModification::buildDeltaQuantity($deltaQuantity);
 
         Assert::assertSame($deltaQuantity, $stockModification->getDeltaQuantity());
-        Assert::assertSame($movementReasonId, $stockModification->getMovementReasonId());
+        Assert::assertNull($stockModification->getFixedQuantity());
     }
 
     /**
-     * @dataProvider getInvalidValues
+     * @dataProvider getValidFixedQuantityValues
+     *
+     * @param int $fixedQuantity
+     */
+    public function testItIsSuccessfullyConstructedUsingFixedQuantity(int $fixedQuantity): void
+    {
+        $stockModification = StockModification::buildFixedQuantity($fixedQuantity);
+
+        Assert::assertSame($fixedQuantity, $stockModification->getFixedQuantity());
+        Assert::assertNull($stockModification->getDeltaQuantity());
+    }
+
+    /**
+     * @dataProvider getInvalidDeltaQuantityValues
      *
      * @param int $deltaQuantity
-     *
-     * @throws MovementReasonConstraintException
      */
     public function testItThrowsExceptionWhenInvalidDeltaQuantityIsProvided(int $deltaQuantity): void
     {
         $this->expectException(ProductStockConstraintException::class);
         $this->expectExceptionCode(ProductStockConstraintException::INVALID_DELTA_QUANTITY);
 
-        new StockModification($deltaQuantity, new MovementReasonId(1));
+        StockModification::buildDeltaQuantity($deltaQuantity);
     }
 
-    /**
-     * @return Generator
-     */
-    public function getValidValues(): Generator
+    public function getValidDeltaQuantityValues(): iterable
     {
         yield [1];
         yield [10];
@@ -78,10 +82,17 @@ class StockModificationTest extends TestCase
         yield [-500];
     }
 
-    /**
-     * @return Generator
-     */
-    public function getInvalidValues(): Generator
+    public function getValidFixedQuantityValues(): iterable
+    {
+        yield [1];
+        yield [10];
+        yield [5000000001];
+        yield [-1];
+        yield [-500];
+        yield [0];
+    }
+
+    public function getInvalidDeltaQuantityValues(): iterable
     {
         yield [0];
     }

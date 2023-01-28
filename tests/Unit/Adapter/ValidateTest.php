@@ -126,4 +126,31 @@ class ValidateTest extends TestCase
             [false, '666invalid'],
         ];
     }
+
+    /**
+     * @param bool $expected
+     * @param string $objectClassName
+     *
+     * @dataProvider isValidObjectClassNameDataProvider
+     */
+    public function testisValidObjectClassName(bool $expected, string $objectClassName): void
+    {
+        $this->assertSame($expected, $this->validate->isValidObjectClassName($objectClassName));
+    }
+
+    public function isValidObjectClassNameDataProvider(): array
+    {
+        return [
+            [true, 'MyClassName'],
+            [true, '_MyClassName'],
+            [true, '_My_Class_Name_'],
+            [true, '_MyClassName_'],
+            [true, '__My__Class__Name__'],
+            [false, ''],
+            [false, '666'],
+            [true, '_666'],
+            [true, '_6_6_6_'],
+            [true, '__'],
+        ];
+    }
 }

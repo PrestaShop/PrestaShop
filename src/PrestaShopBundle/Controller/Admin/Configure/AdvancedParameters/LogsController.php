@@ -122,7 +122,7 @@ class LogsController extends FrameworkBundleAdminController
             $saveErrors = $this->getFormHandler()->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_logs_index');
             }
@@ -144,7 +144,7 @@ class LogsController extends FrameworkBundleAdminController
     {
         $this->getLogRepository()->deleteAll();
 
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_logs_index');
     }

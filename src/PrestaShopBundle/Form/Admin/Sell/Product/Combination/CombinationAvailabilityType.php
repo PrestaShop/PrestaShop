@@ -36,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CombinationAvailabilityType extends TranslatorAwareType
 {
@@ -90,7 +90,7 @@ class CombinationAvailabilityType extends TranslatorAwareType
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans(
-                    'Label when out of stock (and back order allowed)',
+                    'Label when out of stock (and backorders allowed)',
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,

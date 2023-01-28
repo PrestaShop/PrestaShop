@@ -73,7 +73,7 @@ class UpdateCombinationImagesFeatureContext extends AbstractCombinationFeatureCo
      */
     public function assertCombinationImages(string $combinationReference, array $imageReferences): void
     {
-        $images = $this->getCombinationForEditing($combinationReference)->getImageIds();
+        $images = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getImageIds();
         Assert::assertEquals(count($images), count($imageReferences));
         foreach ($imageReferences as $imageReference) {
             $imageId = $this->getSharedStorage()->get($imageReference);
@@ -88,13 +88,30 @@ class UpdateCombinationImagesFeatureContext extends AbstractCombinationFeatureCo
     }
 
     /**
+     * @Then combination :combinationReference should have the following cover :coverUrl
+     *
+     * @param string $combinationReference
+     * @param string $coverUrl
+     */
+    public function assertCombinationCover(string $combinationReference, string $coverUrl): void
+    {
+        $combinationCoverUrl = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getCoverThumbnailUrl();
+        $realImageUrl = $this->getRealImageUrl($coverUrl);
+        Assert::assertEquals(
+            $realImageUrl,
+            $combinationCoverUrl,
+            'Unexpected combination cover image url'
+        );
+    }
+
+    /**
      * @Then combination :combinationReference should have no images
      *
      * @param string $combinationReference
      */
     public function assertNoImages(string $combinationReference): void
     {
-        $images = $this->getCombinationForEditing($combinationReference)->getImageIds();
+        $images = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getImageIds();
         Assert::assertEmpty($images);
     }
 }

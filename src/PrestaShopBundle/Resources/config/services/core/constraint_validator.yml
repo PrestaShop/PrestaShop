@@ -23,6 +23,8 @@ services:
 
   prestashop.core.constraint_validator.typed_regex_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: validator.constraint_validator }
 

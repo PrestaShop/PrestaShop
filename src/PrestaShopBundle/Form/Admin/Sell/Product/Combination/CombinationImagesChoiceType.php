@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CombinationImagesChoiceType extends TranslatorAwareType
 {
@@ -61,7 +61,9 @@ class CombinationImagesChoiceType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver
-            ->setRequired('product_id')
+            ->setRequired([
+                'product_id',
+            ])
             ->setAllowedTypes('product_id', 'int')
             ->setDefaults([
                 'label' => $this->trans('Images', 'Admin.Global'),

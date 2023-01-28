@@ -35,6 +35,7 @@ parameters:
     - install-dev/theme/config.php
     - tests/Resources
     - tests/Unit/Core/Foundation/IoC/Fixtures
+    - */node_modules/*
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'
@@ -70,3 +71,18 @@ parameters:
     - PHP_VERSION_ID
     - Memcached::HAVE_IGBINARY
     - PaymentModuleCore::DEBUG_MODE
+    - _PS_API_IN_USE_
+    - _PS_ALLOW_MULTI_STATEMENTS_QUERIES_
+  disallowedNamespaces:
+        -
+            class: 'Symfony\Component\Translation\TranslatorInterface'
+            message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
+            disallowIn:
+                - src/*
+  disallowedMethodCalls:
+        -
+            method: 'PrestaShopBundle\Form\Admin\Type\CommonAbstractType::getConfiguration()'
+            message: 'Use dependency injection instead'
+            disallowIn:
+                - src/*
+

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Language;
 use Language;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class LanguagePack is responsible for the language pack actions regarding installation.

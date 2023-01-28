@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page.

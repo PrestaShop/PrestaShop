@@ -1,6 +1,8 @@
 // Config
 // Tools
 @import "~bootstrap/scss/mixins/breakpoints";
+@import "~prestakit/scss/mixins/fonts";
+
 // Settings
 /* stylelint-disable */
 @import "@scss/config/_settings";
@@ -112,8 +114,8 @@ $product-page-padding-bottom: 80px !default;
   .product-header-v2 {
     display: flex;
     flex-direction: row;
-    gap: 1.5625rem;
-    padding: 0.625rem;
+    gap: 1rem;
+    padding: 0;
     margin: 1rem 0;
     background: $white;
     @include border-radius(0.375rem);
@@ -123,7 +125,7 @@ $product-page-padding-bottom: 80px !default;
       flex-grow: 1;
     }
 
-    $product-cover-size: 110px;
+    $product-cover-size: 130px;
 
     .product-header-cover {
       flex-grow: 0;
@@ -132,15 +134,41 @@ $product-page-padding-bottom: 80px !default;
 
       .form-group {
         margin-bottom: 0;
+
+        img {
+          @include border-left-radius(0.375rem);
+        }
       }
     }
 
     .product-header-form {
       flex-grow: 2;
       min-width: 35%;
+      padding: 0.625rem 0;
 
       > .form-group {
         margin-bottom: 0;
+      }
+
+      #product_header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+
+        .header-name {
+          flex-basis: 100%;
+        }
+
+        .ps-switch {
+          /* This is a temporary fix, ps-switch component behaves poorly in a flex container this should be handled correctly in prestakit */
+          min-width: 7rem;
+          margin-top: 0;
+        }
+
+        .form-group {
+          margin-bottom: 0;
+        }
       }
 
       .product-type-preview {
@@ -154,14 +182,16 @@ $product-page-padding-bottom: 80px !default;
     }
 
     .product-header-details {
-      padding: 1.125rem 1.125rem 0 0;
+      padding-top: 1.125rem;
 
       .product-header-summary {
+        position: relative;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-end;
         gap: 1rem;
+        justify-content: flex-end;
+        padding-right: 1.125rem;
 
         .product-field-preview {
           display: flex;
@@ -191,6 +221,19 @@ $product-page-padding-bottom: 80px !default;
             }
           }
         }
+
+        &::after {
+          position: absolute;
+          right: 0;
+          bottom: -0.875rem;
+          left: 0;
+          content: " ";
+          border-style: solid;
+          border-width: 1px;
+          border-top: 0;
+          // stylelint-disable-next-line
+          border-image: linear-gradient(to left, #c6d5da, #fff) 1;
+        }
       }
 
       .product-header-references {
@@ -198,6 +241,7 @@ $product-page-padding-bottom: 80px !default;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-end;
+        padding-right: 1.125rem;
         margin: 1.75rem 0 0;
         font-size: 0.875rem;
         font-weight: 400;
@@ -328,8 +372,8 @@ $product-page-padding-bottom: 80px !default;
     .product-footer-container {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
       gap: 0.5rem;
+      justify-content: space-between;
       width: 100%;
       height: 100%;
       padding: 0 0.5rem;
@@ -685,6 +729,10 @@ $product-page-padding-bottom: 80px !default;
         color: $gray-medium;
       }
     }
+  }
+
+  .manage-shop-images-button-container {
+    text-align: right;
   }
 
   .nav-tabs {
@@ -1155,7 +1203,7 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  .product-tabs {
+  #product-tabs-content {
     @include border-radius(6px);
 
     > .form-contenttab {
@@ -1190,6 +1238,12 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
+  &.product-shops-form {
+    width: 100%;
+    padding: 0 1rem 0.1rem;
+    background-color: $white;
+  }
+
   .maxLength {
     float: none;
   }
@@ -1200,41 +1254,9 @@ $product-page-padding-bottom: 80px !default;
     list-style: none;
   }
 
-  #product_stock_options,
   #product_specifications_references {
     input {
       max-width: 415px;
-    }
-  }
-
-  #product_stock_quantities_stock_movements {
-    max-width: 400px;
-
-    .table {
-      margin-bottom: 0.8rem;
-    }
-
-    td {
-      padding-top: 0.8rem;
-      padding-bottom: 0.8rem;
-    }
-
-    .stock_movement_quantity {
-      @include border-radius(5px);
-      display: inline-block;
-      min-width: 55px;
-      padding: 2px;
-      font-size: 0.7rem;
-      color: #fff;
-      text-align: center;
-
-      &.increased_quantity {
-        background-color: $brand-primary;
-      }
-
-      &.decreased_quantity {
-        background-color: $gray-dark;
-      }
     }
   }
 
@@ -1424,9 +1446,121 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+// Stock movement style is common to product and combination page
+.stock-movement-list {
+  max-width: 600px;
+
+  .table {
+    margin-bottom: 0.8rem;
+    border-bottom: none;
+  }
+
+  td {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    border: none;
+  }
+
+  .employee_preview {
+    display: inline-block;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .stock_movement_quantity {
+    @include border-radius(5px);
+    display: inline-block;
+    min-width: 55px;
+    padding: 2px;
+    font-size: 0.7rem;
+    color: $white;
+    text-align: center;
+
+    &.increased_quantity {
+      background-color: $brand-primary;
+    }
+
+    &.decreased_quantity {
+      background-color: $gray-dark;
+    }
+  }
+
+  .entity-item {
+    border-bottom: none;
+  }
+
+  .orders-stock-movement {
+    background-color: $background-grey;
+
+    .text-preview {
+      font-weight: 700;
+    }
+  }
+}
+
+.product_packed_products {
+  .search-with-icon {
+    max-width: 377px;
+  }
+
+  .combination-reference {
+    margin-left: 0.5rem;
+  }
+
+  .entities-list-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  li.packed-product {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 180px;
+    // stylelint-disable-next-line
+    padding: 0 !important;
+    border: none;
+
+    .packed-product-image {
+      margin-bottom: 0.5rem;
+    }
+
+    .packed-product-legend,
+    .packed-product-reference,
+    .packed-product-quantity {
+      max-width: 100%;
+
+      .reference-preview,
+      .text-preview {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        font-weight: 600;
+        text-overflow: ellipsis;
+      }
+
+      .reference-preview {
+        font-weight: 500;
+      }
+    }
+
+    .packed-product-quantity {
+      margin-top: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+
 // Some of the following styles target product page v2 components, but since the are new and only used in the new
 // page there is no need to scope them inside the product-page-v2 class
-.create-product-form {
+.create-product-form,
+.product-shops-form {
   width: 100%;
   padding: 0 1rem 0.1rem;
   background-color: $white;
@@ -1434,7 +1568,6 @@ $product-page-padding-bottom: 80px !default;
 
 .product-type-selector {
   width: 100%;
-  margin-bottom: 1rem;
 
   select {
     display: none;
@@ -1601,6 +1734,7 @@ $product-page-padding-bottom: 80px !default;
       &-row-actions {
         display: flex;
         align-items: center;
+        margin: 0;
       }
 
       &-image {
@@ -1613,6 +1747,7 @@ $product-page-padding-bottom: 80px !default;
 
       td {
         .form-check-radio {
+          padding-top: 0;
           margin-bottom: 0;
 
           .form-check-label {
@@ -1626,6 +1761,12 @@ $product-page-padding-bottom: 80px !default;
 
         .delta-quantity {
           max-width: 15rem;
+
+          .delta_quantity_delta-widget {
+            display: flex;
+            align-items: center;
+            margin: 0;
+          }
 
           &-quantity {
             max-width: 10rem;
@@ -1757,6 +1898,23 @@ $product-page-padding-bottom: 80px !default;
 }
 
 .combination-page {
+  #combination_form {
+    padding-top: 1rem;
+  }
+
+  .combination-cover-row {
+    display: inline-block;
+  }
+
+  .combination-header-row {
+    display: inline-block;
+    margin-left: 1rem;
+
+    .combination-name-row {
+      font-weight: 600;
+    }
+  }
+
   .combination-images-selector:not(.disabled) {
     .combination-image-choice {
       cursor: pointer;
@@ -1823,6 +1981,14 @@ $product-page-padding-bottom: 80px !default;
     .product-suppliers-collection-row {
       max-width: 100%;
     }
+  }
+
+  .small-input {
+    max-width: 210px;
+  }
+
+  .medium-input {
+    max-width: 540px;
   }
 }
 
@@ -2270,6 +2436,89 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+#modal-product-shops {
+  .modal-dialog {
+    max-width: 810px;
+  }
+}
+
+#images-shop-association-modal {
+  .image-shop-grid-container {
+    max-height: 70vh;
+    overflow: auto;
+
+    &.delete-warning {
+      max-height: 65vh;
+    }
+  }
+
+  .images-shop-association-loading {
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .image-shop-grid {
+    width: 100%;
+
+    tr.header-row {
+      border-bottom: 2px solid $brand-primary;
+    }
+
+    tr:not(.header-row) {
+      border-bottom: 1px solid $gray-light;
+    }
+
+    .shop-image-cell {
+      max-width: 70px;
+    }
+
+    tr.deleted-image {
+      background-color: $alert-warning-bg;
+
+      .shop-image-cell {
+        position: relative;
+
+        &::before {
+          @include use-material-icon();
+          position: absolute;
+          top: calc(50% - 0.75rem);
+          left: calc(50% - 0.75rem);
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          font-size: 1.5rem;
+          color: $warning;
+          text-align: center;
+          content: "warning";
+        }
+
+        img {
+          filter: grayscale(0.8);
+        }
+      }
+    }
+
+    td,
+    th {
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .cover-checkbox {
+      margin-top: 17px;
+    }
+
+    .cover-label {
+      display: block;
+      font-size: 11px;
+      color: $gray-light;
+    }
+  }
+}
+
+
 // Create product modal
 @import "create_product_modal";
+// Product light list (which is displayed in the form, hence its stylesheet is in this file)
 @import "product_light_list";

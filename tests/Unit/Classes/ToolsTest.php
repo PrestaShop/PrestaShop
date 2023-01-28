@@ -320,6 +320,7 @@ class ToolsTest extends TestCase
             ['product_attribute', 'productAttribute', false],
             ['product_attribute_combination', 'productAttributeCombination', false],
             ['product_attribute_image', 'productAttributeImage', false],
+            ['product_attribute_lang', 'productAttributeLang', false],
             ['product_lang', 'productLang', false],
             ['product_supplier', 'productSupplier', false],
             ['profile_lang', 'profileLang', false],
@@ -824,6 +825,272 @@ class ToolsTest extends TestCase
                 'value0',
             ],
             'field4',
+        ];
+    }
+
+    /**
+     * This test verifies the rewrite rules to be written in the .htaccess file against the expected url segments
+     *
+     * @see Tools::generateHtaccess
+     *
+     * @dataProvider provideHtaccessRules
+     */
+    public function testHtaccessRewriteRules(string $rule, string $replacement, array $testCases)
+    {
+        $rule = "~$rule~";
+        foreach ($testCases as $setName => $case) {
+            if ($case['shouldMatch']) {
+                $this->assertRegExp($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
+            } else {
+                $this->assertNotRegExp($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
+            }
+
+            if ($case['shouldMatch']) {
+                $result = preg_replace($rule, $replacement, $case['uri']);
+                $this->assertSame($case['rewritten'], $result);
+            }
+        }
+    }
+
+    public function provideHtaccessRules()
+    {
+        return [
+            'legacy product images 1' => [
+                '^([a-z\d]+\-[a-z\d]+\-[-\w]*)/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/p/$1$2',
+                [
+                    [
+                        'uri' => '123-something-foobar/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/123-something-foobar.jpg',
+                    ],
+                    [
+                        'uri' => '123-something-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/123-something-.jpg',
+                    ],
+                    [
+                        'uri' => '123-something/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => 'test-99/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => 'test-99-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/test-99-.jpg',
+                    ],
+                    [
+                        'uri' => 'test123-foo2bar1-someThing_with_underscores-9-123/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/test123-foo2bar1-someThing_with_underscores-9-123.jpg',
+                    ],
+                    [
+                        'uri' => 'test123-foo2bar1-someThing_with_underscores-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/test123-foo2bar1-someThing_with_underscores-.jpg',
+                    ],
+                    [
+                        'uri' => '123-Something-foobar/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => 'r-f-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/r-f-.jpg',
+                    ],
+                    [
+                        'uri' => 'r-f/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => '99/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => 'test/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                ],
+            ],
+
+            'legacy product images 2' => [
+                '^([\d]+(?:\-[\d]+){1,2})/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/p/$1$2',
+                [
+                    [
+                        'uri' => '123-456-7/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/123-456-7.jpg',
+                    ],
+                    [
+                        'uri' => '123-456/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/123-456.jpg',
+                    ],
+                    [
+                        'uri' => '123-/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => '123/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                ],
+            ],
+
+            'product images (single digit)' => [
+                '^(([\d])(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$$',
+                '%{ENV:REWRITEBASE}img/p/$2/$1$3',
+                [
+                    [
+                        'uri' => '1-soMeTh1ng_cool22-99/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/1/1-soMeTh1ng_cool22-99.jpg',
+                    ],
+                    [
+                        'uri' => '9-soMeTh1ng_cool22-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/9/9-soMeTh1ng_cool22-.jpg',
+                    ],
+                    [
+                        'uri' => '9-soMeTh1ng_cool22/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/9/9-soMeTh1ng_cool22.jpg',
+                    ],
+                    [
+                        'uri' => '1-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/1/1-.jpg',
+                    ],
+                    [
+                        'uri' => '1/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/1/1.jpg',
+                    ],
+                ],
+            ],
+
+            'product images (7 digits)' => [
+                '^(([\d])([\d])([\d])([\d])([\d])([\d])([\d])(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/p/$2/$3/$4/$5/$6/$7/$8/$1$9',
+                [
+                    [
+                        'uri' => '1234567-soMeTh1ng_cool22-99/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/1/2/3/4/5/6/7/1234567-soMeTh1ng_cool22-99.jpg',
+                    ],
+                    [
+                        'uri' => '7654321-soMeTh1ng_cool22-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/7/6/5/4/3/2/1/7654321-soMeTh1ng_cool22-.jpg',
+                    ],
+                    [
+                        'uri' => '7654321-soMeTh1ng_cool22/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/7/6/5/4/3/2/1/7654321-soMeTh1ng_cool22.jpg',
+                    ],
+                    [
+                        'uri' => '1234567-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/1/2/3/4/5/6/7/1234567-.jpg',
+                    ],
+                    [
+                        'uri' => '1234567/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/p/1/2/3/4/5/6/7/1234567.jpg',
+                    ],
+                    [
+                        'uri' => '1234-soMeTh1ng_cool22-99/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                ],
+            ],
+
+            'category images 1' => [
+                '^c/([\d]+)(\-[\.*\w-]*)/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/c/$1$2.jpg',
+                [
+                    [
+                        'uri' => 'c/1234567-soMe.Th1n*g_cool22-99/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/1234567-soMe.Th1n*g_cool22-99.jpg',
+                    ],
+                    [
+                        'uri' => 'c/1-foo-99/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/1-foo-99.jpg',
+                    ],
+                    [
+                        'uri' => 'c/1-foo-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/1-foo-.jpg',
+                    ],
+                    [
+                        'uri' => 'c/1-foo/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/1-foo.jpg',
+                    ],
+                    [
+                        'uri' => 'c/1-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/1-.jpg',
+                    ],
+                    [
+                        'uri' => 'c/1/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => '1-foo-99/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => 'c/foo-99/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                ],
+            ],
+
+            'category images 2' => [
+                '^c/([a-zA-Z_-]+)(-[\d]+)?/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/c/$1$2$3',
+                [
+                    [
+                        'uri' => 'c/soMeThing_cool-test-99/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/soMeThing_cool-test-99.jpg',
+                    ],
+                    [
+                        'uri' => 'c/foo-99/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/foo-99.jpg',
+                    ],
+                    [
+                        'uri' => 'c/foo-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/foo-.jpg',
+                    ],
+                    [
+                        'uri' => 'c/-/totally-ignored.jpg',
+                        'shouldMatch' => true,
+                        'rewritten' => '%{ENV:REWRITEBASE}img/c/-.jpg',
+                    ],
+                    [
+                        'uri' => 'c/1-1/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => 'c/1/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                    [
+                        'uri' => '1-foo-99/totally-ignored.jpg',
+                        'shouldMatch' => false,
+                    ],
+                ],
+            ],
         ];
     }
 }

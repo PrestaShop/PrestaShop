@@ -1,4 +1,4 @@
-{# **
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * #}
+ *#}
 
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
@@ -34,6 +34,21 @@
     </div>
     {{ form_widget(form.id_customer) }}
   </li>
+{% endblock %}
+
+{#
+  these widgets are the prototype templates (that are handled by js later) and they are rendered as disabled by default
+  on page load because of disablingSwitch component behavior. But they must not be disabled
+  or else will not be submitted to the form, so we remove "disabled" attribute if it exists.
+#}
+{% block searched_customer_id_customer_widget %}
+  {% set attr = attr|filter((value, key) => key != 'disabled') %}
+  {{ block('hidden_widget') }}
+{% endblock %}
+
+{% block searched_customer_fullname_and_email_widget %}
+  {% set attr = attr|filter((value, key) => key != 'disabled') %}
+  {{ block('text_preview_widget') }}
 {% endblock %}
 
 {% block specific_price_impact_row %}

@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShopBundle\Utils\Tree;
 
 /**
  * @property Shop|null $object
@@ -167,13 +168,13 @@ class AdminShopControllerCore extends AdminController
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
             ->setHeaderTemplate('shop_tree_header.tpl')->setActions([
                 new TreeToolbarLink(
-                    'Collapse All',
+                    'Collapse all',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
-                    'Expand All',
+                    'Expand all',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
@@ -226,14 +227,26 @@ class AdminShopControllerCore extends AdminController
     public function displayAjaxGetCategoriesFromRootCategory()
     {
         if (Tools::isSubmit('id_category')) {
-            $selected_cat = [(int) Tools::getValue('id_category')];
-            $children = Category::getChildren((int) Tools::getValue('id_category'), $this->context->language->id);
-            foreach ($children as $child) {
-                $selected_cat[] = $child['id_category'];
-            }
+            $getId = function ($category) {
+                return (int) $category['id_category'];
+            };
+
+            $languageId = $this->context->language->id;
+            $getChildren = function (array $category) use ($languageId, $getId) {
+                return Category::getChildren($getId($category), $languageId);
+            };
+
+            // selected categories ids.
+            $selectedCategories = Tree::extractChildrenId(
+                [
+                    ['id_category' => (int) Tools::getValue('id_category')],
+                ],
+                $getChildren,
+                $getId
+            );
 
             $helper = new HelperTreeCategories('categories-tree', null, (int) Tools::getValue('id_category'), null, false);
-            $this->content = $helper->setSelectedCategories($selected_cat)->setUseSearch(true)->setUseCheckBox(true)
+            $this->content = $helper->setSelectedCategories($selectedCategories)->setUseSearch(true)->setUseCheckBox(true)
                 ->render();
         }
         parent::displayAjax();
@@ -270,6 +283,11 @@ class AdminShopControllerCore extends AdminController
         return $result;
     }
 
+    /**
+     * @return bool
+     *
+     * @throws PrestaShopException
+     */
     public function processDelete()
     {
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
@@ -289,7 +307,7 @@ class AdminShopControllerCore extends AdminController
     /**
      * @param Shop $new_shop
      *
-     * @return bool
+     * @return ObjectModel|bool
      */
     protected function afterAdd($new_shop)
     {
@@ -361,6 +379,13 @@ class AdminShopControllerCore extends AdminController
         $this->context->smarty->assign('shops_having_dependencies', $shop_delete_list);
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         if (!($obj = $this->loadObject(true))) {
@@ -381,6 +406,7 @@ class AdminShopControllerCore extends AdminController
                     'desc' => [
                         $this->trans('This field does not refer to the shop name visible in the front office.', [], 'Admin.Shopparameters.Help'),
                         $this->trans('Follow [1]this link[/1] to edit the shop name used on the front office.', [
+                            '_raw' => true,
                             '[1]' => '<a href="' . $this->context->link->getAdminLink('AdminStores') . '#store_fieldset_general">',
                             '[/1]' => '</a>',
                         ], 'Admin.Shopparameters.Help'), ],
@@ -459,6 +485,7 @@ class AdminShopControllerCore extends AdminController
             'type' => 'select',
             'label' => $this->trans('Category root', [], 'Admin.Catalog.Feature'),
             'desc' => $this->trans('This is the root category of the store that you\'ve created. To define a new root category for your store, [1]please click here[/1].', [
+                '_raw' => true,
                 '[1]' => '<a href="' . $this->context->link->getAdminLink('AdminCategories') . '&addcategoryroot" target="_blank">',
                 '[/1]' => '</a>',
             ], 'Admin.Shopparameters.Help'),
@@ -653,7 +680,12 @@ class AdminShopControllerCore extends AdminController
     }
 
     /**
-     * Object creation.
+     * Object creation
+     *
+     * @return Shop|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function processAdd()
     {

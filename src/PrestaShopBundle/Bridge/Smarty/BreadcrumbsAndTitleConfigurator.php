@@ -68,34 +68,33 @@ class BreadcrumbsAndTitleConfigurator implements ConfiguratorInterface
      */
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
-        $tabs = Tab::recursiveTab($controllerConfiguration->id, []);
+        $tabs = Tab::recursiveTab($controllerConfiguration->tabId, []);
 
         if (!empty($tabs[0])) {
             $this->addMetaTitle($controllerConfiguration, $tabs[0]['name']);
         }
 
-        $breadcrumbs = $this->getBreadcrumbs($controllerConfiguration->id);
+        $breadcrumbs = $this->getBreadcrumbs($controllerConfiguration->tabId);
 
         $controllerConfiguration->breadcrumbs[] = $breadcrumbs['tab']['name'] ?? '';
 
-        $controllerConfiguration->templatesVars['breadcrumbs2'] = $breadcrumbs;
-        $controllerConfiguration->templatesVars['quick_access_current_link_name'] = Tools::safeOutput($breadcrumbs['tab']['name'] . (isset($breadcrumbs['action']) ? ' - ' . $breadcrumbs['action']['name'] : ''));
-        $controllerConfiguration->templatesVars['quick_access_current_link_icon'] = $breadcrumbs['container']['icon'];
+        $controllerConfiguration->templateVars['breadcrumbs2'] = $breadcrumbs;
+        $controllerConfiguration->templateVars['quick_access_current_link_name'] = Tools::safeOutput($breadcrumbs['tab']['name'] . (isset($breadcrumbs['action']) ? ' - ' . $breadcrumbs['action']['name'] : ''));
+        $controllerConfiguration->templateVars['quick_access_current_link_icon'] = $breadcrumbs['container']['icon'];
 
         $navigationPipe = $this->configuration->get('PS_NAVIGATION_PIPE') ?: '>';
-        $controllerConfiguration->templatesVars['navigationPipe'] = $navigationPipe;
+        $controllerConfiguration->templateVars['navigationPipe'] = $navigationPipe;
     }
 
     /**
      * Get breadcrumbs configuration from tabs.
      *
-     * @param int $id
+     * @param int $tabId
      *
      * @return array
      */
-    public function getBreadcrumbs(int $id): array
+    public function getBreadcrumbs(int $tabId): array
     {
-        $tabId = $id;
         $tabs = Tab::recursiveTab($tabId, []);
 
         $dummy = ['name' => '', 'href' => '', 'icon' => ''];

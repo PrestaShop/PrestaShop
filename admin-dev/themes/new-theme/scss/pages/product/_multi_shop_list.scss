@@ -1,0 +1,80 @@
+.product-shop-list {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.product-shop-details-toggle {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  cursor: pointer;
+
+  &:hover {
+    color: $primary;
+  }
+
+  &::before {
+    font-family: "Material Icons", Arial, Verdana, Tahoma, sans-serif;
+    content: "expand_more";
+  }
+}
+
+.loading-shop-row {
+  .product-shop-details-toggle {
+    &:hover {
+      color: $gray-600;
+    }
+
+    &::before {
+      cursor: progress;
+      content: "pending";
+    }
+  }
+}
+
+.grid table.grid-table tbody tr.expanded-shop-row:hover,
+.expanded-shop-row {
+  background-color: $light-blue;
+
+  .product-shop-details-toggle {
+    &::before {
+      content: "expand_less";
+    }
+  }
+
+  // Only four columns are kept visible
+  td:not(.column-associated_shops):not(.column-id_product):not(.column-bulk):not(.column-actions) {
+    font-size: 0;
+    pointer-events: none;
+    cursor: default;
+
+    * {
+      visibility: hidden;
+    }
+  }
+}
+
+.shop-preview-row {
+  background-color: $light-gray;
+
+  .shop-name-column-content {
+    display: flex;
+
+    .shop-name-text {
+      display: inline-block;
+    }
+
+    .shop-selector-color {
+      display: inline-block;
+      width: 1.25rem;
+      min-width: 1.25rem;
+      height: 1.25rem;
+      min-height: 1.25rem;
+      margin-right: 0.75rem;
+    }
+  }
+}

@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Configuration;
+use Country;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
@@ -99,5 +100,13 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
             'PS_SEARCH_INDEXATION',
             $status
         );
+    }
+
+    /**
+     * @Given /^shop configuration for default shop is set to (.+)$/
+     */
+    public function shopConfigurationSetDefaultCountry(string $isoCode): void
+    {
+        $this->setConfiguration('PS_COUNTRY_DEFAULT', Country::getByIso($isoCode));
     }
 }

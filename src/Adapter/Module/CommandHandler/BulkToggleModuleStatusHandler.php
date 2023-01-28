@@ -75,8 +75,7 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
     public function handle(BulkToggleModuleStatusCommand $command): void
     {
         foreach ($command->getModules() as $moduleName) {
-            $module = Module::getInstanceByName($moduleName);
-            if (!Validate::isLoadedObject($module) || !$this->moduleManager->isInstalled($moduleName)) {
+            if ($this->isDisablingAlreadyDisabledModule($command->getExpectedStatus(), $moduleName) || !Validate::isLoadedObject(Module::getInstanceByName($moduleName))) {
                 continue;
             }
 
@@ -107,5 +106,10 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
         //    So after this loop we clear the caches (especially Symfony one but it's safer to clear them all).
         //    If you don't the modification of the status will be ignored even if the state of the DB has changed.
         $this->cacheClearer->clear();
+    }
+
+    private function isDisablingAlreadyDisabledModule(bool $expectedStatus, string $moduleName): bool
+    {
+        return !$expectedStatus && !$this->moduleManager->isInstalledAndActive($moduleName);
     }
 }

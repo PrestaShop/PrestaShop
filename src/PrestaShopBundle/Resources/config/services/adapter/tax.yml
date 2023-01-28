@@ -5,10 +5,13 @@ services:
   prestashop.adapter.tax.ecotax.ecotax_resetter:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\Ecotax\ProductEcotaxResetter'
 
-  prestashop.adapter.tax.tax_computer:
-    class: 'PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
+  PrestaShop\PrestaShop\Adapter\Tax\TaxComputer:
     arguments:
-      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
+      - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository'
+
+  prestashop.adapter.tax.tax_computer:
+    alias: PrestaShop\PrestaShop\Adapter\Tax\TaxComputer
+    deprecated: ~
 
   # Command handlers
   prestashop.adapter.tax.command_handler.delete_tax_handler:

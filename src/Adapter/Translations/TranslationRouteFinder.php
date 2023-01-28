@@ -206,10 +206,10 @@ class TranslationRouteFinder
     {
         $module = $this->moduleRepository->getModule($moduleName);
 
-        if (!($module instanceof Module)) {
+        if (!($module->getInstance() instanceof Module)) {
             throw new InvalidModuleException($moduleName);
         }
 
-        return $module->isUsingNewTranslationSystem();
+        return $module->getInstance()->isUsingNewTranslationSystem();
     }
 }

@@ -54,8 +54,6 @@ export default class Router {
         .find('body')
         .data('base-url'),
     );
-
-    return this;
   }
 
   /**

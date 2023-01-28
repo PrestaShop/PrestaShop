@@ -149,7 +149,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         if ($settingForm->isSubmitted()) {
             if (!$errors = $handler->save($settingForm->getData())) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
             } else {
                 $this->flashErrors($errors);
             }
@@ -182,7 +182,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_requests_index');
             }
@@ -228,7 +228,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             $result = $this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_requests_index');
             }
@@ -307,7 +307,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleException($e));

@@ -17,7 +17,7 @@ Feature: Update product details from Back Office (BO)
       | ean13          |       |
       | mpn            |       |
       | reference      |       |
-    When I update product "product1" details with following values:
+    When I update product "product1" with following values:
       | isbn      | 978-3-16-148410-0 |
       | upc       | 72527273070       |
       | ean13     | 978020137962      |
@@ -39,7 +39,7 @@ Feature: Update product details from Back Office (BO)
       | ean13          | 978020137962      |
       | mpn            | mpn1              |
       | reference      | ref1              |
-    When I update product "product1" details with following values:
+    When I update product "product1" with following values:
       | isbn |  |
     Then product "product1" should have following details:
       | product detail | value        |
@@ -60,7 +60,7 @@ Feature: Update product details from Back Office (BO)
       | ean13          |       |
       | mpn            |       |
       | reference      |       |
-    When I update product "product2" details with following values:
+    When I update product "product2" with following values:
       | mpn | this is more than forty characters long string |
     Then I should get error that product mpn is invalid
     And product "product2" should have following details:

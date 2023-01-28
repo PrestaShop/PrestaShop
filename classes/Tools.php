@@ -30,20 +30,24 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Security\Hashing;
+use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
+use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 class ToolsCore
 {
-    const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
-    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+    public const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+    public const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
-    public const PASSWORDGEN_FLAG_NUMERIC = 'NUMERIC';
-    public const PASSWORDGEN_FLAG_NO_NUMERIC = 'NO_NUMERIC';
-    public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
-    public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
+    public const PASSWORDGEN_FLAG_NUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_NUMERIC;
+    public const PASSWORDGEN_FLAG_NO_NUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_NO_NUMERIC;
+    public const PASSWORDGEN_FLAG_RANDOM = PasswordGenerator::PASSWORDGEN_FLAG_RANDOM;
+    public const PASSWORDGEN_FLAG_ALPHANUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_ALPHANUMERIC;
 
     public const LANGUAGE_EXTRACTOR_REGEXP = '#(?<=-)\w\w|\w\w(?!-)#';
 
@@ -95,43 +99,11 @@ class ToolsCore
      */
     public static function passwdGen($length = 8, $flag = self::PASSWORDGEN_FLAG_ALPHANUMERIC)
     {
-        $length = (int) $length;
-
-        if ($length <= 0) {
+        try {
+            return (new PasswordGenerator(new OpenSSL()))->generatePassword($length, $flag);
+        } catch (InvalidArgumentException $exception) {
             return false;
         }
-
-        switch ($flag) {
-            case static::PASSWORDGEN_FLAG_NUMERIC:
-                $str = '0123456789';
-
-                break;
-            case static::PASSWORDGEN_FLAG_NO_NUMERIC:
-                $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-                break;
-            case static::PASSWORDGEN_FLAG_RANDOM:
-                $num_bytes = (int) ceil($length * 0.75);
-                $bytes = self::getBytes($num_bytes);
-
-                return substr(rtrim(base64_encode($bytes), '='), 0, $length);
-            case static::PASSWORDGEN_FLAG_ALPHANUMERIC:
-            default:
-                $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-                break;
-        }
-
-        $bytes = Tools::getBytes($length);
-        $position = 0;
-        $result = '';
-
-        for ($i = 0; $i < $length; ++$i) {
-            $position = ($position + ord($bytes[$i])) % strlen($str);
-            $result .= $str[$position];
-        }
-
-        return $result;
     }
 
     /**
@@ -145,19 +117,11 @@ class ToolsCore
      */
     public static function getBytes($length)
     {
-        $length = (int) $length;
-
-        if ($length <= 0) {
+        try {
+            return (new OpenSSL())->getBytes($length);
+        } catch (\Exception $e) {
             return false;
         }
-
-        $bytes = openssl_random_pseudo_bytes($length, $cryptoStrong);
-
-        if ($cryptoStrong === true) {
-            return $bytes;
-        }
-
-        return false;
     }
 
     /**
@@ -264,8 +228,7 @@ class ToolsCore
      */
     public static function getShopProtocol()
     {
-        $protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS'])
-            && Tools::strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+        $protocol = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
 
         return $protocol;
     }
@@ -705,7 +668,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
         if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
-            $currency = Currency::getCurrencyInstance((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency = Currency::getCurrencyInstance(Currency::getDefaultCurrencyId());
         }
 
         $cookie->id_currency = (int) $currency->id;
@@ -850,7 +813,7 @@ class ToolsCore
      */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {
-        $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $default_currency = Currency::getDefaultCurrencyId();
 
         if (!$context) {
             $context = Context::getContext();
@@ -889,14 +852,14 @@ class ToolsCore
         }
 
         if ($currency_from === null) {
-            $currency_from = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_from = Currency::getDefaultCurrency();
         }
 
         if ($currency_to === null) {
-            $currency_to = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_to = Currency::getDefaultCurrency();
         }
 
-        if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
+        if ($currency_from->id == Currency::getDefaultCurrencyId()) {
             $amount *= $currency_to->conversion_rate;
         } else {
             $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
@@ -1244,7 +1207,7 @@ class ToolsCore
      */
     public static function hash($passwd)
     {
-        return md5(_COOKIE_KEY_ . $passwd);
+        return (new Hashing())->hash($passwd, _COOKIE_KEY_);
     }
 
     /**
@@ -1272,7 +1235,7 @@ class ToolsCore
      */
     public static function hashIV($data)
     {
-        return md5(_COOKIE_IV_ . $data);
+        return (new Hashing())->hash($data, _COOKIE_IV_);
     }
 
     /**
@@ -1370,6 +1333,8 @@ class ToolsCore
     /**
      * Return the friendly url from the provided string.
      *
+     * @deprecated since 8.1
+     *
      * @param string $str
      * @param bool $utf8_decode (deprecated)
      *
@@ -1377,6 +1342,11 @@ class ToolsCore
      */
     public static function link_rewrite($str, $utf8_decode = null)
     {
+        @trigger_error(
+            'This function is deprecated, use Tools::str2url($str) instead.',
+            E_USER_DEPRECATED
+        );
+
         if ($utf8_decode !== null) {
             Tools::displayParameterAsDeprecated('utf8_decode');
         }
@@ -1394,45 +1364,7 @@ class ToolsCore
      */
     public static function str2url($str)
     {
-        static $array_str = [];
-        static $allow_accented_chars = null;
-
-        if (!is_string($str)) {
-            return false;
-        }
-
-        if (isset($array_str[$str])) {
-            return $array_str[$str];
-        }
-
-        if ($str == '') {
-            return '';
-        }
-
-        if ($allow_accented_chars === null) {
-            $allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
-        }
-
-        $return_str = trim($str);
-        $return_str = mb_strtolower($return_str, 'UTF-8');
-
-        if (!$allow_accented_chars) {
-            $return_str = Tools::replaceAccentedChars($return_str);
-        }
-
-        // Remove all non-whitelist chars.
-        if ($allow_accented_chars) {
-            $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
-        } else {
-            $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/', '', $return_str);
-        }
-
-        $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
-        $return_str = str_replace([' ', '/'], '-', $return_str);
-
-        $array_str[$str] = $return_str;
-
-        return $return_str;
+        return (new StringModifier())->str2url((string) $str);
     }
 
     /**
@@ -1444,13 +1376,7 @@ class ToolsCore
      */
     public static function replaceAccentedChars($str)
     {
-        static $transliterator;
-
-        if (!$transliterator) {
-            $transliterator = Transliterator::create('Any-Latin; Latin-ASCII');
-        }
-
-        return $transliterator->transliterate($str);
+        return (new StringModifier())->replaceAccentedChars($str);
     }
 
     /**
@@ -2228,12 +2154,22 @@ class ToolsCore
     }
 
     /**
+     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
+     *
      * @param string $hex
      *
      * @return float|int|string
      */
     public static function getBrightness($hex)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (Tools::strtolower($hex) == 'transparent') {
             return '129';
         }
@@ -2251,8 +2187,19 @@ class ToolsCore
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 
+    /**
+     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
+     */
     public static function isBright($hex)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (null === self::$colorBrightnessCalculator) {
             self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
         }
@@ -2474,7 +2421,9 @@ class ToolsCore
                 fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:' . $uri['physical'] . ']' . PHP_EOL);
 
                 // Webservice
-                fwrite($write_fd, 'RewriteRule ^api(?:/(.*))?$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]' . "\n\n");
+                fwrite($write_fd, 'RewriteRule ^api(?:/(.*))?$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]' . PHP_EOL);
+                // upload folder
+                fwrite($write_fd, 'RewriteRule ^upload/.+$ %{ENV:REWRITEBASE}index.php [QSA,L]' . "\n\n");
 
                 if (!$rewrite_settings) {
                     $rewrite_settings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
@@ -2503,37 +2452,34 @@ class ToolsCore
                     if (Configuration::get('PS_LEGACY_IMAGES')) {
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]' . PHP_EOL);
+                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+\-[a-z0-9]+\-[-\w]*)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]' . PHP_EOL);
+                        fwrite($write_fd, 'RewriteRule ^([\d]+(?:\-[\d]+){1,2})/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
                     }
 
                     // Rewrite product images < 10 millions
+                    $path_components = [];
                     for ($i = 1; $i <= 7; ++$i) {
-                        $img_path = $img_name = '';
-                        for ($j = 1; $j <= $i; ++$j) {
-                            $img_path .= '$' . $j . '/';
-                            $img_name .= '$' . $j;
-                        }
-                        $img_name .= '$' . $j;
+                        $path_components[] = '$' . ($i + 1); // paths start on 2
+                        $path = implode('/', $path_components);
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^' . str_repeat('([0-9])', $i) . '(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/' . $img_path . $img_name . '$' . ($j + 1) . ".jpg [L]\n");
+                        fwrite($write_fd, 'RewriteRule ^(' . str_repeat('([\d])', $i) . '(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/' . $path . '/$1$' . ($i + 2) . " [L]\n");
                     }
                     fwrite($write_fd, $media_domains);
                     fwrite($write_fd, $domain_rewrite_cond);
-                    fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]' . PHP_EOL);
+                    fwrite($write_fd, 'RewriteRule ^c/([\d]+)(\-[\.*\w-]*)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/c/$1$2$3 [L]' . PHP_EOL);
                     fwrite($write_fd, $media_domains);
                     fwrite($write_fd, $domain_rewrite_cond);
-                    fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]' . PHP_EOL);
+                    fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[\d]+)?/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/c/$1$2$3 [L]' . PHP_EOL);
                 }
 
                 fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
                 if (Shop::isFeatureActive()) {
                     fwrite($write_fd, $domain_rewrite_cond);
                 }
-                fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]' . PHP_EOL);
+                fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ %{ENV:REWRITEBASE}js/jquery/plugins/fancybox/images/$1.$2 [L]' . PHP_EOL);
             }
             // Redirections to dispatcher
             if ($rewrite_settings) {
@@ -2830,7 +2776,15 @@ FileETag none
 
     public static function generateIndex()
     {
-        PrestaShopAutoload::getInstance()->generateIndex();
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1. Use PrestaShop\Autoload\PrestashopAutoload instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
+        \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
     }
 
     /**

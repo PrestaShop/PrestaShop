@@ -41,15 +41,9 @@
   {% endif %}
 
   {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
-        employeeForm: employeeForm,
-        level: level,
-        errorMessage: errorMessage,
-        isRestrictedAccess: isRestrictedAccess,
-        superAdminProfileId: superAdminProfileId,
-        getTabsUrl: getTabsUrl,
-        avatarUrl: editableEmployee.avatarUrl
-      } %}
-
+    employeeForm: employeeForm,
+    isRestrictedAccess: isRestrictedAccess
+  } %}
 {% endblock %}
 
 {% block javascripts %}

@@ -25,9 +25,9 @@
  */
 class OrderInvoiceCore extends ObjectModel
 {
-    const TAX_EXCL = 0;
-    const TAX_INCL = 1;
-    const DETAIL = 2;
+    public const TAX_EXCL = 0;
+    public const TAX_INCL = 1;
+    public const DETAIL = 2;
 
     /** @var int */
     public $id_order;

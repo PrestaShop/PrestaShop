@@ -146,7 +146,7 @@ class OrderReturnCore extends ObjectModel
         return (int) ($data['total']);
     }
 
-    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null)
+    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null, int $idOrderReturn = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -156,6 +156,7 @@ class OrderReturnCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'order_return`
 		WHERE `id_customer` = ' . (int) $customer_id .
         ($order_id ? ' AND `id_order` = ' . (int) $order_id : '') .
+        ($idOrderReturn ? ' AND `id_order_return` = ' . (int) $idOrderReturn : '') .
         ($no_denied ? ' AND `state` != 4' : '') . '
 		ORDER BY `date_add` DESC');
         foreach ($data as $k => $or) {

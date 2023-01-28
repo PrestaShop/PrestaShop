@@ -112,11 +112,7 @@ abstract class ModuleAdminControllerCore extends AdminController
                 $class = get_class($this);
             }
 
-            $translated = Translate::getModuleTranslation($this->module->name, $string, $class, null, $addslashes);
-        }
-
-        if ($htmlentities) {
-            $translated = htmlspecialchars($translated, ENT_QUOTES, 'utf-8');
+            $translated = Translate::getModuleTranslation($this->module->name, $string, $class, null, $addslashes, null, true, $htmlentities);
         }
 
         return $translated;

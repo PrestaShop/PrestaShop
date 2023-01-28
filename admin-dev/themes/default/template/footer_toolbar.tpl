@@ -71,7 +71,7 @@
     {if isset($toolbar_btn['save-and-stay'])}
     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="caret"></span>
-      <span class="sr-only">{l s='Toggle Dropdown' d='Admin.Modules.Feature'}</span>
+      <span class="sr-only">{l s='Toggle dropdown' d='Admin.Modules.Feature'}</span>
     </button>
     <ul class="dropdown-menu">
       <li>

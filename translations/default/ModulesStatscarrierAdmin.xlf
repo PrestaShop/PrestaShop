@@ -7,9 +7,9 @@
         <target>Carrier distribution</target>
         <note>Line: 46</note>
       </trans-unit>
-      <trans-unit id="2e30734499b8dca052626a5145679eff">
-        <source>Adds a graph displaying each carriers' distribution to the Stats dashboard.</source>
-        <target>Adds a graph displaying each carriers' distribution to the Stats dashboard.</target>
+      <trans-unit id="d2297e4ef285a4dd7c1a60873bfcea38">
+        <source>Enrich your stats, add a pie chart illustrating your carriers’ distribution.</source>
+        <target>Enrich your stats, add a pie chart illustrating your carriers’ distribution.</target>
         <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="ff61af405aa570a9000e6ba2da39857a">
@@ -26,11 +26,6 @@
         <source>Percentage of orders listed by carrier.</source>
         <target>Percentage of orders listed by carrier.</target>
         <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="d2297e4ef285a4dd7c1a60873bfcea38">
-        <source>Enrich your stats, add a pie chart illustrating your carriers’ distribution.</source>
-        <target>Enrich your stats, add a pie chart illustrating your carriers’ distribution.</target>
-        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>

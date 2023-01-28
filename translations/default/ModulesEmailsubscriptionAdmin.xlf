@@ -7,10 +7,10 @@
         <target>Newsletter subscription</target>
         <note>Line: 98</note>
       </trans-unit>
-      <trans-unit id="10ae246e682f91bb896dd1d8405514ed">
-        <source>Adds a form for newsletter subscription.</source>
-        <target>Adds a form for newsletter subscription.</target>
-        <note>Line: 67</note>
+      <trans-unit id="37ffc12cc52151379284a1ce98959855">
+        <source>Keep in touch with your customers the way you want, add a form to the homepage of your store and allow all the curious to subscribe to your newsletter.</source>
+        <target>Keep in touch with your customers the way you want, add a form to the homepage of your store and allow all the curious to subscribe to your newsletter.</target>
+        <note>Line: 99</note>
       </trans-unit>
       <trans-unit id="396c88991101b5ca362932952293d291">
         <source>Are you sure that you want to delete all of your contacts?</source>
@@ -21,6 +21,11 @@
         <source>Subscribed</source>
         <target>Subscribed</target>
         <note>Line: 296</note>
+      </trans-unit>
+      <trans-unit id="20d956f54e022848a3977b02d8498f78">
+        <source>Iso language</source>
+        <target>Iso language</target>
+        <note>Line: 302</note>
       </trans-unit>
       <trans-unit id="ec59738d441f28011a81e62bdcea6200">
         <source>Subscribed on</source>
@@ -187,11 +192,6 @@
         <target>No result found!</target>
         <note>Line: 1316</note>
       </trans-unit>
-      <trans-unit id="9896806b3fb40a73bdda4781f61052bf">
-        <source>-- Select associated page --</source>
-        <target>-- Select associated page --</target>
-        <note>Line: 1300</note>
-      </trans-unit>
       <trans-unit id="d2bea8f0552d424dcb7180b873eb7b3a">
         <source>Newsletter subscription: no email to delete, this customer has not registered.</source>
         <target>Newsletter subscription: no email to delete, this customer has not registered.</target>
@@ -201,16 +201,6 @@
         <source>Newsletter subscription: no email to export, this customer has not registered.</source>
         <target>Newsletter subscription: no email to export, this customer has not registered.</target>
         <note>Line: 1460</note>
-      </trans-unit>
-      <trans-unit id="20d956f54e022848a3977b02d8498f78">
-        <source>Iso language</source>
-        <target>Iso language</target>
-        <note>Line: 302</note>
-      </trans-unit>
-      <trans-unit id="37ffc12cc52151379284a1ce98959855">
-        <source>Keep in touch with your customers the way you want, add a form to the homepage of your store and allow all the curious to subscribe to your newsletter.</source>
-        <target>Keep in touch with your customers the way you want, add a form to the homepage of your store and allow all the curious to subscribe to your newsletter.</target>
-        <note>Line: 99</note>
       </trans-unit>
     </body>
   </file>

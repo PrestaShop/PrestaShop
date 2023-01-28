@@ -4,8 +4,13 @@ on:
     - cron: '0 23 * * *'
   workflow_dispatch:
 
+permissions: { }
 jobs:
   js-routing-dump:
+    permissions:
+      contents: write   #   to create branch (peter-evans/create-pull-request)
+      pull-requests: write   #   to create a PR (peter-evans/create-pull-request)
+
     runs-on: ubuntu-latest
     name: Update JS Routing
     strategy:
@@ -34,6 +39,8 @@ jobs:
         with:
           php-version: ${{ env.PHP_VERSION }}
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
@@ -43,7 +50,7 @@ jobs:
           mysql root password: 'password'
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -51,7 +58,7 @@ jobs:
         run: npm install -g npm@7
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -61,11 +68,10 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Node Directory
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -73,7 +79,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}

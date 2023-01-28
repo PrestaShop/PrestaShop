@@ -2,35 +2,38 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.product.pack.repository.product_pack_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository
-
-  prestashop.adapter.product.pack.update.product_pack_updater:
-    class: PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater
+  PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository:
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.product.pack.repository.product_pack_repository'
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
 
-  prestashop.adapter.product.pack.command_handler.set_pack_products_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\SetPackProductsHandler
+  PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater:
     arguments:
-      - '@prestashop.adapter.product.pack.update.product_pack_updater'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
+
+  PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\SetPackProductsHandler:
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand
 
-  prestashop.adapter.product.pack.command_handler.remove_all_products_from_pack_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\RemoveAllProductsFromPackHandler
+  PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\RemoveAllProductsFromPackHandler:
     arguments:
-      - '@prestashop.adapter.product.pack.update.product_pack_updater'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand
 
-  prestashop.adapter.product.pack.command_handler.get_packed_products_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsHandler
+  PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsHandler:
     arguments:
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
+      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
+      - '@translator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts

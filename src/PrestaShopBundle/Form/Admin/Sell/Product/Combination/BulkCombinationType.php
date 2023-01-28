@@ -44,7 +44,10 @@ class BulkCombinationType extends TranslatorAwareType
     {
         $builder
             ->add('stock', BulkCombinationStockType::class)
-            ->add('price', BulkCombinationPriceType::class)
+            ->add('price', BulkCombinationPriceType::class, [
+                'product_id' => $options['product_id'],
+                'country_id' => $options['country_id'],
+            ])
             ->add('references', BulkCombinationReferencesType::class)
             ->add('images', BulkCombinationImagesType::class, [
                 'label' => $this->trans('Images', 'Admin.Global'),
@@ -59,15 +62,19 @@ class BulkCombinationType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'label' => false,
-                'label_subtitle' => $this->trans('You can bulk edit the selected combinations by enabling and filling each field that needs update.', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('You can bulk edit the selected combinations by enabling and filling each field that needs to be updated.', 'Admin.Catalog.Feature'),
                 'expand_first' => false,
                 'display_one' => false,
                 'required' => false,
                 'attr' => [
                     'class' => 'bulk-combination-form',
                 ],
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig',
             ])
-            ->setRequired(['product_id'])
+            ->setRequired([
+                'product_id',
+                'country_id',
+            ])
             ->setAllowedTypes('product_id', 'int')
         ;
     }

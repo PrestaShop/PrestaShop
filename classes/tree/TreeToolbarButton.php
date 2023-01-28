@@ -25,7 +25,7 @@
  */
 abstract class TreeToolbarButtonCore
 {
-    const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
+    public const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 
     protected $_attributes;
     private $_context;

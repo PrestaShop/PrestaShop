@@ -29,8 +29,8 @@ use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
 
 class AdminSearchControllerCore extends AdminController
 {
-    const TOKEN_CHECK_START_POS = 34;
-    const TOKEN_CHECK_LENGTH = 8;
+    public const TOKEN_CHECK_START_POS = 34;
+    public const TOKEN_CHECK_LENGTH = 8;
 
     /**
      * @var string
@@ -101,7 +101,7 @@ class AdminSearchControllerCore extends AdminController
             /* Product research */
             if (!$searchType || $searchType == 1) {
                 /* Handle product ID */
-                if ($searchType == 1 && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
+                if ($searchType == 1 && Validate::isUnsignedInt((int) $this->query)) {
                     $product = new Product((int) $this->query);
                     if (Validate::isLoadedObject($product)) {
                         Tools::redirectAdmin('index.php?tab=AdminProducts&id_product=' . (int) ($product->id) . '&token=' . Tools::getAdminTokenLite('AdminProducts'));
@@ -116,7 +116,7 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 2 || $searchType == 6) {
                 if (!$searchType || $searchType == 2) {
                     /* Handle customer ID */
-                    if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
+                    if ($searchType && Validate::isUnsignedInt((int) $this->query)) {
                         $customer = new Customer((int) $this->query);
                         if (Validate::isLoadedObject($customer)) {
                             Tools::redirectAdmin($this->context->link->getAdminLink(
@@ -142,7 +142,7 @@ class AdminSearchControllerCore extends AdminController
 
             /* Order */
             if (!$searchType || $searchType == 3) {
-                if (Validate::isUnsignedInt(trim($this->query)) && (int) $this->query && Validate::isLoadedObject($order = new Order((int) $this->query))) {
+                if (Validate::isUnsignedInt(trim($this->query)) && Validate::isLoadedObject($order = new Order((int) $this->query))) {
                     if ($searchType == 3) {
                         Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
                     } else {
@@ -180,14 +180,23 @@ class AdminSearchControllerCore extends AdminController
             /* Invoices */
             if ($searchType == 4) {
                 if ($invoice = OrderInvoice::getInvoiceByNumber($this->query)) {
-                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf') . '&submitAction=generateInvoicePDF&id_order=' . (int) ($invoice->id_order));
+                    Tools::redirectAdmin(
+                        $this->context->link->getAdminLink(
+                            'AdminPdf',
+                            true,
+                            [
+                                'route' => 'admin_orders_generate_invoice_pdf',
+                                'orderId' => (int) ($invoice->id_order),
+                            ]
+                        )
+                    );
                 }
                 $this->errors[] = $this->trans('No invoice was found with this ID:', [], 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
             }
 
             /* Cart */
             if ($searchType == 5) {
-                if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && Validate::isLoadedObject($cart = new Cart((int) $this->query))) {
+                if (Validate::isUnsignedInt((int) $this->query) && Validate::isLoadedObject($cart = new Cart((int) $this->query))) {
                     Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int) ($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int) (Tab::getIdFromClassName('AdminCarts')) . (int) $this->context->employee->id));
                 }
                 $this->errors[] = $this->trans('No cart was found with this ID:', [], 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
@@ -247,7 +256,7 @@ class AdminSearchControllerCore extends AdminController
                 || (isset($module->displayName) && stripos($module->displayName, $this->query) !== false)
                 || (isset($module->description) && stripos($module->description, $this->query) !== false)
             ) {
-                $module->linkto = 'index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules');
+                $module->linkto = Context::getContext()->link->getAdminLink('ADMINMODULESSF') . '&find=' . $module->name;
                 $this->_list['modules'][] = $module;
             }
         }
@@ -373,9 +382,7 @@ class AdminSearchControllerCore extends AdminController
         $this->tpl_view_vars['query'] = $searchedExpression;
         $this->tpl_view_vars['show_toolbar'] = true;
 
-        if (count($this->errors)) {
-            return parent::renderView();
-        } else {
+        if (!count($this->errors)) {
             $nb_results = 0;
             foreach ($this->_list as $list) {
                 if ($list != false) {
@@ -474,11 +481,10 @@ class AdminSearchControllerCore extends AdminController
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
             }
-
-            $this->getSearchPanels($searchedExpression);
-
-            return parent::renderView();
         }
+        $this->getSearchPanels($searchedExpression);
+
+        return parent::renderView();
     }
 
     protected function getSearchPanels(string $searchedExpression): void
