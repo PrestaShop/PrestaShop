@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
+/**
+ * @method delete(string $name) will be added in 9.0
+ */
 interface ModuleManagerInterface
 {
     /**
@@ -49,8 +52,6 @@ interface ModuleManagerInterface
     public function disableMobile(string $name): bool;
 
     public function reset(string $name, bool $keepData = false): bool;
-
-    public function delete(string $name): bool;
 
     public function postInstall(string $name): bool;
 
