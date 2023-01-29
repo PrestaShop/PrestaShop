@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
+use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -472,10 +474,10 @@ class MetaController extends FrameworkBundleAdminController
         }
 
         $tools = $this->get(Tools::class);
-        $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
+        $urlFileChecker = $this->get(UrlFileCheckerInterface::class);
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
-        $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
+        $helperBlockLinkProvider = $this->get(DocumentationLinkProviderInterface::class);
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(

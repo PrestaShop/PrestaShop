@@ -2,6 +2,16 @@ services:
   _defaults:
     public: true
 
+  PrestaShopBundle\Twig\LocaleExtension:
+    public: false
+    autoconfigure: true
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
+
+  prestashop.adapter.twig.locale_extension:
+    alias: PrestaShop\PrestaShop\Adapter\Twig\LocaleExtension
+    deprecated: ~
+
   prestashop.twig.modules.loader:
     class: 'PrestaShopBundle\Twig\Locator\ModuleTemplateLoader'
     arguments:
@@ -64,10 +74,8 @@ services:
 
   prestashop.bundle.twig.extension.documentation_link_provider_extension:
     class: 'PrestaShopBundle\Twig\Extension\DocumentationLinkExtension'
-    arguments:
-      - '@prestashop.core.util.helper_card.documentation_link_provider'
-    tags:
-      - { name: twig.extension }
+    autowire: true
+    autoconfigure: true
 
   prestashop.twig.extension.context_iso_code_provider_extension:
     class: PrestaShopBundle\Twig\ContextIsoCodeProviderExtension
@@ -83,7 +91,7 @@ services:
     class: PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension
     arguments:
       - '@twig.extension.routing'
-      - '@prestashop.core.uti.back_url_provider'
+      - '@PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider'
       - '@=service("request_stack") ? service("request_stack") : null'
     public: true
     tags:
@@ -92,7 +100,7 @@ services:
   prestashop.bundle.twig.extension.color_brightness_calculator_extension:
     class: PrestaShopBundle\Twig\Extension\ColorBrightnessCalculatorExtension
     arguments:
-      - '@prestashop.core.util.color_brightness_calculator'
+      - '@PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator'
     tags:
       - { name: twig.extension }
 

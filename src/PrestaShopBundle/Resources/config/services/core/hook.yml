@@ -23,10 +23,9 @@ services:
 
   prestashop.core.hook.generator.hook_description_generator:
     class: 'PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator'
+    autowire: true
     arguments:
-      - '%hook_descriptions%'
-      - '@prestashop.core.util.string.string_validator'
-      - '@PrestaShop\PrestaShop\Core\Util\String\StringModifier'
+      $hookDescriptions: '%hook_descriptions%'
 
 parameters:
   hook_descriptions:
