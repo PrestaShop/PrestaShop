@@ -3825,10 +3825,20 @@ exit;
     /**
      * Allows to display the category description without HTML tags and slashes.
      *
+     * @deprecated since version 8.1.0, to be removed.
+     *
      * @return string
      */
     public static function getDescriptionClean($description)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. There is no replacement',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         return strip_tags(stripslashes($description));
     }
 
