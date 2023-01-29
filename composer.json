@@ -228,8 +228,7 @@
         ],
         "integration-tests": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml",
-            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml"
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml"
         ],
         "restore-test-db": [
             "@php ./tests/bin/restore-test-db.php"
