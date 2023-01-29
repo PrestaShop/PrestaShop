@@ -1,13 +1,16 @@
 services:
   _defaults:
-    public: true
+    public: false
 
-  prestashop.adapter.admin.page_preference:
-    class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
+  PrestaShop\PrestaShop\Adapter\Admin\PagePreference:
     arguments:
       - "@session"
       - !php/const _PS_MODE_DEV_
     decorates: prestashop.core.admin.page_preference_interface
+
+  prestashop.adapter.admin.page_preference:
+    alias: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
+    deprecated: ~
     public: false
 
   prestashop.adapter.legacy_db:
