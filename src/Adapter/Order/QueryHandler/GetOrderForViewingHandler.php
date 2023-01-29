@@ -223,7 +223,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderSources($order),
             $this->getLinkedOrders($order),
             $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery)),
-            $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice)),
+            $order->id_address_invoice ? $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice)) : '',
             (string) $order->note
         );
     }
@@ -233,7 +233,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      *
      * @return OrderCustomerForViewing
      */
-    private function getOrderCustomer(Order $order, OrderInvoiceAddressForViewing $invoiceAddress): OrderCustomerForViewing
+    private function getOrderCustomer(Order $order, ?OrderInvoiceAddressForViewing $invoiceAddress): OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
@@ -338,11 +338,15 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      *
      * @return OrderInvoiceAddressForViewing
      */
-    private function getOrderInvoiceAddress(Order $order): OrderInvoiceAddressForViewing
+    private function getOrderInvoiceAddress(Order $order): ?OrderInvoiceAddressForViewing
     {
         $address = new Address($order->id_address_invoice);
         $country = new Country($address->id_country);
         $stateName = '';
+
+        if (!$order->id_address_invoice) {
+            return null;
+        }
 
         if ($address->id_state) {
             $state = new State($address->id_state);
