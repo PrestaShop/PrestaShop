@@ -275,7 +275,7 @@ class MailThemeController extends FrameworkBundleAdminController
      */
     public function sendTestMailAction($theme, $layout, $locale, $module = '')
     {
-        if ($this->configuration->get('PS_MAIL_THEME') !== $theme) {
+        if ($this->getConfiguration()->get('PS_MAIL_THEME') !== $theme) {
             $this->addFlash(
                 'error',
                 $this->trans(

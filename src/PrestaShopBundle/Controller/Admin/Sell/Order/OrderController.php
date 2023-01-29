@@ -517,12 +517,12 @@ class OrderController extends FrameworkBundleAdminController
 
         $this->handleOutOfStockProduct($orderForViewing);
 
-        $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
+        $merchandiseReturnEnabled = (bool) $this->getConfiguration()->get('PS_ORDER_RETURN');
 
         /** @var OrderSiblingProviderInterface $orderSiblingProvider */
         $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
-        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNum = (int) $this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -532,7 +532,7 @@ class OrderController extends FrameworkBundleAdminController
         $metatitle = sprintf(
             '%s %s %s',
             $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
-            $this->configuration->get('PS_NAVIGATION_PIPE', '>'),
+            $this->getConfiguration()->get('PS_NAVIGATION_PIPE', '>'),
             $this->trans(
                 'Order %reference% from %firstname% %lastname%',
                 'Admin.Orderscustomers.Feature',
@@ -571,7 +571,7 @@ class OrderController extends FrameworkBundleAdminController
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
             'paginationNum' => $paginationNum,
             'paginationNumOptions' => $paginationNumOptions,
-            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
             'internalNoteForm' => $internalNoteForm->createView(),
         ]);
     }
@@ -689,7 +689,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
     {
-        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT');
         if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
             return;
         }
@@ -784,7 +784,7 @@ class OrderController extends FrameworkBundleAdminController
                 'product' => $newProduct,
                 'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
                 'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
-                'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+                'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
                 'cancelProductForm' => $cancelProductForm->createView(),
                 'orderCurrency' => $orderCurrency,
             ]);
@@ -1049,7 +1049,7 @@ class OrderController extends FrameworkBundleAdminController
             'cancelProductForm' => $cancelProductForm->createView(),
             'isColumnLocationDisplayed' => $product->getLocation() !== '',
             'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
-            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
@@ -1581,7 +1581,7 @@ class OrderController extends FrameworkBundleAdminController
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $paginationNum = $this->configuration->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNum = $this->getConfiguration()->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -1607,7 +1607,7 @@ class OrderController extends FrameworkBundleAdminController
             'paginationNum' => $paginationNum,
             'isColumnLocationDisplayed' => $isColumnLocationDisplayed,
             'isColumnRefundedDisplayed' => $isColumnRefundedDisplayed,
-            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => $this->getConfiguration()->getBoolean('PS_STOCK_MANAGEMENT'),
         ]);
     }
 
@@ -1715,7 +1715,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->configuration->set('PS_ORDER_PRODUCTS_NB_PER_PAGE', $numPerPage);
+            $this->getConfiguration()->set('PS_ORDER_PRODUCTS_NB_PER_PAGE', $numPerPage);
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],

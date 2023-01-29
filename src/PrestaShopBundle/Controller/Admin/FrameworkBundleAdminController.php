@@ -28,15 +28,15 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,6 +51,8 @@ class FrameworkBundleAdminController extends AbstractController
     public const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
+     * @deprecated since version 8.1, use $this->getConfiguration() instead
+     *
      * @var Configuration
      */
     protected $configuration;
@@ -65,6 +67,8 @@ class FrameworkBundleAdminController extends AbstractController
      */
     public function __construct()
     {
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.1 and will be removed in the next major version.', E_USER_DEPRECATED);
+
         $this->configuration = new Configuration();
     }
 
@@ -80,9 +84,17 @@ class FrameworkBundleAdminController extends AbstractController
         @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in the next major version.', E_USER_DEPRECATED);
 
         return [
-            'is_shop_context' => (new Context())->isShopContext(),
+            'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
         ];
+    }
+
+    /**
+     * @return ShopConfigurationInterface
+     */
+    protected function getConfiguration(): ShopConfigurationInterface
+    {
+        return $this->container->get('prestashop.adapter.legacy.configuration');
     }
 
     /**
@@ -185,7 +197,7 @@ class FrameworkBundleAdminController extends AbstractController
         $iso = (string) $legacyContext->getEmployeeLanguageIso();
 
         return $this->generateUrl('admin_common_sidebar', [
-            'url' => $this->get('prestashop.core.help.documentation')->generateLink($section, $iso),
+            'url' => $this->container->get(Documentation::class)->generateLink($section, $iso),
             'title' => $title,
         ]);
     }
