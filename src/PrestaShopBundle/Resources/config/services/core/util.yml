@@ -3,11 +3,12 @@ imports:
 
 services:
   _defaults:
-      autowire: true
-      public: false
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Core\Util\ArabicToLatinDigitConverter:
   PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator:
+    public: true
   PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter:
   PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter:
   PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor:
@@ -66,4 +67,3 @@ services:
     alias: PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter
     deprecated: ~
     public: true
-
