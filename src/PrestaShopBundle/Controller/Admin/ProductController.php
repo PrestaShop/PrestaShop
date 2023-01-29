@@ -655,7 +655,7 @@ class ProductController extends FrameworkBundleAdminController
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
             'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
-            'is_combination_active' => $this->getConfiguration()->combinationIsActive(),
+            'is_combination_active' => $this->getConfiguration()->getBoolean('PS_COMBINATION_FEATURE_ACTIVE'),
             'showContentHeader' => false,
             'seo_link' => $adminProductWrapper->getPreviewUrl($product, false),
             'preview_link' => $preview_url,
