@@ -1,12 +1,23 @@
 services:
   _defaults:
-    public: true
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Backup\DatabaseBackupCreator:
+  PrestaShop\PrestaShop\Adapter\Backup\BackupRepository:
+  PrestaShop\PrestaShop\Adapter\Backup\BackupRemover:
 
   prestashop.adapter.backup.database_creator:
-    class: 'PrestaShop\PrestaShop\Adapter\Backup\DatabaseBackupCreator'
+    alias: 'PrestaShop\PrestaShop\Adapter\Backup\DatabaseBackupCreator'
+    public: false
+    deprecated: ~
 
   prestashop.adapter.backup.backup_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Backup\BackupRepository'
+    alias: 'PrestaShop\PrestaShop\Adapter\Backup\BackupRepository'
+    public: false
+    deprecated: ~
 
   prestashop.adapter.backup.backup_remover:
-    class: 'PrestaShop\PrestaShop\Adapter\Backup\BackupRemover'
+    alias: 'PrestaShop\PrestaShop\Adapter\Backup\BackupRemover'
+    public: false
+    deprecated: ~
