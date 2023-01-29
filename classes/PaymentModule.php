@@ -1180,17 +1180,7 @@ abstract class PaymentModuleCore extends Module
 
                 // Set the new voucher value
                 $voucher->reduction_amount = $remainingValue;
-                if ($voucher->reduction_tax) {
-                    // Add total shipping amount only if reduction amount > total shipping
-                    if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl) {
-                        $voucher->reduction_amount -= $order->total_shipping_tax_incl;
-                    }
-                } else {
-                    // Add total shipping amount only if reduction amount > total shipping
-                    if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl) {
-                        $voucher->reduction_amount -= $order->total_shipping_tax_excl;
-                    }
-                }
+
                 if ($voucher->reduction_amount <= 0) {
                     continue;
                 }
