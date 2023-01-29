@@ -8,10 +8,6 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
 
-  prestashop.adapter.twig.locale_extension:
-    alias: PrestaShop\PrestaShop\Adapter\Twig\LocaleExtension
-    deprecated: ~
-
   prestashop.twig.modules.loader:
     class: 'PrestaShopBundle\Twig\Locator\ModuleTemplateLoader'
     arguments:
