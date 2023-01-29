@@ -104,20 +104,33 @@ class StockManager implements StockInterface
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
 
         $updatePhysicalQuantityQuery = '
-            UPDATE {table_prefix}stock_available sa
-            SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
-            WHERE sa.id_shop = ' . (int) $shopId . '
-        ';
+            UPDATE {_DB_PREFIX_}stock_available sa
+                JOIN {_DB_PREFIX_}shop s ON sa.id_shop = s.id_shop {ID_SHOP_ASSOCIATION_CLAUSE}
+                JOIN {_DB_PREFIX_}order_detail od ON sa.id_product = od.product_id {ID_PRODUCT_ASSOCIATION_CLAUSE} {ID_ORDER_ASSOCIATION_CLAUSE}
+            SET
+                sa.physical_quantity = sa.quantity + sa.reserved_quantity';
 
+        $updatePhysicalQuantityQuery = str_replace('{_DB_PREFIX_}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
+
+        $id_shop_association_clause = '';
+        if ($shopId) {
+            $id_shop_association_clause = ' AND s.id_shop = ' . $shopId;
+        }
+        $updatePhysicalQuantityQuery = str_replace('{ID_SHOP_ASSOCIATION_CLAUSE}', $id_shop_association_clause, $updatePhysicalQuantityQuery);
+
+        $id_product_association_clause = '';
         if ($idProduct) {
-            $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
+            $id_product_association_clause = ' AND sa.id_product = ' . $idProduct;
         }
+        $updatePhysicalQuantityQuery = str_replace('{ID_PRODUCT_ASSOCIATION_CLAUSE}', $id_product_association_clause, $updatePhysicalQuantityQuery);
 
+        $id_order_association_clause = '';
         if ($idOrder) {
-            $updatePhysicalQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = ' . (int) $idOrder . ')';
+            $id_order_association_clause = ' AND od.id_order = ' . $idOrder;
         }
+        $updatePhysicalQuantityQuery = str_replace('{ID_ORDER_ASSOCIATION_CLAUSE}', $id_order_association_clause, $updatePhysicalQuantityQuery);
 
-        $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
+        $updatePhysicalQuantityQuery = str_replace('{_DB_PREFIX_}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
 
         return Db::getInstance()->execute($updatePhysicalQuantityQuery);
     }
@@ -160,10 +173,10 @@ class StockManager implements StockInterface
                     WHERE (
                             o.valid = 1
                             OR (
-                        os.id_order_state != :error_state AND
-                        os.id_order_state != :cancellation_state
-                    )
-            )
+                                os.id_order_state != :error_state AND
+                                os.id_order_state != :cancellation_state
+                            )
+                        )
                         AND sa.id_product = od.product_id
                         AND sa.id_product_attribute = od.product_attribute_id
                         {ID_PRODUCT_ASSOCIATION_CLAUSE}
