@@ -43,7 +43,7 @@ use TypeError;
  * These tests need to run a symfony command with and without the context helper, so it needs to be run isolated or
  * other tests may have already fixed or mocked the context.
  *
- * @group isolatedProcess
+ * @runTestsInSeparateProcesses
  */
 class LoadLegacyClassesinCommandTest extends KernelTestCase
 {

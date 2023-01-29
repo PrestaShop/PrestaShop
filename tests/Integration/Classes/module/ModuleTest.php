@@ -35,7 +35,7 @@ use Tests\Integration\Utility\ContextMockerTrait;
 /**
  * These tests install and uninstalls modules causing the cache to be cleared. So it's better to run it isolated.
  *
- * @group isolatedProcess
+ * @runTestsInSeparateProcesses
  */
 class ModuleTest extends TestCase
 {

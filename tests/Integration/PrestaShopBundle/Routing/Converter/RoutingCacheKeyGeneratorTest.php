@@ -36,7 +36,7 @@ use Tools;
 /**
  * These tests clear the cache manually, so it's better to run it isolated.
  *
- * @group isolatedProcess
+ * @runTestsInSeparateProcesses
  */
 class RoutingCacheKeyGeneratorTest extends KernelTestCase
 {

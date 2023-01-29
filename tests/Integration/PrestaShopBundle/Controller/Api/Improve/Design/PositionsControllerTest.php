@@ -44,7 +44,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * The controller installs and uninstalls modules so it needs to clear the cache, that's why it's better isolated
  *
- * @group isolatedProcess
+ * @runTestsInSeparateProcesses
  */
 class PositionsControllerTest extends TestCase
 {
