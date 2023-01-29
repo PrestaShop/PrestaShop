@@ -67,7 +67,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     public function __construct()
     {
-        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.1 and will be removed in the next major version.', E_USER_DEPRECATED);
+        @trigger_error(__FUNCTION__ . ' is deprecated since version 8.1 and will be removed in the next major version.', E_USER_DEPRECATED);
 
         $this->configuration = new Configuration();
     }

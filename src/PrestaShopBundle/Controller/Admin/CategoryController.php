@@ -54,7 +54,7 @@ class CategoryController extends FrameworkBundleAdminController
     public function addSimpleCategoryFormAction(Request $request)
     {
         $response = new JsonResponse();
-        $commandBus = $this->get('prestashop.core.command_bus');
+        $commandBus = $this->getCommandBus();
         $tools = $this->get(Tools::class);
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $shopList = $shopContext->getShops(false, true);
