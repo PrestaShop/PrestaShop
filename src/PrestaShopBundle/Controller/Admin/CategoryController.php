@@ -59,7 +59,7 @@ class CategoryController extends FrameworkBundleAdminController
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $shopList = $shopContext->getShops(false, true);
         $currentIdShop = $shopContext->getContextShopID();
-        $defaultLanguageId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_LANG_DEFAULT');
+        $defaultLanguageId = $this->getConfiguration()->getInt('PS_LANG_DEFAULT');
 
         $form = $this->createFormBuilder()
             ->add('category', SimpleCategory::class)

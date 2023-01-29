@@ -55,7 +55,7 @@ class EmailController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, EmailLogsFilter $filters)
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
 
         $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
         $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');

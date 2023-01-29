@@ -135,7 +135,7 @@ class CombinationController extends FrameworkBundleAdminController
 
         $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
         if (empty($shopId)) {
-            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+            $shopId = $this->getConfiguration()->getInt('PS_SHOP_DEFAULT');
         }
 
         try {

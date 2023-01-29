@@ -97,7 +97,7 @@ class ThemeController extends AbstractAdminController
             'faviconPath' => $logoProvider->getFaviconPath(),
             'currentlyUsedTheme' => $themeProvider->getCurrentlyUsedTheme(),
             'notUsedThemes' => $themeProvider->getNotUsedThemes(),
-            'isDevModeOn' => $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEV_'),
+            'isDevModeOn' => $this->getConfiguration()->get('_PS_MODE_DEV_'),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'isMultiShopFeatureUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
             'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),

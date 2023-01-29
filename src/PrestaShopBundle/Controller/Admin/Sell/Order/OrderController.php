@@ -251,7 +251,7 @@ class OrderController extends FrameworkBundleAdminController
         );
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
             'currencies' => $currencies,
@@ -356,7 +356,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function exportAction(OrderFilters $filters)
     {
-        $isB2bEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_B2B_ENABLE');
+        $isB2bEnabled = $this->getConfiguration()->get('PS_B2B_ENABLE');
 
         $filters = new OrderFilters(['limit' => null] + $filters->all());
         $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
@@ -1825,7 +1825,7 @@ class OrderController extends FrameworkBundleAdminController
     public function searchProductsAction(Request $request): JsonResponse
     {
         try {
-            $defaultCurrencyId = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_CURRENCY_DEFAULT');
+            $defaultCurrencyId = (int) $this->getConfiguration()->get('PS_CURRENCY_DEFAULT');
 
             $searchPhrase = $request->query->get('search_phrase');
             $currencyId = $request->query->get('currency_id');

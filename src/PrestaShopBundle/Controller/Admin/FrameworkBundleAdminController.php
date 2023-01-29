@@ -258,7 +258,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function isDemoModeEnabled()
     {
-        return $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEMO_');
+        return $this->getConfiguration()->get('_PS_MODE_DEMO_');
     }
 
     /**
