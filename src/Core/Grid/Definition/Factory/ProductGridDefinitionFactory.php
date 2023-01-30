@@ -658,30 +658,37 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         if ($this->shopConstraintContext->getShopConstraint()->getShopId()) {
             $bulkEnableRoute = 'admin_products_v2_bulk_enable_shop';
             $bulkDisableRoute = 'admin_products_v2_bulk_disable_shop';
+            $bulkDuplicateRoute = 'admin_products_v2_bulk_duplicate_shop';
             $routeParams = [
                 'shopId' => $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue(),
             ];
             if ($this->multistoreFeature->isActive()) {
                 $bulkEnableLabel = $this->trans('Activate selection for current store', [], 'Admin.Actions');
                 $bulkDisableLabel = $this->trans('Deactivate selection for current store', [], 'Admin.Actions');
+                $duplicateLabel = $this->trans('Duplicate selection for current store', [], 'Admin.Actions');
             } else {
                 $bulkEnableLabel = $this->trans('Activate selection', [], 'Admin.Actions');
                 $bulkDisableLabel = $this->trans('Deactivate selection', [], 'Admin.Actions');
+                $duplicateLabel = $this->trans('Duplicate selection', [], 'Admin.Actions');
             }
         } elseif ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
             $bulkEnableRoute = 'admin_products_v2_bulk_enable_shop_group';
             $bulkDisableRoute = 'admin_products_v2_bulk_disable_shop_group';
+            $bulkDuplicateRoute = 'admin_products_v2_bulk_duplicate_shop_group';
             $routeParams = [
                 'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
             ];
             $bulkEnableLabel = $this->trans('Activate selection for group', [], 'Admin.Actions');
             $bulkDisableLabel = $this->trans('Deactivate selection for group', [], 'Admin.Actions');
+            $duplicateLabel = $this->trans('Duplicate selection for group', [], 'Admin.Actions');
         } else {
             $bulkEnableRoute = 'admin_products_v2_bulk_enable_all_shops';
             $bulkDisableRoute = 'admin_products_v2_bulk_disable_all_shops';
+            $bulkDuplicateRoute = 'admin_products_v2_bulk_duplicate_all_shops';
             $routeParams = [];
             $bulkEnableLabel = $this->trans('Activate selection for all stores', [], 'Admin.Actions');
             $bulkDisableLabel = $this->trans('Deactivate selection for all stores', [], 'Admin.Actions');
+            $duplicateLabel = $this->trans('Duplicate selection for all stores', [], 'Admin.Actions');
         }
 
         return (new BulkActionCollection())
@@ -705,11 +712,12 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ))
             ->add($this->buildAjaxBulkAction(
                 'bulk_duplicate_ajax',
-                'admin_products_v2_bulk_duplicate',
-                $this->trans('Duplicate selection', [], 'Admin.Actions'),
+                $bulkDuplicateRoute,
+                $duplicateLabel,
                 $this->trans('Duplicating %total% products', [], 'Admin.Actions'),
                 $this->trans('Duplicating %done% / %total% products', [], 'Admin.Actions'),
-                'content_copy'
+                'content_copy',
+                $routeParams
             ))
             ->add($this->buildAjaxBulkAction(
                 'bulk_delete_ajax',

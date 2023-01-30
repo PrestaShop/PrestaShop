@@ -833,7 +833,7 @@ class ProductController extends FrameworkBundleAdminController
      * Duplicate products in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -842,90 +842,47 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function bulkDuplicateAction(Request $request): JsonResponse
+    public function bulkDuplicateAllShopsAction(Request $request): JsonResponse
     {
-        try {
-            $this->getCommandBus()->handle(
-                new BulkDuplicateProductCommand(
-                    $this->getProductIdsFromRequest($request),
-                    ShopConstraint::allShops()
-                )
-            );
-        } catch (Exception $e) {
-            if ($e instanceof BulkProductException) {
-                return $this->jsonBulkErrors($e);
-            } else {
-                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
-            }
-        }
-
-        return $this->json(['success' => true]);
-    }
-
-    private function duplicateByShopConstraint(int $productId, ShopConstraint $shopConstraint): Response
-    {
-        try {
-            /** @var ProductId $newProductId */
-            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
-                $productId,
-                $shopConstraint
-            ));
-            $this->addFlash(
-                'success',
-                $this->trans('Successful duplication', 'Admin.Notifications.Success')
-            );
-        } catch (ProductException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_products_v2_index');
-        }
-
-        return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
+        return $this->bulkDuplicateByShopConstraint($request, ShopConstraint::allShops());
     }
 
     /**
-     * @param Request $request
+     * Duplicate products in bulk action for specific shop.
      *
-     * @return array<int, int>
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     * @param int $shopId
+     *
+     * @return JsonResponse
      */
-    private function getProductIdsFromRequest(Request $request): array
+    public function bulkDuplicateShopAction(Request $request, int $shopId): JsonResponse
     {
-        $productIds = $request->request->get('product_bulk');
-
-        if (is_numeric($productIds)) {
-            return [(int) $productIds];
-        }
-
-        if (!is_array($productIds)) {
-            return [];
-        }
-
-        foreach ($productIds as $i => $productId) {
-            $productIds[$i] = (int) $productId;
-        }
-
-        return $productIds;
+        return $this->bulkDuplicateByShopConstraint($request, ShopConstraint::shop($shopId));
     }
 
     /**
-     * @return array
+     * Duplicate products in bulk action for specific shop group.
+     *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     * @param int $shopGroupId
+     *
+     * @return JsonResponse
      */
-    private function getProductToolbarButtons(): array
+    public function bulkDuplicateShopGroupAction(Request $request, int $shopGroupId): JsonResponse
     {
-        $toolbarButtons = [];
-
-        $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),
-            'desc' => $this->trans('New product', 'Admin.Actions'),
-            'icon' => 'add_circle_outline',
-            'class' => 'btn-primary new-product-button',
-            'floating_class' => 'new-product-button',
-            'data_attributes' => [
-                'modal-title' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
-            ],
-        ];
-
-        return $toolbarButtons;
+        return $this->bulkDuplicateByShopConstraint($request, ShopConstraint::shopGroup($shopGroupId));
     }
 
     /**
@@ -1090,6 +1047,108 @@ class ProductController extends FrameworkBundleAdminController
             'productShopsForm' => $productShopsForm->createView(),
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
         ]);
+    }
+
+    /**
+     * Helper private method to duplicate some products
+     *
+     * @param Request $request
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return JsonResponse
+     */
+    private function bulkDuplicateByShopConstraint(Request $request, ShopConstraint $shopConstraint): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkDuplicateProductCommand(
+                    $this->getProductIdsFromRequest($request),
+                    $shopConstraint
+                )
+            );
+        } catch (Exception $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * Helper private method to duplicate a product
+     *
+     * @param int $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return Response
+     */
+    private function duplicateByShopConstraint(int $productId, ShopConstraint $shopConstraint): Response
+    {
+        try {
+            /** @var ProductId $newProductId */
+            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+                $productId,
+                $shopConstraint
+            ));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplication', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_products_v2_index');
+        }
+
+        return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array<int, int>
+     */
+    private function getProductIdsFromRequest(Request $request): array
+    {
+        $productIds = $request->request->get('product_bulk');
+
+        if (is_numeric($productIds)) {
+            return [(int) $productIds];
+        }
+
+        if (!is_array($productIds)) {
+            return [];
+        }
+
+        foreach ($productIds as $i => $productId) {
+            $productIds[$i] = (int) $productId;
+        }
+
+        return $productIds;
+    }
+
+    /**
+     * @return array
+     */
+    private function getProductToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),
+            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+            'class' => 'btn-primary new-product-button',
+            'floating_class' => 'new-product-button',
+            'data_attributes' => [
+                'modal-title' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
+            ],
+        ];
+
+        return $toolbarButtons;
     }
 
     /**

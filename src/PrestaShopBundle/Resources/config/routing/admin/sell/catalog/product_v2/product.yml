@@ -130,7 +130,7 @@ admin_products_v2_delete:
     productId: \d+
 
 admin_products_v2_delete_from_shop_group:
-  path: /{productId}/delete_from_shop_group/{shopGroupId}
+  path: /{productId}/delete/shop-group/{shopGroupId}
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopGroupAction
@@ -140,7 +140,7 @@ admin_products_v2_delete_from_shop_group:
     shopGroupId: \d+
 
 admin_products_v2_delete_from_shop:
-  path: /{productId}/delete_from_shop/{shopId}
+  path: /{productId}/delete/shop/{shopId}
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopAction
@@ -177,7 +177,7 @@ admin_products_v2_duplicate_shop:
     shopId: \d+
 
 admin_products_v2_duplicate_shop_group:
-  path: /{productId}/duplicate/shop_group/{shopGroupId}
+  path: /{productId}/duplicate/shop-group/{shopGroupId}
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::duplicateShopGroupAction
@@ -266,7 +266,7 @@ admin_products_v2_bulk_enable_shop:
     expose: true
 
 admin_products_v2_bulk_enable_shop_group:
-  path: /bulk-enable/shop_group/{shopGroupId}
+  path: /bulk-enable/shop-group/{shopGroupId}
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableShopGroupAction
@@ -307,7 +307,7 @@ admin_products_v2_bulk_disable_shop:
     expose: true
 
 admin_products_v2_bulk_disable_shop_group:
-  path: /bulk-disable/shop_group/{shopGroupId}
+  path: /bulk-disable/shop-group/{shopGroupId}
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableShopGroupAction
@@ -320,11 +320,11 @@ admin_products_v2_bulk_disable_shop_group:
   options:
     expose: true
 
-admin_products_v2_bulk_duplicate:
+admin_products_v2_bulk_duplicate_all_shops:
   path: /bulk-duplicate
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateAllShopsAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkduplicateSelectionproduct
@@ -332,6 +332,38 @@ admin_products_v2_bulk_duplicate:
       id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_duplicate_shop:
+  path: /bulk-duplicate/shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_duplicate_shop_group:
+  path: /bulk-duplicate/shop-group/{shopGroupId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
   options:
     expose: true
 
