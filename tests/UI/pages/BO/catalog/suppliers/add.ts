@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type SupplierData from '@data/faker/supplier';
+
+import type {Page} from 'playwright';
 
 /**
  * Add supplier page, contains functions that can be used on the page
@@ -7,6 +10,60 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddSupplier extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly descriptionDiv: string;
+
+  private readonly descriptionLangNavItemLink: (lang: string) => string;
+
+  private readonly descriptionIFrame: (id: number) => string;
+
+  private readonly homePhoneInput: string;
+
+  private readonly mobilePhoneInput: string;
+
+  private readonly addressInput: string;
+
+  private readonly secondaryAddressInput: string;
+
+  private readonly postalCodeInput: string;
+
+  private readonly cityInput: string;
+
+  private readonly countryInput: string;
+
+  private readonly selectCountryList: string;
+
+  private readonly searchCountryInput: string;
+
+  private readonly countrySearchResult: string;
+
+  private readonly stateInput: string;
+
+  private readonly logoFileInput: string;
+
+  private readonly metaTitleLangButton: string;
+
+  private readonly metaTitleLangSpan: (lang: string) => string;
+
+  private readonly metaTitleInput: (id: number) => string;
+
+  private readonly metaDescriptionTextarea: (id: number) => string;
+
+  private readonly metaKeywordsInput: (id: number) => string;
+
+  private readonly statusToggleInput: (toggle: number) => string;
+
+  private readonly taggableFieldDiv: (lang: string) => string;
+
+  private readonly deleteKeywordLink: (lang: string) => string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add supplier page
@@ -20,8 +77,8 @@ class AddSupplier extends BOBasePage {
     // Selectors
     this.nameInput = '#supplier_name';
     this.descriptionDiv = '#supplier_description';
-    this.descriptionLangNavItemLink = (lang) => `${this.descriptionDiv} ul li a[data-locale='${lang}']`;
-    this.descriptionIFrame = (id) => `#supplier_description_${id}_ifr`;
+    this.descriptionLangNavItemLink = (lang: string) => `${this.descriptionDiv} ul li a[data-locale='${lang}']`;
+    this.descriptionIFrame = (id: number) => `#supplier_description_${id}_ifr`;
     this.homePhoneInput = '#supplier_phone';
     this.mobilePhoneInput = '#supplier_mobile_phone';
     this.addressInput = '#supplier_address';
@@ -35,16 +92,16 @@ class AddSupplier extends BOBasePage {
     this.stateInput = '#supplier_id_state';
     this.logoFileInput = '#supplier_logo';
     this.metaTitleLangButton = '#supplier_meta_title_dropdown';
-    this.metaTitleLangSpan = (lang) => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title_dropdown\']'
+    this.metaTitleLangSpan = (lang: string) => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
-    this.metaTitleInput = (id) => `#supplier_meta_title_${id}`;
-    this.metaDescriptionTextarea = (id) => `#supplier_meta_description_${id}`;
-    this.metaKeywordsInput = (id) => `#supplier_meta_keyword_${id}-tokenfield`;
-    this.statusToggleInput = (toggle) => `#supplier_is_enabled_${toggle}`;
+    this.metaTitleInput = (id: number) => `#supplier_meta_title_${id}`;
+    this.metaDescriptionTextarea = (id: number) => `#supplier_meta_description_${id}`;
+    this.metaKeywordsInput = (id: number) => `#supplier_meta_keyword_${id}-tokenfield`;
+    this.statusToggleInput = (toggle: number) => `#supplier_is_enabled_${toggle}`;
 
     // Selectors for Meta keywords
-    this.taggableFieldDiv = (lang) => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = (lang) => `${this.taggableFieldDiv(lang)} a.close`;
+    this.taggableFieldDiv = (lang: string) => `div.input-group div.js-locale-${lang}`;
+    this.deleteKeywordLink = (lang: string) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 
@@ -56,9 +113,9 @@ class AddSupplier extends BOBasePage {
    * Create or edit Supplier
    * @param page {Page} Browser tab
    * @param supplierData {SupplierData} Data to set on new/edit supplier form
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async createEditSupplier(page, supplierData) {
+  async createEditSupplier(page: Page, supplierData: SupplierData): Promise<string> {
     // Fill Name
     await this.setValue(page, this.nameInput, supplierData.name);
 
@@ -111,7 +168,7 @@ class AddSupplier extends BOBasePage {
    * @param lang {string} To specify which input to empty
    * @return {Promise<void>}
    */
-  async deleteKeywords(page, lang = 'en') {
+  async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
     const closeButtons = await page.$$(this.deleteKeywordLink(lang));
 
     /* eslint-disable no-restricted-syntax */
@@ -128,7 +185,7 @@ class AddSupplier extends BOBasePage {
    * @param idLang {number} To choose which lang (1 for en, 2 for fr)
    * @return {Promise<void>}
    */
-  async addKeywords(page, keywords, idLang = 1) {
+  async addKeywords(page: Page, keywords: string[], idLang: number = 1): Promise<void> {
     /* eslint-disable no-restricted-syntax */
     for (const keyword of keywords) {
       await page.type(this.metaKeywordsInput(idLang), keyword);
@@ -143,7 +200,7 @@ class AddSupplier extends BOBasePage {
    * @param lang {string} To choose which language ('en' or 'fr')
    * @return {Promise<void>}
    */
-  async changeLanguageForSelectors(page, lang = 'en') {
+  async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     // Change language for Description input
     await Promise.all([
       page.click(this.descriptionLangNavItemLink(lang)),
@@ -162,4 +219,4 @@ class AddSupplier extends BOBasePage {
   }
 }
 
-module.exports = new AddSupplier();
+export default new AddSupplier();
