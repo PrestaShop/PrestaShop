@@ -38,13 +38,13 @@ class StoreCore extends ObjectModel
     /** @var int State id */
     public $id_state;
 
-    /** @var string|array<string> Name */
+    /** @var string Store name */
     public $name;
 
-    /** @var string|array<string> Address first line */
+    /** @var string Address first line */
     public $address1;
 
-    /** @var string|array<string> Address second line (optional) */
+    /** @var string Address second line (optional) */
     public $address2;
 
     /** @var string Postal code */
@@ -59,7 +59,7 @@ class StoreCore extends ObjectModel
     /** @var float Longitude */
     public $longitude;
 
-    /** @var string|array Store hours (PHP serialized) */
+    /** @var string Store hours (PHP serialized) */
     public $hours;
 
     /** @var string Phone number */
@@ -68,7 +68,16 @@ class StoreCore extends ObjectModel
     /** @var string Fax number */
     public $fax;
 
-    /** @var string|array<string> Note */
+    /** @var string Siret number */
+    public $siret;
+	
+    /** @var string VAT number */
+    public $vat_number;
+	
+    /** @var string IBAN number */
+    public $iban;
+
+    /** @var string Note */
     public $note;
 
     /** @var string e-mail */
@@ -106,6 +115,9 @@ class StoreCore extends ObjectModel
 
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+			'siret' => ['type' => self::TYPE_STRING, 'validate' => 'isSiret', 'size' => 18],
+            'vat_number' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName',],
+            'iban' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName',],
             'address1' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 255],
             'address2' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 255],
             'hours' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => 65000],
@@ -124,8 +136,8 @@ class StoreCore extends ObjectModel
     /**
      * StoreCore constructor.
      *
-     * @param int|null $idStore
-     * @param int|null $idLang
+     * @param null $idStore
+     * @param null $idLang
      */
     public function __construct($idStore = null, $idLang = null)
     {
@@ -137,19 +149,25 @@ class StoreCore extends ObjectModel
     /**
      * Get Stores by language.
      *
-     * @param int $idLang
+     * @param $idLang
      *
-     * @return array
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getStores($idLang)
     {
-        return Db::getInstance()->executeS(
-            'SELECT s.id_store AS `id`, s.*, sl.*
-            FROM ' . _DB_PREFIX_ . 'store s  ' . Shop::addSqlAssociation('store', 's') . '
-            LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (sl.id_store = s.id_store AND sl.id_lang = ' . (int) $idLang . ')
-            WHERE s.active = 1
-            ORDER BY sl.`name` ASC'
+        $stores = Db::getInstance()->executeS(
+            '
+            SELECT s.id_store AS `id`, s.*, sl.*
+            FROM ' . _DB_PREFIX_ . 'store s
+            ' . Shop::addSqlAssociation('store', 's') . '
+            LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (
+            sl.id_store = s.id_store
+            AND sl.id_lang = ' . (int) $idLang . '
+            )
+            WHERE s.active = 1'
         );
+
+        return $stores;
     }
 
     /**
