@@ -128,6 +128,5 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
                 BulkDeleteOrderReturnProductException::CANT_DELETE_ALL_PRODUCTS
             );
         }
-
     }
 }

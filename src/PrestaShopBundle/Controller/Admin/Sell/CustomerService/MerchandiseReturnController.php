@@ -27,12 +27,15 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
@@ -110,6 +113,11 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
 
         try {
+            $editableOrderReturn = $this->getQueryBus()->handle(
+                new GetOrderReturnForEditing(
+                    $orderReturnId
+                )
+            );
             $form = $formBuilder->getFormFor($orderReturnId);
             $form->handleRequest($request);
 
@@ -126,7 +134,12 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_merchandise_returns_index');
         }
 
+        $allowPrintingOrderReturnPdf =
+            $editableOrderReturn->getOrderReturnStateId() === OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID;
+
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
+            'allowPrintingOrderReturnPdf' => $allowPrintingOrderReturnPdf,
+            'editableOrderReturn' => $editableOrderReturn,
             'orderReturnForm' => $form->createView(),
             'orderReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -250,6 +263,23 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 'Admin.Orderscustomers.Notification'
             ),
         ];
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_returns_index")
+     *
+     * @param Request $request
+     * @param int $orderReturnId
+     *
+     * @return void
+     */
+    public function generateOrderReturnPdfAction(Request $request, int $orderReturnId): void
+    {
+        $this->get(OrderReturnPdfGenerator::class)->generatePDF([$orderReturnId]);
+
+        // When using legacy generator,
+        // we want to be sure that displaying PDF is the last thing this controller will do
+        die();
     }
 
     /**

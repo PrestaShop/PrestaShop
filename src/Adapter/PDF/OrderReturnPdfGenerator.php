@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\PDF;
 use Context;
 use OrderReturn;
 use PDF;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use RuntimeException;
@@ -42,7 +43,6 @@ use Validate;
  */
 final class OrderReturnPdfGenerator implements PDFGeneratorInterface
 {
-    private const ORDER_RETURN_STATE_WAITING_FOR_PACKAGE = 2;
     /**
      * @var TranslatorInterface
      */
@@ -71,12 +71,12 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
             throw new RuntimeException($this->translator->trans('The order return cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
 
-        if ($orderReturn->state < self::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE) {
+        if ($orderReturn->state < OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID) {
             throw new RuntimeException($this->translator->trans('The order return was not confirmed.', [], 'Admin.Orderscustomers.Notification'));
         }
 
         $pdf = new PDF($orderReturn, PDF::TEMPLATE_ORDER_RETURN, Context::getContext()->smarty);
 
-        return $pdf->render(false);
+        return $pdf->render();
     }
 }
