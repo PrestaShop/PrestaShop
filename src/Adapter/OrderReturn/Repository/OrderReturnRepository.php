@@ -44,8 +44,6 @@ use PrestaShopException;
 
 class OrderReturnRepository extends AbstractObjectModelRepository
 {
-
-
     /**
      * @var OrderReturnValidator
      */
@@ -144,7 +142,6 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             $orderReturnDetailId,
             $orderReturnDetail->getCustomizationId()
         );
-
     }
 
     /**

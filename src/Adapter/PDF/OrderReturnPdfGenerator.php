@@ -65,17 +65,17 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
         }
 
         $orderReturnId = reset($orderReturnId);
-        $orderReturn = new OrderReturn((int)$orderReturnId);
+        $orderReturn = new OrderReturn((int) $orderReturnId);
         if (!Validate::isLoadedObject($orderReturn)) {
             throw new RuntimeException($this->translator->trans('The order return cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
-
 
         if ($orderReturn->state < 2) {
             throw new RuntimeException($this->translator->trans('The order return was not confirmed.', [], 'Admin.Orderscustomers.Notification'));
         }
 
         $pdf = new PDF($orderReturn, PDF::TEMPLATE_ORDER_RETURN, Context::getContext()->smarty);
+
         return $pdf->render(false);
     }
 }
