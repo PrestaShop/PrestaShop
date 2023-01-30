@@ -119,6 +119,31 @@
                     {% endif %}
                 </div>
             </div>
+
+          <div class="tab">
+            <h3 class="tab-title">
+              Not registered hooks
+              <span class="badge">{{ collector.notRegisteredHooks|length }}</span>
+            </h3>
+            <p>
+              These hooks have been dispatched by PrestaShop but they are not registered in the database, meaning no modules registered them
+              and they were not added in the hook fixtures for core hooks.
+            </p>
+            <div class="tab-content">
+              {% if collector.notRegisteredHooks is empty %}
+                <div class="empty">
+                  <p>
+                    <strong>There are no unregistered hooks</strong>.
+                  </p>
+                  <p>
+                    Seems like all hooks had appropriate listeners so they were all correctly registered in the database.
+                  </p>
+                </div>
+              {% else %}
+                {{ helper.render_table(collector.notRegisteredHooks, false) }}
+              {% endif %}
+            </div>
+          </div>
         </div>
     {% endif %}
 {% endblock %}
