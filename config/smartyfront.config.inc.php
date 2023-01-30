@@ -59,15 +59,24 @@ smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 
 function withWidget($params, callable $cb)
 {
-    if (!isset($params['name'])) {
-        throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
+    // Check if name was provided
+    if (empty($params['name'])) {
+        throw new Exception('When using {widget}, you must provide at least the `name` parameter.');
     }
 
+    // Get module name
     $moduleName = $params['name'];
     unset($params['name']);
 
+    // Try to load module
     $moduleInstance = Module::getInstanceByName($moduleName);
 
+    // If it's not installed, nothing to do here
+    if (empty($moduleInstance)) {
+        return;
+    }
+
+    // Check if this module supports widget interface
     if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
         throw new Exception(sprintf(
             'Module `%1$s` is not a WidgetInterface.',
