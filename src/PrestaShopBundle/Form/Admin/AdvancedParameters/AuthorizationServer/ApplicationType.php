@@ -47,7 +47,7 @@ class ApplicationType extends TranslatorAwareType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => $this->trans('Name', 'Admin.Global'),
+                'label' => $this->trans('App name', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
