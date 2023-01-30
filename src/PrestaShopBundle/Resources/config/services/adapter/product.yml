@@ -296,8 +296,7 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkUpdateProductStatusHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand

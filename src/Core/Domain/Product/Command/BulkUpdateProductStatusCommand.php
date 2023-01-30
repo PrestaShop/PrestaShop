@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Deletes multiple products
@@ -47,16 +48,25 @@ class BulkUpdateProductStatusCommand
     private $newStatus;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int[] $productIds
      *
      * @throws ProductConstraintException
      */
-    public function __construct(array $productIds, bool $newStatus)
-    {
+    public function __construct(
+        array $productIds,
+        bool $newStatus,
+        ShopConstraint $shopConstraint
+    ) {
         foreach ($productIds as $productId) {
             $this->productIds[] = new ProductId($productId);
         }
         $this->newStatus = $newStatus;
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -73,5 +83,13 @@ class BulkUpdateProductStatusCommand
     public function getNewStatus(): bool
     {
         return $this->newStatus;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }
