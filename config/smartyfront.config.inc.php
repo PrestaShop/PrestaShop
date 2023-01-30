@@ -57,13 +57,16 @@ smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
 smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 
-function withWidget($params, callable $cb)
+function withWidget($params, callable $cb, $smarty)
 {
     // Check if name was provided
     if (empty($params['name'])) {
         if (_PS_MODE_DEV_) {
             trigger_error(
-                'When using {widget}, you must provide at least the `name` parameter.',
+                sprintf(
+                    'When using {widget}, you must provide at least the `name` parameter. Template - %1$s',
+                    $smarty->source->filepath
+                ),
                 E_USER_NOTICE
             );
         }
@@ -81,7 +84,11 @@ function withWidget($params, callable $cb)
     if (empty($moduleInstance)) {
         if (_PS_MODE_DEV_) {
             trigger_error(
-                sprintf('Module `%1$s` cannot be used as a widget, because it\'s not installed.', $moduleName),
+                sprintf(
+                    'Module %1$s cannot be used as a widget, because it\'s not installed. Template - %2$s',
+                    $moduleName,
+                    $smarty->source->filepath
+                ),
                 E_USER_NOTICE
             );
         }
@@ -92,7 +99,11 @@ function withWidget($params, callable $cb)
     if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
         if (_PS_MODE_DEV_) {
             trigger_error(
-                sprintf('Module `%1$s` cannot be used as a widget, because it\'s not a WidgetInterface.', $moduleName),
+                sprintf(
+                    'Module `%1$s` cannot be used as a widget, because it\'s not a WidgetInterface. Template - %2$s',
+                    $moduleName,
+                    $smarty->source->filepath
+                ),
                 E_USER_NOTICE
             );
         }
@@ -104,13 +115,17 @@ function withWidget($params, callable $cb)
 
 function smartyWidget($params, &$smarty)
 {
-    return withWidget($params, function ($widget, $params) {
-        return Hook::coreRenderWidget(
-            $widget,
-            isset($params['hook']) ? $params['hook'] : null,
-            $params
-        );
-    });
+    return withWidget(
+        $params,
+        function ($widget, $params) {
+            return Hook::coreRenderWidget(
+                $widget,
+                isset($params['hook']) ? $params['hook'] : null,
+                $params
+            );
+        }, 
+        $smarty
+    );
 }
 
 function smartyRender($params, &$smarty)
