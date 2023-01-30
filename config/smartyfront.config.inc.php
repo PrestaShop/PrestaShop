@@ -61,7 +61,11 @@ function withWidget($params, callable $cb)
 {
     // Check if name was provided
     if (empty($params['name'])) {
-        throw new Exception('When using {widget}, you must provide at least the `name` parameter.');
+        trigger_error(
+            'When using {widget}, you must provide at least the `name` parameter.',
+            E_USER_NOTICE
+        );
+        return;
     }
 
     // Get module name
@@ -73,15 +77,20 @@ function withWidget($params, callable $cb)
 
     // If it's not installed, nothing to do here
     if (empty($moduleInstance)) {
+        trigger_error(
+            sprintf('Module `%1$s` cannot be used as a widget, because it\'s not installed.', $moduleName),
+            E_USER_NOTICE
+        );
         return;
     }
 
     // Check if this module supports widget interface
     if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
-        throw new Exception(sprintf(
-            'Module `%1$s` is not a WidgetInterface.',
-            $moduleName
-        ));
+        trigger_error(
+            sprintf('Module `%1$s` cannot be used as a widget, because it\'s not a WidgetInterface.', $moduleName),
+            E_USER_NOTICE
+        );
+        return;
     }
 
     return $cb($moduleInstance, $params);
