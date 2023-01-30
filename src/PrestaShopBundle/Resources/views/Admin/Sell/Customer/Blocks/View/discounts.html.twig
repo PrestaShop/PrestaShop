@@ -28,6 +28,11 @@
     <i class="material-icons">loyalty</i>
     {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
     <span class="badge badge-primary rounded">{{ customerInformation.discountsInformation|length }}</span>
+
+    <a href="{{ getAdminLink('AdminCartRules', true, {'addcart_rule': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right" 
+    data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
+      <i class="material-icons">add_circle</i>
+    </a>
   </h3>
   <div class="card-body">
     {% if customerDiscountGrid.data.records_total > 0 %}

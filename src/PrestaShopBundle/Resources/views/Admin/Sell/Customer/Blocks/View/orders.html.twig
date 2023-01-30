@@ -32,6 +32,11 @@
     <i class="material-icons">shopping_basket</i>
     {{ 'Orders'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ ordersCount }}</span>
+
+    <a href="{{ path('admin_orders_create') }}" class="tooltip-link float-right" 
+    data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
+      <i class="material-icons">add_circle</i>
+    </a>
   </h3>
   <div class="card-body">
     {% if ordersCount > 0 %}
