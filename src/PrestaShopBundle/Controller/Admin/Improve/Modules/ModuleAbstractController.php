@@ -28,8 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
 
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
@@ -77,8 +77,8 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
+                AccessCheckerInterface::LEVEL_READ,
+                AccessCheckerInterface::LEVEL_UPDATE,
             ]
         )) {
             $toolbarButtons['add_module'] = [

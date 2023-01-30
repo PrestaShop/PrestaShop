@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -243,20 +244,20 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(PageVoter::DELETE, $controller)) {
-            return PageVoter::LEVEL_DELETE;
+        if ($this->isGranted(AccessCheckerInterface::DELETE, $controller)) {
+            return AccessCheckerInterface::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(PageVoter::CREATE, $controller)) {
-            return PageVoter::LEVEL_CREATE;
+        if ($this->isGranted(AccessCheckerInterface::CREATE, $controller)) {
+            return AccessCheckerInterface::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(PageVoter::UPDATE, $controller)) {
-            return PageVoter::LEVEL_UPDATE;
+        if ($this->isGranted(AccessCheckerInterface::UPDATE, $controller)) {
+            return AccessCheckerInterface::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(PageVoter::READ, $controller)) {
-            return PageVoter::LEVEL_READ;
+        if ($this->isGranted(AccessCheckerInterface::READ, $controller)) {
+            return AccessCheckerInterface::LEVEL_READ;
         }
 
         return 0;
@@ -318,13 +319,13 @@ class FrameworkBundleAdminController extends AbstractController
     protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
+                $action === 'delete' . $suffix && $this->isGranted(AccessCheckerInterface::DELETE, $object)
             ) || (
                 ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
-                $this->isGranted(PageVoter::UPDATE, $object)
+                $this->isGranted(AccessCheckerInterface::UPDATE, $object)
             ) || (
                 ($action === 'duplicate' . $suffix) &&
-                ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
+                ($this->isGranted(AccessCheckerInterface::UPDATE, $object) || $this->isGranted(AccessCheckerInterface::CREATE, $object))
             );
     }
 

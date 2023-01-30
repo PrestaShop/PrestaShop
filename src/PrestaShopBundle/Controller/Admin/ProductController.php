@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Product\ProductCsvExporter;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Attribute;
@@ -60,7 +61,6 @@ use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
@@ -281,7 +281,7 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
-        if (!$this->isGranted(PageVoter::READ, self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted(AccessCheckerInterface::READ, self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -398,7 +398,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function newAction()
     {
-        if (!$this->isGranted(PageVoter::CREATE, self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted(AccessCheckerInterface::CREATE, self::PRODUCT_OBJECT)) {
             $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
             $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
 
@@ -454,7 +454,7 @@ class ProductController extends FrameworkBundleAdminController
 
         gc_disable();
 
-        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
+        foreach ([AccessCheckerInterface::READ, AccessCheckerInterface::UPDATE, AccessCheckerInterface::CREATE] as $permission) {
             if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
                 return $this->redirect('admin_dashboard');
             }
@@ -667,7 +667,7 @@ class ProductController extends FrameworkBundleAdminController
             'attribute_groups' => $attributeGroups,
             'max_upload_size' => LegacyTools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT),
+            'editable' => $this->isGranted(AccessCheckerInterface::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
             'isCreationMode' => (int) $product->state === Product::STATE_TEMP,
@@ -918,7 +918,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function massEditAction(Request $request, $action)
     {
-        if (!$this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted(AccessCheckerInterface::UPDATE, self::PRODUCT_OBJECT)) {
             $errorMessage = $this->trans(
                 'You do not have permission to edit this.',
                 'Admin.Notifications.Error'

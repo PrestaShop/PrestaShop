@@ -27,10 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,10 +90,10 @@ class MemcacheServerController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
+                AccessCheckerInterface::LEVEL_READ,
+                AccessCheckerInterface::LEVEL_UPDATE,
+                AccessCheckerInterface::LEVEL_CREATE,
+                AccessCheckerInterface::LEVEL_DELETE,
             ]
         )) {
             return new JsonResponse(
@@ -149,10 +149,10 @@ class MemcacheServerController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
+                AccessCheckerInterface::LEVEL_READ,
+                AccessCheckerInterface::LEVEL_UPDATE,
+                AccessCheckerInterface::LEVEL_CREATE,
+                AccessCheckerInterface::LEVEL_DELETE,
             ]
         )) {
             return new JsonResponse(
