@@ -20,6 +20,14 @@
 
 $product-page-padding-bottom: 80px !default;
 
+.developer-mode {
+  .product-page {
+    .product-footer {
+      padding-bottom: calc($grid-gutter-width / 2 + 2.25rem);
+    }
+  }
+}
+
 .product-page {
   padding-bottom: $product-page-padding-bottom;
 
