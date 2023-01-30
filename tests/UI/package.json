@@ -91,7 +91,7 @@
     "mocha": "^10.2.0",
     "mochawesome": "^7.1.3",
     "module-alias": "^2.2.2",
-    "pdfjs-dist": "^3.2.146",
+    "pdfjs-dist": "^3.3.122",
     "playwright": "^1.29.2"
   },
   "devDependencies": {
