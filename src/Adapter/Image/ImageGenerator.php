@@ -31,8 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 use Configuration;
 use ImageManager;
 use ImageType;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopException;
 
 /**
@@ -40,6 +43,16 @@ use PrestaShopException;
  */
 class ImageGenerator
 {
+    private $featureFlagRepository;
+
+    private $imageFormatConfiguration;
+
+    public function __construct(FeatureFlagRepository $featureFlagRepository, ImageFormatConfiguration $imageFormatConfiguration)
+    {
+        $this->featureFlagRepository = $featureFlagRepository;
+        $this->imageFormatConfiguration = $imageFormatConfiguration;
+    }
+
     /**
      * @param string $imagePath
      * @param ImageType[] $imageTypes
@@ -96,12 +109,29 @@ class ImageGenerator
             $height *= 2;
         }
 
-        return ImageManager::resize(
-            $filePath,
-            sprintf('%s-%s%s', rtrim($filePath, '.' . $fileExtension), stripslashes($imageType->name), $destinationExtension),
-            $width,
-            $height,
-            trim(mime_content_type($filePath), 'image/')
-        );
+        if (!$this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+            return ImageManager::resize(
+                $filePath,
+                sprintf('%s-%s%s', rtrim($filePath, '.' . $fileExtension), stripslashes($imageType->name), $destinationExtension),
+                $width,
+                $height,
+                trim(mime_content_type($filePath), 'image/'));
+        }
+
+        $result = true;
+
+        foreach ($this->imageFormatConfiguration->getGenerationFormats() as $imageFormat) {
+            if (!ImageManager::resize(
+                $filePath,
+                sprintf('%s-%s.%s', rtrim($filePath, '.' . $fileExtension), stripslashes($imageType->name), $imageFormat),
+                $width,
+                $height,
+                trim(mime_content_type($filePath), 'image/')
+            )) {
+                $result = false;
+            }
+        }
+
+        return $result;
     }
 }
