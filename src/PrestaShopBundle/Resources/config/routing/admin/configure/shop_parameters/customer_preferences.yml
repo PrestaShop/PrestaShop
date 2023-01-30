@@ -13,21 +13,3 @@ admin_customer_preferences_process:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerPreferencesController::processAction'
     _legacy_controller: AdminCustomerPreferences
     _legacy_link: AdminCustomerPreferences:update
-
-admin_customer_groups_index:
-  path: /groups
-  methods: [ GET ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::indexAction'
-    _legacy_controller: AdminGroups
-    _legacy_link: AdminGroups
-
-admin_customer_groups_search:
-  path: /groups
-  methods: POST
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer_groups
-    redirectRoute: admin_customer_groups_index
-    _legacy_controller: AdminGroups
-    # _legacy_link: AdminGenders:submitFiltergenders

@@ -43,7 +43,7 @@ $(() => {
   customerGroups.addExtension(new BulkActionCheckboxExtension());
   customerGroups.addExtension(new SubmitBulkExtension());
   customerGroups.addExtension(new ExportToSqlManagerExtension());
-  customerGroups.addExtension(new SortingExtension())
+  customerGroups.addExtension(new SortingExtension());
   customerGroups.addExtension(new FiltersResetExtension());
   customerGroups.addExtension(new ReloadListActionExtension());
   customerGroups.addExtension(new ColumnTogglingExtension());
