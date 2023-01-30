@@ -730,24 +730,47 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function bulkEnableAction(Request $request): JsonResponse
+    public function bulkEnableAllShopsAction(Request $request): JsonResponse
     {
-        try {
-            $this->getCommandBus()->handle(
-                new BulkUpdateProductStatusCommand(
-                    $this->getProductIdsFromRequest($request),
-                    true
-                )
-            );
-        } catch (Exception $e) {
-            if ($e instanceof BulkProductException) {
-                return $this->jsonBulkErrors($e);
-            } else {
-                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
-            }
-        }
+        return $this->bulkUpdateProductStatus($request, true, ShopConstraint::allShops());
+    }
 
-        return $this->json(['success' => true]);
+    /**
+     * Enable products in bulk action for a specific shop.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     * @param int $shopId
+     *
+     * @return JsonResponse
+     */
+    public function bulkEnableShopAction(Request $request, int $shopId): JsonResponse
+    {
+        return $this->bulkUpdateProductStatus($request, true, ShopConstraint::shop($shopId));
+    }
+
+    /**
+     * Enable products in bulk action for a specific shop group.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     * @param int $shopGroupId
+     *
+     * @return JsonResponse
+     */
+    public function bulkEnableShopGroupAction(Request $request, int $shopGroupId): JsonResponse
+    {
+        return $this->bulkUpdateProductStatus($request, true, ShopConstraint::shopGroup($shopGroupId));
     }
 
     /**
@@ -763,24 +786,47 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function bulkDisableAction(Request $request): JsonResponse
+    public function bulkDisableAllShopsAction(Request $request): JsonResponse
     {
-        try {
-            $this->getCommandBus()->handle(
-                new BulkUpdateProductStatusCommand(
-                    $this->getProductIdsFromRequest($request),
-                    false
-                )
-            );
-        } catch (Exception $e) {
-            if ($e instanceof BulkProductException) {
-                return $this->jsonBulkErrors($e);
-            } else {
-                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
-            }
-        }
+        return $this->bulkUpdateProductStatus($request, false, ShopConstraint::allShops());
+    }
 
-        return $this->json(['success' => true]);
+    /**
+     * Disable products in bulk action for a specific shop.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     * @param int $shopId
+     *
+     * @return JsonResponse
+     */
+    public function bulkDisableShopAction(Request $request, int $shopId): JsonResponse
+    {
+        return $this->bulkUpdateProductStatus($request, false, ShopConstraint::shop($shopId));
+    }
+
+    /**
+     * Disable products in bulk action for a specific shop group.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     * @param int $shopGroupId
+     *
+     * @return JsonResponse
+     */
+    public function bulkDisableShopGroupAction(Request $request, int $shopGroupId): JsonResponse
+    {
+        return $this->bulkUpdateProductStatus($request, false, ShopConstraint::shopGroup($shopGroupId));
     }
 
     /**
@@ -1068,6 +1114,36 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Helper private method to bulk update a product's status.
+     *
+     * @param Request $request
+     * @param bool $newStatus
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return JsonResponse
+     */
+    private function bulkUpdateProductStatus(Request $request, bool $newStatus, ShopConstraint $shopConstraint): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateProductStatusCommand(
+                    $this->getProductIdsFromRequest($request),
+                    $newStatus,
+                    $shopConstraint
+                )
+            );
+        } catch (Exception $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
     }
 
     /**

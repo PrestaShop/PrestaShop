@@ -191,7 +191,7 @@ admin_products_v2_duplicate_shop_group:
     shopGroupId: \d+
 
 admin_products_v2_toggle_status_for_shop:
-  path: /{productId}/toggle_status/{shopId}
+  path: /{productId}/toggle_status/shop/{shopId}
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusAction
@@ -238,11 +238,11 @@ admin_products_v2_update_position:
   requirements:
     productId: \d+
 
-admin_products_v2_bulk_enable:
+admin_products_v2_bulk_enable_all_shops:
   path: /bulk-enable
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableAllShopsAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkdisableSelectionproduct
@@ -251,16 +251,72 @@ admin_products_v2_bulk_enable:
   options:
     expose: true
 
-admin_products_v2_bulk_disable:
+admin_products_v2_bulk_enable_shop:
+  path: /bulk-enable/shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_enable_shop_group:
+  path: /bulk-enable/shop_group/{shopGroupId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_disable_all_shops:
   path: /bulk-disable
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableAllShopsAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkenableSelectionproduct
   requirements:
     productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_disable_shop:
+  path: /bulk-disable/shop/{shopId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkenableSelectionproduct
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_disable_shop_group:
+  path: /bulk-disable/shop_group/{shopGroupId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkenableSelectionproduct
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
   options:
     expose: true
 
