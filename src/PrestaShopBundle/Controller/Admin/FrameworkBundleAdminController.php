@@ -94,7 +94,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function getConfiguration(): ShopConfigurationInterface
     {
-        return $this->container->get('prestashop.adapter.legacy.configuration');
+        return $this->container->get(ShopConfigurationInterface::class);
     }
 
     /**
