@@ -385,11 +385,11 @@ admin_products_v2_bulk_duplicate_shop_group:
   options:
     expose: true
 
-admin_products_v2_bulk_delete:
+admin_products_v2_bulk_delete_from_all_shops:
   path: /bulk-delete
   methods: [ POST, DELETE ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromAllShopsAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkdeleteproduct
@@ -397,6 +397,38 @@ admin_products_v2_bulk_delete:
       id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_delete_from_shop:
+  path: /bulk-delete/shop/{shopId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_delete_from_shop_group:
+  path: /bulk-delete/shop-group/{shopGroupId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromShopGroupAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
   options:
     expose: true
 

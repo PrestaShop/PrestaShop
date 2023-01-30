@@ -542,6 +542,70 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
+     * @param int $shopId
+     *
+     * @return Response
+     */
+    public function bulkDeleteFromShopAction(Request $request, int $shopId): Response
+    {
+        try {
+            // Could be worth refacto this with a dedicated BulkDeleteProductFromShopsCommand
+            foreach ($this->getProductIdsFromRequest($request) as $productId) {
+                $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, [$shopId]));
+            }
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
+     * @param int $shopGroupId
+     *
+     * @return Response
+     */
+    public function bulkDeleteFromShopGroupAction(Request $request, int $shopGroupId): Response
+    {
+        try {
+            /** @var ProductMultiShopRepository $productRepository */
+            $productRepository = $this->get(ProductMultiShopRepository::class);
+
+            // Could be worth refacto this with a dedicated BulkDeleteProductFromShopsCommand
+            foreach ($this->getProductIdsFromRequest($request) as $productId) {
+                $productShopIds = $productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
+                $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
+                    return $shopId->getValue();
+                }, $productShopIds)));
+            }
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
+    }
+
+    /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param int $productId
@@ -724,7 +788,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function bulkDeleteAction(Request $request): JsonResponse
+    public function bulkDeleteFromAllShopsAction(Request $request): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand(
