@@ -69,7 +69,7 @@ class FrameworkBundleAdminController extends AbstractController
     {
         @trigger_error(__FUNCTION__ . ' is deprecated since version 8.1 and will be removed in the next major version.', E_USER_DEPRECATED);
 
-        $this->configuration = $this->getConfiguration();
+        $this->configuration = new Configuration();
     }
 
     /**
@@ -94,7 +94,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function getConfiguration(): ShopConfigurationInterface
     {
-        return $this->container->get(ShopConfigurationInterface::class);
+        return $this->container->get('prestashop.adapter.legacy.configuration');
     }
 
     /**
