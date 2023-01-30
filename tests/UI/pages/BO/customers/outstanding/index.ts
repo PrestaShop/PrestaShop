@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Outstanding page, contains functions that can be used on the page
@@ -7,6 +8,40 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Outstanding extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly gridTable: string;
+
+  private readonly outstandingFilterColumnInput: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRow: (row: number) => string;
+
+  private readonly tableColumn: (row: number, column: string) => string;
+
+  private readonly tableColumnActionType: (row: number, column: string) => string;
+
+  private readonly cardHeaderTitle: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on outstanding page
@@ -18,20 +53,20 @@ class Outstanding extends BOBasePage {
     this.gridTable = '#outstanding_grid_table';
 
     // Filters
-    this.outstandingFilterColumnInput = (filterBy) => `#outstanding_${filterBy}`;
+    this.outstandingFilterColumnInput = (filterBy: string) => `#outstanding_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.tableColumnActionType = (row, column) => `${this.tableColumn(row, column)} a`;
+    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
+    this.tableColumnActionType = (row: number, column: string) => `${this.tableColumn(row, column)} a`;
 
     this.cardHeaderTitle = '#outstanding_grid_panel .card-header-title';
     this.paginationLabel = '#outstanding_grid .col-form-label';
@@ -46,7 +81,7 @@ class Outstanding extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -59,7 +94,7 @@ class Outstanding extends BOBasePage {
    * @param row {number} Outstanding row in table
    * @returns {Promise<string|number>}
    */
-  async getTextColumn(page, columnName, row) {
+  async getTextColumn(page: Page, columnName: string, row: number): Promise<string> {
     if (columnName === 'id_invoice') {
       return this.getNumberFromText(page, this.tableColumn(row, 'id_invoice'));
     }
@@ -74,7 +109,7 @@ class Outstanding extends BOBasePage {
    * @param row {number} Outstanding row in table
    * @returns {Promise<void>}
    */
-  async viewOrder(page, columnName, row = 1) {
+  async viewOrder(page: Page, columnName: string, row: number = 1): Promise<void> {
     await this.waitForSelectorAndClick(page, this.tableColumnActionType(row, columnName));
   }
 
@@ -83,9 +118,9 @@ class Outstanding extends BOBasePage {
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Outstanding row in table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async viewInvoice(page, columnName, row = 1) {
+  async viewInvoice(page: Page, columnName: string, row: number = 1): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.tableColumnActionType(row, 'invoice'));
   }
 
@@ -94,7 +129,7 @@ class Outstanding extends BOBasePage {
    * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOutstanding(page) {
+  async getNumberOutstanding(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.cardHeaderTitle);
   }
 
@@ -104,7 +139,7 @@ class Outstanding extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -114,7 +149,7 @@ class Outstanding extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -128,7 +163,7 @@ class Outstanding extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -139,7 +174,7 @@ class Outstanding extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -153,11 +188,11 @@ class Outstanding extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @returns {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
@@ -171,7 +206,7 @@ class Outstanding extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfOutstandingInPage(page) {
+  async getNumberOfOutstandingInPage(page: Page): Promise<number> {
     return (await page.$$(`${this.tableBody} tr`)).length;
   }
 
@@ -181,7 +216,7 @@ class Outstanding extends BOBasePage {
    * @param row {number} Outstanding row on table
    * @returns {Promise<number>}
    */
-  async getOutstandingAllowancePrice(page, row) {
+  async getOutstandingAllowancePrice(page: Page, row: number): Promise<number> {
     // Delete the first character (currency symbol) before getting price ATI
     return parseFloat((await this.getTextColumn(page, 'outstanding_allow_amount', row)).substring(1));
   }
@@ -192,10 +227,10 @@ class Outstanding extends BOBasePage {
    * @param column {string} Column name on table
    * @returns {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
-    let rowContent;
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
+    let rowContent: string;
     const rowsNumber = await this.getNumberOfOutstandingInPage(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       if (column === 'outstanding_allow_amount') {
@@ -218,7 +253,7 @@ class Outstanding extends BOBasePage {
    * @param value {?string|number} Column name on table
    * @returns {Promise<void>}
    */
-  async filterTable(page, filterType, columnName, value) {
+  async filterTable(page: Page, filterType: string, columnName: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.outstandingFilterColumnInput(columnName), value);
@@ -244,7 +279,7 @@ class Outstanding extends BOBasePage {
    * @param dateTo {string} Date to to filter with
    * @returns {Promise<void>}
    */
-  async filterOutstandingByDate(page, dateFrom, dateTo) {
+  async filterOutstandingByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
     await page.type(this.outstandingFilterColumnInput('date_add_from'), dateFrom);
     await page.type(this.outstandingFilterColumnInput('date_add_to'), dateTo);
     // click on search
@@ -252,4 +287,4 @@ class Outstanding extends BOBasePage {
   }
 }
 
-module.exports = new Outstanding();
+export default new Outstanding();
