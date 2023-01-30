@@ -1822,6 +1822,7 @@ services:
       - '@prestashop.adapter.shop.url.product_provider'
       - '@prestashop.adapter.shop.url.product_preview_provider'
       - '@router'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
       - "@=service('prestashop.adapter.shop.context').getContextShopID()"
     tags:
       - { name: form.type }

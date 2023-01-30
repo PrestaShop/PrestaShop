@@ -550,23 +550,33 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function duplicateAction(int $productId): Response
     {
-        try {
-            /** @var ProductId $newProductId */
-            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
-                $productId,
-                ShopConstraint::allShops()
-            ));
-            $this->addFlash(
-                'success',
-                $this->trans('Successful duplication', 'Admin.Notifications.Success')
-            );
-        } catch (ProductException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        return $this->duplicateByShopConstraint($productId, ShopConstraint::allShops());
+    }
 
-            return $this->redirectToRoute('admin_products_v2_index');
-        }
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return Response
+     */
+    public function duplicateShopAction(int $productId, int $shopId): Response
+    {
+        return $this->duplicateByShopConstraint($productId, ShopConstraint::shop($shopId));
+    }
 
-        return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
+     * @param int $productId
+     * @param int $shopGroupId
+     *
+     * @return Response
+     */
+    public function duplicateShopGroupAction(int $productId, int $shopGroupId): Response
+    {
+        return $this->duplicateByShopConstraint($productId, ShopConstraint::shopGroup($shopGroupId));
     }
 
     /**
@@ -804,6 +814,27 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->json(['success' => true]);
+    }
+
+    private function duplicateByShopConstraint(int $productId, ShopConstraint $shopConstraint): Response
+    {
+        try {
+            /** @var ProductId $newProductId */
+            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+                $productId,
+                $shopConstraint
+            ));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplication', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_products_v2_index');
+        }
+
+        return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
     }
 
     /**
