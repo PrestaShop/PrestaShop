@@ -111,12 +111,19 @@ class ToolsCore
      *
      * Limited to OpenSSL since 1.7.0.0
      *
+     * @deprecated Since 8.1.0
+     *
      * @param int $length Desired length of random bytes
      *
      * @return bool|string Random bytes
      */
     public static function getBytes($length)
     {
+        @trigger_error(
+            'Tools::getBytes() is deprecated since version 8.1.0.',
+            E_USER_DEPRECATED
+        );
+
         try {
             return (new OpenSSL())->getBytes($length);
         } catch (\Exception $e) {
