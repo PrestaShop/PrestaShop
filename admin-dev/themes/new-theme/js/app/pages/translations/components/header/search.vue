@@ -23,14 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div
-    id="search"
-    class="col-md-8 mb-4"
-  >
-    <form
-      class="search-form"
-      @submit.prevent
-    >
+  <div id="search">
+    <form class="search-form" @submit.prevent>
       <label>{{ trans('search_label') }}</label>
       <div class="input-group">
         <PSTags
