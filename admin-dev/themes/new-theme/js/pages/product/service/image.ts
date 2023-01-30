@@ -70,6 +70,7 @@ export const saveImageInformations = async (
   });
   data[`${formName}[_token]`] = token;
   data[`${formName}[shop_id]`] = shopId || 0;
+  data[`${formName}[apply_to_all_stores]`] = selectedFile.applyToAllStores;
 
   return $.ajax(saveUrl, {
     method: 'PATCH',

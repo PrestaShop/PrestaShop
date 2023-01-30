@@ -80,6 +80,8 @@
       :locales="locales"
       :selected-locale="selectedLocale"
       :loading="buttonLoading"
+      :is-multi-store-active="isMultiStoreActive"
+      :shop-id="shopId"
     />
 
     <modal
@@ -219,6 +221,10 @@
       },
       shopId: {
         type: Number,
+        required: true,
+      },
+      isMultiStoreActive: {
+        type: Boolean,
         required: true,
       },
       locales: {
@@ -473,7 +479,11 @@
       /**
        * Save selected file
        */
-      async saveSelectedFile(captionValue: Record<string, any>, isCover: boolean): Promise<void> {
+      async saveSelectedFile(
+        captionValue: Record<string, any>,
+        isCover: boolean,
+        shopId: number|null,
+      ): Promise<void> {
         if (!this.selectedFiles.length) {
           return;
         }
@@ -490,9 +500,7 @@
             selectedFile,
             this.token,
             this.formName,
-            //@todo: check if all shops checkobx is selected when its implemented and then check if its associated to current shop
-            // then use allShops constraint (null as shopId)
-            selectedFile.isAssociatedToCurrentShop ? this.shopId : null,
+            shopId,
           );
 
           const savedImageElement = <HTMLElement> document.querySelector(
@@ -570,8 +578,6 @@
             newPosition,
             this.formName,
             this.token,
-            //@todo: check if all shops checkobx is selected when its implemented and then check if its associated to current shop
-            // then use allShops constraint (null as shopId)
             image.isAssociatedToCurrentShop ? this.shopId : null,
           );
         } catch (error: any) {

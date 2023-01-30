@@ -99,6 +99,7 @@ class ImageDropzoneType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
+            'is_multi_store_active' => $this->multistoreFeature->isActive(),
             'translations' => [
                 'window.selectAll' => $this->trans('Select all', 'Admin.Actions'),
                 'window.settingsUpdated' => $this->trans('Settings updated', 'Admin.Global'),
@@ -112,6 +113,7 @@ class ImageDropzoneType extends TranslatorAwareType
                     ['[1]' => '<span>', '[/1]' => '</span>']
                 ),
                 'window.useAsCover' => $this->trans('Use as cover image', 'Admin.Catalog.Feature'),
+                'window.applyToAllStores' => $this->trans('Apply changes to all stores', 'Admin.Global'),
                 'window.saveImage' => $this->trans('Save image settings', 'Admin.Actions'),
                 'window.delete' => $this->trans('Delete selection', 'Admin.Actions'),
                 'window.close' => $this->trans('Close window', 'Admin.Actions'),
@@ -151,11 +153,13 @@ class ImageDropzoneType extends TranslatorAwareType
             ->setRequired([
                 'product_id',
                 'shop_id',
+                'is_multi_store_active',
             ])
             ->setAllowedTypes('product_id', 'int')
             ->setAllowedTypes('shop_id', 'int')
             ->setAllowedTypes('update_form_type', ['string', 'null'])
             ->setAllowedTypes('translations', ['array'])
+            ->setAllowedTypes('is_multi_store_active', ['bool'])
         ;
     }
 
@@ -169,6 +173,7 @@ class ImageDropzoneType extends TranslatorAwareType
         $view->vars['translations'] = $options['translations'];
         $view->vars['product_id'] = $options['product_id'];
         $view->vars['shop_id'] = $options['shop_id'];
+        $view->vars['is_multi_store_active'] = $options['is_multi_store_active'];
         $view->vars['update_form_name'] = StringUtil::fqcnToBlockPrefix($options['update_form_type']) ?: '';
     }
 }
