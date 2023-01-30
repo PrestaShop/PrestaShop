@@ -35,4 +35,9 @@ class CannotUpdateTaxRulesGroupException extends TaxRulesGroupException
      * Thrown when status toggling fails
      */
     public const FAILED_TOGGLE_STATUS = 1;
+
+    /**
+     * When generic product update fails
+     */
+    public const FAILED_UPDATE_TAX_RULES_GROUP = 10;
 }

@@ -28,9 +28,3 @@
 {% block content %}
   {{ include('@PrestaShop/Admin/Improve/International/TaxRulesGroup/Blocks/form.html.twig', {'taxRulesGroupForm': taxRulesGroupForm}) }}
 {% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/tax_rules_group.bundle.js') }}"></script>
-{% endblock %}

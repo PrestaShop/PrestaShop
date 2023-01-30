@@ -127,15 +127,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $taxRulesGroupId): Response
     {
-        try {
-            /** @var EditableTaxRulesGroup $editableTaxRulesGroup */
-            $editableTaxRulesGroup = $this->getQueryBus()->handle(new GetTaxRulesGroupForEditing((int) $taxRulesGroupId));
-        } catch (TaxRulesGroupException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-
-            return $this->redirectToRoute('admin_tax_rules_groups_index');
-        }
-
         $taxRulesGroupForm = null;
 
         try {
@@ -149,7 +140,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                     'taxRulesGroupId' => $taxRulesGroupId,
                 ]);
             }
-        } catch (TaxRulesGroupNotFoundException $e) {
+        } catch (TaxRulesGroupException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_tax_rules_groups_index');
@@ -159,7 +150,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/International/TaxRulesGroup/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $editableTaxRulesGroup->getName()]),
+            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $taxRulesGroupForm->getData()['name']]),
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);

@@ -64,11 +64,14 @@ class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements E
     {
         $taxRulesGroup = $this->getTaxRulesGroup($command->getTaxRulesGroupId());
 
+        $updatableProperties = [];
         if (null !== $command->getName()) {
             $taxRulesGroup->name = $command->getName();
+            $updatableProperties[] = 'name';
         }
         if (null !== $command->isEnabled()) {
             $taxRulesGroup->active = $command->isEnabled();
+            $updatableProperties[] = 'active';
         }
 
         $shopIds = [];
@@ -76,6 +79,11 @@ class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements E
             $shopIds[] = new ShopId($shopId);
         }
 
-        $this->taxRulesGroupRepository->update($taxRulesGroup, $shopIds);
+        $this->taxRulesGroupRepository->partialUpdate(
+            $taxRulesGroup,
+            $updatableProperties,
+            $shopIds,
+            CannotUpdateTaxRulesGroupException::FAILED_UPDATE_TAX_RULES_GROUP
+        );
     }
 }

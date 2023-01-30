@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
@@ -152,7 +153,12 @@ class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
     public function add(TaxRulesGroup $taxRulesGroup, array $shopIds, int $errorCode = 0): TaxRulesGroupId
     {
         $this->taxRulesGroupValidator->validate($taxRulesGroup);
-        $id = $this->addObjectModel($taxRulesGroup, CannotAddTaxRulesGroupException::class, $errorCode);
+        $id = $this->addObjectModelToShops(
+            $taxRulesGroup,
+            $shopIds,
+            CannotAddTaxRulesGroupException::class,
+            $errorCode
+        );
 
         return new TaxRulesGroupId($id);
     }
@@ -168,6 +174,27 @@ class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
             $taxRulesGroup,
             $shopIds,
             CannotUpdateTaxRulesGroupException::class
+        );
+    }
+
+    /**
+     * @param TaxRulesGroup $taxRulesGroup
+     * @param array $propertiesToUpdate
+     * @param ShopId[] $shopIds
+     * @param int $errorCode
+     */
+    public function partialUpdate(
+        TaxRulesGroup $taxRulesGroup,
+        array $propertiesToUpdate,
+        array $shopIds,
+        int $errorCode
+    ): void {
+        $this->partiallyUpdateObjectModelForShops(
+            $taxRulesGroup,
+            $propertiesToUpdate,
+            $shopIds,
+            CannotUpdateStoreException::class,
+            $errorCode
         );
     }
 }
