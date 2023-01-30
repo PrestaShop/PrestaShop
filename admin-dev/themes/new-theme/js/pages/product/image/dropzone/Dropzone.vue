@@ -344,16 +344,16 @@
         this.dropzone.on(DropzoneEvents.addedFile, (file: PSDropzoneFile) => {
           file.previewElement.dataset.id = file.image_id;
 
-          // @todo: the file type is actually not PSDropzoneFile at all, the typescript here is absolute failure
+          // @todo: Improve types int his component (the file type is actually not PSDropzoneFile in all cases).
           // check if image is associated with current shop.
-          // If shop_ids is missing, it means the image is being uploaded,
+          // If shop_ids is missing, it means the image is being uploaded and it is not PSDropzoneFile type,
           // so it will be associated to the shop by default
           file.isAssociatedToCurrentShop = !file.shop_ids || file.shop_ids.includes(this.shopId);
 
           if (!file.isAssociatedToCurrentShop) {
             file.previewElement.classList.add('not-associated');
-            // @todo: add translated title from data attr
-            file.previewElement.title = 'Image is not associated to current shop';
+            file.previewElement.dataset.toggle = 'pstooltip';
+            file.previewElement.dataset.originalTitle = this.$t('window.notAssociatedToShop');
           } else if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
           }
@@ -387,6 +387,7 @@
           file.legends = response.legends;
           // Update dataset so that it can be selected later
           file.previewElement.dataset.id = file.image_id;
+          file.isAssociatedToCurrentShop = response.shop_ids.includes(this.shopId);
 
           if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
@@ -637,12 +638,6 @@
       position: relative;
       cursor: pointer;
 
-      &.not-associated {
-        img {
-          filter: grayscale(0.8);
-        }
-      }
-
       .iscover {
         display: none;
         left: -2px;
@@ -745,6 +740,11 @@
           background: $primary;
         }
       }
+    }
+
+    .dz-preview.not-associated {
+      filter: grayscale(0.8);
+      opacity: 0.6;
     }
   }
 }

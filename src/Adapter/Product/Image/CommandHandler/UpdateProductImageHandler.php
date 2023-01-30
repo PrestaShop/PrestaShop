@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\UpdateProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
 {
@@ -105,6 +107,10 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
             // only is_cover prop is multi-shop compatible now and is handled separately,
             // so we don't really care from which shop other properties are loaded
             $shopId = reset($associatedShopIds);
+
+            if (!$shopId) {
+                throw new ShopAssociationNotFound('Image is not associated to any shop');
+            }
         }
 
         $image = $this->productImageRepository->get(

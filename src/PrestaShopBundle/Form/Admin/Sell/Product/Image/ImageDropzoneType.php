@@ -112,8 +112,9 @@ class ImageDropzoneType extends TranslatorAwareType
                     'Admin.Catalog.Feature',
                     ['[1]' => '<span>', '[/1]' => '</span>']
                 ),
+                'window.notAssociatedToShop' => $this->trans('Image is not associated to this shop', 'Admin.Catalog.Feature'),
                 'window.useAsCover' => $this->trans('Use as cover image', 'Admin.Catalog.Feature'),
-                'window.applyToAllStores' => $this->trans('Apply changes to all stores', 'Admin.Global'),
+                'window.applyToAllStores' => $this->trans('Apply changes to all associated stores', 'Admin.Global'),
                 'window.saveImage' => $this->trans('Save image settings', 'Admin.Actions'),
                 'window.delete' => $this->trans('Delete selection', 'Admin.Actions'),
                 'window.close' => $this->trans('Close window', 'Admin.Actions'),
