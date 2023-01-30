@@ -85,4 +85,16 @@ parameters:
             message: 'Use dependency injection instead'
             disallowIn:
                 - src/*
+        -
+            method: 'PrestaShop\PrestaShop\Adapter\Configuration::__construct()'
+            message: 'Use dependency injection instead'
+            disallowIn:
+                - src/Core
+            allowIn:
+                - src/Adapter/*
+                - src/Core/Addon/Theme/ThemeManagerBuilder.php # exising legacy code, needs to be migrated
+                - src/PrestaShopBundle/Form/Admin/Type/ # deprecated
+                - src/PrestaShopBundle/Form/Admin/Type/CommonAbstractType.php # deprecated
+                - src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php # deprecated
+                - src/PrestaShopBundle/Entity/StockMvt.php # deprecated
 

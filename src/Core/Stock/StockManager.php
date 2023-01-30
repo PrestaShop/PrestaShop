@@ -389,8 +389,9 @@ class StockManager
             $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId, $params['id_shop'] ?? null);
 
             if ($stockAvailable->id) {
+                $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
                 $stockMvt = new StockMvt();
-
+                $stockMvt->setIdStockMvtReason($stockMvt->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
                 $stockMvt->setIdStock((int) $stockAvailable->id);
 
                 if (!empty($params['id_order'])) {

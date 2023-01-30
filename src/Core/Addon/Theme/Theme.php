@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use AbstractAssetManager;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
@@ -51,7 +50,7 @@ class Theme implements AddonInterface
     ) {
         if (isset($attributes['parent'])) {
             if (null === $configurationCacheDirectory) {
-                $configurationCacheDirectory = (new Configuration())->get('_PS_CACHE_DIR_');
+                $configurationCacheDirectory = _PS_CACHE_DIR_;
             }
 
             $yamlParser = new YamlParser($configurationCacheDirectory);

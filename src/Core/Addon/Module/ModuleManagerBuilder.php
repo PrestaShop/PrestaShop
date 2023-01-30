@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
@@ -159,7 +158,7 @@ class ModuleManagerBuilder
             return;
         }
 
-        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
+        $yamlParser = new YamlParser(_PS_CACHE_DIR_);
 
         $prestashopAddonsConfig = $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 

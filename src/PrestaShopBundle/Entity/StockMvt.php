@@ -146,6 +146,8 @@ class StockMvt
 
     public function __construct()
     {
+        @trigger_error('This function is deprecated since 8.1 and will be dropped in 9.0.', E_USER_DEPRECATED);
+
         $configuration = new Configuration();
         $this->setIdStockMvtReason($this->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
     }

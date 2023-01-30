@@ -29,11 +29,11 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use Currency;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
@@ -67,7 +67,7 @@ class ProductInformation extends CommonAbstractType
      */
     public $categoryDataProvider;
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     public $configuration;
     /**
@@ -86,10 +86,6 @@ class ProductInformation extends CommonAbstractType
      * @var array<int|Language>
      */
     private $locales;
-    /**
-     * @var ManufacturerDataProvider
-     */
-    private $manufacturerDataProvider;
     /**
      * @var array
      */
@@ -129,17 +125,16 @@ class ProductInformation extends CommonAbstractType
         $categoryDataProvider,
         $productDataProvider,
         $featureDataProvider,
-        $manufacturerDataProvider
+        $manufacturerDataProvider,
+        ConfigurationInterface $configuration
     ) {
         $this->context = $legacyContext;
         $this->translator = $translator;
         $this->router = $router;
         $this->productDataProvider = $productDataProvider;
         $this->categoryDataProvider = $categoryDataProvider;
-        $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->featureDataProvider = $featureDataProvider;
 
-        $this->configuration = new Configuration();
         $this->locales = $this->context->getLanguages();
         $this->currency = $this->context->getContext()->currency;
 
@@ -159,7 +154,7 @@ class ProductInformation extends CommonAbstractType
         );
 
         $this->manufacturers = $this->formatDataChoicesList(
-            $this->manufacturerDataProvider->getManufacturers(
+            $manufacturerDataProvider->getManufacturers(
                 $get_nb_products = false,
                 $id_lang = 0,
                 $active = true,
@@ -170,6 +165,7 @@ class ProductInformation extends CommonAbstractType
             ),
             'id_manufacturer'
         );
+        $this->configuration = $configuration;
     }
 
     /**

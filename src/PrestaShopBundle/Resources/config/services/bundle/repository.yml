@@ -47,6 +47,7 @@ services:
     class: PrestaShopBundle\Entity\Repository\StockRepository
     arguments:
       - "@service_container"
+      - '@prestashop.adapter.legacy.configuration'
       - "@doctrine.dbal.default_connection"
       - "@doctrine.orm.default_entity_manager"
       - "@prestashop.adapter.legacy.context"

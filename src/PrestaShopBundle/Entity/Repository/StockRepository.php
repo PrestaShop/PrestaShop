@@ -28,11 +28,11 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManager;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Stock\StockManager as StockManagerCore;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
@@ -57,6 +57,10 @@ class StockRepository extends StockManagementRepository
      * @var array
      */
     private $totalCombinations = [];
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
 
     /**
      * StockRepository constructor.
@@ -71,6 +75,7 @@ class StockRepository extends StockManagementRepository
      */
     public function __construct(
         ContainerInterface $container,
+        ConfigurationInterface $configuration,
         Connection $connection,
         EntityManager $entityManager,
         ContextAdapter $contextAdapter,
@@ -89,9 +94,9 @@ class StockRepository extends StockManagementRepository
 
         $this->stockManager = $stockManager;
 
-        $configuration = new Configuration();
         $this->orderStates['error'] = (int) $configuration->get('PS_OS_ERROR');
         $this->orderStates['cancellation'] = (int) $configuration->get('PS_OS_CANCELED');
+        $this->configuration = $configuration;
     }
 
     /**
@@ -123,7 +128,7 @@ class StockRepository extends StockManagementRepository
             $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
 
             if ($product->id) {
-                $configurationAdapter = new Configuration();
+                $configurationAdapter = $this->configuration;
 
                 (new StockManagerCore())->updateQuantity(
                     $product,

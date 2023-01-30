@@ -115,6 +115,7 @@ services:
       - "@prestashop.adapter.data_provider.product"
       - "@prestashop.adapter.data_provider.feature"
       - "@prestashop.adapter.data_provider.manufacturer"
+      - '@prestashop.adapter.legacy.configuration'
     parent: 'form.type.common_type'
     public: true
     tags:
