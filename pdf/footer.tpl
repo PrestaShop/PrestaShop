@@ -43,8 +43,14 @@
 				<br />
 			{/if}
 
-			{if isset($shop_details)}
-				{$shop_details|escape:'html':'UTF-8'}<br />
+			{if isset($shop_siret)}
+				{$shop_siret|escape:'html':'UTF-8'}<br />
+			{/if}
+						{if isset($shop_vat_number)}
+				{$shop_vat_number|escape:'html':'UTF-8'}<br />
+			{/if}
+						{if isset($shop_iban)}
+				{$shop_iban|escape:'html':'UTF-8'}<br />
 			{/if}
 
 			{if isset($free_text)}
@@ -53,4 +59,3 @@
 		</td>
 	</tr>
 </table>
-
