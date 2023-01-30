@@ -303,7 +303,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
       - '@prestashop.adapter.shop.context'
       - '@form.factory'
-      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultiShopPreviewAccessibilityChecker'
+      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductSingleShopAssociatedAccessibilityChecker'
+      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultipleShopsAssociatedAccessibilityChecker'
     public: true
 
   prestashop.core.grid.definition.factory.product.shops:

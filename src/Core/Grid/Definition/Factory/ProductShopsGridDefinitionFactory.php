@@ -150,7 +150,7 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
      *
      * @return array
      */
-    protected function getEditColumnAttributes(): array
+    protected function getMultiShopEditionAttributes(): array
     {
         return [];
     }

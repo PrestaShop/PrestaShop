@@ -93,7 +93,12 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @var AccessibilityCheckerInterface
      */
-    private $productPreviewChecker;
+    private $singleShopChecker;
+
+    /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $multipleShopsChecker;
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
@@ -101,14 +106,16 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         FeatureInterface $multistoreFeature,
         ShopConstraintContextInterface $shopConstraintContext,
         FormFactoryInterface $formFactory,
-        AccessibilityCheckerInterface $productPreviewChecker
+        AccessibilityCheckerInterface $singleShopChecker,
+        AccessibilityCheckerInterface $multipleShopsChecker
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
         $this->multistoreFeature = $multistoreFeature;
         $this->shopConstraintContext = $shopConstraintContext;
         $this->formFactory = $formFactory;
-        $this->productPreviewChecker = $productPreviewChecker;
+        $this->singleShopChecker = $singleShopChecker;
+        $this->multipleShopsChecker = $multipleShopsChecker;
     }
 
     /**
@@ -132,7 +139,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        $editAttributes = $this->getEditColumnAttributes();
+        $editAttributes = $this->getMultiShopEditionAttributes();
 
         $columns = (new ColumnCollection())
             ->add(
@@ -283,7 +290,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @return array<string, string>
      */
-    protected function getEditColumnAttributes(): array
+    protected function getMultiShopEditionAttributes(): array
     {
         if ($this->shopConstraintContext->getShopConstraint()->forAllShops() || $this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
             return [
@@ -298,20 +305,6 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getRowActions(): RowActionCollection
     {
-        $editOptions = [
-            'route' => 'admin_products_v2_edit',
-            'route_param_name' => 'productId',
-            'route_param_field' => 'id_product',
-            'clickable_row' => true,
-        ];
-        if ($this->shopConstraintContext->getShopConstraint()->forAllShops() || $this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-            $editOptions['attr'] = [
-                'class' => 'multi-shop-edit-product',
-                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
-                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
-            ];
-        }
-
         // By default use the default value from the trait
         $deleteLabel = null;
         $deleteRouteName = 'admin_products_v2_delete';
@@ -335,12 +328,56 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         $rowActions = new RowActionCollection();
+
+        if ($this->shopConstraintContext->getShopConstraint()->forAllShops() || $this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
+            $rowActions
+                ->add((new LinkRowAction('single_shop_edit'))
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_v2_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                    // Only present when product has strictly one shop
+                    'accessibility_checker' => $this->singleShopChecker,
+                    // We force the shop switching in this case
+                    'extra_route_params' => [
+                        'switchToShop' => 'id_shop_default',
+                    ],
+                ])
+                )
+                ->add((new LinkRowAction('multi_shops_edit'))
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_v2_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                    'attr' => $this->getMultiShopEditionAttributes(),
+                    // Only present when product has more than one shop
+                    'accessibility_checker' => $this->multipleShopsChecker,
+                ])
+                )
+            ;
+        } else {
+            // When no multi shop or if the view is single shop a simple edit action is used
+            $rowActions
+                ->add((new LinkRowAction('edit'))
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_v2_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                ])
+                )
+            ;
+        }
+
         $rowActions
-            ->add((new LinkRowAction('edit'))
-            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-            ->setIcon('edit')
-            ->setOptions($editOptions)
-            )
             ->add((new LinkRowAction('preview'))
             ->setName($this->trans('Preview', [], 'Admin.Actions'))
             ->setIcon('remove_red_eye')
@@ -349,7 +386,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'target' => '_blank',
-                'accessibility_checker' => $this->productPreviewChecker,
+                'accessibility_checker' => $this->singleShopChecker,
             ])
             )
             ->add((new SubmitRowAction('duplicate'))

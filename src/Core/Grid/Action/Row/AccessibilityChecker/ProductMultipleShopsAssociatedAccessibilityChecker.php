@@ -31,10 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
- * This checker is used in multishop view, the preview action should not be displayed for products
- * associated to multiple shops. If there is only one it's ok though.
+ * This checker is used in multishop view, some actions should not be displayed for products
+ * associated to a single shops. If there are more than one it's ok though.
  */
-class ProductMultiShopPreviewAccessibilityChecker implements AccessibilityCheckerInterface
+class ProductMultipleShopsAssociatedAccessibilityChecker implements AccessibilityCheckerInterface
 {
     /**
      * @var MultistoreContextCheckerInterface
@@ -55,9 +55,9 @@ class ProductMultiShopPreviewAccessibilityChecker implements AccessibilityChecke
     public function isGranted(array $record)
     {
         if ($this->multiStoreContext->isSingleShopContext()) {
-            return true;
+            return false;
         }
 
-        return empty($record['associated_shops_ids']) || count($record['associated_shops_ids']) === 1;
+        return !empty($record['associated_shops_ids']) && count($record['associated_shops_ids']) > 1;
     }
 }
