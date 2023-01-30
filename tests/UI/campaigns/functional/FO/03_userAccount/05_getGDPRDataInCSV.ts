@@ -921,6 +921,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPage2', baseContext);
 
         await customersPage.goToViewCustomerPage(page, 1);
+
         const pageTitle = await viewCustomerPage.getPageTitle(page);
         await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
       });

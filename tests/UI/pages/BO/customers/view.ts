@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * View customer page, contains functions that can be used on the page
@@ -7,6 +8,56 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ViewCustomer extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly updateSuccessfulMessage: string;
+
+  private readonly personnalInformationDiv: string;
+
+  private readonly personnalInformationEditButton: string;
+
+  private readonly ordersDiv: string;
+
+  private readonly ordersViewButton: (row: number) => string;
+
+  private readonly cartsDiv: string;
+
+  private readonly cartsViewButton: (row: number) => string;
+
+  private readonly viewedProductsDiv: string;
+
+  private readonly privateNoteDiv: string;
+
+  private readonly privateNoteTextArea: string;
+
+  private readonly privateNoteSaveButton: string;
+
+  private readonly messagesDiv: string;
+
+  private readonly vouchersDiv: string;
+
+  private readonly voucherEditButton: string;
+
+  private readonly voucherToggleDropdown: string;
+
+  private readonly voucherDeleteButton: string;
+
+  private readonly lastEmailsDiv: string;
+
+  private readonly lastConnectionsDiv: string;
+
+  private readonly lastConnectionTableRow: (row: number) => string;
+
+  private readonly lastConnectionTableColumn: (row: number, column: string) => string;
+
+  private readonly groupsDiv: string;
+
+  private readonly addressesDiv: string;
+
+  private readonly addressesEditButton: (row: number) => string;
+
+  private readonly purchasedProductsDiv: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on view customer page
@@ -24,11 +75,11 @@ class ViewCustomer extends BOBasePage {
 
     // Orders
     this.ordersDiv = '.customer-orders-card';
-    this.ordersViewButton = (row) => `${this.ordersDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
+    this.ordersViewButton = (row: number) => `${this.ordersDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
 
     // Carts
     this.cartsDiv = '.customer-carts-card';
-    this.cartsViewButton = (row) => `${this.cartsDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
+    this.cartsViewButton = (row: number) => `${this.cartsDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
 
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
@@ -52,8 +103,8 @@ class ViewCustomer extends BOBasePage {
 
     // Last connections
     this.lastConnectionsDiv = '.customer-last-connections-card';
-    this.lastConnectionTableRow = (row) => `tr.customer-last-connection:nth-child(${row})`;
-    this.lastConnectionTableColumn = (row, column) => `${this.lastConnectionTableRow(row)} `
+    this.lastConnectionTableRow = (row: number) => `tr.customer-last-connection:nth-child(${row})`;
+    this.lastConnectionTableColumn = (row: number, column: string) => `${this.lastConnectionTableRow(row)} `
       + `td.customer-last-connection-${column}`;
 
     // Groups
@@ -61,7 +112,7 @@ class ViewCustomer extends BOBasePage {
 
     // Addresses
     this.addressesDiv = '.customer-addresses-card';
-    this.addressesEditButton = (row) => `${this.addressesDiv} tr:nth-child(${row}) a.grid-edit-row-link i`;
+    this.addressesEditButton = (row: number) => `${this.addressesDiv} tr:nth-child(${row}) a.grid-edit-row-link i`;
 
     // Purchased products
     this.purchasedProductsDiv = '.customer-bought-products-card';
@@ -77,8 +128,8 @@ class ViewCustomer extends BOBasePage {
    * @param cardTitle {string} Value of card title to get number of elements
    * @returns {Promise<string>}
    */
-  getNumberOfElementFromTitle(page, cardTitle) {
-    let selector;
+  getNumberOfElementFromTitle(page: Page, cardTitle: string): Promise<string> {
+    let selector: string;
 
     switch (cardTitle) {
       case 'Orders':
@@ -123,7 +174,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getPersonalInformationTitle(page) {
+  getPersonalInformationTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.personnalInformationDiv);
   }
 
@@ -133,8 +184,8 @@ class ViewCustomer extends BOBasePage {
    * @param element {string} Value of element to get text content
    * @returns {Promise<string>}
    */
-  getTextFromElement(page, element) {
-    let selector;
+  getTextFromElement(page: Page, element: string): Promise<string> {
+    let selector: string;
 
     switch (element) {
       case 'Personal information':
@@ -184,7 +235,7 @@ class ViewCustomer extends BOBasePage {
    * @param row {number} Row number in table Last connections
    * @returns {Promise<string>}
    */
-  getTextColumnFromTableLastConnections(page, column, row = 1) {
+  getTextColumnFromTableLastConnections(page: Page, column: string, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.lastConnectionTableColumn(row, column));
   }
 
@@ -193,7 +244,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPrivateNoteBlockVisible(page) {
+  isPrivateNoteBlockVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.privateNoteDiv, 1000);
   }
 
@@ -203,7 +254,7 @@ class ViewCustomer extends BOBasePage {
    * @param note {string} Value of private note to set
    * @returns {Promise<string>}
    */
-  async setPrivateNote(page, note) {
+  async setPrivateNote(page: Page, note: string): Promise<string> {
     await this.setValue(page, this.privateNoteTextArea, note);
     await page.click(this.privateNoteSaveButton);
 
@@ -215,7 +266,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToEditCustomerPage(page) {
+  async goToEditCustomerPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.personnalInformationEditButton);
   }
 
@@ -226,8 +277,8 @@ class ViewCustomer extends BOBasePage {
    * @param row {number} Row on table where to click
    * @returns {Promise<void>}
    */
-  async goToPage(page, cardTitle, row = 1) {
-    let selector;
+  async goToPage(page: Page, cardTitle: string, row: number = 1): Promise<void> {
+    let selector: (row: number) => string;
 
     switch (cardTitle) {
       case 'Orders':
@@ -251,9 +302,9 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getCustomerID(page) {
+  async getCustomerID(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.personnalInformationDiv);
   }
 }
 
-module.exports = new ViewCustomer();
+export default new ViewCustomer();
