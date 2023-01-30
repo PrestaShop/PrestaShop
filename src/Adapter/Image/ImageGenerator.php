@@ -43,8 +43,14 @@ use PrestaShopException;
  */
 class ImageGenerator
 {
+    /**
+     * @var FeatureFlagRepository
+     */
     private $featureFlagRepository;
 
+    /**
+     * @var ImageFormatConfiguration
+     */
     private $imageFormatConfiguration;
 
     public function __construct(FeatureFlagRepository $featureFlagRepository, ImageFormatConfiguration $imageFormatConfiguration)
