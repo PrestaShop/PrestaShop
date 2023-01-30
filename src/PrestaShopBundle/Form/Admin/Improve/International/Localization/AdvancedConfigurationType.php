@@ -64,7 +64,7 @@ class AdvancedConfigurationType extends TranslatorAwareType
             ])
             ->add('translation_pack_url', TextType::class, [
                 'label' => $this->trans(
-                    'Localisation pack url',
+                    'Localization pack URL',
                     'Admin.International.Feature'
                 ),
             ])
