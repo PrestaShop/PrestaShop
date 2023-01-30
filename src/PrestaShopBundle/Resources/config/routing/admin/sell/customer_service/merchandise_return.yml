@@ -15,6 +15,7 @@ admin_merchandise_returns_save_options:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::indexAction
     _legacy_controller: AdminReturn
     _legacy_link: AdminReturn:submitOptionsorder_return
+    _legacy_feature_flag: order_return
 
 admin_merchandise_returns_filter:
   path: /
@@ -97,5 +98,6 @@ admin_order_returns_generate_pdf:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:generateOrderReturnPdf
     _legacy_controller: AdminReturn
+    _legacy_feature_flag: order_return
   requirements:
     orderReturnId: \d+

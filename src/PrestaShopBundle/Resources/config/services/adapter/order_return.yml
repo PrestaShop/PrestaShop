@@ -60,4 +60,4 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand'
     arguments:
-      [ '@prestashop.adapter.order_return.repository.order_return_repository' ]
+      [ '@prestashop.adapter.order_return.repository.order_return_repository', '@prestashop.adapter.order.repository.order_repository' ]

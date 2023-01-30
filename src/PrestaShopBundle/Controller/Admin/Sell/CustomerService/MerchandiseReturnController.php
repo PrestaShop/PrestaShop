@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
@@ -255,6 +256,20 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             OrderReturnOrderStateConstraintException::class => [
                 OrderReturnOrderStateConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            BulkDeleteOrderReturnProductException::class => [
+                BulkDeleteOrderReturnProductException::CANT_DELETE_PRODUCT_NOT_PART_OF_ORDER_RETURN => $this->trans(
+                    'Some order details don\'t exist in merchandise return',
+                    'Admin.Notifications.Error'
+                ),
+                BulkDeleteOrderReturnProductException::CANT_DELETE_ALL_PRODUCTS => $this->trans(
+                    'Merchandise return must have at least one product left',
+                    'Admin.Notifications.Error'
+                ),
+                BulkDeleteOrderReturnProductException::UNEXPECTED_ERROR => $this->trans(
+                    'Failed to delete some of merchandise return products',
                     'Admin.Notifications.Error'
                 ),
             ],

@@ -56,9 +56,10 @@ class DeleteProductFromOrderReturnHandler implements DeleteProductFromOrderRetur
     {
         try {
             $this->orderReturnRepository->deleteOrderReturnDetail(
-            $command->getOrderReturnId(),
-            $command->getOrderReturnDetailId()
-        );
+                $command->getOrderReturnId(),
+                $command->getOrderReturnDetailId(),
+                $command->getCustomizationId()
+            );
         } catch (OrderReturnException $e) {
             throw new DeleteOrderReturnProductException($e->getMessage(), $e->getCode());
         }

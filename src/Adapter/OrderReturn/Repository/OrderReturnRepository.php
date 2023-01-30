@@ -149,18 +149,20 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     /**
      * @param OrderReturnId $orderReturnId
      * @param OrderReturnDetailId $orderReturnDetailId
-     * @param CustomizationId $customizationId
+     * @param CustomizationId|null $customizationId
      *
      * @throws DeleteOrderReturnProductException
      */
     public function deleteOrderReturnDetail(
         OrderReturnId $orderReturnId,
-        OrderReturnDetailId $orderReturnDetailId
+        OrderReturnDetailId $orderReturnDetailId,
+        ?CustomizationId $customizationId = null
     ): void {
         try {
             if (!OrderReturn::deleteOrderReturnDetail(
                 $orderReturnId->getValue(),
-                $orderReturnDetailId->getValue()
+                $orderReturnDetailId->getValue(),
+                $customizationId ? $customizationId->getValue() : 0
             )) {
                 throw new DeleteOrderReturnProductException(
                     'Failed to delete merchandise return detail',
@@ -188,8 +190,8 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             return new OrderReturnDetail(
                 (int) $result['id_order_return'],
                 (int) $result['id_order_detail'],
-                (int) $result['id_customization'],
-                (int) $result['product_quantity']
+                (int) $result['product_quantity'],
+                (int) $result['id_customization'] ?: null
             );
         }
 
@@ -215,10 +217,10 @@ class OrderReturnRepository extends AbstractObjectModelRepository
         $return = [];
         foreach ($details as $detail) {
             $return[$detail['id_order_detail']] = new OrderReturnDetail(
-                $detail['id_order_return'],
-                $detail['id_order_detail'],
-                $detail['customization_id'],
-                $detail['product_quantity']
+                $orderReturnId->getValue(),
+                (int) $detail['id_order_detail'],
+                (int) $detail['product_quantity'],
+                (int) $detail['id_customization'] ?: null
             );
         }
 

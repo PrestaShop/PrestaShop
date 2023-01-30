@@ -65,12 +65,17 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
      */
     public function handle(BulkDeleteProductFromOrderReturnCommand $command): void
     {
-        $this->validate($command->getOrderReturnId(), $command->getOrderReturnDetailIds());
+        $orderReturn = $this->orderReturnRepository->get($command->getOrderReturnId());
+        $order = $this->orderRepository->get(new OrderId((int) $orderReturn->id_order));
+        $details = $this->orderReturnRepository->getOrderReturnDetails($command->getOrderReturnId(), $order);
+
+        $this->validate($command->getOrderReturnDetailIds(), $details);
         foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
             try {
                 $this->orderReturnRepository->deleteOrderReturnDetail(
                     $command->getOrderReturnId(),
-                    $orderReturnDetailId
+                    $orderReturnDetailId,
+                    $details[$orderReturnDetailId->getValue()]->getCustomizationId()
                 );
             } catch (OrderReturnException $e) {
                 $errors[] = $orderReturnDetailId->getValue();
@@ -87,21 +92,14 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
     }
 
     /**
-     * @param OrderReturnId $orderReturnId
      * @param array<OrderReturnDetailId> $orderReturnDetailIds
+     * @param array $details
      *
      * @throws BulkDeleteOrderReturnProductException
-     * @throws OrderReturnException
-     * @throws OrderException
-     * @throws CoreException
      */
-    private function validate(OrderReturnId $orderReturnId, array $orderReturnDetailIds): void
+    private function validate(array $orderReturnDetailIds, array $details): void
     {
         $errors = [];
-
-        $orderReturn = $this->orderReturnRepository->get($orderReturnId);
-        $order = $this->orderRepository->get(new OrderId($orderReturn->id_order));
-        $details = $this->orderReturnRepository->getOrderReturnDetails($orderReturnId, $order);
 
         /* Check if products exist in order return */
         foreach ($orderReturnDetailIds as $orderReturnDetailId) {

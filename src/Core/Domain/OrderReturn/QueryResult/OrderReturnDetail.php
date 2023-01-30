@@ -45,21 +45,23 @@ class OrderReturnDetail
     private $orderDetailId;
 
     /**
-     * @var CustomizationId
-     */
-    private $customizationId;
-
-    /**
      * @var int
      */
     private $productQuantity;
 
-    public function __construct(int $orderReturnId, int $orderDetailId, int $customizationId, int $productQuantity)
+    /**
+     * @var CustomizationId
+     */
+    private $customizationId;
+
+    public function __construct(int $orderReturnId, int $orderDetailId, int $productQuantity, ?int $customizationId = null)
     {
         $this->orderReturnId = new OrderReturnId($orderReturnId);
         $this->orderDetailId = new OrderReturnDetailId($orderDetailId);
-        $this->customizationId = new CustomizationId($customizationId);
         $this->productQuantity = $productQuantity;
+        if ($customizationId) {
+            $this->customizationId = new CustomizationId($customizationId);
+        }
     }
 
     /**
@@ -79,9 +81,9 @@ class OrderReturnDetail
     }
 
     /**
-     * @return CustomizationId
+     * @return CustomizationId|null
      */
-    public function getCustomizationId(): CustomizationId
+    public function getCustomizationId(): ?CustomizationId
     {
         return $this->customizationId;
     }
