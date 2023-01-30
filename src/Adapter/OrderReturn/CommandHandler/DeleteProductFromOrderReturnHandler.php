@@ -28,14 +28,25 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 
-class DeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler implements DeleteProductFromOrderReturnHandlerInterface
+class DeleteProductFromOrderReturnHandler implements DeleteProductFromOrderReturnHandlerInterface
 {
+    /**
+     * @var OrderReturnRepository
+     */
+    private $orderReturnRepository;
+
+    public function __construct(
+        OrderReturnRepository $orderReturnRepository
+    ) {
+        $this->orderReturnRepository = $orderReturnRepository;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -44,7 +55,7 @@ class DeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler imp
     public function handle(DeleteProductFromOrderReturnCommand $command): void
     {
         try {
-            $this->deleteOrderReturnProduct(
+            $this->orderReturnRepository->deleteOrderReturnDetail(
             $command->getOrderReturnId(),
             $command->getOrderReturnDetailId()
         );

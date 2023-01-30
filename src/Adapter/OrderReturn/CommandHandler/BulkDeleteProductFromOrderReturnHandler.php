@@ -30,14 +30,35 @@ namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
 use Order;
 use OrderReturn;
-use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 
-class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler implements BulkDeleteProductFromOrderReturnHandlerInterface
+class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOrderReturnHandlerInterface
 {
+    /**
+     * @var OrderReturnRepository
+     */
+    private $orderReturnRepository;
+
+    /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    public function __construct(
+        OrderReturnRepository $orderReturnRepository,
+        OrderRepository $orderRepository
+    ) {
+        $this->orderReturnRepository = $orderReturnRepository;
+        $this->orderRepository = $orderRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,8 +66,8 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
     {
         $errors = [];
 
-        $orderReturn = new OrderReturn($command->getOrderReturnId()->getValue());
-        $order = new Order($orderReturn->id_order);
+        $orderReturn = $this->orderReturnRepository->get(new OrderReturnId($command->getOrderReturnId()->getValue()));
+        $order = $this->orderRepository->get(new OrderId($orderReturn->id_order));
         $details = OrderReturn::getOrdersReturnProducts($command->getOrderReturnId()->getValue(), $order);
 
         /* Check if products exist in order return */
@@ -77,7 +98,7 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
 
         foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
             try {
-                $this->deleteOrderReturnProduct(
+                $this->orderReturnRepository->deleteOrderReturnDetail(
                     $command->getOrderReturnId(),
                     $orderReturnDetailId
                 );

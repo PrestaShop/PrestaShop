@@ -24,7 +24,9 @@ services:
   prestashop.adapter.order_return.repository.order_return_repository:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository'
     arguments:
-      [ '@prestashop.adapter.order_return.validator.order_return_validator' ]
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@prestashop.adapter.order_return.validator.order_return_validator'
 
   prestashop.adapter.order_return.validator.order_return_validator:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'
@@ -43,13 +45,19 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
+    arguments:
+      [ '@prestashop.adapter.order_return.repository.order_return_repository', '@prestashop.adapter.order_return_state.repository.order_return_state_repository' ]
 
   PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandler:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand'
+    arguments:
+      [ '@prestashop.adapter.order_return.repository.order_return_repository' ]
 
   PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandler:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand'
+    arguments:
+      [ '@prestashop.adapter.order_return.repository.order_return_repository' ]

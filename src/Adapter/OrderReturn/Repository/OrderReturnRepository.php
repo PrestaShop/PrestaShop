@@ -28,27 +28,50 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
+use Doctrine\DBAL\Connection;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnDetail;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShopException;
 
 class OrderReturnRepository extends AbstractObjectModelRepository
 {
+
+
     /**
      * @var OrderReturnValidator
      */
     private $orderReturnValidator;
 
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
      * @param OrderReturnValidator $orderReturnValidator
      */
-    public function __construct(OrderReturnValidator $orderReturnValidator)
-    {
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix,
+        OrderReturnValidator $orderReturnValidator
+    ) {
         $this->orderReturnValidator = $orderReturnValidator;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -85,5 +108,94 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             $orderReturn,
             OrderReturnException::class
         );
+    }
+
+    /**
+     * @param OrderReturnId $orderReturnId
+     * @param OrderReturnDetailId $orderReturnDetailId
+     *
+     * @throws CoreException
+     * @throws DeleteOrderReturnProductException
+     * @throws OrderReturnException
+     */
+    public function deleteOrderReturnProduct(
+        OrderReturnId $orderReturnId,
+        OrderReturnDetailId $orderReturnDetailId
+    ): void {
+        $orderReturn = $this->get($orderReturnId);
+
+        if ((int) ($orderReturn->countProduct()) <= 1) {
+            throw new DeleteOrderReturnProductException(
+                'Can\'t delete last product from merchandise return',
+                DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT
+            );
+        }
+        $orderReturnDetail = $this->getOrderReturnDetailByOrderDetailId($orderReturnDetailId->getValue());
+
+        if (!$orderReturnDetail) {
+            throw new DeleteOrderReturnProductException(
+                'Couldn\'t find merchandise return detail',
+                DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND
+            );
+        }
+
+        $this->deleteOrderReturnDetail(
+            $orderReturnDetail->getOrderReturnId(),
+            $orderReturnDetailId,
+            $orderReturnDetail->getCustomizationId()
+        );
+
+    }
+
+    /**
+     * @param OrderReturnId $orderReturnId
+     * @param OrderReturnDetailId $orderReturnDetailId
+     * @param CustomizationId $customizationId
+     *
+     * @throws DeleteOrderReturnProductException
+     */
+    public function deleteOrderReturnDetail(
+        OrderReturnId $orderReturnId,
+        OrderReturnDetailId $orderReturnDetailId,
+        CustomizationId $customizationId
+    ): void {
+        try {
+            if (!OrderReturn::deleteOrderReturnDetail(
+                $orderReturnId->getValue(),
+                $orderReturnDetailId->getValue(),
+                $customizationId->getValue()
+            )) {
+                throw new DeleteOrderReturnProductException(
+                    'Failed to delete merchandise return detail',
+                    DeleteOrderReturnProductException::UNEXPECTED_ERROR
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new DeleteOrderReturnProductException(
+                'Failed to delete merchandise return detail',
+                DeleteOrderReturnProductException::UNEXPECTED_ERROR
+            );
+        }
+    }
+
+    public function getOrderReturnDetailByOrderDetailId(int $orderDetailId): ?OrderReturnDetail
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('id_order_return, id_order_detail, id_customization, product_quantity')
+            ->from($this->dbPrefix . 'order_return_detail')
+            ->where('id_order_detail = :orderDetailId')
+            ->setParameter('orderDetailId', $orderDetailId)
+            ->execute()->fetchFirstColumn();
+
+        if ($result) {
+            return new OrderReturnDetail(
+                (int) $result['id_order_return'],
+                (int) $result['id_order_detail'],
+                (int) $result['id_customization'],
+                (int) $result['product_quantity']
+            );
+        }
+
+        return null;
     }
 }
