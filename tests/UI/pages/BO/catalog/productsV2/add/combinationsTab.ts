@@ -243,7 +243,8 @@ class CombinationsTab extends BOBasePage {
     this.combinationListTableRow = (row: number) => `#combination-list-row-${row - 1}`;
     this.combinationListTableColumn = (row: number, column: string) => `td input#combination_list_${row - 1}_${column}`;
     this.combinationListTableActionsDropDown = (row: number) => `#combination_list_${row - 1}_actions div a`;
-    this.combinationListTableActionsColumn = (row: number, action: string) => `td button#combination_list_${row - 1}_actions_${action}`;
+    this.combinationListTableActionsColumn = (row: number, action: string) => `td button#combination_list_${row - 1}`
+      + `_actions_${action}`;
     this.combinationListTableSelectAllButton = '#bulk-all-selection-dropdown-button';
     this.combinationListSelectAllDropDownMenu = '#bulk-all-selection-dropdown .dropdown-menu.show';
     this.combinationListBulkSelectAll = '#bulk-all-selection-dropdown label[for="bulk-select-all"]';
