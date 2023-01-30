@@ -167,7 +167,11 @@ class CustomerPersisterCore
             if ($guestToCustomerConversion) {
                 $customer->cleanGroups();
                 $customer->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
-                $customer->sendWelcomeEmail($this->context->language->id);
+
+                // Send him a welcome email, if enabled
+                if (Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+                    $customer->sendWelcomeEmail($this->context->language->id);
+                }
             }
         }
 
@@ -236,8 +240,8 @@ class CustomerPersisterCore
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
 
-            // Send a welcome information email, only for registered customers
-            if (!$customer->is_guest) {
+            // Send a welcome information email, only for registered customers and if enabled
+            if (!$customer->is_guest && Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
                 $customer->sendWelcomeEmail($this->context->language->id);
             }
 

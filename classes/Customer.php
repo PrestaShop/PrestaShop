@@ -1230,8 +1230,8 @@ class CustomerCore extends ObjectModel
         // Otherwise, just a welcome email, if configured.
         if (empty($password)) {
             $this->sendWelcomeEmail($idLang, true);
-        } else {
-            $this->sendWelcomeEmail($idLang, false);
+        } elseif (Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+            $this->sendWelcomeEmail($idLang);
         }
 
         return true;
@@ -1250,11 +1250,6 @@ class CustomerCore extends ObjectModel
      */
     public function sendWelcomeEmail(int $idLang, bool $sendPasswordLink = false)
     {
-        // If it's just a basic welcome email, we will check if we want to send these kind of emails first
-        if ($sendPasswordLink === false && !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
-            return true;
-        }
-
         // Use provided lang ID, or take the one from context
         $language = new Language($idLang);
         if (!Validate::isLoadedObject($language)) {
