@@ -137,9 +137,15 @@
       {% endif %}
 
     {% else %}
-      <p class="text-muted text-center">
-        {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-      </p>
+      <div class="text-center">
+        <p class="text-muted mb-2">
+          {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+        </p> 
+        <a class="btn btn-primary" href="{{ path('admin_orders_create') }}">
+          <i class="material-icons">add_circle</i>
+          {{ 'Create manual order'|trans({}, 'Admin.Global') }}
+        </a>
+      </div>
     {% endif %}
   </div>
 </div>

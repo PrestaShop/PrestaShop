@@ -38,9 +38,15 @@
     {% if customerDiscountGrid.data.records_total > 0 %}
       {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerDiscountGrid} %}
     {% else %}
-      <p class="text-muted text-center mb-0">
-        {{ '%firstname% %lastname% has no discount vouchers'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-      </p>
+      <div class="text-center">
+        <p class="text-muted mb-2">
+          {{ '%firstname% %lastname% has no discount vouchers'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+        </p> 
+        <a class="btn btn-primary" href="{{ getAdminLink('AdminCartRules', true, {'addcart_rule': 1, 'back': app.request.uri}) }}">
+          <i class="material-icons">add_circle</i>
+          {{ 'Create voucher'|trans({}, 'Admin.Global') }}
+        </a>
+      </div>
     {% endif %}
   </div>
 </div>
