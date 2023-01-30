@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\EmptyColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
@@ -141,6 +142,11 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $editAttributes = $this->getMultiShopEditionAttributes();
 
+        $shopId = null;
+        if ($this->shopConstraintContext->getShopConstraint()->getShopId()) {
+            $shopId = $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue();
+        }
+
         $columns = (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk'))
@@ -218,16 +224,37 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'attr' => $editAttributes,
                     ])
             )
-            ->add(
-                (new ToggleColumn('active'))
-                    ->setName($this->trans('Status', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'active',
-                        'primary_field' => 'id_product',
-                        'route' => 'admin_products_v2_toggle_status',
-                        'route_param_name' => 'productId',
-                    ])
-            )
+        ;
+
+        if (!empty($shopId)) {
+            $columns
+                ->add(
+                    (new ToggleColumn('active'))
+                        ->setName($this->trans('Status', [], 'Admin.Global'))
+                        ->setOptions([
+                            'field' => 'active',
+                            'primary_field' => 'id_product',
+                            'route' => 'admin_products_v2_toggle_status_for_shop',
+                            'route_param_name' => 'productId',
+                            'extra_route_params' => [
+                                'shopId' => $shopId,
+                            ],
+                        ])
+                )
+            ;
+        } else {
+            $columns
+                ->add(
+                    (new EmptyColumn('active'))
+                        ->setName($this->trans('Status', [], 'Admin.Global'))
+                        ->setOptions([
+                            'empty_value' => '-',
+                        ])
+                )
+            ;
+        }
+
+        $columns
             ->add(
                 (new PositionColumn('position'))
                     ->setName($this->trans('Position', [], 'Admin.Global'))

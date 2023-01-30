@@ -190,7 +190,7 @@ admin_products_v2_duplicate_shop_group:
     productId: \d+
     shopGroupId: \d+
 
-admin_products_v2_toggle_status:
+admin_products_v2_toggle_status_for_shop:
   path: /{productId}/toggle_status/{shopId}
   methods: [ POST ]
   defaults:
@@ -200,7 +200,6 @@ admin_products_v2_toggle_status:
       - AdminProducts:statusproduct
     _legacy_parameters:
       id_product: productId
-    shopId: null
   requirements:
     productId: \d+
 
