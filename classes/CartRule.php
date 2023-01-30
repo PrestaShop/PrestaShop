@@ -1732,7 +1732,7 @@ class CartRuleCore extends ObjectModel
             return [];
         }
 
-        static $errors = [];
+        $errors = [];
         $now = time();
         foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, $useOrderPrice) as $cart_rule) {
             if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice)) {
