@@ -226,6 +226,8 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should re-check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
 
+      await addOrderPage.setGift(page, true);
+
       const tax = await basicHelper.percentage(giftOptions.price, 10);
       const totalTaxExc = (Products.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
       const totalTaxInc = (Products.demo_12.price + giftOptions.price + tax).toFixed(2);
@@ -238,7 +240,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       ]);
     });
 
-    it('should set a gift message and complete the order', async function () {
+    it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
       await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
