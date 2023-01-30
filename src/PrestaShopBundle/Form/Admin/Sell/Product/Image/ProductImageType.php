@@ -47,6 +47,7 @@ class ProductImageType extends CommonAbstractType
         parent::buildForm($builder, $options);
         $builder
             ->add('product_id', HiddenType::class)
+            ->add('shop_id', HiddenType::class)
             ->add('file', FileType::class)
             ->add('position', IntegerType::class)
             ->add('legend', TranslatableType::class, [

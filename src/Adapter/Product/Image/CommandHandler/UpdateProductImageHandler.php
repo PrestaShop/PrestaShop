@@ -117,7 +117,7 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
             $this->productImageRepository->partialUpdateForShops(
                 $image,
                 ['legend' => array_keys($command->getLocalizedLegends())],
-                [$shopConstraint->getShopId()],
+                [$shopId],
                 CannotUpdateProductImageException::FAILED_UPDATE_COVER
             );
         }

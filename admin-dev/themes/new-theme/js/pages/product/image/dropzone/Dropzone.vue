@@ -344,7 +344,6 @@
           // so it will be associated to the shop by default
           file.isAssociatedToCurrentShop = !file.shop_ids || file.shop_ids.includes(this.shopId);
 
-          debugger;
           if (!file.isAssociatedToCurrentShop) {
             file.previewElement.classList.add('not-associated');
             // @todo: add translated title from data attr
@@ -563,13 +562,17 @@
         }
       },
       async updateImagePosition(productImageId: number, newPosition: number): Promise<void> {
+        const image = this.files.filter((file) => Number(file.image_id) === productImageId)[0];
+
         try {
           await saveImagePosition(
             productImageId,
             newPosition,
             this.formName,
             this.token,
-            null
+            //@todo: check if all shops checkobx is selected when its implemented and then check if its associated to current shop
+            // then use allShops constraint (null as shopId)
+            image.isAssociatedToCurrentShop ? this.shopId : null,
           );
         } catch (error: any) {
           this.sortableContainer?.sortable('cancel');

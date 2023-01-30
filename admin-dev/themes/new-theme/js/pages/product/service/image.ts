@@ -69,10 +69,7 @@ export const saveImageInformations = async (
     data[`${formName}[legend][${langId}]`] = selectedFile.legends[langId];
   });
   data[`${formName}[_token]`] = token;
-
-  if (shopId) {
-    data[`${formName}[shop_id]`] = shopId;
-  }
+  data[`${formName}[shop_id]`] = shopId || 0;
 
   return $.ajax(saveUrl, {
     method: 'PATCH',
@@ -112,10 +109,7 @@ export const saveImagePosition = async (
   const data: Record<string, any> = {};
   data[`${formName}[position]`] = newPosition;
   data[`${formName}[_token]`] = token;
-
-  if (shopId) {
-    data[`${formName}[shop_id]`] = shopId;
-  }
+  data[`${formName}[shop_id]`] = shopId || 0;
 
   return $.ajax(sortUrl, {
     method: 'PATCH',
