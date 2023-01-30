@@ -64,8 +64,7 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
@@ -404,11 +403,6 @@ services:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater'
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTypeHandler:
     arguments:
