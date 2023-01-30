@@ -115,17 +115,13 @@ function withWidget($params, callable $cb, $smarty)
 
 function smartyWidget($params, &$smarty)
 {
-    return withWidget(
-        $params,
-        function ($widget, $params) {
-            return Hook::coreRenderWidget(
-                $widget,
-                isset($params['hook']) ? $params['hook'] : null,
-                $params
-            );
-        }, 
-        $smarty
-    );
+    return withWidget($params, function ($widget, $params) {
+        return Hook::coreRenderWidget(
+            $widget,
+            isset($params['hook']) ? $params['hook'] : null,
+            $params
+        );
+    }, $smarty);
 }
 
 function smartyRender($params, &$smarty)
@@ -178,7 +174,7 @@ function smartyWidgetBlock($params, $content, $smarty)
                 $smarty->assign($key, $value);
             }
             $backedUpVariablesStack[] = $backedUpVariables;
-        });
+        }, $smarty);
         // We don't display anything since the template is not rendered yet.
         return '';
     } else {
