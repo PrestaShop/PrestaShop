@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type AddressData from '@data/faker/address';
+
+import type {Page} from 'playwright';
 
 /**
  * Add address page, contains functions that can be used on the page
@@ -7,6 +10,48 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddAddress extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly customerEmailInput: string;
+
+  private readonly customerAddressdniInput: string;
+
+  private readonly customerAddressAliasInput: string;
+
+  private readonly customerAddressFirstNameInput: string;
+
+  private readonly customerLastNameInput: string;
+
+  private readonly customerAddressCompanyInput: string;
+
+  private readonly customerAddressVatNumberInput: string;
+
+  private readonly customerAddressInput: string;
+
+  private readonly customerAddressPostCodeInput: string;
+
+  private readonly customerSecondAddressInput: string;
+
+  private readonly customerAddressCityInput: string;
+
+  private readonly customerAddressCountrySelect: string;
+
+  private readonly customerAddressCountryOption: string;
+
+  private readonly customerAddressStateSelect: string;
+
+  private readonly searchStateInput: string;
+
+  private readonly searchResultState: string;
+
+  private readonly customerAddressPhoneInput: string;
+
+  private readonly customerAddressOtherInput: string;
+
+  public readonly saveAddressButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add address page
@@ -51,7 +96,12 @@ class AddAddress extends BOBasePage {
    * @param waitForNavigation {boolean} True if we need to wait for navigation after save, false if not
    * @returns {Promise<?string>}
    */
-  async createEditAddress(page, addressData, save = true, waitForNavigation = true) {
+  async createEditAddress(
+    page: Page,
+    addressData: AddressData,
+    save: boolean = true,
+    waitForNavigation: boolean = true,
+  ): Promise<string|null> {
     if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
       await this.setValue(page, this.customerEmailInput, addressData.email);
     }
@@ -93,7 +143,7 @@ class AddAddress extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async saveAddress(page) {
+  async saveAddress(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.saveAddressButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -103,9 +153,9 @@ class AddAddress extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getSelectedCountry(page) {
+  getSelectedCountry(page: Page): Promise<string> {
     return this.getTextContent(page, `${this.customerAddressCountryOption}[selected]`, false);
   }
 }
 
-module.exports = new AddAddress();
+export default new AddAddress();
