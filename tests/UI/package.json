@@ -27,6 +27,7 @@
     "// Functional BO": "Scripts to run functional BO tests",
     "test:functional:BO": "TEST_PATH='functional/BO/**/*.{ts,js}' npm run test:specific",
     "test:functional:BO:login": "TEST_PATH='functional/BO/00_login/**/*.{ts,js}' npm run test:specific",
+    "test:functional:BO:dashboard": "TEST_PATH='functional/BO/01_dashboard/**/*.{ts,js}' npm run test:specific",
     "test:functional:BO:orders": "TEST_PATH='functional/BO/02_orders/**/*.{ts,js}' npm run test:specific",
     "test:functional:BO:orders:01": "TEST_PATH='functional/BO/02_orders/01*/**/*.{ts,js}' npm run test:specific",
     "test:functional:BO:orders:02": "TEST_PATH='functional/BO/02_orders/02*/**/*.{ts,js}' npm run test:specific",
