@@ -42,6 +42,7 @@ use Validate;
  */
 final class OrderReturnPdfGenerator implements PDFGeneratorInterface
 {
+    private const ORDER_RETURN_STATE_WAITING_FOR_PACKAGE = 2;
     /**
      * @var TranslatorInterface
      */
@@ -70,7 +71,7 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
             throw new RuntimeException($this->translator->trans('The order return cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
 
-        if ($orderReturn->state < 2) {
+        if ($orderReturn->state < self::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE) {
             throw new RuntimeException($this->translator->trans('The order return was not confirmed.', [], 'Admin.Orderscustomers.Notification'));
         }
 
