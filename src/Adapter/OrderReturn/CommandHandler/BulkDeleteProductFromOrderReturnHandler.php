@@ -28,16 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
-use Order;
-use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOrderReturnHandlerInterface
 {
@@ -64,14 +65,46 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
      */
     public function handle(BulkDeleteProductFromOrderReturnCommand $command): void
     {
+        $this->validate($command->getOrderReturnId(), $command->getOrderReturnDetailIds());
+        foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
+            try {
+                $this->orderReturnRepository->deleteOrderReturnDetail(
+                    $command->getOrderReturnId(),
+                    $orderReturnDetailId
+                );
+            } catch (OrderReturnException $e) {
+                $errors[] = $orderReturnDetailId->getValue();
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteOrderReturnProductException(
+                $errors,
+                'Failed to delete some of merchandise return products',
+                BulkDeleteOrderReturnProductException::UNEXPECTED_ERROR
+            );
+        }
+    }
+
+    /**
+     * @param OrderReturnId $orderReturnId
+     * @param array<OrderReturnDetailId> $orderReturnDetailIds
+     *
+     * @throws BulkDeleteOrderReturnProductException
+     * @throws OrderReturnException
+     * @throws OrderException
+     * @throws CoreException
+     */
+    private function validate(OrderReturnId $orderReturnId, array $orderReturnDetailIds): void
+    {
         $errors = [];
 
-        $orderReturn = $this->orderReturnRepository->get(new OrderReturnId($command->getOrderReturnId()->getValue()));
+        $orderReturn = $this->orderReturnRepository->get($orderReturnId);
         $order = $this->orderRepository->get(new OrderId($orderReturn->id_order));
-        $details = OrderReturn::getOrdersReturnProducts($command->getOrderReturnId()->getValue(), $order);
+        $details = $this->orderReturnRepository->getOrderReturnDetails($orderReturnId, $order);
 
         /* Check if products exist in order return */
-        foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
+        foreach ($orderReturnDetailIds as $orderReturnDetailId) {
             if (isset($details[$orderReturnDetailId->getValue()])) {
                 unset($details[$orderReturnDetailId->getValue()]);
             } else {
@@ -96,23 +129,5 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
             );
         }
 
-        foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
-            try {
-                $this->orderReturnRepository->deleteOrderReturnDetail(
-                    $command->getOrderReturnId(),
-                    $orderReturnDetailId
-                );
-            } catch (OrderReturnException $e) {
-                $errors[] = $orderReturnDetailId->getValue();
-            }
-        }
-
-        if (!empty($errors)) {
-            throw new BulkDeleteOrderReturnProductException(
-                $errors,
-                'Failed to delete some of merchandise return products',
-                BulkDeleteOrderReturnProductException::UNEXPECTED_ERROR
-            );
-        }
     }
 }

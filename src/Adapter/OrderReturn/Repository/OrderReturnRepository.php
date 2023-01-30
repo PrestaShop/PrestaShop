@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
 use Doctrine\DBAL\Connection;
+use Exception;
+use Order;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
@@ -153,14 +155,12 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     public function deleteOrderReturnDetail(
         OrderReturnId $orderReturnId,
-        OrderReturnDetailId $orderReturnDetailId,
-        CustomizationId $customizationId
+        OrderReturnDetailId $orderReturnDetailId
     ): void {
         try {
             if (!OrderReturn::deleteOrderReturnDetail(
                 $orderReturnId->getValue(),
-                $orderReturnDetailId->getValue(),
-                $customizationId->getValue()
+                $orderReturnDetailId->getValue()
             )) {
                 throw new DeleteOrderReturnProductException(
                     'Failed to delete merchandise return detail',
@@ -194,5 +194,34 @@ class OrderReturnRepository extends AbstractObjectModelRepository
         }
 
         return null;
+    }
+
+    /**
+     * @param OrderReturnId $orderReturnId
+     * @param Order $order
+     *
+     * @return array<OrderReturnDetail>
+     *
+     * @throws OrderReturnException
+     */
+    public function getOrderReturnDetails(OrderReturnId $orderReturnId, Order $order): array
+    {
+        try {
+            $details = OrderReturn::getOrdersReturnProducts($orderReturnId->getValue(), $order);
+        } catch (Exception $e) {
+            throw new OrderReturnException($e->getMessage());
+        }
+
+        $return = [];
+        foreach ($details as $detail) {
+            $return[$detail['id_order_detail']] = new OrderReturnDetail(
+                $detail['id_order_return'],
+                $detail['id_order_detail'],
+                $detail['customization_id'],
+                $detail['product_quantity']
+            );
+        }
+
+        return $return;
     }
 }
