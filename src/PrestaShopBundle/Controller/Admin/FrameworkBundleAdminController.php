@@ -28,15 +28,15 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,6 +51,8 @@ class FrameworkBundleAdminController extends AbstractController
     public const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
+     * @deprecated since version 8.1, use $this->getConfiguration() instead
+     *
      * @var Configuration
      */
     protected $configuration;
@@ -65,6 +67,8 @@ class FrameworkBundleAdminController extends AbstractController
      */
     public function __construct()
     {
+        @trigger_error(__FUNCTION__ . ' is deprecated since version 8.1 and will be removed in the next major version.', E_USER_DEPRECATED);
+
         $this->configuration = new Configuration();
     }
 
@@ -80,9 +84,17 @@ class FrameworkBundleAdminController extends AbstractController
         @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in the next major version.', E_USER_DEPRECATED);
 
         return [
-            'is_shop_context' => (new Context())->isShopContext(),
+            'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
         ];
+    }
+
+    /**
+     * @return ShopConfigurationInterface
+     */
+    protected function getConfiguration(): ShopConfigurationInterface
+    {
+        return $this->container->get('prestashop.adapter.legacy.configuration');
     }
 
     /**
@@ -146,7 +158,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function dispatchHook($hookName, array $parameters)
     {
-        $this->get('prestashop.core.hook.dispatcher')->dispatchWithParameters($hookName, $parameters);
+        $this->container->get('prestashop.core.hook.dispatcher')->dispatchWithParameters($hookName, $parameters);
     }
 
     /**
@@ -163,7 +175,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function renderHook($hookName, array $parameters)
     {
-        return $this->get('prestashop.core.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
+        return $this->container->get('prestashop.core.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
     }
 
     /**
@@ -185,7 +197,7 @@ class FrameworkBundleAdminController extends AbstractController
         $iso = (string) $legacyContext->getEmployeeLanguageIso();
 
         return $this->generateUrl('admin_common_sidebar', [
-            'url' => $this->get('prestashop.core.help.documentation')->generateLink($section, $iso),
+            'url' => $this->container->get(Documentation::class)->generateLink($section, $iso),
             'title' => $title,
         ]);
     }
@@ -238,7 +250,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function langToLocale($lang)
     {
-        return $this->get('prestashop.service.translation')->langToLocale($lang);
+        return $this->container->get('prestashop.service.translation')->langToLocale($lang);
     }
 
     /**
@@ -246,7 +258,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function isDemoModeEnabled()
     {
-        return $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEMO_');
+        return $this->getConfiguration()->get('_PS_MODE_DEMO_');
     }
 
     /**
@@ -298,7 +310,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function trans($key, $domain, array $parameters = [])
     {
-        return $this->get('translator')->trans($key, $parameters, $domain);
+        return $this->container->get('translator')->trans($key, $parameters, $domain);
     }
 
     /**
@@ -323,7 +335,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function redirectToDefaultPage()
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
         $defaultTab = $legacyContext->getDefaultEmployeeTab();
 
         return $this->redirect($legacyContext->getAdminLink($defaultTab));
@@ -391,7 +403,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function getFallbackErrorMessage($type, $code, $message = '')
     {
-        $isDebug = $this->get('kernel')->isDebug();
+        $isDebug = $this->container->get('kernel')->isDebug();
         if ($isDebug && !empty($message)) {
             return $this->trans(
                 'An unexpected error occurred. [%type% code %code%]: %message%',
@@ -425,7 +437,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function getAdminLink($controller, array $params, $withToken = true)
     {
-        return $this->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
+        return $this->container->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
     }
 
     /**
@@ -437,7 +449,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function presentGrid(GridInterface $grid)
     {
-        return $this->get('prestashop.core.grid.presenter.grid_presenter')->present($grid);
+        return $this->container->get('prestashop.core.grid.presenter.grid_presenter')->present($grid);
     }
 
     /**
@@ -447,7 +459,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function getCommandBus()
     {
-        return $this->get('prestashop.core.command_bus');
+        return $this->container->get('prestashop.core.command_bus');
     }
 
     /**
@@ -457,7 +469,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function getQueryBus()
     {
-        return $this->get('prestashop.core.query_bus');
+        return $this->container->get('prestashop.core.query_bus');
     }
 
     /**

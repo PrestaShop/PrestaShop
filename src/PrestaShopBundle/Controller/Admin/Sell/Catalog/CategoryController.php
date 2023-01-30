@@ -166,7 +166,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
         $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
 
-        $parentId = (int) $request->query->get('id_parent', $this->configuration->getInt('PS_HOME_CATEGORY'));
+        $parentId = (int) $request->query->get('id_parent', $this->getConfiguration()->getInt('PS_HOME_CATEGORY'));
 
         $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
         $categoryForm->handleRequest($request);
@@ -226,7 +226,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->getConfiguration()->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
         } catch (Exception $e) {
@@ -378,7 +378,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->getConfiguration()->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
         } catch (Exception $e) {
@@ -617,7 +617,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
-        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
+        $idParent = $this->getConfiguration()->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             try {
@@ -664,7 +664,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
-        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
+        $idParent = $this->getConfiguration()->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             $categoriesDeleteData = $deleteCategoriesForm->getData();
@@ -834,7 +834,7 @@ class CategoryController extends FrameworkBundleAdminController
             $categoryId = $request->attributes->get('categoryId');
         }
         if (empty($categoryId)) {
-            $categoryId = $this->configuration->getInt('PS_HOME_CATEGORY');
+            $categoryId = $this->getConfiguration()->getInt('PS_HOME_CATEGORY');
         }
 
         // Display the button "Add new category" if the current category is not a root category

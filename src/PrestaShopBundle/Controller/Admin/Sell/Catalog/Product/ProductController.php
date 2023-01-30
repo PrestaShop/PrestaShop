@@ -862,7 +862,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function downloadVirtualFileAction(int $virtualProductFileId): BinaryFileResponse
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
         $download = $this->getDoctrine()
             ->getRepository(ProductDownload::class)
             ->findOneBy([
@@ -904,7 +904,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
         if (empty($shopId)) {
-            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+            $shopId = $this->getConfiguration()->getInt('PS_SHOP_DEFAULT');
         }
 
         try {
@@ -976,7 +976,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function renderEditProductForm(FormInterface $productForm, int $productId): Response
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
         $categoryTreeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_tree_selector_form_builder');
 
         $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');

@@ -394,7 +394,7 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/view.html.twig', [
             'layoutTitle' => $viewableSupplier->getName(),
             'viewableSupplier' => $viewableSupplier,
-            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isStockManagementEnabled' => $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
@@ -576,7 +576,7 @@ class SupplierController extends FrameworkBundleAdminController
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
         $urlEnding = '</a>';
 
-        if ($this->configuration->get('PS_DISPLAY_SUPPLIERS')) {
+        if ($this->getConfiguration()->get('PS_DISPLAY_SUPPLIERS')) {
             return $this->trans(
                 'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
                 'Admin.Catalog.Notification',

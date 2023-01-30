@@ -60,7 +60,7 @@ class BackupController extends FrameworkBundleAdminController
     public function indexAction(Request $request, BackupFilters $filters)
     {
         $backupForm = $this->getBackupFormHandler()->getForm();
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
 
         $hasDownloadFile = false;
         $downloadFile = null;

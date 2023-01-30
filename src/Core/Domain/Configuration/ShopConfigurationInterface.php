@@ -31,6 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Configuration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
+/**
+ * @method getInt($key, $default = 0, ShopConstraint $shopConstraint = null)
+ * @method getBoolean($key, $default = false, ShopConstraint $shopConstraint = null)
+ */
 interface ShopConfigurationInterface extends ConfigurationInterface
 {
     /**

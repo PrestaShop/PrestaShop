@@ -421,7 +421,7 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function changeFormLanguageAction(Request $request)
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
 
         if ($configuration->getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')) {
             $languageChanger = $this->get('prestashop.adapter.employee.form_language_changer');

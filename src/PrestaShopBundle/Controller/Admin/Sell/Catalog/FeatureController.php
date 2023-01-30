@@ -279,7 +279,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     private function renderEditForm(array $parameters = [])
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/edit.html.twig', $parameters + [
-            'contextLangId' => $this->configuration->get('PS_LANG_DEFAULT'),
+            'contextLangId' => $this->getConfiguration()->get('PS_LANG_DEFAULT'),
         ]);
     }
 
