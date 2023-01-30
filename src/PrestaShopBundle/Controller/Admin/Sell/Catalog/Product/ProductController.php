@@ -585,13 +585,13 @@ class ProductController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
-     * @param int|null $shopId
+     * @param int $shopId
      *
      * @return JsonResponse
      */
-    public function toggleStatusAction(int $productId, ?int $shopId): JsonResponse
+    public function toggleStatusForShopAction(int $productId, int $shopId): JsonResponse
     {
-        $shopConstraint = !empty($shopId) ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+        $shopConstraint = ShopConstraint::shop($shopId);
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
             $productId,
@@ -617,33 +617,61 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Enable product status and redirect to product list.
+     * Enable product status for all shops and redirect to product list.
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
-     * @param int|null $shopGroupId
      *
      * @return RedirectResponse
      */
-    public function enableAction(int $productId, ?int $shopGroupId): RedirectResponse
+    public function enableForAllShopsAction(int $productId): RedirectResponse
     {
-        return $this->updateProductStatus($productId, true, $shopGroupId);
+        return $this->updateProductStatusByShopConstraint($productId, true, ShopConstraint::allShops());
     }
 
     /**
-     * Disable product status and redirect to product list.
+     * Enable product status for shop group and redirect to product list.
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
-     * @param int|null $shopGroupId
+     * @param int $shopGroupId
      *
      * @return RedirectResponse
      */
-    public function disableAction(int $productId, ?int $shopGroupId): RedirectResponse
+    public function enableForShopGroupAction(int $productId, int $shopGroupId): RedirectResponse
     {
-        return $this->updateProductStatus($productId, false, $shopGroupId);
+        return $this->updateProductStatusByShopConstraint($productId, true, ShopConstraint::shopGroup($shopGroupId));
+    }
+
+    /**
+     * Disable product status for shop group and redirect to product list.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     * @param int $shopGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function disableForShopGroupAction(int $productId, int $shopGroupId): RedirectResponse
+    {
+        return $this->updateProductStatusByShopConstraint($productId, false, ShopConstraint::shopGroup($shopGroupId));
+    }
+
+    /**
+     * Disable product status for all shops and redirect to product list.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
+    public function disableForAllShopsAction(int $productId): RedirectResponse
+    {
+        return $this->updateProductStatusByShopConstraint($productId, false, ShopConstraint::allShops());
     }
 
     /**
@@ -1156,14 +1184,13 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param int $productId
      * @param bool $isEnabled
-     * @param int|null $shopGroupId
+     * @param ShopConstraint $shopConstraint
      *
      * @return RedirectResponse
      */
-    private function updateProductStatus(int $productId, bool $isEnabled, ?int $shopGroupId): RedirectResponse
+    private function updateProductStatusByShopConstraint(int $productId, bool $isEnabled, ShopConstraint $shopConstraint): RedirectResponse
     {
         try {
-            $shopConstraint = !empty($shopGroupId) ? ShopConstraint::shopGroup($shopGroupId) : ShopConstraint::allShops();
             $command = new UpdateProductCommand($productId, $shopConstraint);
             $command->setActive($isEnabled);
             $this->getCommandBus()->handle($command);

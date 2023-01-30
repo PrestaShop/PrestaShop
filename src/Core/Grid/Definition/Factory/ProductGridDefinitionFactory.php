@@ -405,6 +405,8 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         if ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
             $deleteRouteName = 'admin_products_v2_delete_from_shop_group';
             $duplicateRouteName = 'admin_products_v2_duplicate_shop_group';
+            $enableRouteName = 'admin_products_v2_enable_for_shop_group';
+            $disableRouteName = 'admin_products_v2_disable_for_shop_group';
             $extraRouteParams = [
                 'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
             ];
@@ -416,6 +418,8 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         } else {
             $deleteRouteName = 'admin_products_v2_delete';
             $duplicateRouteName = 'admin_products_v2_duplicate_all_shops';
+            $enableRouteName = 'admin_products_v2_enable_for_all_shops';
+            $disableRouteName = 'admin_products_v2_disable_for_all_shops';
 
             $deleteLabel = $this->trans('Delete from all stores', [], 'Admin.Actions');
             $enableLabel = $this->trans('Enable on all stores', [], 'Admin.Actions');
@@ -497,7 +501,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($enableLabel)
             ->setIcon('radio_button_checked')
             ->setOptions([
-                'route' => 'admin_products_v2_enable',
+                'route' => $enableRouteName,
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'extra_route_params' => $extraRouteParams,
@@ -507,7 +511,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($disableLabel)
             ->setIcon('radio_button_unchecked')
             ->setOptions([
-                'route' => 'admin_products_v2_disable',
+                'route' => $disableRouteName,
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'extra_route_params' => $extraRouteParams,

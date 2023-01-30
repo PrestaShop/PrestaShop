@@ -194,7 +194,7 @@ admin_products_v2_toggle_status_for_shop:
   path: /{productId}/toggle_status/shop/{shopId}
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusForShopAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:statusproduct
@@ -202,23 +202,41 @@ admin_products_v2_toggle_status_for_shop:
       id_product: productId
   requirements:
     productId: \d+
+    shopId: \d+
 
-admin_products_v2_enable:
+admin_products_v2_enable_for_all_shops:
+  path: /{productId}/enable
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableForAllShopsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_products_v2_enable_for_shop_group:
   path: /{productId}/enable/{shopGroupId}
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableForShopGroupAction
     _legacy_controller: AdminProducts
-    shopGroupId: null
   requirements:
     productId: \d+
     shopGroupId: \d+
 
-admin_products_v2_disable:
+admin_products_v2_disable_for_all_shops:
+  path: /{productId}/disable
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableForAllShopsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_products_v2_disable_for_shop_group:
   path: /{productId}/disable/{shopGroupId}
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableForShopGroupAction
     _legacy_controller: AdminProducts
     shopGroupId: null
   requirements:
