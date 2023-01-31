@@ -220,3 +220,7 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRulesGroupFormDataProvider:
+    arguments:
+      - '@prestashop.core.query_bus'

@@ -24,20 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
 
 /**
- * Thrown on failure to update tax rules group
+ * Thrown on failure to add a tax rules group without errors
  */
-class CannotUpdateTaxRulesGroupException extends TaxRulesGroupException
+class CannotAddTaxRulesGroupException extends TaxRulesGroupException
 {
-    /**
-     * Thrown when status toggling fails
-     */
-    public const FAILED_TOGGLE_STATUS = 1;
-
-    /**
-     * When generic product update fails
-     */
-    public const FAILED_UPDATE_TAX_RULES_GROUP = 10;
 }

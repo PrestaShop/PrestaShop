@@ -24,20 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\EditTaxRulesGroupCommand;
 
 /**
- * Thrown on failure to update tax rules group
+ * Defines contract for edit tax rules group handler
  */
-class CannotUpdateTaxRulesGroupException extends TaxRulesGroupException
+interface EditTaxRulesGroupHandlerInterface
 {
     /**
-     * Thrown when status toggling fails
+     * @param EditTaxRulesGroupCommand $command
      */
-    public const FAILED_TOGGLE_STATUS = 1;
-
-    /**
-     * When generic product update fails
-     */
-    public const FAILED_UPDATE_TAX_RULES_GROUP = 10;
+    public function handle(EditTaxRulesGroupCommand $command): void;
 }
