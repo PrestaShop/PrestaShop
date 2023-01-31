@@ -27,9 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShopBundle\Form\Admin\Type\ColorPickerType;
@@ -40,6 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -61,7 +62,8 @@ class OrderStateType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ThemeCatalogInterface $themeCatalog
-     * @param Configuration $configuration
+     * @param UrlGeneratorInterface $routing
+     * @param ShopConfigurationInterface $configuration
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
      */
@@ -69,7 +71,8 @@ class OrderStateType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         ThemeCatalogInterface $themeCatalog,
-        Configuration $configuration
+        UrlGeneratorInterface $routing,
+        ShopConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
         $mailTheme = $configuration->get('PS_MAIL_THEME', 'modern');
@@ -84,7 +87,7 @@ class OrderStateType extends TranslatorAwareType
             foreach ($mailLayouts as $mailLayout) {
                 $this->templates[$languageId][$mailLayout->getName()] = $mailLayout->getName();
                 $this->templateAttributes[$languageId][$mailLayout->getName()] = [
-                    'data-preview' => $this->routing->generate(
+                    'data-preview' => $routing->generate(
                         empty($mailLayout->getModuleName()) ?
                             'admin_mail_theme_preview_layout' :
                             'admin_mail_theme_preview_module_layout',
