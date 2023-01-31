@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -88,21 +88,21 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('reduction'))
-                    ->setName($this->trans('Reduction', [], 'Admin.Global'))
+                    ->setName($this->trans('Reduction', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'reduction',
                     ])
             )
             ->add(
                 (new DataColumn('price_display_method'))
-                    ->setName($this->trans('Price display Method', [], 'Admin.Global'))
+                    ->setName($this->trans('Price display Method', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'price_display_method',
                     ])
             )
             ->add(
                 (new DataColumn('show_prices'))
-                    ->setName($this->trans('Show prices', [], 'Admin.Global'))
+                    ->setName($this->trans('Show prices', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'show_prices',
                     ])

@@ -56,8 +56,9 @@ class CustomerGroupsController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Groups/index.html.twig', [
             'customerGroupsGrid' => $this->presentGrid($customerGroupsGrid),
-            'layoutTitle' => $this->trans('Titles', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Groups', 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
         ]);
     }
 
