@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 
 class GetOrderDetailCustomizations
@@ -42,7 +43,7 @@ class GetOrderDetailCustomizations
      *
      * @param int $orderDetailId
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException
+     * @throws OrderReturnConstraintException
      */
     public function __construct(int $orderDetailId)
     {

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundE
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -161,8 +163,11 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     public function deleteProductAction(Request $request, int $orderReturnId, int $orderReturnDetailId): RedirectResponse
     {
         try {
+            $orderReturnRepository = $this->get('prestashop.adapter.order_return.repository.order_return_repository');
+            $detail = $orderReturnRepository->getOrderReturnDetailByOrderDetailId($orderReturnDetailId);
+
             $this->getCommandBus()->handle(
-                new DeleteProductFromOrderReturnCommand($orderReturnId, $orderReturnDetailId)
+                new DeleteProductFromOrderReturnCommand($orderReturnId, $orderReturnDetailId, $detail->getCustomizationId())
             );
 
             $this->addFlash(

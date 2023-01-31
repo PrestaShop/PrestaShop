@@ -184,7 +184,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'order_return_detail')
             ->where('id_order_detail = :orderDetailId')
             ->setParameter('orderDetailId', $orderDetailId)
-            ->execute()->fetchFirstColumn();
+            ->execute()->fetchAssociative();
 
         if ($result) {
             return new OrderReturnDetail(

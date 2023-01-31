@@ -47,10 +47,6 @@ class DeleteProductFromOrderReturnCommand
      * @var OrderReturnDetailId
      */
     private $orderReturnDetailId;
-    /**
-     * @var CustomizationId|null
-     */
-    private $customizationId;
 
     /**
      * DeleteProductFromOrderReturnCommand constructor.
@@ -60,11 +56,10 @@ class DeleteProductFromOrderReturnCommand
      *
      * @throws OrderReturnConstraintException
      */
-    public function __construct(int $orderReturnId, int $orderReturnDetailId, ?int $customizationId)
+    public function __construct(int $orderReturnId, int $orderReturnDetailId)
     {
         $this->orderReturnId = new OrderReturnId($orderReturnId);
         $this->orderReturnDetailId = new OrderReturnDetailId($orderReturnDetailId);
-        $this->customizationId = $customizationId ? new CustomizationId($customizationId) : null;
     }
 
     /**
@@ -81,13 +76,5 @@ class DeleteProductFromOrderReturnCommand
     public function getOrderReturnDetailId(): OrderReturnDetailId
     {
         return $this->orderReturnDetailId;
-    }
-
-    /**
-     * @return CustomizationId|null
-     */
-    public function getCustomizationId(): ?CustomizationId
-    {
-        return $this->customizationId;
     }
 }
