@@ -77,6 +77,7 @@ class ModuleController extends ModuleAbstractController
             'bulk-reset' => $this->trans('Reset', 'Admin.Actions'),
             'bulk-enable-mobile' => $this->trans('Enable Mobile', 'Admin.Modules.Feature'),
             'bulk-disable-mobile' => $this->trans('Disable Mobile', 'Admin.Modules.Feature'),
+            'bulk-delete' => $this->trans('Delete', 'Admin.Modules.Feature'),
         ];
 
         return $this->render(
@@ -179,6 +180,9 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_UNINSTALL:
                 $deniedAccess = $this->checkPermission(PageVoter::DELETE);
                 break;
+            case ModuleAdapter::ACTION_DELETE:
+                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
+                break;
 
             default:
                 $deniedAccess = null;
@@ -212,6 +216,9 @@ class ModuleController extends ModuleAbstractController
             if ($action === ModuleAdapter::ACTION_UNINSTALL) {
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
+            }
+            if ($action === ModuleAdapter::ACTION_DELETE) {
+                $response[$module]['refresh_needed'] = false;
             }
             $systemCacheClearEnabled = filter_var(
                 $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
@@ -249,7 +256,7 @@ class ModuleController extends ModuleAbstractController
                     '%module%' => $module,
                 ]
             );
-            if ($action !== 'uninstall') {
+            if ($action !== 'uninstall' && $action !== 'delete') {
                 $response[$module]['module_name'] = $module;
                 $response[$module]['is_configurable'] = (bool) $moduleInstance->attributes->get('is_configurable');
             }
