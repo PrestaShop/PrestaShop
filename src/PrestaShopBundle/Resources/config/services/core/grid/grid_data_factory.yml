@@ -554,7 +554,7 @@ services:
   prestashop.core.grid.data.factory.customer_groups:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
     arguments:
-      - '@prestashop.core.grid.query_builder.customer_groups'
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\CustomerGroupsQueryBuilder'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'customer_groups'
