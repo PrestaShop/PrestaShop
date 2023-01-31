@@ -77,10 +77,7 @@ $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
 
-$catch = false;
-if (false !== strpos($request->getRequestUri(), Api::API_BASE_PATH)) {
-    $catch = true;
-}
+$catch = strpos($request->getRequestUri(), Api::API_BASE_PATH) !== false;
 
 try {
     require_once __DIR__.'/../autoload.php';
