@@ -573,7 +573,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function duplicateAction(int $productId): Response
+    public function duplicateAllShopsAction(int $productId): Response
     {
         return $this->duplicateByShopConstraint($productId, ShopConstraint::allShops());
     }
