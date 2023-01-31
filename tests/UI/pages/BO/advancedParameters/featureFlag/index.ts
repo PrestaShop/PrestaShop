@@ -51,6 +51,13 @@ class FeatureFlag extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setNewProductPage(page: Page, toEnable: boolean = true): Promise<string> {
+    const isChecked = await this.isChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
+
+    if (isChecked) {
+      // Return the successful message to simulate all went good (no need to change the value here)
+      return this.successfulUpdateMessage;
+    }
+
     await this.setChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
     await this.waitForSelectorAndClick(page, this.submitStableButton);
     if (toEnable) {

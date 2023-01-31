@@ -9,9 +9,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  enableNewProductPageTest,
-  disableNewProductPageTest,
-  isNewProductPageEnabledByDefault,
+  isNewProductPageEnabledByDefault, setNewProductPageTest,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
@@ -46,9 +44,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
   });
 
   // Pre-condition: Enable new product page
-  if (!isNewProductPageEnabledByDefault()) {
-    enableNewProductPageTest(`${baseContext}_enableNewProduct`);
-  }
+  setNewProductPageTest(true);
 
   // before and after functions
   before(async function () {
@@ -209,8 +205,6 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     });
   });
 
-  // Post-condition: Disable new product page
-  if (!isNewProductPageEnabledByDefault()) {
-    disableNewProductPageTest(`${baseContext}_disableNewProduct`);
-  }
+  // Post-condition: Reset initial state
+  setNewProductPageTest(isNewProductPageEnabledByDefault());
 });

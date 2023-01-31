@@ -11,8 +11,7 @@ import Categories from '@data/demo/categories';
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 import {
-  disableNewProductPageTest, enableNewProductPageTest,
-  isNewProductPageEnabledByDefault,
+  isNewProductPageEnabledByDefault, setNewProductPageTest,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_catalogFO_filterProducts';
@@ -29,9 +28,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
   let allProductsNumber: number = 0;
 
   // Pre-condition: Disable new product page
-  if (isNewProductPageEnabledByDefault()) {
-    disableNewProductPageTest(`${baseContext}_disableNewProduct`);
-  }
+  setNewProductPageTest(false);
 
   // before and after functions
   before(async function () {
@@ -80,8 +77,6 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
 
-  // Post-condition: Enable new product page
-  if (isNewProductPageEnabledByDefault()) {
-    enableNewProductPageTest(`${baseContext}_enableNewProduct`);
-  }
+  // Post-condition: Reset initial state
+  setNewProductPageTest(isNewProductPageEnabledByDefault());
 });

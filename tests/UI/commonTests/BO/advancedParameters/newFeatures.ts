@@ -110,4 +110,14 @@ function isNewProductPageEnabledByDefault(): boolean {
   return true;
 }
 
-export {enableNewProductPageTest, disableNewProductPageTest, isNewProductPageEnabledByDefault};
+function setNewProductPageTest(expectedStatus: boolean, baseContext: string = 'commonTests-disableNewProductPage'): void {
+  if (expectedStatus) {
+    enableNewProductPageTest(baseContext);
+  } else {
+    disableNewProductPageTest(baseContext);
+  }
+}
+
+export {
+  enableNewProductPageTest, disableNewProductPageTest, isNewProductPageEnabledByDefault, setNewProductPageTest,
+};
