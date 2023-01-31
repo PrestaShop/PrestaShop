@@ -56,7 +56,7 @@ admin_order_returns_update:
 
 admin_order_returns_products_filter:
   path: /{orderReturnId}/edit
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle:Admin\Common:searchGrid
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_return_products
@@ -71,7 +71,7 @@ admin_order_returns_products_filter:
 
 admin_order_returns_delete_product:
   path: /{orderReturnId}/products/{orderReturnDetailId}/delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProduct
     _legacy_controller: AdminReturn
@@ -86,7 +86,7 @@ admin_order_returns_delete_product:
 
 admin_order_returns_delete_product_bulk:
   path: /{orderReturnId}/products/bulk-delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:bulkDeleteProduct
   requirements:
@@ -94,7 +94,7 @@ admin_order_returns_delete_product_bulk:
 
 admin_order_returns_generate_pdf:
   path: /{orderReturnId}/generate-order-return-pdf
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:generateOrderReturnPdf
     _legacy_controller: AdminReturn
