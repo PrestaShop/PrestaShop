@@ -207,7 +207,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute(
