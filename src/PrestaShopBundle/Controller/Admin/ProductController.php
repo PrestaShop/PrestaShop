@@ -1361,12 +1361,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function shouldRedirectToV2(): bool
     {
-        $multistoreFeature = $this->get('prestashop.adapter.multistore_feature');
-
-        if (!$multistoreFeature->isActive()) {
-            return $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-        }
-
-        return $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+        return $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 }

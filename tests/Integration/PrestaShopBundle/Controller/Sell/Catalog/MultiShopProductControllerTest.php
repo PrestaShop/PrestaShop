@@ -154,13 +154,13 @@ class MultiShopProductControllerTest extends GridControllerTestCase
     {
         parent::setUp();
         $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-        $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+        $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 
     public function tearDown(): void
     {
         $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-        $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+        $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
 
         // Call parent tear down later or the kernel will be shut down
         parent::tearDown();

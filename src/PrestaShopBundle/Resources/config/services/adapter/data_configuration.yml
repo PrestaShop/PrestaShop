@@ -97,9 +97,7 @@ services:
 
   prestashop.adapter.preferences.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.core.admin.feature_flag.repository'
+    autowire: true
 
   prestashop.adapter.upload_quota.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
