@@ -48,9 +48,10 @@ class FeatureFlag extends BOBasePage {
    * Enable/Disable new product page
    * @param page {Page} Browser tab
    * @param toEnable {boolean} True if we need to enable new product page
+   * @param isStable {boolean} False if we need to confirm a beta feature flag
    * @returns {Promise<string>}
    */
-  async setNewProductPage(page: Page, toEnable: boolean = true): Promise<string> {
+  async setNewProductPage(page: Page, toEnable: boolean = true, isStable: boolean = true): Promise<string> {
     const isChecked = await this.isChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
 
     if (isChecked) {
@@ -60,7 +61,8 @@ class FeatureFlag extends BOBasePage {
 
     await this.setChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
     await this.waitForSelectorAndClick(page, this.submitStableButton);
-    if (toEnable) {
+    // The confirmation modal is only displayed for experimental/beta feature flags
+    if (toEnable && !isStable) {
       await this.waitForVisibleSelector(page, this.modalSubmitFeatureFlag);
       await this.clickAndWaitForNavigation(page, this.enableExperimentalfeatureButton);
     }
