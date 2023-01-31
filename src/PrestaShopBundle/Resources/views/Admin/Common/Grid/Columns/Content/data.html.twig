@@ -24,7 +24,15 @@
  *#}
 
 {% if column.options.max_displayed_characters > 0 and record[column.options.field]|length > column.options.max_displayed_characters %}
-  {{ record[column.options.field]|slice(0, column.options.max_displayed_characters) }}&mldr;
+  {% if column.options.raw %}
+    {{ record[column.options.field]|slice(0, column.options.max_displayed_characters)|escape('html') }}&mldr;
+  {% else %}
+    {{ record[column.options.field]|slice(0, column.options.max_displayed_characters) }}&mldr;
+  {% endif %}
 {% else %}
-  {{ record[column.options.field] }}
+  {% if column.options.raw %}
+    {{ record[column.options.field]|escape('html') }}
+  {% else %}
+    {{ record[column.options.field] }}
+  {% endif %}
 {% endif %}
