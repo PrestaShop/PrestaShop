@@ -42,7 +42,7 @@
           ghost
           @click="resetTranslation"
         >
-        {{ trans('button_reset') }}
+          {{ trans('button_reset') }}
         </PSButton>
       </div>
     </div>

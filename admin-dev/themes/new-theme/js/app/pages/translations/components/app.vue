@@ -28,7 +28,6 @@
     id="app"
     class="translations-app"
   >
-
     <div class="row justify-content-between align-items-end">
       <div class="col-md-8 mb-3">
         <Search @search="onSearch" />

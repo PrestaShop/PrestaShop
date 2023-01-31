@@ -24,7 +24,9 @@
  *-->
 <template>
   <div id="search">
-    <form class="search-form" @submit.prevent>
+    <form class="search-form"
+      @submit.prevent
+    >
       <label>{{ trans('search_label') }}</label>
       <div class="input-group">
         <PSTags
