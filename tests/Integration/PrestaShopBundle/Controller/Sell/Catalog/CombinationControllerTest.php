@@ -32,6 +32,7 @@ use Cache;
 use DOMElement;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -63,7 +64,7 @@ class CombinationControllerTest extends FormGridControllerTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
+        $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
         if (!$featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
             $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
             $this->changedProductFeatureFlag = true;
@@ -73,7 +74,7 @@ class CombinationControllerTest extends FormGridControllerTestCase
     public function tearDown(): void
     {
         if ($this->changedProductFeatureFlag) {
-            $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
+            $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
             $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
         }
 

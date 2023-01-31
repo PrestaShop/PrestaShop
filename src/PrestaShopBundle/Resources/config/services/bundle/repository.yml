@@ -129,8 +129,12 @@ services:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
 
-  prestashop.core.admin.feature_flag.repository:
-    class: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
+  PrestaShopBundle\Entity\Repository\FeatureFlagRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\FeatureFlag
+    public: true
+
+  prestashop.core.admin.feature_flag.repository:
+    alias: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
+    deprecated: ~
