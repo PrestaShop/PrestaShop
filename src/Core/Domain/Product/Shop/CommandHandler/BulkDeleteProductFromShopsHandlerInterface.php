@@ -24,25 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationShopAssociationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand;
 
 /**
- * Handles @see GetCombinationForEditing query
+ * Defines contract to handle @see BulkDeleteProductFromShopsCommand
  */
-interface GetCombinationForEditingHandlerInterface
+interface BulkDeleteProductFromShopsHandlerInterface
 {
     /**
-     * @param GetCombinationForEditing $query
-     *
-     * @return CombinationForEditing
-     *
-     * @throws CombinationNotFoundException
-     * @throws CombinationShopAssociationNotFoundException
+     * @param BulkDeleteProductFromShopsCommand $command
      */
-    public function handle(GetCombinationForEditing $query): CombinationForEditing;
+    public function handle(BulkDeleteProductFromShopsCommand $command): void;
 }

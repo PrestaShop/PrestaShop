@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductShopAssociationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 
@@ -38,6 +40,9 @@ interface GetProductForEditingHandlerInterface
      * @param GetProductForEditing $query
      *
      * @return ProductForEditing
+     *
+     * @throws ProductNotFoundException
+     * @throws ProductShopAssociationNotFoundException
      */
     public function handle(GetProductForEditing $query): ProductForEditing;
 }

@@ -33,6 +33,7 @@ use DateTime;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
@@ -45,6 +46,25 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CombinationAssertionFeatureContext extends AbstractCombinationFeatureContext
 {
+    /**
+     * @Then combination(s) :combinationReferences should not exist anymore
+     *
+     * @param string $combinationReferences
+     */
+    public function checkCombinationsNotFound(string $combinationReferences): void
+    {
+        foreach (explode(',', $combinationReferences) as $combinationReference) {
+            $caughtException = null;
+            try {
+                $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId());
+            } catch (CombinationNotFoundException $e) {
+                $caughtException = $e;
+            }
+
+            Assert::assertNotNull($caughtException);
+        }
+    }
+
     /**
      * @Then combination :combinationReference should have following details:
      *
