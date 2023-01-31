@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductShopAssociationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
@@ -435,6 +436,18 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        // We fetch the product from its default shop, the values don't matter anyway we just need a Product instance
+        $product = $this->getProductByDefaultShop($productId);
+        $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
+        $this->deleteObjectModelFromShops($product, $shopIds, CannotDeleteProductException::class);
+    }
+
+    /**
+     * @param ProductId $productId
      *
      * @return bool
      */
@@ -590,7 +603,8 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             $productId->getValue(),
             Product::class,
             ProductNotFoundException::class,
-            $shopId
+            $shopId,
+            ProductShopAssociationNotFoundException::class
         );
 
         return $this->loadProduct($product);

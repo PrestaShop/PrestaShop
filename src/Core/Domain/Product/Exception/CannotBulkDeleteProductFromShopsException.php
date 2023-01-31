@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +22,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{# Empty column which displays nothing, mainly used when changing the content of a grid a replacing one column with empty content. #}
-{{ column.options.empty_value|default('') }}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+
+/**
+ * Thrown when product deletion from shops failed
+ */
+class CannotBulkDeleteProductFromShopsException extends BulkProductException
+{
+}

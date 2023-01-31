@@ -24,25 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationShopAssociationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
+
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
- * Handles @see GetCombinationForEditing query
+ * This checker is used in multishop view, some actions should not be displayed for products
+ * associated to multiple shops. If there is only one it's ok though.
  */
-interface GetCombinationForEditingHandlerInterface
+class ProductSingleShopAssociatedAccessibilityChecker implements AccessibilityCheckerInterface
 {
     /**
-     * @param GetCombinationForEditing $query
-     *
-     * @return CombinationForEditing
-     *
-     * @throws CombinationNotFoundException
-     * @throws CombinationShopAssociationNotFoundException
+     * @var MultistoreContextCheckerInterface
      */
-    public function handle(GetCombinationForEditing $query): CombinationForEditing;
+    private $multiStoreContext;
+
+    public function __construct(
+        MultistoreContextCheckerInterface $multiStoreContext
+    ) {
+        $this->multiStoreContext = $multiStoreContext;
+    }
+
+    /**
+     * @param array{associated_shops_ids?: array<int>} $record
+     *
+     * @return bool
+     */
+    public function isGranted(array $record)
+    {
+        if ($this->multiStoreContext->isSingleShopContext()) {
+            return true;
+        }
+
+        return empty($record['associated_shops_ids']) || count($record['associated_shops_ids']) === 1;
+    }
 }

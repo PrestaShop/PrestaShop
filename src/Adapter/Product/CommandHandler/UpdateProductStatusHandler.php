@@ -28,9 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * @deprecated since 8.1 and will be removed in next major version.
@@ -40,13 +43,21 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStatus
 class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
 {
     /**
-     * @var ProductStatusUpdater
+     * @var ProductMultiShopRepository
      */
-    private $productStatusUpdater;
+    private $productMultiShopRepository;
 
-    public function __construct(ProductStatusUpdater $productStatusUpdater)
-    {
-        $this->productStatusUpdater = $productStatusUpdater;
+    /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    public function __construct(
+        ProductMultiShopRepository $productMultiShopRepository,
+        ProductIndexationUpdater $productIndexationUpdater
+    ) {
+        $this->productMultiShopRepository = $productMultiShopRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     /**
@@ -54,6 +65,15 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
      */
     public function handle(UpdateProductStatusCommand $command)
     {
-        $this->productStatusUpdater->updateStatus($command->getProductId(), $command->getEnable());
+        $allShopsConstraint = ShopConstraint::allShops();
+        $product = $this->productMultiShopRepository->getByShopConstraint($command->getProductId(), $allShopsConstraint);
+        $product->active = $command->getEnable();
+        $this->productMultiShopRepository->partialUpdate(
+            $product,
+            ['active'],
+            $allShopsConstraint,
+            CannotUpdateProductException::FAILED_UPDATE_STATUS
+        );
+        $this->productIndexationUpdater->updateIndexation($product, $allShopsConstraint);
     }
 }
