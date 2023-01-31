@@ -55,6 +55,11 @@
 				<div>{$categoryData['info']}</div>
 			{/if}
 
+      {* Category warning *}
+      {if (isset($categoryData['warning']) && $categoryData['warning'])}
+        <div class="alert alert-warning">{$categoryData['warning']}</div>
+      {/if}
+
 			{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
 			<div class="well clearfix">
 				<label class="control-label col-lg-3">
@@ -162,7 +167,7 @@
 												<p class="radio">
 													{strip}
 													<label for="{$key}_{$k}">
-														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
+														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if} {if !empty($field['disabled'])} disabled="disabled"{/if}/>
 													 	{$v}
 													</label>
 													{/strip}

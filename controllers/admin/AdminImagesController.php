@@ -220,6 +220,7 @@ class AdminImagesControllerCore extends AdminController
                 'icon' => 'icon-picture',
                 'top' => '',
                 'bottom' => '',
+                'warning' => $this->trans('JPG is selected by default because it used by many modules. We do not recommend de remove it. If you want to remove JPG in the image generation, you need to activate the debug mode.', [], 'Admin.Design.Help'),
                 'description' => $this->trans('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.', [], 'Admin.Design.Help') . '
 					<br /><br />' . $this->trans('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".', [], 'Admin.Design.Help'),
                 'fields' => $fields,
@@ -935,6 +936,25 @@ class AdminImagesControllerCore extends AdminController
     private function getImageFormatForm(array $fields): array
     {
         if ($this->isMultipleImageFormatFeatureEnabled) {
+            $debugMode = (bool) _PS_MODE_DEV_;
+            $key = 'PS_JPEG_CONFIGURATION';
+            $value = [
+                'title' => $this->trans('JPG / PNG format configuration:', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans('In order to keep a backward compatibility, PNG formats will keep the JPG extension.', [], 'Admin.Design.Help'),
+                'show' => true,
+                'required' => true,
+                'type' => 'radio',
+                'choices' => [
+                    'jpg' => $this->trans('JPG format', [], 'Admin.Design.Feature'),
+                    'png' => $this->trans('PNG format', [], 'Admin.Design.Feature'),
+                    'jpg_png' => $this->trans('JPG or PNG format only if the image base is PNG', [], 'Admin.Design.Feature'),
+                ],
+                'disabled' => $debugMode,
+            ];
+
+            $fields = [$key => $value] + $fields;
+
+
             $imageFormatsDisabled = [];
 
             if (false === $this->canGenerateAvif) {
@@ -942,6 +962,7 @@ class AdminImagesControllerCore extends AdminController
             }
             $key = 'PS_IMAGE_FORMAT';
             $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
+
             $value = [
                 'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
                 'show' => true,
@@ -950,14 +971,12 @@ class AdminImagesControllerCore extends AdminController
                 'type' => 'checkbox',
                 'multiple' => true,
                 'choices' => [
-                    'jpg' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
-                    'png' => $this->trans('PNG', [], 'Admin.Design.Feature'),
+                    'jpg' => $this->trans('JPEG / PNG', [], 'Admin.Design.Feature'),
                     'webp' => $this->trans('WebP', [], 'Admin.Design.Feature'),
                     'avif' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
                 ],
                 'value_multiple' => [
                     'jpg' => in_array('jpg', $configuredImageFormats),
-                    'png' => in_array('png', $configuredImageFormats),
                     'webp' => in_array('webp', $configuredImageFormats),
                     'avif' => in_array('avif', $configuredImageFormats),
                 ],

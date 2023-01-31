@@ -24,6 +24,7 @@
  */
 
 $(function(){
+  const debugMode = window.prestashop.debug;
   const checkboxName = 'PS_IMAGE_FORMAT[]';
   const formId = 'image_type_form';
   const checkedCheckboxes = `input[name="${checkboxName}"]:checked`
@@ -32,31 +33,33 @@ $(function(){
   const avifCheckbox = document.querySelector(avifFieldId);
   const isAvifSupported = !(avifCheckbox.disabled && !avifCheckbox.checked);
 
-  // on page load, disable checkbox if there is only one checked
-  if (document.querySelectorAll(checkedCheckboxes).length === 1) {
-    document.querySelector(checkedCheckboxes).disabled = true;
-  }
+  if (debugMode === false) {
+    // on page load, disable checkbox if there is only one checked
+    if (document.querySelectorAll(checkedCheckboxes).length === 1) {
+      document.querySelector(checkedCheckboxes).disabled = true;
+    }
 
-  // on change, if only one checkbox is checked, disable it
-  const checkboxes = document.querySelectorAll(`input[name="${checkboxName}"]`);
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', function(event){
-      const checkedCount = document.querySelectorAll(checkedCheckboxes).length;
+    // on change, if only one checkbox is checked, disable it.
+    const checkboxes = document.querySelectorAll(`input[name="${checkboxName}"]`);
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', function (event) {
+        const checkedCount = document.querySelectorAll(checkedCheckboxes).length;
 
-      if (checkedCount > 1) {
-        let disabledCheckbox;
-        if (isAvifSupported) {
-          disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled`);
+        if (checkedCount > 1) {
+          let disabledCheckbox;
+          if (isAvifSupported) {
+            disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled`);
+          } else {
+            disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled:not(${avifFieldId})`);
+          }
+          disabledCheckbox.disabled = false;
         } else {
-          disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled:not(${avifFieldId})`);
+          const checkedCheckbox = document.querySelector(checkedCheckboxes);
+          checkedCheckbox.disabled = true;
         }
-        disabledCheckbox.disabled = false;
-      } else {
-        const checkedCheckbox = document.querySelector(checkedCheckboxes);
-        checkedCheckbox.disabled = true;
-      }
+      });
     });
-  });
+  }
 
   // on submit, re-enable disabled checkbox so that it is properly sent to backend
   const form = document.getElementById(formId);
