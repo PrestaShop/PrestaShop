@@ -16,6 +16,11 @@ import tax from '@data/demo/tax';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  disableNewProductPageTest,
+  enableNewProductPageTest,
+  isNewProductPageEnabledByDefault
+} from "@commonTests/BO/advancedParameters/newFeatures";
 
 const baseContext: string = 'sanity_productsBO_filterProducts';
 
@@ -25,6 +30,11 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let page: Page;
   let numberOfProducts: number = 0;
   let numberOfProductsOnPage: number = 0;
+
+  // Pre-condition: Disable new product page
+  if (isNewProductPageEnabledByDefault()) {
+    disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  }
 
   // before and after functions
   before(async function () {
@@ -112,4 +122,9 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });
+
+  // Post-condition: Enable new product page
+  if (isNewProductPageEnabledByDefault()) {
+    enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  }
 });

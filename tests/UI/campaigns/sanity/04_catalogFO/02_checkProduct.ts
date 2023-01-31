@@ -11,6 +11,10 @@ import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  disableNewProductPageTest, enableNewProductPageTest,
+  isNewProductPageEnabledByDefault
+} from "@commonTests/BO/advancedParameters/newFeatures";
 
 const baseContext: string = 'sanity_catalogFO_checkProduct';
 
@@ -21,6 +25,11 @@ const baseContext: string = 'sanity_catalogFO_checkProduct';
 describe('FO - Catalog : Check the Product page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition: Disable new product page
+  if (isNewProductPageEnabledByDefault()) {
+    disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  }
 
   // before and after functions
   before(async function () {
@@ -61,4 +70,9 @@ describe('FO - Catalog : Check the Product page', async () => {
       expect(result.description).to.contains(Products.demo_1.description),
     ]);
   });
+
+  // Post-condition: Enable new product page
+  if (isNewProductPageEnabledByDefault()) {
+    enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  }
 });

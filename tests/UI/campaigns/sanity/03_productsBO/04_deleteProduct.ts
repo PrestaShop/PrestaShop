@@ -15,6 +15,10 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {
+  disableNewProductPageTest, enableNewProductPageTest,
+  isNewProductPageEnabledByDefault
+} from "@commonTests/BO/advancedParameters/newFeatures";
 
 const baseContext: string = 'sanity_productsBO_deleteProduct';
 
@@ -27,6 +31,11 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
     type: 'Standard product',
     productHasCombinations: false,
   });
+
+  // Pre-condition: Disable new product page
+  if (isNewProductPageEnabledByDefault()) {
+    disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  }
 
   // before and after functions
   before(async function () {
@@ -102,4 +111,9 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
     const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
+
+  // Post-condition: Enable new product page
+  if (isNewProductPageEnabledByDefault()) {
+    enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  }
 });
