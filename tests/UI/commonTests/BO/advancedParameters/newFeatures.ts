@@ -106,7 +106,7 @@ function disableNewProductPageTest(baseContext: string = 'commonTests-disableNew
  * adapt the tests behaviour especially the part that enables/disables the page. We keep this value editable
  * here in case the default value changes the tests will be easy to adapt.
  */
-function isNewProductPageEnabledByDefault() {
+function isNewProductPageEnabledByDefault(): boolean {
   return true;
 }
 

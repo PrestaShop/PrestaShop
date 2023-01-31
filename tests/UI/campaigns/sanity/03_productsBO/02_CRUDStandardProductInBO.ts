@@ -21,8 +21,8 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
   disableNewProductPageTest, enableNewProductPageTest,
-  isNewProductPageEnabledByDefault
-} from "@commonTests/BO/advancedParameters/newFeatures";
+  isNewProductPageEnabledByDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_productsBO_CRUDStandardProductInBO';
 

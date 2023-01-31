@@ -17,7 +17,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {
   enableNewProductPageTest,
   disableNewProductPageTest,
-  isNewProductPageEnabledByDefault
+  isNewProductPageEnabledByDefault,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
@@ -44,6 +44,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     minimumQuantity: 1,
     status: true,
   });
+
   // Pre-condition: Enable new product page
   if (!isNewProductPageEnabledByDefault()) {
     enableNewProductPageTest(`${baseContext}_enableNewProduct`);

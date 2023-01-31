@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {
   enableNewProductPageTest,
   disableNewProductPageTest,
-  isNewProductPageEnabledByDefault
+  isNewProductPageEnabledByDefault,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
