@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Twig;
 
 use PrestaShopBundle\Twig\LocaleExtension as BaseLocaleExtension;
 
-@trigger_error('This class is deprecated since 8.1 and will be dropped in 9.0.', E_USER_DEPRECATED);
+@trigger_error('This class is deprecated since 8.1 and will be dropped in 9.0. It has been replaced PrestaShopBundle\Twig\LocaleExtension.', E_USER_DEPRECATED);
 
 /**
  * Provides helper functions in Twig for formatting data using context locale
