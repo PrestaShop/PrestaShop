@@ -60,7 +60,7 @@ class LogoUploader
     /**
      * @var string
      */
-    private $psImgDir;
+    private $imageDirection;
 
     /**
      * @var FeatureFlagRepository
@@ -71,18 +71,18 @@ class LogoUploader
         Shop $shop,
         ImageFormatConfigurationInterface $imageFormatConfiguration,
         FeatureFlagRepository $featureFlagRepository,
-        string $psImgDir
+        string $imageDirection
     ) {
         $this->shop = $shop;
         $this->imageFormatConfiguration = $imageFormatConfiguration;
-        $this->psImgDir = $psImgDir;
+        $this->imageDirection = $imageDirection;
         $this->featureFlagRepository = $featureFlagRepository;
     }
 
     public function updateHeader()
     {
         if ($this->update('PS_LOGO', 'logo')) {
-            list($width, $height) = getimagesize($this->psImgDir . Configuration::get('PS_LOGO'));
+            list($width, $height) = getimagesize($this->imageDirection . Configuration::get('PS_LOGO'));
             Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
             Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
         }
@@ -102,9 +102,9 @@ class LogoUploader
     {
         $shopId = (int) $this->shop->id;
         if ($shopId == Configuration::get('PS_SHOP_DEFAULT')) {
-            $this->uploadIco('PS_FAVICON', $this->psImgDir . 'favicon.ico');
+            $this->uploadIco('PS_FAVICON', $this->imageDirection . 'favicon.ico');
         }
-        if ($this->uploadIco('PS_FAVICON', $this->psImgDir . 'favicon-' . $shopId . '.ico')) {
+        if ($this->uploadIco('PS_FAVICON', $this->imageDirection . 'favicon-' . $shopId . '.ico')) {
             Configuration::updateValue('PS_FAVICON', 'favicon-' . $shopId . '.ico');
         }
 
@@ -145,21 +145,21 @@ class LogoUploader
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
             if ($fieldName == 'PS_STORES_ICON') {
-                if (!@ImageManager::resize($tmpName, $this->psImgDir . $logoName, null, null, 'gif', true)) {
+                if (!@ImageManager::resize($tmpName, $this->imageDirection . $logoName, null, null, 'gif', true)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
                 $isMultipleImageFeatureEnabled = $this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
                 if (ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
-                    if (!copy($tmpName, $this->psImgDir . $logoName)) {
+                    if (!copy($tmpName, $this->imageDirection . $logoName)) {
                         throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                     }
-                } elseif (!$isMultipleImageFeatureEnabled && !ImageManager::resize($tmpName, $this->psImgDir . $logoName)) {
+                } elseif (!$isMultipleImageFeatureEnabled && !ImageManager::resize($tmpName, $this->imageDirection . $logoName)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 } else {
                     foreach ($this->imageFormatConfiguration->getGenerationFormats() as $imageFormat) {
                         $logoName = $this->getLogoName($logoPrefix, '.' . $imageFormat);
-                        if (!ImageManager::resize($tmpName, $this->psImgDir . $logoName, null, null, $imageFormat, true)) {
+                        if (!ImageManager::resize($tmpName, $this->imageDirection . $logoName, null, null, $imageFormat, true)) {
                             throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                         }
                     }
@@ -172,27 +172,27 @@ class LogoUploader
             // on updating PS_LOGO if the new file is an svg, copy old logo for mail and invoice
             if ($fieldName == 'PS_LOGO' && ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
                 if (empty(Configuration::get('PS_LOGO_MAIL'))) {
-                    $newLogoMail = $this->getLogoName('logo_mail', '.' . pathinfo($this->psImgDir . Configuration::get($fieldName), \PATHINFO_EXTENSION));
+                    $newLogoMail = $this->getLogoName('logo_mail', '.' . pathinfo($this->imageDirection . Configuration::get($fieldName), \PATHINFO_EXTENSION));
                     // copy old logo file for mail
-                    if (@copy($this->psImgDir . Configuration::get($fieldName), $this->psImgDir . $newLogoMail)) {
+                    if (@copy($this->imageDirection . Configuration::get($fieldName), $this->imageDirection . $newLogoMail)) {
                         Configuration::updateValue('PS_LOGO_MAIL', $newLogoMail);
                     }
                 }
                 if (empty(Configuration::get('PS_LOGO_INVOICE'))) {
                     $newLogoInvoice = $this->getLogoName('logo_invoice', '.' . pathinfo(Configuration::get($fieldName), \PATHINFO_EXTENSION));
                     // copy old logo file for invoice
-                    if (@copy($this->psImgDir . Configuration::get($fieldName), $this->psImgDir . $newLogoInvoice)) {
+                    if (@copy($this->imageDirection . Configuration::get($fieldName), $this->imageDirection . $newLogoInvoice)) {
                         Configuration::updateValue('PS_LOGO_INVOICE', $newLogoInvoice);
                     }
                 }
             }
 
             // manage deleting old logo
-            if (!count($this->errors) && @filemtime($this->psImgDir . Configuration::get($fieldName))) {
+            if (!count($this->errors) && @filemtime($this->imageDirection . Configuration::get($fieldName))) {
                 if (Shop::isFeatureActive()) {
                     $this->updateInMultiShopContext($idShop, $idShopGroup, $fieldName);
                 } else {
-                    @unlink($this->psImgDir . Configuration::get($fieldName));
+                    @unlink($this->imageDirection . Configuration::get($fieldName));
                 }
             }
 
@@ -217,7 +217,7 @@ class LogoUploader
             Shop::setContext(Shop::CONTEXT_SHOP);
             $logoShop = Configuration::get($fieldName);
             if ($logoAll != $logoShop && $logoGroup != $logoShop && $logoShop != false) {
-                @unlink($this->psImgDir . Configuration::get($fieldName));
+                @unlink($this->imageDirection . Configuration::get($fieldName));
             }
         } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
             $idShopGroup = Shop::getContextShopGroupID();
@@ -225,7 +225,7 @@ class LogoUploader
             $logoAll = Configuration::get($fieldName);
             Shop::setContext(Shop::CONTEXT_GROUP);
             if ($logoAll != Configuration::get($fieldName)) {
-                @unlink($this->psImgDir . Configuration::get($fieldName));
+                @unlink($this->imageDirection . Configuration::get($fieldName));
             }
         }
     }
