@@ -661,7 +661,7 @@ services:
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.canonical_redirect_type").getChoices()'
-      - '@=service("prestashop.core.util.url.url_file_checker").isHtaccessFileWritable()'
+      - '@=service("PrestaShop\\PrestaShop\\Core\\Util\\Url\\UrlFileCheckerInterface").isHtaccessFileWritable()'
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\Tools").isModRewriteActive()'
       - '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
     tags:

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker;
@@ -261,7 +262,7 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     private function renderHeader(string $headerTemplate, array $templateVars): Response
     {
-        $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
+        $colorBrightnessCalculator = $this->get(ColorBrightnessCalculator::class);
         $isAllShopContext = $this->multistoreContext->isAllShopContext();
         $isShopContext = $this->multistoreContext->isShopContext();
         $colorConfigLink = false;

@@ -24,15 +24,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Twig;
+namespace PrestaShopBundle\Twig;
 
-use PrestaShopBundle\Twig\LocaleExtension as BaseLocaleExtension;
-
-@trigger_error('This class is deprecated since 8.1 and will be dropped in 9.0.', E_USER_DEPRECATED);
+use DateTime;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides helper functions in Twig for formatting data using context locale
  */
-final class LocaleExtension extends BaseLocaleExtension
+class LocaleExtension extends AbstractExtension
 {
+    /**
+     * @var string
+     */
+    private $contextDateFormatLite;
+
+    /**
+     * @param string $contextDateFormatLite
+     */
+    public function __construct(string $contextDateFormatLite)
+    {
+        $this->contextDateFormatLite = $contextDateFormatLite;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction(
+                'format_date',
+                function ($date) {
+                    return (new DateTime($date))->format($this->contextDateFormatLite);
+                }
+            ),
+        ];
+    }
 }
