@@ -20,7 +20,7 @@ let page: Page;
  * @param baseContext {string} String to identify the test
  */
 function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewProductPage'): void {
-  describe('PRE-TEST: Enable "New product page"', async () => {
+  describe('Enable "New product page"', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -63,7 +63,7 @@ function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewPr
  * @param baseContext {string} String to identify the test
  */
 function disableNewProductPageTest(baseContext: string = 'commonTests-disableNewProductPage'): void {
-  describe('POST-TEST: Disable "New product page"', async () => {
+  describe('Disable "New product page"', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
