@@ -29,11 +29,6 @@ import CarrierSelector from '@pages/product/components/carriers/CarrierSelector.
 import {createI18n} from 'vue-i18n';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 
-interface CarrierChoice {
-  label: string,
-  value: string
-}
-
 /**
  * @param {string} carrierChoicesSelector
  * @param {EventEmitter} eventEmitter
@@ -45,7 +40,7 @@ export default function initCarrierSelector(
   eventEmitter: typeof EventEmitter,
 ): App {
   const container = <HTMLElement> document.querySelector(carrierChoicesSelector);
-  const carrierChoices = <CarrierChoice[]> JSON.parse(<string>container.dataset.carrierChoices);
+  const carrierChoices = <Record<string, number>> JSON.parse(<string>container.dataset.carrierChoices);
   const translations = JSON.parse(<string>container.dataset.translations);
   const i18n = createI18n({
     locale: 'en',
@@ -53,18 +48,19 @@ export default function initCarrierSelector(
     messages: {en: translations},
   });
 
-  const carriers = carrierChoices.map(({
-    value: id,
-    label,
-  }) => ({
-    id: Number(id),
-    name: label,
-    label,
+  // format carrier choices to fit for checkbox dropdown component type requirement
+  const carriers = Object.entries(carrierChoices).map(([name, id]) => ({
+    id,
+    name,
+    label: name,
   }));
 
   const vueApp = createApp(CarrierSelector, {
     i18n,
     carriers,
+    initialCarrierIds: JSON.parse(<string>container.dataset.selectedCarrierIds),
+    modifyAllShopsName: <string>container.dataset.modifyAllShopsName,
+    choiceInputName: <string>container.dataset.choiceInputName,
     eventEmitter,
   }).use(i18n);
 

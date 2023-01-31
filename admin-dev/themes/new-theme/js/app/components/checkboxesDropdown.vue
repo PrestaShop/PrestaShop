@@ -89,6 +89,10 @@
         type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
+      initialItemIds: {
+        type: Array as PropType<any>,
+        default: () => [],
+      },
       label: {
         type: String,
         required: true,
@@ -103,6 +107,7 @@
       },
     },
     mounted() {
+      this.selectedItems = this.items.filter((item) => this.initialItemIds.includes(item.id));
       // this.eventEmitter.on(CombinationEvents.clearAllCombinationFilters, this.clear);
     },
     computed: {

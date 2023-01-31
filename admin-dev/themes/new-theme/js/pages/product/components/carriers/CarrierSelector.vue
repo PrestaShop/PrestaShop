@@ -26,6 +26,7 @@
   <div class="carrier-selector">
     <div
       class="form-check form-check-radio form-radio"
+      @click="showModifyAllShopsCheckbox"
     >
       <div
         class="carrier-selector-line"
@@ -38,28 +39,41 @@
           @addItem="addCarrier"
           @removeItem="removeCarrier"
           :event-emitter="eventEmitter"
-          :disabled="allCarriersSelected"
+          :initial-item-ids="this.initialCarrierIds"
         />
       </div>
     </div>
     <div
-      v-if="selectedCarriers.length"
+      v-if="selectedCarrierIds.length"
       id="selected-carriers"
     >
-      <span
-        v-if="selectedCarriers.length && !allCarriersSelected"
-      >
+      <span>
         <ul>
-          <li v-for="(selectedCarrier, key) in selectedCarriers">
-            {{ selectedCarrier.label }}<span v-if="key !== selectedCarriers.length -1 ">, </span>
+          <li v-for="(selectedCarrier, key) in getSelectedCarriers">
+            {{ selectedCarrier.label }}<span v-if="key !== getSelectedCarriers.length -1 ">, </span>
             <input
+              :name="choiceInputName"
               type="hidden"
-              :value="selectedCarrier.value"
-              :disabled="allCarriersSelected"
+              :value="selectedCarrier.id"
             >
           </li>
         </ul>
       </span>
+    </div>
+    <div
+      v-if="modifyAllShopsVisible"
+      class="form-check form-check-radio form-checkbox"
+    >
+      <div
+        class="md-checkbox md-checkbox-inline"
+      >
+        <label class="required">
+          <input
+            :name="modifyAllShopsName"
+            type="checkbox"
+            class="form-check-input"
+          ><i class="md-checkbox-control"/>{{ $t('modifyAllShops.label') }}</label>
+      </div>
     </div>
   </div>
 </template>
@@ -77,15 +91,19 @@
   export default defineComponent({
     name: 'CarrierSelector',
     data(): {
-      selectedCarriers: Carrier[],
-      allCarriersSelected: boolean,
+      selectedCarrierIds: number[],
+      modifyAllShopsVisible: Boolean,
     } {
       return {
-        selectedCarriers: [],
-        allCarriersSelected: false,
+        selectedCarrierIds: [],
+        modifyAllShopsVisible: false,
       };
     },
     props: {
+      initialCarrierIds: {
+        type: Array as PropType<number[]>,
+        required: true,
+      },
       carriers: {
         type: Array as PropType<Carrier[]>,
         required: true,
@@ -94,38 +112,40 @@
         type: Object,
         required: true,
       },
+      modifyAllShopsName: {
+        type: String,
+        required: true,
+      },
+      choiceInputName: {
+        type: String,
+        required: true,
+      },
     },
     components: {
       checkboxesDropdown,
     },
     mounted() {
-      this.selectedCarriers = [];
-      // this.eventEmitter.on(CombinationEvents.clearCarriers, () => this.clearAll());
+      this.selectedCarrierIds = this.initialCarrierIds;
+    },
+    computed: {
+      getSelectedCarriers(): Carrier[] {
+        return this.carriers.filter((carrier: Carrier) => this.selectedCarrierIds.includes(carrier.id));
+      },
     },
     methods: {
-      /**
-       * This methods is used to initialize product carriers
-       */
+      showModifyAllShopsCheckbox(): void {
+        this.modifyAllShopsVisible = true;
+      },
       addCarrier(carrier: Carrier): void {
-        this.selectedCarriers.push(carrier);
-        this.updateCarriers();
+        this.selectedCarrierIds.push(carrier.id);
       },
       removeCarrier(carrier: Carrier): void {
-        this.selectedCarriers = this.selectedCarriers.filter(
-          (e: Carrier) => carrier.id !== e.id,
+        this.selectedCarrierIds = this.selectedCarrierIds.filter(
+          (id: number) => carrier.id !== id,
         );
-
-        this.updateCarriers();
-      },
-      toggleAllSelected(event: Event): void {
-        const input = <HTMLInputElement> event.currentTarget;
-        this.allCarriersSelected = input.id === 'select-all-carriers-checkbox' && input.checked;
-      },
-      updateCarriers(): void {
-        // this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedCarriers);
       },
       getLabel(): string {
-        return this.selectedCarriers.length > 0
+        return this.selectedCarrierIds.length > 0
           ? this.$t('selectedCarriers.label')
           : this.$t('allCarriers.label');
       },
