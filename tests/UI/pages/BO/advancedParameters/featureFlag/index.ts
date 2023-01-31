@@ -28,7 +28,7 @@ class FeatureFlag extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'New & Experimental Features • PrestaShop';
+    this.pageTitle = `New & Experimental Features • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
