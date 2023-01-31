@@ -223,7 +223,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await addOrderPage.setGift(page, true);
     });
 
-    it('should re-check summary block', async function () {
+    it('should enable gift and re-check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
 
       await addOrderPage.setGift(page, true);
