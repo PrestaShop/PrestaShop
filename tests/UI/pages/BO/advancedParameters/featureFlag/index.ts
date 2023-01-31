@@ -13,6 +13,8 @@ class FeatureFlag extends BOBasePage {
 
   private readonly submitButton: string;
 
+  private readonly submitStableButton: string;
+
   private readonly alertSuccess: string;
 
   private readonly modalSubmitFeatureFlag: string;
@@ -30,8 +32,9 @@ class FeatureFlag extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
-    this.newProductPageSwitchButton = (toggle: number) => `#feature_flag_beta_feature_flags_product_page_v2_enabled_${toggle}`;
+    this.newProductPageSwitchButton = (toggle: number) => `#feature_flag_stable_feature_flags_product_page_v2_enabled_${toggle}`;
     this.submitButton = '#feature_flag_beta_submit';
+    this.submitStableButton = '#feature_flag_stable_submit';
     this.alertSuccess = 'div.alert.alert-success[role="alert"]';
     this.modalSubmitFeatureFlag = '#modal-confirm-submit-feature-flag';
     this.enableExperimentalfeatureButton = `${this.modalSubmitFeatureFlag} button.btn-confirm-submit`;
@@ -49,7 +52,7 @@ class FeatureFlag extends BOBasePage {
    */
   async setNewProductPage(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
-    await this.waitForSelectorAndClick(page, this.submitButton);
+    await this.waitForSelectorAndClick(page, this.submitStableButton);
     if (toEnable) {
       await this.waitForVisibleSelector(page, this.modalSubmitFeatureFlag);
       await this.clickAndWaitForNavigation(page, this.enableExperimentalfeatureButton);

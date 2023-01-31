@@ -20,7 +20,7 @@ let page: Page;
  * @param baseContext {string} String to identify the test
  */
 function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewProductPage'): void {
-  describe('PRE-TEST: Enable "New product page - Single store"', async () => {
+  describe('PRE-TEST: Enable "New product page"', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +49,7 @@ function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewPr
       await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
     });
 
-    it('should enable New product page - Single store', async function () {
+    it('should enable New product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNewProductPage', baseContext);
 
       const successMessage = await featureFlagPage.setNewProductPage(page, true);
@@ -63,7 +63,7 @@ function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewPr
  * @param baseContext {string} String to identify the test
  */
 function disableNewProductPageTest(baseContext: string = 'commonTests-disableNewProductPage'): void {
-  describe('POST-TEST: Disable "New product page - Single store"', async () => {
+  describe('POST-TEST: Disable "New product page"', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -92,7 +92,7 @@ function disableNewProductPageTest(baseContext: string = 'commonTests-disableNew
       await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
     });
 
-    it('should disable New product page - Single store', async function () {
+    it('should disable New product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableNewProductPage', baseContext);
 
       const successMessage = await featureFlagPage.setNewProductPage(page, false);
