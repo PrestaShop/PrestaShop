@@ -58,154 +58,156 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Steps
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('Product page V1: Perform basic crud operations', async () => {
+    // Steps
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-    await productsPage.closeSfToolBar(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+      await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
 
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-    await productsPage.resetFilterCategory(page);
+      await productsPage.resetFilterCategory(page);
 
-    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
 
-  it('should create product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+    it('should create product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-    await productsPage.goToAddProductPage(page);
+      await productsPage.goToAddProductPage(page);
 
-    const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
-  });
+      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
 
-  it('should preview product and get all information', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
+    it('should preview product and get all information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
 
-    // Preview product in FO and get product information
-    page = await addProductPage.previewProduct(page);
-    productInformation = await foProductPage.getProductInformation(page);
+      // Preview product in FO and get product information
+      page = await addProductPage.previewProduct(page);
+      productInformation = await foProductPage.getProductInformation(page);
 
-    const pageTitle = await foProductPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productData.name);
-  });
+      const pageTitle = await foProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productData.name);
+    });
 
-  it('should go back to BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
-    // Go back to BO
-    page = await foProductPage.closePage(browserContext, page, 0) as Page;
+      // Go back to BO
+      page = await foProductPage.closePage(browserContext, page, 0) as Page;
 
-    const pageTitle = await addProductPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addProductPage.pageTitle);
-  });
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
 
-  it('should check that all product attributes are correct', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductAttributes1', baseContext);
+    it('should check that all product attributes are correct', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductAttributes1', baseContext);
 
-    // Check that all Product attribute are correct
-    await Promise.all([
-      expect(productInformation.name).to.equal(productData.name),
-      expect(productInformation.price).to.equal(productData.price),
-      expect(productInformation.summary).to.equal(productData.summary),
-      expect(productInformation.description).to.contains(productData.description),
-    ]);
-  });
+      // Check that all Product attribute are correct
+      await Promise.all([
+        expect(productInformation.name).to.equal(productData.name),
+        expect(productInformation.price).to.equal(productData.price),
+        expect(productInformation.summary).to.equal(productData.summary),
+        expect(productInformation.description).to.contains(productData.description),
+      ]);
+    });
 
-  it('should edit Product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
+    it('should edit Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
-    const createProductMessage = await addProductPage.createEditBasicProduct(page, editedProductData);
-    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
-  });
+      const createProductMessage = await addProductPage.createEditBasicProduct(page, editedProductData);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
 
-  it('should preview product and get all information', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
+    it('should preview product and get all information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
-    page = await addProductPage.previewProduct(page);
-    productInformation = await foProductPage.getProductInformation(page);
-  });
+      page = await addProductPage.previewProduct(page);
+      productInformation = await foProductPage.getProductInformation(page);
+    });
 
-  it('should go back to BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-    page = await foProductPage.closePage(browserContext, page, 0) as Page;
+      page = await foProductPage.closePage(browserContext, page, 0) as Page;
 
-    const pageTitle = await addProductPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addProductPage.pageTitle);
-  });
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
 
-  it('should check that all product attributes are correct', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductAttributes2', baseContext);
+    it('should check that all product attributes are correct', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductAttributes2', baseContext);
 
-    // Check that all Product attribute are correct
-    await Promise.all([
-      expect(productInformation.name).to.equal(editedProductData.name),
-      expect(productInformation.price).to.equal(editedProductData.price),
-      expect(productInformation.summary).to.be.equal(editedProductData.summary),
-      expect(productInformation.description).to.be.equal(editedProductData.description),
-    ]);
-  });
+      // Check that all Product attribute are correct
+      await Promise.all([
+        expect(productInformation.name).to.equal(editedProductData.name),
+        expect(productInformation.price).to.equal(editedProductData.price),
+        expect(productInformation.summary).to.be.equal(editedProductData.summary),
+        expect(productInformation.description).to.be.equal(editedProductData.description),
+      ]);
+    });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCheckPrices', baseContext);
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCheckPrices', baseContext);
 
-    await addProductPage.goToSubMenu(
-      page,
-      addProductPage.catalogParentLink,
-      addProductPage.productsLink,
-    );
+      await addProductPage.goToSubMenu(
+        page,
+        addProductPage.catalogParentLink,
+        addProductPage.productsLink,
+      );
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
 
-  it('should filter list by reference and check prices', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductsPrices', baseContext);
+    it('should filter list by reference and check prices', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsPrices', baseContext);
 
-    await productsPage.filterProducts(page, 'reference', editedProductData.reference);
+      await productsPage.filterProducts(page, 'reference', editedProductData.reference);
 
-    const productPrice = await productsPage.getProductPriceFromList(page, 1, false);
-    const productPriceATI = await productsPage.getProductPriceFromList(page, 1, true);
+      const productPrice = await productsPage.getProductPriceFromList(page, 1, false);
+      const productPriceATI = await productsPage.getProductPriceFromList(page, 1, true);
 
-    const conversionRate = (100 + parseInt(tax.DefaultFrTax.rate, 10)) / 100;
-    await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / conversionRate).toFixed(2)));
-    await expect(parseFloat(productPriceATI)).to.equal(parseFloat(editedProductData.price));
-  });
+      const conversionRate = (100 + parseInt(tax.DefaultFrTax.rate, 10)) / 100;
+      await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / conversionRate).toFixed(2)));
+      await expect(parseFloat(productPriceATI)).to.equal(parseFloat(editedProductData.price));
+    });
 
-  it('should go to edit product page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEditProductPage', baseContext);
+    it('should go to edit product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditProductPage', baseContext);
 
-    await productsPage.goToEditProductPage(page, 1);
+      await productsPage.goToEditProductPage(page, 1);
 
-    const pageTitle = await addProductPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addProductPage.pageTitle);
-  });
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
 
-  it('should delete product and be on product list page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+    it('should delete product and be on product list page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-    const testResult = await addProductPage.deleteProduct(page);
-    await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      const testResult = await addProductPage.deleteProduct(page);
+      await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
   });
 
   // Post-condition: Reset initial state
