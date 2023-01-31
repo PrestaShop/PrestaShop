@@ -108,7 +108,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
             $coverImage = $editableCategory->getCoverImage();
             if ($coverImage) {
-                $coverImageEdited = [
+                $coverImages[] = [
                     'size' => $coverImage['size'],
                     'image_path' => $coverImage['path'],
                     'delete_path' => $this->router->generate(
@@ -118,11 +118,15 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
                         ]
                     ),
                 ];
-                $coverImages = [$coverImageEdited];
             }
             $thumbnailImage = $editableCategory->getThumbnailImage();
             if ($thumbnailImage) {
-                $thumbnailImages = [$thumbnailImage];
+                $thumbnailImages[] =
+                    [
+                        'image_path' => $thumbnailImage['path'],
+                        'size' => $thumbnailImage['size'],
+
+                    ];
             }
             $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
             $menuThumbnailImagesEdited = [];

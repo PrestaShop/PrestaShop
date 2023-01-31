@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
@@ -64,21 +65,29 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
     private $categoryMenuThumbnailUploader;
 
     /**
+     * @var MenuThumbnailAvailableKeyProvider
+     */
+    private $menuThumbnailAvailableKeyProvider;
+
+    /**
      * @param CommandBusInterface $commandBus
      * @param ImageUploaderInterface $categoryCoverUploader
      * @param ImageUploaderInterface $categoryThumbnailUploader
      * @param ImageUploaderInterface $categoryMenuThumbnailUploader
+     * @param MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
      */
     public function __construct(
         CommandBusInterface $commandBus,
         ImageUploaderInterface $categoryCoverUploader,
         ImageUploaderInterface $categoryThumbnailUploader,
-        ImageUploaderInterface $categoryMenuThumbnailUploader
+        ImageUploaderInterface $categoryMenuThumbnailUploader,
+        MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
     ) {
         $this->commandBus = $commandBus;
         $this->categoryCoverUploader = $categoryCoverUploader;
         $this->categoryThumbnailUploader = $categoryThumbnailUploader;
         $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
+        $this->menuThumbnailAvailableKeyProvider = $menuThumbnailAvailableKeyProvider;
     }
 
     /**
@@ -114,7 +123,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
     public function update($categoryId, array $data)
     {
         $categoryId = (int) $categoryId;
-        $availableKeys = $this->getAvailableKeys($categoryId);
+        $availableKeys = $this->menuThumbnailAvailableKeyProvider->getAvailableKeys($categoryId);
 
         if (isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count($availableKeys)) {
             throw new MenuThumbnailsLimitException(sprintf('The maximum number of menu thumbnails has been reached for the %d category', $categoryId));
@@ -204,7 +213,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         UploadedFile $coverImage = null,
         UploadedFile $thumbnailImage = null,
         array $menuThumbnailImages = []
-    ) {
+    ): void {
         if (null !== $coverImage) {
             $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
         }
@@ -218,26 +227,5 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
                 $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
             }
         }
-    }
-
-    /**
-     * @param int $categoryId
-     *
-     * @return array<int, int>
-     */
-    private function getAvailableKeys(int $categoryId): array
-    {
-        $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
-        $usedKeys = [];
-
-        foreach ($files as $file) {
-            $matches = [];
-
-            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
-                $usedKeys[] = (int) $matches[1];
-            }
-        }
-
-        return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
     }
 }
