@@ -57,6 +57,9 @@ class AdminStoresControllerCore extends AdminController
             'state' => ['title' => $this->trans('State', [], 'Admin.Global'), 'filter_key' => 'st!name'],
             'country' => ['title' => $this->trans('Country', [], 'Admin.Global'), 'filter_key' => 'cl!name'],
             'phone' => ['title' => $this->trans('Phone', [], 'Admin.Global')],
+			'siret' => ['title' => $this->trans('Siret', [], 'Admin.Global')],
+            'vat_number' => ['title' => $this->trans('VAT number', [], 'Admin.Global')],
+	        'iban' => ['title' => $this->trans('Iban', [], 'Admin.Global')],
             'fax' => ['title' => $this->trans('Fax', [], 'Admin.Global')],
             'active' => ['title' => $this->trans('Enabled', [], 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false],
         ];
@@ -130,12 +133,6 @@ class AdminStoresControllerCore extends AdminController
         return parent::renderList();
     }
 
-    /**
-     * @return string|void
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws SmartyException
-     */
     public function renderForm()
     {
         if (!($obj = $this->loadObject(true))) {
@@ -245,6 +242,24 @@ class AdminStoresControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
+                    'label' => $this->trans('Siret', [], 'Admin.Global'),
+                    'name' => 'siret',
+					'required' => false,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->trans('VAT number', [], 'Admin.Global'),
+                    'name' => 'vat_number',
+					'required' => false,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->trans('Iban', [], 'Admin.Global'),
+                    'name' => 'iban',
+					'required' => false,
+                ],
+                [
+                    'type' => 'text',
                     'label' => $this->trans('Email address', [], 'Admin.Global'),
                     'name' => 'email',
                 ],
@@ -312,7 +327,7 @@ class AdminStoresControllerCore extends AdminController
 
         $hours = [];
 
-        $hours_temp = $this->getFieldValue($obj, 'hours');
+        $hours_temp = ($this->getFieldValue($obj, 'hours'));
         if (is_array($hours_temp) && !empty($hours_temp)) {
             $langs = Language::getLanguages(false);
             $hours_temp = array_map('json_decode', $hours_temp);
@@ -356,9 +371,9 @@ class AdminStoresControllerCore extends AdminController
             /* If the selected country does not contain states */
             $id_state = (int) Tools::getValue('id_state');
             $id_country = (int) Tools::getValue('id_country');
-            $country = new Country($id_country);
+            $country = new Country((int) $id_country);
 
-            if ($id_country && !(int) $country->contains_states && $id_state) {
+            if ($id_country && $country && !(int) $country->contains_states && $id_state) {
                 $this->errors[] = $this->trans('You\'ve selected a state for a country that does not contain states.', [], 'Admin.Advparameters.Notification');
             }
 
@@ -384,7 +399,6 @@ class AdminStoresControllerCore extends AdminController
                 $this->errors[] = $this->trans('The Zip/Postal code is invalid.', [], 'Admin.Notifications.Error');
             }
             /* Store hours */
-            $encodedHours = [];
             foreach ($langs as $lang) {
                 $hours = [];
                 for ($i = 1; $i < 8; ++$i) {
@@ -398,7 +412,7 @@ class AdminStoresControllerCore extends AdminController
                 }
                 $encodedHours[$lang['id_lang']] = json_encode($hours);
             }
-            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours ?? []);
+            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours);
         }
 
         if (!count($this->errors)) {
@@ -413,7 +427,7 @@ class AdminStoresControllerCore extends AdminController
         $ret = parent::postImage($id);
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
+        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
                 ImageManager::resize(
@@ -453,49 +467,63 @@ class AdminStoresControllerCore extends AdminController
 
         $formFields = [
             'PS_SHOP_NAME' => [
-                'title' => $this->trans('Shop name', [], 'Admin.Shopparameters.Feature'),
+			'title' => $this->trans('Shop name', [], 'Admin.Shopparameters.Feature'),
                 'hint' => $this->trans('Displayed in emails and page titles.', [], 'Admin.Shopparameters.Feature'),
                 'validation' => 'isGenericName',
                 'required' => true,
                 'type' => 'text',
                 'no_escape' => true,
             ],
-            'PS_SHOP_EMAIL' => ['title' => $this->trans('Shop email', [], 'Admin.Shopparameters.Feature'),
+            'PS_SHOP_EMAIL' => [
+			'title' => $this->trans('Shop email', [], 'Admin.Shopparameters.Feature'),
                 'hint' => $this->trans('Displayed in emails sent to customers.', [], 'Admin.Shopparameters.Help'),
                 'validation' => 'isEmail',
                 'required' => true,
                 'type' => 'text',
             ],
             'PS_SHOP_DETAILS' => [
-                'title' => $this->trans('Registration number', [], 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Shop registration information (e.g. SIRET or RCS).', [], 'Admin.Shopparameters.Help'),
+			'title' => $this->trans('Registration number', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. ?).', [], 'Admin.Shopparameters.Help'),
                 'validation' => 'isGenericName',
                 'type' => 'textarea',
                 'cols' => 30,
                 'rows' => 5,
             ],
-            'PS_SHOP_ADDR1' => [
-                'title' => $this->trans('Shop address line 1', [], 'Admin.Shopparameters.Feature'),
-                'validation' => 'isAddress',
-                'type' => 'text',
-            ],
-            'PS_SHOP_ADDR2' => [
-                'title' => $this->trans('Shop address line 2', [], 'Admin.Shopparameters.Feature'),
-                'validation' => 'isAddress',
-                'type' => 'text',
-            ],
-            'PS_SHOP_CODE' => [
-                'title' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
+            'PS_SHOP_IBAN' => [
+			'title' => $this->trans('Registration number iban', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. iban or bic).', [], 'Admin.Shopparameters.Help'),
                 'validation' => 'isGenericName',
                 'type' => 'text',
             ],
-            'PS_SHOP_CITY' => [
-                'title' => $this->trans('City', [], 'Admin.Global'),
+            'PS_SHOP_SIRET' => [
+			'title' => $this->trans('Registration number Siret', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. "SIRET" in France and "Código fiscal" in Spain).', [], 'Admin.Shopparameters.Help'),
                 'validation' => 'isGenericName',
                 'type' => 'text',
             ],
-            'PS_SHOP_COUNTRY_ID' => [
-                'title' => $this->trans('Country', [], 'Admin.Global'),
+            'PS_SHOP_VAT_NUMBER' => [
+			'title' => $this->trans('Registration number VAT', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. VAT or BTW).', [], 'Admin.Shopparameters.Help'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+            ],
+            'PS_SHOP_ADDR1' => ['title' => $this->trans('Shop address line 1', [], 'Admin.Shopparameters.Feature'),
+                'validation' => 'isAddress',
+                'type' => 'text',
+            ],
+            'PS_SHOP_ADDR2' => ['title' => $this->trans('Shop address line 2', [], 'Admin.Shopparameters.Feature'),
+                'validation' => 'isAddress',
+                'type' => 'text',
+            ],
+            'PS_SHOP_CODE' => ['title' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+            ],
+            'PS_SHOP_CITY' => ['title' => $this->trans('City', [], 'Admin.Global'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+            ],
+            'PS_SHOP_COUNTRY_ID' => ['title' => $this->trans('Country', [], 'Admin.Global'),
                 'validation' => 'isInt',
                 'type' => 'select',
                 'list' => $countryList,
@@ -503,21 +531,18 @@ class AdminStoresControllerCore extends AdminController
                 'cast' => 'intval',
                 'defaultValue' => (int) $this->context->country->id,
             ],
-            'PS_SHOP_STATE_ID' => [
-                'title' => $this->trans('State', [], 'Admin.Global'),
+            'PS_SHOP_STATE_ID' => ['title' => $this->trans('State', [], 'Admin.Global'),
                 'validation' => 'isInt',
                 'type' => 'select',
                 'list' => $stateList,
                 'identifier' => 'id',
                 'cast' => 'intval',
             ],
-            'PS_SHOP_PHONE' => [
-                'title' => $this->trans('Phone', [], 'Admin.Global'),
+            'PS_SHOP_PHONE' => ['title' => $this->trans('Phone', [], 'Admin.Global'),
                 'validation' => 'isGenericName',
                 'type' => 'text',
             ],
-            'PS_SHOP_FAX' => [
-                'title' => $this->trans('Fax', [], 'Admin.Global'),
+            'PS_SHOP_FAX' => ['title' => $this->trans('Fax', [], 'Admin.Global'),
                 'validation' => 'isGenericName',
                 'type' => 'text',
             ],
