@@ -52,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -550,24 +551,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function bulkDeleteFromShopAction(Request $request, int $shopId): Response
     {
-        try {
-            // Could be worth refacto this with a dedicated BulkDeleteProductFromShopsCommand
-            foreach ($this->getProductIdsFromRequest($request) as $productId) {
-                $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, [$shopId]));
-            }
-            $this->addFlash(
-                'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
-            );
-        } catch (ProductException $e) {
-            if ($e instanceof BulkProductException) {
-                return $this->jsonBulkErrors($e);
-            } else {
-                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
-            }
-        }
-
-        return $this->json(['success' => true]);
+        return $this->bulkDeleteByShopConstraint($request, ShopConstraint::shop($shopId));
     }
 
     /**
@@ -579,30 +563,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function bulkDeleteFromShopGroupAction(Request $request, int $shopGroupId): Response
     {
-        try {
-            /** @var ProductMultiShopRepository $productRepository */
-            $productRepository = $this->get(ProductMultiShopRepository::class);
-
-            // Could be worth refacto this with a dedicated BulkDeleteProductFromShopsCommand
-            foreach ($this->getProductIdsFromRequest($request) as $productId) {
-                $productShopIds = $productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
-                $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
-                    return $shopId->getValue();
-                }, $productShopIds)));
-            }
-            $this->addFlash(
-                'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
-            );
-        } catch (ProductException $e) {
-            if ($e instanceof BulkProductException) {
-                return $this->jsonBulkErrors($e);
-            } else {
-                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
-            }
-        }
-
-        return $this->json(['success' => true]);
+        return $this->bulkDeleteByShopConstraint($request, ShopConstraint::shopGroup($shopGroupId));
     }
 
     /**
@@ -1196,6 +1157,36 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
+    }
+
+    /**
+     * Helper private method to delete some products
+     *
+     * @param Request $request
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return JsonResponse
+     */
+    private function bulkDeleteByShopConstraint(Request $request, ShopConstraint $shopConstraint): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductFromShopsCommand(
+                $this->getProductIdsFromRequest($request),
+                $shopConstraint
+            ));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
     }
 
     /**

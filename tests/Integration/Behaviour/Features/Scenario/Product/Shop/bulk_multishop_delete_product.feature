@@ -32,6 +32,8 @@ Feature: Copy product from shop to shop.
     And I add product "standardProduct" to shop "shop2" with following information:
       | name[en-US] | magic staff |
       | type        | standard    |
+    When I update product "standardProduct" stock for shop shop2 with following information:
+      | delta_quantity | 51 |
     And I add new image "image1" named "app_icon.png" to product "standardProduct" for shop "shop2"
     And I add new image "image2" named "some_image.jpg" to product "standardProduct" for shop "shop2"
     And I copy product standardProduct from shop shop2 to shop shop1
@@ -41,6 +43,8 @@ Feature: Copy product from shop to shop.
     And product standardProduct is associated to shop shop2
     And product standardProduct is associated to shop shop3
     And product standardProduct is associated to shop shop4
+    And product "standardProduct" should have following stock information for shops "shop1,shop2,shop3,shop4":
+      | quantity | 51 |
     And product "standardProduct" should have following images for shops "shop1,shop2,shop3,shop4":
       | image reference | position | shops                      |
       | image1          | 1        | shop1, shop2, shop3, shop4 |
@@ -65,6 +69,17 @@ Feature: Copy product from shop to shop.
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+    And I update combination "product1LWhite" stock for all shops with following details:
+      | delta quantity | 10 |
+    And I update combination "product1LBlack" stock for all shops with following details:
+      | delta quantity | 20 |
+    And I update combination "product1LBlue" stock for all shops with following details:
+      | delta quantity | 30 |
+    And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop3,shop4":
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
 
   Scenario: I can bulk delete product from first shop group
     When I bulk delete following products from shop group default_shop_group:
@@ -76,6 +91,8 @@ Feature: Copy product from shop to shop.
     And product standardProduct is associated to shop shop3
     And product standardProduct is associated to shop shop4
     And default shop for product standardProduct is shop3
+    And product "standardProduct" should have following stock information for shops "shop3,shop4":
+      | quantity | 51 |
     And product "standardProduct" should have following images for shops "shop3,shop4":
       | image reference | position | shops        |
       | image1          | 1        | shop3, shop4 |
@@ -87,10 +104,10 @@ Feature: Copy product from shop to shop.
     And product productWithCombinations is associated to shop shop4
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop3,shop4":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
-      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
-      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
     And product productWithCombinations should have no combinations for shops "shop1,shop2"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop1"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop2"
@@ -105,6 +122,8 @@ Feature: Copy product from shop to shop.
     And product standardProduct is not associated to shop shop3
     And product standardProduct is not associated to shop shop4
     And default shop for product standardProduct is shop2
+    And product "standardProduct" should have following stock information for shops "shop1,shop2":
+      | quantity | 51 |
     And product "standardProduct" should have following images for shops "shop1,shop2":
       | image reference | position | shops        |
       | image1          | 1        | shop1, shop2 |
@@ -116,10 +135,10 @@ Feature: Copy product from shop to shop.
     And product productWithCombinations is not associated to shop shop4
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
-      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
-      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
     And product productWithCombinations should have no combinations for shops "shop3,shop4"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop4"
@@ -134,6 +153,8 @@ Feature: Copy product from shop to shop.
     And product standardProduct is associated to shop shop3
     And product standardProduct is associated to shop shop4
     And default shop for product standardProduct is shop1
+    And product "standardProduct" should have following stock information for shops "shop1,shop3,shop4":
+      | quantity | 51 |
     And product "standardProduct" should have following images for shops "shop1,shop3,shop4":
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop3, shop4 |
@@ -145,10 +166,10 @@ Feature: Copy product from shop to shop.
     And product productWithCombinations is associated to shop shop4
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop3,shop4":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
-      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
-      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
     And product productWithCombinations should have no combinations for shops "shop2"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop2"
 
@@ -162,6 +183,8 @@ Feature: Copy product from shop to shop.
     And product standardProduct is not associated to shop shop3
     And product standardProduct is associated to shop shop4
     And default shop for product standardProduct is shop2
+    And product "standardProduct" should have following stock information for shops "shop1,shop2,shop4":
+      | quantity | 51 |
     And product "standardProduct" should have following images for shops "shop1,shop2,shop4":
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop2, shop4 |
@@ -173,10 +196,10 @@ Feature: Copy product from shop to shop.
     And product productWithCombinations is associated to shop shop4
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop4":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
-      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
-      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
     And product productWithCombinations should have no combinations for shops "shop3"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3"
 
