@@ -19,7 +19,8 @@ import {ProductDetails} from '@data/types/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
-  isNewProductPageEnabledByDefault, setNewProductPageTest,
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_productsBO_CRUDStandardProductWithCombinationsInBO';
@@ -46,7 +47,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   });
 
   // Pre-condition: Disable new product page
-  setNewProductPageTest(false);
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -186,5 +187,5 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   });
 
   // Post-condition: Reset initial state
-  setNewProductPageTest(isNewProductPageEnabledByDefault());
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

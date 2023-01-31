@@ -16,7 +16,8 @@ import foProductPage from '@pages/FO/product';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  isNewProductPageEnabledByDefault, setNewProductPageTest,
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
@@ -49,7 +50,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
   });
 
   // Pre-condition: Enable new product page
-  setNewProductPageTest(true);
+  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -263,5 +264,5 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
   });
 
   // Post-condition: Reset initial state
-  setNewProductPageTest(isNewProductPageEnabledByDefault());
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

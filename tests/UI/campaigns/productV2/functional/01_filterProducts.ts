@@ -8,7 +8,8 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  isNewProductPageEnabledByDefault, setNewProductPageTest,
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
@@ -27,7 +28,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let numberOfProducts: number = 0;
 
   // Pre-condition: Enable new product page
-  setNewProductPageTest(true);
+  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -300,5 +301,5 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   });
 
   // Post-condition: Reset initial state
-  setNewProductPageTest(isNewProductPageEnabledByDefault());
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

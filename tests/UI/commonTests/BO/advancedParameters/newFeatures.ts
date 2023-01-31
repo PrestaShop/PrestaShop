@@ -110,7 +110,22 @@ function isNewProductPageEnabledByDefault(): boolean {
   return true;
 }
 
-function setNewProductPageTest(expectedStatus: boolean, baseContext: string = 'commonTests-disableNewProductPage'): void {
+/**
+ * Reset the new product page to its initial state.
+ *
+ * @param baseContext {string}
+ */
+function resetNewProductPageAsDefault(baseContext: string = 'commonTests-resetNewProductPage'): void {
+  setNewProductPageTest(isNewProductPageEnabledByDefault(), baseContext);
+}
+
+/**
+ * Set the new product page state via a boolean.
+ *
+ * @param expectedStatus {boolean}
+ * @param baseContext {string}
+ */
+function setNewProductPageTest(expectedStatus: boolean, baseContext: string = 'commonTests-setNewProductPage'): void {
   if (expectedStatus) {
     enableNewProductPageTest(baseContext);
   } else {
@@ -119,5 +134,9 @@ function setNewProductPageTest(expectedStatus: boolean, baseContext: string = 'c
 }
 
 export {
-  enableNewProductPageTest, disableNewProductPageTest, isNewProductPageEnabledByDefault, setNewProductPageTest,
+  enableNewProductPageTest,
+  disableNewProductPageTest,
+  isNewProductPageEnabledByDefault,
+  setNewProductPageTest,
+  resetNewProductPageAsDefault,
 };

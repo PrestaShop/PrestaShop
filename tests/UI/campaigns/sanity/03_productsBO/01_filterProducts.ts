@@ -17,7 +17,8 @@ import tax from '@data/demo/tax';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
-  isNewProductPageEnabledByDefault, setNewProductPageTest,
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_productsBO_filterProducts';
@@ -30,7 +31,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let numberOfProductsOnPage: number = 0;
 
   // Pre-condition: Disable new product page
-  setNewProductPageTest(false);
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -122,5 +123,5 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   });
 
   // Post-condition: Reset initial state
-  setNewProductPageTest(isNewProductPageEnabledByDefault());
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -13,7 +13,8 @@ import Products from '@data/demo/products';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {
-  isNewProductPageEnabledByDefault, setNewProductPageTest,
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_cartFO_editCheckCart';
@@ -32,7 +33,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
   let itemsNumber: number = 0;
 
   // Pre-condition: Disable new product page
-  setNewProductPageTest(false);
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -174,5 +175,5 @@ describe('FO - Cart : Check Cart in FO', async () => {
   });
 
   // Post-condition: Reset initial state
-  setNewProductPageTest(isNewProductPageEnabledByDefault());
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
