@@ -101,4 +101,13 @@ function disableNewProductPageTest(baseContext: string = 'commonTests-disableNew
   });
 }
 
-export {enableNewProductPageTest, disableNewProductPageTest};
+/**
+ * Indicate the default state of new page with feature flags, depending on its initial value we need to
+ * adapt the tests behaviour especially the part that enables/disables the page. We keep this value editable
+ * here in case the default value changes the tests will be easy to adapt.
+ */
+function isNewProductPageEnabledByDefault() {
+  return true;
+}
+
+export {enableNewProductPageTest, disableNewProductPageTest, isNewProductPageEnabledByDefault};
