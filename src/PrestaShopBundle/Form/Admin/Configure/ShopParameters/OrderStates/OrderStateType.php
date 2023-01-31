@@ -40,7 +40,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Router;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -54,11 +53,6 @@ class OrderStateType extends TranslatorAwareType
     private $templates;
 
     /**
-     * @var Router
-     */
-    private $routing;
-
-    /**
      * @var array
      */
     private $templateAttributes;
@@ -67,7 +61,6 @@ class OrderStateType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ThemeCatalogInterface $themeCatalog
-     * @param Router $routing
      * @param Configuration $configuration
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
@@ -76,11 +69,9 @@ class OrderStateType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         ThemeCatalogInterface $themeCatalog,
-        Router $routing,
         Configuration $configuration
     ) {
         parent::__construct($translator, $locales);
-        $this->routing = $routing;
         $mailTheme = $configuration->get('PS_MAIL_THEME', 'modern');
 
         $mailLayouts = $themeCatalog->getByName($mailTheme)->getLayouts();
