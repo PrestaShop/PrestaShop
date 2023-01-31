@@ -331,14 +331,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         // By default, use the default value from the trait
         $deleteLabel = null;
         $duplicateLabel = $this->trans('Duplicate', [], 'Admin.Actions');
-        $extraDeleteParams = [];
         $shopId = $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue();
         if ($this->multistoreFeature->isActive()) {
             $deleteLabel = $this->trans('Delete from store', [], 'Admin.Actions');
             $duplicateLabel = $this->trans('Duplicate for current store', [], 'Admin.Actions');
-            $extraDeleteParams = [
-                'shopId' => $shopId,
-            ];
         }
 
         $rowActions = new RowActionCollection();
@@ -388,7 +384,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'productId',
                     'id_product',
                     'POST',
-                    $extraDeleteParams,
+                    ['shopId' => $shopId],
                     [],
                     $deleteLabel
                 )
