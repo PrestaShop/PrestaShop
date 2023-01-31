@@ -24,47 +24,23 @@
  *-->
 <template>
   <div class="carrier-selector">
-    <div class="form-check form-check-radio form-radio">
-      <label class="form-check-label">
-        <input
-          id="select-all-carriers-checkbox"
-          type="radio"
-          name="all_carriers"
-          class="form-check-input"
-          value="1"
-          @change="toggleAllSelected"
-        >
-        <i class="form-check-round"/>
-        {{ $t('allCarriers.label') }}
-      </label>
-    </div>
     <div
       class="form-check form-check-radio form-radio"
     >
-      <label class="form-check-label">
-        <input
-          type="radio"
-          name="all_carriers"
-          class="form-check-input"
-          value="1"
-          @change="toggleAllSelected"
-        >
-        <i class="form-check-round"/>
-        <div
-          class="carrier-selector-line"
-          v-if="carriers.length"
-        >
-          <checkboxes-dropdown
-            :items="carriers"
-            :parent-id="1"
-            :label="$t('selectedCarriers.label')"
-            @addItem="addCarrier"
-            @removeItem="removeCarrier"
-            :event-emitter="eventEmitter"
-            :disabled="allCarriersSelected"
-          />
-        </div>
-      </label>
+      <div
+        class="carrier-selector-line"
+        v-if="carriers.length"
+      >
+        <checkboxes-dropdown
+          :items="carriers"
+          :parent-id="1"
+          :label="getLabel()"
+          @addItem="addCarrier"
+          @removeItem="removeCarrier"
+          :event-emitter="eventEmitter"
+          :disabled="allCarriersSelected"
+        />
+      </div>
     </div>
     <div
       v-if="selectedCarriers.length"
@@ -74,9 +50,7 @@
         v-if="selectedCarriers.length && !allCarriersSelected"
       >
         <ul>
-          <li
-            v-for="(selectedCarrier, key) in selectedCarriers"
-          >
+          <li v-for="(selectedCarrier, key) in selectedCarriers">
             {{ selectedCarrier.label }}<span v-if="key !== selectedCarriers.length -1 ">, </span>
             <input
               type="hidden"
@@ -149,6 +123,11 @@
       },
       updateCarriers(): void {
         // this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedCarriers);
+      },
+      getLabel(): string {
+        return this.selectedCarriers.length > 0
+          ? this.$t('selectedCarriers.label')
+          : this.$t('allCarriers.label');
       },
     },
   });
