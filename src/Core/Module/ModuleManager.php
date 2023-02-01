@@ -253,46 +253,38 @@ class ModuleManager implements ModuleManagerInterface
         return $disabled;
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public function enableMobile(string $name): bool
     {
-        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
-            throw new Exception($this->translator->trans(
-                'You are not allowed to enable the module %module% on mobile.',
-                ['%module%' => $name],
-                'Admin.Modules.Notification'
-            ));
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        $this->assertIsInstalled($name);
-
-        $this->hookManager->exec('actionBeforeEnableMobileModule', ['moduleName' => $name]);
-
-        $module = $this->moduleRepository->getModule($name);
-        $enabled = $module->onMobileEnable();
-        $this->dispatch(ModuleManagementEvent::ENABLE_MOBILE, $module);
-
-        return $enabled;
+        return true;
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public function disableMobile(string $name): bool
     {
-        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
-            throw new Exception($this->translator->trans(
-                'You are not allowed to disable the module %module% on mobile.',
-                ['%module%' => $name],
-                'Admin.Modules.Notification'
-            ));
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        $this->assertIsInstalled($name);
-
-        $this->hookManager->exec('actionBeforeDisableMobileModule', ['moduleName' => $name]);
-
-        $module = $this->moduleRepository->getModule($name);
-        $disabled = $module->onMobileDisable();
-        $this->dispatch(ModuleManagementEvent::DISABLE_MOBILE, $module);
-
-        return $disabled;
+        return true;
     }
 
     public function reset(string $name, bool $keepData = false): bool

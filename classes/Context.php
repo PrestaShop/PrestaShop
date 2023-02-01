@@ -206,43 +206,24 @@ class ContextCore
     }
 
     /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
      * Sets mobile_device context variable.
      *
      * @return bool
      */
     public function getMobileDevice()
     {
-        if ($this->mobile_device === null) {
-            $this->mobile_device = false;
-            if ($this->checkMobileContext()) {
-                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int) Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
-                    $this->mobile_device = true;
-                } else {
-                    switch ((int) Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
-                        case 1: // Only for mobile device
-                            if ($this->isMobile() && !$this->isTablet()) {
-                                $this->mobile_device = true;
-                            }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-                            break;
-                        case 2: // Only for touchpads
-                            if ($this->isTablet() && !$this->isMobile()) {
-                                $this->mobile_device = true;
-                            }
-
-                            break;
-                        case 3: // For touchpad or mobile devices
-                            if ($this->isMobile() || $this->isTablet()) {
-                                $this->mobile_device = true;
-                            }
-
-                            break;
-                    }
-                }
-            }
-        }
-
-        return $this->mobile_device;
+        return false;
     }
 
     /**
@@ -276,36 +257,24 @@ class ContextCore
     }
 
     /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
      * Checks if mobile context is possible.
      *
      * @return bool
-     *
-     * @throws PrestaShopException
      */
     protected function checkMobileContext()
     {
-        // Check mobile context
-        if (Tools::isSubmit('no_mobile_theme')) {
-            Context::getContext()->cookie->no_mobile = true;
-            if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                $guest->mobile_theme = false;
-                $guest->update();
-            }
-        } elseif (Tools::isSubmit('mobile_theme_ok')) {
-            Context::getContext()->cookie->no_mobile = false;
-            if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                $guest->mobile_theme = true;
-                $guest->update();
-            }
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
-            && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
-            && defined('_PS_THEME_MOBILE_DIR_')
-            && @filemtime(_PS_THEME_MOBILE_DIR_)
-            && !Context::getContext()->cookie->no_mobile;
+        return false;
     }
 
     /**

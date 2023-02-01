@@ -670,8 +670,6 @@ class AdminModuleController {
       'bulk-uninstall': 'uninstall',
       'bulk-disable': 'disable',
       'bulk-enable': 'enable',
-      'bulk-disable-mobile': 'disableMobile',
-      'bulk-enable-mobile': 'enableMobile',
       'bulk-reset': 'reset',
       'bulk-delete': 'delete',
     };

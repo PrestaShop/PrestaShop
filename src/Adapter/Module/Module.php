@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -43,8 +42,6 @@ class Module implements ModuleInterface
     public const ACTION_UNINSTALL = 'uninstall';
     public const ACTION_ENABLE = 'enable';
     public const ACTION_DISABLE = 'disable';
-    public const ACTION_ENABLE_MOBILE = 'enableMobile';
-    public const ACTION_DISABLE_MOBILE = 'disableMobile';
     public const ACTION_RESET = 'reset';
     public const ACTION_UPGRADE = 'upgrade';
     public const ACTION_CONFIGURE = 'configure';
@@ -133,6 +130,7 @@ class Module implements ModuleInterface
 
     /**
      * Default values for ParameterBag database.
+     * active_on_mobile property is deprecated and will be removed in 10.0.0
      *
      * @var array
      */
@@ -230,9 +228,21 @@ class Module implements ModuleInterface
         return (bool) $this->database->get('active');
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public function isActiveOnMobile(): bool
     {
-        return (bool) $this->database->get('active_on_mobile');
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return $this->isActive();
     }
 
     public function isInstalled(): bool
@@ -340,33 +350,37 @@ class Module implements ModuleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
      */
     public function onMobileEnable(): bool
     {
-        if (!$this->hasValidInstance()) {
-            return false;
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        $result = $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
-        $this->database->set('active_on_mobile', $result);
-
-        return $result;
+        return true;
     }
 
     /**
-     * {@inheritdoc}
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
      */
     public function onMobileDisable(): bool
     {
-        if (!$this->hasValidInstance()) {
-            return false;
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        $result = $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
-        $this->database->set('active_on_mobile', !$result);
-
-        return $result;
+        return true;
     }
 
     /**

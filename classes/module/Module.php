@@ -128,6 +128,11 @@ abstract class ModuleCore implements ModuleInterface
     /** @var string Fill it if the module is installed but not yet set up */
     public $warning;
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Attribute will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
+     * @var int enable_device */
     public $enable_device = 7;
 
     /** @var array to store the limited country */
@@ -892,26 +897,35 @@ abstract class ModuleCore implements ModuleInterface
         return true;
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public function enableDevice($device)
     {
-        Db::getInstance()->execute(
-            '
-            UPDATE ' . _DB_PREFIX_ . 'module_shop
-            SET enable_device = enable_device + ' . (int) $device . '
-            WHERE (enable_device &~ ' . (int) $device . ' OR enable_device = 0) AND id_module=' . (int) $this->id .
-            Shop::addSqlRestriction()
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
         );
 
         return true;
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public function disableDevice($device)
     {
-        Db::getInstance()->execute(
-            'UPDATE ' . _DB_PREFIX_ . 'module_shop
-            SET enable_device = enable_device - ' . (int) $device . '
-            WHERE enable_device & ' . (int) $device . ' AND id_module=' . (int) $this->id .
-            Shop::addSqlRestriction()
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
         );
 
         return true;
@@ -1314,7 +1328,7 @@ abstract class ModuleCore implements ModuleInterface
 
         $modules_installed = [];
         $result = Db::getInstance()->executeS('
-        SELECT m.name, m.version, mp.interest, module_shop.enable_device
+        SELECT m.name, m.version, mp.interest
         FROM `' . _DB_PREFIX_ . 'module` m
         ' . Shop::addSqlAssociation('module', 'm', false) . '
         LEFT JOIN `' . _DB_PREFIX_ . 'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = ' . (int) $id_employee . ')');
@@ -1519,7 +1533,6 @@ abstract class ModuleCore implements ModuleInterface
                 $module->installed = true;
                 $module->database_version = $modules_installed[$module->name]['version'];
                 $module->interest = $modules_installed[$module->name]['interest'];
-                $module->enable_device = $modules_installed[$module->name]['enable_device'];
             } else {
                 $module->installed = false;
                 $module->database_version = 0;
@@ -2074,18 +2087,21 @@ abstract class ModuleCore implements ModuleInterface
         return Cache::retrieve('Module::isEnabled' . $module_name);
     }
 
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     */
     public static function isEnabledForMobileDevices($module_name)
     {
-        if (!Cache::isStored('Module::isEnabledForMobileDevices' . $module_name)) {
-            $id_module = Module::getModuleIdByName($module_name);
-            $enable_device = (int) Db::getInstance()->getValue('SELECT `enable_device` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id);
-            $is_enabled_mobile = $enable_device === 7;
-            Cache::store('Module::isEnabledForMobileDevices' . $module_name, (bool) $is_enabled_mobile);
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement. Use Module::isEnabled only.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-            return (bool) $is_enabled_mobile;
-        }
-
-        return Cache::retrieve('Module::isEnabledForMobileDevices' . $module_name);
+        return self::isEnabled($module_name);
     }
 
     /**

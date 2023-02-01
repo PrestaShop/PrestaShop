@@ -71,8 +71,12 @@ class CartCore extends ObjectModel
     /** @var string Gift message if specified */
     public $gift_message;
 
-    /** @var bool Mobile Theme */
-    public $mobile_theme;
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Attribute will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
+     * @var bool Mobile Theme */
+    public $mobile_theme = false;
 
     /** @var string Object creation date */
     public $date_add;

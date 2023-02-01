@@ -53,8 +53,6 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_UNINSTALL => 'Admin.Actions',
         Module::ACTION_ENABLE => 'Admin.Actions',
         Module::ACTION_DISABLE => 'Admin.Actions',
-        Module::ACTION_ENABLE_MOBILE => 'Admin.Modules.Feature',
-        Module::ACTION_DISABLE_MOBILE => 'Admin.Modules.Feature',
         Module::ACTION_RESET => 'Admin.Actions',
         Module::ACTION_UPGRADE => 'Admin.Actions',
         Module::ACTION_CONFIGURE => 'Admin.Actions',
@@ -69,8 +67,6 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_UNINSTALL => 'Uninstall',
         Module::ACTION_ENABLE => 'Enable',
         Module::ACTION_DISABLE => 'Disable',
-        Module::ACTION_ENABLE_MOBILE => 'Enable mobile',
-        Module::ACTION_DISABLE_MOBILE => 'Disable mobile',
         Module::ACTION_RESET => 'Reset',
         Module::ACTION_UPGRADE => 'Update',
         Module::ACTION_CONFIGURE => 'Configure',
@@ -85,8 +81,6 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_CONFIGURE,
         Module::ACTION_ENABLE,
         Module::ACTION_DISABLE,
-        Module::ACTION_ENABLE_MOBILE,
-        Module::ACTION_DISABLE_MOBILE,
         Module::ACTION_RESET,
         Module::ACTION_UPGRADE,
         Module::ACTION_UNINSTALL,
@@ -248,17 +242,14 @@ class AdminModuleDataProvider implements ModuleInterface
                 unset($urls['delete']);
                 if (!$module->isActive()) {
                     unset(
-                        $urls['disable'],
-                        $urls['enableMobile'],
-                        $urls['disableMobile']
+                        $urls['disable']
                     );
                     if ($moduleDatabaseAttributes->get('active') === null) {
                         unset($urls['enable']);
                     }
                 } else {
                     unset(
-                        $urls['enable'],
-                        $urls[$module->isActiveOnMobile() ? 'enableMobile' : 'disableMobile']
+                        $urls['enable']
                     );
                 }
 

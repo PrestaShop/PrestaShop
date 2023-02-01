@@ -58,8 +58,6 @@ class EventSubscriber implements EventSubscriberInterface
             ModuleManagementEvent::UPGRADE => 'onModuleInstalledOrUninstalled',
             ModuleManagementEvent::ENABLE => 'onModuleStateChanged',
             ModuleManagementEvent::DISABLE => 'onModuleStateChanged',
-            ModuleManagementEvent::ENABLE_MOBILE => 'onModuleStateChanged',
-            ModuleManagementEvent::DISABLE_MOBILE => 'onModuleStateChanged',
         ];
     }
 
