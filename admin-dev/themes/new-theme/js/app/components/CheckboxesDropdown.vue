@@ -158,8 +158,7 @@
   }
 
   .dropdown-item {
-    padding: 0.438rem 0.938rem;
-    padding-right: 1rem;
+    padding: 0.438rem 1rem 0.438rem 0.938rem;
     line-height: normal;
     color: inherit;
     border-bottom: 0;

@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-  import checkboxesDropdown from '@app/components/checkboxesDropdown.vue';
+  import CheckboxesDropdown from '@app/components/CheckboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';
 
@@ -125,7 +125,7 @@
       },
     },
     components: {
-      checkboxesDropdown,
+      CheckboxesDropdown,
     },
     mounted() {
       this.selectedCarrierIds = this.initialCarrierIds;

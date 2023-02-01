@@ -57,8 +57,7 @@
 </template>
 
 <script lang="ts">
-  import checkboxesDropdown, {eventClearAllSelections} from '@app/components/checkboxesDropdown.vue';
-  // import checkboxesDropdown from '@app/components/checkboxesDropdown.vue';
+  import CheckboxesDropdown, {eventClearAllSelections} from '@app/components/CheckboxesDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';
@@ -83,7 +82,7 @@
       },
     },
     components: {
-      checkboxesDropdown,
+      CheckboxesDropdown,
     },
     computed: {
       selectedFiltersNumber(): number {
