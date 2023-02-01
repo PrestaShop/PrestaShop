@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
@@ -32,6 +36,9 @@ describe('BO - Catalog - Products : Preview product from list', async () => {
   let page: Page;
   let numberOfProducts: number = 0;
 
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,64 +49,69 @@ describe('BO - Catalog - Products : Preview product from list', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+  describe('Preview product from list', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    it(`should filter product by name '${Products.demo_5.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToPreview', baseContext);
+
+      await productsPage.filterProducts(page, 'name', Products.demo_5.name);
+
+      const textColumn = await productsPage.getProductNameFromList(page, 1);
+      await expect(textColumn).to.contains(Products.demo_5.name);
+    });
+
+    it('should preview product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
+
+      // Preview product
+      page = await productsPage.previewProduct(page, 1);
+
+      // Check product information in FO
+      const productInformation = await foProductPage.getProductInformation(page);
+      await expect(productInformation.name).to.equal(Products.demo_5.name);
+    });
+
+    it('should close the current page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
+
+      page = await foProductPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetSecond', baseContext);
+
+      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
   });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-    await productsPage.closeSfToolBar(page);
-
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-
-  it('should reset all filters and get number of products', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
-
-  it(`should filter product by name '${Products.demo_5.name}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterToPreview', baseContext);
-
-    await productsPage.filterProducts(page, 'name', Products.demo_5.name);
-
-    const textColumn = await productsPage.getProductNameFromList(page, 1);
-    await expect(textColumn).to.contains(Products.demo_5.name);
-  });
-
-  it('should preview product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
-
-    // Preview product
-    page = await productsPage.previewProduct(page, 1);
-
-    // Check product information in FO
-    const productInformation = await foProductPage.getProductInformation(page);
-    await expect(productInformation.name).to.equal(Products.demo_5.name);
-  });
-
-  it('should close the current page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
-
-    page = await foProductPage.closePage(browserContext, page, 0);
-
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-
-  it('should reset all filters and get number of products', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetSecond', baseContext);
-
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
