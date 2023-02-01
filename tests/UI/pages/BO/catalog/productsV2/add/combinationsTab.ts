@@ -12,15 +12,15 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class CombinationsTab extends BOBasePage {
-  private readonly generateCombinationsMessage: (number: number) => string;
+  public readonly generateCombinationsMessage: (number: number) => string;
 
-  private readonly successfulGenerateCombinationsMessage: (number: number) => string;
+  public readonly successfulGenerateCombinationsMessage: (number: number) => string;
 
-  private readonly editCombinationsModalTitle: (number: number) => string;
+  public readonly editCombinationsModalTitle: (number: number) => string;
 
-  private readonly editCombinationsModalMessage: (number: number) => string;
+  public readonly editCombinationsModalMessage: (number: number) => string;
 
-  private readonly successfulUpdateMessage: string;
+  public readonly successfulUpdateMessage: string;
 
   private readonly combinationsTabLink: string;
 
@@ -106,6 +106,8 @@ class CombinationsTab extends BOBasePage {
 
   private readonly combinationListTableColumn: (row: number, column: string) => string;
 
+  private readonly combinationListTableActionsDropDown: (row: number) => string;
+
   private readonly combinationListTableActionsColumn: (row: number, action: string) => string;
 
   private readonly combinationListTableSelectAllButton: string;
@@ -172,10 +174,10 @@ class CombinationsTab extends BOBasePage {
    */
   constructor() {
     super();
-    this.generateCombinationsMessage = (number) => `Generate ${number} combinations`;
-    this.successfulGenerateCombinationsMessage = (number) => `Successfully generated ${number} combinations.`;
-    this.editCombinationsModalTitle = (number) => `Edit ${number} combinations`;
-    this.editCombinationsModalMessage = (number) => `Editing ${number}/${number} combinations`;
+    this.generateCombinationsMessage = (number: number) => `Generate ${number} combinations`;
+    this.successfulGenerateCombinationsMessage = (number: number) => `Successfully generated ${number} combinations.`;
+    this.editCombinationsModalTitle = (number: number) => `Edit ${number} combinations`;
+    this.editCombinationsModalMessage = (number: number) => `Editing ${number}/${number} combinations`;
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors in combinations tab
@@ -198,30 +200,30 @@ class CombinationsTab extends BOBasePage {
     this.bulkEditModalTitle = `${this.bulkEditModal} .modal-header .modal-title`;
     // Edit stocks
     this.bulkEditModalStocksButton = '#bulk_combination_stock_accordion_header h2 button';
-    this.bulkEditModalQuantitySwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_delta_quantity_'
+    this.bulkEditModalQuantitySwitchButton = (toEnable: number) => '#bulk_combination_stock_disabling_switch_delta_quantity_'
       + `${toEnable}`;
     this.bulkEditModalQuantityInput = '#bulk_combination_stock_delta_quantity_delta';
-    this.bulkEditModalMinimalQuantitySwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_minimal'
+    this.bulkEditModalMinimalQuantitySwitchButton = (toEnable: number) => '#bulk_combination_stock_disabling_switch_minimal'
       + `_quantity_${toEnable}`;
     this.bulkEditModalMinimalQuantityInput = '#bulk_combination_stock_minimal_quantity';
-    this.bulkEditModalStockLocationSwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_stock_'
+    this.bulkEditModalStockLocationSwitchButton = (toEnable: number) => '#bulk_combination_stock_disabling_switch_stock_'
       + `location_${toEnable}`;
     this.bulkEditModalStockLocationInput = '#bulk_combination_stock_stock_location';
     this.bulkEditModalSaveButton = '#bulk-combination-form-modal div.modal-footer button.btn-confirm-submit';
     // Edit retail price
     this.bulkEditModalRetailPriceButton = '#bulk_combination_price_accordion_header h2 button';
-    this.bulkEditModalCostPriceSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_wholesale_'
+    this.bulkEditModalCostPriceSwitchButton = (toEnable: number) => '#bulk_combination_price_disabling_switch_wholesale_'
       + `price_${toEnable}`;
     this.bulkEditModalCostPriceInput = '#bulk_combination_price_wholesale_price';
-    this.bulkEditModalImpactOnPriceTIncSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_price_'
+    this.bulkEditModalImpactOnPriceTIncSwitchButton = (toEnable: number) => '#bulk_combination_price_disabling_switch_price_'
       + `tax_excluded_${toEnable}`;
     this.bulkEditModalImpactOnPriceTIncInput = '#bulk_combination_price_price_tax_excluded';
-    this.bulkEditModalImpactOnWeightSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_weight_'
+    this.bulkEditModalImpactOnWeightSwitchButton = (toEnable: number) => '#bulk_combination_price_disabling_switch_weight_'
       + `${toEnable}`;
     this.bulkEditModalImpactOnWeightInput = '#bulk_combination_price_weight';
     // Edit specific references
     this.bulkEditModalSpecificReferences = '#bulk_combination_references_accordion_header h2 button';
-    this.bulkEditModalReferenceSwitchButton = (toEnable) => '#bulk_combination_references_disabling_switch_'
+    this.bulkEditModalReferenceSwitchButton = (toEnable: number) => '#bulk_combination_references_disabling_switch_'
       + `reference_${toEnable}`;
     this.bulkEditModalReferenceInput = '#bulk_combination_references_reference';
     // Save progress modal
@@ -233,14 +235,16 @@ class CombinationsTab extends BOBasePage {
     // Filter by size selectors
     this.filterBySizeButton = '#form_invoice_prefix[data-role=filter-by-size]';
     this.filterBySizeDropDownMenu = '.combinations-filters-dropdown div.dropdown-menu';
-    this.filterBySizeCheckboxButton = (id) => `div.combinations-filters div:nth-child(${id}) .md-checkbox-container`;
+    this.filterBySizeCheckboxButton = (id: number) => `div.combinations-filters div:nth-child(${id}) .md-checkbox-container`;
     this.clearFilterButton = 'div.combinations-filters button.combinations-filters-clear';
 
     // Selectors of combinations table
     this.combinationsListTable = '#combination_list';
-    this.combinationListTableRow = (row) => `#combination-list-row-${row - 1}`;
-    this.combinationListTableColumn = (row, column) => `td input#combination_list_${row - 1}_${column}`;
-    this.combinationListTableActionsColumn = (row, action) => `td button#combination_list_${row - 1}_actions_${action}`;
+    this.combinationListTableRow = (row: number) => `#combination-list-row-${row - 1}`;
+    this.combinationListTableColumn = (row: number, column: string) => `td input#combination_list_${row - 1}_${column}`;
+    this.combinationListTableActionsDropDown = (row: number) => `#combination_list_${row - 1}_actions div a`;
+    this.combinationListTableActionsColumn = (row: number, action: string) => `td button#combination_list_${row - 1}`
+      + `_actions_${action}`;
     this.combinationListTableSelectAllButton = '#bulk-all-selection-dropdown-button';
     this.combinationListSelectAllDropDownMenu = '#bulk-all-selection-dropdown .dropdown-menu.show';
     this.combinationListBulkSelectAll = '#bulk-all-selection-dropdown label[for="bulk-select-all"]';
@@ -258,11 +262,11 @@ class CombinationsTab extends BOBasePage {
     this.editCombinationModalCancelButton = `${this.editCombinationModal} footer button.btn-close`;
     this.editCombinationCloseModal = `${this.editCombinationEditModal} div.modal-prevent-close div.modal.show`;
     this.editCombinationModalDiscardButton = `${this.editCombinationCloseModal} button.btn-primary`;
-    this.combinationStockMovementsDate = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}_`
+    this.combinationStockMovementsDate = (row: number) => `#combination_form_stock_quantities_stock_movements_${row - 1}_`
       + 'date + span';
-    this.combinationStockMovementsEmployeeName = (row) => '#combination_form_stock_quantities_stock_movements_'
+    this.combinationStockMovementsEmployeeName = (row: number) => '#combination_form_stock_quantities_stock_movements_'
       + `${row - 1}_employee_name + span`;
-    this.combinationStockMovements = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}`
+    this.combinationStockMovements = (row: number) => `#combination_form_stock_quantities_stock_movements_${row - 1}`
       + '_delta_quantity + span';
 
     // Delete combination modal
@@ -272,9 +276,9 @@ class CombinationsTab extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.combinationsListTable} thead`;
-    this.sortColumnDiv = (columnNumber) => `${this.tableHead} th:nth-child(${columnNumber}) `
+    this.sortColumnDiv = (columnNumber: number) => `${this.tableHead} th:nth-child(${columnNumber}) `
       + 'div.ps-sortable-column[data-sort-col-name]';
-    this.sortColumnSpanButton = (columnNumber) => `${this.sortColumnDiv(columnNumber)} span.ps-sort`;
+    this.sortColumnSpanButton = (columnNumber: number) => `${this.sortColumnDiv(columnNumber)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationBlock = '#combinations-pagination';
@@ -343,7 +347,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async generateCombinations(page: Page): Promise<string|null> {
+  async generateCombinations(page: Page): Promise<string | null> {
     await this.waitForSelectorAndClick(page, this.generateCombinationsButtonOnModal);
 
     return this.getGrowlMessageContent(page);
@@ -381,7 +385,7 @@ class CombinationsTab extends BOBasePage {
    * @param row {number} Row in table
    * @returns {Promise<string|null>}
    */
-  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string|null> {
+  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string | null> {
     await this.closeGrowlMessage(page);
     await this.setValue(page, `${this.combinationListTableColumn(row, 'reference')}`, combinationData.reference);
     await this.setValue(
@@ -408,6 +412,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<string|null|boolean>}
    */
   async clickOnDeleteIcon(page: Page, action: string, row: number = 1): Promise<string | null | boolean> {
+    await this.waitForSelectorAndClick(page, this.combinationListTableActionsDropDown(row));
     await this.waitForSelectorAndClick(page, `${this.combinationListTableActionsColumn(row, 'delete')}`);
 
     if (action === 'cancel') {
@@ -508,9 +513,9 @@ class CombinationsTab extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string|null>}
    */
-  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string|null> {
+  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string | null> {
     const selector: string = this.combinationListTableColumn(row, column);
-    let text: string|null = '';
+    let text: string | null = '';
 
     switch (column) {
       case 'combination_id':
@@ -546,8 +551,8 @@ class CombinationsTab extends BOBasePage {
    * @param column {string} Column name to get all rows text content
    * @return {Promise<(string|null)[]>}
    */
-  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<(string|null)[]> {
-    const allRowsContentTable: (string|null)[] = [];
+  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<(string | null)[]> {
+    const allRowsContentTable: (string | null)[] = [];
 
     for (let i = 1; i <= numberOfCombinations; i++) {
       const rowContent = await this.getTextColumn(page, column, i);

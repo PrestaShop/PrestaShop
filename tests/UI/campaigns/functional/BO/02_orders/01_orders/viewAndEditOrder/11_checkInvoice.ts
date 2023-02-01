@@ -351,6 +351,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice1', baseContext);
 
@@ -471,7 +472,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await expect(paymentMethodExist, 'Payment method and total to pay are not correct!').to.be.true;
         });
 
-        it.skip('should check that the carrier is not visible', async function () {
+        it('should check that the carrier is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierNotVisible', baseContext);
 
           const isCarrierVisible = await files.isTextInPDF(filePath as string, `Carrier, ${Carriers.default.name}`);
@@ -584,6 +585,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice2', baseContext);
 
@@ -779,6 +781,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice3', baseContext);
 
@@ -1019,6 +1022,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice4', baseContext);
 

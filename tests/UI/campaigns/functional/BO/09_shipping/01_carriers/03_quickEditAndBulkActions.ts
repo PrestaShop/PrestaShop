@@ -175,12 +175,8 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
       it(`should ${test.args.action} carriers with Bulk Actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ByBulkActions`, baseContext);
 
-        // not working, skipping it
-        // https://github.com/PrestaShop/PrestaShop/issues/21571
-        await carriersPage.bulkSetStatus(page, test.args.action);
-
-        // const deleteTextResult = await carriersPage.bulkEnableDisableCarriers(page, test.args.action);
-        // await expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
+        const deleteTextResult = await carriersPage.bulkSetStatus(page, test.args.action);
+        await expect(deleteTextResult).to.be.contains(carriersPage.successfulUpdateStatusMessage);
       });
     });
   });

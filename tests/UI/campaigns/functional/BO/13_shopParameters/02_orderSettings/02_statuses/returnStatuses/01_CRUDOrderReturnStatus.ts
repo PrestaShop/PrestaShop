@@ -93,13 +93,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
     it('should create order return status and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderStatus', baseContext);
 
-      await addOrderReturnStatusPage.setOrderReturnStatus(page, createOrderReturnStatusData);
-
-      /* @todo Successful message is not visible, skipping it */
-      /* https://github.com/PrestaShop/PrestaShop/issues/21270 */
-      // const textResult = await addOrderReturnStatusPage.setOrderStatus(page, createOrderReturnStatusData);
-
-      // await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
+      const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, createOrderReturnStatusData);
+      await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
 
       const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
       await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderReturnStatuses + 1);

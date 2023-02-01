@@ -203,7 +203,7 @@ class TaxRules extends BOBasePage {
    * @param columnName {string} Column name to get text column from table
    * @returns {Promise<string|null>}
    */
-  async getTextColumnFromTable(page: Page, row: number, columnName: string): Promise<string|null> {
+  async getTextColumnFromTable(page: Page, row: number, columnName: string): Promise<string | null> {
     let columnSelector;
 
     switch (columnName) {
@@ -289,9 +289,9 @@ class TaxRules extends BOBasePage {
    * @param columnName {string} Column name to get all rows column content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string|null)[]> {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string | null)[]> {
     const rowsNumber: number = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable: (string|null)[] = [];
+    const allRowsContentTable: (string | null)[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, columnName);
@@ -411,9 +411,9 @@ class TaxRules extends BOBasePage {
    * Enable / disable tax rules by Bulk Actions
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to bulk enable status, false if not
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async bulkSetStatus(page: Page, enable: boolean = true): Promise<void> {
+  async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -422,8 +422,8 @@ class TaxRules extends BOBasePage {
 
     // Click to change status
     await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
-    /* Successful message is not visible, skipping it */
-    // return this.getTextContent(page, this.alertSuccessBlock);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**

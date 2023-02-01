@@ -10,7 +10,7 @@ import type {Page} from 'playwright';
 class Carriers extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly successfulUpdateStatusMessage: string;
+  public readonly successfulUpdateStatusMessage: string;
 
   private readonly addNewCarrierLink: string;
 
@@ -265,7 +265,7 @@ class Carriers extends BOBasePage {
    * @param columnName {string} Column name in the table
    * @return {Promise<string|null>}
    */
-  async getTextColumn(page: Page, row: number, columnName: string): Promise<string|null> {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string | null> {
     let columnSelector;
 
     switch (columnName) {
@@ -331,9 +331,9 @@ class Carriers extends BOBasePage {
    * @param columnName {string} Column name in the table
    * @return {Promise<(string|null)[]>}
    */
-  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string|null)[]> {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string | null)[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable: (string|null)[] = [];
+    const allRowsContentTable: (string | null)[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
@@ -453,9 +453,9 @@ class Carriers extends BOBasePage {
    * Bulk set carriers status
    * @param page {Page} Browser tab
    * @param action {string} The action to perform in bulk
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async bulkSetStatus(page: Page, action:string): Promise<void> {
+  async bulkSetStatus(page: Page, action: string): Promise<string> {
     // Select all rows
     await Promise.all([
       page.click(this.bulkActionMenuButton),
@@ -479,9 +479,8 @@ class Carriers extends BOBasePage {
       await this.clickAndWaitForNavigation(page, this.bulkDisableLink);
     }
 
-    // not working, skipping it
     // Return successful message
-    // return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
@@ -519,7 +518,7 @@ class Carriers extends BOBasePage {
    * @param newPosition {number} The new position for the row
    * @return {Promise<string>}
    */
-  async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string|null> {
+  async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string | null> {
     await this.dragAndDrop(
       page,
       this.tableColumnPosition(actualPosition),
