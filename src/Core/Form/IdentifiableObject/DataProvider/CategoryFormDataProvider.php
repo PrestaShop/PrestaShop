@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 use PrestaShopBundle\Service\Routing\Router;
 
 /**
@@ -59,7 +59,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $groupDataProvider;
 
     /**
-     * @var UrlProviderInterface
+     * @var CategoryProvider
      */
     private $categoryProvider;
 
@@ -73,7 +73,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      * @param int $contextShopId
      * @param int $contextShopRootCategoryId
      * @param GroupDataProvider $groupDataProvider
-     * @param UrlProviderInterface $categoryProvider
+     * @param CategoryProvider $categoryProvider
      * @param Router $router
      */
     public function __construct(
@@ -81,7 +81,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         $contextShopId,
         $contextShopRootCategoryId,
         GroupDataProvider $groupDataProvider,
-        UrlProviderInterface $categoryProvider,
+        CategoryProvider $categoryProvider,
         Router $router
     ) {
         $this->queryBus = $queryBus;
