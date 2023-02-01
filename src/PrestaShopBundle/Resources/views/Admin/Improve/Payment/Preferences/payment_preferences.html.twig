@@ -50,7 +50,11 @@
         </p>
       </div>
 
-      {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig' %}
+      {% if formsSeparated %}
+        {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_separated_form_block.html.twig' %}
+      {% else %}
+        {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig' %}
+      {% endif %}
     {% endif %}
   </div>
 {% endblock %}

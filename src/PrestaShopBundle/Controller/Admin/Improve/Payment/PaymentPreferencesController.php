@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -52,6 +53,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $separationEnabled = $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PAYMENT_PREFERENCES_FORM_SEPARATION);
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $paymentModulesListProvider = $this->get('prestashop.adapter.module.payment_module_provider');
@@ -67,8 +69,36 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
         }
 
+        if ($separationEnabled) {
+            $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+            $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+            $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+            $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+            $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
+            if ($isSingleShopContext) {
+                $carrierRestrictionsView = $carrierRestrictionsForm->createView();
+                $countryRestrictionsView = $countryRestrictionsForm->createView();
+                $currencyRestrictionsView = $currencyRestrictionsForm->createView();
+                $groupRestrictionsView = $groupRestrictionsForm->createView();
+                $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
+            }
+
+            return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
+                'formsSeparated' => true,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($legacyController),
+                'paymentCurrencyRestrictionsForm' => $currencyRestrictionsView,
+                'paymentCountryRestrictionsForm' => $countryRestrictionsView,
+                'paymentGroupRestrictionsForm' => $groupRestrictionsView,
+                'paymentCarrierRestrictionsForm' => $carrierRestrictionsView,
+                'isSingleShopContext' => $isSingleShopContext,
+                'paymentModulesCount' => $paymentModulesCount,
+            ]);
+        }
+
         /* In next major version for separate views should be passed one for each restriction group */
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
+            'formsSeparated' => false,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'paymentPreferencesForm' => $paymentPreferencesForm,

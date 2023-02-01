@@ -1,0 +1,126 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% form_theme paymentCurrencyRestrictionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme paymentGroupRestrictionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme paymentCountryRestrictionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme paymentCarrierRestrictionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{#{% block payment_preferences_form %}#}
+{#  {% block payment_modules_currency_restrictions %}#}
+{#    {{ form_start(paymentCurrencyRestrictionsForm, {'action': path('admin_payment_currency_restrictions_save')}) }}#}
+{#    <div class="card">#}
+{#      <h3 class="card-header">#}
+{#        <i class="material-icons">euro_symbol</i>#}
+{#        {{ form_label(paymentCurrencyRestrictionsForm.currency_restrictions) }}#}
+{#      </h3>#}
+{#      <div class="card-body">#}
+{#        <div class="form-group">#}
+{#          {{ form_widget(paymentCurrencyRestrictionsForm.currency_restrictions) }}#}
+{#        </div>#}
+{#      </div>#}
+{#      {{ form_widget(paymentCurrencyRestrictionsForm) }}#}
+{#      <div class="card-footer">#}
+{#        <div class="d-flex justify-content-end">#}
+{#          <button class="btn btn-primary" id="form-currency-restrictions-save-button">#}
+{#            {{ 'Save'|trans({}, 'Admin.Actions') }}#}
+{#          </button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#    {{ form_end(paymentCurrencyRestrictionsForm) }}#}
+{#  {% endblock %}#}
+
+{#  {% block payment_modules_group_restrictions %}#}
+{#    {{ form_start(paymentGroupRestrictionsForm, {'action': path('admin_payment_group_restrictions_save')}) }}#}
+{#    <div class="card">#}
+{#      <h3 class="card-header">#}
+{#        <i class="material-icons">group</i>#}
+{#        {{ form_label(paymentGroupRestrictionsForm.group_restrictions) }}#}
+{#      </h3>#}
+{#      <div class="card-body">#}
+{#        <div class="form-group">#}
+{#          {{ form_widget(paymentGroupRestrictionsForm.group_restrictions) }}#}
+{#        </div>#}
+{#      </div>#}
+{#      {{ form_widget(paymentGroupRestrictionsForm) }}#}
+{#      <div class="card-footer">#}
+{#        <div class="d-flex justify-content-end">#}
+{#          <button class="btn btn-primary" id="form-group-restrictions-save-button">#}
+{#            {{ 'Save'|trans({}, 'Admin.Actions') }}#}
+{#          </button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#    {{ form_end(paymentGroupRestrictionsForm) }}#}
+{#  {% endblock %}#}
+
+{#  {% block payment_modules_country_restrictions %}#}
+{#    {{ form_start(paymentCountryRestrictionsForm, {'action': path('admin_payment_country_restrictions_save')}) }}#}
+{#    <div class="card">#}
+{#      <h3 class="card-header">#}
+{#        <i class="material-icons">public</i>#}
+{#        {{ form_label(paymentCountryRestrictionsForm.country_restrictions) }}#}
+{#      </h3>#}
+{#      <div class="card-body">#}
+{#        <div class="form-group">#}
+{#          {{ form_widget(paymentCountryRestrictionsForm.country_restrictions) }}#}
+{#        </div>#}
+{#      </div>#}
+{#      {{ form_widget(paymentCountryRestrictionsForm) }}#}
+{#      <div class="card-footer">#}
+{#        <div class="d-flex justify-content-end">#}
+{#          <button class="btn btn-primary" id="form-country-restrictions-save-button">#}
+{#            {{ 'Save'|trans({}, 'Admin.Actions') }}#}
+{#          </button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#    {{ form_end(paymentCountryRestrictionsForm) }}#}
+{#  {% endblock %}#}
+
+{#  {% block payment_modules_carrier_restrictions %}#}
+{#    {{ form_start(paymentCarrierRestrictionsForm, {'action': path('admin_payment_carrier_restrictions_save')}) }}#}
+{#    <div class="card">#}
+{#      <h3 class="card-header">#}
+{#        <i class="material-icons">local_shipping</i>#}
+{#        {{ form_label(paymentCarrierRestrictionsForm.carrier_restrictions) }}#}
+{#      </h3>#}
+{#      <div class="card-body">#}
+{#        <div class="form-group">#}
+{#          {{ form_widget(paymentCarrierRestrictionsForm.carrier_restrictions) }}#}
+{#        </div>#}
+{#      </div>#}
+{#      {{ form_widget(paymentCarrierRestrictionsForm) }}#}
+{#      <div class="card-footer">#}
+{#        <div class="d-flex justify-content-end">#}
+{#          <button class="btn btn-primary" id="form-carrier-restrictions-save-button">#}
+{#            {{ 'Save'|trans({}, 'Admin.Actions') }}#}
+{#          </button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#    {{ form_end(paymentCarrierRestrictionsForm) }}#}
+{#  {% endblock %}#}
+{#{% endblock %}#}
