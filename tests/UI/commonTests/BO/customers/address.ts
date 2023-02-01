@@ -67,6 +67,7 @@ function createAddressTest(addressData: AddressData, baseContext: string = 'comm
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAddressPage', baseContext);
 
       await addressesPage.goToAddNewAddressPage(page);
+
       const pageTitle = await addAddressPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
     });

@@ -404,7 +404,6 @@ describe('FO - Account : Consult return details', async () => {
 
           // Click on view my shop
           page = await editMerchandiseReturnsPage.viewMyShop(page);
-
           // Change FO language
           await homePage.changeLanguage(page, 'en');
 

@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * View customer service page, contains selectors and functions for the page
@@ -7,6 +8,22 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ViewCustomer extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly threadBadge: string;
+
+  private readonly messagesThredDiv: string;
+
+  private readonly attachmentLink: string;
+
+  private readonly statusButton: (statusName: string) => string;
+
+  private readonly yourAnswerFormTitle: string;
+
+  private readonly yourAnswerFormTextarea: string;
+
+  private readonly ordersAndMessagesBlock: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on view customer service page
@@ -20,7 +37,7 @@ class ViewCustomer extends BOBasePage {
     this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
     this.messagesThredDiv = '#main-div div[data-role="messages-thread"]';
     this.attachmentLink = `${this.messagesThredDiv} a[href*='/upload']`;
-    this.statusButton = (statusName) => `${this.messagesThredDiv} form input[value='${statusName}'] + button`;
+    this.statusButton = (statusName: string) => `${this.messagesThredDiv} form input[value='${statusName}'] + button`;
     this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
     this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
     this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
@@ -36,7 +53,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getBadgeNumber(page) {
+  getBadgeNumber(page: Page): Promise<string> {
     return this.getTextContent(page, this.threadBadge);
   }
 
@@ -45,16 +62,16 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getCustomerMessage(page) {
+  getCustomerMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.messagesThredDiv);
   }
 
   /**
    * Get attached href
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  getAttachedFileHref(page) {
+  getAttachedFileHref(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.attachmentLink, 'href');
   }
 
@@ -64,7 +81,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getYourAnswerFormTitle(page) {
+  getYourAnswerFormTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.yourAnswerFormTitle);
   }
 
@@ -73,7 +90,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getYourAnswerFormContent(page) {
+  getYourAnswerFormContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.yourAnswerFormTextarea);
   }
 
@@ -83,7 +100,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getOrdersAndMessagesTimeline(page) {
+  getOrdersAndMessagesTimeline(page: Page): Promise<string> {
     return this.getTextContent(page, this.ordersAndMessagesBlock);
   }
 
@@ -93,8 +110,8 @@ class ViewCustomer extends BOBasePage {
    * @param status {string} Status to set on the message
    * @returns {Promise<string>}
    */
-  async setStatus(page, status) {
-    let statusName;
+  async setStatus(page: Page, status: string): Promise<string> {
+    let statusName: string;
 
     switch (status) {
       case 'Re-open':
@@ -126,4 +143,4 @@ class ViewCustomer extends BOBasePage {
   }
 }
 
-module.exports = new ViewCustomer();
+export default new ViewCustomer();

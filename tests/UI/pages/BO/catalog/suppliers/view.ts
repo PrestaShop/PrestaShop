@@ -1,5 +1,4 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * View supplier page, contains functions that can be used on the page
@@ -7,6 +6,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ViewSupplier extends BOBasePage {
+  private readonly productsGrid: string;
+
+  private readonly productsGridHeader: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on view supplier page
@@ -24,4 +27,4 @@ class ViewSupplier extends BOBasePage {
    */
 }
 
-module.exports = new ViewSupplier();
+export default new ViewSupplier();

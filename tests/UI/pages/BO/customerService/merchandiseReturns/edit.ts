@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Edit merchandise returns page, contains selectors and functions for the page
@@ -7,6 +8,12 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class EditMerchandiseReturns extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly status: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on edit merchandise return page
@@ -30,7 +37,7 @@ class EditMerchandiseReturns extends BOBasePage {
    * @param status {string} Status to select
    * @returns {Promise<string>}
    */
-  async setStatus(page, status) {
+  async setStatus(page: Page, status: string): Promise<string> {
     await this.selectByVisibleText(page, this.status, status);
     await this.waitForSelectorAndClick(page, this.saveButton);
 
@@ -38,4 +45,4 @@ class EditMerchandiseReturns extends BOBasePage {
   }
 }
 
-module.exports = new EditMerchandiseReturns();
+export default new EditMerchandiseReturns();

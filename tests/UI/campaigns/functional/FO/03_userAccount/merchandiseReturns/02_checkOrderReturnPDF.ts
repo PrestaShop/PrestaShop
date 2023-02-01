@@ -362,7 +362,6 @@ describe('FO - Account : Check order return PDF', async () => {
 
         // Click on view my shop
         page = await editMerchandiseReturnsPage.viewMyShop(page);
-
         // Change FO language
         await homePage.changeLanguage(page, 'en');
 

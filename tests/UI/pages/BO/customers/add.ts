@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type CustomerData from '@data/faker/customer';
+
+import type {Page} from 'playwright';
 
 /**
  * Add customer page, contains functions that can be used on the page
@@ -7,6 +10,52 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddCustomer extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  public readonly updateSuccessfullMessage: string;
+
+  private readonly socialTitleInput: (id: number) => string;
+
+  private readonly firstNameInput: string;
+
+  private readonly lastNameInput: string;
+
+  private readonly emailInput: string;
+
+  private readonly passwordInput: string;
+
+  private readonly yearOfBirthSelect: string;
+
+  private readonly monthOfBirthSelect: string;
+
+  private readonly dayOfBirthSelect: string;
+
+  private readonly statusToggleInput: (toggle: number) => string;
+
+  private readonly partnerOffersToggleInput: (toggle: number) => string;
+
+  private readonly companyInput: string;
+
+  private readonly allowedOutstandingAmountInput: string;
+
+  private readonly riskRatingSelect: string;
+
+  private readonly groupAccessCheckbox: (id: number) => string;
+
+  private readonly visitorCheckbox: string;
+
+  private readonly guestCheckbox: string;
+
+  private readonly customerCheckbox: string;
+
+  private readonly selectAllGroupAccessCheckbox: string;
+
+  private readonly defaultCustomerGroupSelect: string;
+
+  public readonly saveCustomerButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add customer page
@@ -19,7 +68,7 @@ class AddCustomer extends BOBasePage {
     this.updateSuccessfullMessage = 'Update successful';
 
     // Selectors
-    this.socialTitleInput = (id) => `#customer_gender_id_${id}`;
+    this.socialTitleInput = (id: number) => `#customer_gender_id_${id}`;
     this.firstNameInput = '#customer_first_name';
     this.lastNameInput = '#customer_last_name';
     this.emailInput = '#customer_email';
@@ -27,14 +76,14 @@ class AddCustomer extends BOBasePage {
     this.yearOfBirthSelect = 'select#customer_birthday_year';
     this.monthOfBirthSelect = 'select#customer_birthday_month';
     this.dayOfBirthSelect = 'select#customer_birthday_day';
-    this.statusToggleInput = (toggle) => `#customer_is_enabled_${toggle}`;
-    this.partnerOffersToggleInput = (toggle) => `#customer_is_partner_offers_subscribed_${toggle}`;
+    this.statusToggleInput = (toggle: number) => `#customer_is_enabled_${toggle}`;
+    this.partnerOffersToggleInput = (toggle: number) => `#customer_is_partner_offers_subscribed_${toggle}`;
     this.companyInput = '#customer_company_name';
     this.allowedOutstandingAmountInput = '#customer_allowed_outstanding_amount';
     this.riskRatingSelect = '#customer_risk_id';
 
     // Group access selector
-    this.groupAccessCheckbox = (id) => `#customer_group_ids_${id}`;
+    this.groupAccessCheckbox = (id: number) => `#customer_group_ids_${id}`;
     this.visitorCheckbox = this.groupAccessCheckbox(0);
     this.guestCheckbox = this.groupAccessCheckbox(1);
     this.customerCheckbox = this.groupAccessCheckbox(2);
@@ -54,7 +103,7 @@ class AddCustomer extends BOBasePage {
    * @param customerData {CustomerData} Data to set on new customer form
    * @return {Promise<void>}
    */
-  async fillCustomerForm(page, customerData) {
+  async fillCustomerForm(page: Page, customerData: CustomerData): Promise<void> {
     // Click on label for social input
     await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
 
@@ -78,7 +127,7 @@ class AddCustomer extends BOBasePage {
    * @param customerData {CustomerData} Data to set on new customer form
    * @return {Promise<void>}
    */
-  async fillB2BCustomerForm(page, customerData) {
+  async fillB2BCustomerForm(page: Page, customerData: CustomerData): Promise<void> {
     // Click on label for social input
     await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
 
@@ -105,7 +154,7 @@ class AddCustomer extends BOBasePage {
    * @param customerData {CustomerData} Data to set on new customer form
    * @return {Promise<string>}
    */
-  async createEditCustomer(page, customerData) {
+  async createEditCustomer(page: Page, customerData: CustomerData): Promise<string> {
     // Fill form
     await this.fillCustomerForm(page, customerData);
 
@@ -120,7 +169,7 @@ class AddCustomer extends BOBasePage {
    * @param customerData {CustomerData} Data to set on new customer form
    * @return {Promise<string>}
    */
-  async createEditB2BCustomer(page, customerData) {
+  async createEditB2BCustomer(page: Page, customerData: CustomerData): Promise<string> {
     // Fill form
     await this.fillB2BCustomerForm(page, customerData);
 
@@ -135,7 +184,7 @@ class AddCustomer extends BOBasePage {
    * @param customerGroup {string} Value to set on customer group input
    * @return {Promise<void>}
    */
-  async setCustomerGroupAccess(page, customerGroup) {
+  async setCustomerGroupAccess(page: Page, customerGroup: string): Promise<void> {
     switch (customerGroup) {
       case 'Customer':
         await this.setCheckedWithIcon(page, this.visitorCheckbox, false);
@@ -158,4 +207,4 @@ class AddCustomer extends BOBasePage {
   }
 }
 
-module.exports = new AddCustomer();
+export default new AddCustomer();
