@@ -47,29 +47,31 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('Get number of products in BO', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-    await productsPage.closeSfToolBar(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+      await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
 
-  it('should reset all filters and get number of products', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+    it('should reset all filters and get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
+      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
   });
 
   // 1 : Sort products list
@@ -279,4 +281,7 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
       await expect(numberOfProducts).to.be.above(0);
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

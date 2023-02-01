@@ -48,40 +48,42 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('Create disabled product', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCreate', baseContext);
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCreate', baseContext);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-    await productsPage.closeSfToolBar(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+      await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
 
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    await productsPage.resetFilterCategory(page);
+      await productsPage.resetFilterCategory(page);
 
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
+      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
 
-  it('should create disabled Product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+    it('should create disabled Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-    await productsPage.goToAddProductPage(page);
+      await productsPage.goToAddProductPage(page);
 
-    const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
   });
 
   describe('Check the disabled product in stocks page', async () => {
