@@ -47,7 +47,7 @@ export default function initDropzone(imagesContainerSelector: string): App {
     locales,
     productId,
     shopId: Number(container.dataset.shopId),
-    isMultiShopEnabled: Boolean(container.dataset.isMultistoreActive),
+    isMultiStoreActive: !!Number(container.dataset.isMultiStoreActive),
     token: container.dataset.token,
     formName: container.dataset.formName,
   }).use(i18n);

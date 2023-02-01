@@ -100,7 +100,7 @@
       </div>
       <div
         class="md-checkbox"
-        v-if="isCover || coverData"
+        v-if="isMultiStoreActive && (isCover || coverData)"
       >
         <label>
           <input

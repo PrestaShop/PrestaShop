@@ -342,11 +342,15 @@
         });
 
         this.dropzone.on(DropzoneEvents.addedFile, (file: PSDropzoneFile) => {
+          // Be aware the file type is not always a PSDropzoneFile.
+          // this event is called multiple times and the file type may differ:
+          // 1. when file is being uploaded it is some sort of native File type
+          // 2. when its being loaded from api it is the PSDropzoneFile type
+
           file.previewElement.dataset.id = file.image_id;
 
-          // @todo: Improve types int his component (the file type is actually not PSDropzoneFile in all cases).
           // check if image is associated with current shop.
-          // If shop_ids is missing, it means the image is being uploaded and it is not PSDropzoneFile type,
+          // If shop_ids is missing, it means the image is being uploaded, therefore it is not PSDropzoneFile type,
           // so it will be associated to the shop by default
           file.isAssociatedToCurrentShop = !file.shop_ids || file.shop_ids.includes(this.shopId);
 

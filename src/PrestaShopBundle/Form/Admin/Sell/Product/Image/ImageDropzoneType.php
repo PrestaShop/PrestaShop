@@ -174,7 +174,8 @@ class ImageDropzoneType extends TranslatorAwareType
         $view->vars['translations'] = $options['translations'];
         $view->vars['product_id'] = $options['product_id'];
         $view->vars['shop_id'] = $options['shop_id'];
-        $view->vars['is_multi_store_active'] = $options['is_multi_store_active'];
+        // twig acts strange when data attr is bool, so we cast it to int to be safe
+        $view->vars['is_multi_store_active'] = (int) $options['is_multi_store_active'];
         $view->vars['update_form_name'] = StringUtil::fqcnToBlockPrefix($options['update_form_type']) ?: '';
     }
 }
