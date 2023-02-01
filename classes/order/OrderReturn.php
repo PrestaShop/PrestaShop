@@ -66,7 +66,7 @@ class OrderReturnCore extends ObjectModel
     {
         if ($customization_ids !== null || $customization_qty_input !== null) {
             @trigger_error(
-                'Passing customization infos is deprecated since version 8.0.0. The customization is already included in the order details.',
+                'Passing customization infos is deprecated since version 9.0.0. The customization is already included in the order details.',
                 E_USER_DEPRECATED
             );
         }
@@ -87,7 +87,7 @@ class OrderReturnCore extends ObjectModel
     {
         if ($customization_ids !== null || $customization_qty_input !== null) {
             @trigger_error(
-                'Passing customization infos is deprecated since version 8.0.0. The customization is already included in the order details.',
+                'Passing customization infos is deprecated since version 9.0.0. The customization is already included in the order details.',
                 E_USER_DEPRECATED
             );
         }
