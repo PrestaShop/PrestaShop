@@ -279,7 +279,7 @@ class AdminLoginControllerCore extends AdminController
                     [
                         'controller' => $this,
                         'employee' => $this->context->employee,
-                        'redirect' => $url,
+                        'redirect' => &$url,
                     ]
                 );
 
