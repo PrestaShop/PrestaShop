@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import boProductsPage from '@pages/BO/catalog/products/index';
+import boProductsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
