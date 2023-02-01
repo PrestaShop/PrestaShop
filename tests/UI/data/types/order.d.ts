@@ -41,9 +41,17 @@ type OrderHistory = {
   invoice: string
 }
 
+type MerchandiseReturns = {
+  orderReference: string
+  fileName: string
+  status: string
+  dateIssued: string
+}
+
 export {
   OrderCreator,
   OrderDeliveryOption,
   OrderHistory,
+  MerchandiseReturns,
   OrderProduct,
 };
