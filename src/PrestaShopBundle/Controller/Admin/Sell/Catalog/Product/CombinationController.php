@@ -755,7 +755,7 @@ class CombinationController extends FrameworkBundleAdminController
             ),
             CannotGenerateCombinationException::class => [
                 CannotGenerateCombinationException::DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS => $this->trans(
-                    'You cannot generate combinations for all stores if the selected attributes are not associated in all stores',
+                    'To create combinations for all your stores, the selected attributes must be available on each of them.',
                     'Admin.Notifications.Error'
                 ),
             ],
