@@ -18,6 +18,7 @@ parameters:
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
+  api_base_path: !php/const PrestaShopBundle\Api\Api::API_BASE_PATH
 
 # Autowires Core controllers
 services:
@@ -107,6 +108,7 @@ swiftmailer:
 api_platform:
   title: PrestaShop API
   version: 1.0.0
+  enable_entrypoint: false
   mapping:
     paths:
       - '%kernel.project_dir%/app/config/api_platform'
