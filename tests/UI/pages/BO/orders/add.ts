@@ -465,7 +465,7 @@ class AddOrder extends BOBasePage {
    * @param customerID {number} Id of customer to check
    * @returns {*}
    */
-  getCustomerIframe(page: Page, customerID: number): Frame|null {
+  getCustomerIframe(page: Page, customerID: number): Frame | null {
     return page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
   }
 
@@ -521,7 +521,7 @@ class AddOrder extends BOBasePage {
    * @param cartId {number} Id of customer to check
    * @returns {*}
    */
-  getShoppingCartIframe(page: Page, cartId: number): Frame|null {
+  getShoppingCartIframe(page: Page, cartId: number): Frame | null {
     return page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
   }
 
@@ -590,7 +590,7 @@ class AddOrder extends BOBasePage {
    * @param orderID {number} Id of order to check
    * @returns {*}
    */
-  getOrderIframe(page: Page, orderID: number): Frame|null {
+  getOrderIframe(page: Page, orderID: number): Frame | null {
     return page.frame({url: new RegExp(`sell/orders/${orderID}/view`, 'gmi')});
   }
 
@@ -853,7 +853,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  getCreateVoucherIframe(page: Page): Frame|null {
+  getCreateVoucherIframe(page: Page): Frame | null {
     return page.frame({
       url: /controller=AdminCartRules&liteDisplaying=1&submitFormAjax=1&addcart_rule=1/gmi,
     });
@@ -981,7 +981,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  getEditAddressIframe(page: Page): Frame|null {
+  getEditAddressIframe(page: Page): Frame | null {
     return page.frame({url: /sell\/addresses\/cart\//gmi});
   }
 
@@ -1001,7 +1001,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  getAddAddressIframe(page: Page): Frame|null {
+  getAddAddressIframe(page: Page): Frame | null {
     return page.frame({url: /sell\/addresses\/new\?/gmi});
   }
 
@@ -1061,7 +1061,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setFreeShipping(page: Page, isEnabled: boolean): Promise<void> {
-    await this.setChecked(page, this.freeShippingToggleInput(isEnabled ? 1 : 0));
+    await this.setChecked(page, this.freeShippingToggleInput(isEnabled ? 1 : 0), isEnabled);
   }
 
   /**
@@ -1071,7 +1071,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setRecycledPackaging(page: Page, isEnabled: boolean): Promise<void> {
-    await this.setChecked(page, this.recycledPackagingToggleInput(isEnabled ? 1 : 0));
+    await this.setChecked(page, this.recycledPackagingToggleInput(isEnabled ? 1 : 0), isEnabled);
     await page.waitForTimeout(3000);
   }
 
@@ -1151,7 +1151,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<Page|string>}
    */
   // eslint-disable-next-line consistent-return
-  async setMoreActions(page: Page, action: string): Promise<Page|string> {
+  async setMoreActions(page: Page, action: string): Promise<Page | string> {
     await this.waitForSelectorAndClick(page, this.moreActionsDropDownButton);
     if (action === 'pre-filled order') {
       await this.waitForSelectorAndClick(page, this.sendOrderMailButton);
