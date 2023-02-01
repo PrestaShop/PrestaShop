@@ -5,12 +5,6 @@ services:
   prestashop.adapter.sql_manager.sql_query_validator:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator'
 
-  prestashop.adapter.sql_manager.request_sql_form_data_validator:
-    class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator'
-    arguments:
-      - '@prestashop.adapter.sql_manager.sql_query_validator'
-    deprecated: 'The "%service_id% service is deprecated. Use "prestashop.adapter.sql_manager.sql_query_validator" instead'
-
   # Command handlers
   prestashop.adapter.sql_manager.command_handler.add_request_sql:
     class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\AddSqlRequestHandler'
