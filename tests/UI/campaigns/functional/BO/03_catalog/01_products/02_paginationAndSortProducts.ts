@@ -5,6 +5,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -29,6 +33,9 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfProducts: number = 0;
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {

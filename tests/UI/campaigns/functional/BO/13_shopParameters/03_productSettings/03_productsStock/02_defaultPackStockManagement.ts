@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -49,6 +53,9 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       },
     ],
   });
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -307,4 +314,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       });
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -30,7 +34,14 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
   let page: Page;
 
   const productData: ProductData = new ProductData({type: 'Standard product', status: false});
-  const editProductData: ProductData = new ProductData({name: 'testForceFriendlyURL', type: 'Standard product', status: false});
+  const editProductData: ProductData = new ProductData({
+    name: 'testForceFriendlyURL',
+    type: 'Standard product',
+    status: false
+  });
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -141,10 +152,14 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
       await expect(friendlyURL).to.equal(test.args.friendlyURL.toLowerCase());
     });
   });
+
   it('should delete product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
     const testResult = await addProductPage.deleteProduct(page);
     await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

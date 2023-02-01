@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -32,6 +36,9 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
   const productData: ProductData = new ProductData({type: 'Standard product', status: false});
   const maxSummarySizeValue: number = 5;
   const defaultSummarySizeValue: number = 800;
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -120,4 +127,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
     const testResult = await addProductPage.deleteProduct(page);
     await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

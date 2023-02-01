@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -30,6 +34,9 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
   let numberOfProducts: number = 0;
 
   const productData: ProductData = new ProductData({type: 'Standard product', status: false});
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -125,4 +132,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
       await expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

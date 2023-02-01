@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import productsPage from '@pages/BO/catalog/products';
@@ -32,6 +36,9 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
 
   const firstProductData: ProductData = new ProductData({name: 'TO DELETE 1', type: 'Standard product'});
   const secondProductData: ProductData = new ProductData({name: 'TO DELETE 2', type: 'Standard product'});
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -181,4 +188,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts);
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -6,6 +6,10 @@ import testContext from '@utils/testContext';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 import {createOrderSpecificProductTest} from '@commonTests/FO/order';
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -63,6 +67,9 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
     ],
     paymentMethod: PaymentMethods.wirePayment,
   });
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // Pre-condition: Create first product
   createProductTest(product, baseContext);
@@ -222,4 +229,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
   // Post-condition
   deleteProductTest(product, baseContext);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

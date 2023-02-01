@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
@@ -38,6 +42,9 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
   const productData: ProductData = new ProductData({type: 'Standard product', quantity: 2});
   const remainingQuantity: number = 0;
   const defaultRemainingQuantity: number = 3;
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -142,4 +149,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
       await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

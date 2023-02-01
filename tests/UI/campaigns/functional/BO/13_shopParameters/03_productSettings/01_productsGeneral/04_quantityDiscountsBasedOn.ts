@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
@@ -79,6 +83,9 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
   ];
   const firstCartTotalATI: number = 30;
   const secondCartTotalATI: number = 40;
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -231,4 +238,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
     const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

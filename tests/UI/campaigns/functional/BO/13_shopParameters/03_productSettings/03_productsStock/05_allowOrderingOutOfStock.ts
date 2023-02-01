@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
@@ -29,6 +33,9 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
   let page: Page;
 
   const productData: ProductData = new ProductData({type: 'Standard product', quantity: 0});
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -170,4 +177,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
     const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -5,6 +5,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // FO
@@ -70,6 +74,9 @@ describe('FO - product page : Add product to cart', async () => {
 
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -366,4 +373,7 @@ describe('FO - product page : Add product to cart', async () => {
       });
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
