@@ -51,7 +51,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly navbarSearchInput: string;
 
-  private readonly helpButton: string;
+  protected readonly helpButton: string;
 
   private readonly menuMobileButton: string;
 
@@ -243,7 +243,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly sfCloseToolbarLink: string;
 
-  private readonly rightSidebar: string;
+  protected readonly rightSidebar: string;
 
   private readonly helpDocumentURL: string;
 
