@@ -175,7 +175,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
         }
 
         foreach ($attributeGroupIdValues as $attributeGroupIdValue) {
-            if ($attributeGroupShops[$attributeGroupIdValue] !== $shopIdValues) {
+            if (!isset($attributeGroupShops[$attributeGroupIdValue]) || $attributeGroupShops[$attributeGroupIdValue] !== $shopIdValues) {
                 throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');
             }
         }

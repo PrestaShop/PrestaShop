@@ -241,7 +241,7 @@ class AttributeRepository extends AbstractObjectModelRepository
         }
 
         foreach ($attributeIdValues as $attributeIdValue) {
-            if ($attributeShops[$attributeIdValue] !== $shopIdValues) {
+            if (!isset($attributeShops[$attributeIdValue]) || $attributeShops[$attributeIdValue] !== $shopIdValues) {
                 throw new ShopAssociationNotFound('Provided attributes do not exist in every shop');
             }
         }
