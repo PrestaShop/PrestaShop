@@ -73,7 +73,11 @@
 
 <script lang="ts">
   import {defineComponent, PropType} from 'vue';
-  // @todo: should this file be PascalCased?
+  import EventEmitter from '@components/event-emitter';
+
+  // emit this event in parent component to clear all selections (to uncheck all checkboxes)
+  export const eventClearAllSelections = 'checkboxesDropdownClearAll';
+
   export default defineComponent({
     data(): {selectedItems: Array<Record<string, any>>} {
       return {
@@ -83,7 +87,7 @@
     props: {
       parentId: {
         type: Number,
-        required: true,
+        default: 1,
       },
       items: {
         type: Array as PropType<Array<Record<string, any>>>,
@@ -98,7 +102,7 @@
         required: true,
       },
       eventEmitter: {
-        type: Object,
+        type: Object as PropType<typeof EventEmitter>,
         required: true,
       },
       disabled: {
@@ -108,7 +112,7 @@
     },
     mounted() {
       this.selectedItems = this.items.filter((item) => this.initialItemIds.includes(item.id));
-      // this.eventEmitter.on(CombinationEvents.clearAllCombinationFilters, this.clear);
+      this.eventEmitter.on(eventClearAllSelections, () => this.clear());
     },
     computed: {
       nbFiles(): string | null {

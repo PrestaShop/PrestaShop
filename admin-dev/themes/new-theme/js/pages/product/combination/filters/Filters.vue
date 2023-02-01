@@ -33,15 +33,15 @@
       class="combinations-filters-line"
       v-if="filters.length"
     >
-      <filter-dropdown
+      <checkboxes-dropdown
         :key="filter.id"
         v-for="filter in filters"
-        :children="filter.attributes"
+        :items="filter.attributes"
         :parent-id="filter.id"
         :label="filter.name"
-        @addFilter="addFilter"
-        @removeFilter="removeFilter"
         :event-emitter="eventEmitter"
+        @addItem="addFilter"
+        @removeItem="removeFilter"
       />
       <button
         type="button"
@@ -57,9 +57,11 @@
 </template>
 
 <script lang="ts">
-  import FilterDropdown from '@pages/product/combination/filters/FilterDropdown.vue';
+  import checkboxesDropdown, {eventClearAllSelections} from '@app/components/checkboxesDropdown.vue';
+  // import checkboxesDropdown from '@app/components/checkboxesDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
+  import EventEmitter from '@components/event-emitter';
 
   const CombinationEvents = ProductEventMap.combinations;
 
@@ -67,7 +69,7 @@
     name: 'Filters',
     data(): {selectedFilters: Record<string, any>} {
       return {
-        selectedFilters: {},
+        selectedFilters: [],
       };
     },
     props: {
@@ -76,12 +78,12 @@
         required: true,
       },
       eventEmitter: {
-        type: Object,
+        type: Object as PropType<typeof EventEmitter>,
         required: true,
       },
     },
     components: {
-      FilterDropdown,
+      checkboxesDropdown,
     },
     computed: {
       selectedFiltersNumber(): number {
@@ -94,6 +96,7 @@
     },
     mounted() {
       this.eventEmitter.on(CombinationEvents.clearFilters, () => this.clearAll());
+      this.eventEmitter.on(CombinationEvents.clearAllCombinationFilters, this.clear);
     },
     methods: {
       /**
@@ -126,12 +129,15 @@
       },
       clearAll(): void {
         this.selectedFilters = [];
-        this.$emit('clearAll');
+        this.eventEmitter.emit(eventClearAllSelections);
         this.eventEmitter.emit(CombinationEvents.clearAllCombinationFilters);
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
       updateFilters(): void {
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
+      },
+      clear(): void {
+        this.selectedFilters = [];
       },
     },
   });

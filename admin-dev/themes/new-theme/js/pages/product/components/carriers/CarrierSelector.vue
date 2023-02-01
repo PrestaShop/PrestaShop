@@ -34,7 +34,6 @@
       >
         <checkboxes-dropdown
           :items="carriers"
-          :parent-id="1"
           :label="getLabel()"
           @addItem="addCarrier"
           @removeItem="removeCarrier"
@@ -49,7 +48,10 @@
     >
       <span>
         <ul>
-          <li v-for="(selectedCarrier, key) in getSelectedCarriers">
+          <li
+            v-for="(selectedCarrier, key) in getSelectedCarriers"
+            :key="key"
+          >
             {{ selectedCarrier.label }}<span v-if="key !== getSelectedCarriers.length -1 ">, </span>
             <input
               :name="choiceInputName"
@@ -81,6 +83,7 @@
 <script lang="ts">
   import checkboxesDropdown from '@app/components/checkboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
+  import EventEmitter from '@components/event-emitter';
 
   export interface Carrier {
     id: number,
@@ -109,7 +112,7 @@
         required: true,
       },
       eventEmitter: {
-        type: Object,
+        type: Object as PropType<typeof EventEmitter>,
         required: true,
       },
       modifyAllShopsName: {
