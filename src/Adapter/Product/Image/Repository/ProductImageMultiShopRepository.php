@@ -114,42 +114,42 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      * @param ProductId $productId
      *
      * @return ImageId[]
-     *
-     * @throws InvalidShopConstraintException
      */
     public function getImagesIds(ProductId $productId, ShopConstraint $shopConstraint): array
     {
+        $qb = $this->connection->createQueryBuilder()->select('i.id_image');
+
         if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
-        }
-
-        $qb = $this->connection->createQueryBuilder()
-            ->select('i.id_image')
-            ->andWhere('i.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-            ->from($this->dbPrefix . 'image', 'i')
-            ->addOrderBy('i.position', 'ASC')
-            ->addOrderBy('i.id_image', 'ASC')
-        ;
-
-        $shopIdValue = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
-
-        if ($shopIdValue) {
-            $qb
+            $qb->from($this->dbPrefix . 'image_shop', 'i')
                 ->innerJoin(
                     'i',
-                    $this->dbPrefix . 'image_shop',
-                    'img_shop',
-                    'i.id_image = img_shop.id_image'
+                    $this->dbPrefix . 'shop',
+                    's',
+                    's.id_shop = i.id_shop AND s.id_shop_group = :shopGroupId'
                 )
-                ->andWhere('img_shop.id_shop = :shopId')
+                ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
+            ;
+        } elseif ($shopConstraint->getShopId()) {
+            $qb->from($this->dbPrefix . 'image_shop', 'i')
+                ->andWhere('i.id_shop = :shopId')
                 ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+            ;
+        } else {
+            $qb->from($this->dbPrefix . 'image', 'i')
+                ->addOrderBy('i.position', 'ASC')
             ;
         }
 
+        $results = $qb->andWhere('i.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('i.id_image', 'ASC')
+            ->execute()
+            ->fetchAll(FetchMode::COLUMN)
+        ;
+
         return array_map(static function (string $id): ImageId {
             return new ImageId((int) $id);
-        }, $qb->execute()->fetchAll(FetchMode::COLUMN));
+        }, $results);
     }
 
     /**
