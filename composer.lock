@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "431863b6b17b54ce7ca55a056373fab0",
+    "content-hash": "9a3b5e7789c0551c50108afae2d474e7",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5348,16 +5348,16 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "2.0.6",
+            "version": "2.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "27e166c1f9520dfeffb1e243af5e54cf0c05b7e7"
+                "reference": "cfba3331bf183d84cea77ef5ae3584f5c6f72d44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/27e166c1f9520dfeffb1e243af5e54cf0c05b7e7",
-                "reference": "27e166c1f9520dfeffb1e243af5e54cf0c05b7e7",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/cfba3331bf183d84cea77ef5ae3584f5c6f72d44",
+                "reference": "cfba3331bf183d84cea77ef5ae3584f5c6f72d44",
                 "shasum": ""
             },
             "require-dev": {
@@ -5381,9 +5381,9 @@
             ],
             "description": "Classic theme for PrestaShop 1.7",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/2.0.6"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2022-10-25T14:37:52+00:00"
+            "time": "2023-02-02T08:31:40+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -13593,5 +13593,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
