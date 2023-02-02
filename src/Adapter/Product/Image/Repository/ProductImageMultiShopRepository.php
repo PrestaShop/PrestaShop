@@ -112,44 +112,52 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return ImageId[]
      */
     public function getImagesIds(ProductId $productId, ShopConstraint $shopConstraint): array
     {
-        $qb = $this->connection->createQueryBuilder()->select('i.id_image');
-
-        if ($shopConstraint->getShopGroupId()) {
-            $qb->from($this->dbPrefix . 'image_shop', 'i')
-                ->innerJoin(
-                    'i',
-                    $this->dbPrefix . 'shop',
-                    's',
-                    's.id_shop = i.id_shop AND s.id_shop_group = :shopGroupId'
-                )
-                ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
-            ;
-        } elseif ($shopConstraint->getShopId()) {
-            $qb->from($this->dbPrefix . 'image_shop', 'i')
-                ->andWhere('i.id_shop = :shopId')
-                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
-            ;
-        } else {
-            $qb->from($this->dbPrefix . 'image', 'i')
-                ->addOrderBy('i.position', 'ASC')
-            ;
-        }
-
-        $results = $qb->andWhere('i.id_product = :productId')
+        $qb = $this->connection->createQueryBuilder()
+            ->select('i.id_image')
+            ->from($this->dbPrefix . 'image', 'i')
+            ->andWhere('i.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('i.position', 'ASC')
             ->addOrderBy('i.id_image', 'ASC')
-            ->execute()
-            ->fetchAll(FetchMode::COLUMN)
         ;
+
+        if (!$shopConstraint->forAllShops()) {
+            $qb
+                ->innerJoin(
+                'i',
+                $this->dbPrefix . 'image_shop',
+                'img_shop',
+                'img_shop.id_image = i.id_image'
+                )
+                ->addGroupBy('i.id_image')
+            ;
+
+            if ($shopConstraint->getShopGroupId()) {
+                $qb
+                    ->innerJoin(
+                        'img_shop',
+                        $this->dbPrefix . 'shop',
+                        's',
+                        's.id_shop = img_shop.id_shop AND s.id_shop_group = :shopGroupId'
+                    )
+                    ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
+                ;
+            } else {
+                $qb->andWhere('img_shop.id_shop = :shopId')
+                    ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+                ;
+            }
+        }
 
         return array_map(static function (string $id): ImageId {
             return new ImageId((int) $id);
-        }, $results);
+        }, $qb->execute()->fetchAll(FetchMode::COLUMN));
     }
 
     /**
