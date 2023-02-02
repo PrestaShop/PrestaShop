@@ -51,7 +51,7 @@ export default class ChangePasswordHandler {
    */
   watchPasswordStrength($input) {
     $.passy.requirements.length.min = this.minLength;
-    $.passy.requirements.characters = 'DIGIT';
+    $.passy.requirements.characters = [$.passy.requirements.characters.DIGIT];
 
     $input.each((index, element) => {
       const $outputContainer = $('<span>');
