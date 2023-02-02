@@ -35,8 +35,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -88,6 +86,7 @@ class ShippingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $modifyAllShopsInputName = ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX . 'carriers';
+        $carrierChoices = $this->carrierChoiceProvider->getChoices();
 
         $builder
             ->add('dimensions', DimensionsType::class)
@@ -118,14 +117,11 @@ class ShippingType extends TranslatorAwareType
             ])
             // related all shops checkbox is rendered in javascript side, but it is still needed here to be correctly filled with data
             ->add($modifyAllShopsInputName, HiddenType::class)
-        ;
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($modifyAllShopsInputName) {
-            $carrierChoices = $this->carrierChoiceProvider->getChoices();
-            $form = $event->getForm();
-            // Vue js CarrierSelector component mounts on this one instead of rendering default bootstrap choices list
-            $form->add('carriers', ChoiceType::class, [
+            ->add('carriers', ChoiceType::class, [
                 'choices' => $carrierChoices,
+                'label_attr' => [
+                    'class' => 'carrier-choice-label',
+                ],
                 'attr' => [
                     'data-modify-all-shops-name' => sprintf('product[shipping][%s]', $modifyAllShopsInputName),
                     'data-choice-input-name' => 'product[shipping][carriers][]',
@@ -134,17 +130,14 @@ class ShippingType extends TranslatorAwareType
                         'selectedCarriers.label' => $this->trans('Only selected carriers', 'Admin.Actions'),
                         'modifyAllShops.label' => $this->trans('Apply changes to all stores', 'Admin.Global'),
                     ]),
-                    'data-carrier-choices' => json_encode($carrierChoices),
-                    // this attribute is fetched from data, so we use PRE_SET_DATA event to add whole carrier choices type
-                    'data-selected-carrier-ids' => json_encode($event->getData()['carriers']),
                 ],
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-            ]);
-        });
+            ])
+        ;
     }
 
     /**

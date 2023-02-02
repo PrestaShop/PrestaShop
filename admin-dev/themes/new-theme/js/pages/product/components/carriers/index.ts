@@ -25,9 +25,10 @@
 
 import {createApp, App} from 'vue';
 import EventEmitter from '@components/event-emitter';
-import CarrierSelector from '@pages/product/components/carriers/CarrierSelector.vue';
+import CarrierSelector, {Carrier} from '@pages/product/components/carriers/CarrierSelector.vue';
 import {createI18n} from 'vue-i18n';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
+import ProductMap from '@pages/product/product-map';
 
 /**
  * @param {string} carrierChoicesSelector
@@ -40,7 +41,6 @@ export default function initCarrierSelector(
   eventEmitter: typeof EventEmitter,
 ): App {
   const container = <HTMLElement> document.querySelector(carrierChoicesSelector);
-  const carrierChoices = <Record<string, number>> JSON.parse(<string>container.dataset.carrierChoices);
   const translations = JSON.parse(<string>container.dataset.translations);
   const i18n = createI18n({
     locale: 'en',
@@ -48,17 +48,32 @@ export default function initCarrierSelector(
     messages: {en: translations},
   });
 
-  // format carrier choices to fit for checkbox dropdown component type requirement
-  const carriers = Object.entries(carrierChoices).map(([name, id]) => ({
-    id,
-    name,
-    label: name,
-  }));
+  const carrierChoiceLabelElements = <NodeListOf<HTMLLabelElement>> container.querySelectorAll(
+    ProductMap.shipping.carrierChoiceLabel,
+  );
+
+  const carriers: Carrier[] = [];
+  const selectedCarrierIds = <number[]> [];
+  // get and format carrier choices to fit for checkbox dropdown component type requirement
+  carrierChoiceLabelElements.forEach((label: HTMLLabelElement) => {
+    const input = <HTMLInputElement> label.querySelector('input');
+    const labelText = <string> label.textContent;
+
+    if (input.checked) {
+      selectedCarrierIds.push(Number(input.value));
+    }
+
+    carriers.push({
+      id: Number(input.value),
+      name: labelText,
+      label: labelText,
+    });
+  });
 
   const vueApp = createApp(CarrierSelector, {
     i18n,
     carriers,
-    initialCarrierIds: JSON.parse(<string>container.dataset.selectedCarrierIds),
+    initialCarrierIds: selectedCarrierIds,
     modifyAllShopsName: <string>container.dataset.modifyAllShopsName,
     choiceInputName: <string>container.dataset.choiceInputName,
     eventEmitter,

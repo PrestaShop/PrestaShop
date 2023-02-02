@@ -34,7 +34,7 @@
       >
         <checkboxes-dropdown
           :items="carriers"
-          :label="getLabel()"
+          :label="getLabel"
           @addItem="addCarrier"
           @removeItem="removeCarrier"
           :event-emitter="eventEmitter"
@@ -134,6 +134,11 @@
       getSelectedCarriers(): Carrier[] {
         return this.carriers.filter((carrier: Carrier) => this.selectedCarrierIds.includes(carrier.id));
       },
+      getLabel(): string {
+        return this.selectedCarrierIds.length > 0
+          ? this.$t('selectedCarriers.label')
+          : this.$t('allCarriers.label');
+      },
     },
     methods: {
       showModifyAllShopsCheckbox(): void {
@@ -146,11 +151,6 @@
         this.selectedCarrierIds = this.selectedCarrierIds.filter(
           (id: number) => carrier.id !== id,
         );
-      },
-      getLabel(): string {
-        return this.selectedCarrierIds.length > 0
-          ? this.$t('selectedCarriers.label')
-          : this.$t('allCarriers.label');
       },
     },
   });

@@ -79,7 +79,9 @@
   export const eventClearAllSelections = 'checkboxesDropdownClearAll';
 
   export default defineComponent({
-    data(): {selectedItems: Array<Record<string, any>>} {
+    data(): {
+      selectedItems: Array<Record<string, any>>
+    } {
       return {
         selectedItems: [],
       };
