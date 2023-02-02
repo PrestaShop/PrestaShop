@@ -75,9 +75,6 @@
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';
 
-  // emit this event in parent component to clear all selections (to uncheck all checkboxes)
-  export const eventClearAllSelections = 'checkboxesDropdownClearAll';
-
   export default defineComponent({
     data(): {
       selectedItems: Array<Record<string, any>>
@@ -107,6 +104,11 @@
         type: Object as PropType<typeof EventEmitter>,
         required: true,
       },
+      // provide this property if you need to clear all selected events from parent component
+      clearSelectedItemsEvent: {
+        type: String,
+        default: '',
+      },
       disabled: {
         type: Boolean,
         default: false,
@@ -114,7 +116,9 @@
     },
     mounted() {
       this.selectedItems = this.items.filter((item) => this.initialItemIds.includes(item.id));
-      this.eventEmitter.on(eventClearAllSelections, () => this.clear());
+      if (this.clearSelectedItemsEvent) {
+        this.eventEmitter.on(this.clearSelectedItemsEvent, () => this.clear());
+      }
     },
     computed: {
       nbFiles(): string | null {

@@ -40,6 +40,7 @@
         :parent-id="filter.id"
         :label="filter.name"
         :event-emitter="eventEmitter"
+        :clear-selected-items-event="clearSelectedFiltersEvent"
         @addItem="addFilter"
         @removeItem="removeFilter"
       />
@@ -57,7 +58,7 @@
 </template>
 
 <script lang="ts">
-  import CheckboxesDropdown, {eventClearAllSelections} from '@app/components/CheckboxesDropdown.vue';
+  import CheckboxesDropdown from '@app/components/CheckboxesDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';
@@ -66,9 +67,13 @@
 
   export default defineComponent({
     name: 'Filters',
-    data(): {selectedFilters: Record<string, any>} {
+    data(): {
+      selectedFilters: Record<string, any>,
+      clearSelectedFiltersEvent: string,
+    } {
       return {
         selectedFilters: [],
+        clearSelectedFiltersEvent: CombinationEvents.clearAllCombinationFilters,
       };
     },
     props: {
@@ -95,7 +100,6 @@
     },
     mounted() {
       this.eventEmitter.on(CombinationEvents.clearFilters, () => this.clearAll());
-      this.eventEmitter.on(CombinationEvents.clearAllCombinationFilters, this.clear);
     },
     methods: {
       /**
@@ -128,15 +132,11 @@
       },
       clearAll(): void {
         this.selectedFilters = [];
-        this.eventEmitter.emit(eventClearAllSelections);
         this.eventEmitter.emit(CombinationEvents.clearAllCombinationFilters);
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
       updateFilters(): void {
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
-      },
-      clear(): void {
-        this.selectedFilters = [];
       },
     },
   });
