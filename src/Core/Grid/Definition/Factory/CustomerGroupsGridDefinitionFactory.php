@@ -88,16 +88,16 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('reduction'))
-                    ->setName($this->trans('Reduction', [], 'Admin.Catalog.Feature'))
+                    ->setName($this->trans('Discount (%)', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'reduction',
                     ])
             )
             ->add(
-                (new DataColumn('price_display_method'))
-                    ->setName($this->trans('Price display Method', [], 'Admin.Shopparameters.Feature'))
+                (new DataColumn('members'))
+                    ->setName($this->trans('Members', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
-                        'field' => 'price_display_method',
+                        'field' => 'members',
                     ])
             )
             ->add(
@@ -148,10 +148,30 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->translator->trans('Search title', [], 'Admin.Global'),
+                            'placeholder' => $this->translator->trans('Search name', [], 'Admin.Global'),
                         ],
                     ])
                     ->setAssociatedColumn('name')
+            )
+            ->add(
+                (new Filter('reduction', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('reduction')
+            )
+            ->add(
+                (new Filter('show_prices', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('show_prices')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

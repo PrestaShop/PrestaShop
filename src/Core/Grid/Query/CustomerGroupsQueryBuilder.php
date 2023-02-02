@@ -68,7 +68,9 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         $builder = $this->getCustomerGroupsQueryBuilder($searchCriteria);
 
         $builder
-            ->select('g.id_group, gl.name, g.reduction, g.price_display_method, g.show_prices')
+            ->select('g.id_group, gl.name, g.reduction, COUNT(cg.id_customer) as members, g.show_prices')
+            ->leftJoin('g', $this->dbPrefix . 'customer_group', 'cg', 'g.id_group = cg.id_group')
+            ->groupBy('g.id_group')
         ;
 
         $this->searchCriteriaApplicator
@@ -116,6 +118,8 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         $allowedFiltersMap = [
             'id_group' => 'g.id_group',
             'name' => 'gl.name',
+            'reduction' => 'g.reduction',
+            'show_prices' => 'g.show_prices',
         ];
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
