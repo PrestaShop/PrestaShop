@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type CartRuleData from '@data/faker/cartRule';
+
+import type {Page} from 'playwright';
 
 /**
  * Add cart rule page, contains functions that can be used on the page
@@ -7,6 +10,126 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddCartRule extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly editPageTitle: string;
+
+  private readonly cartRuleForm: string;
+
+  private readonly infomationsTabLink: string;
+
+  private readonly nameInput: (ID: number) => string;
+
+  private readonly descriptionTextArea: string;
+
+  private readonly codeInput: string;
+
+  private readonly generateButton: string;
+
+  private readonly highlightToggle: (toggle: string) => string;
+
+  private readonly partialUseToggle: (toggle: string) => string;
+
+  private readonly priorityInput: string;
+
+  private readonly statusToggle: (toggle: string) => string;
+
+  private readonly conditionsTabLink: string;
+
+  private readonly singleCustomerInput: string;
+
+  private readonly singleCustomerResultBlock: string;
+
+  private readonly singleCustomerResultItem: string;
+
+  private readonly dateFromInput: string;
+
+  private readonly dateToInput: string;
+
+  private readonly minimumAmountInput: string;
+
+  private readonly minimumAmountCurrencySelect: string;
+
+  private readonly minimumAmountTaxSelect: string;
+
+  private readonly minimumAmountShippingSelect: string;
+
+  private readonly quantityInput: string;
+
+  private readonly quantityPerUserInput: string;
+
+  private readonly countryRestriction: string;
+
+  private readonly countrySelection: string;
+
+  private readonly countryGroupRemoveButton: string;
+
+  private readonly countryGroupAddButton: string;
+
+  private readonly carrierRestriction: string;
+
+  private readonly carrierRestrictionPickUpInStore: string;
+
+  private readonly carrierRestrictionDeliveryNextDay: string;
+
+  private readonly carrierRestrictionRemoveButton: string;
+
+  private readonly carrierRestrictionAddButton: string;
+
+  private readonly customerGroupRestriction: string;
+
+  private readonly customerGroupSelection: string;
+
+  private readonly customerGroupCustomer: string;
+
+  private readonly customerGroupGuest: string;
+
+  private readonly customerGroupVisitor: string;
+
+  private readonly customerGroupRemoveButton: string;
+
+  private readonly customerGroupAddButton: string;
+
+  private readonly actionsTabLink: string;
+
+  private readonly freeShippingToggle: (toggle: string) => string;
+
+  private readonly applyDiscountRadioButton: (toggle: string) => string;
+
+  private readonly discountPercentRadioButton: string;
+
+  private readonly discountPercentInput: string;
+
+  private readonly discountAmountRadioButton: string;
+
+  private readonly discountAmountInput: string;
+
+  private readonly discountAmountCurrencySelect: string;
+
+  private readonly discountAmountTaxSelect: string;
+
+  private readonly discountOffRadioButton: string;
+
+  private readonly applyDiscountToOrderCheckbox: string;
+
+  private readonly applyDiscountToSpecificProductCheckbox: string;
+
+  private readonly productNameInput: string;
+
+  private readonly productSearchResultBlock: string;
+
+  private readonly productSearchResultItem: string;
+
+  private readonly excludeDiscountProductsToggle: (toggle: string) => string;
+
+  private readonly sendFreeGifToggle: (toggle: string) => string;
+
+  private readonly freeGiftFilterInput: string;
+
+  private readonly freeGiftProductSelect: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add cart rule page
@@ -23,7 +146,7 @@ class AddCartRule extends BOBasePage {
     // Information tab
     this.infomationsTabLink = '#cart_rule_link_informations';
 
-    this.nameInput = (ID) => `#name_${ID}`;
+    this.nameInput = (ID: number) => `#name_${ID}`;
     this.descriptionTextArea = `${this.cartRuleForm} textarea[name='description']`;
 
     // Discount code selectors
@@ -31,10 +154,10 @@ class AddCartRule extends BOBasePage {
     this.generateButton = '#cart_rule_informations  a.btn-default';
 
     // Toggle Selectors
-    this.highlightToggle = (toggle) => `${this.cartRuleForm} #highlight_${toggle}`;
-    this.partialUseToggle = (toggle) => `${this.cartRuleForm} #partial_use_${toggle}`;
+    this.highlightToggle = (toggle: string) => `${this.cartRuleForm} #highlight_${toggle}`;
+    this.partialUseToggle = (toggle: string) => `${this.cartRuleForm} #partial_use_${toggle}`;
     this.priorityInput = `${this.cartRuleForm} input[name='priority']`;
-    this.statusToggle = (toggle) => `${this.cartRuleForm} #active_${toggle}`;
+    this.statusToggle = (toggle: string) => `${this.cartRuleForm} #active_${toggle}`;
 
     // Conditions tab
     this.conditionsTabLink = '#cart_rule_link_conditions';
@@ -83,10 +206,10 @@ class AddCartRule extends BOBasePage {
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
-    this.freeShippingToggle = (toggle) => `${this.cartRuleForm} #free_shipping_${toggle}`;
+    this.freeShippingToggle = (toggle: string) => `${this.cartRuleForm} #free_shipping_${toggle}`;
 
     // Discount percent selectors
-    this.applyDiscountRadioButton = (toggle) => `${this.cartRuleForm} #apply_discount_${toggle}`;
+    this.applyDiscountRadioButton = (toggle: string) => `${this.cartRuleForm} #apply_discount_${toggle}`;
     this.discountPercentRadioButton = this.applyDiscountRadioButton('percent');
     this.discountPercentInput = '#reduction_percent';
 
@@ -107,8 +230,8 @@ class AddCartRule extends BOBasePage {
     this.productSearchResultItem = `${this.productSearchResultBlock} .ac_even`;
 
     // Exclude discount products and free gift selectors
-    this.excludeDiscountProductsToggle = (toggle) => `${this.cartRuleForm} #reduction_exclude_special_${toggle}`;
-    this.sendFreeGifToggle = (toggle) => `${this.cartRuleForm} #free_gift_${toggle}`;
+    this.excludeDiscountProductsToggle = (toggle: string) => `${this.cartRuleForm} #reduction_exclude_special_${toggle}`;
+    this.sendFreeGifToggle = (toggle: string) => `${this.cartRuleForm} #free_gift_${toggle}`;
     this.freeGiftFilterInput = '#giftProductFilter';
     this.freeGiftProductSelect = '#gift_product';
 
@@ -123,7 +246,7 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on information form
    * @return {Promise<void>}
    */
-  async fillInformationForm(page, cartRuleData) {
+  async fillInformationForm(page: Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
     await page.click(this.infomationsTabLink);
 
@@ -157,7 +280,7 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on conditions form
    * @return {Promise<void>}
    */
-  async fillConditionsForm(page, cartRuleData) {
+  async fillConditionsForm(page: Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
     await page.click(this.conditionsTabLink);
 
@@ -219,7 +342,7 @@ class AddCartRule extends BOBasePage {
    * @param cartRuleData {CartRuleData} Data to set on actions form
    * @return {Promise<void>}
    */
-  async fillActionsForm(page, cartRuleData) {
+  async fillActionsForm(page: Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to actions tab
     await page.click(this.actionsTabLink);
 
@@ -229,7 +352,9 @@ class AddCartRule extends BOBasePage {
     switch (cartRuleData.discountType) {
       case 'Percent':
         await this.setChecked(page, this.discountPercentRadioButton);
-        await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent);
+        if (cartRuleData.discountPercent) {
+          await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent);
+        }
         await this.setChecked(
           page,
           this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'),
@@ -237,9 +362,11 @@ class AddCartRule extends BOBasePage {
         break;
       case 'Amount':
         await this.setChecked(page, this.discountAmountRadioButton);
-        await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value);
-        await this.selectByVisibleText(page, this.discountAmountCurrencySelect, cartRuleData.discountAmount.currency);
-        await this.selectByVisibleText(page, this.discountAmountTaxSelect, cartRuleData.discountAmount.tax);
+        if (cartRuleData.discountAmount) {
+          await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value);
+          await this.selectByVisibleText(page, this.discountAmountCurrencySelect, cartRuleData.discountAmount.currency);
+          await this.selectByVisibleText(page, this.discountAmountTaxSelect, cartRuleData.discountAmount.tax);
+        }
         break;
       case 'None':
         await this.setChecked(page, this.discountOffRadioButton);
@@ -260,7 +387,9 @@ class AddCartRule extends BOBasePage {
         break;
       case 'Specific product':
         await this.setChecked(page, this.applyDiscountToSpecificProductCheckbox);
-        await this.setValue(page, this.productNameInput, cartRuleData.product);
+        if (cartRuleData.product) {
+          await this.setValue(page, this.productNameInput, cartRuleData.product);
+        }
         await this.waitForVisibleSelector(page, this.productSearchResultBlock);
         await this.waitForSelectorAndClick(page, this.productSearchResultItem);
         break;
@@ -272,7 +401,7 @@ class AddCartRule extends BOBasePage {
     // Set free gift
     await this.setChecked(page, this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
 
-    if (cartRuleData.freeGift) {
+    if (cartRuleData.freeGift && cartRuleData.freeGiftProduct) {
       await this.setValue(page, this.freeGiftFilterInput, cartRuleData.freeGiftProduct.name);
       await this.waitForVisibleSelector(page, this.freeGiftProductSelect);
       await this.selectByVisibleText(
@@ -290,7 +419,7 @@ class AddCartRule extends BOBasePage {
    * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
    * @returns {Promise<string|null>}
    */
-  async createEditCartRules(page, cartRuleData, waitForNavigation = true) {
+  async createEditCartRules(page: Page, cartRuleData: CartRuleData, waitForNavigation: boolean = true): Promise<string|null> {
     // Fill information form
     await this.fillInformationForm(page, cartRuleData);
 
@@ -312,4 +441,4 @@ class AddCartRule extends BOBasePage {
   }
 }
 
-module.exports = new AddCartRule();
+export default new AddCartRule();
