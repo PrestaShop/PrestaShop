@@ -9,7 +9,7 @@ https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/#pul
 
 | Questions         | Answers
 | ----------------- | -------------------------------------------------------
-| Branch?           | develop / 8.0.x / 1.7.8.x
+| Branch?           | develop / 8.1.x / 8.0.x / 1.7.8.x
 | Description?      | Please be specific when describing the PR. <br> Every detail helps: versions, browser/server configuration, specific module/theme, etc. Feel free to add more information below this table.
 | Type?             | bug fix / improvement / new feature / refacto
 | Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM
