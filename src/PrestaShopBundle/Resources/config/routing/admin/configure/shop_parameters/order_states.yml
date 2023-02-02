@@ -4,7 +4,8 @@ admin_order_states:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::indexAction
     _legacy_controller: AdminStatuses
-#    _legacy_link: AdminStatuses
+    _legacy_link: AdminStatuses
+    _legacy_feature_flag: order_state
 
 admin_order_states_filter:
   path: /
@@ -14,7 +15,8 @@ admin_order_states_filter:
     _legacy_controller: AdminStatuses
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_states
     redirectRoute: admin_order_states
-#  _legacy_link: AdminStatuses:submitFilterstate
+    _legacy_link: AdminStatuses:submitFilterstate
+    _legacy_feature_flag: order_state
 
 admin_order_states_create:
   path: /new
