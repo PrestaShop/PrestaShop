@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Cart rules page, contains functions that can be used on the page
@@ -7,6 +8,98 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class CartRules extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly addNewCartRuleButton: string;
+
+  private readonly catalogPriceRulesTab: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnSelectRowCheckbox: (row: number) => string;
+
+  private readonly tableColumnId: (row: number) => string;
+
+  private readonly tableColumnName: (row: number) => string;
+
+  private readonly tableColumnPriority: (row: number) => string;
+
+  private readonly tableColumnCode: (row: number) => string;
+
+  private readonly tableColumnQuantity: (row: number) => string;
+
+  private readonly tableColumnExpirationDate: (row: number) => string;
+
+  private readonly tableColumnStatusLink: (row: number) => string;
+
+  private readonly tableColumnStatusEnableLink: (row: number) => string;
+
+  private readonly tableColumnStatusDisableLink: (row: number) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsEditLink: (row: number) => string;
+
+  private readonly tableColumnActionsToggleButton: (row: number) => string;
+
+  private readonly tableColumnActionsDropdownMenu: (row: number) => string;
+
+  private readonly tableColumnActionsDeleteLink: (row: number) => string;
+
+  private readonly deleteModalButtonYes: string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkEnableLink: string;
+
+  private readonly bulkDisableLink: string;
+
+  private readonly bulkDeleteLink: string;
+
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationDropdownButton: string;
+
+  private readonly paginationItems: (number: number) => string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: number) => string;
+
+  private readonly sortColumnSpanButton: (column: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on cart rules page
@@ -30,33 +123,33 @@ class CartRules extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='cart_ruleFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='cart_ruleFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncart_rule';
     this.filterResetButton = 'button[name=\'submitResetcart_rule\']';
 
     // Table body selectors
     this.tableBodyRows = `${this.gridTable} tbody tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = (row) => `${this.tableBodyColumn(row)} input[name='cart_ruleBox[]']`;
-    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnPriority = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnCode = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnQuantity = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnExpirationDate = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnStatusLink = (row) => `${this.tableBodyColumn(row)}:nth-child(8) a`;
-    this.tableColumnStatusEnableLink = (row) => `${this.tableColumnStatusLink(row)}.action-enabled`;
-    this.tableColumnStatusDisableLink = (row) => `${this.tableColumnStatusLink(row)}.action-disabled`;
+    this.tableColumnSelectRowCheckbox = (row: number) => `${this.tableBodyColumn(row)} input[name='cart_ruleBox[]']`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnPriority = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnCode = (row: number) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnQuantity = (row: number) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnExpirationDate = (row: number) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnStatusLink = (row: number) => `${this.tableBodyColumn(row)}:nth-child(8) a`;
+    this.tableColumnStatusEnableLink = (row: number) => `${this.tableColumnStatusLink(row)}.action-enabled`;
+    this.tableColumnStatusDisableLink = (row: number) => `${this.tableColumnStatusLink(row)}.action-disabled`;
 
     // Row actions selectors
-    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -74,14 +167,15 @@ class CartRules extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header methods */
@@ -90,7 +184,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToCatalogPriceRulesTab(page) {
+  async goToCatalogPriceRulesTab(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.catalogPriceRulesTab);
     await this.waitForVisibleSelector(page, `${this.catalogPriceRulesTab}.current`);
   }
@@ -100,7 +194,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewCartRulesPage(page) {
+  async goToAddNewCartRulesPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewCartRuleButton);
   }
 
@@ -111,7 +205,7 @@ class CartRules extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToEditCartRulePage(page, row) {
+  async goToEditCartRulePage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
   }
 
@@ -120,9 +214,9 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @param cartRuleName {string} Cart rule name to delete
-   * @returns {Promise<unknown>}
+   * @returns {Promise<string>}
    */
-  async deleteCartRule(page, row = 1, cartRuleName = '') {
+  async deleteCartRule(page: Page, row: number = 1, cartRuleName: string = ''): Promise<string> {
     if (await this.elementVisible(page, this.filterColumn('name'), 1000)) {
       await this.filterCartRules(page, 'input', 'name', cartRuleName);
     }
@@ -145,8 +239,8 @@ class CartRules extends BOBasePage {
    * @param columnName {string} Column name to get text content
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
+    let columnSelector: string;
 
     switch (columnName) {
       case 'id_cart_rule':
@@ -186,7 +280,7 @@ class CartRules extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getCartRuleStatus(page, row) {
+  getCartRuleStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, this.tableColumnStatusEnableLink(row), 1000);
   }
 
@@ -197,7 +291,7 @@ class CartRules extends BOBasePage {
    * @param wantedStatus {boolean} True if we need to enable status, false if not
    * @return {Promise<void>}
    */
-  async setCartRuleStatus(page, row, wantedStatus) {
+  async setCartRuleStatus(page: Page, row: number, wantedStatus: boolean): Promise<void> {
     if (wantedStatus !== await this.getCartRuleStatus(page, row)) {
       await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
     }
@@ -209,7 +303,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -223,7 +317,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -232,7 +326,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -245,7 +339,7 @@ class CartRules extends BOBasePage {
    * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
-  async filterCartRules(page, filterType, filterBy, value) {
+  async filterCartRules(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     await this.resetFilter(page);
     switch (filterType) {
       case 'input':
@@ -272,7 +366,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async bulkSelectRows(page) {
+  async bulkSelectRows(page: Page): Promise<void> {
     await page.click(this.bulkActionMenuButton);
 
     await Promise.all([
@@ -284,11 +378,11 @@ class CartRules extends BOBasePage {
   /**
    * Bulk delete cart rules
    * @param page {Page} Browser tab
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async bulkDeleteCartRules(page) {
+  async bulkDeleteCartRules(page: Page): Promise<string> {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await this.bulkSelectRows(page);
@@ -307,7 +401,7 @@ class CartRules extends BOBasePage {
    * @param wantedStatus {boolean} True if we need to bulk enable status, false if not
    * @return {Promise<void>}
    */
-  async bulkSetStatus(page, wantedStatus) {
+  async bulkSetStatus(page: Page, wantedStatus: boolean): Promise<void> {
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -329,7 +423,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -339,7 +433,7 @@ class CartRules extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.waitForSelectorAndClick(page, this.paginationItems(number));
 
@@ -351,7 +445,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -362,7 +456,7 @@ class CartRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -375,11 +469,11 @@ class CartRules extends BOBasePage {
    * @param columnName {string} Column name to get all rows content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       allRowsContentTable.push(rowContent);
     }
@@ -394,8 +488,8 @@ class CartRules extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
-    let columnSelector;
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    let columnSelector: string;
 
     switch (sortBy) {
       case 'id_cart_rule':
@@ -431,4 +525,4 @@ class CartRules extends BOBasePage {
   }
 }
 
-module.exports = new CartRules();
+export default new CartRules();
