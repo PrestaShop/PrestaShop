@@ -28,50 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
+use PrestaShopBundle\Entity\AuthorizedApplication;
 
-/**
- * @experimental
- */
-interface AuthorizedApplicationRepositoryInterface
+interface ApiAccessRepositoryInterface
 {
-    /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
-     */
-    public function create(AuthorizedApplicationInterface $application): void;
-
-    /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
-     */
-    public function update(AuthorizedApplicationInterface $application): void;
-
-    /**
-     * @param ApplicationId $applicationId
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
-     */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface;
-
-    /**
-     * @param string $name
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
-     */
-    public function getByName(string $name): ?AuthorizedApplicationInterface;
-
     /**
      * @param AuthorizedApplication $application
      *
      * @return void
      */
-    public function delete(AuthorizedApplication $application): void;
+    public function deleteByApplication(AuthorizedApplication $application): void;
 }

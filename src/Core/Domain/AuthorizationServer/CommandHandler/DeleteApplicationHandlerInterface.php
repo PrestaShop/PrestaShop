@@ -24,34 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 
-namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicationCommand;
 
 /**
- * @experimental
+ * Defines contract for DeleteApplicationHandler
  */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+interface DeleteApplicationHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param DeleteApplicationCommand $command
      */
-    public function deleteByApplication(AuthorizedApplication $application): void
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
-
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
-    }
+    public function handle(DeleteApplicationCommand $command);
 }

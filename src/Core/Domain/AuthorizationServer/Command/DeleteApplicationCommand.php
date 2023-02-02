@@ -26,52 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
 /**
- * @experimental
+ * Deletes application
  */
-interface AuthorizedApplicationRepositoryInterface
+class DeleteApplicationCommand
 {
     /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
+     * @var ApplicationId
      */
-    public function create(AuthorizedApplicationInterface $application): void;
+    private $applicationId;
 
     /**
-     * @param AuthorizedApplicationInterface $application
+     * @param $applicationId
      *
-     * @return void
+     * @throws ApplicationConstraintException
      */
-    public function update(AuthorizedApplicationInterface $application): void;
+    public function __construct($applicationId)
+    {
+        $this->applicationId = new ApplicationId($applicationId);
+    }
 
     /**
-     * @param ApplicationId $applicationId
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
+     * @return ApplicationId
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface;
-
-    /**
-     * @param string $name
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
-     */
-    public function getByName(string $name): ?AuthorizedApplicationInterface;
-
-    /**
-     * @param AuthorizedApplication $application
-     *
-     * @return void
-     */
-    public function delete(AuthorizedApplication $application): void;
+    public function getApplicationId(): ApplicationId
+    {
+        return $this->applicationId;
+    }
 }

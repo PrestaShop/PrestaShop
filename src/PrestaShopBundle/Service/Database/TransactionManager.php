@@ -26,32 +26,47 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShopBundle\Service\Database;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use Doctrine\ORM\EntityManager;
+use PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface;
 
-/**
- * @experimental
- */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+class TransactionManager implements TransactionManagerInterface
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function deleteByApplication(AuthorizedApplication $application): void
+    public function rollback(): void
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $this->entityManager->rollback();
+    }
 
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
+    /**
+     * {@inheritdoc}
+     */
+    public function commit(): void
+    {
+        $this->entityManager->commit();
+    }
 
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
+    /**
+     * {@inheritdoc}
+     */
+    public function beginTransaction(): void
+    {
+        $this->entityManager->beginTransaction();
     }
 }

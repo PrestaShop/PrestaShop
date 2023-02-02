@@ -4,6 +4,7 @@ services:
     autowire: true
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface: '@PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository'
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface: '@PrestaShopBundle\Entity\Repository\ApiAccessRepository'
 
   PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\AddApplicationHandler:
     tags:
@@ -19,6 +20,11 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing'
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\DeleteApplicationHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicationCommand'
 
   PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory: ~
 

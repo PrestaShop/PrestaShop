@@ -35,9 +35,10 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApp
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
+use PrestaShopBundle\Entity\AuthorizedApplication;
 
 /**
- * Handles command which adds new manufacturer using legacy object model
+ * Handles command which adds new application
  *
  * @experimental
  */

@@ -138,3 +138,8 @@ services:
     arguments:
       - PrestaShopBundle\Entity\AuthorizedApplication
     public: true
+
+  PrestaShopBundle\Entity\Repository\ApiAccessRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\ApiAccess

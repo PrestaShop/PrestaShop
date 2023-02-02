@@ -26,32 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessRepositoryInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception;
 
 /**
- * @experimental
+ * Is thrown when application deletion failed
  */
-class ApiAccessRepository extends EntityRepository implements ApiAccessRepositoryInterface
+class DeleteApplicationException extends ApplicationException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteByApplication(AuthorizedApplication $application): void
-    {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-
-        $queryBuilder
-            ->delete()
-            ->from($this->getEntityName(), 'e')
-            ->where('e.authorizedApplication = :authorizedApplication')
-            ->setParameter('authorizedApplication', $application);
-
-        $query = $queryBuilder->getQuery();
-
-        $query->execute();
-    }
 }

@@ -29,8 +29,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DeleteApplicationException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApplicationNameException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
@@ -163,10 +166,19 @@ class ApplicationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      */
-    public function deleteAction(): void
+    public function deleteAction(int $applicationId)
     {
-        // TODO: Implement deleteAction() method in delete PR.
-        throw new NotImplementedException();
+        try {
+            $this->getCommandBus()->handle(new DeleteApplicationCommand($applicationId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ApplicationException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_authorized_applications_index');
     }
 
     /**
@@ -214,6 +226,11 @@ class ApplicationController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof DuplicateApplicationNameException ? $e->getDuplicateActionName() : ''
+            ),
+            DeleteApplicationException::class => $this->trans(
+                'An error occurred during application deletion: %s',
+                'Admin.Notifications.Error',
+                [sprintf('"%s"', $e->getMessage())]
             ),
             ApplicationConstraintException::class => [
                 CustomerConstraintException::INVALID_ID => $this->trans(

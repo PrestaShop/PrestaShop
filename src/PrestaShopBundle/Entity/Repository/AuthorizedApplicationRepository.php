@@ -81,4 +81,13 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
 
         return $application;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(AuthorizedApplication $application): void
+    {
+        $this->getEntityManager()->remove($application);
+        $this->getEntityManager()->flush();
+    }
 }
