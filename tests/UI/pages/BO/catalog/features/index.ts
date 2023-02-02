@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Features page, contains functions that can be used on features page
@@ -7,6 +8,78 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Features extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly addNewFeatureLink: string;
+
+  private readonly helpCardLink: string;
+
+  private readonly helpContainerBlock: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnId: (row: number) => string;
+
+  private readonly tableColumnName: (row: number) => string;
+
+  private readonly tableColumnValues: (row: number) => string;
+
+  private readonly tableColumnPosition: (row: number) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsViewLink: (row: number) => string;
+
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationDropdownButton: string;
+
+  private readonly paginationItems: (number: number) => string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: number) => string;
+
+  private readonly sortColumnSpanButton: (column: number) => string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on features page
@@ -33,38 +106,38 @@ class Features extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='featureFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='featureFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonfeature';
     this.filterResetButton = 'button[name=\'submitResetfeature\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnValues = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnPosition = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnValues = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnPosition = (row: number) => `${this.tableBodyColumn(row)}:nth-child(5)`;
 
     // Row actions selectors
-    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsViewLink = (row) => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a[title='View']`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -83,7 +156,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddFeaturePage(page) {
+  async goToAddFeaturePage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewFeatureLink);
   }
 
@@ -93,7 +166,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -105,7 +178,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -114,7 +187,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -126,7 +199,7 @@ class Features extends BOBasePage {
    * @param value {string} value to filter with
    * @return {Promise<void>}
    */
-  async filterTable(page, filterBy, value) {
+  async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
@@ -139,8 +212,8 @@ class Features extends BOBasePage {
    * @param columnName {string} Column name to get
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
+    let columnSelector: string;
 
     switch (columnName) {
       case 'id_feature':
@@ -172,18 +245,18 @@ class Features extends BOBasePage {
    * @param row {number} Feature row in table
    * @return {Promise<void>}
    */
-  async viewFeature(page, row) {
+  async viewFeature(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 
   /* Helper card methods */
   /**
    * @override
-   * Open help side bar
+   * Open help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async openHelpSideBar(page) {
+  async openHelpSideBar(page: Page): Promise<boolean> {
     await page.click(this.helpCardLink);
 
     return this.elementVisible(page, this.helpContainerBlock, 4000);
@@ -191,11 +264,11 @@ class Features extends BOBasePage {
 
   /**
    * @override
-   * Close help side bar
+   * Close help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeHelpSideBar(page) {
+  async closeHelpSideBar(page: Page): Promise<boolean> {
     await page.click(this.helpCardLink);
 
     return this.elementNotVisible(page, this.helpContainerBlock, 2000);
@@ -205,9 +278,9 @@ class Features extends BOBasePage {
    * @override
    * Get help card URL
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getHelpDocumentURL(page) {
+  async getHelpDocumentURL(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.helpCardLink, 'href');
   }
 
@@ -217,7 +290,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -227,7 +300,7 @@ class Features extends BOBasePage {
    * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.clickAndWaitForNavigation(page, this.paginationItems(number));
 
@@ -239,7 +312,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -250,7 +323,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -264,8 +337,8 @@ class Features extends BOBasePage {
    * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
-    let columnSelector;
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    let columnSelector: string;
 
     switch (sortBy) {
       case 'id_feature':
@@ -294,11 +367,11 @@ class Features extends BOBasePage {
    * @param columnName {string} Column name to get all content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       allRowsContentTable.push(rowContent);
     }
@@ -312,7 +385,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async bulkDeleteFeatures(page) {
+  async bulkDeleteFeatures(page: Page): Promise<string> {
     // To confirm bulk delete action with dialog
     await this.dialogListener(page, true);
 
@@ -343,9 +416,9 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @param actualPosition {number} Actual position to change
    * @param newPosition {number} New position to change
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  async changePosition(page, actualPosition, newPosition) {
+  async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string|null> {
     await this.dragAndDrop(
       page,
       this.tableColumnPosition(actualPosition),
@@ -356,4 +429,4 @@ class Features extends BOBasePage {
   }
 }
 
-module.exports = new Features();
+export default new Features();
