@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import {Page} from 'playwright';
+
+import type FileData from '@data/faker/file';
+
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Add file page, contains functions that can be used on the page
@@ -7,6 +10,22 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddFile extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameLangButton: string;
+
+  private readonly nameLangSpan: (lang: string) => string;
+
+  private readonly nameInput: (id: number) => string;
+
+  private readonly descriptionInput: (id: number) => string;
+
+  private readonly fileInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add file page
@@ -19,10 +38,10 @@ class AddFile extends BOBasePage {
 
     // Selectors
     this.nameLangButton = '#attachment_name_dropdown';
-    this.nameLangSpan = (lang) => 'div.dropdown-menu[aria-labelledby=\'attachment_name_dropdown\']'
+    this.nameLangSpan = (lang: string) => 'div.dropdown-menu[aria-labelledby=\'attachment_name_dropdown\']'
       + ` span[data-locale='${lang}']`;
-    this.nameInput = (id) => `#attachment_name_${id}`;
-    this.descriptionInput = (id) => `#attachment_file_description_${id}`;
+    this.nameInput = (id: number) => `#attachment_name_${id}`;
+    this.descriptionInput = (id: number) => `#attachment_file_description_${id}`;
     this.fileInput = '#attachment_file';
     this.saveButton = '.card-footer button';
   }
@@ -34,7 +53,7 @@ class AddFile extends BOBasePage {
    * @param fileData {FileData} Data to set on add/edit file form
    * @returns {Promise<string>}
    */
-  async createEditFile(page, fileData) {
+  async createEditFile(page: Page, fileData: FileData): Promise<string> {
     // Fill name and description in english
     await this.changeLanguageForSelectors(page, 'en');
     await this.setValue(page, this.nameInput(1), fileData.name);
@@ -47,7 +66,10 @@ class AddFile extends BOBasePage {
 
     // Upload file
     const fileInputElement = await page.$(this.fileInput);
-    await fileInputElement.setInputFiles(fileData.filename);
+
+    if (fileInputElement) {
+      await fileInputElement.setInputFiles(fileData.filename);
+    }
 
     // Save Supplier
     await this.clickAndWaitForNavigation(page, this.saveButton);
@@ -60,7 +82,7 @@ class AddFile extends BOBasePage {
    * @param lang {string} Value oof language to change
    * @return {Promise<void>}
    */
-  async changeLanguageForSelectors(page, lang = 'en') {
+  async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
       page.click(this.nameLangButton),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='true']`),
@@ -72,4 +94,4 @@ class AddFile extends BOBasePage {
   }
 }
 
-module.exports = new AddFile();
+export default new AddFile();
