@@ -235,9 +235,6 @@ class ImageRetriever
             ];
         }
 
-        // add original image to the list of urls
-        $urls['original'] = $this->link->$getImageURL($rewrite, (string) $id_image);
-
         // Sort thumbnails by size
         uasort($urls, function (array $a, array $b) {
             return $a['width'] * $a['height'] > $b['width'] * $b['height'] ? 1 : -1;
@@ -249,13 +246,37 @@ class ImageRetriever
         $large = end($urls);
         $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
 
-        return [
+        $result = [
             'bySize' => $urls,
             'small' => $small,
             'medium' => $medium,
             'large' => $large,
             'legend' => !empty($object->meta_title) ? $object->meta_title : $object->name,
             'id_image' => $id_image,
+        ];
+
+        if ($this->isMultipleImageFormatFeatureActive) {
+            $result['original'] = $this->getOriginalImage($getImageURL, $id_image, $rewrite);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $getImageURL
+     * @param int $imageId
+     * @param string $rewrite
+     * @return array
+     */
+    private function getOriginalImage(string $getImageURL, int $imageId, string $rewrite): array
+    {
+        $originalImagePath = $this->link->$getImageURL($rewrite, $imageId);
+        $originalDimensions = getimagesize($originalImagePath);
+
+        return [
+            'url' => $originalImagePath,
+            'width' => $originalDimensions[0],
+            'height' => $originalDimensions[1],
         ];
     }
 
