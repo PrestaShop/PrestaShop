@@ -24,7 +24,8 @@
  *-->
 <template>
   <transition name="fade">
-    <div class="card"
+    <div
+      class="card"
       v-if="principalReady"
     >
       <div class="p-3 translations-wrapper">

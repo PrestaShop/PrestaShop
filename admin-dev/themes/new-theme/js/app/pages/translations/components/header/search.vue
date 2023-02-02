@@ -24,7 +24,8 @@
  *-->
 <template>
   <div id="search">
-    <form class="search-form"
+    <form
+      class="search-form"
       @submit.prevent
     >
       <label>{{ trans('search_label') }}</label>
