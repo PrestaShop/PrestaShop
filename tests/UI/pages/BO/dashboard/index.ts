@@ -52,7 +52,7 @@ class Dashboard extends BOBasePage {
    */
   async getSalesScore(page: Page): Promise<number> {
     const text = await this.getTextContent(page, this.salesScore);
-    const salesScore : string = text.match(/\d+(\.\d+)?/g).toString().replace(',', '');
+    const salesScore: string = text.match(/\d+(\.\d+)?/g).toString().replace(',', '');
 
     return parseFloat(salesScore);
   }
