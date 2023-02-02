@@ -28,10 +28,12 @@
     id="app"
     class="translations-app"
   >
-    <div class="container-fluid">
-      <div class="row justify-content-between align-items-center">
+    <div class="row justify-content-between align-items-end">
+      <div class="col-md-8 mb-3">
         <Search @search="onSearch" />
-        <div class="translations-summary">
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="translations-summary text-md-right">
           <span>{{ totalTranslations }}</span>
           <span v-show="totalMissingTranslations">
             -
@@ -39,18 +41,23 @@
           </span>
         </div>
       </div>
+    </div>
 
-      <div class="row">
+    <div class="row">
+      <div class="col-md-5 col-lg-4 mb-3">
         <Sidebar
           :modal="$refs.transModal"
           :principal="$refs.principal"
         />
+      </div>
+      <div class="col-md-7 col-lg-8 mb-3">
         <Principal
           :modal="$refs.transModal"
           ref="principal"
         />
       </div>
     </div>
+
     <PSModal
       ref="transModal"
       :translations="translations"
