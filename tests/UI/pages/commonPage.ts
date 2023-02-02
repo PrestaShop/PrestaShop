@@ -236,6 +236,20 @@ export default class CommonPage {
   }
 
   /**
+   * Delete the existing text from input then set a value
+   * @param page {Page} Browser tab
+   * @param selector {string} String to locate the input to set its value
+   * @param value {string} Value to set on the input
+   * @return {Promise<void>}
+   */
+  async setColorValue(page: Page, selector: string, value: string): Promise<void> {
+    await this.clearInput(page, selector);
+
+    // eslint-disable-next-line no-param-reassign
+    await page.$eval(selector, (el: HTMLInputElement, value: string) => { el.value = value; }, value);
+  }
+
+  /**
    * Delete text from input
    * @param page {Frame|Page} Browser tab
    * @param selector {string} String to locate the element for the deletion
@@ -243,8 +257,8 @@ export default class CommonPage {
    */
   async clearInput(page: Frame|Page, selector: string): Promise<void> {
     await this.waitForVisibleSelector(page, selector);
-    // eslint-disable-next-line no-return-assign,no-param-reassign
-    await page.$eval(selector, (el: HTMLInputElement) => el.value = '');
+    // eslint-disable-next-line no-param-reassign
+    await page.$eval(selector, (el: HTMLInputElement) => { el.value = ''; });
   }
 
   /**
@@ -525,12 +539,12 @@ export default class CommonPage {
    * @returns {Promise<string|null>}
    */
   async clickAndWaitForDownload(page: Page, selector: string, targetBlank: boolean = false): Promise<string | null> {
-    /* eslint-disable no-return-assign, no-param-reassign */
+    /* eslint-disable no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     if (targetBlank) {
       await page.$eval(selector, (el: HTMLLinkElement) => el.setAttribute('target', ''));
     }
-    /* eslint-enable no-return-assign, no-param-reassign */
+    /* eslint-enable no-param-reassign */
 
     const [download] = await Promise.all([
       page.waitForEvent('download'),

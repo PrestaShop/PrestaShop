@@ -29,13 +29,13 @@ class AddOrderReturnStatus extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Statuses > Add new •';
-    this.pageTitleEdit = 'Statuses > Edit •';
+    this.pageTitleCreate = 'Return statuses •';
+    this.pageTitleEdit = 'Edit:';
 
     // Form selectors
-    this.nameInput = '#name_1';
-    this.colorInput = '#color_0';
-    this.saveButton = '#order_return_state_form_submit_btn';
+    this.nameInput = '#order_return_state_name_1';
+    this.colorInput = '#order_return_state_color';
+    this.saveButton = '#save-button';
   }
 
   /* Methods */
@@ -50,13 +50,13 @@ class AddOrderReturnStatus extends BOBasePage {
     await this.setValue(page, this.nameInput, orderReturnStatusData.name);
 
     // Set color
-    await this.setValue(page, this.colorInput, orderReturnStatusData.color);
+    await this.setColorValue(page, this.colorInput, orderReturnStatusData.color);
 
     // Save order return status
     await this.clickAndWaitForURL(page, this.saveButton);
 
     // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

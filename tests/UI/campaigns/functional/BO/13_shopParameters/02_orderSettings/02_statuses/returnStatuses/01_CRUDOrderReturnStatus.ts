@@ -94,7 +94,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderStatus', baseContext);
 
       const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, createOrderReturnStatusData);
-      await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
+      await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
 
       const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
       await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderReturnStatuses + 1);

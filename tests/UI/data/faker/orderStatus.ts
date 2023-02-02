@@ -41,8 +41,10 @@ export default class OrderStatusData {
     /** @type {number} Name of the status */
     this.id = orderStatusToCreate.id || 0;
 
-    /** @type {string} Name of the status */
-    this.name = orderStatusToCreate.name || `order_status_${faker.lorem.word()}`;
+    /** @type {string} Name of the status (Max 32 characters) */
+    this.name = (orderStatusToCreate.name || `order_status_${faker.lorem.word({
+      length: {min: 1, max: 19},
+    })}`).substring(0, 32);
 
     /** @type {string} Hexadecimal value for the status color */
     this.color = orderStatusToCreate.color || faker.internet.color();
