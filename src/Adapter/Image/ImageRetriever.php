@@ -266,6 +266,7 @@ class ImageRetriever
      * @param string $getImageURL
      * @param int $imageId
      * @param string $rewrite
+     *
      * @return array
      */
     private function getOriginalImage(string $getImageURL, int $imageId, string $rewrite): array
@@ -273,10 +274,13 @@ class ImageRetriever
         $originalImagePath = $this->link->$getImageURL($rewrite, $imageId);
         $originalDimensions = getimagesize($originalImagePath);
 
+        $width = !empty($originalDimensions[0]) ? $originalDimensions[0] : false;
+        $height = !empty($originalDimensions[1]) ? $originalDimensions[1] : false;
+
         return [
             'url' => $originalImagePath,
-            'width' => $originalDimensions[0],
-            'height' => $originalDimensions[1],
+            'width' => $width,
+            'height' => $height,
         ];
     }
 
