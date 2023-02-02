@@ -54,6 +54,7 @@ export default function initCarrierSelector(
 
   const carriers: Carrier[] = [];
   const selectedCarrierIds = <number[]> [];
+  let choiceInputName = '';
   // get and format carrier choices to fit for checkbox dropdown component type requirement
   carrierChoiceLabelElements.forEach((label: HTMLLabelElement) => {
     const input = <HTMLInputElement> label.querySelector('input');
@@ -68,6 +69,11 @@ export default function initCarrierSelector(
       name: labelText,
       label: labelText,
     });
+
+    if (choiceInputName === '') {
+      // get the name of choice input which is important so that in backend side it is correctly filled in form when handling request
+      choiceInputName = input.name;
+    }
   });
 
   const vueApp = createApp(CarrierSelector, {
@@ -75,7 +81,7 @@ export default function initCarrierSelector(
     carriers,
     initialCarrierIds: selectedCarrierIds,
     modifyAllShopsName: <string>container.dataset.modifyAllShopsName,
-    choiceInputName: <string>container.dataset.choiceInputName,
+    choiceInputName,
     eventEmitter,
   }).use(i18n);
 

@@ -124,7 +124,6 @@ class ShippingType extends TranslatorAwareType
                 ],
                 'attr' => [
                     'data-modify-all-shops-name' => sprintf('product[shipping][%s]', $modifyAllShopsInputName),
-                    'data-choice-input-name' => 'product[shipping][carriers][]',
                     'data-translations' => json_encode([
                         'allCarriers.label' => $this->trans('All carriers', 'Admin.Actions'),
                         'selectedCarriers.label' => $this->trans('Only selected carriers', 'Admin.Actions'),
