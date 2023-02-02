@@ -39,7 +39,17 @@
           @removeItem="removeCarrier"
           :event-emitter="eventEmitter"
           :initial-item-ids="this.initialCarrierIds"
+          :clear-selected-items-event="this.clearSelectedCarriersEvent"
         />
+        <button
+          type="button"
+          v-if="this.selectedCarrierIds.length > 0"
+          class="btn btn-outline-secondary carrier-choices-clear"
+          @click="clearAllSelected"
+        >
+          <i class="material-icons">close</i>
+          {{ $t('allCarriers.label') }}
+        </button>
       </div>
     </div>
     <div
@@ -84,6 +94,7 @@
   import CheckboxesDropdown from '@app/components/CheckboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';
+  import ProductEventMap from '@pages/product/product-event-map';
 
   export interface Carrier {
     id: number,
@@ -95,11 +106,13 @@
     name: 'CarrierSelector',
     data(): {
       selectedCarrierIds: number[],
-      modifyAllShopsVisible: Boolean,
+      modifyAllShopsVisible: boolean,
+      clearSelectedCarriersEvent: string,
     } {
       return {
         selectedCarrierIds: [],
         modifyAllShopsVisible: false,
+        clearSelectedCarriersEvent: ProductEventMap.shipping.clearSelectedCarriers,
       };
     },
     props: {
@@ -151,6 +164,10 @@
         this.selectedCarrierIds = this.selectedCarrierIds.filter(
           (id: number) => carrier.id !== id,
         );
+      },
+      clearAllSelected(): void {
+        this.eventEmitter.emit(this.clearSelectedCarriersEvent);
+        this.selectedCarrierIds = [];
       },
     },
   });

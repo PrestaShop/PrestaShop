@@ -68,4 +68,7 @@ export default {
     listUpdated: 'specificPricesListUpdated',
   },
   cancelProductShops: 'cancelProductShops',
+  shipping: {
+    clearSelectedCarriers: 'clearSelectedCarriers',
+  },
 };
