@@ -199,7 +199,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly logsLink: string;
 
-  private readonly featureFlagLink: string;
+  public readonly featureFlagLink: string;
 
   private readonly securityLink: string;
 
@@ -235,9 +235,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly confirmationModal: string;
 
-  private readonly modalDialog: string;
+  protected readonly modalDialog: string;
 
-  private readonly modalDialogYesButton: string;
+  protected readonly modalDialogYesButton: string;
 
   private readonly sfToolbarMainContentDiv: string;
 

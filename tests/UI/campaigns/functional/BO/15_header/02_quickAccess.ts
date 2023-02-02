@@ -79,7 +79,6 @@ describe('BO - Header : Quick access links', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToCreateLink', baseContext);
 
     await newVoucherPage.reloadPage(page);
-
     await newVoucherPage.goToManageQuickAccessPage(page);
 
     const pageTitle = await quickAccessPage.getPageTitle(page);

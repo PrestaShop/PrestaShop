@@ -83,7 +83,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   let availableStockVirtualProduct: number = 0;
   // Variable used for available stock of customized product
   let availableStockCustomizedProduct: number = 0;
-  let createProductMessage: string = '';
+  let createProductMessage: string|null = '';
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   // Constant used to add a prefix to created products
