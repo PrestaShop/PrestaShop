@@ -4,6 +4,12 @@ services:
     autowire: true
     autoconfigure: true
 
+  PrestaShopBundle\Form\Admin\Extension\:
+    resource: "../../../../../Form/Admin/Extension/*"
+  PrestaShopBundle\Form\Extension\:
+    resource: "../../../../../Form/Extension/*"
+
+
   PrestaShopBundle\Form\Admin\Extension\CommaTransformerExtension:
   PrestaShopBundle\Form\Admin\Type\ResizableTextType:
 
@@ -13,13 +19,10 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
       - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
 
-
-  # These two are the same one is adding help config and the other one is adding hint
+  PrestaShopBundle\Form\Extension\DataListExtension:
   PrestaShopBundle\Form\Admin\Extension\HelpTextExtension:
   PrestaShopBundle\Form\Admin\Extension\HintTextExtension:
-
   PrestaShopBundle\Form\Admin\Extension\DefaultEmptyDataExtension:
-  PrestaShopBundle\Form\Extension\DataListExtension:
   PrestaShopBundle\Form\Admin\Extension\RowAttributesExtension:
   PrestaShopBundle\Form\Admin\Extension\ExternalLinkExtension:
   PrestaShopBundle\Form\Admin\Extension\AlertExtension:
