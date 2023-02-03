@@ -55,6 +55,8 @@ ALTER TABLE `PREFIX_tax_rule` MODIFY `id_county` INT NOT NULL AFTER `id_country`
 
 UPDATE `PREFIX_address_format` set `format`='firstname lastname
 company
+siret
+vat_number
 address1 address2
 city, State:name postcode
 Country:name
