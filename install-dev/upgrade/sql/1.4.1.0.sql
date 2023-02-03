@@ -29,10 +29,12 @@ CREATE TABLE `PREFIX_address_format` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 INSERT INTO `PREFIX_address_format` (`id_country`, `format`)
-(SELECT `id_country` as id_country, 'firstname lastname\ncompany\nvat_number\naddress1\naddress2\npostcode city\ncountry\nphone' as format FROM PREFIX_country);
+(SELECT `id_country` as id_country, 'firstname lastname\ncompany\nsiret\nvat_number\naddress1\naddress2\npostcode city\ncountry\nphone' as format FROM PREFIX_country);
 
 UPDATE `PREFIX_address_format` set `format`='firstname lastname
 company
+siret
+vat_number
 address1
 address2
 city State:name postcode 
