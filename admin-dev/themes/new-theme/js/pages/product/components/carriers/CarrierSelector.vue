@@ -95,12 +95,7 @@
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';
   import ProductEventMap from '@pages/product/product-event-map';
-
-  export interface Carrier {
-    id: number,
-    name: string,
-    label: string,
-  }
+  import {Carrier} from '@pages/product/components/carriers/types';
 
   export default defineComponent({
     name: 'CarrierSelector',

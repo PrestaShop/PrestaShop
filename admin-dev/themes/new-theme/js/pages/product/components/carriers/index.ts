@@ -25,10 +25,11 @@
 
 import {createApp, App} from 'vue';
 import EventEmitter from '@components/event-emitter';
-import CarrierSelector, {Carrier} from '@pages/product/components/carriers/CarrierSelector.vue';
+import CarrierSelector from '@pages/product/components/carriers/CarrierSelector.vue';
 import {createI18n} from 'vue-i18n';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import ProductMap from '@pages/product/product-map';
+import {Carrier} from '@pages/product/components/carriers/types';
 
 /**
  * @param {string} carrierChoicesSelector
