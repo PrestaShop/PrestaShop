@@ -3,66 +3,30 @@ services:
     public: false
     autowire: true
     autoconfigure: true
+    bind:
+      $multistoreFeature: '@prestashop.adapter.feature.multistore'
+      $defaultCurrencyId: '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+      $formRenderer: '@twig.form.renderer'
+      $multistoreCheckboxEnabler: '@prestashop.multistore_checkbox_enabler'
+      $flashBag: '@session.flash_bag'
+      $addDisablingSwitchListener: '@form.event_listener.add_disabling_switch_listener'
 
   PrestaShopBundle\Form\Admin\Extension\:
     resource: "../../../../../Form/Admin/Extension/*"
+
   PrestaShopBundle\Form\Extension\:
     resource: "../../../../../Form/Extension/*"
-
-
-  PrestaShopBundle\Form\Admin\Extension\CommaTransformerExtension:
-  PrestaShopBundle\Form\Admin\Type\ResizableTextType:
-
-  PrestaShopBundle\Form\Admin\Type\CustomMoneyType:
-    arguments:
-      - '@prestashop.core.localization.locale.context_locale'
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
-
-  PrestaShopBundle\Form\Extension\DataListExtension:
-  PrestaShopBundle\Form\Admin\Extension\HelpTextExtension:
-  PrestaShopBundle\Form\Admin\Extension\HintTextExtension:
-  PrestaShopBundle\Form\Admin\Extension\DefaultEmptyDataExtension:
-  PrestaShopBundle\Form\Admin\Extension\RowAttributesExtension:
-  PrestaShopBundle\Form\Admin\Extension\ExternalLinkExtension:
-  PrestaShopBundle\Form\Admin\Extension\AlertExtension:
-  PrestaShopBundle\Form\Admin\Extension\LabelOptionsExtension:
-  PrestaShopBundle\Form\Admin\Extension\UnitTypeExtension:
-  PrestaShopBundle\Form\Admin\Extension\MultistoreExtension:
-  PrestaShopBundle\Form\Admin\Extension\ColumnsNumberExtension:
-
-  PrestaShopBundle\Form\Admin\Extension\FormThemeExtension:
-    arguments:
-      - '@twig.form.renderer'
-
-  PrestaShopBundle\Form\Admin\Extension\MultistoreConfigurationTypeExtension:
-    arguments:
-      - '@prestashop.multistore_checkbox_enabler'
-
-  PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension:
-  PrestaShopBundle\Form\Admin\Extension\AlertsTrackingExtension:
-    arguments:
-      - '@session.flash_bag'
-  PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension:
-    arguments:
-      - '@prestashop.adapter.feature.multistore'
-      - '@prestashop.adapter.shop.context'
-      - '@translator'
-
-  PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension:
-    arguments:
-      - '@form.event_listener.add_disabling_switch_listener'
 
   form.extension.comma_transformer:
     alias: 'PrestaShopBundle\Form\Admin\Extension\CommaTransformerExtension'
     deprecated: ~
     public: true
   form.type.extension.money:
-    alias: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'
+    alias: 'PrestaShopBundle\Form\Admin\Extension\CustomMoneyTypeExtension'
     deprecated: ~
     public: true
   form.type.extension.resizable_text:
-    alias: 'PrestaShopBundle\Form\Admin\Type\ResizableTextType'
+    alias: 'PrestaShopBundle\Form\Extension\ResizableTextTypeExtension'
     deprecated: ~
     public: true
   form.extension.help_text:

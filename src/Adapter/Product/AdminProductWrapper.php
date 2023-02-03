@@ -41,7 +41,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Form\Admin\Type\CustomMoneyType;
+use PrestaShopBundle\Form\Extension\CustomMoneyType;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
