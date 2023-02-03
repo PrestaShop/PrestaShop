@@ -352,7 +352,11 @@
           // check if image is associated with current shop.
           // If shop_ids is missing, it means the image is being uploaded, therefore it is not PSDropzoneFile type,
           // so it will be associated to the shop by default
-          file.isAssociatedToCurrentShop = !file.shop_ids || file.shop_ids.includes(this.shopId);
+          if (!file.shop_ids) {
+            file.shop_ids = [this.shopId];
+          }
+
+          file.isAssociatedToCurrentShop = file.shop_ids.includes(this.shopId);
 
           if (!file.isAssociatedToCurrentShop) {
             file.previewElement.classList.add('not-associated');
