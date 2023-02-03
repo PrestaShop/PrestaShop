@@ -57,6 +57,8 @@ export default class ProductTypeSwitcher {
 
     this.productId = parseInt($productForm.data('productId'), 10);
     this.initialType = <string> this.$typeSelector.val();
+
+    this.$productTypePreview.on('click', () => this.showSelectionModal());
   }
 
   private showSelectionModal() {

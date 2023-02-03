@@ -26,7 +26,6 @@
 import _ from 'lodash';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
@@ -57,8 +56,6 @@ export default class ProductPartialUpdater {
   private $productFormGoToCatalogButton: JQuery;
 
   private $productFormCancelButton: JQuery;
-
-  private $productTypeSwitcher: ProductTypeSwitcher;
 
   private $productTypePreview: JQuery;
 
@@ -94,7 +91,6 @@ export default class ProductPartialUpdater {
     this.$productFormNewProductButton = $productFormNewProductButton;
     this.$productFormGoToCatalogButton = $productFormGoToCatalogButton;
     this.$productFormCancelButton = $productFormCancelButton;
-    this.$productTypeSwitcher = new ProductTypeSwitcher($(ProductMap.productForm));
     this.$productTypePreview = $(ProductMap.productType.headerPreviewButton);
     this.initialData = {};
 
