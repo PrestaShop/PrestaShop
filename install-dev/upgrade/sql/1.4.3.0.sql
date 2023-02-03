@@ -2,6 +2,8 @@ SET NAMES 'utf8';
 
 UPDATE `PREFIX_address_format` SET `format`='firstname lastname
 company
+siret
+vat_number
 address1
 address2
 city
