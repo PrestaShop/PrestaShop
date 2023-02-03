@@ -1227,22 +1227,36 @@ class ValidateCore
      *
      * @return bool Return true if is valid
      */
-    public static function isSiret($siret)
+ public static function isSiret($siret)
     {
-        if (Tools::strlen($siret) != 14) {
-            return false;
-        }
-        $sum = 0;
-        for ($i = 0; $i != 14; ++$i) {
-            $tmp = ((($i + 1) % 2) + 1) * (int) ($siret[$i]);
-            if ($tmp >= 10) {
-                $tmp -= 9;
-            }
-            $sum += $tmp;
-        }
-
-        return $sum % 10 === 0;
+    return (bool)preg_match('/^[0-9]{8,11}$/', $siret);
     }
+	
+		    /**
+     * Validate VAT code.
+     *
+     * @param string $vat APE Code VAT code
+     *
+     * @return bool Return true if is valid
+     */
+    public static function isvat_number($vat_number)
+    {
+        return (bool) preg_match('/^\d[0-9]{8,17}[a-zA-Z]{3}$/', $vat_number);
+    }
+	
+
+	    /**
+     * Validate Iban code.
+     *
+     * @param string $Iban code
+     *
+     * @return bool Return true if is valid
+     */
+    public static function isIban($iban)
+    {
+        return (bool) preg_match('/^[0-9]{14,18}[a-zA-Z]{6}$/S', $iban);
+    }
+	
 
     /**
      * Validate APE Code.
