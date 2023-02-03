@@ -1657,6 +1657,9 @@ class FrontControllerCore extends Controller
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
+            'registration_number_Siret' => Configuration::get('PS_SHOP_SIRET'),
+            'registration_number_VAT_number' => Configuration::get('PS_SHOP_VAT_NUMBER'),
+            'registration_number_Iban' => Configuration::get('PS_SHOP_IBAN'),
 
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
