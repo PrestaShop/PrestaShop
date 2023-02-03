@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type AttributeValueData from '@data/faker/attributeValue';
+
+import type {Page} from 'playwright';
 
 /**
  * Add value page, contains functions that can be used on the page
@@ -7,6 +10,26 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddValue extends BOBasePage {
+  public readonly createPageTitle: string;
+
+  public readonly editPageTitle: string;
+
+  private readonly attributeGroupSelect: string;
+
+  private readonly valueInput: string;
+
+  private readonly urlInput: string;
+
+  private readonly metaTitleInput: string;
+
+  private readonly colorInput: string;
+
+  private readonly textureFileInput: string;
+
+  private readonly saveButton: string;
+
+  private readonly saveAndStayButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add value page
@@ -37,11 +60,11 @@ class AddValue extends BOBasePage {
   /**
    * Fill value form and save it
    * @param page {Page} Browser tab
-   * @param valueData {ValueData} Data to set on add/edit value form
+   * @param valueData {AttributeValueData} Data to set on add/edit value form
    * @param saveAndStay {boolean} True if we need to save and stay, false if not
    * @return {Promise<string>}
    */
-  async addEditValue(page, valueData, saveAndStay = false) {
+  async addEditValue(page: Page, valueData: AttributeValueData, saveAndStay: boolean = false): Promise<string> {
     // Set group and value
     await this.selectByVisibleText(page, this.attributeGroupSelect, valueData.attributeName);
     await this.setValue(page, this.valueInput, valueData.value);
@@ -68,4 +91,4 @@ class AddValue extends BOBasePage {
   }
 }
 
-module.exports = new AddValue();
+export default new AddValue();
