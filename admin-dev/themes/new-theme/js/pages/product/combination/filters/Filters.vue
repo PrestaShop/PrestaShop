@@ -36,13 +36,13 @@
       <checkboxes-dropdown
         :key="filter.id"
         v-for="filter in filters"
-        :items="filter.attributes"
+        :choices="filter.attributes"
         :parent-id="filter.id"
         :label="filter.name"
         :event-emitter="eventEmitter"
-        :clear-selected-items-event="clearSelectedFiltersEvent"
-        @addItem="addFilter"
-        @removeItem="removeFilter"
+        :clear-selected-choices-event="clearSelectedFiltersEvent"
+        @selectChoice="addFilter"
+        @unselectChoice="removeFilter"
       />
       <button
         type="button"
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-  import CheckboxesDropdown from '@app/components/CheckboxesDropdown.vue';
+  import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';

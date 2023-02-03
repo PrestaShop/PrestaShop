@@ -29,16 +29,16 @@
     >
       <div
         class="carrier-selector-line"
-        v-if="carriers.length"
+        v-if="carrierChoices.length"
       >
         <checkboxes-dropdown
-          :items="carriers"
+          :choices="carrierChoices"
           :label="getLabel"
-          @addItem="addCarrier"
-          @removeItem="removeCarrier"
+          @selectChoice="addCarrier"
+          @unselectChoice="removeCarrier"
           :event-emitter="eventEmitter"
-          :initial-item-ids="this.initialCarrierIds"
-          :clear-selected-items-event="this.clearSelectedCarriersEvent"
+          :initial-choice-ids="this.initialCarrierIds"
+          :clear-selected-choices-event="this.clearSelectedCarriersEvent"
         />
         <button
           type="button"
@@ -75,11 +75,11 @@
 </template>
 
 <script lang="ts">
-  import CheckboxesDropdown from '@app/components/CheckboxesDropdown.vue';
+  import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
   import EventEmitter from '@components/event-emitter';
   import ProductEventMap from '@pages/product/product-event-map';
-  import {Carrier} from '@pages/product/components/carriers/types';
+  import {Choice} from '@app/components/checkboxes-dropdown/types';
 
   export default defineComponent({
     name: 'CarrierSelector',
@@ -97,8 +97,8 @@
         type: Array as PropType<number[]>,
         required: true,
       },
-      carriers: {
-        type: Array as PropType<Carrier[]>,
+      carrierChoices: {
+        type: Array as PropType<Choice[]>,
         required: true,
       },
       eventEmitter: {
@@ -117,8 +117,8 @@
       this.selectedCarrierIds = this.initialCarrierIds;
     },
     computed: {
-      getSelectedCarriers(): Carrier[] {
-        return this.carriers.filter((carrier: Carrier) => this.selectedCarrierIds.includes(carrier.id));
+      getSelectedCarriers(): Choice[] {
+        return this.carrierChoices.filter((carrier: Choice) => this.selectedCarrierIds.includes(carrier.id));
       },
       getLabel(): string {
         return this.selectedCarrierIds.length > 0
@@ -127,10 +127,10 @@
       },
     },
     methods: {
-      addCarrier(carrier: Carrier): void {
+      addCarrier(carrier: Choice): void {
         this.selectedCarrierIds.push(carrier.id);
       },
-      removeCarrier(carrier: Carrier): void {
+      removeCarrier(carrier: Choice): void {
         this.selectedCarrierIds = this.selectedCarrierIds.filter(
           (id: number) => carrier.id !== id,
         );
