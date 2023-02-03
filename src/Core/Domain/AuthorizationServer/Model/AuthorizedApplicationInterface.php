@@ -24,44 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
-
-interface AuthorizedApplicationRepositoryInterface
+interface AuthorizedApplicationInterface
 {
     /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
+     * @return int
      */
-    public function create(AuthorizedApplicationInterface $application): void;
+    public function getId(): int;
 
     /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
+     * @param int $id
      */
-    public function update(AuthorizedApplicationInterface $application): void;
+    public function setId(int $id): void;
 
     /**
-     * @param ApplicationId $applicationId
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
+     * @return string
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface;
+    public function getName(): string;
 
     /**
      * @param string $name
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
      */
-    public function getByName(string $name): ?AuthorizedApplicationInterface;
+    public function setName(string $name): void;
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string;
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void;
 }

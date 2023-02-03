@@ -24,44 +24,67 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
-
-interface AuthorizedApplicationRepositoryInterface
+interface ApiAccessInterface
 {
     /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
+     * @return int
      */
-    public function create(AuthorizedApplicationInterface $application): void;
+    public function getId(): int;
 
     /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
+     * @param int $id
      */
-    public function update(AuthorizedApplicationInterface $application): void;
+    public function setId(int $id): void;
 
     /**
-     * @param ApplicationId $applicationId
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
+     * @return string
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface;
+    public function getClientId(): string;
 
     /**
-     * @param string $name
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
+     * @param string $clientId
      */
-    public function getByName(string $name): ?AuthorizedApplicationInterface;
+    public function setClientId(string $clientId): void;
+
+    /**
+     * @return string
+     */
+    public function getClientSecret(): string;
+
+    /**
+     * @param mixed $clientSecret
+     */
+    public function setClientSecret($clientSecret): void;
+
+    /**
+     * @return AuthorizedApplicationInterface
+     */
+    public function getAuthorizedApplication(): AuthorizedApplicationInterface;
+
+    /**
+     * @param AuthorizedApplicationInterface $authorizedApplication
+     */
+    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): void;
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool;
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active): void;
+
+    /**
+     * @return array
+     */
+    public function getScopes(): array;
+
+    /**
+     * @param array $scopes
+     */
+    public function setScopes(array $scopes): void;
 }

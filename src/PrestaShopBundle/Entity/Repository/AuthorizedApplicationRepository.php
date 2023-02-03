@@ -30,16 +30,16 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
-use PrestaShopBundle\Entity\AuthorizedApplication;
 
 class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function create(AuthorizedApplication $application): void
+    public function create(AuthorizedApplicationInterface $application): void
     {
         $this->getEntityManager()->persist($application);
         $this->getEntityManager()->flush();
@@ -48,7 +48,7 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
     /**
      * {@inheritdoc}
      */
-    public function update(AuthorizedApplication $application): void
+    public function update(AuthorizedApplicationInterface $application): void
     {
         $this->getEntityManager()->flush();
     }
@@ -56,7 +56,7 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
     /**
      * {@inheritdoc}
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplication
+    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface
     {
         $application = $this->find($applicationId->getValue());
         if ($application === null) {
@@ -69,7 +69,7 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
     /**
      * {@inheritdoc}
      */
-    public function getByName(string $name): ?AuthorizedApplication
+    public function getByName(string $name): ?AuthorizedApplicationInterface
     {
         $application = $this->findOneBy(['name' => $name]);
         if ($application === null) {

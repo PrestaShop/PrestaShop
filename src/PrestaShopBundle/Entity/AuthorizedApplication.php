@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -36,7 +37,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table()
  * @UniqueEntity("name")
  */
-class AuthorizedApplication
+class AuthorizedApplication implements AuthorizedApplicationInterface
 {
     /**
      * @var int

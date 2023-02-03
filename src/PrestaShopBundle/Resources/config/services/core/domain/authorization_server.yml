@@ -19,3 +19,7 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing'
+
+  PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory: ~
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationFactoryInterface: '@PrestaShopBundle\Model\AuthorizationServer\AuthorizedApplicationFactory'

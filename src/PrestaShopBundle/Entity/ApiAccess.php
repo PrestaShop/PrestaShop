@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -36,7 +38,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table()
  * @UniqueEntity("name")
  */
-class ApiAccess
+class ApiAccess implements ApiAccessInterface
 {
     /**
      * @var int
@@ -62,7 +64,7 @@ class ApiAccess
     private $clientSecret;
 
     /**
-     * @var AuthorizedApplication
+     * @var AuthorizedApplicationInterface
      *
      * @ORM\ManyToOne(targetEntity=AuthorizedApplication::class)
      * @ORM\JoinColumn(name="id_authorized_application", referencedColumnName="id_authorized_application", nullable=false, onDelete="CASCADE")
@@ -130,17 +132,17 @@ class ApiAccess
     }
 
     /**
-     * @return AuthorizedApplication
+     * @return AuthorizedApplicationInterface
      */
-    public function getAuthorizedApplication(): AuthorizedApplication
+    public function getAuthorizedApplication(): AuthorizedApplicationInterface
     {
         return $this->authorizedApplication;
     }
 
     /**
-     * @param AuthorizedApplication $authorizedApplication
+     * @param AuthorizedApplicationInterface $authorizedApplication
      */
-    public function setAuthorizedApplication(AuthorizedApplication $authorizedApplication): void
+    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): void
     {
         $this->authorizedApplication = $authorizedApplication;
     }
