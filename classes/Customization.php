@@ -41,7 +41,11 @@ class CustomizationCore extends ObjectModel
     /** @var int */
     public $id_product;
 
-    /** @var int */
+    /**
+     * @deprecated Since 9.0.0. Use the quantity from the table cart_product instead.
+     *
+     * @var int
+     */
     public $quantity;
 
     /** @var int */

@@ -4386,7 +4386,6 @@ class CartCore extends ObjectModel
                 $customs_by_id[$custom['id_customization']] = [
                     'id_product_attribute' => $custom['id_product_attribute'],
                     'id_product' => $custom['id_product'],
-                    'quantity' => $custom['quantity'],
                 ];
             }
         }
