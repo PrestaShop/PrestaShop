@@ -1,2 +1,24 @@
 imports:
   - { resource: form/*.yml }
+
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+    bind:
+      $multistoreFeature: '@prestashop.adapter.feature.multistore'
+      $defaultCurrencyId: '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+      $formRenderer: '@twig.form.renderer'
+      $flashBag: '@session.flash_bag'
+      $addDisablingSwitchListener: '@form.event_listener.add_disabling_switch_listener'
+      $locale: '@prestashop.core.localization.locale.context_locale'
+      $multistoreController: '@prestashop.core.admin.multistore'
+
+  PrestaShopBundle\Form\Extension\:
+    resource: "../../../../../Form/Extension/*"
+
+  PrestaShopBundle\Form\FormCloner:
+  PrestaShopBundle\Form\FormBuilderModifier:
+  PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler:
+    public: true

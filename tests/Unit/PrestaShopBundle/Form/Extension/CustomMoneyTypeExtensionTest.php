@@ -25,17 +25,17 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Form\Admin\Extension;
+namespace Tests\Unit\PrestaShopBundle\Form\Extension;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
-use PrestaShopBundle\Form\Extension\CustomMoneyType;
+use PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
-class CustomMoneyTypeTest extends TestCase
+class CustomMoneyTypeExtensionTest extends TestCase
 {
     private const DEFAULT_CURRENCY_ID = 1;
 
@@ -55,7 +55,7 @@ class CustomMoneyTypeTest extends TestCase
     ): void {
         $currencyRepository = $this->createMock(CurrencyRepository::class);
         $currencyRepository->method('getIsoCode')->willReturn($currencyIso);
-        $customMoneyType = new CustomMoneyType(
+        $customMoneyType = new CustomMoneyTypeExtension(
             $this->mockLocale($cldrPattern, $symbol),
             self::DEFAULT_CURRENCY_ID,
             $currencyRepository

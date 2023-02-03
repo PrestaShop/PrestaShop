@@ -26,48 +26,57 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class MultistoreExtension extends AbstractTypeExtension
+/**
+ * Appends alert messages from session flashbag to form vars.
+ *
+ * Usage example: when form is rendered in iframe modal, success alerts allows identifying if it was rendered after
+ * successful redirect. This way we can automatically close the modal knowing that the action was successful.
+ */
+class AlertsTrackingExtension extends AbstractTypeExtension
 {
+    /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
+     * @param FlashBagInterface $flashBag
+     */
+    public function __construct(
+        FlashBagInterface $flashBag
+    ) {
+        $this->flashBag = $flashBag;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        //We dont want to add alerts on every single child form, just the parent one.
+        if ($form->getParent()) {
+            return;
+        }
+
+        /*
+         * Example: ['alerts' => ['success' => ['Success message'], 'error' => ['Invalid data']]]
+         */
+        $view->vars['alerts'] = $this->flashBag->peekAll();
+    }
+
     /**
      * {@inheritdoc}
      */
     public static function getExtendedTypes(): iterable
     {
         return [FormType::class];
-    }
-
-    /**
-     * @param FormView $view
-     * @param FormInterface $form
-     * @param array $options
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options): void
-    {
-        parent::buildView($view, $form, $options);
-
-        $view->vars = array_replace($view->vars, ['multistore_dropdown' => $options['multistore_dropdown']]);
-    }
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefaults(
-            [
-                'multistore_dropdown' => false,
-                'multistore_configuration_key' => null,
-            ]
-        );
     }
 }

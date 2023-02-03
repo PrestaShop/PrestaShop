@@ -24,14 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -44,7 +44,7 @@ class CustomMoneyTypeExtension extends AbstractTypeExtension
     public const PRESTASHOP_DECIMALS = 6;
 
     /**
-     * @var LocaleInterface
+     * @var Locale
      */
     private $locale;
 
@@ -59,12 +59,12 @@ class CustomMoneyTypeExtension extends AbstractTypeExtension
     private $currencyRepository;
 
     /**
-     * @param LocaleInterface $locale
+     * @param Locale $locale
      * @param int $defaultCurrencyId
      * @param CurrencyRepository $currencyRepository
      */
     public function __construct(
-        LocaleInterface $locale,
+        Locale $locale,
         int $defaultCurrencyId,
         CurrencyRepository $currencyRepository
     ) {

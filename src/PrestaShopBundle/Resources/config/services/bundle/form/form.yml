@@ -1,25 +1,13 @@
 services:
-  _defaults:
-    public: false
-
-  PrestaShopBundle\Form\FormCloner:
-
   form.form_cloner:
     alias: PrestaShopBundle\Form\FormCloner
-    public: true
     deprecated: ~
+    public: true
 
   form.form_builder_modifier:
-    class: PrestaShopBundle\Form\FormBuilderModifier
+    alias: PrestaShopBundle\Form\FormBuilderModifier
+    deprecated: ~
     public: true
-
-  PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler:
-    arguments:
-      - '@prestashop.adapter.feature.multistore'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.shop.context'
-      - '@prestashop.core.admin.multistore'
-      - '@form.form_cloner'
 
   prestashop.multistore_checkbox_enabler:
     alias: 'PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler'

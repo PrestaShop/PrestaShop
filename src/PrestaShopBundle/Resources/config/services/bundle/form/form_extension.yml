@@ -1,28 +1,10 @@
 services:
-  _defaults:
-    public: false
-    autowire: true
-    autoconfigure: true
-    bind:
-      $multistoreFeature: '@prestashop.adapter.feature.multistore'
-      $defaultCurrencyId: '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-      $formRenderer: '@twig.form.renderer'
-      $multistoreCheckboxEnabler: '@prestashop.multistore_checkbox_enabler'
-      $flashBag: '@session.flash_bag'
-      $addDisablingSwitchListener: '@form.event_listener.add_disabling_switch_listener'
-
-  PrestaShopBundle\Form\Admin\Extension\:
-    resource: "../../../../../Form/Admin/Extension/*"
-
-  PrestaShopBundle\Form\Extension\:
-    resource: "../../../../../Form/Extension/*"
-
   form.extension.comma_transformer:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\CommaTransformerExtension'
+    alias: 'PrestaShopBundle\Form\Extension\CommaTransformerExtension'
     deprecated: ~
     public: true
   form.type.extension.money:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\CustomMoneyTypeExtension'
+    alias: 'PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension'
     deprecated: ~
     public: true
   form.type.extension.resizable_text:
@@ -30,15 +12,15 @@ services:
     deprecated: ~
     public: true
   form.extension.help_text:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\HelpTextExtension'
+    alias: 'PrestaShopBundle\Form\Extension\HelpTextExtension'
     deprecated: ~
     public: true
   form.extension.hint_text:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\HintTextExtension'
+    alias: 'PrestaShopBundle\Form\Extension\HintTextExtension'
     deprecated: ~
     public: true
   form.extension.default_empty_data:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\DefaultEmptyDataExtension'
+    alias: 'PrestaShopBundle\Form\Extension\DefaultEmptyDataExtension'
     deprecated: ~
     public: true
   form.extension.data_list:
@@ -46,55 +28,55 @@ services:
     deprecated: ~
     public: true
   form.extension.row_attributes:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\RowAttributesExtension'
+    alias: 'PrestaShopBundle\Form\Extension\RowAttributesExtension'
     deprecated: ~
     public: true
   form.extension.external_link:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\ExternalLinkExtension'
+    alias: 'PrestaShopBundle\Form\Extension\ExternalLinkExtension'
     deprecated: ~
     public: true
   form.extension.alert:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\AlertExtension'
+    alias: 'PrestaShopBundle\Form\Extension\AlertExtension'
     deprecated: ~
     public: true
   form.extension.label_options:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\LabelOptionsExtension'
+    alias: 'PrestaShopBundle\Form\Extension\LabelOptionsExtension'
     deprecated: ~
     public: true
   form.extension.form_theme:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\FormThemeExtension'
+    alias: 'PrestaShopBundle\Form\Extension\FormThemeExtension'
     deprecated: ~
     public: true
   form.extension.columns_number:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\ColumnsNumberExtension'
+    alias: 'PrestaShopBundle\Form\Extension\ColumnsNumberExtension'
     deprecated: ~
     public: true
   form.extension.multistore_configuration:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\MultistoreConfigurationTypeExtension'
+    alias: 'PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension'
     deprecated: ~
     public: true
   form.extension.unit:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\UnitTypeExtension'
+    alias: 'PrestaShopBundle\Form\Extension\UnitTypeExtension'
     deprecated: ~
     public: true
   form.extension.multistore_dropdown:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\MultistoreExtension'
+    alias: 'PrestaShopBundle\Form\Extension\MultistoreExtension'
     deprecated: ~
     public: true
   form.extension.downloadable_file:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
+    alias: 'PrestaShopBundle\Form\Extension\DownloadFileExtension'
     deprecated: ~
     public: true
   form.extension.alerts_tracking_extension:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\AlertsTrackingExtension'
+    alias: 'PrestaShopBundle\Form\Extension\AlertsTrackingExtension'
     deprecated: ~
     public: true
   form.extension.modify_all_shops_extension:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension'
+    alias: 'PrestaShopBundle\Form\Extension\ModifyAllShopsExtension'
     deprecated: ~
     public: true
   form.extension.disabling_switch_extension:
-    alias: 'PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension'
+    alias: 'PrestaShopBundle\Form\Extension\DisablingSwitchExtension'
     deprecated: ~
     public: true
 

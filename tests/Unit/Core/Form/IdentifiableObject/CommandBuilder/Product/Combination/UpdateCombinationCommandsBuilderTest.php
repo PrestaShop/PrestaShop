@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshol
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
 {

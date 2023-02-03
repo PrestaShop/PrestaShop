@@ -24,36 +24,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Appends alert messages from session flashbag to form vars.
- *
- * Usage example: when form is rendered in iframe modal, success alerts allows identifying if it was rendered after
- * successful redirect. This way we can automatically close the modal knowing that the action was successful.
+ * Class HelpTextExtension extends every form type with additional help text options.
  */
-class AlertsTrackingExtension extends AbstractTypeExtension
+class HelpTextExtension extends AbstractTypeExtension
 {
     /**
-     * @var FlashBagInterface
+     * {@inheritdoc}
      */
-    private $flashBag;
-
-    /**
-     * @param FlashBagInterface $flashBag
-     */
-    public function __construct(
-        FlashBagInterface $flashBag
-    ) {
-        $this->flashBag = $flashBag;
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'help' => null,
+            ])
+            ->setAllowedTypes('help', ['null', 'string'])
+        ;
     }
 
     /**
@@ -61,15 +55,7 @@ class AlertsTrackingExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        //We dont want to add alerts on every single child form, just the parent one.
-        if ($form->getParent()) {
-            return;
-        }
-
-        /*
-         * Example: ['alerts' => ['success' => ['Success message'], 'error' => ['Invalid data']]]
-         */
-        $view->vars['alerts'] = $this->flashBag->peekAll();
+        $view->vars['help'] = $options['help'] ?? null;
     }
 
     /**

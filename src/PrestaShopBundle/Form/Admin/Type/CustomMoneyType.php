@@ -26,8 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-
-use PrestaShopBundle\Form\Admin\Extension\CustomMoneyTypeExtension;
+use PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension;
 
 class CustomMoneyType extends CustomMoneyTypeExtension
 {

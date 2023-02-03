@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Closure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

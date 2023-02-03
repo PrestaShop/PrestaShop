@@ -26,25 +26,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Adds the "columns_number" option to all Form Types.
- *
- * You can use it together with the UI kit form theme to adapt the display of a form group into columns,
- * the form theme will add a class that affects the display into flex container with fixed size for sub elements.
- *
- * ```
- * 'columns_number' => 4,
- * ```
+ * Adds a unit suffix to form type.
  */
-class ColumnsNumberExtension extends AbstractTypeExtension
+class UnitTypeExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
@@ -52,12 +46,10 @@ class ColumnsNumberExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
-                'columns_number' => null,
-                'column_breaker' => false,
-            ])
-            ->setAllowedTypes('columns_number', ['null', 'int'])
-            ->setAllowedTypes('column_breaker', ['bool'])
+            ->setDefined('unit')
+            ->setDefault('prepend_unit', false)
+            ->setAllowedTypes('unit', 'string')
+            ->setAllowedTypes('prepend_unit', 'bool')
         ;
     }
 
@@ -66,10 +58,10 @@ class ColumnsNumberExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (!empty($options['columns_number'])) {
-            $view->vars['columns_number'] = $options['columns_number'];
+        if (isset($options['unit'])) {
+            $view->vars['unit'] = $options['unit'];
+            $view->vars['prepend_unit'] = $options['prepend_unit'];
         }
-        $view->vars['column_breaker'] = $options['column_breaker'];
     }
 
     /**
@@ -77,6 +69,6 @@ class ColumnsNumberExtension extends AbstractTypeExtension
      */
     public static function getExtendedTypes(): iterable
     {
-        return [FormType::class];
+        return [IntegerType::class, NumberType::class];
     }
 }
