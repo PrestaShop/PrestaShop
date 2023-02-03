@@ -250,7 +250,6 @@ export default class ProductPartialUpdater {
       this.$productFormPreviewButton.removeClass('disabled');
       this.$productFormDuplicateButton.removeClass('disabled');
       this.$productFormNewProductButton.removeClass('disabled');
-      this.$productTypeSwitcher.registerProductTypePreviewOnClickEvent();
       this.$productTypePreview.removeClass('disabled');
     } else {
       this.$productFormSubmitButton.prop('disabled', false);
@@ -281,7 +280,11 @@ export default class ProductPartialUpdater {
     Object.keys(this.initialData).forEach((fieldName) => {
       const fieldValue = this.initialData[fieldName];
 
-      if (_.isEqual(currentData[fieldName], fieldValue)) {
+      // Field is absent in the new data (it was not in the initial) we force it to empty string (not null
+      // or it will be ignored)
+      if (!Object.prototype.hasOwnProperty.call(currentData, fieldName)) {
+        currentData[fieldName] = '';
+      } else if (_.isEqual(currentData[fieldName], fieldValue)) {
         delete currentData[fieldName];
       }
     });
