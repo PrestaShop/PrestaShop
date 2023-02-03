@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type BrandData from '@data/faker/brand';
+
+import type {Page} from 'playwright';
 
 /**
  * Add brand page, contains selectors and functions for the page
@@ -7,6 +10,38 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddBrand extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly shortDescriptionDiv: string;
+
+  private readonly shortDescriptionLangLink: (lang: string) => string;
+
+  private readonly shortDescriptionIFrame: (id: number) => string;
+
+  private readonly descriptionDiv: string;
+
+  private readonly descriptionIFrame: (id: number) => string;
+
+  private readonly logoFileInput: string;
+
+  private readonly metaTitleInput: (id: number) => string;
+
+  private readonly metaDescriptionInput: (id: number) => string;
+
+  private readonly metaKeywordsInput: (id: number) => string;
+
+  private readonly statusToggleInput: (toggle: number) => string;
+
+  private readonly taggableFieldDiv: (lang: string) => string;
+
+  private readonly deleteKeywordLink: (lang: string) => string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on add brand page
@@ -20,19 +55,19 @@ class AddBrand extends BOBasePage {
     // Selectors
     this.nameInput = '#manufacturer_name';
     this.shortDescriptionDiv = '#manufacturer_short_description';
-    this.shortDescriptionLangLink = (lang) => `${this.shortDescriptionDiv} li.nav-item a[data-locale='${lang}']`;
-    this.shortDescriptionIFrame = (id) => `${this.shortDescriptionDiv} #manufacturer_short_description_${id}_ifr`;
+    this.shortDescriptionLangLink = (lang: string) => `${this.shortDescriptionDiv} li.nav-item a[data-locale='${lang}']`;
+    this.shortDescriptionIFrame = (id: number) => `${this.shortDescriptionDiv} #manufacturer_short_description_${id}_ifr`;
     this.descriptionDiv = '#manufacturer_description';
-    this.descriptionIFrame = (id) => `${this.descriptionDiv} #manufacturer_description_${id}_ifr`;
+    this.descriptionIFrame = (id: number) => `${this.descriptionDiv} #manufacturer_description_${id}_ifr`;
     this.logoFileInput = '#manufacturer_logo';
-    this.metaTitleInput = (id) => `#manufacturer_meta_title_${id}`;
-    this.metaDescriptionInput = (id) => `#manufacturer_meta_description_${id}`;
-    this.metaKeywordsInput = (id) => `#manufacturer_meta_keyword_${id}-tokenfield`;
-    this.statusToggleInput = (toggle) => `#manufacturer_is_enabled_${toggle}`;
+    this.metaTitleInput = (id: number) => `#manufacturer_meta_title_${id}`;
+    this.metaDescriptionInput = (id: number) => `#manufacturer_meta_description_${id}`;
+    this.metaKeywordsInput = (id: number) => `#manufacturer_meta_keyword_${id}-tokenfield`;
+    this.statusToggleInput = (toggle: number) => `#manufacturer_is_enabled_${toggle}`;
 
     // Selectors for Meta keywords
-    this.taggableFieldDiv = (lang) => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = (lang) => `${this.taggableFieldDiv(lang)} a.close`;
+    this.taggableFieldDiv = (lang: string) => `div.input-group div.js-locale-${lang}`;
+    this.deleteKeywordLink = (lang: string) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 
@@ -46,7 +81,7 @@ class AddBrand extends BOBasePage {
    * @param brandData {BrandData} Data to set in brand form
    * @returns {Promise<string>}
    */
-  async createEditBrand(page, brandData) {
+  async createEditBrand(page: Page, brandData: BrandData): Promise<string> {
     // Fill Name
     await this.setValue(page, this.nameInput, brandData.name);
     // Fill information in english
@@ -84,7 +119,7 @@ class AddBrand extends BOBasePage {
    * @param lang {string} To specify which input to empty
    * @return {Promise<void>}
    */
-  async deleteKeywords(page, lang = 'en') {
+  async deleteKeywords(page: Page, lang: string = 'en'): Promise<void> {
     const closeButtons = await page.$$(this.deleteKeywordLink(lang));
 
     /* eslint-disable no-await-in-loop, no-restricted-syntax */
@@ -101,7 +136,7 @@ class AddBrand extends BOBasePage {
    * @param id {number} ID for lang (1 for en, 2 for fr)
    * @return {Promise<void>}
    */
-  async addKeywords(page, keywords, id = 1) {
+  async addKeywords(page: Page, keywords: string[], id: number = 1): Promise<void> {
     /* eslint-disable no-await-in-loop, no-restricted-syntax */
     for (const keyword of keywords) {
       await page.type(this.metaKeywordsInput(id), keyword);
@@ -116,12 +151,12 @@ class AddBrand extends BOBasePage {
    * @param lang {string} Language to choose
    * @return {Promise<void>}
    */
-  async changeLanguage(page, lang) {
+  async changeLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
-      page.$eval(this.shortDescriptionLangLink(lang), (el) => el.click()),
+      page.$eval(this.shortDescriptionLangLink(lang), (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.shortDescriptionLangLink(lang)}.active`),
     ]);
   }
 }
 
-module.exports = new AddBrand();
+export default new AddBrand();
