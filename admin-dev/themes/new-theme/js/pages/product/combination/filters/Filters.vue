@@ -39,8 +39,6 @@
         :choices="filter.attributes"
         :parent-id="filter.id"
         :label="filter.name"
-        :event-emitter="eventEmitter"
-        :clear-selected-choices-event="clearSelectedFiltersEvent"
         @selectChoice="addFilter"
         @unselectChoice="removeFilter"
       />
@@ -58,10 +56,10 @@
 </template>
 
 <script lang="ts">
-  import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
-  import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
+  import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
   import EventEmitter from '@components/event-emitter';
+  import ProductEventMap from '@pages/product/product-event-map';
 
   const CombinationEvents = ProductEventMap.combinations;
 

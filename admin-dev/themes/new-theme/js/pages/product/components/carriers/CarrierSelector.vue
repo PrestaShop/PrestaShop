@@ -36,9 +36,7 @@
           :label="getLabel"
           @selectChoice="addCarrier"
           @unselectChoice="removeCarrier"
-          :event-emitter="eventEmitter"
-          :initial-choice-ids="this.initialCarrierIds"
-          :clear-selected-choices-event="this.clearSelectedCarriersEvent"
+          :selected-choice-ids="this.selectedCarrierIds"
         />
         <button
           type="button"
@@ -58,10 +56,10 @@
       <span>
         <ul>
           <li
-            v-for="(selectedCarrier, key) in getSelectedCarriers"
+            v-for="(selectedCarrier, key) in selectedCarriers"
             :key="key"
           >
-            {{ selectedCarrier.label }}<span v-if="key !== getSelectedCarriers.length -1 ">, </span>
+            {{ selectedCarrier.label }}<span v-if="key !== selectedCarriers.length -1 ">, </span>
             <input
               :name="choiceInputName"
               type="hidden"
@@ -77,7 +75,6 @@
 <script lang="ts">
   import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
-  import EventEmitter from '@components/event-emitter';
   import ProductEventMap from '@pages/product/product-event-map';
   import {Choice} from '@app/components/checkboxes-dropdown/types';
 
@@ -101,10 +98,6 @@
         type: Array as PropType<Choice[]>,
         required: true,
       },
-      eventEmitter: {
-        type: Object as PropType<typeof EventEmitter>,
-        required: true,
-      },
       choiceInputName: {
         type: String,
         required: true,
@@ -117,7 +110,7 @@
       this.selectedCarrierIds = this.initialCarrierIds;
     },
     computed: {
-      getSelectedCarriers(): Choice[] {
+      selectedCarriers(): Choice[] {
         return this.carrierChoices.filter((carrier: Choice) => this.selectedCarrierIds.includes(carrier.id));
       },
       getLabel(): string {
@@ -136,7 +129,6 @@
         );
       },
       clearAllSelected(): void {
-        this.eventEmitter.emit(this.clearSelectedCarriersEvent);
         this.selectedCarrierIds = [];
       },
     },

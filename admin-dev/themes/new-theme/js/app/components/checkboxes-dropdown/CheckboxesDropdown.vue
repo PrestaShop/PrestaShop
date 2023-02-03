@@ -30,7 +30,7 @@
         :class="[
           'btn',
           'dropdown-toggle',
-          selectedChoices.length > 0 ? 'btn-primary' : 'btn-outline-secondary',
+          selectedChoiceIds.length > 0 ? 'btn-primary' : 'btn-outline-secondary',
           'btn',
           {disabled: this.disabled}
         ]"
@@ -73,17 +73,9 @@
 
 <script lang="ts">
   import {defineComponent, PropType} from 'vue';
-  import EventEmitter from '@components/event-emitter';
   import {Choice} from '@app/components/checkboxes-dropdown/types';
 
   export default defineComponent({
-    data(): {
-      selectedChoices: Array<Record<string, any>>
-    } {
-      return {
-        selectedChoices: [],
-      };
-    },
     props: {
       parentId: {
         type: Number,
@@ -93,7 +85,7 @@
         type: Array as PropType<Choice[]>,
         required: true,
       },
-      initialChoiceIds: {
+      selectedChoiceIds: {
         type: Array as PropType<number[]>,
         default: () => [],
       },
@@ -101,53 +93,31 @@
         type: String,
         required: true,
       },
-      eventEmitter: {
-        type: Object as PropType<typeof EventEmitter>,
-        required: true,
-      },
-      // provide this property if you need to clear all selected events from parent component
-      clearSelectedChoicesEvent: {
-        type: String,
-        default: '',
-      },
       disabled: {
         type: Boolean,
         default: false,
       },
     },
-    mounted() {
-      this.selectedChoices = this.choices.filter((item) => this.initialChoiceIds.includes(item.id));
-      if (this.clearSelectedChoicesEvent) {
-        this.eventEmitter.on(this.clearSelectedChoicesEvent, () => this.clear());
-      }
-    },
     computed: {
       nbFiles(): string | null {
-        return this.selectedChoices.length > 0
-          ? `(${this.selectedChoices.length})`
+        return this.selectedChoiceIds.length > 0
+          ? `(${this.selectedChoiceIds.length})`
           : null;
       },
     },
     methods: {
       isSelected(item: Record<string, any>): boolean {
-        return this.selectedChoices.some((e) => item.id === e.id);
+        return this.selectedChoiceIds.some((id) => item.id === id);
       },
       toggleSelection(item: Record<string, any>): void {
-        if (this.selectedChoices.some((e) => item.id === e.id)) {
+        if (this.selectedChoiceIds.some((id) => item.id === id)) {
           this.$emit('unselectChoice', item, this.parentId);
-          this.selectedChoices = this.selectedChoices.filter(
-            (selectedItem) => selectedItem.id !== item.id,
-          );
         } else {
           this.$emit('selectChoice', item, this.parentId);
-          this.selectedChoices.push(item);
         }
       },
       preventClose(event: Event): void {
         event.stopPropagation();
-      },
-      clear(): void {
-        this.selectedChoices = [];
       },
     },
   });

@@ -24,7 +24,6 @@
  */
 
 import {createApp, App} from 'vue';
-import EventEmitter from '@components/event-emitter';
 import CarrierSelector from '@pages/product/components/carriers/CarrierSelector.vue';
 import {createI18n} from 'vue-i18n';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
@@ -32,14 +31,10 @@ import ProductMap from '@pages/product/product-map';
 import {Choice} from '@app/components/checkboxes-dropdown/types';
 
 /**
- * @param {string} carrierChoicesSelector
- * @param {EventEmitter} eventEmitter
- * @param {array} carriers
  * @returns {Vue | CombinedVueInstance<Vue, {eventEmitter, carriers}, object, object, Record<never, any>>}
  */
 export default function initCarrierSelector(
   carrierChoicesSelector: string,
-  eventEmitter: typeof EventEmitter,
 ): App {
   const container = <HTMLElement> document.querySelector(carrierChoicesSelector);
   const translations = JSON.parse(<string>container.dataset.translations);
@@ -83,7 +78,6 @@ export default function initCarrierSelector(
     initialCarrierIds,
     modifyAllShopsName: <string>container.dataset.modifyAllShopsName,
     choiceInputName,
-    eventEmitter,
   }).use(i18n);
 
   vueApp.mount(carrierChoicesSelector);
