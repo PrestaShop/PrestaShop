@@ -60,7 +60,7 @@ final class ColorBrightnessCalculator
         $hexColor = str_replace('#', '', $hexColor);
 
         if (strlen($hexColor) === 3) {
-            $hexColor .= $hexColor;
+            $hexColor = $hexColor[0] . $hexColor[0] . $hexColor[1] . $hexColor[1] . $hexColor[2] . $hexColor[2];
         }
 
         $r = hexdec(substr($hexColor, 0, 2));
