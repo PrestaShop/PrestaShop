@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShopBundle\Api\Api;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -76,9 +77,11 @@ $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
 
+$catch = strpos($request->getRequestUri(), Api::API_BASE_PATH) !== false;
+
 try {
     require_once __DIR__.'/../autoload.php';
-    $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+    $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, $catch);
     $response->send();
     $kernel->terminate($request, $response);
 } catch (NotFoundHttpException $exception) {
