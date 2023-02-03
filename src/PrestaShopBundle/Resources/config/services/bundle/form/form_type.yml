@@ -24,10 +24,6 @@ services:
       - '@prestashop.bundle.form.data_transformer.idn_converter'
 
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
-    arguments:
-      - "@translator"
-      - "@form.form_cloner"
-
   PrestaShopBundle\Form\Admin\Category\SimpleCategory:
     arguments:
       - "@translator"
@@ -505,7 +501,7 @@ services:
   PrestaShopBundle\Form\Admin\Type\PriceReductionType:
     arguments:
       $defaultCurrency: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      $eventSubscriber: '@form.event_listener.price_reduction'
+      $eventSubscriber: '@PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
       $taxInclusionChoiceProvider: '@prestashop.core.form.choice_provider.tax_inclusion'
 
 
@@ -612,8 +608,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
   PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
     arguments:
-      $productTypeListener: '@form.type.sell.product.event_listener.product_type_listener'
-      $toolbarButtonsProvider: '@form.type.sell.product.toolbar_buttons_provider'
+      $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
 
 
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
@@ -648,7 +643,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType:
     arguments:
       $defaultCategoryChoiceProvider: '@prestashop.adapter.form.choice_provider.product_default_category_choice_provider'
-      $eventSubscriber: '@form.type.sell.product.event_listener.categories_listener'
+      $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTagsCollectionType:
   PrestaShopBundle\Form\Admin\Sell\Product\Category\ProductCategoryType:
@@ -661,7 +656,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
     arguments:
       $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
-      $featureValueListener: '@form.type.sell.product.event_listener.feature_value_listener'
+      $featureValueListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType:
   PrestaShopBundle\Form\Admin\Sell\Product\Details\CustomizationsType:
@@ -683,7 +678,6 @@ services:
     arguments:
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
       $router: "@router"
-      $formCloner: '@form.form_cloner'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:
@@ -768,7 +762,7 @@ services:
     arguments:
       $router: '@router'
       $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
-      $eventSubscriber: '@form.type.sell.product.event_listener.redirect_option_listener'
+      $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
       $employeeIsoCode: '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
       $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
 
@@ -793,7 +787,6 @@ services:
       $currencyByIdChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
       $defaultCurrencyIsoCode: "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
       $currencyRepository: '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
-      $formCloner: '@form.form_cloner'
 
   PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType:
     arguments:
@@ -890,8 +883,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType:
-    arguments:
-      $formCloner: '@form.form_cloner'
 
   PrestaShopBundle\Form\Admin\Type\EntitySearchInputType:
   PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType:
@@ -919,58 +910,33 @@ services:
   PrestaShopBundle\Form\Admin\Type\DisablingSwitchType:
   PrestaShopBundle\Form\Admin\Type\FormattedTextareaType:
 
-  # events listener
-  form.event_listener.add_disabling_switch_listener:
-    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
-    public: true
-    arguments:
-      - '@form.form_cloner'
   form.type.sell.product.event_listener.combination_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
     public: true
 
-  form.event_listener.price_reduction:
-    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
-
-
-  form.type.sell.product.event_listener.feature_value_listener:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener:
     arguments:
-      - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
-      - '@form.form_cloner'
-    public: true
+      $featureValuesChoiceProvider: '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
-      - '@form.form_cloner'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-    public: false
+      $combinationRepository: '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
 
-  form.type.sell.product.event_listener.product_type_listener:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
-    public: true
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener:
     arguments:
       - '@prestashop.adapter.legacy.hook'
 
-  form.type.sell.product.event_listener.redirect_option_listener:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
-    public: true
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener:
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener:
+  PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener:
+  PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener:
 
-  form.type.sell.product.event_listener.categories_listener:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
+  PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider:
     arguments:
-      - '@form.form_cloner'
-    public: true
+      $helpUrlProvider: '@prestashop.adapter.shop.url.help_provider'
+      $moduleDataProvider: '@prestashop.adapter.data_provider.module'
 
-  form.type.sell.product.toolbar_buttons_provider:
-    class: 'PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider'
-    arguments:
-      - '@translator'
-      - '@router'
-      - '@prestashop.adapter.shop.url.help_provider'
-      - '@prestashop.adapter.data_provider.module'
-      - '@prestashop.adapter.legacy.context'
-
+  PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface: '@PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceKeyType:
     arguments:
@@ -983,3 +949,33 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
     arguments:
       $isShopFeatureEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
+
+  # Deprecated
+  form.type.sell.product.event_listener.categories_listener:
+    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
+    public: true
+    deprecated: ~
+  form.type.sell.product.event_listener.feature_value_listener:
+    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
+    public: true
+    deprecated: ~
+  form.event_listener.add_disabling_switch_listener:
+    alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
+    public: true
+    deprecated: ~
+  form.type.sell.product.event_listener.product_type_listener:
+    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
+    public: true
+    deprecated: ~
+  form.event_listener.price_reduction:
+    alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
+    public: true
+    deprecated: ~
+  form.type.sell.product.toolbar_buttons_provider:
+    alias: 'PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface'
+    public: true
+    deprecated: ~
+  form.type.sell.product.event_listener.redirect_option_listener:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
+    public: true
+    deprecated: ~
