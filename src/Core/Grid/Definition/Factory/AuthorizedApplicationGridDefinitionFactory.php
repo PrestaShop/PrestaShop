@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use DeleteActionTrait;
-
     public const GRID_ID = 'authorized_application';
 
     /**
@@ -73,7 +72,7 @@ final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefin
                     ->setOptions([
                         'field' => 'name',
                         'route' => 'admin_authorized_applications_view',
-                        'route_param_name' => 'authorizedApplicationId',
+                        'route_param_name' => 'applicationId',
                         'route_param_field' => 'id_authorized_application',
                     ])
             )
@@ -107,7 +106,7 @@ final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefin
             ->setIcon('edit')
             ->setOptions([
                 'route' => 'admin_authorized_applications_edit',
-                'route_param_name' => 'authorizedApplicationId',
+                'route_param_name' => 'applicationId',
                 'route_param_field' => 'id_authorized_application',
             ])
             )
@@ -117,7 +116,7 @@ final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefin
                     ->setIcon('zoom_in')
                     ->setOptions([
                         'route' => 'admin_authorized_applications_view',
-                        'route_param_name' => 'authorizedApplicationId',
+                        'route_param_name' => 'applicationId',
                         'route_param_field' => 'id_authorized_application',
                         'clickable_row' => true,
                     ])
@@ -125,7 +124,7 @@ final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefin
             ->add(
                 $this->buildDeleteAction(
                     'admin_authorized_applications_delete',
-                    'authorizedApplicationId',
+                    'applicationId',
                     'id_authorized_application'
                 )
             );

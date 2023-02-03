@@ -26,56 +26,43 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
-use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+interface AuthorizedApplicationRepositoryInterface
 {
     /**
-     * {@inheritdoc}
+     * @param AuthorizedApplication $application
+     *
+     * @return void
      */
-    public function create(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
-    }
+    public function create(AuthorizedApplication $application): void;
 
     /**
-     * {@inheritdoc}
+     * @param AuthorizedApplication $application
+     *
+     * @return void
      */
-    public function update(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->flush();
-    }
+    public function update(AuthorizedApplication $application): void;
 
     /**
-     * {@inheritdoc}
+     * @param ApplicationId $applicationId
+     *
+     * @throws ApplicationNotFoundException
+     *
+     * @return AuthorizedApplication|null
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplication
-    {
-        $application = $this->find($applicationId->getValue());
-        if ($application === null) {
-            throw new ApplicationNotFoundException(sprintf('Application with id "%d" was not found.', $applicationId->getValue()));
-        }
-
-        return $application;
-    }
+    public function getById(ApplicationId $applicationId): ?AuthorizedApplication;
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @throws ApplicationNotFoundException
+     *
+     * @return AuthorizedApplication|null
      */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        $application = $this->findOneBy(['name' => $name]);
-        if ($application === null) {
-            throw new ApplicationNotFoundException(sprintf('Application with name "%d" was not found.', $name));
-        }
-
-        return $application;
-    }
+    public function getByName(string $name): ?AuthorizedApplication;
 }

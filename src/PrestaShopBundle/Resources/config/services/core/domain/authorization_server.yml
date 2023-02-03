@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface: '@PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository'
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\AddApplicationHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand'
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler\EditApplicationHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand'
+
+  PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler\GetApplicationForEditingHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing'

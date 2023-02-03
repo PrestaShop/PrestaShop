@@ -26,56 +26,39 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
 
-use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Handles query which gets application for editing
+ */
+class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @var AuthorizedApplicationRepositoryInterface
      */
-    public function create(AuthorizedApplication $application): void
+    private $applicationRepository;
+
+    public function __construct(AuthorizedApplicationRepositoryInterface $applicationRepository)
     {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
+        $this->applicationRepository = $applicationRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update(AuthorizedApplication $application): void
+    public function handle(GetApplicationForEditing $query)
     {
-        $this->getEntityManager()->flush();
-    }
+        $application = $this->applicationRepository->getById($query->getApplicationId());
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplication
-    {
-        $application = $this->find($applicationId->getValue());
         if ($application === null) {
-            throw new ApplicationNotFoundException(sprintf('Application with id "%d" was not found.', $applicationId->getValue()));
+            throw new ApplicationNotFoundException(sprintf('Application with id "%d" was not found.', $query->getApplicationId()->getValue()));
         }
 
-        return $application;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        $application = $this->findOneBy(['name' => $name]);
-        if ($application === null) {
-            throw new ApplicationNotFoundException(sprintf('Application with name "%d" was not found.', $name));
-        }
-
-        return $application;
+        return new EditableApplication($query->getApplicationId(), $application->getName(), $application->getDescription());
     }
 }
