@@ -41,7 +41,6 @@ Pre-condition:
 - Create new order by default customer
 - Enable merchandise returns
 Scenario
-- Check that no merchandise returns has been requested
 - Create merchandise returns
 - Check merchandise returns details with all status
 Post-condition:
@@ -83,53 +82,7 @@ describe('FO - Account : Consult return details', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Case 1 : Check that no merchandise returns has been requested', async () => {
-    it('should go to FO home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount1', baseContext);
-
-      await homePage.goToFo(page);
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
-    });
-
-    it('should login', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
-
-      await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, Customers.johnDoe);
-
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
-    });
-
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage0', baseContext);
-
-      await homePage.goToMyAccountPage(page);
-
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myAccountPage.pageTitle);
-    });
-
-    it('should click on \'Merchandise returns\' link', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnMerchandiseReturnsLink', baseContext);
-
-      await myAccountPage.goToMerchandiseReturnsPage(page);
-
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
-    });
-
-    it('should check that no merchandise returns has been requested', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNoMerchandiseReturns', baseContext);
-
-      const alert = await foMerchandiseReturnsPage.getAlertText(page);
-      await expect(alert).to.equal(foMerchandiseReturnsPage.alertNoMerchandiseReturns);
-    });
-  });
-
-  describe(`Case 2 : Check merchandise returns status '${OrderReturnStatuses.waitingForConfirmation.name}'`, async () => {
+  describe(`Case 1 : Check merchandise returns status '${OrderReturnStatuses.waitingForConfirmation.name}'`, async () => {
     describe(`Change the created orders status to '${OrderStatuses.shipped.name}'`, async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
@@ -228,6 +181,16 @@ describe('FO - Account : Consult return details', async () => {
 
         const isHomePage = await homePage.isHomePage(page);
         await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      });
+
+      it('should login', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
+
+        await homePage.goToLoginPage(page);
+        await loginPage.customerLogin(page, Customers.johnDoe);
+
+        const isCustomerConnected = await loginPage.isCustomerConnected(page);
+        await expect(isCustomerConnected).to.be.true;
       });
 
       it('should go to my account page', async function () {
@@ -332,7 +295,7 @@ describe('FO - Account : Consult return details', async () => {
     {args: {status: OrderReturnStatuses.returnCompleted.name}},
   ];
   tests.forEach((test, index) => {
-    describe(`Case ${index + 3} : Check merchandise returns with the status ${test.args.status}`, async () => {
+    describe(`Case ${index + 2} : Check merchandise returns with the status ${test.args.status}`, async () => {
       describe('Change the merchandise returns status', async () => {
         it('should go to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToBO${index}`, baseContext);
