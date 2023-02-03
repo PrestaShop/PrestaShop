@@ -26,6 +26,12 @@ Feature: Add product to pack from Back Office (BO)
     And attribute "M" named "M" in en language exists
     And attribute "White" named "White" in en language exists
     And attribute "Black" named "Black" in en language exists
+    And I associate attribute group "Size" with shops "shop1,shop2"
+    And I associate attribute group "Color" with shops "shop1,shop2"
+    And I associate attribute "S" with shops "shop1,shop2"
+    And I associate attribute "M" with shops "shop1,shop2"
+    And I associate attribute "White" with shops "shop1,shop2"
+    And I associate attribute "Black" with shops "shop1,shop2"
 
   Scenario: I add standard product to a multishop pack, all shops are synced
     Given I add product "productPack1" to shop shop1 with following information:

@@ -96,13 +96,18 @@ export default class CombinationsService {
 
   /**
    * @param {number} productId
+   * @param {number|null} shopId
    * @param {Record<number, number[]>} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
    */
-  generateCombinations(productId: number, data: Record<number, number[]>): JQuery.jqXHR {
+  generateCombinations(productId: number, shopId: number|null, data: Record<number, number[]>): JQuery.jqXHR {
+    const routeParams = <Record<string, number>> {productId};
+
+    if (shopId) {
+      routeParams.shopId = shopId;
+    }
+
     return $.ajax({
-      url: this.router.generate('admin_products_combinations_generate', {
-        productId,
-      }),
+      url: this.router.generate('admin_products_combinations_generate', routeParams),
       data,
       method: 'POST',
     });

@@ -195,9 +195,6 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         $this->assertCombinationExists($combinationId);
         $this->attributeRepository->assertAllAttributesExist($attributeIds);
 
-        // @todo: need to check if these doesn't exist?
-        // especially when dealing with combination which has to be only added to another shop,
-        // then we get duplicate insert error :/
         $attributesList = [];
         foreach ($attributeIds as $attributeId) {
             $attributesList[] = [

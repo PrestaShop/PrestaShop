@@ -29,7 +29,7 @@
  */
 class AttributeGroupCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var string|string[] Name */
     public $name;
     /** @var bool Whether the attribute group is a color group */
     public $is_color_group;
@@ -37,7 +37,7 @@ class AttributeGroupCore extends ObjectModel
     public $position;
     /** @var string Group type */
     public $group_type;
-    /** @var string Public Name */
+    /** @var string|string[] Public Name */
     public $public_name;
 
     /**

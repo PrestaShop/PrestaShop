@@ -32,6 +32,7 @@ export default function initCombinationGenerator(
   combinationGeneratorSelector: string,
   eventEmitter: typeof EventEmitter,
   productId: number,
+  shopId: number,
 ): App {
   const container = <HTMLElement> document.querySelector(combinationGeneratorSelector);
 
@@ -45,6 +46,7 @@ export default function initCombinationGenerator(
   const vueApp = createApp(CombinationGenerator, {
     i18n,
     productId,
+    shopId,
     eventEmitter,
   }).use(i18n);
 

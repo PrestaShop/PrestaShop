@@ -28,6 +28,14 @@ Feature: Copy product from shop to shop.
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
+    And I associate attribute group "Size" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute group "Color" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "S" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "M" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "L" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "White" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Black" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Blue" with shops "shop1,shop2,shop3,shop4"
     And language "french" with locale "fr-FR" exists
     And I add product "standardProduct" to shop "shop2" with following information:
       | name[en-US] | magic staff |

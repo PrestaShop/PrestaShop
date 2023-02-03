@@ -116,9 +116,9 @@ default:
                 - "%paths.base%/Features/Scenario/Language"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\LanguageFeatureContext
         order:
             paths:
                 - "%paths.base%/Features/Scenario/Order"
@@ -168,19 +168,19 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         order_return_state:
-          paths:
-            - "%paths.base%/Features/Scenario/OrderReturnState"
-          contexts:
-            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\OrderReturnStateFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+            paths:
+                - "%paths.base%/Features/Scenario/OrderReturnState"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderReturnStateFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         order_state:
-          paths:
-            - "%paths.base%/Features/Scenario/OrderState"
-          contexts:
-            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\OrderStateFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+            paths:
+                - "%paths.base%/Features/Scenario/OrderState"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderStateFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         currency:
             paths:
                 - "%paths.base%/Features/Scenario/Currency"
@@ -214,15 +214,15 @@ default:
             paths:
                 - "%paths.base%/Features/Scenario/Tax"
             contexts:
-              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
         manufacturer:
             paths:
                 - "%paths.base%/Features/Scenario/Manufacturer"
             contexts:
-              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
         cms_page:
             paths:
                 - "%paths.base%/Features/Scenario/CmsPage"
@@ -241,33 +241,33 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         catalog_price_rule:
-          paths:
-            - "%paths.base%/Features/Scenario/CatalogPriceRule"
-          contexts:
-            - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CatalogPriceRuleContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
-            - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
-            - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+            paths:
+                - "%paths.base%/Features/Scenario/CatalogPriceRule"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CatalogPriceRuleContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         meta:
             paths:
                 - "%paths.base%/Features/Scenario/Meta"
@@ -298,22 +298,22 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
         misc:
             paths:
-              - "%paths.base%/Features/Scenario/Misc"
+                - "%paths.base%/Features/Scenario/Misc"
             contexts:
-              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\EmployeeFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\EmployeeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         address:
             paths:
-              - "%paths.base%/Features/Scenario/Address"
+                - "%paths.base%/Features/Scenario/Address"
             contexts:
-              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
         supplier:
             paths:
                 - "%paths.base%/Features/Scenario/Supplier"
@@ -393,7 +393,6 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\FeatureFlagFeatureContext
-
         security:
             paths:
                 - "%paths.base%/Features/Scenario/Security"
@@ -417,6 +416,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         search_engine:
@@ -535,8 +535,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderReturnFeatureContext
         customer_service:
-          paths:
-            - "%paths.base%/Features/Scenario/CustomerService"
-          contexts:
-            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CustomerServiceFeatureContext
+            paths:
+                - "%paths.base%/Features/Scenario/CustomerService"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerServiceFeatureContext
