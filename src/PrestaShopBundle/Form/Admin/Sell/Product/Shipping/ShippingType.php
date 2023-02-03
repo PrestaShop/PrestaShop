@@ -29,10 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Shipping;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -85,9 +83,6 @@ class ShippingType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $modifyAllShopsInputName = ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX . 'carriers';
-        $carrierChoices = $this->carrierChoiceProvider->getChoices();
-
         $builder
             ->add('dimensions', DimensionsType::class)
             ->add('delivery_time_note_type', ChoiceType::class, [
@@ -115,15 +110,12 @@ class ShippingType extends TranslatorAwareType
                 'default_empty_data' => 0.0,
                 'modify_all_shops' => true,
             ])
-            // related all shops checkbox is rendered in javascript side, but it is still needed here to be correctly filled with data
-            ->add($modifyAllShopsInputName, HiddenType::class)
             ->add('carriers', ChoiceType::class, [
-                'choices' => $carrierChoices,
+                'choices' => $this->carrierChoiceProvider->getChoices(),
                 'label_attr' => [
                     'class' => 'carrier-choice-label',
                 ],
                 'attr' => [
-                    'data-modify-all-shops-name' => sprintf('product[shipping][%s]', $modifyAllShopsInputName),
                     'data-translations' => json_encode([
                         'allCarriers.label' => $this->trans('All carriers', 'Admin.Actions'),
                         'selectedCarriers.label' => $this->trans('Only selected carriers', 'Admin.Actions'),
@@ -135,6 +127,7 @@ class ShippingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
+                'modify_all_shops' => true,
             ])
         ;
     }

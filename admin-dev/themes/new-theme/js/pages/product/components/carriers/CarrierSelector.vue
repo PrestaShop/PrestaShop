@@ -26,7 +26,6 @@
   <div class="carrier-selector">
     <div
       class="form-check form-check-radio form-radio"
-      @click="showModifyAllShopsCheckbox"
     >
       <div
         class="carrier-selector-line"
@@ -72,21 +71,6 @@
         </ul>
       </span>
     </div>
-    <div
-      v-if="modifyAllShopsVisible"
-      class="form-check form-check-radio form-checkbox"
-    >
-      <div
-        class="md-checkbox md-checkbox-inline"
-      >
-        <label class="required">
-          <input
-            :name="modifyAllShopsName"
-            type="checkbox"
-            class="form-check-input"
-          ><i class="md-checkbox-control"/>{{ $t('modifyAllShops.label') }}</label>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -101,12 +85,10 @@
     name: 'CarrierSelector',
     data(): {
       selectedCarrierIds: number[],
-      modifyAllShopsVisible: boolean,
       clearSelectedCarriersEvent: string,
     } {
       return {
         selectedCarrierIds: [],
-        modifyAllShopsVisible: false,
         clearSelectedCarriersEvent: ProductEventMap.shipping.clearSelectedCarriers,
       };
     },
@@ -121,10 +103,6 @@
       },
       eventEmitter: {
         type: Object as PropType<typeof EventEmitter>,
-        required: true,
-      },
-      modifyAllShopsName: {
-        type: String,
         required: true,
       },
       choiceInputName: {
@@ -149,9 +127,6 @@
       },
     },
     methods: {
-      showModifyAllShopsCheckbox(): void {
-        this.modifyAllShopsVisible = true;
-      },
       addCarrier(carrier: Carrier): void {
         this.selectedCarrierIds.push(carrier.id);
       },
