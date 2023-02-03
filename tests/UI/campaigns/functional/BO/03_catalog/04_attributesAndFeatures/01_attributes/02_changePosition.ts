@@ -79,8 +79,8 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
 
       const sortedTable = await attributesPage.getAllRowsColumnContent(page, 'a!position');
 
-      const nonSortedTableFloat = await nonSortedTable.map((text: string): number => parseFloat(text));
-      const sortedTableFloat = await sortedTable.map((text: string): number => parseFloat(text));
+      const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
+      const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
       const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
       await expect(sortedTableFloat).to.deep.equal(expectedResult);
