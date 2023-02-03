@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type BrandAddressData from '@data/faker/brandAddress';
+
+import type {Page} from 'playwright';
 
 /**
  * Add brand address page, contains selectors and functions for the page
@@ -7,6 +10,32 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddBrandAddress extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly brandSelect: string;
+
+  private readonly lastnameInput: string;
+
+  private readonly firstnameInput: string;
+
+  private readonly addressInput: string;
+
+  private readonly secondaryAddressInput: string;
+
+  private readonly postalCodeInput: string;
+
+  private readonly cityInput: string;
+
+  private readonly countrySelect: string;
+
+  private readonly homePhoneInput: string;
+
+  private readonly mobilePhoneInput: string;
+
+  private readonly otherInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on add brand address page
@@ -40,7 +69,7 @@ class AddBrandAddress extends BOBasePage {
    * @param brandAddressData {BrandAddressData} Data to set in address form
    * @return {Promise<string>}
    */
-  async createEditBrandAddress(page, brandAddressData) {
+  async createEditBrandAddress(page: Page, brandAddressData: BrandAddressData): Promise<string> {
     // Fill information data
     await this.selectByVisibleText(page, this.brandSelect, brandAddressData.brandName);
     await this.setValue(page, this.lastnameInput, brandAddressData.lastName);
@@ -61,4 +90,4 @@ class AddBrandAddress extends BOBasePage {
   }
 }
 
-module.exports = new AddBrandAddress();
+export default new AddBrandAddress();

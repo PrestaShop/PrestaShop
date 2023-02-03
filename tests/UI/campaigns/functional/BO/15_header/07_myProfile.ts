@@ -15,7 +15,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import loginPage from '@pages/BO/login';
 import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/products/index';
+import productsPage from '@pages/BO/catalog/products';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';

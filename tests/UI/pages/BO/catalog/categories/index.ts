@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Categories page, contains functions that can be used on the page
@@ -7,6 +8,82 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Categories extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly pageRootTitle: string;
+
+  public readonly successfulUpdateStatusMessage: string;
+
+  private readonly editHomeCategoryButton: string;
+
+  private readonly addNewCategoryLink: string;
+
+  private readonly categoryGridPanel: string;
+
+  private readonly categoryGridTitle: string;
+
+  private readonly categoriesListForm: string;
+
+  private readonly categoriesListTableRow: (row: number) => string;
+
+  private readonly categoriesListTableColumn: (row: number, column: string) => string;
+
+  private readonly categoriesListTableDraggableColumn: (row: number) => string;
+
+  private readonly categoriesListTableToggleDropDown: (row: number, column: string) => string;
+
+  private readonly categoriesListTableDeleteLink: (row: number, column: string) => string;
+
+  private readonly categoriesListTableViewLink: (row: number, column: string) => string;
+
+  private readonly categoriesListTableEditLink: (row: number, column: string) => string;
+
+  private readonly categoriesListColumnStatus: (row: number) => string;
+
+  private readonly categoriesListColumnStatusToggleInput: (row: number) => string;
+
+  private readonly categoryFilterInput: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly selectAllRowsDiv: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkActionsEnableButton: string;
+
+  private readonly bulkActionsDisableButton: string;
+
+  private readonly bulkActionsDeleteButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly deleteCategoryModal: string;
+
+  private readonly deleteCategoryModalDeleteButton: string;
+
+  private readonly deleteCategoryModalModeInput: (id: number) => string;
+
+  private readonly categoryGridActionsButton: string;
+
+  private readonly gridActionDropDownMenu: string;
+
+  private readonly gridActionExportLink: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on categories page
@@ -28,24 +105,24 @@ class Categories extends BOBasePage {
     this.categoryGridPanel = '#category_grid_panel';
     this.categoryGridTitle = `${this.categoryGridPanel} h3.card-header-title`;
     this.categoriesListForm = '#category_grid';
-    this.categoriesListTableRow = (row) => `${this.categoriesListForm} tbody tr:nth-child(${row})`;
-    this.categoriesListTableColumn = (row, column) => `${this.categoriesListTableRow(row)} td.column-${column}`;
-    this.categoriesListTableDraggableColumn = (row) => `${this.categoriesListTableRow(row)
+    this.categoriesListTableRow = (row: number) => `${this.categoriesListForm} tbody tr:nth-child(${row})`;
+    this.categoriesListTableColumn = (row: number, column: string) => `${this.categoriesListTableRow(row)} td.column-${column}`;
+    this.categoriesListTableDraggableColumn = (row: number) => `${this.categoriesListTableRow(row)
     } td.column-position_drag span i`;
-    this.categoriesListTableToggleDropDown = (row, column) => `${this.categoriesListTableColumn(row, column)
+    this.categoriesListTableToggleDropDown = (row: number, column: string) => `${this.categoriesListTableColumn(row, column)
     } a[data-toggle='dropdown']`;
-    this.categoriesListTableDeleteLink = (row, column) => `${this.categoriesListTableColumn(row, column)
+    this.categoriesListTableDeleteLink = (row: number, column: string) => `${this.categoriesListTableColumn(row, column)
     } a.grid-delete-row-link`;
-    this.categoriesListTableViewLink = (row, column) => `${this.categoriesListTableColumn(row, column)
+    this.categoriesListTableViewLink = (row: number, column: string) => `${this.categoriesListTableColumn(row, column)
     } a.grid-view-row-link`;
-    this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
+    this.categoriesListTableEditLink = (row: number, column: string) => `${this.categoriesListTableColumn(row, column)
     } a.grid-edit-row-link`;
 
-    this.categoriesListColumnStatus = (row) => `${this.categoriesListTableColumn(row, 'active')} .ps-switch`;
-    this.categoriesListColumnStatusToggleInput = (row) => `${this.categoriesListColumnStatus(row)} input`;
+    this.categoriesListColumnStatus = (row: number) => `${this.categoriesListTableColumn(row, 'active')} .ps-switch`;
+    this.categoriesListColumnStatusToggleInput = (row: number) => `${this.categoriesListColumnStatus(row)} input`;
 
     // Filters
-    this.categoryFilterInput = (filterBy) => `${this.categoriesListForm} #category_${filterBy}`;
+    this.categoryFilterInput = (filterBy: string) => `${this.categoriesListForm} #category_${filterBy}`;
     this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
     this.filterResetButton = `${this.categoriesListForm} .grid-reset-button`;
 
@@ -58,13 +135,13 @@ class Categories extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.categoriesListForm} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Modal Dialog
     this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
     this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
-    this.deleteCategoryModalModeInput = (id) => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
+    this.deleteCategoryModalModeInput = (id: number) => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
 
     // Grid Actions
     this.categoryGridActionsButton = '#category-grid-actions-button';
@@ -86,7 +163,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewCategoryPage(page) {
+  async goToAddNewCategoryPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewCategoryLink);
   }
 
@@ -95,7 +172,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -106,7 +183,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.categoryGridTitle);
   }
 
@@ -115,7 +192,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -128,7 +205,7 @@ class Categories extends BOBasePage {
    * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
-  async filterCategories(page, filterType, filterBy, value = '') {
+  async filterCategories(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.categoryFilterInput(filterBy), value);
@@ -149,7 +226,7 @@ class Categories extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  async getStatus(page, row) {
+  async getStatus(page: Page, row: number): Promise<boolean> {
     // Get value of the check input
     const inputValue = await this.getAttributeContent(
       page,
@@ -168,7 +245,7 @@ class Categories extends BOBasePage {
    * @param valueWanted {boolean} True if we need to enable status, false if not
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page, row, valueWanted = true) {
+  async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
       await page.click(this.categoriesListColumnStatus(row));
 
@@ -190,7 +267,7 @@ class Categories extends BOBasePage {
    * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableCategories(page, row, column) {
+  async getTextColumnFromTableCategories(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.categoriesListTableColumn(row, column));
   }
 
@@ -200,7 +277,7 @@ class Categories extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<{name: string, description: string, id: string, position: number, status: boolean}>}
    */
-  async getCategoryFromTable(page, row) {
+  async getCategoryFromTable(page: Page, row: number) {
     return {
       id: await this.getTextColumnFromTableCategories(page, row, 'id_category'),
       name: await this.getTextColumnFromTableCategories(page, row, 'name'),
@@ -216,11 +293,11 @@ class Categories extends BOBasePage {
    * @param column {string} Column to get all rows column
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCategories(page, i, column);
       allRowsContentTable.push(rowContent);
     }
@@ -234,7 +311,7 @@ class Categories extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async goToEditCategoryPage(page, row) {
+  async goToEditCategoryPage(page: Page, row: number): Promise<void> {
     // Click on dropDown
     await Promise.all([
       page.click(this.categoriesListTableToggleDropDown(row, 'actions')),
@@ -250,7 +327,7 @@ class Categories extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async goToViewSubCategoriesPage(page, row) {
+  async goToViewSubCategoriesPage(page: Page, row: number): Promise<void> {
     if (
       await this.elementVisible(page, this.categoriesListTableViewLink(row, 'actions'), 100)
     ) {
@@ -267,7 +344,7 @@ class Categories extends BOBasePage {
    * @param modeID {number} Deletion method to choose in modal
    * @returns {Promise<string>}
    */
-  async deleteCategory(page, row, modeID = 0) {
+  async deleteCategory(page: Page, row: number, modeID: number = 0): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.click(this.categoriesListTableToggleDropDown(row, 'actions')),
@@ -292,7 +369,7 @@ class Categories extends BOBasePage {
    * @param modeID {number} Deletion mode ID to choose in modal
    * @return {Promise<void>}
    */
-  async chooseOptionAndDelete(page, modeID) {
+  async chooseOptionAndDelete(page: Page, modeID: number): Promise<void> {
     await this.setChecked(page, this.deleteCategoryModalModeInput(modeID));
     await this.clickAndWaitForNavigation(page, this.deleteCategoryModalDeleteButton);
     await this.waitForVisibleSelector(page, this.alertSuccessBlockParagraph);
@@ -304,10 +381,10 @@ class Categories extends BOBasePage {
    * @param enable {boolean} True if we need to enable status, false if not
    * @returns {Promise<string>}
    */
-  async bulkSetStatus(page, enable = true) {
+  async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
@@ -328,10 +405,10 @@ class Categories extends BOBasePage {
    * @param modeID {number} Deletion mode ID to choose in modal
    * @returns {Promise<string>}
    */
-  async deleteCategoriesBulkActions(page, modeID = 0) {
+  async deleteCategoriesBulkActions(page: Page, modeID: number = 0): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
@@ -356,9 +433,9 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @param actualPosition {number} Value of actual position
    * @param newPosition {number} Value of new position
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  async changeCategoryPosition(page, actualPosition, newPosition) {
+  async changeCategoryPosition(page: Page, actualPosition: number, newPosition: number): Promise<string|null> {
     await this.dragAndDrop(
       page,
       this.categoriesListTableDraggableColumn(actualPosition),
@@ -376,11 +453,11 @@ class Categories extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
@@ -394,9 +471,9 @@ class Categories extends BOBasePage {
   /**
    * Click on lint to export categories to a csv file
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  async exportDataToCsv(page) {
+  async exportDataToCsv(page: Page): Promise<string|null> {
     await Promise.all([
       page.click(this.categoryGridActionsButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
@@ -416,7 +493,7 @@ class Categories extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<string>}
    */
-  async getCategoryInCsvFormat(page, row) {
+  async getCategoryInCsvFormat(page: Page, row: number): Promise<string> {
     const category = await this.getCategoryFromTable(page, row);
 
     return `${category.id};`
@@ -431,7 +508,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToEditHomeCategoryPage(page) {
+  async goToEditHomeCategoryPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.editHomeCategoryButton);
   }
 
@@ -441,7 +518,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -451,7 +528,7 @@ class Categories extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -465,7 +542,7 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
@@ -475,10 +552,10 @@ class Categories extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
 }
 
-module.exports = new Categories();
+export default new Categories();

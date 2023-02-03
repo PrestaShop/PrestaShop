@@ -390,8 +390,8 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
         const sortedTable = await combinationsTab.getAllRowsColumnContent(page, 40, test.args.sortBy);
 
-        const nonSortedTableFloat: number[] = await nonSortedTable.map((text: string): number => parseFloat(text));
-        const sortedTableFloat: number[] = await sortedTable.map((text: string): number => parseFloat(text));
+        const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+        const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
         const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

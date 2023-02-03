@@ -1,7 +1,42 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type CategoryData from '@data/faker/category';
+
+import type {Page} from 'playwright';
 
 class AddCategory extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly displayedToggleInput: (toggle: number) => string;
+
+  private readonly descriptionIframe: string;
+
+  private readonly categoryCoverImage: string;
+
+  private readonly metaTitleInput: string;
+
+  private readonly metaDescriptionTextarea: string;
+
+  private readonly selectAllGroupAccessCheckbox: string;
+
+  private readonly saveCategoryButton: string;
+
+  private readonly rootCategoryNameInput: string;
+
+  private readonly rootCategoryDisplayedToggleInput: (toggle: number) => string;
+
+  private readonly rootCategoryDescriptionIframe: string;
+
+  private readonly rootCategoryCoverImage: string;
+
+  private readonly rootCategoryMetaTitleInput: string;
+
+  private readonly rootCategoryMetaDescriptionTextarea: string;
+
   constructor() {
     super();
 
@@ -10,7 +45,7 @@ class AddCategory extends BOBasePage {
 
     // Selectors
     this.nameInput = '#category_name_1';
-    this.displayedToggleInput = (toggle) => `#category_active_${toggle}`;
+    this.displayedToggleInput = (toggle: number) => `#category_active_${toggle}`;
     this.descriptionIframe = '#category_description_1_ifr';
     this.categoryCoverImage = '#category_cover_image';
     this.metaTitleInput = '#category_meta_title_1';
@@ -20,7 +55,7 @@ class AddCategory extends BOBasePage {
 
     // Selectors fo root category
     this.rootCategoryNameInput = '#root_category_name_1';
-    this.rootCategoryDisplayedToggleInput = (toggle) => `#root_category_active_${toggle}`;
+    this.rootCategoryDisplayedToggleInput = (toggle: number) => `#root_category_active_${toggle}`;
     this.rootCategoryDescriptionIframe = '#root_category_description_1_ifr';
     this.rootCategoryCoverImage = '#root_category_cover_image';
     this.rootCategoryMetaTitleInput = '#root_category_meta_title_1';
@@ -36,7 +71,7 @@ class AddCategory extends BOBasePage {
    * @param page
    * @return {Promise<void>}
    */
-  async selectAllGroups(page) {
+  async selectAllGroups(page: Page): Promise<void> {
     if (!(await page.isChecked(this.selectAllGroupAccessCheckbox))) {
       const parentElement = await this.getParentElement(page, this.selectAllGroupAccessCheckbox);
       await parentElement.click();
@@ -49,7 +84,7 @@ class AddCategory extends BOBasePage {
    * @param categoryData {CategoryData} Data to set on new/edit category form
    * @returns {Promise<string>}
    */
-  async createEditCategory(page, categoryData) {
+  async createEditCategory(page: Page, categoryData: CategoryData): Promise<string> {
     await this.setValue(page, this.nameInput, categoryData.name);
     await this.setChecked(page, this.displayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
@@ -69,7 +104,7 @@ class AddCategory extends BOBasePage {
    * @param categoryData {CategoryData} Data to set on edit home category form
    * @returns {Promise<string>}
    */
-  async editHomeCategory(page, categoryData) {
+  async editHomeCategory(page: Page, categoryData: CategoryData): Promise<string> {
     await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
     await this.setChecked(page, this.rootCategoryDisplayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);
@@ -83,4 +118,4 @@ class AddCategory extends BOBasePage {
   }
 }
 
-module.exports = new AddCategory();
+export default new AddCategory();

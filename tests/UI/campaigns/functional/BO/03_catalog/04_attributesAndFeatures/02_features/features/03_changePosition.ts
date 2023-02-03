@@ -72,8 +72,8 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
 
     const sortedTable = await featuresPage.getAllRowsColumnContent(page, 'a!position');
 
-    const nonSortedTableFloat: number[] = await nonSortedTable.map((text: string): number => parseFloat(text));
-    const sortedTableFloat: number[] = await sortedTable.map((text: string): number => parseFloat(text));
+    const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+    const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
     const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

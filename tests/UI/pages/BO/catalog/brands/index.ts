@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Brands page, contains selectors and functions for the page
@@ -7,6 +8,90 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Brands extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulUpdateStatusMessage: string;
+
+  private readonly suppliersNavItemLink: string;
+
+  private readonly newBrandLink: string;
+
+  private readonly newBrandAddressLink: string;
+
+  private readonly gridPanel: (table: string) => string;
+
+  private readonly gridTable: (table: string) => string;
+
+  private readonly gridHeaderTitle: (table: string) => string;
+
+  private readonly selectAllRowsLabel: (table: string) => string;
+
+  private readonly bulkActionsToggleButton: (table: string) => string;
+
+  private readonly confirmDeleteModal: (table: string) => string;
+
+  private readonly filterColumn: (table: string, filterBy: string) => string;
+
+  private readonly filterSearchButton: (table: string) => string;
+
+  private readonly filterResetButton: (table: string) => string;
+
+  private readonly tableBody: (table: string) => string;
+
+  private readonly tableRow: (table: string, row: number) => string;
+
+  private readonly tableColumn: (table: string, row: number, column: string) => string;
+
+  private readonly actionsColumn: (table: string, row: number) => string;
+
+  private readonly dropdownToggleButton: (table: string, row: number) => string;
+
+  private readonly dropdownToggleMenu: (table: string, row: number) => string;
+
+  private readonly deleteRowLink: (table: string, row: number) => string;
+
+  private readonly tableHead: (table: string) => string;
+
+  private readonly sortColumnDiv: (table: string, column: string) => string;
+
+  private readonly sortColumnSpanButton: (table: string, column: string) => string;
+
+  private readonly gridActionButton: (table: string) => string;
+
+  private readonly gridActionDropDownMenu: (table: string) => string;
+
+  private readonly gridActionExportLink: (table: string) => string;
+
+  private readonly confirmDeleteButton: (table: string) => string;
+
+  private readonly brandsTableColumnLogoImg: (row: number) => string;
+
+  private readonly brandsTableColumnStatus: (row: number) => string;
+
+  private readonly brandsTableColumnStatusToggleInput: (row: number) => string;
+
+  private readonly viewBrandLink: (row: number) => string;
+
+  private readonly editBrandLink: (row: number) => string;
+
+  private readonly bulkActionsEnableButton: string;
+
+  private readonly bulkActionsDisableButton: string;
+
+  private readonly deleteBrandsButton: string;
+
+  private readonly editBrandAddressLink: (row: number) => string;
+
+  private readonly deleteAddressesButton: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: (table: string) => string;
+
+  private readonly paginationNextLink: (table: string) => string;
+
+  private readonly paginationPreviousLink: (table: string) => string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on brands page
@@ -23,69 +108,68 @@ class Brands extends BOBasePage {
     this.newBrandAddressLink = '#page-header-desc-configuration-add_manufacturer_address';
 
     // Table Selectors
-    this.gridPanel = (table) => `#${table}_grid_panel`;
-    this.gridTable = (table) => `#${table}_grid_table`;
-    this.gridHeaderTitle = (table) => `${this.gridPanel(table)} h3.card-header-title`;
+    this.gridPanel = (table: string) => `#${table}_grid_panel`;
+    this.gridTable = (table: string) => `#${table}_grid_table`;
+    this.gridHeaderTitle = (table: string) => `${this.gridPanel(table)} h3.card-header-title`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = (table) => `${this.gridPanel(table)} tr.column-filters .grid_bulk_action_select_all`;
-    this.bulkActionsToggleButton = (table) => `${this.gridPanel(table)} button.js-bulk-actions-btn`;
-    this.confirmDeleteModal = (table) => `#${table}_grid_confirm_modal`;
-    this.confirmDeleteButton = 'button.btn-confirm-submit';
+    this.selectAllRowsLabel = (table: string) => `${this.gridPanel(table)} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = (table: string) => `${this.gridPanel(table)} button.js-bulk-actions-btn`;
+    this.confirmDeleteModal = (table: string) => `#${table}_grid_confirm_modal`;
 
     // Filters
-    this.filterColumn = (table, filterBy) => `${this.gridTable(table)} #${table}_${filterBy}`;
-    this.filterSearchButton = (table) => `${this.gridTable(table)} .grid-search-button`;
-    this.filterResetButton = (table) => `${this.gridTable(table)} .grid-reset-button`;
+    this.filterColumn = (table: string, filterBy: string) => `${this.gridTable(table)} #${table}_${filterBy}`;
+    this.filterSearchButton = (table: string) => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = (table: string) => `${this.gridTable(table)} .grid-reset-button`;
 
     // Table rows and columns
-    this.tableBody = (table) => `${this.gridTable(table)} tbody`;
-    this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
-    this.tableColumn = (table, row, column) => `${this.tableRow(table, row)} td.column-${column}`;
+    this.tableBody = (table: string) => `${this.gridTable(table)} tbody`;
+    this.tableRow = (table: string, row: number) => `${this.tableBody(table)} tr:nth-child(${row})`;
+    this.tableColumn = (table: string, row: number, column: string) => `${this.tableRow(table, row)} td.column-${column}`;
 
     // Actions buttons in Row
-    this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
-    this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
-    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
+    this.actionsColumn = (table: string, row: number) => `${this.tableRow(table, row)} td.column-actions`;
+    this.dropdownToggleButton = (table: string, row: number) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (table: string, row: number) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
+    this.deleteRowLink = (table: string, row: number) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
 
     // Sort Selectors
-    this.tableHead = (table) => `${this.gridTable(table)} thead`;
-    this.sortColumnDiv = (table, column) => `${this.tableHead(table)
+    this.tableHead = (table: string) => `${this.gridTable(table)} thead`;
+    this.sortColumnDiv = (table: string, column: string) => `${this.tableHead(table)
     } div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
+    this.sortColumnSpanButton = (table: string, column: string) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
 
     // Grid Actions
-    this.gridActionButton = (table) => `#${table}-grid-actions-button`;
-    this.gridActionDropDownMenu = (table) => `#${table}-grid-actions-dropdown-menu`;
-    this.gridActionExportLink = (table) => `#${table}-grid-action-export`;
+    this.gridActionButton = (table: string) => `#${table}-grid-actions-button`;
+    this.gridActionDropDownMenu = (table: string) => `#${table}-grid-actions-dropdown-menu`;
+    this.gridActionExportLink = (table: string) => `#${table}-grid-action-export`;
 
     // Delete modal
-    this.confirmDeleteModal = (table) => `#${table}-grid-confirm-modal`;
-    this.confirmDeleteButton = (table) => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
+    this.confirmDeleteModal = (table: string) => `#${table}-grid-confirm-modal`;
+    this.confirmDeleteButton = (table: string) => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
 
     // Brands list Selectors
-    this.brandsTableColumnLogoImg = (row) => `${this.tableColumn('manufacturer', row, 'logo')} img`;
-    this.brandsTableColumnStatus = (row) => `${this.tableColumn('manufacturer', row, 'active')} .ps-switch`;
-    this.brandsTableColumnStatusToggleInput = (row) => `${this.brandsTableColumnStatus(row)} input`;
-    this.viewBrandLink = (row) => `${this.actionsColumn('manufacturer', row)} a.grid-view-row-link`;
-    this.editBrandLink = (row) => `${this.dropdownToggleMenu('manufacturer', row)} a.grid-edit-row-link`;
+    this.brandsTableColumnLogoImg = (row: number) => `${this.tableColumn('manufacturer', row, 'logo')} img`;
+    this.brandsTableColumnStatus = (row: number) => `${this.tableColumn('manufacturer', row, 'active')} .ps-switch`;
+    this.brandsTableColumnStatusToggleInput = (row: number) => `${this.brandsTableColumnStatus(row)} input`;
+    this.viewBrandLink = (row: number) => `${this.actionsColumn('manufacturer', row)} a.grid-view-row-link`;
+    this.editBrandLink = (row: number) => `${this.dropdownToggleMenu('manufacturer', row)} a.grid-edit-row-link`;
     this.bulkActionsEnableButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel('manufacturer')
     } #manufacturer_grid_bulk_action_disable_selection`;
     this.deleteBrandsButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_delete_selection`;
 
     // Brand Addresses Selectors
-    this.editBrandAddressLink = (row) => `${this.actionsColumn('manufacturer_address', row)
+    this.editBrandAddressLink = (row: number) => `${this.actionsColumn('manufacturer_address', row)
     } a.grid-edit-row-link`;
     this.deleteAddressesButton = `${this.gridPanel('manufacturer_address')
     } #manufacturer_address_grid_bulk_action_delete_selection`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
-    this.paginationLabel = (table) => `${this.gridPanel(table)} .col-form-label`;
-    this.paginationNextLink = (table) => `${this.gridPanel(table)} [data-role=next-page-link]`;
-    this.paginationPreviousLink = (table) => `${this.gridPanel(table)} [data-role='previous-page-link']`;
+    this.paginationLabel = (table: string) => `${this.gridPanel(table)} .col-form-label`;
+    this.paginationNextLink = (table: string) => `${this.gridPanel(table)} [data-role=next-page-link]`;
+    this.paginationPreviousLink = (table: string) => `${this.gridPanel(table)} [data-role='previous-page-link']`;
   }
 
   /*
@@ -97,7 +181,7 @@ class Brands extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToSubTabSuppliers(page) {
+  async goToSubTabSuppliers(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.suppliersNavItemLink);
   }
 
@@ -107,7 +191,7 @@ class Brands extends BOBasePage {
    * @param tableName {string} Table name to reset
    * @return {Promise<void>}
    */
-  async resetFilter(page, tableName) {
+  async resetFilter(page: Page, tableName: string): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton(tableName), 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
     }
@@ -119,7 +203,7 @@ class Brands extends BOBasePage {
    * @param tableName {string} Table name to get number of element
    * @return {Promise<number>}
    */
-  async getNumberOfElementInGrid(page, tableName) {
+  async getNumberOfElementInGrid(page: Page, tableName: string): Promise<number> {
     return this.getNumberFromText(page, this.gridHeaderTitle(tableName));
   }
 
@@ -129,7 +213,7 @@ class Brands extends BOBasePage {
    * @param tableName {string} tableName name to reset
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page, tableName) {
+  async resetAndGetNumberOfLines(page: Page, tableName: string): Promise<number> {
     await this.resetFilter(page, tableName);
     return this.getNumberOfElementInGrid(page, tableName);
   }
@@ -143,7 +227,7 @@ class Brands extends BOBasePage {
    * @param value {string} Value to put in filter
    * @return {Promise<void>}
    */
-  async filterTable(page, tableName, filterType, filterBy, value = '') {
+  async filterTable(page: Page, tableName: string, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(tableName, filterBy), value);
@@ -166,7 +250,7 @@ class Brands extends BOBasePage {
    * @param value {string} Value to put in filter
    * @return {Promise<void>}
    */
-  async filterBrands(page, filterType, filterBy, value = '') {
+  async filterBrands(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     await this.filterTable(page, 'manufacturer', filterType, filterBy, value);
   }
 
@@ -176,7 +260,7 @@ class Brands extends BOBasePage {
    * @param value {string} Value to put in filter
    * @return {Promise<void>}
    */
-  async filterBrandsEnabled(page, value) {
+  async filterBrandsEnabled(page: Page, value: string): Promise<void> {
     await this.filterTable(page, 'manufacturer', 'select', 'active', value === '1' ? 'Yes' : 'No');
   }
 
@@ -188,7 +272,7 @@ class Brands extends BOBasePage {
    * @param value {string} Value to put in filter
    * @return {Promise<void>}
    */
-  async filterAddresses(page, filterType, filterBy, value = '') {
+  async filterAddresses(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     await this.filterTable(page, 'manufacturer_address', filterType, filterBy, value);
   }
 
@@ -198,7 +282,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to get status
    * @return {Promise<boolean>}
    */
-  async getBrandStatus(page, row) {
+  async getBrandStatus(page: Page, row: number): Promise<boolean> {
     // Get value of the check input
     const inputValue = await this.getAttributeContent(
       page,
@@ -217,7 +301,7 @@ class Brands extends BOBasePage {
    * @param valueWanted {boolean} Status to set for the brand
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async setBrandStatus(page, row, valueWanted = true) {
+  async setBrandStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getBrandStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.brandsTableColumnStatus(row));
       return true;
@@ -231,7 +315,7 @@ class Brands extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewBrandPage(page) {
+  async goToAddNewBrandPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.newBrandLink);
   }
 
@@ -240,7 +324,7 @@ class Brands extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewBrandAddressPage(page) {
+  async goToAddNewBrandAddressPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.newBrandAddressLink);
   }
 
@@ -250,7 +334,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to view
    * @return {Promise<void>}
    */
-  async viewBrand(page, row = 1) {
+  async viewBrand(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.viewBrandLink(row));
   }
 
@@ -260,7 +344,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to edit
    * @returns {Promise<void>}
    */
-  async goToEditBrandPage(page, row = 1) {
+  async goToEditBrandPage(page: Page, row: number = 1): Promise<void> {
     await Promise.all([
       page.click(this.dropdownToggleButton('manufacturer', row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton('manufacturer', row)}[aria-expanded='true']`),
@@ -274,7 +358,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to edit
    * @return {Promise<void>}
    */
-  async goToEditBrandAddressPage(page, row = 1) {
+  async goToEditBrandAddressPage(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.editBrandAddressLink(row));
   }
 
@@ -285,7 +369,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to delete
    * @return {Promise<string>}
    */
-  async deleteRowInTable(page, tableName, row = 1) {
+  async deleteRowInTable(page: Page, tableName: string, row: number = 1): Promise<string> {
     await Promise.all([
       page.click(this.dropdownToggleButton(tableName, row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(tableName, row)}[aria-expanded='true']`),
@@ -306,7 +390,7 @@ class Brands extends BOBasePage {
    * @param tableName {string} Table name to confirm deletion
    * @return {Promise<void>}
    */
-  async confirmDelete(page, tableName) {
+  async confirmDelete(page: Page, tableName: string): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton(tableName));
   }
 
@@ -316,7 +400,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to delete
    * @return {Promise<string>}
    */
-  async deleteBrand(page, row = 1) {
+  async deleteBrand(page: Page, row: number = 1): Promise<string> {
     return this.deleteRowInTable(page, 'manufacturer', row);
   }
 
@@ -326,7 +410,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to delete
    * @return {Promise<string>}
    */
-  async deleteBrandAddress(page, row = 1) {
+  async deleteBrandAddress(page: Page, row: number = 1): Promise<string> {
     return this.deleteRowInTable(page, 'manufacturer_address', row);
   }
 
@@ -336,10 +420,10 @@ class Brands extends BOBasePage {
    * @param enable {boolean} Status to select in bulk actions
    * @return {Promise<string>}
    */
-  async bulkSetBrandsStatus(page, enable = true) {
+  async bulkSetBrandsStatus(page: Page, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel('manufacturer'), (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel('manufacturer'), (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton('manufacturer')}:not([disabled])`, 40000),
     ]);
 
@@ -360,10 +444,10 @@ class Brands extends BOBasePage {
    * @param tableName {string} Table name to bulk delete
    * @return {Promise<string>}
    */
-  async deleteWithBulkActions(page, tableName) {
+  async deleteWithBulkActions(page: Page, tableName: string): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel(tableName), (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 
@@ -393,7 +477,7 @@ class Brands extends BOBasePage {
    * @param column {string} Column to get text content
    * @return {Promise<string>}
    */
-  async getTextColumnFromTable(page, tableName, row, column) {
+  async getTextColumnFromTable(page: Page, tableName: string, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.tableColumn(tableName, row, column));
   }
 
@@ -404,7 +488,7 @@ class Brands extends BOBasePage {
    * @param column {string} Column to get text content
    * @return {Promise<string>}
    */
-  async getTextColumnFromTableBrands(page, row, column) {
+  async getTextColumnFromTableBrands(page: Page, row: number, column: string): Promise<string> {
     return this.getTextColumnFromTable(page, 'manufacturer', row, column);
   }
 
@@ -412,9 +496,9 @@ class Brands extends BOBasePage {
    * Get logo link from brands table row
    * @param page {Page} Browser tab
    * @param row {number} Row in table to get logo link
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  async getLogoLinkFromBrandsTable(page, row) {
+  async getLogoLinkFromBrandsTable(page: Page, row: number): Promise<string|null> {
     return this.getAttributeContent(page, this.brandsTableColumnLogoImg(row), 'src');
   }
 
@@ -424,7 +508,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to get text column
    * @return {Promise<object>}
    */
-  async getBrandFromTable(page, row) {
+  async getBrandFromTable(page: Page, row: number): Promise<object> {
     return {
       id: await this.getTextColumnFromTableBrands(page, row, 'id_manufacturer'),
       logo: await this.getLogoLinkFromBrandsTable(page, row),
@@ -442,7 +526,7 @@ class Brands extends BOBasePage {
    * @param column {string} Column to get text content
    * @return {Promise<string>}
    */
-  async getTextColumnFromTableAddresses(page, row, column) {
+  async getTextColumnFromTableAddresses(page: Page, row: number, column: string): Promise<string> {
     return this.getTextColumnFromTable(page, 'manufacturer_address', row, column);
   }
 
@@ -453,12 +537,13 @@ class Brands extends BOBasePage {
    * @param column {string} Column to get all rows content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, tableName, column) {
+  async getAllRowsColumnContent(page: Page, tableName: string, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
-    const allRowsContentTable = [];
-    let rowContent;
+    const allRowsContentTable: string[] = [];
+    let rowContent: string;
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
+      rowContent = '';
       switch (tableName) {
         case 'manufacturer':
           rowContent = await this.getTextColumnFromTableBrands(page, i, column);
@@ -469,7 +554,9 @@ class Brands extends BOBasePage {
         default:
         // Nothing to do
       }
-      allRowsContentTable.push(rowContent);
+      if (rowContent !== '') {
+        allRowsContentTable.push(rowContent);
+      }
     }
 
     return allRowsContentTable;
@@ -481,7 +568,7 @@ class Brands extends BOBasePage {
    * @param column {string} Column to get all rows content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContentBrandsTable(page, column) {
+  async getAllRowsColumnContentBrandsTable(page: Page, column: string): Promise<string[]> {
     return this.getAllRowsColumnContent(page, 'manufacturer', column);
   }
 
@@ -491,7 +578,7 @@ class Brands extends BOBasePage {
    * @param column {string} Column to get all rows content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContentAddressesTable(page, column) {
+  async getAllRowsColumnContentAddressesTable(page: Page, column: string): Promise<string[]> {
     return this.getAllRowsColumnContent(page, 'manufacturer_address', column);
   }
 
@@ -504,11 +591,11 @@ class Brands extends BOBasePage {
    * @param sortDirection {string} Sort direction (asc/desc)
    * @return {Promise<void>}
    */
-  async sortTable(page, tableName, sortBy, sortDirection = 'asc') {
+  async sortTable(page: Page, tableName: string, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(tableName, sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(tableName, sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
@@ -524,7 +611,7 @@ class Brands extends BOBasePage {
    * @param sortDirection {string} Sort direction (asc/desc)
    * @return {Promise<void>}
    */
-  async sortTableBrands(page, sortBy, sortDirection = 'asc') {
+  async sortTableBrands(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     return this.sortTable(page, 'manufacturer', sortBy, sortDirection);
   }
 
@@ -535,7 +622,7 @@ class Brands extends BOBasePage {
    * @param sortDirection {string} Sort direction (asc/desc)
    * @return {Promise<void>}
    */
-  async sortTableAddresses(page, sortBy, sortDirection = 'asc') {
+  async sortTableAddresses(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     return this.sortTable(page, 'manufacturer_address', sortBy, sortDirection);
   }
 
@@ -544,9 +631,9 @@ class Brands extends BOBasePage {
    * Click on lint to export categories to a csv file
    * @param page {Page} Browser tab
    * @param table {string} Which table to export
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  async exportDataToCsv(page, table) {
+  async exportDataToCsv(page: Page, table: string): Promise<string|null> {
     await Promise.all([
       page.click(this.gridActionButton(table)),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu(table)}.show`),
@@ -558,9 +645,9 @@ class Brands extends BOBasePage {
   /**
    * Export brands data to csv file
    * @param page {Page} Browser tab
-   * @return {Promise<*>}
+   * @return {Promise<string|null>}
    */
-  async exportBrandsDataToCsv(page) {
+  async exportBrandsDataToCsv(page: Page): Promise<string|null> {
     return this.exportDataToCsv(page, 'manufacturer');
   }
 
@@ -570,7 +657,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row on table to get on csv file
    * @return {Promise<string>}
    */
-  async getBrandInCsvFormat(page, row) {
+  async getBrandInCsvFormat(page: Page, row: number): Promise<string> {
     const brand = await this.getBrandFromTable(page, row);
 
     return `${brand.id};`
@@ -588,7 +675,7 @@ class Brands extends BOBasePage {
    * @param tableName {string} Table name to get pagination label
    * @return {Promise<string>}
    */
-  getPaginationLabel(page, tableName) {
+  getPaginationLabel(page: Page, tableName: string): Promise<string> {
     return this.getTextContent(page, this.paginationLabel(tableName));
   }
 
@@ -596,10 +683,10 @@ class Brands extends BOBasePage {
    * Select pagination limit
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to select pagination limit
-   * @param number {string} Pagination limit per page to choose
+   * @param number {number} Pagination limit per page to choose
    * @return {Promise<string>}
    */
-  async selectPaginationLimit(page, tableName, number) {
+  async selectPaginationLimit(page: Page, tableName: string, number: number): Promise<string> {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
 
     return this.getPaginationLabel(page, tableName);
@@ -611,7 +698,7 @@ class Brands extends BOBasePage {
    * @param tableName {string} Table name to select next pagination
    * @return {Promise<string>}
    */
-  async paginationNext(page, tableName) {
+  async paginationNext(page: Page, tableName: string): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
@@ -623,11 +710,11 @@ class Brands extends BOBasePage {
    * @param tableName {string} Table name to select previous pagination
    * @return {Promise<string>}
    */
-  async paginationPrevious(page, tableName) {
+  async paginationPrevious(page: Page, tableName: string): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
   }
 }
 
-module.exports = new Brands();
+export default new Brands();

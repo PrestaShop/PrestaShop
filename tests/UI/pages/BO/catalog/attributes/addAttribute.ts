@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type AttributeData from '@data/faker/attribute';
+
+import type {Page} from 'playwright';
 
 /**
  * Add attribute page, contains functions that can be used on the page
@@ -7,6 +10,24 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddAttribute extends BOBasePage {
+  public readonly createPageTitle: string;
+
+  public readonly editPageTitle: string;
+
+  private readonly nameInput: string;
+
+  private readonly publicNameInput: string;
+
+  private readonly urlInput: string;
+
+  private readonly metaTitleInput: string;
+
+  private readonly indexableToggle: (toggle: string) => string;
+
+  private readonly attributeTypeSelect: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add attribute page
@@ -24,7 +45,7 @@ class AddAttribute extends BOBasePage {
     this.publicNameInput = '#public_name_1';
     this.urlInput = 'input[name=\'url_name_1\']';
     this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.indexableToggle = (toggle) => `#indexable_${toggle}`;
+    this.indexableToggle = (toggle: string) => `#indexable_${toggle}`;
     this.attributeTypeSelect = '#group_type';
     this.saveButton = '#attribute_group_form_submit_btn';
   }
@@ -38,7 +59,7 @@ class AddAttribute extends BOBasePage {
    * @param attributeData {AttributeData} Data to set on new/edit attribute form
    * @return {Promise<string>}
    */
-  async addEditAttribute(page, attributeData) {
+  async addEditAttribute(page: Page, attributeData: AttributeData): Promise<string> {
     // Set names
     await this.setValue(page, this.nameInput, attributeData.name);
     await this.setValue(page, this.publicNameInput, attributeData.publicName);
@@ -61,4 +82,4 @@ class AddAttribute extends BOBasePage {
   }
 }
 
-module.exports = new AddAttribute();
+export default new AddAttribute();

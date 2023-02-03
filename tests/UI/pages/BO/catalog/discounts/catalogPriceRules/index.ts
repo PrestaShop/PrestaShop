@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Add catalog price rule page, contains functions that can be used on the page
@@ -7,6 +8,80 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class CatalogPriceRules extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly addNewCatalogPriceRuleButton: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridPanel: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterDateFromColumn: (filterBy: string) => string;
+
+  private readonly filterDateToColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRow: (row: number) => string;
+
+  private readonly tableEmptyRow: string;
+
+  private readonly tableColumn: (row: number, column: number) => string;
+
+  private readonly actionsColumn: (row: number) => string;
+
+  private readonly dropdownToggleButton: (row: number) => string;
+
+  private readonly dropdownToggleMenu: (row: number) => string;
+
+  private readonly confirmDeleteButton: string;
+
+  private readonly deleteRowLink: (row: number) => string;
+
+  private readonly editRowLink: (row: number) => string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: number) => string;
+
+  private readonly sortColumnSpanButton: (column: number) => string;
+
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationDropdownButton: string;
+
+  private readonly paginationItems: (number: number) => string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly paginationNextLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add catalog price rule page
@@ -30,25 +105,25 @@ class CatalogPriceRules extends BOBasePage {
 
     // Filters
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='specific_price_ruleFilter_${filterBy}']`;
-    this.filterDateFromColumn = (filterBy) => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_0`;
-    this.filterDateToColumn = (filterBy) => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_1`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='specific_price_ruleFilter_${filterBy}']`;
+    this.filterDateFromColumn = (filterBy: string) => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_0`;
+    this.filterDateToColumn = (filterBy: string) => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_1`;
     this.filterSearchButton = `${this.gridTable} #submitFilterButtonspecific_price_rule`;
     this.filterResetButton = 'button[name=\'submitResetspecific_price_rule\']';
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
+    this.tableColumn = (row: number, column: number) => `${this.tableRow(row)} td:nth-child(${column})`;
 
     // Actions buttons in Row
-    this.actionsColumn = (row) => `${this.tableRow(row)} td .btn-group-action`;
-    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} button.dropdown-toggle`;
-    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} ul.dropdown-menu`;
+    this.actionsColumn = (row: number) => `${this.tableRow(row)} td .btn-group-action`;
+    this.dropdownToggleButton = (row: number) => `${this.actionsColumn(row)} button.dropdown-toggle`;
+    this.dropdownToggleMenu = (row: number) => `${this.actionsColumn(row)} ul.dropdown-menu`;
     this.confirmDeleteButton = '#popup_ok';
-    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.delete`;
-    this.editRowLink = (row) => `${this.actionsColumn(row)} a.edit`;
+    this.deleteRowLink = (row: number) => `${this.dropdownToggleMenu(row)} a.delete`;
+    this.editRowLink = (row: number) => `${this.actionsColumn(row)} a.edit`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -59,14 +134,14 @@ class CatalogPriceRules extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }
@@ -77,7 +152,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewCatalogPriceRulePage(page) {
+  async goToAddNewCatalogPriceRulePage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewCatalogPriceRuleButton);
   }
 
@@ -86,7 +161,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -98,7 +173,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -107,7 +182,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.resetFilter(page);
     }
@@ -120,7 +195,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param ruleName {string} Value of rule name to edit
    * @returns {Promise<void>}
    */
-  async goToEditCatalogPriceRulePage(page, ruleName) {
+  async goToEditCatalogPriceRulePage(page: Page, ruleName: string): Promise<void> {
     if (await this.elementVisible(page, this.filterColumn('a!name'))) {
       await this.filterPriceRules(page, 'select', 'a!name', ruleName);
     }
@@ -135,7 +210,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param value  {string} Value to put on filter
    * @returns {Promise<void>}
    */
-  async filterPriceRules(page, filterType, filterBy, value) {
+  async filterPriceRules(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
@@ -162,7 +237,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param dateTo {string} Value of 'date to' to set on input
    * @returns {Promise<void>}
    */
-  async filterByDate(page, filterBy, dateFrom, dateTo) {
+  async filterByDate(page: Page, filterBy: string, dateFrom: string, dateTo: string): Promise<void> {
     await page.type(this.filterDateFromColumn(filterBy), dateFrom);
     await page.type(this.filterDateToColumn(filterBy), dateTo);
     // click on search
@@ -175,7 +250,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param ruleName {string} Value of rule name to delete
    * @returns {Promise<string>}
    */
-  async deleteCatalogPriceRule(page, ruleName) {
+  async deleteCatalogPriceRule(page: Page, ruleName: string): Promise<string> {
     if (await this.elementVisible(page, this.filterColumn('a!name'))) {
       await this.filterPriceRules(page, 'select', 'a!name', ruleName);
     }
@@ -196,8 +271,8 @@ class CatalogPriceRules extends BOBasePage {
    * @param columnName {string} Column name to get text content
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
+    let columnSelector: string;
 
     switch (columnName) {
       case 'id_specific_price_rule':
@@ -252,7 +327,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param page
    * @return {Promise<void>}
    */
-  async bulkSelectRows(page) {
+  async bulkSelectRows(page: Page): Promise<void> {
     await page.click(this.bulkActionMenuButton);
 
     await Promise.all([
@@ -264,11 +339,11 @@ class CatalogPriceRules extends BOBasePage {
   /**
    * Bulk delete price rules
    * @param page {Page} Browser tab
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async bulkDeletePriceRules(page) {
+  async bulkDeletePriceRules(page: Page): Promise<string> {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await this.bulkSelectRows(page);
@@ -288,11 +363,11 @@ class CatalogPriceRules extends BOBasePage {
    * @param columnName {string} Column name to get all rows column
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       allRowsContentTable.push(rowContent);
     }
@@ -307,8 +382,8 @@ class CatalogPriceRules extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
-    let columnSelector;
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    let columnSelector: string;
 
     switch (sortBy) {
       case 'id_specific_price_rule':
@@ -365,7 +440,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -375,7 +450,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.clickAndWaitForNavigation(page, this.paginationItems(number));
 
@@ -387,7 +462,7 @@ class CatalogPriceRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -398,11 +473,11 @@ class CatalogPriceRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
 }
 
-module.exports = new CatalogPriceRules();
+export default new CatalogPriceRules();

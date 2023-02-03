@@ -85,7 +85,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, '10');
+      const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -106,7 +106,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, '50');
+      const paginationNumber = await brandsPage.selectPaginationLimit(page, tableName, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });

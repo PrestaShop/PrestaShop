@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Monitoring page, contains functions that can be used on the page
@@ -7,6 +8,80 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Monitoring extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly gridPanel: (table: string) => string;
+
+  private readonly gridTable: (table: string) => string;
+
+  private readonly gridHeaderTitle: (table: string) => string;
+
+  private readonly bulkActionsButton: (table: string) => string;
+
+  private readonly deleteSelectButton: (table: string) => string;
+
+  private readonly selectAllCheckBox: (table: string) => string;
+
+  private readonly filterColumn: (table: string, filterBy: string) => string;
+
+  private readonly filterSearchButton: (table: string) => string;
+
+  private readonly filterResetButton: (table: string) => string;
+
+  private readonly tableBody: (table: string) => string;
+
+  private readonly tableRow: (table: string, row: number) => string;
+
+  private readonly tableEmptyRow: (table: string) => string;
+
+  private readonly tableColumn: (table: string, row: number, column: string) => string;
+
+  private readonly enableColumn: (table: string, row: number) => string;
+
+  private readonly enableColumnValidIcon: (table: string, row: number) => string;
+
+  private readonly actionsColumn: (table: string, row: number) => string;
+
+  private readonly editRowLink: (table: string, row: number) => string;
+
+  private readonly dropdownToggleButton: (table: string, row: number) => string;
+
+  private readonly dropdownToggleMenu: (table: string, row: number) => string;
+
+  private readonly deleteRowLink: (table: string, row: number) => string;
+
+  private readonly viewCategoryRowLink: (row: number) => string;
+
+  private readonly editCategoryRowLink: (row: number) => string;
+
+  private readonly deleteCategoryRowLink: (row: number) => string;
+
+  private readonly deleteModeCategoryModal: string;
+
+  private readonly deleteModeInput: (position: number) => string;
+
+  private readonly deleteModeCategoryModalDiv: string;
+
+  private readonly submitDeleteCategoryButton: string;
+
+  private readonly tableHead: (table: string) => string;
+
+  private readonly sortColumnDiv: (table: string, column: string) => string;
+
+  private readonly sortColumnSpanButton: (table: string, column: string) => string;
+
+  private readonly deleteProductModal: (table: string) => string;
+
+  private readonly submitDeleteProductButton: (table: string) => string;
+
+  private readonly paginationLimitSelect: (table: string) => string;
+
+  private readonly paginationLabel: (table: string) => string;
+
+  private readonly paginationNextLink: (table: string) => string;
+
+  private readonly paginationPreviousLink: (table: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on monitoring page
@@ -17,62 +92,62 @@ class Monitoring extends BOBasePage {
     this.pageTitle = 'Monitoring •';
 
     // Selectors
-    this.gridPanel = (table) => `#${table}_grid_panel`;
-    this.gridTable = (table) => `#${table}_grid_table`;
-    this.gridHeaderTitle = (table) => `${this.gridPanel(table)} div.card-header h3`;
+    this.gridPanel = (table: string) => `#${table}_grid_panel`;
+    this.gridTable = (table: string) => `#${table}_grid_table`;
+    this.gridHeaderTitle = (table: string) => `${this.gridPanel(table)} div.card-header h3`;
 
     // Bulk actions
-    this.bulkActionsButton = (table) => `${this.gridPanel(table)} .js-bulk-actions-btn`;
-    this.deleteSelectButton = (table) => `#${table}_grid_bulk_action_delete_selection`;
+    this.bulkActionsButton = (table: string) => `${this.gridPanel(table)} .js-bulk-actions-btn`;
+    this.deleteSelectButton = (table: string) => `#${table}_grid_bulk_action_delete_selection`;
 
     // Filters
-    this.selectAllCheckBox = (table) => `${this.gridPanel(table)} .js-bulk-action-select-all`;
-    this.filterColumn = (table, filterBY) => `${this.gridTable(table)} #${table}_${filterBY}`;
-    this.filterSearchButton = (table) => `${this.gridTable(table)} .grid-search-button`;
-    this.filterResetButton = (table) => `${this.gridTable(table)} .grid-reset-button`;
+    this.selectAllCheckBox = (table: string) => `${this.gridPanel(table)} .js-bulk-action-select-all`;
+    this.filterColumn = (table: string, filterBy: string) => `${this.gridTable(table)} #${table}_${filterBy}`;
+    this.filterSearchButton = (table: string) => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = (table: string) => `${this.gridTable(table)} .grid-reset-button`;
 
     // Table
-    this.tableBody = (table) => `${this.gridTable(table)} tbody`;
-    this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
-    this.tableEmptyRow = (table) => `${this.tableBody(table)} tr.empty_row`;
-    this.tableColumn = (table, row, column) => `${this.tableRow(table, row)} td.column-${column}`;
+    this.tableBody = (table: string) => `${this.gridTable(table)} tbody`;
+    this.tableRow = (table: string, row: number) => `${this.tableBody(table)} tr:nth-child(${row})`;
+    this.tableEmptyRow = (table: string) => `${this.tableBody(table)} tr.empty_row`;
+    this.tableColumn = (table: string, row: number, column: string) => `${this.tableRow(table, row)} td.column-${column}`;
 
     // Enable column
-    this.enableColumn = (table, row) => this.tableColumn(table, row, 'active');
-    this.enableColumnValidIcon = (row) => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    this.enableColumn = (table: string, row: number) => this.tableColumn(table, row, 'active');
+    this.enableColumnValidIcon = (table: string, row: number) => `${this.enableColumn(table, row)} i.grid-toggler-icon-valid`;
 
     // Actions buttons in Row
-    this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
-    this.editRowLink = (table, row) => `${this.actionsColumn(table, row)} a.grid-edit-row-link`;
-    this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
-    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
+    this.actionsColumn = (table: string, row: number) => `${this.tableRow(table, row)} td.column-actions`;
+    this.editRowLink = (table: string, row: number) => `${this.actionsColumn(table, row)} a.grid-edit-row-link`;
+    this.dropdownToggleButton = (table: string, row: number) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (table: string, row: number) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
+    this.deleteRowLink = (table: string, row: number) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
 
     // Category selectors
-    this.viewCategoryRowLink = (row) => `${this.actionsColumn('empty_category', row)} a.grid-view-row-link`;
-    this.editCategoryRowLink = (row) => `${this.dropdownToggleMenu('empty_category', row)} a.grid-edit-row-link`;
-    this.deleteCategoryRowLink = (row) => `${this.dropdownToggleMenu('empty_category', row)
+    this.viewCategoryRowLink = (row: number) => `${this.actionsColumn('empty_category', row)} a.grid-view-row-link`;
+    this.editCategoryRowLink = (row: number) => `${this.dropdownToggleMenu('empty_category', row)} a.grid-edit-row-link`;
+    this.deleteCategoryRowLink = (row: number) => `${this.dropdownToggleMenu('empty_category', row)
     } a.grid-delete-row-link`;
     this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
-    this.deleteModeInput = (position) => `#delete_categories_delete_mode_${position} + i`;
+    this.deleteModeInput = (position: number) => `#delete_categories_delete_mode_${position} + i`;
     this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
     this.submitDeleteCategoryButton = `${this.deleteModeCategoryModal} button.js-submit-delete-categories`;
 
     // Sort Selectors
-    this.tableHead = (table) => `${this.gridTable(table)} thead`;
-    this.sortColumnDiv = (table, column) => `${this.tableHead(table)
+    this.tableHead = (table: string) => `${this.gridTable(table)} thead`;
+    this.sortColumnDiv = (table: string, column: string) => `${this.tableHead(table)
     } div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
+    this.sortColumnSpanButton = (table: string, column: string) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
 
     // Modal products list
-    this.deleteProductModal = (table) => `#${table}-grid-confirm-modal`;
-    this.submitDeleteProductButton = (table) => `${this.deleteProductModal(table)} button.btn-confirm-submit`;
+    this.deleteProductModal = (table: string) => `#${table}-grid-confirm-modal`;
+    this.submitDeleteProductButton = (table: string) => `${this.deleteProductModal(table)} button.btn-confirm-submit`;
 
     // Pagination selectors
-    this.paginationLimitSelect = (table) => `${this.gridPanel(table)} #paginator_select_page_limit`;
-    this.paginationLabel = (table) => `${this.gridPanel(table)} .col-form-label`;
-    this.paginationNextLink = (table) => `${this.gridPanel(table)} [data-role=next-page-link]`;
-    this.paginationPreviousLink = (table) => `${this.gridPanel(table)} [data-role='previous-page-link']`;
+    this.paginationLimitSelect = (table: string) => `${this.gridPanel(table)} #paginator_select_page_limit`;
+    this.paginationLabel = (table: string) => `${this.gridPanel(table)} .col-form-label`;
+    this.paginationNextLink = (table: string) => `${this.gridPanel(table)} [data-role=next-page-link]`;
+    this.paginationPreviousLink = (table: string) => `${this.gridPanel(table)} [data-role='previous-page-link']`;
   }
 
   /* Reset Methods */
@@ -82,7 +157,7 @@ class Monitoring extends BOBasePage {
    * @param tableName {string} Table name to get number of element from
    * @return {Promise<number>}
    */
-  async getNumberOfElementInGrid(page, tableName) {
+  async getNumberOfElementInGrid(page: Page, tableName: string): Promise<number> {
     return this.getNumberFromText(page, this.gridHeaderTitle(tableName));
   }
 
@@ -92,7 +167,7 @@ class Monitoring extends BOBasePage {
    * @param tableName {string} Table name to reset filter
    * @return {Promise<void>}
    */
-  async resetFilter(page, tableName) {
+  async resetFilter(page: Page, tableName: string): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton(tableName), 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
     }
@@ -104,7 +179,7 @@ class Monitoring extends BOBasePage {
    * @param tableName {string} Table name to reset and get number of elements
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page, tableName) {
+  async resetAndGetNumberOfLines(page: Page, tableName: string): Promise<number> {
     await this.resetFilter(page, tableName);
     return this.getNumberOfElementInGrid(page, tableName);
   }
@@ -119,7 +194,7 @@ class Monitoring extends BOBasePage {
    * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
-  async filterTable(page, tableName, filterType, filterBy, value = '') {
+  async filterTable(page: Page, tableName: string, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(tableName, filterBy), value);
@@ -143,7 +218,7 @@ class Monitoring extends BOBasePage {
    * @param column {string} Column name to get text content
    * @return {Promise<string>}
    */
-  async getTextColumnFromTable(page, tableName, row, column) {
+  async getTextColumnFromTable(page: Page, tableName: string, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.tableColumn(tableName, row, column));
   }
 
@@ -154,7 +229,7 @@ class Monitoring extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async openDropdownMenu(page, tableName, row) {
+  async openDropdownMenu(page: Page, tableName: string, row: number): Promise<void> {
     await Promise.all([
       page.click(this.dropdownToggleButton(tableName, row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(tableName, row)}[aria-expanded='true']`),
@@ -168,7 +243,7 @@ class Monitoring extends BOBasePage {
    * @param row {number} Row on table to delete
    * @return {Promise<string>}
    */
-  async deleteProductInGrid(page, tableName, row) {
+  async deleteProductInGrid(page: Page, tableName: string, row: number): Promise<string> {
     await this.openDropdownMenu(page, tableName, row);
 
     // Click on delete and wait for modal
@@ -187,10 +262,10 @@ class Monitoring extends BOBasePage {
    * @param tableName {string} Table name to delete elements from it
    * @returns {Promise<string>}
    */
-  async bulkDeleteElementsInTable(page, tableName) {
+  async bulkDeleteElementsInTable(page: Page, tableName: string): Promise<string> {
     // Select all elements in table
     await Promise.all([
-      page.$eval(this.selectAllCheckBox(tableName), (el) => el.click()),
+      page.$eval(this.selectAllCheckBox(tableName), (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsButton(tableName)}:not([disabled])`),
     ]);
 
@@ -202,7 +277,7 @@ class Monitoring extends BOBasePage {
 
     // Click on delete selected and wait for modal
     await Promise.all([
-      page.$eval(this.deleteSelectButton(tableName), (el) => el.click()),
+      page.$eval(this.deleteSelectButton(tableName), (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
     ]);
 
@@ -221,8 +296,8 @@ class Monitoring extends BOBasePage {
    * @param deletionModePosition {number} value of mode position to delete
    * @return {Promise<string>}
    */
-  async deleteCategoryInGrid(page, tableName, row, deletionModePosition) {
-    this.dialogListener(page, true);
+  async deleteCategoryInGrid(page: Page, tableName: string, row: number, deletionModePosition: number) {
+    await this.dialogListener(page, true);
     await this.openDropdownMenu(page, tableName, row);
     await Promise.all([
       page.click(this.deleteCategoryRowLink(row)),
@@ -243,7 +318,7 @@ class Monitoring extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  async getStatus(page, tableName, row = 1) {
+  async getStatus(page: Page, tableName: string, row: number = 1): Promise<boolean> {
     return this.elementVisible(page, this.enableColumnValidIcon(tableName, row), 100);
   }
 
@@ -255,11 +330,11 @@ class Monitoring extends BOBasePage {
    * @param column {string} Column name to get text column
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, tableName, column) {
+  async getAllRowsColumnContent(page: Page, tableName: string, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(tableName, i, column));
 
       if (column === 'active') {
@@ -279,11 +354,11 @@ class Monitoring extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, tableName, sortBy, sortDirection = 'asc') {
+  async sortTable(page: Page, tableName: string, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(tableName, sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(tableName, sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
@@ -299,7 +374,7 @@ class Monitoring extends BOBasePage {
    * @param tableName {string} Table name to get pagination label
    * @return {Promise<string>}
    */
-  getPaginationLabel(page, tableName) {
+  getPaginationLabel(page: Page, tableName: string): Promise<string> {
     return this.getTextContent(page, this.paginationLabel(tableName));
   }
 
@@ -310,7 +385,7 @@ class Monitoring extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, tableName, number) {
+  async selectPaginationLimit(page: Page, tableName: string, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect(tableName), number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -325,7 +400,7 @@ class Monitoring extends BOBasePage {
    * @param tableName {string} Table name to select pagination next
    * @returns {Promise<string>}
    */
-  async paginationNext(page, tableName) {
+  async paginationNext(page: Page, tableName: string): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
@@ -337,10 +412,10 @@ class Monitoring extends BOBasePage {
    * @param tableName {string} Table name to select pagination previous
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page, tableName) {
+  async paginationPrevious(page: Page, tableName: string): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(tableName));
     return this.getPaginationLabel(page, tableName);
   }
 }
 
-module.exports = new Monitoring();
+export default new Monitoring();

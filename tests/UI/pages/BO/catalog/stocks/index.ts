@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * stocks page, contains functions that can be used on the page
@@ -7,6 +8,84 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Stocks extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly alertBoxBlock: string;
+
+  private readonly alertBoxTextSpan: string;
+
+  private readonly alertBoxButtonClose: string;
+
+  private readonly movementsNavItemLink: string;
+
+  private readonly searchForm: string;
+
+  private readonly searchInput: string;
+
+  private readonly searchButton: string;
+
+  private readonly searchTagsList: string;
+
+  private readonly searchTagsListCloseSpan: string;
+
+  private readonly selectAllCheckbox: string;
+
+  private readonly bulkEditQuantityInput: string;
+
+  private readonly applyNewQuantityButton: string;
+
+  private readonly productList: string;
+
+  private readonly productRows: string;
+
+  private readonly productRow: (row: number) => string;
+
+  private readonly productRowNameColumn: (row: number) => string;
+
+  private readonly productRowReferenceColumn: (row: number) => string;
+
+  private readonly productRowSupplierColumn: (row: number) => string;
+
+  private readonly productRowPhysicalColumn: (row: number) => string;
+
+  private readonly productRowReservedColumn: (row: number) => string;
+
+  private readonly productRowAvailableColumn: (row: number) => string;
+
+  private readonly productRowQuantityColumn: (row: number) => string;
+
+  private readonly productRowQuantityColumnInput: (row: number) => string;
+
+  private readonly productRowQuantityUpdateButton: (row: number) => string;
+
+  private readonly productListLoading: string;
+
+  private readonly filtersContainerDiv: string;
+
+  private readonly advancedFiltersButton: string;
+
+  private readonly filterStatusEnabledLabel: string;
+
+  private readonly filterStatusDisabledLabel: string;
+
+  private readonly filterStatusAllLabel: string;
+
+  private readonly filterCategoryDiv: string;
+
+  private readonly filterCategoryExpandButton: string;
+
+  private readonly filterCategoryCollapseButton: string;
+
+  private readonly filterCategoryTreeItems: (category: string) => string;
+
+  private readonly filterCategoryCheckBoxDiv: (category: string) => string;
+
+  private readonly paginationList: string;
+
+  private readonly paginationListItem: string;
+
+  private readonly paginationListItemLink: (id: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add currency page
@@ -39,18 +118,18 @@ class Stocks extends BOBasePage {
     this.applyNewQuantityButton = 'button.update-qty';
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
-    this.productRow = (row) => `${this.productRows}:nth-child(${row})`;
-    this.productRowNameColumn = (row) => `${this.productRow(row)} td[data-role=product-name]`;
-    this.productRowReferenceColumn = (row) => `${this.productRow(row)} td[data-role=product-reference]`;
-    this.productRowSupplierColumn = (row) => `${this.productRow(row)} td[data-role=product-supplier-name]`;
-    this.productRowPhysicalColumn = (row) => `${this.productRow(row)} td[data-role=physical-quantity]`;
-    this.productRowReservedColumn = (row) => `${this.productRow(row)} td[data-role=reserved-quantity]`;
-    this.productRowAvailableColumn = (row) => `${this.productRow(row)} td[data-role=available-quantity]`;
+    this.productRow = (row: number) => `${this.productRows}:nth-child(${row})`;
+    this.productRowNameColumn = (row: number) => `${this.productRow(row)} td[data-role=product-name]`;
+    this.productRowReferenceColumn = (row: number) => `${this.productRow(row)} td[data-role=product-reference]`;
+    this.productRowSupplierColumn = (row: number) => `${this.productRow(row)} td[data-role=product-supplier-name]`;
+    this.productRowPhysicalColumn = (row: number) => `${this.productRow(row)} td[data-role=physical-quantity]`;
+    this.productRowReservedColumn = (row: number) => `${this.productRow(row)} td[data-role=reserved-quantity]`;
+    this.productRowAvailableColumn = (row: number) => `${this.productRow(row)} td[data-role=available-quantity]`;
 
     // Quantity column
-    this.productRowQuantityColumn = (row) => `${this.productRow(row)} td[data-role=update-quantity]`;
-    this.productRowQuantityColumnInput = (row) => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
-    this.productRowQuantityUpdateButton = (row) => `${this.productRowQuantityColumn(row)} button.check-button`;
+    this.productRowQuantityColumn = (row: number) => `${this.productRow(row)} td[data-role=update-quantity]`;
+    this.productRowQuantityColumnInput = (row: number) => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
+    this.productRowQuantityUpdateButton = (row: number) => `${this.productRowQuantityColumn(row)} button.check-button`;
 
     // loader
     this.productListLoading = `${this.productRows} td:nth-child(1) div.ps-loader`;
@@ -66,13 +145,13 @@ class Stocks extends BOBasePage {
     this.filterCategoryDiv = `${this.filtersContainerDiv} div.filter-categories`;
     this.filterCategoryExpandButton = `${this.filterCategoryDiv} button:nth-child(1)`;
     this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
-    this.filterCategoryTreeItems = (category) => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
-    this.filterCategoryCheckBoxDiv = (category) => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
+    this.filterCategoryTreeItems = (category: string) => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
+    this.filterCategoryCheckBoxDiv = (category: string) => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
 
     // Pagination
     this.paginationList = 'nav ul.pagination';
     this.paginationListItem = `${this.paginationList} li.page-item`;
-    this.paginationListItemLink = (id) => `${this.paginationListItem}:nth-child(${id}) a`;
+    this.paginationListItemLink = (id: number) => `${this.paginationListItem}:nth-child(${id}) a`;
   }
 
   /*
@@ -84,7 +163,7 @@ class Stocks extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToSubTabMovements(page) {
+  async goToSubTabMovements(page: Page): Promise<void> {
     await page.click(this.movementsNavItemLink);
     await this.waitForVisibleSelector(page, `${this.movementsNavItemLink}.active`);
   }
@@ -94,7 +173,7 @@ class Stocks extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getTotalNumberOfProducts(page) {
+  async getTotalNumberOfProducts(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.searchButton, 2000);
     await this.waitForHiddenSelector(page, this.productListLoading);
     // If pagination that return number of products in this page
@@ -119,7 +198,7 @@ class Stocks extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfProductsFromList(page) {
+  async getNumberOfProductsFromList(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.searchButton, 2000);
     await this.waitForHiddenSelector(page, this.productListLoading);
     return (await page.$$(this.productRows)).length;
@@ -130,7 +209,7 @@ class Stocks extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getProductsPagesLength(page) {
+  async getProductsPagesLength(page: Page): Promise<number> {
     return (await page.$$(this.paginationListItem)).length;
   }
 
@@ -140,7 +219,7 @@ class Stocks extends BOBasePage {
    * @param pageNumber {number} Value of page to go
    * @return {Promise<void>}
    */
-  async paginateTo(page, pageNumber = 1) {
+  async paginateTo(page: Page, pageNumber: number = 1): Promise<void> {
     await Promise.all([
       page.click(this.paginationListItemLink(pageNumber)),
       this.waitForVisibleSelector(page, this.productListLoading),
@@ -153,7 +232,7 @@ class Stocks extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<number> {
     const closeButtons = await page.$$(this.searchTagsListCloseSpan);
 
     /* eslint-disable no-restricted-syntax */
@@ -171,7 +250,7 @@ class Stocks extends BOBasePage {
    * @param value {string} Value to st on filter input
    * @returns {Promise<void>}
    */
-  async simpleFilter(page, value) {
+  async simpleFilter(page: Page, value: string): Promise<void> {
     await page.type(this.searchInput, value);
 
     await Promise.all([
@@ -189,7 +268,7 @@ class Stocks extends BOBasePage {
    * @param column {string} Column to get text value
    * @return {Promise<number|string>}
    */
-  async getTextColumnFromTableStocks(page, row, column) {
+  async getTextColumnFromTableStocks(page: Page, row: number, column: string): Promise<string> {
     switch (column) {
       case 'name':
         return this.getTextContent(page, this.productRowNameColumn(row));
@@ -214,7 +293,7 @@ class Stocks extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<{reserved: number, available: number, physical: number}>}
    */
-  async getStockQuantityForProduct(page, row) {
+  async getStockQuantityForProduct(page: Page, row: number) {
     return {
       physical: await (this.getTextColumnFromTableStocks(page, row, 'physical')),
       reserved: await (this.getTextColumnFromTableStocks(page, row, 'reserved')),
@@ -229,7 +308,7 @@ class Stocks extends BOBasePage {
    * @param quantity {number} Value to add/subtract from quantity
    * @returns {Promise<string>}
    */
-  async updateRowQuantityWithInput(page, row, quantity) {
+  async updateRowQuantityWithInput(page: Page, row: number, quantity: number): Promise<string> {
     await this.setValue(page, this.productRowQuantityColumnInput(row), quantity);
 
     // Wait for check button before click
@@ -249,9 +328,9 @@ class Stocks extends BOBasePage {
    * @param quantity {number} Value of quantity to set on input
    * @returns {Promise<string>}
    */
-  async bulkEditQuantityWithInput(page, quantity) {
+  async bulkEditQuantityWithInput(page: Page, quantity: number): Promise<string> {
     // Select All products
-    await page.$eval(this.selectAllCheckbox, (el) => el.click());
+    await page.$eval(this.selectAllCheckbox, (el: HTMLElement) => el.click());
 
     // Set value in input
     await this.setValue(page, this.bulkEditQuantityInput, quantity);
@@ -273,7 +352,7 @@ class Stocks extends BOBasePage {
    * @param status {string} Value of status to set on filter
    * @return {Promise<void>}
    */
-  async filterByStatus(page, status) {
+  async filterByStatus(page: Page, status: string): Promise<void> {
     await this.openCloseAdvancedFilter(page);
     switch (status) {
       case 'enabled':
@@ -296,7 +375,7 @@ class Stocks extends BOBasePage {
    * @param category {string} Category name to set on filter input
    * @return {Promise<void>}
    */
-  async filterByCategory(page, category) {
+  async filterByCategory(page: Page, category: string): Promise<void> {
     await this.openCloseAdvancedFilter(page);
     await page.click(this.filterCategoryExpandButton);
     await page.click(this.filterCategoryCheckBoxDiv(category));
@@ -311,7 +390,7 @@ class Stocks extends BOBasePage {
    * @param toOpen {boolean} True if we need to open advanced filter, false if not
    * @return {Promise<void>}
    */
-  async openCloseAdvancedFilter(page, toOpen = true) {
+  async openCloseAdvancedFilter(page: Page, toOpen: boolean = true): Promise<void> {
     await Promise.all([
       page.click(this.advancedFiltersButton),
       this.waitForVisibleSelector(page, `${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
@@ -320,25 +399,25 @@ class Stocks extends BOBasePage {
 
   /**
    * @override
-   * Open help side bar
+   * Open help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async openHelpSideBar(page) {
-    await page.$eval(this.helpButton, (el) => el.click());
+  async openHelpSideBar(page: Page): Promise<boolean> {
+    await page.$eval(this.helpButton, (el: HTMLElement) => el.click());
     return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
   }
 
   /**
    * @override
-   * Close help side bar
+   * Close help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeHelpSideBar(page) {
-    await page.$eval(this.helpButton, (el) => el.click());
+  async closeHelpSideBar(page: Page): Promise<boolean> {
+    await page.$eval(this.helpButton, (el: HTMLElement) => el.click());
     return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
   }
 }
 
-module.exports = new Stocks();
+export default new Stocks();

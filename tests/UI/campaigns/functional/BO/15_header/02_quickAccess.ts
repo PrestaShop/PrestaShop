@@ -12,8 +12,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import statsPage from '@pages/BO/stats';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
-import newProductPage from '@pages/BO/catalog/products/add';
 import newVoucherPage from '@pages/BO/catalog/discounts/add';
+import newProductPage from '@pages/BO/catalog/products/add';
 import ordersPage from '@pages/BO/orders';
 import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
@@ -79,7 +79,6 @@ describe('BO - Header : Quick access links', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToCreateLink', baseContext);
 
     await newVoucherPage.reloadPage(page);
-
     await newVoucherPage.goToManageQuickAccessPage(page);
 
     const pageTitle = await quickAccessPage.getPageTitle(page);

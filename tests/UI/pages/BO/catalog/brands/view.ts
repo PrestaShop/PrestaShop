@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * View brands page, contains selectors and functions for the page
@@ -7,6 +8,18 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ViewBrand extends BOBasePage {
+  private readonly contentDiv: string;
+
+  private readonly addressesGrid: string;
+
+  public readonly addressesGridHeader: string;
+
+  private readonly addressesTableBody: string;
+
+  private readonly addressesTableRow: (row: number) => string;
+
+  private readonly addressesTableColumn: (row: number, column: number) => string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on view brand page
@@ -19,8 +32,8 @@ class ViewBrand extends BOBasePage {
     this.addressesGrid = 'div[data-role=addresses-card]';
     this.addressesGridHeader = `${this.addressesGrid} h3.card-header`;
     this.addressesTableBody = `${this.addressesGrid} .card-body table tbody`;
-    this.addressesTableRow = (row) => `${this.addressesTableBody} tr:nth-of-type(${row})`;
-    this.addressesTableColumn = (row, column) => `${this.addressesTableRow(row)} td:nth-of-type(${column})`;
+    this.addressesTableRow = (row: number) => `${this.addressesTableBody} tr:nth-of-type(${row})`;
+    this.addressesTableColumn = (row: number, column: number) => `${this.addressesTableRow(row)} td:nth-of-type(${column})`;
   }
 
   /*
@@ -30,10 +43,10 @@ class ViewBrand extends BOBasePage {
    * Get text from a column
    * @param page {Page} Browser tab
    * @param row {number} Row in table to get text column
-   * @param column {string} Column to get text content
+   * @param column {number} Column to get text content
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableAddresses(page, row, column) {
+  async getTextColumnFromTableAddresses(page: Page, row: number, column: number): Promise<string> {
     return this.getTextContent(page, this.addressesTableColumn(row, column));
   }
 
@@ -42,9 +55,9 @@ class ViewBrand extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfAddressesInGrid(page) {
+  async getNumberOfAddressesInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.addressesGridHeader);
   }
 }
 
-module.exports = new ViewBrand();
+export default new ViewBrand();
