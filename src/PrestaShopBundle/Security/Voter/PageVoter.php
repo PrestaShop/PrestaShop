@@ -94,7 +94,7 @@ class PageVoter extends Voter
      *
      * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, [
             AccessCheckerInterface::CREATE,
@@ -111,29 +111,14 @@ class PageVoter extends Voter
      *
      * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         /** @var Employee $user */
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
-        $action = $this->buildAction($subject, $attribute);
+        $action = $this->buildAction((string) $subject, (string) $attribute);
 
-        return $this->can($action, $employeeProfileId);
-    }
-
-    /**
-     * Checks if the provided user profile is allowed to perform the requested action.
-     *
-     * @param string $action
-     * @param int $employeeProfileId
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
-    protected function can($action, $employeeProfileId)
-    {
-        return $this->accessDecisionManager->isEmployeeGranted($action, $employeeProfileId);
+        return $this->accessDecisionManager->isEmployeeGranted($action, (int) $employeeProfileId);
     }
 
     /**
@@ -144,7 +129,7 @@ class PageVoter extends Voter
      *
      * @return string
      */
-    private function buildAction($subject, $attribute)
+    private function buildAction(string $subject, string $attribute): string
     {
         $action = $subject;
 
