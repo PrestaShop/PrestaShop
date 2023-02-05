@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
@@ -213,7 +214,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var bool Random session for modules perfs logs */
     public static $_log_modules_perfs_session = null;
 
-    /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+    /** @var ContainerInterface */
     private $container;
 
     /** @var array|null used to cache module ids */
@@ -445,7 +446,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // Permissions management
         foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
-            $slug = 'ROLE_MOD_MODULE_' . strtoupper($this->name) . '_' . $action;
+            $slug = Permission::PREFIX_MODULE . strtoupper($this->name) . '_' . $action;
 
             Db::getInstance()->execute(
                 'INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $slug . '")'
@@ -772,7 +773,7 @@ abstract class ModuleCore implements ModuleInterface
         $this->disable(true);
 
         // Delete permissions module access
-        $roles = Db::getInstance()->executeS('SELECT `id_authorization_role` FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` LIKE "ROLE_MOD_MODULE_' . strtoupper($this->name) . '_%"');
+        $roles = Db::getInstance()->executeS('SELECT `id_authorization_role` FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` LIKE "' . Permission::PREFIX_MODULE . strtoupper($this->name) . '_%"');
 
         if (!empty($roles)) {
             foreach ($roles as $role) {
@@ -1336,7 +1337,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param bool $use_config in order to use config.xml file in module dir
      *
-     * @return array<\stdClass> Modules
+     * @return array<StdClass> Modules
      */
     public static function getModulesOnDisk($use_config = false, $id_employee = false)
     {
@@ -1412,7 +1413,7 @@ abstract class ModuleCore implements ModuleInterface
                         }
                     }
 
-                    $item = new \stdClass();
+                    $item = new StdClass();
                     $item->id = 0;
                     $item->warning = '';
 
@@ -1468,7 +1469,7 @@ abstract class ModuleCore implements ModuleInterface
                     try {
                         $tmp_module = ServiceLocator::get($module);
 
-                        $item = new \stdClass();
+                        $item = new StdClass();
 
                         $item->id = (int) $tmp_module->id;
                         $item->warning = $tmp_module->warning;
@@ -1587,7 +1588,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * @param \StdClass $modaddons Addons Module object, provided by XML stream
+     * @param StdClass $modaddons Addons Module object, provided by XML stream
      *
      * @return string|null
      */
@@ -2501,14 +2502,14 @@ abstract class ModuleCore implements ModuleInterface
                 `slug` LIKE "%DELETE" as "uninstall"
             FROM `' . _DB_PREFIX_ . 'authorization_role` a
             LEFT JOIN `' . _DB_PREFIX_ . 'module_access` j ON j.id_authorization_role = a.id_authorization_role
-            WHERE `slug` LIKE "ROLE_MOD_MODULE_%"
+            WHERE `slug` LIKE "' . Permission::PREFIX_MODULE . '%"
             AND j.id_profile = "' . (int) $idProfile . '"
             ORDER BY a.slug
         ');
 
             foreach ($profileRoles as $role) {
                 preg_match(
-                    '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
+                    '/' . Permission::PREFIX_MODULE . '(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
                     $role['slug'],
                     $matches
                 );
@@ -2531,13 +2532,13 @@ abstract class ModuleCore implements ModuleInterface
                 `slug` LIKE "%UPDATE" as "configure",
                 `slug` LIKE "%DELETE" as "uninstall"
             FROM `' . _DB_PREFIX_ . 'authorization_role` a
-            WHERE `slug` LIKE "ROLE_MOD_MODULE_%"
+            WHERE `slug` LIKE "' . Permission::PREFIX_MODULE . '%"
             ORDER BY a.slug
         ');
 
         foreach ($result as $row) {
             preg_match(
-                '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
+                '/' . Permission::PREFIX_MODULE . '(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
                 $row['slug'],
                 $matches
             );
@@ -3429,7 +3430,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @throws ServiceCircularReferenceException When a circular reference is detected
      * @throws ServiceNotFoundException When the service is not defined
-     * @throws \Exception
+     * @throws Exception
      */
     public function get($serviceName)
     {

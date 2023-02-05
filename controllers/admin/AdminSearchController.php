@@ -289,7 +289,7 @@ class AdminSearchControllerCore extends AdminController
                 continue;
             }
             // Remove pages without access
-            if (!Access::isGranted(Permission::PREFIX . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+            if (!Access::isGranted(Permission::PREFIX_TAB . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
                 continue;
             }
             $tab = Tab::getInstanceFromClassName($row['class_name']);

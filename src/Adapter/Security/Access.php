@@ -11,7 +11,7 @@ class Access implements AccessCheckerInterface, EmployeePermissionProviderInterf
 {
     public function isEmployeeGranted(string $action, int $employeeProfileId): bool
     {
-        return LegacyAccess::isGranted(Permission::PREFIX . strtoupper($action), $employeeProfileId);
+        return LegacyAccess::isGranted(Permission::PREFIX_TAB . strtoupper($action), $employeeProfileId);
     }
 
     public function getRoles(int $employeeProfileId): array

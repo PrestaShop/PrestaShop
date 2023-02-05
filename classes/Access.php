@@ -216,7 +216,7 @@ class AccessCore extends ObjectModel
      */
     public static function sluggifyTab($tab, $authorization = '')
     {
-        return sprintf('%s%s_%s', Permission::PREFIX, strtoupper($tab['class_name'] ?? ''), $authorization);
+        return sprintf('%s%s_%s', Permission::PREFIX_TAB, strtoupper($tab['class_name'] ?? ''), $authorization);
     }
 
     /**
@@ -229,7 +229,7 @@ class AccessCore extends ObjectModel
      */
     public static function sluggifyModule($module, $authorization = '')
     {
-        return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name'] ?? ''), $authorization);
+        return sprintf('%s%s_%s', Permission::PREFIX_MODULE, strtoupper($module['name'] ?? ''), $authorization);
     }
 
     /**
@@ -346,7 +346,7 @@ class AccessCore extends ObjectModel
         $idTab = (int) $idTab;
 
         if ($idTab == -1) {
-            $slug = Permission::PREFIX . '%_';
+            $slug = Permission::PREFIX_TAB . '%_';
         } else {
             $slug = self::findSlugByIdTab($idTab);
         }
@@ -406,7 +406,7 @@ class AccessCore extends ObjectModel
         $idModule = (int) $idModule;
 
         if ($idModule == -1) {
-            $slug = 'ROLE_MOD_MODULE_%_';
+            $slug = Permission::PREFIX_MODULE.'%_';
         } else {
             $slug = self::findSlugByIdModule($idModule);
         }

@@ -4736,28 +4736,28 @@ class AdminControllerCore extends Controller
     {
         if (
             Access::isGranted(
-                Permission::PREFIX . strtoupper($this->controller_name) . '_DELETE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
         } elseif (
             Access::isGranted(
-                Permission::PREFIX . strtoupper($this->controller_name) . '_CREATE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
         } elseif (
             Access::isGranted(
-                Permission::PREFIX . strtoupper($this->controller_name) . '_UPDATE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
         } elseif (
             Access::isGranted(
-                Permission::PREFIX . strtoupper($this->controller_name) . '_READ',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_READ',
                 $this->context->employee->id_profile
             )
         ) {
