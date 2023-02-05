@@ -58,7 +58,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleR
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -405,7 +405,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
         $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
 
-        if (!in_array($authLevel, [AccessCheckerInterface::LEVEL_UPDATE, AccessCheckerInterface::LEVEL_DELETE])) {
+        if (!in_array($authLevel, [Permission::LEVEL_UPDATE, Permission::LEVEL_DELETE])) {
             return $this->json([
                 'status' => false,
                 'message' => $this->trans(

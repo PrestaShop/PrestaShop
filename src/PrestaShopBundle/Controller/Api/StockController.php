@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
@@ -64,7 +64,7 @@ class StockController extends ApiController
      */
     public function listProductsAction(Request $request)
     {
-        if (!$this->isGranted([AccessCheckerInterface::READ], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted([Permission::READ], $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -92,7 +92,7 @@ class StockController extends ApiController
      */
     public function editProductAction(Request $request)
     {
-        if (!$this->isGranted([AccessCheckerInterface::UPDATE], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted([Permission::UPDATE], $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -125,7 +125,7 @@ class StockController extends ApiController
      */
     public function bulkEditProductsAction(Request $request)
     {
-        if (!$this->isGranted([AccessCheckerInterface::UPDATE], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted([Permission::UPDATE], $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -154,7 +154,7 @@ class StockController extends ApiController
      */
     public function listProductsExportAction(Request $request)
     {
-        if (!$this->isGranted([AccessCheckerInterface::READ], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted([Permission::READ], $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 

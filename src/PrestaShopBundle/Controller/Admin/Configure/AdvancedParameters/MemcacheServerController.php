@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -90,10 +90,10 @@ class MemcacheServerController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             [
-                AccessCheckerInterface::LEVEL_READ,
-                AccessCheckerInterface::LEVEL_UPDATE,
-                AccessCheckerInterface::LEVEL_CREATE,
-                AccessCheckerInterface::LEVEL_DELETE,
+                Permission::LEVEL_READ,
+                Permission::LEVEL_UPDATE,
+                Permission::LEVEL_CREATE,
+                Permission::LEVEL_DELETE,
             ]
         )) {
             return new JsonResponse(
@@ -149,10 +149,10 @@ class MemcacheServerController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             [
-                AccessCheckerInterface::LEVEL_READ,
-                AccessCheckerInterface::LEVEL_UPDATE,
-                AccessCheckerInterface::LEVEL_CREATE,
-                AccessCheckerInterface::LEVEL_DELETE,
+                Permission::LEVEL_READ,
+                Permission::LEVEL_UPDATE,
+                Permission::LEVEL_CREATE,
+                Permission::LEVEL_DELETE,
             ]
         )) {
             return new JsonResponse(

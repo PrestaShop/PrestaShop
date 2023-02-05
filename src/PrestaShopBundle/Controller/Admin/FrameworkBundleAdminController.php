@@ -33,8 +33,7 @@ use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -244,20 +243,20 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(AccessCheckerInterface::DELETE, $controller)) {
-            return AccessCheckerInterface::LEVEL_DELETE;
+        if ($this->isGranted(Permission::DELETE, $controller)) {
+            return Permission::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(AccessCheckerInterface::CREATE, $controller)) {
-            return AccessCheckerInterface::LEVEL_CREATE;
+        if ($this->isGranted(Permission::CREATE, $controller)) {
+            return Permission::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(AccessCheckerInterface::UPDATE, $controller)) {
-            return AccessCheckerInterface::LEVEL_UPDATE;
+        if ($this->isGranted(Permission::UPDATE, $controller)) {
+            return Permission::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(AccessCheckerInterface::READ, $controller)) {
-            return AccessCheckerInterface::LEVEL_READ;
+        if ($this->isGranted(Permission::READ, $controller)) {
+            return Permission::LEVEL_READ;
         }
 
         return 0;
@@ -319,13 +318,13 @@ class FrameworkBundleAdminController extends AbstractController
     protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && $this->isGranted(AccessCheckerInterface::DELETE, $object)
+                $action === 'delete' . $suffix && $this->isGranted(Permission::DELETE, $object)
             ) || (
                 ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
-                $this->isGranted(AccessCheckerInterface::UPDATE, $object)
+                $this->isGranted(Permission::UPDATE, $object)
             ) || (
                 ($action === 'duplicate' . $suffix) &&
-                ($this->isGranted(AccessCheckerInterface::UPDATE, $object) || $this->isGranted(AccessCheckerInterface::CREATE, $object))
+                ($this->isGranted(Permission::UPDATE, $object) || $this->isGranted(Permission::CREATE, $object))
             );
     }
 

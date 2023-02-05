@@ -49,7 +49,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -327,7 +327,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
         // If employee is editing his own profile - he doesn't need to have access to the edit form.
         if ($contextEmployeeProvider->getId() != $employeeId) {
-            if (!$this->isGranted(AccessCheckerInterface::UPDATE, $request->get('_legacy_controller'))) {
+            if (!$this->isGranted(Permission::UPDATE, $request->get('_legacy_controller'))) {
                 $this->addFlash(
                     'error',
                     $this->trans(

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Security\Voter;
 
 use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -39,51 +40,51 @@ class PageVoter extends Voter
     /**
      * @deprecated since 9.0
      */
-    public const CREATE = AccessCheckerInterface::CREATE;
+    public const CREATE = Permission::CREATE;
 
     /**
      * @deprecated since 9.0
      */
-    public const UPDATE = AccessCheckerInterface::UPDATE;
+    public const UPDATE = Permission::UPDATE;
 
     /**
      * @deprecated since 9.0
      */
-    public const DELETE = AccessCheckerInterface::DELETE;
+    public const DELETE = Permission::DELETE;
 
     /**
      * @deprecated since 9.0
      */
-    public const READ = AccessCheckerInterface::READ;
+    public const READ = Permission::READ;
 
     /**
      * @deprecated since 9.0
      */
-    public const LEVEL_DELETE = AccessCheckerInterface::LEVEL_DELETE;
+    public const LEVEL_DELETE = Permission::LEVEL_DELETE;
 
     /**
      * @deprecated since 9.0
      */
-    public const LEVEL_UPDATE = AccessCheckerInterface::LEVEL_UPDATE;
+    public const LEVEL_UPDATE = Permission::LEVEL_UPDATE;
 
     /**
      * @deprecated since 9.0
      */
-    public const LEVEL_CREATE = AccessCheckerInterface::LEVEL_CREATE;
+    public const LEVEL_CREATE = Permission::LEVEL_CREATE;
 
     /**
      * @deprecated since 9.0
      */
-    public const LEVEL_READ = AccessCheckerInterface::LEVEL_READ;
+    public const LEVEL_READ = Permission::LEVEL_READ;
 
     /**
      * @var AccessCheckerInterface
      */
-    private $accessDecisionManager;
+    private $accessChecker;
 
-    public function __construct(AccessCheckerInterface $accessDecisionManager)
+    public function __construct(AccessCheckerInterface $accessChecker)
     {
-        $this->accessDecisionManager = $accessDecisionManager;
+        $this->accessChecker = $accessChecker;
     }
 
     /**
@@ -97,10 +98,10 @@ class PageVoter extends Voter
     protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, [
-            AccessCheckerInterface::CREATE,
-            AccessCheckerInterface::UPDATE,
-            AccessCheckerInterface::DELETE,
-            AccessCheckerInterface::READ,
+            Permission::CREATE,
+            Permission::UPDATE,
+            Permission::DELETE,
+            Permission::READ,
         ], true);
     }
 
@@ -118,7 +119,7 @@ class PageVoter extends Voter
         $employeeProfileId = $user->getData()->id_profile;
         $action = $this->buildAction((string) $subject, (string) $attribute);
 
-        return $this->accessDecisionManager->isEmployeeGranted($action, (int) $employeeProfileId);
+        return $this->accessChecker->isEmployeeGranted($action, (int) $employeeProfileId);
     }
 
     /**

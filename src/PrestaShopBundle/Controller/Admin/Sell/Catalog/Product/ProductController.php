@@ -65,7 +65,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\ProductDownload;
@@ -1051,7 +1051,7 @@ class ProductController extends FrameworkBundleAdminController
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
-            'editable' => $this->isGranted(AccessCheckerInterface::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+            'editable' => $this->isGranted(Permission::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
     }
 
@@ -1079,7 +1079,7 @@ class ProductController extends FrameworkBundleAdminController
             'productForm' => $productForm->createView(),
             'statsLink' => $statsLink,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
-            'editable' => $this->isGranted(AccessCheckerInterface::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+            'editable' => $this->isGranted(Permission::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
             'taxEnabled' => (bool) $configuration->get('PS_TAX'),
             'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
             'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive(),

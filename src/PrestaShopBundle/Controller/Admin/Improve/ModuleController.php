@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -172,14 +172,14 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_DISABLE:
             case ModuleAdapter::ACTION_ENABLE_MOBILE:
             case ModuleAdapter::ACTION_DISABLE_MOBILE:
-                $deniedAccess = $this->checkPermission(AccessCheckerInterface::UPDATE);
+                $deniedAccess = $this->checkPermission(Permission::UPDATE);
                 break;
             case ModuleAdapter::ACTION_INSTALL:
-                $deniedAccess = $this->checkPermission(AccessCheckerInterface::CREATE);
+                $deniedAccess = $this->checkPermission(Permission::CREATE);
                 break;
             case ModuleAdapter::ACTION_DELETE:
             case ModuleAdapter::ACTION_UNINSTALL:
-                $deniedAccess = $this->checkPermission(AccessCheckerInterface::DELETE);
+                $deniedAccess = $this->checkPermission(Permission::DELETE);
                 break;
 
             default:
@@ -307,8 +307,8 @@ class ModuleController extends ModuleAbstractController
 
         $deniedAccess = $this->checkPermissions(
             [
-                AccessCheckerInterface::LEVEL_CREATE,
-                AccessCheckerInterface::LEVEL_DELETE,
+                Permission::LEVEL_CREATE,
+                Permission::LEVEL_DELETE,
             ]
         );
         if (null !== $deniedAccess) {

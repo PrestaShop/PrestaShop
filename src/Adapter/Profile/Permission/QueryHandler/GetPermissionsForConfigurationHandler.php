@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsFor
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use Profile;
 use RuntimeException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -96,7 +96,7 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
         $employeeProfileId = $query->getEmployeeProfileId()->getValue();
-        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(AccessCheckerInterface::UPDATE, 'AdminAccess');
+        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(Permission::UPDATE, 'AdminAccess');
 
         $bulkConfigurationPermissions = $this->getBulkConfigurationForProfiles(
             $employeeProfileId,

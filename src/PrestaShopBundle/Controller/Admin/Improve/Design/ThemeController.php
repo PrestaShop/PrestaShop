@@ -52,7 +52,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
@@ -434,7 +434,7 @@ class ThemeController extends AbstractAdminController
     protected function canCustomizePageLayouts(Request $request)
     {
         return !$this->isDemoModeEnabled() &&
-            $this->isGranted(AccessCheckerInterface::UPDATE, $request->attributes->get('_legacy_controller'));
+            $this->isGranted(Permission::UPDATE, $request->attributes->get('_legacy_controller'));
     }
 
     /**

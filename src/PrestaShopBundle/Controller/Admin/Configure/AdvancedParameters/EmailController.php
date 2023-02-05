@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmailLogsFilter;
-use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -240,10 +240,10 @@ class EmailController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($request->attributes->get('_legacy_controller')),
             [
-                AccessCheckerInterface::LEVEL_READ,
-                AccessCheckerInterface::LEVEL_UPDATE,
-                AccessCheckerInterface::LEVEL_CREATE,
-                AccessCheckerInterface::LEVEL_DELETE,
+                Permission::LEVEL_READ,
+                Permission::LEVEL_UPDATE,
+                Permission::LEVEL_CREATE,
+                Permission::LEVEL_DELETE,
             ]
         )) {
             return $this->json([
