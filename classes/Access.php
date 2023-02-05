@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Security\Permission;
+
 /**
  * Class AccessCore.
  */
@@ -214,7 +216,7 @@ class AccessCore extends ObjectModel
      */
     public static function sluggifyTab($tab, $authorization = '')
     {
-        return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name'] ?? ''), $authorization);
+        return sprintf('%s%s_%s', Permission::PREFIX, strtoupper($tab['class_name'] ?? ''), $authorization);
     }
 
     /**
@@ -344,7 +346,7 @@ class AccessCore extends ObjectModel
         $idTab = (int) $idTab;
 
         if ($idTab == -1) {
-            $slug = 'ROLE_MOD_TAB_%_';
+            $slug = Permission::PREFIX . '%_';
         } else {
             $slug = self::findSlugByIdTab($idTab);
         }

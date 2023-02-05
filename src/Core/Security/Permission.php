@@ -4,6 +4,8 @@ namespace PrestaShop\PrestaShop\Core\Security;
 
 class Permission
 {
+    public const PREFIX = 'ROLE_MOD_TAB_';
+
     public const CREATE = 'create';
     public const UPDATE = 'update';
     public const DELETE = 'delete';
