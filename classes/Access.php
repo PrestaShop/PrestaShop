@@ -406,7 +406,7 @@ class AccessCore extends ObjectModel
         $idModule = (int) $idModule;
 
         if ($idModule == -1) {
-            $slug = Permission::PREFIX_MODULE.'%_';
+            $slug = Permission::PREFIX_MODULE . '%_';
         } else {
             $slug = self::findSlugByIdModule($idModule);
         }

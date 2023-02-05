@@ -99,4 +99,6 @@ parameters:
             message: 'Use \PrestaShop\PrestaShop\Core\Security\Permission constants instead.'
             disallowIn:
                 - src/*
+                - classes/*
+                - controllers/*
 
