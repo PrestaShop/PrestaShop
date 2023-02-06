@@ -1,3 +1,5 @@
+import ImportData from '@data/faker/import';
+
 import {createObjectCsvWriter} from 'csv-writer';
 import fs from 'fs';
 import imgGen from 'js-image-generator';
@@ -198,10 +200,10 @@ export default {
    * Create csv file
    * @param path {string} Path of the file
    * @param fileName {string} Name of the file to create
-   * @param data {Object} Data to create csv file
+   * @param data {ImportData} Data to create csv file
    * @returns {Promise<void>}
    */
-  async createCSVFile(path: string, fileName: string, data: object): Promise<void> {
+  async createCSVFile(path: string, fileName: string, data: ImportData): Promise<void> {
     await this.createFile(path, fileName, '');
     if ('header' in data && 'records' in data) {
       const csvWriter = createObjectCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});
