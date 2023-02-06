@@ -95,7 +95,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
       {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
       {linkSelector: 'Best sellers', pageTitle: bestSalesPage.pageTitle},
-    ].forEach((args, index) => {
+    ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);
 
@@ -118,7 +118,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Contact us', pageTitle: contactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
       {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
-    ].forEach((args, index) => {
+    ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);
 
@@ -136,7 +136,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
       {linkSelector: 'Sign in', pageTitle: loginPage.pageTitle},
       {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
-    ].forEach((args, index) => {
+    ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
 
@@ -171,7 +171,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
-    ].forEach((args, index) => {
+    ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
 
@@ -209,7 +209,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
-    ].forEach((args, index) => {
+    ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks3${index}`, baseContext);
 

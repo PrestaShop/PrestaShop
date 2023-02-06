@@ -68,7 +68,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
     {args: {action: 'disable', enable: false}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} re-display cart at login`, async function () {
       await testContext.addContextItem(
         this,

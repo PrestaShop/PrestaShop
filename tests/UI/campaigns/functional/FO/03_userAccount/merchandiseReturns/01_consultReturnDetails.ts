@@ -294,7 +294,7 @@ describe('FO - Account : Consult return details', async () => {
     {args: {status: OrderReturnStatuses.returnDenied.name}},
     {args: {status: OrderReturnStatuses.returnCompleted.name}},
   ];
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`Case ${index + 2} : Check merchandise returns with the status ${test.args.status}`, async () => {
       describe('Change the merchandise returns status', async () => {
         it('should go to BO', async function () {

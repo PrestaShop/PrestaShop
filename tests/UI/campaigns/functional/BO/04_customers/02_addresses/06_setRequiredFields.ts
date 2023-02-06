@@ -69,7 +69,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
   [
     {args: {action: 'select', exist: true, addressData: addressDataWithVatNumber}},
     {args: {action: 'unselect', exist: false, addressData: addressDataWithoutVatNumber}},
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     it(`should ${test.args.action} 'Vat number' as required fields`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}VatNumber`, baseContext);
 

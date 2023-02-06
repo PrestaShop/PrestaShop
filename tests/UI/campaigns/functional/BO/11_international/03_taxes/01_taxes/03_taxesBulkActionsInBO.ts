@@ -68,7 +68,7 @@ describe('BO - International - Taxes : Bulk actions', async () => {
       {args: {taxToCreate: secondTaxData}},
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it('should go to add new tax page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTaxPage${index + 1}`, baseContext);
 

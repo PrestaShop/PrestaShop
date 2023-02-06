@@ -78,7 +78,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`${test.args.action} product image in delivery slip then check the file created`, async () => {
       it('should go to \'Orders > Delivery slips\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToDeliverySlipsPage${index}`, baseContext);

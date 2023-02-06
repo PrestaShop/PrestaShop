@@ -54,7 +54,7 @@ describe('BO - Shop Parameters - Product Settings : Update label of in-stock pro
     {args: {label: ' ', labelToCheck: '', exist: false}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should set '${test.args.label}' in Label of in-stock products input`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateLabelOfInStockProducts_${index}`, baseContext);
 

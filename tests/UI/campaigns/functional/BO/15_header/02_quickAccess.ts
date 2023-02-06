@@ -58,7 +58,7 @@ describe('BO - Header : Quick access links', async () => {
       {args: {pageName: 'New product', idLink: 4, pageTitle: newProductPage.pageTitle}},
       {args: {pageName: 'Orders', idLink: 6, pageTitle: ordersPage.pageTitle}},
       {args: {pageName: 'New voucher', idLink: 5, pageTitle: newVoucherPage.pageTitle}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it(`should check '${test.args.pageName}' link from Quick access`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
 

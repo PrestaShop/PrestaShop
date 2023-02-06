@@ -48,7 +48,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
     {args: {action: 'disable', exist: false}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage_${index}`, baseContext);
 

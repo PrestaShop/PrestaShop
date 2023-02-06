@@ -67,7 +67,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
     {args: {webserviceToCreate: secondWebServiceData}},
   ];
 
-  tests.forEach((test: {args: {webserviceToCreate: WebserviceData}}, index) => {
+  tests.forEach((test: {args: {webserviceToCreate: WebserviceData}}, index: number) => {
     it('should go to add new webservice key page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
 

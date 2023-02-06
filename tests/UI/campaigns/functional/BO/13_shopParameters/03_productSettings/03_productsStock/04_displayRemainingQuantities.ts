@@ -102,7 +102,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
       {args: {quantity: defaultRemainingQuantity, exist: true, state: 'NotDisplayed'}},
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should update Display remaining quantities to ${test.args.quantity}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDisplayRemainingQuantity${index}`, baseContext);
 

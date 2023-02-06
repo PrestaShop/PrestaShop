@@ -55,7 +55,7 @@ describe('BO - Shop Parameters - General : Enable/Disable multi store', async ()
     {args: {action: 'disable', exist: false}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} multi store`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}MultiStore`, baseContext);
 

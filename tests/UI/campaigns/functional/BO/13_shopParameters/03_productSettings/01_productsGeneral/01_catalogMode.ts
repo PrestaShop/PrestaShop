@@ -94,7 +94,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         },
       ];
 
-      testShowPrices.forEach((showPrices, index) => {
+      testShowPrices.forEach((showPrices, index: number) => {
         it(`should ${showPrices.args.action} show prices`, async function () {
           await testContext.addContextItem(
             this,

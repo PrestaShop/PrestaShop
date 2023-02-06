@@ -178,7 +178,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
         const searchResult = await packTab.searchProduct(page, 'Pack mug');
         await expect(searchResult).to.equal('No results found for "Pack mug"');
       });
-      const tests: object = [
+      const tests = [
         {
           args:
             {
@@ -218,7 +218,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
             },
         },
       ];
-      tests.forEach((test, index) => {
+      tests.forEach((test, index: number) => {
         // 3 - Add product with combination
         it(`should search for a '${test.args.productType}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProductToPack${index}`, baseContext);
@@ -390,12 +390,12 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       ]);
     });
 
-    const tests: object = [
+    const tests = [
       {args: {product: Products.demo_11, quantity: 15}},
       {args: {product: Products.demo_18, quantity: 1}},
       {args: {product: Products.demo_14, quantity: 1}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductInPack${index}`, baseContext);
 
@@ -458,13 +458,13 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       ]);
     });
 
-    const tests: object = [
+    const tests = [
       {args: {product: Products.demo_11, quantity: 15}},
       {args: {product: Products.demo_18, quantity: 1}},
       {args: {product: Products.demo_19, quantity: 20}},
       {args: {product: Products.demo_14, quantity: 1}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkEditProductInPack${index}`, baseContext);
 

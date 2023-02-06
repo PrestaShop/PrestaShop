@@ -179,7 +179,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     customizedProduct,
     productWithSpecificPrice,
     productWithEcoTax,
-  ].forEach((product, index) => {
+  ].forEach((product: ProductData, index: number) => {
     describe(`PRE-TEST: Create product '${product.name}'`, async () => {
       if (index === 0) {
         it('should login in BO', async function () {

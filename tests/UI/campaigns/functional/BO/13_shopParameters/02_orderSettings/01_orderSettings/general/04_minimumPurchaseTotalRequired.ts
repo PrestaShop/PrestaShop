@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
     {args: {value: defaultPurchaseTotalRequired, disable: false, alertMessage: false}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it('should update Minimum purchase total required in order to validate the order value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateMinimumPurchaseTotal_${index}`, baseContext);
 

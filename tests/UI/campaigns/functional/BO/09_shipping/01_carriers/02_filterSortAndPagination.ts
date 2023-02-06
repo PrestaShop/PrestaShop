@@ -228,8 +228,8 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
 
   // 3 - Create 16 carriers
   describe('Create 16 carriers in BO', async () => {
-    const creationTests = new Array(17).fill(0, 0, 17);
-    creationTests.forEach((test, index) => {
+    const creationTests: number[] = new Array(17).fill(0, 0, 17);
+    creationTests.forEach((test: number, index: number) => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
       const carrierData: CarrierData = new CarrierData({name: `todelete${index}`});

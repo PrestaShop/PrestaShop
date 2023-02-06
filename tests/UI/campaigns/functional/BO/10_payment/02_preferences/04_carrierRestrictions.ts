@@ -92,7 +92,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
       {args: {action: 'check', paymentModule: 'ps_wirepayment', exist: true}},
       {args: {action: 'uncheck', paymentModule: 'ps_checkpayment', exist: false}},
       {args: {action: 'check', paymentModule: 'ps_checkpayment', exist: true}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it(`should ${test.args.action} free prestashop carrier for '${test.args.paymentModule}'`, async function () {
         await testContext.addContextItem(
           this,

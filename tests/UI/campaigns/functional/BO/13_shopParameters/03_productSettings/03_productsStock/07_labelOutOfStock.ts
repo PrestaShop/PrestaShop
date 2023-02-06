@@ -120,7 +120,7 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
       },
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should ${test.args.action} allow ordering of out-of-stock products`, async function () {
         await testContext.addContextItem(
           this,

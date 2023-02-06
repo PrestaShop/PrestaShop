@@ -146,7 +146,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
   [
     {args: {action: 'activate', enable: true, prefix: '#NE'}},
     {args: {action: 'deactivate', enable: false, prefix: '#RE'}},
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 

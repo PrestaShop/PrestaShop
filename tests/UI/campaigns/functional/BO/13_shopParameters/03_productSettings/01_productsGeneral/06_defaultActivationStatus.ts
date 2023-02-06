@@ -53,7 +53,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
       {args: {action: 'disable', enable: false}},
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index}`, baseContext);
 

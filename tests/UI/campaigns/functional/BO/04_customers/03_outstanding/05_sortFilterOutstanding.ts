@@ -206,7 +206,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         },
       },
     ];
-    filterTests.forEach((test, index) => {
+    filterTests.forEach((test, index: number) => {
       it(`should filter by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier);
 
@@ -385,7 +385,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
   });
 
   // Post-Condition: Delete created customers by bulk action
-  customersData.forEach((customerData, index) => {
+  customersData.forEach((customerData: CustomerData, index: number) => {
     bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_${index + 1}`);
   });
 

@@ -117,7 +117,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} display discounted price`, async function () {
       await testContext.addContextItem(
         this,

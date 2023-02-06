@@ -364,7 +364,7 @@ describe('FO - product page : Add product to cart', async () => {
       },
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should check share link of '${test.args.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${index}`, baseContext);
 

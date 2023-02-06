@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       {args: {action: 'enable', enable: true, deliveryTimeText: '8-9 days'}},
       {args: {action: 'disable', enable: false, deliveryTimeText: ''}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       describe(`Check delivery time of out-of-stock products ${test.args.enable} status`, async () => {
         it(`should ${test.args.action} delivery time of out-of-stock products in BO`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
