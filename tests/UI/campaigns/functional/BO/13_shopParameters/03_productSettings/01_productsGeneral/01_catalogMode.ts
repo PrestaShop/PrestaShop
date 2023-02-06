@@ -139,7 +139,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         it('should close the page and go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-          page = await productPage.closePage(browserContext, page, 0) as Page;
+          page = await productPage.closePage(browserContext, page, 0);
 
           const pageTitle = await productSettingsPage.getPageTitle(page);
           await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
@@ -188,7 +188,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-        page = await productPage.closePage(browserContext, page, 0) as Page;
+        page = await productPage.closePage(browserContext, page, 0);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(productSettingsPage.pageTitle);

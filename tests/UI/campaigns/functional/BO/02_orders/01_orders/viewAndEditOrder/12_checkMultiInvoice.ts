@@ -246,7 +246,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
@@ -254,7 +254,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference', baseContext);
 
       const productReferenceExist = await files.isTextInPDF(
-        filePath as string,
+        filePath,
         `${firstProduct.reference}, ,${firstProduct.name}`,
       );
       await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
@@ -265,7 +265,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUnitPrice', baseContext);
 
       const priceVisible = await files.isTextInPDF(
-        filePath as string,
+        filePath,
         `${firstProduct.name}, ,`
         + `€${newProductPrice.toFixed(2)}, ,`
         + '1, ,'
@@ -305,7 +305,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       filePath = await orderPageProductsBlock.viewInvoice(page);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist, 'File is not downloaded!').to.be.true;
     });
 
@@ -314,7 +314,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPriceOnFirstInvoice', baseContext);
 
       const priceVisible = await files.isTextInPDF(
-        filePath as string,
+        filePath,
         `${firstProduct.name}, ,`
         + `€${secondNewProductPrice.toFixed(2)}, ,`
         + '1, ,'
@@ -331,7 +331,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPriceOnSecondInvoice', baseContext);
 
       const priceVisible = await files.isTextInPDF(
-        filePath as string,
+        filePath,
         `${firstProduct.name}, ,`
         + `€${(secondNewProductPrice).toFixed(2)}, ,`
         + '2, ,'
@@ -437,7 +437,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       filePath = await orderPageTabListBlock.downloadInvoice(page, 5);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
@@ -445,7 +445,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference2', baseContext);
 
       const productReferenceExist = await files.isTextInPDF(
-        filePath as string,
+        filePath,
         `${secondProduct.reference}, ,${secondProduct.name}`,
       );
       await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
@@ -456,7 +456,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPriceForThirdInvoice', baseContext);
 
       const priceVisible = await files.isTextInPDF(
-        filePath as string,
+        filePath,
         `${secondProduct.name}, ,`
         + `€${secondProduct.price.toFixed(2)}, ,`
         + '1, ,'
@@ -474,7 +474,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
         // Total Products, Shipping Costs, Total (Tax excl.), Total
         const isShippingCostVisible = await files.isTextInPDF(
-          filePath as string,
+          filePath,
           `Total Products, ,€${secondProduct.price.toFixed(2)},`
           + 'Shipping Costs, ,Free Shipping,,'
           + `Total (Tax excl.), ,€${secondProduct.price.toFixed(2)},,`

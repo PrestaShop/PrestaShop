@@ -315,7 +315,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await expect(firstInvoiceFileName).to.be.not.null;
 
         // Check that file exist
-        const exist = await files.doesFileExist(firstInvoiceFileName as string);
+        const exist = await files.doesFileExist(firstInvoiceFileName);
         await expect(exist).to.be.true;
       });
 
@@ -323,11 +323,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTaxBreakdownInFile', baseContext);
 
         // Check the existence of the first tax
-        let exist = await files.isTextInPDF(firstInvoiceFileName as string, '10.000 %');
+        let exist = await files.isTextInPDF(firstInvoiceFileName, '10.000 %');
         await expect(exist).to.be.true;
 
         // Check the existence of the second tax
-        exist = await files.isTextInPDF(firstInvoiceFileName as string, '20.000 %');
+        exist = await files.isTextInPDF(firstInvoiceFileName, '20.000 %');
         await expect(exist).to.be.true;
       });
     });
@@ -388,7 +388,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         secondInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
         await expect(secondInvoiceFileName).to.be.not.null;
 
-        const exist = await files.doesFileExist(secondInvoiceFileName as string);
+        const exist = await files.doesFileExist(secondInvoiceFileName);
         await expect(exist).to.be.true;
       });
 
@@ -396,13 +396,13 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNoTaxBreakdownInFile', baseContext);
 
         // Check that there is only one tax line 30.000 %
-        let exist = await files.isTextInPDF(secondInvoiceFileName as string, '10.000 %');
+        let exist = await files.isTextInPDF(secondInvoiceFileName, '10.000 %');
         await expect(exist).to.be.false;
 
-        exist = await files.isTextInPDF(secondInvoiceFileName as string, '20.000 %');
+        exist = await files.isTextInPDF(secondInvoiceFileName, '20.000 %');
         await expect(exist).to.be.false;
 
-        exist = await files.isTextInPDF(secondInvoiceFileName as string, '30.000 %');
+        exist = await files.isTextInPDF(secondInvoiceFileName, '30.000 %');
         await expect(exist).to.be.true;
       });
     });

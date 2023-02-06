@@ -281,7 +281,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
@@ -363,7 +363,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
@@ -390,7 +390,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 4);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
   });

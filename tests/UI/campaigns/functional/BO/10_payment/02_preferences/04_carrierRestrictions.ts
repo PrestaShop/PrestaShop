@@ -160,7 +160,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
         // Close current tab
-        page = await homePage.closePage(browserContext, page, 0) as Page;
+        page = await homePage.closePage(browserContext, page, 0);
 
         const pageTitle = await preferencesPage.getPageTitle(page);
         await expect(pageTitle).to.contains(preferencesPage.pageTitle);

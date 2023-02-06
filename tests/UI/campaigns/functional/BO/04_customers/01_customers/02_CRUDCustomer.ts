@@ -127,7 +127,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0) as Page;
+      page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(customersPage.pageTitle);
@@ -248,7 +248,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0) as Page;
+      page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(customersPage.pageTitle);
