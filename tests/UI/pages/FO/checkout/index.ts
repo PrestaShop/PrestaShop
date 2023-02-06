@@ -495,7 +495,9 @@ class Checkout extends FOBasePage {
    * @returns {Promise<void>}
    */
   async fillAddressForm(page: Page, address: AddressData): Promise<void> {
-    await this.setValue(page, this.addressStepAliasInput, address.alias);
+    if (await this.elementVisible(page, this.addressStepAliasInput)) {
+      await this.setValue(page, this.addressStepAliasInput, address.alias);
+    }
     await this.setValue(page, this.addressStepCompanyInput, address.company);
     await this.setValue(page, this.addressStepAddress1Input, address.address);
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
