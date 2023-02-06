@@ -43,10 +43,17 @@ type ImportCategory = {
   description: string
 };
 
+type ImportCombination = {
+  id: number
+  reference: string
+  attribute: string
+  value: string
+};
+
 type ImportCreator = {
   entity: string
   header: ImportHeaderItem[]
-  records: ImportAddress[]|ImportBrand[]|ImportCategory[]
+  records: ImportAddress[]|ImportBrand[]|ImportCategory[]|ImportCombination[]
 }
 
 type ImportHeaderItem = {
@@ -58,6 +65,7 @@ export {
   ImportAddress,
   ImportBrand,
   ImportCategory,
+  ImportCombination,
   ImportCreator,
   ImportHeaderItem,
 };
