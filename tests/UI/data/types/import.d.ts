@@ -34,10 +34,19 @@ type ImportBrand = {
   imageURL: string
 };
 
+type ImportCategory = {
+  id: number
+  active: number
+  name: string
+  parent_category: string
+  root_category: string
+  description: string
+};
+
 type ImportCreator = {
   entity: string
   header: ImportHeaderItem[]
-  records: ImportAddress[]|ImportBrand[]
+  records: ImportAddress[]|ImportBrand[]|ImportCategory[]
 }
 
 type ImportHeaderItem = {
@@ -48,6 +57,7 @@ type ImportHeaderItem = {
 export {
   ImportAddress,
   ImportBrand,
+  ImportCategory,
   ImportCreator,
   ImportHeaderItem,
 };

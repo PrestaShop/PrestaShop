@@ -12,7 +12,7 @@ import importPage from '@pages/BO/advancedParameters/import';
 import categoriesPage from '@pages/BO/catalog/categories';
 
 // Import data
-import {Data} from '@data/import/categories';
+import ImportCategories from '@data/import/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,7 +43,7 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all data
-    await files.createCSVFile('.', fileName, Data);
+    await files.createCSVFile('.', fileName, ImportCategories);
   });
 
   after(async () => {
