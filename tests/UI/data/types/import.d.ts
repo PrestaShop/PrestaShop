@@ -53,8 +53,24 @@ type ImportCombination = {
 type ImportCreator = {
   entity: string
   header: ImportHeaderItem[]
-  records: ImportAddress[]|ImportBrand[]|ImportCategory[]|ImportCombination[]
+  records: ImportAddress[]|ImportBrand[]|ImportCategory[]|ImportCombination[]|ImportCustomer[]
 }
+
+type ImportCustomer = {
+  id: number
+  active: number
+  title: number
+  email: string
+  password: string
+  birthdate: string
+  lastName: string
+  firstName: string
+  newsletter: number
+  optIn: number
+  registrationDate: string
+  groups: string
+  defaultGroup: string
+};
 
 type ImportHeaderItem = {
   id: string
@@ -67,5 +83,6 @@ export {
   ImportCategory,
   ImportCombination,
   ImportCreator,
+  ImportCustomer,
   ImportHeaderItem,
 };
