@@ -67,11 +67,9 @@
     name: 'Filters',
     data(): {
       selectedFilters: Record<string, any>,
-      clearSelectedFiltersEvent: string,
     } {
       return {
         selectedFilters: [],
-        clearSelectedFiltersEvent: CombinationEvents.clearAllCombinationFilters,
       };
     },
     props: {
@@ -130,7 +128,6 @@
       },
       clearAll(): void {
         this.selectedFilters = [];
-        this.eventEmitter.emit(CombinationEvents.clearAllCombinationFilters);
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
       updateFilters(): void {

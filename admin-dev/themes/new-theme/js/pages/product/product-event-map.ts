@@ -57,7 +57,6 @@ export default {
     combinationDeleted: 'combinationDeleted',
     combinationSwitchDeltaQuantity: 'combinationSwitchDeltaQuantity',
     combinationSwitchFixedQuantity: 'combinationSwitchFixedQuantity',
-    clearAllCombinationFilters: 'clearAllCombinationFilters',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
@@ -68,7 +67,4 @@ export default {
     listUpdated: 'specificPricesListUpdated',
   },
   cancelProductShops: 'cancelProductShops',
-  shipping: {
-    clearSelectedCarriers: 'clearSelectedCarriers',
-  },
 };

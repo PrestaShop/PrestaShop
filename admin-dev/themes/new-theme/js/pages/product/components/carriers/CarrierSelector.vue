@@ -75,18 +75,15 @@
 <script lang="ts">
   import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
-  import ProductEventMap from '@pages/product/product-event-map';
   import {Choice} from '@app/components/checkboxes-dropdown/types';
 
   export default defineComponent({
     name: 'CarrierSelector',
     data(): {
       selectedCarrierIds: number[],
-      clearSelectedCarriersEvent: string,
     } {
       return {
         selectedCarrierIds: [],
-        clearSelectedCarriersEvent: ProductEventMap.shipping.clearSelectedCarriers,
       };
     },
     props: {

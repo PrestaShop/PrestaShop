@@ -76,7 +76,6 @@ export default function initCarrierSelector(
     i18n,
     carrierChoices,
     initialCarrierIds,
-    modifyAllShopsName: <string>container.dataset.modifyAllShopsName,
     choiceInputName,
   }).use(i18n);
 

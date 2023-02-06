@@ -51,7 +51,7 @@
 
   export default defineComponent({
     props: {
-      choices: {
+      items: {
         type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },

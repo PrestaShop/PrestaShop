@@ -320,7 +320,7 @@
         );
 
         this.sortableContainer.sortable({
-          choices: DropzoneMap.sortableItems,
+          items: DropzoneMap.sortableItems,
           opacity: 0.9,
           containment: 'parent',
           distance: 32,
