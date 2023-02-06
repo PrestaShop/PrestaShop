@@ -22,10 +22,22 @@ type ImportAddress = {
   dni: string
 };
 
+type ImportBrand = {
+  id: number
+  active: number
+  name: string
+  description: string
+  shortDescription: string
+  metaTitle: string
+  metaKeywords: string[]
+  metaDescription: string
+  imageURL: string
+};
+
 type ImportCreator = {
   entity: string
   header: ImportHeaderItem[]
-  records: ImportAddress[]
+  records: ImportAddress[]|ImportBrand[]
 }
 
 type ImportHeaderItem = {
@@ -35,6 +47,7 @@ type ImportHeaderItem = {
 
 export {
   ImportAddress,
+  ImportBrand,
   ImportCreator,
   ImportHeaderItem,
 };

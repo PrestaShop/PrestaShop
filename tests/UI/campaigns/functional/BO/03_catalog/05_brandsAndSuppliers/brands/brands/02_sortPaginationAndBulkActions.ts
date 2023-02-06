@@ -13,7 +13,7 @@ import brandsPage from '@pages/BO/catalog/brands';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {Data} from '@data/import/brands';
+import ImportBrands from '@data/import/brands';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -39,14 +39,14 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
   const numberOfImportedBrands: number = 10;
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, ImportBrands.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all brands data
-    await files.createCSVFile('.', fileName, Data);
+    await files.createCSVFile('.', fileName, ImportBrands);
   });
 
   after(async () => {
