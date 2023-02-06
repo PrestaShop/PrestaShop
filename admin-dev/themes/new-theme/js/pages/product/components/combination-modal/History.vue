@@ -64,7 +64,6 @@
       class="card-footer"
       v-if="areCombinationsNotEmpty"
     >
-      <p>{{ selectedCombinationId }}</p>
       <pagination
         :pagination-length="14"
         :datas="combinationsList"
