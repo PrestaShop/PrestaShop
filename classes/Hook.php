@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class HookCore extends ObjectModel
@@ -423,6 +424,9 @@ class HookCore extends ObjectModel
                     return static::coreCallHook($module, $methodName, $hookArgs);
                 }
             }
+        } catch (ModuleErrorInterface $e) {
+            // Exceptions that implements ModuleErrorInterface are usefull to display error messages
+            throw $e;
         } catch (Exception $e) {
             $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
             if ($environment->isDebug()) {
