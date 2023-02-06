@@ -108,6 +108,6 @@
     "jsdoc-to-markdown": "^8.0.0",
     "mochawesome-merge": "^4.2.2",
     "ts-mocha": "^10.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }
