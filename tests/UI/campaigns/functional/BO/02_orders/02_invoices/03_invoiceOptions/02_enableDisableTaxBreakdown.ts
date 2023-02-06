@@ -6,6 +6,10 @@ import testContext from '@utils/testContext';
 // Import commonSteps
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
@@ -52,8 +56,8 @@ Post-condition: Delete Product with bulk action
 describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let firstInvoiceFileName: string|null;
-  let secondInvoiceFileName: string|null;
+  let firstInvoiceFileName: string | null;
+  let secondInvoiceFileName: string | null;
 
   const taxRuleGroupToCreate: TaxRulesGroupData = new TaxRulesGroupData();
   const firstTaxRuleToCreate: TaxRuleData = new TaxRuleData({
@@ -70,6 +74,9 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
     type: 'Standard product',
     taxRule: taxRuleGroupToCreate.name,
   });
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_dnableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -464,4 +471,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
   // Post-condition: Delete the created products
   bulkDeleteProductsTest(productData.name, `${baseContext}_postTest`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

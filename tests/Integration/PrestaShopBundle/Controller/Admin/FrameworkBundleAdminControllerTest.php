@@ -210,7 +210,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
 
         $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
 
-        self::$kernel->getContainer()->set('prestashop.core.admin.feature_flag.repository', $mockFeatureFlagRepository);
+        self::$kernel->getContainer()->set(FeatureFlagRepository::class, $mockFeatureFlagRepository);
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('prestashop.core.kpi_row.presenter', $kpiRowPresenterMock);

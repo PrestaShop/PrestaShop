@@ -9,6 +9,10 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/order';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
@@ -205,6 +209,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   // Pre-condition: Enable EcoTax
   enableEcoTaxTest(`${baseContext}_preTest_2`);
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -855,4 +862,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   // Post-condition: Disable EcoTax
   disableEcoTaxTest(`${baseContext}_postTest_4`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -4,10 +4,14 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import categoryPage from '@pages/FO/category';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import categoryPage from '@pages/FO/category';
 
 // Import data
 import Products from '@data/demo/products';
@@ -55,6 +59,9 @@ describe('FO - Home Page : Product quick view', async () => {
     lowStockLevel: 3,
     behaviourOutOfStock: 'Deny orders',
   });
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest`);
@@ -270,4 +277,7 @@ describe('FO - Home Page : Product quick view', async () => {
 
   // Post-condition : Delete the created product
   deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

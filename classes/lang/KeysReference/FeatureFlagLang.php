@@ -33,6 +33,8 @@ trans(
 
 // Product feature flag in 8.0
 trans('New product page - Single store', 'Admin.Advparameters.Feature');
+// Product feature flag in 8.1
+trans('New product page', 'Admin.Advparameters.Feature');
 trans('This page benefits from increased performance and includes new features such as a new combination management system.', 'Admin.Advparameters.Help');
 
 // Product multi store feature flag in 8.0

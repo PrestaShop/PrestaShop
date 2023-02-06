@@ -26,7 +26,7 @@ services:
   PrestaShopBundle\Routing\Converter\LegacyRouteFactory:
     autowire: true
     arguments:
-      - '@prestashop.core.admin.feature_flag.repository'
+      - '@PrestaShopBundle\Entity\Repository\FeatureFlagRepository'
 
   # We set this alias so that we can override it in test environment (to avoid memory limit crashes)
   prestashop.bundle.routing.converter.cache:

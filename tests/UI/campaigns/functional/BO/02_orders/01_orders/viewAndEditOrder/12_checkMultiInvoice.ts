@@ -8,6 +8,10 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderSpecificProductTest} from '@commonTests/FO/order';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -46,7 +50,7 @@ Post-condition:
 describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string|null;
+  let filePath: string | null;
   let firstFileName: string = '';
   let secondFileName: string = '';
 
@@ -85,6 +89,9 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     carrierID: Carriers.myCarrier.id,
     shippingCost: '€8.40',
   };
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // Pre-condition: Create first product
   createProductTest(firstProduct, `${baseContext}_preTest_1`);
@@ -485,4 +492,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
   // Post-condition: Delete 'Free shipping' cart rule
   deleteCartRuleTest(`${baseContext}_postTest_2`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -11,6 +11,10 @@ import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/internatio
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
@@ -193,6 +197,9 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
   // Pre-condition: Create currency
   createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -666,4 +673,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
   // Post-condition: Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_4`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });
