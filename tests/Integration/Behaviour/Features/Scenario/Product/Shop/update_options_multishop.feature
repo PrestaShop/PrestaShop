@@ -1,11 +1,11 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-options
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-options-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @restore-languages-after-feature
 @clear-cache-after-feature
-@product-multi-shop
-@update-multi-shop-options
+@product-multishop
+@update-options-multishop
 Feature: Feature: Update product options from Back Office (BO) for multiple shops
   As a BO user
   I want to be able to update product fields associated with options in multiple shops.

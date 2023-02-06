@@ -1,10 +1,10 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-pack
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-pack-multishop
 @restore-products-before-feature
 @clear-cache-after-feature
 @restore-shops-before-feature
 @restore-shops-after-feature
-@product-multi-shop
-@update-multi-shop-pack
+@product-multishop
+@update-pack-multishop
 Feature: Add product to pack from Back Office (BO)
   As a BO user
   I need to be able to add product to pack from BO

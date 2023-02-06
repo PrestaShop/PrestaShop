@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multishop-image
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-image-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
 @product-image
-@update-multishop-image
+@update-image-multishop
 Feature: Update product image from Back Office (BO)
   As an employee I need to be able to update new product image
 

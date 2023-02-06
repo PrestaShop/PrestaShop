@@ -4,7 +4,7 @@
 @restore-shops-after-feature
 @clear-cache-after-feature
 @product-combination
-@product-multi-shop
+@product-multishop
 @copy-combinations-to-shop
 Feature: Copy combinations from Back Office (BO) when using multi-shop feature
   As a BO user

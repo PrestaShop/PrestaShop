@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags delete-multishop-image
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags delete-image-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
 @product-image
-@delete-multishop-image
+@delete-image-multishop
 Feature: Delete product image from Back Office (BO)
   As an employee I need to be able to delete product image
 

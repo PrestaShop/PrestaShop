@@ -4,6 +4,7 @@
 @restore-shops-after-feature
 @restore-languages-after-feature
 @clear-cache-before-feature
+@product-multishop
 @update-customization-fields-multishop
 Feature: Set product images for all shops from Back Office (BO)
   As an employee I need to be able to edit customization fields for each shop

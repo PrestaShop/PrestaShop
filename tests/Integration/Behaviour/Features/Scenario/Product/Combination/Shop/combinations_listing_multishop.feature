@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags combinations-multi-shop-listing
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags combinations-listing-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
-@product-multi-shop
-@combinations-multi-shop-listing
+@product-multishop
+@combinations-listing-multishop
 Feature: List attribute combinations for product in Back Office (BO) of multiple shops
   As an employee
   I need to be able to see and manipulate a list of product attribute combinations in BO of multiple shops

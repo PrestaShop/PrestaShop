@@ -1,12 +1,12 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-categories
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-categories-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @restore-languages-after-feature
 @reset-img-after-feature
 @clear-cache-after-feature
-@product-multi-shop
-@update-multi-shop-categories
+@product-multishop
+@update-categories-multishop
 Feature: Copy product from shop to shop.
   As a BO user I want to be able to copy product from shop to shop.
 

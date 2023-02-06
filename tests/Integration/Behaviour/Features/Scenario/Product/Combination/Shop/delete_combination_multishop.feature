@@ -1,12 +1,12 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags delete-multi-shop-combination
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags delete-combination-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @clear-cache-after-feature
 @product-combination
 @delete-combination
-@product-multi-shop
-@delete-multi-shop-combination
+@product-multishop
+@delete-combination-multishop
 Feature: Delete combination from Back Office (BO) in multiple shops
   As a BO user
   I need to be able to delete product combinations from BO in multiple shops

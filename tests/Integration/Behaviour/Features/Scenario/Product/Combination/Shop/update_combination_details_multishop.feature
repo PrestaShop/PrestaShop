@@ -1,8 +1,8 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-multi-shop-details
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-details-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
-@update-combination-multi-shop-details
+@update-combination-details-multishop
 Feature: Update product combination details in Back Office (BO) in multi shop context
   As an employee
   I need to be able to update product combination details from BO in multiple shops

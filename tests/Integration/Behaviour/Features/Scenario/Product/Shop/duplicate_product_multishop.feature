@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-multi-shop-product
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
@@ -6,8 +6,8 @@
 @restore-taxes-after-feature
 @reset-img-after-feature
 @clear-cache-after-feature
-@product-multi-shop
-@duplicate-multi-shop-product
+@product-multishop
+@duplicate-product-multishop
 Feature: Copy product from shop to shop.
   As a BO user I want to be able to duplicate products for specific shop, group shop and all shops
 
