@@ -141,7 +141,7 @@
   import Modal from '@PSVue/components/Modal.vue';
   import Router from '@components/router';
   import {defineComponent} from 'vue';
-  import PaginatedCombinationsService from '@pages/product/combination/service/paginated-combinations-service';
+  import PaginatedCombinationsService from '@pages/product/service/paginated-combinations-service';
   import PsModal from '@components/modal/modal';
   import History from './History.vue';
 

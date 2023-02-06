@@ -26,7 +26,7 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import CombinationsService from '@pages/product/combination/service/combinations-service';
+import CombinationsService from '@pages/product/service/combinations-service';
 import ConfirmModal from '@components/modal/confirm-modal';
 
 const {$} = window;

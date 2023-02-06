@@ -26,7 +26,7 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import PaginatedCombinationsService from '@pages/product/combination/service/paginated-combinations-service';
+import PaginatedCombinationsService from '@pages/product/service/paginated-combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 const CombinationMap = ProductMap.combinations;

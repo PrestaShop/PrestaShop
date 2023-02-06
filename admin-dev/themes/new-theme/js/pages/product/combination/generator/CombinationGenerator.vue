@@ -92,10 +92,10 @@
 </template>
 
 <script lang="ts">
-  import CombinationsService from '@pages/product/combination/service/combinations-service';
+  import CombinationsService from '@pages/product/service/combinations-service';
   import AttributesSelector from '@pages/product/combination/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/combination/mixins/is-attribute-selected';
-  import {getAllAttributeGroups} from '@pages/product/combination/service/attribute-groups';
+  import {getAllAttributeGroups} from '@pages/product/service/attribute-groups';
   import Modal from '@PSVue/components/Modal.vue';
   import {defineComponent} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';

@@ -28,7 +28,7 @@ import {createI18n} from 'vue-i18n';
 import EventEmitter from '@components/event-emitter';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import CombinationModal from '@pages/product/combination/combination-modal/CombinationModal.vue';
-import PaginatedCombinationsService from '@pages/product/combination/service/paginated-combinations-service';
+import PaginatedCombinationsService from '@pages/product/service/paginated-combinations-service';
 
 /**
  * @param {string} combinationModalSelector

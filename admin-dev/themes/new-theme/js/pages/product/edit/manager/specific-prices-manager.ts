@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import PaginatedCatalogPriceRulesService from '@pages/product/catalog-price-rule/paginated-catalog-price-rules-service';
+import PaginatedCatalogPriceRulesService from '@pages/product/service/paginated-catalog-price-rules-service';
 import CatalogPriceRuleRenderer from '@pages/product/catalog-price-rule/catalog-price-rule-renderer';
 import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
@@ -33,7 +33,7 @@ import SpecificPriceListRenderer from '@pages/product/specific-price/specific-pr
 import Router from '@components/router';
 import FormFieldToggler from '@components/form/form-field-toggler';
 import {isUndefined} from '@PSTypes/typeguard';
-import PaginatedSpecificPricesService from '@pages/product/specific-price/service/paginated-specific-prices-service';
+import PaginatedSpecificPricesService from '@pages/product/service/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 import ClickEvent = JQuery.ClickEvent;

@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {deleteSpecificPrice} from '@pages/product/specific-price/service/specific-price-service';
+import {deleteSpecificPrice} from '@pages/product/service/specific-price-service';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
 import ConfirmModal from '@components/modal/confirm-modal';

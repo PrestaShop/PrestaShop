@@ -25,7 +25,7 @@
 <script lang="ts" setup>
   import Modal from '@PSVue/components/Modal.vue';
   import {ref, computed} from 'vue';
-  import {getProductImages, getProductShopImages, updateProductShopImages} from '@pages/product/image/images-service';
+  import {getProductImages, getProductShopImages, updateProductShopImages} from '@pages/product/service/images-service';
   import ImageShopGrid from '@pages/product/image/images-shop-association/ImageShopGrid.vue';
   import ProductEventMap from '@pages/product/product-event-map';
 
