@@ -53,7 +53,7 @@ type ImportCombination = {
 type ImportCreator = {
   entity: string
   header: ImportHeaderItem[]
-  records: ImportAddress[]|ImportBrand[]|ImportCategory[]|ImportCombination[]|ImportCustomer[]
+  records: ImportAddress[]|ImportBrand[]|ImportCategory[]|ImportCombination[]|ImportCustomer[]|ImportProduct[]
 }
 
 type ImportCustomer = {
@@ -77,6 +77,36 @@ type ImportHeaderItem = {
   title: string
 }
 
+type ImportProduct = {
+  id: number
+  active: number
+  name: string
+  categories: string
+  price_TEXC: string
+  tax_rule_id: string
+  cost_price: string
+  on_sale: string
+  discount_amount: string
+  discount_percent: string
+  discount_from: string
+  discount_to: string
+  reference: string
+  supplier_reference: string
+  supplier: string
+  brand: string
+  ean13: string
+  upc: string
+  value: string
+  mpn: string
+  width: string
+  height: string
+  depth: string
+  weight: string
+  delivery_time_in_stock: string
+  delivery_time_out_of_stock: string
+  quantity: number
+};
+
 export {
   ImportAddress,
   ImportBrand,
@@ -85,4 +115,5 @@ export {
   ImportCreator,
   ImportCustomer,
   ImportHeaderItem,
+  ImportProduct,
 };

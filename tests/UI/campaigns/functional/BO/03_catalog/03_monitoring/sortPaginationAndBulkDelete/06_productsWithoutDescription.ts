@@ -15,7 +15,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import monitoringPage from '@pages/BO/catalog/monitoring';
 
 // Import data
-import {ProductsData} from '@data/import/disabledProducts';
+import ImportDisabledProducts from '@data/import/disabledProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,14 +41,14 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
   const productsFile: string = 'products.csv';
 
   // Pre-condition: Import list of products
-  importFileTest(productsFile, ProductsData.entity, `${baseContext}_preTest_1`);
+  importFileTest(productsFile, ImportDisabledProducts.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all products data
-    await files.createCSVFile('.', productsFile, ProductsData);
+    await files.createCSVFile('.', productsFile, ImportDisabledProducts);
   });
 
   after(async () => {
