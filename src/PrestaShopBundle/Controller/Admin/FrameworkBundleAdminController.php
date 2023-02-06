@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
@@ -35,13 +34,11 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -51,43 +48,9 @@ class FrameworkBundleAdminController extends AbstractController
     public const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
-     * @deprecated since version 8.1, use $this->getConfiguration() instead
-     *
-     * @var Configuration
-     */
-    protected $configuration;
-
-    /**
      * @var string|null
      */
     protected $layoutTitle;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        @trigger_error(__FUNCTION__ . ' is deprecated since version 8.1 and will be removed in the next major version.', E_USER_DEPRECATED);
-
-        $this->configuration = new Configuration();
-    }
-
-    /**
-     * @Template
-     *
-     * @deprecated Since 8.0, to be removed in the next major version
-     *
-     * @return array|Response Template vars if the action uses template annotation, or a Response object
-     */
-    public function overviewAction()
-    {
-        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in the next major version.', E_USER_DEPRECATED);
-
-        return [
-            'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
-            'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
-        ];
-    }
 
     /**
      * @return ShopConfigurationInterface
