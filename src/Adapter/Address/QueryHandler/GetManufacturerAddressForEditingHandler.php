@@ -59,6 +59,9 @@ final class GetManufacturerAddressForEditingHandler extends AbstractAddressHandl
             $address->phone,
             $address->phone_mobile,
             $address->other,
+            $address->siret
+            $address->APE
+            $address->vat_number
             $address->dni
         );
     }

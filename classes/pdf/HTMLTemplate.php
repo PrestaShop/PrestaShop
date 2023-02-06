@@ -83,6 +83,9 @@ abstract class HTMLTemplateCore
             'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
+            'shop_siret' => Configuration::get('PS_SHOP_SIRET', null, null, $id_shop),
+            'shop_vat_number' => Configuration::get('PS_SHOP_VAT_NUMBER', null, null, $id_shop),
+			'shop_iban' => Configuration::get('PS_SHOP_IBAN', null, null, $id_shop),
             'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
         ]);
 
@@ -96,7 +99,14 @@ abstract class HTMLTemplateCore
      */
     protected function getShopAddress()
     {
-        return AddressFormat::generateAddress($this->shop->getAddress(), [], ' - ', ' ');
+        $shop_address = '';
+
+        $shop_address_obj = $this->shop->getAddress();
+        if (isset($shop_address_obj) && $shop_address_obj instanceof Address) {
+            $shop_address = AddressFormat::generateAddress($shop_address_obj, [], ' - ', ' ');
+        }
+
+        return $shop_address;
     }
 
     /**
@@ -154,6 +164,9 @@ abstract class HTMLTemplateCore
             'title' => $this->title,
             'shop_name' => $shop_name,
             'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int) $id_shop),
+            'shop_siret' => Configuration::get('PS_SHOP_SIRET', null, null, $id_shop),
+            'shop_vat_number' => Configuration::get('PS_SHOP_VAT_NUMBER', null, null, $id_shop),
+            'shop_iban' => Configuration::get('PS_SHOP_IBAN', null, null, $id_shop),
             'width_logo' => $width,
             'height_logo' => $height,
         ]);
@@ -206,7 +219,7 @@ abstract class HTMLTemplateCore
      * If the template is not present in the theme directory, it will return the default template
      * in _PS_PDF_DIR_ directory.
      *
-     * @param string $template_name
+     * @param $template_name
      *
      * @return string
      */

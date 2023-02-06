@@ -60,6 +60,7 @@ class AddressFormatCore extends ObjectModel
         'firstname',
         'lastname',
         'address1',
+        'postcode',
         'city',
         'Country:name',
     ];

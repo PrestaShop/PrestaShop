@@ -29,7 +29,9 @@ CREATE TABLE `PREFIX_address` (
   `other` text,
   `phone` varchar(32) DEFAULT NULL,
   `phone_mobile` varchar(32) DEFAULT NULL,
+  `siret` varchar(32) DEFAULT NULL,
   `vat_number` varchar(32) DEFAULT NULL,
+  `APE` varchar(10) DEFAULT NULL,
   `dni` varchar(16) DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
@@ -80,10 +82,22 @@ CREATE TABLE `PREFIX_product_attachment` (
   PRIMARY KEY (`id_product`, `id_attachment`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+/* Describe the impact on weight / price of an attribute */
+CREATE TABLE `PREFIX_attribute_impact` (
+  `id_attribute_impact` int(10) unsigned NOT NULL auto_increment,
+  `id_product` int(11) unsigned NOT NULL,
+  `id_attribute` int(11) unsigned NOT NULL,
+  `weight` DECIMAL(20, 6) NOT NULL,
+  `price` DECIMAL(20, 6) NOT NULL,
+  PRIMARY KEY (`id_attribute_impact`),
+  UNIQUE KEY `id_product` (`id_product`, `id_attribute`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 /* Describe the carrier informations */
 CREATE TABLE `PREFIX_carrier` (
   `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_reference` int(10) unsigned NOT NULL,
+  `id_tax_rules_group` int(10) unsigned DEFAULT '0',
   `name` varchar(64) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -104,6 +118,7 @@ CREATE TABLE `PREFIX_carrier` (
   `grade` int(10) DEFAULT '0',
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`, `active`),
+  KEY `id_tax_rules_group` (`id_tax_rules_group`),
   KEY `reference` (
     `id_reference`, `deleted`, `active`
   )
@@ -356,7 +371,6 @@ CREATE TABLE `PREFIX_category_lang` (
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(128) NOT NULL,
   `description` text,
-  `additional_description` text,
   `link_rewrite` varchar(128) NOT NULL,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
@@ -614,6 +628,7 @@ CREATE TABLE `PREFIX_customer` (
   `company` varchar(255),
   `siret` varchar(14),
   `ape` varchar(5),
+  `vat_number` varchar(28),
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -756,7 +771,7 @@ CREATE TABLE `PREFIX_customized_data` (
   `id_customization` int(10) unsigned NOT NULL,
   `type` tinyint(1) NOT NULL,
   `index` int(3) NOT NULL,
-  `value` varchar(1024) NOT NULL,
+  `value` varchar(255) NOT NULL,
   `id_module` int(10) NOT NULL DEFAULT '0',
   `price` decimal(20, 6) NOT NULL DEFAULT '0',
   `weight` decimal(20, 6) NOT NULL DEFAULT '0',
@@ -1230,6 +1245,7 @@ CREATE TABLE `PREFIX_orders` (
   `gift` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `gift_message` text,
   `mobile_theme` tinyint(1) NOT NULL DEFAULT '0',
+  `shipping_number` varchar(64) DEFAULT NULL,
   `total_discounts` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_discounts_tax_incl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_discounts_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.00',
@@ -1326,7 +1342,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_id` int(10) unsigned NOT NULL,
   `product_attribute_id` int(10) unsigned DEFAULT NULL,
   `id_customization` int(10) unsigned DEFAULT 0,
-  `product_name` text NOT NULL,
+  `product_name` varchar(255) NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `product_quantity_in_stock` int(10) NOT NULL DEFAULT '0',
   `product_quantity_refunded` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1591,7 +1607,6 @@ CREATE TABLE `PREFIX_order_payment` (
   `card_expiration` CHAR(7) NULL,
   `card_holder` VARCHAR(254) NULL,
   `date_add` DATETIME NOT NULL,
-  `id_employee` INT NULL,
   PRIMARY KEY (`id_order_payment`),
   KEY `order_reference`(`order_reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -1618,7 +1633,6 @@ CREATE TABLE `PREFIX_product` (
   `price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `wholesale_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `unity` varchar(255) DEFAULT NULL,
-  `unit_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `unit_price_ratio` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `additional_shipping_cost` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `reference` varchar(64) DEFAULT NULL,
@@ -1636,10 +1650,9 @@ CREATE TABLE `PREFIX_product` (
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
-    '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
-    '404-displayed', '410-displayed', 'default'
-  ) NOT NULL DEFAULT 'default',
+    '404', '301-product', '302-product',
+    '301-category', '302-category'
+  ) NOT NULL DEFAULT '404',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
@@ -1688,7 +1701,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `wholesale_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `unity` varchar(255) DEFAULT NULL,
-  `unit_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `unit_price_ratio` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `additional_shipping_cost` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `customizable` tinyint(2) NOT NULL DEFAULT '0',
@@ -1696,10 +1708,9 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
-    '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
-    '404-displayed', '410-displayed', 'default'
-  ) NOT NULL DEFAULT 'default',
+    '', '404', '301-product', '302-product',
+    '301-category', '302-category'
+  ) NOT NULL DEFAULT '',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
@@ -1731,6 +1742,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `id_product` int(10) unsigned NOT NULL,
   `reference` varchar(64) DEFAULT NULL,
   `supplier_reference` varchar(64) DEFAULT NULL,
+  `location` varchar(255) NOT NULL DEFAULT '',
   `ean13` varchar(13) DEFAULT NULL,
   `isbn` varchar(32) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
@@ -1738,6 +1750,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `wholesale_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `ecotax` decimal(17, 6) NOT NULL DEFAULT '0.00',
+  `quantity` int(10) NOT NULL DEFAULT '0',
   `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `unit_price_impact` DECIMAL(20, 6) NOT NULL DEFAULT '0.00',
   `default_on` tinyint(1) unsigned NULL DEFAULT NULL,
@@ -1753,15 +1766,6 @@ CREATE TABLE `PREFIX_product_attribute` (
   KEY `id_product_id_product_attribute` (
     `id_product_attribute`, `id_product`
   )
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-/* Localized combination information */
-CREATE TABLE `PREFIX_product_attribute_lang` (
-  `id_product_attribute` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `available_now` varchar(255) DEFAULT NULL,
-  `available_later` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_product_attribute`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* shop specific attribute info */
@@ -1919,6 +1923,50 @@ CREATE TABLE `PREFIX_range_weight` (
   UNIQUE KEY `id_carrier` (
     `id_carrier`, `delimiter1`, `delimiter2`
   )
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Referrer stats */
+CREATE TABLE `PREFIX_referrer` (
+  `id_referrer` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(64) NOT NULL,
+  `passwd` varchar(255) DEFAULT NULL,
+  `http_referer_regexp` varchar(64) DEFAULT NULL,
+  `http_referer_like` varchar(64) DEFAULT NULL,
+  `request_uri_regexp` varchar(64) DEFAULT NULL,
+  `request_uri_like` varchar(64) DEFAULT NULL,
+  `http_referer_regexp_not` varchar(64) DEFAULT NULL,
+  `http_referer_like_not` varchar(64) DEFAULT NULL,
+  `request_uri_regexp_not` varchar(64) DEFAULT NULL,
+  `request_uri_like_not` varchar(64) DEFAULT NULL,
+  `base_fee` decimal(5, 2) NOT NULL DEFAULT '0.00',
+  `percent_fee` decimal(5, 2) NOT NULL DEFAULT '0.00',
+  `click_fee` decimal(5, 2) NOT NULL DEFAULT '0.00',
+  `date_add` datetime NOT NULL,
+  PRIMARY KEY (`id_referrer`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Referrer cache (stats) */
+CREATE TABLE `PREFIX_referrer_cache` (
+  `id_connections_source` int(11) unsigned NOT NULL,
+  `id_referrer` int(11) unsigned NOT NULL,
+  PRIMARY KEY (
+    `id_connections_source`, `id_referrer`
+  )
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Referrer shop info (stats) */
+CREATE TABLE `PREFIX_referrer_shop` (
+  `id_referrer` int(10) unsigned NOT NULL auto_increment,
+  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
+  `cache_visitors` int(11) DEFAULT NULL,
+  `cache_visits` int(11) DEFAULT NULL,
+  `cache_pages` int(11) DEFAULT NULL,
+  `cache_registrations` int(11) DEFAULT NULL,
+  `cache_orders` int(11) DEFAULT NULL,
+  `cache_sales` decimal(17, 2) DEFAULT NULL,
+  `cache_reg_rate` decimal(5, 4) DEFAULT NULL,
+  `cache_order_rate` decimal(5, 4) DEFAULT NULL,
+  PRIMARY KEY (`id_referrer`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* List of custom SQL request saved on the admin (used to generate exports) */
@@ -2129,6 +2177,11 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
   `name` varchar(255) NOT NULL,
   `address1` varchar(255) NOT NULL,
   `address2` varchar(255) DEFAULT NULL,
+  `siret` varchar(18) DEFAULT NULL,
+  `vat_number` varchar(28) DEFAULT NULL,
+  `iban` varchar(28) DEFAULT NULL,
+  `APE` varchar(10) DEFAULT NULL,
+  `dni` varchar(16) DEFAULT NULL,
   `hours` text,
   `note` text,
   PRIMARY KEY (`id_store`, `id_lang`)
@@ -2152,7 +2205,7 @@ CREATE TABLE `PREFIX_webservice_permission` (
   `id_webservice_permission` int(11) NOT NULL AUTO_INCREMENT,
   `resource` varchar(50) NOT NULL,
   `method` enum(
-    'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'
+    'GET', 'POST', 'PUT', 'DELETE', 'HEAD'
   ) NOT NULL,
   `id_webservice_account` int(11) NOT NULL,
   PRIMARY KEY (`id_webservice_permission`),
@@ -2803,8 +2856,6 @@ CREATE TABLE `PREFIX_employee_session` (
   `id_employee_session` int(11) unsigned NOT NULL auto_increment,
   `id_employee` int(10) unsigned DEFAULT NULL,
   `token` varchar(40) DEFAULT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
   PRIMARY KEY `id_employee_session` (`id_employee_session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -2812,7 +2863,5 @@ CREATE TABLE `PREFIX_customer_session` (
   `id_customer_session` int(11) unsigned NOT NULL auto_increment,
   `id_customer` int(10) unsigned DEFAULT NULL,
   `token` varchar(40) DEFAULT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
   PRIMARY KEY `id_customer_session` (`id_customer_session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

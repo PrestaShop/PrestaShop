@@ -82,6 +82,8 @@ final class AddManufacturerAddressHandler extends AbstractAddressHandler impleme
         $address->phone = $command->getHomePhone();
         $address->phone_mobile = $command->getMobilePhone();
         $address->other = $command->getOther();
+        $address->siret = $command->getsiret();
+        $address->APE = $command->getAPE();
         $address->dni = $command->getDni();
         $address->alias = 'manufacturer';
 

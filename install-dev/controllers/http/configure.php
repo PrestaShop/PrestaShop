@@ -219,6 +219,11 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             18 => $this->translator->trans('Shoes and accessories', [], 'Install'),
             19 => $this->translator->trans('Sports and Entertainment', [], 'Install'),
             20 => $this->translator->trans('Travel', [], 'Install'),
+            21 => $this->translator->trans('Ratailer', [], 'Install'),
+            22 => $this->translator->trans('Detailer', [], 'Install'),
+            23 => $this->translator->trans('Wholesale', [], 'Install'),
+            24 => $this->translator->trans('Online Marketplace', [], 'Install')
+            25 => $this->translator->trans('E-commerce Platform', [], 'Install')
         ];
 
         asort($list_activities);

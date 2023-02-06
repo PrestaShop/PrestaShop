@@ -87,6 +87,12 @@ class AddressCore extends ObjectModel
     /** @var string Mobile phone number */
     public $phone_mobile;
 
+   /** @var string SIRET */
+    public $siret;
+
+    /** @var string APE number */
+    public $ape;
+
     /** @var string VAT number */
     public $vat_number;
 
@@ -131,6 +137,8 @@ class AddressCore extends ObjectModel
             'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
+            'siret' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'APE' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'vat_number' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'address1' => ['type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128],
             'address2' => ['type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128],

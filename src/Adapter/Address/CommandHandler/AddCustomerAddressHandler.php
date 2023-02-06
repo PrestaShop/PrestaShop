@@ -82,6 +82,8 @@ final class AddCustomerAddressHandler extends AbstractAddressHandler implements 
         $address->address2 = $command->getAddress2();
         $address->dni = $command->getDni();
         $address->company = $command->getCompany();
+        $address->siret = $command->getSiret();
+        $address->APE = $command->getAPE();
         $address->vat_number = $command->getVatNumber();
         $address->id_state = $command->getStateId()->getValue();
         $address->phone = $command->getHomePhone();

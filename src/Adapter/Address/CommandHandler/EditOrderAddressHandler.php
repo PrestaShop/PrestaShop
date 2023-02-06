@@ -164,6 +164,12 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
         if (null !== $orderCommand->getCompany()) {
             $addressCommand->setCompany($orderCommand->getCompany());
         }
+        if (null !== $orderCommand->getSiret()) {
+            $addressCommand->setSiret($orderCommand->getSiret());
+        }
+        if (null !== $orderCommand->getAPE()) {
+            $addressCommand->setAPE($orderCommand->getAPE());
+        }
         if (null !== $orderCommand->getVatNumber()) {
             $addressCommand->setVatNumber($orderCommand->getVatNumber());
         }

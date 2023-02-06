@@ -152,6 +152,14 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
             $address->vat_number = $command->getVatNumber();
         }
 
+        if (null !== $command->getSiret()) {
+            $address->siret = $command->getSiret();
+        }
+        
+        if (null !== $command->getAPE()) {
+            $address->APE = $command->getAPE();
+        }
+
         if (null !== $command->getHomePhone()) {
             $address->phone = $command->getHomePhone();
         }

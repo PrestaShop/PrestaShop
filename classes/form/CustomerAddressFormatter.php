@@ -225,6 +225,10 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 return $this->translator->trans('Mobile phone', [], 'Shop.Forms.Labels');
             case 'company':
                 return $this->translator->trans('Company', [], 'Shop.Forms.Labels');
+            case 'siret':
+                return $this->translator->trans('Siret', [], 'Shop.Forms.Labels');
+            case 'APE':
+                return $this->translator->trans('APE', [], 'Shop.Forms.Labels');
             case 'vat_number':
                 return $this->translator->trans('VAT number', [], 'Shop.Forms.Labels');
             case 'dni':

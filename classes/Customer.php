@@ -91,6 +91,9 @@ class CustomerCore extends ObjectModel
     /** @var string APE */
     public $ape;
 
+    /** @var string VAT number */
+    public $vat_number;
+
     /** @var float Outstanding allow amount (B2B opt) */
     public $outstanding_allow_amount = 0;
 
@@ -192,6 +195,7 @@ class CustomerCore extends ObjectModel
             'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'siret' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'ape' => ['type' => self::TYPE_STRING, 'validate' => 'isApe'],
+            'vat_number' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'outstanding_allow_amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false],
             'show_public_prices' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_risk' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
@@ -729,6 +733,8 @@ class CustomerCore extends ObjectModel
                 'other' => '',
                 'phone' => '',
                 'phone_mobile' => '',
+                'siret' => '',
+                'APE' => '',
                 'vat_number' => '',
                 'dni' => '',
             ];
@@ -777,6 +783,8 @@ class CustomerCore extends ObjectModel
                       a.`other`,
                       a.`phone`,
                       a.`phone_mobile`,
+                      a.`siret`,
+                      a.`APE`,
                       a.`vat_number`,
                       a.`dni`
                     FROM `' . _DB_PREFIX_ . 'address` a

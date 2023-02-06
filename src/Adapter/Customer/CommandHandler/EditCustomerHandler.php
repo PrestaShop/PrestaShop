@@ -182,6 +182,10 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             $customer->ape = $command->getApeCode()->getValue();
         }
 
+        if (null !== $command->getvat_numberCode()) {
+            $customer->vat_number = $command->getvat_numberCode()->getValue();
+        }
+
         if (null !== $command->getWebsite()) {
             $customer->website = $command->getWebsite();
         }

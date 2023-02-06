@@ -25,9 +25,9 @@
  */
 class OrderInvoiceCore extends ObjectModel
 {
-    public const TAX_EXCL = 0;
-    public const TAX_INCL = 1;
-    public const DETAIL = 2;
+    const TAX_EXCL = 0;
+    const TAX_INCL = 1;
+    const DETAIL = 2;
 
     /** @var int */
     public $id_order;
@@ -38,7 +38,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var int */
     public $delivery_number;
 
-    /** @var string */
+    /** @var int */
     public $delivery_date = '0000-00-00 00:00:00';
 
     /** @var float */
@@ -80,13 +80,13 @@ class OrderInvoiceCore extends ObjectModel
     /** @var string note */
     public $note;
 
-    /** @var string */
+    /** @var int */
     public $date_add;
 
     /** @var array Total paid cache */
     protected static $_total_paid_cache = [];
 
-    /** @var Order|null */
+    /** @var Order * */
     private $order;
 
     /**
@@ -112,7 +112,7 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
             'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
-            'note' => ['type' => self::TYPE_HTML],
+            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
@@ -158,7 +158,7 @@ class OrderInvoiceCore extends ObjectModel
             WHERE number = ' . (int) $id_invoice
         );
 
-        return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;
+        return $id_order_invoice ? new OrderInvoice($id_order_invoice) : false;
     }
 
     /**
@@ -265,7 +265,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add stock information on a product detail.
      *
-     * @param array $product
+     * @param array &$product
      */
     protected function setProductCurrentStock(&$product)
     {
@@ -281,7 +281,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add image information on a product detail.
      *
-     * @param array $product
+     * @param array &$product
      */
     protected function setProductImageInformations(&$product)
     {
@@ -305,7 +305,7 @@ class OrderInvoiceCore extends ObjectModel
         $product['image_size'] = null;
 
         if ($id_image) {
-            $product['image'] = new Image((int) $id_image);
+            $product['image'] = new Image($id_image);
         }
     }
 
@@ -444,7 +444,6 @@ class OrderInvoiceCore extends ObjectModel
 
             $sum_of_split_taxes = 0;
             $sum_of_tax_bases = 0;
-            /** @var array{id_tax: int, rate: float, total_amount: float} $row */
             foreach ($shipping_breakdown as &$row) {
                 if (Configuration::get('PS_ATCP_SHIPWRAP')) {
                     $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, Context::getContext()->getComputingPrecision(), $this->getOrder()->round_mode);
@@ -506,7 +505,6 @@ class OrderInvoiceCore extends ObjectModel
         $sum_of_split_taxes = 0;
         $sum_of_tax_bases = 0;
         $total_tax_rate = 0;
-        /** @var array{id_tax: int, rate: float, total_amount: float} $row */
         foreach ($wrapping_breakdown as &$row) {
             if (Configuration::get('PS_ATCP_SHIPWRAP')) {
                 $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, Context::getContext()->getComputingPrecision(), $this->getOrder()->round_mode);
@@ -564,7 +562,6 @@ class OrderInvoiceCore extends ObjectModel
 
         $priceDisplayPrecision = Context::getContext()->getComputingPrecision();
         $taxes = [];
-        /** @var array{rate: float, ecotax_tax_excl: float, ecotax_tax_incl: float} $row */
         foreach ($result as $row) {
             if ($row['ecotax_tax_excl'] > 0) {
                 $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), $priceDisplayPrecision);
@@ -581,8 +578,8 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param string $date_from
-     * @param string $date_to
+     * @param $date_from
+     * @param $date_to
      *
      * @return array collection of OrderInvoice
      */
@@ -605,7 +602,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param int $id_order_state
+     * @param $id_order_state
      *
      * @return array collection of OrderInvoice
      */
@@ -627,8 +624,8 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param string $date_from
-     * @param string $date_to
+     * @param $date_from
+     * @param $date_to
      *
      * @return array collection of invoice
      */
@@ -650,7 +647,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param int $id_order_invoice
+     * @param $id_order_invoice
      */
     public static function getCarrier($id_order_invoice)
     {
@@ -665,7 +662,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param int $id_order_invoice
+     * @param $id_order_invoice
      */
     public static function getCarrierId($id_order_invoice)
     {
@@ -776,7 +773,7 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
      *
-     * @return float|array
+     * @return float
      *
      * @since 1.5.0.14
      */
@@ -925,12 +922,15 @@ class OrderInvoiceCore extends ObjectModel
     {
         $address = new Address();
         $address->company = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
+        $address->siret = Configuration::get('PS_SHOP_SIRET', null, null, $id_shop);
+        $address->vat_number = Configuration::get('PS_SHOP_VAT_NUMBER', null, null, $id_shop);
+        $address->iban = Configuration::get('PS_SHOP_IBAN', null, null, $id_shop);		
         $address->address1 = Configuration::get('PS_SHOP_ADDR1', null, null, $id_shop);
         $address->address2 = Configuration::get('PS_SHOP_ADDR2', null, null, $id_shop);
         $address->postcode = Configuration::get('PS_SHOP_CODE', null, null, $id_shop);
         $address->city = Configuration::get('PS_SHOP_CITY', null, null, $id_shop);
         $address->phone = Configuration::get('PS_SHOP_PHONE', null, null, $id_shop);
-        $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
+        $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
 
         return AddressFormat::generateAddress($address, [], '<br />', ' ');
     }

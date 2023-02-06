@@ -652,6 +652,8 @@ abstract class PaymentModuleCore extends Module
                         '{delivery_other}' => $delivery->other,
                         '{invoice_company}' => $invoice->company,
                         '{invoice_vat_number}' => $invoice->vat_number,
+                        '{invoice_siret}' => $invoice->siret,
+                        '{invoice_APE}' => $invoice->APE,
                         '{invoice_firstname}' => $invoice->firstname,
                         '{invoice_lastname}' => $invoice->lastname,
                         '{invoice_address2}' => $invoice->address2,

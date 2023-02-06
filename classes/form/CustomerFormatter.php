@@ -152,8 +152,26 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setName('siret')
                 ->setType('text')
                 ->setLabel($this->translator->trans(
-                    // Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.
-                    'Identification number',
+                    // Please localize this string with the applicable registration number type in your country. For example : "KvK in Netherlands "SIRET" in France and "Código fiscal" in Spain.
+                    'Siret number',
+                    [],
+                    'Shop.Forms.Labels'
+                ));
+                $format['APE'] = (new FormField())
+                ->setName('APE')
+                ->setType('text')
+                ->setLabel($this->translator->trans(
+                    // Please localize this string with the applicable registration APE number type in your country. For example : "APE" in France Activite Principale de l’Entreprise - or NAF code.
+                    'APE',
+                    [],
+                    'Shop.Forms.Labels'
+                ));
+                $format['vat_number'] = (new FormField())
+                ->setName('vat_number')
+                ->setType('text')
+                ->setLabel($this->translator->trans(
+                    // Please localize this string with the applicable registration number type in your country. For example : "VAT" in England and "BTW" in Netherland.
+                    'VAT number',
                     [],
                     'Shop.Forms.Labels'
                 ));

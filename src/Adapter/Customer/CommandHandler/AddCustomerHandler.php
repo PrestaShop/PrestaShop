@@ -135,6 +135,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->company = $command->getCompanyName();
         $customer->siret = $command->getSiretCode();
         $customer->ape = $apeCode;
+        $customer->vat_number = $vat_numberCode;
         $customer->website = $command->getWebsite();
         $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
         $customer->max_payment_days = $command->getMaxPaymentDays();

@@ -60,7 +60,30 @@ class AdminPdfControllerCore extends AdminController
             $this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
         } else {
             die($this->trans('The order ID -- or the invoice order ID -- is missing.', [], 'Admin.Orderscustomers.Notification'));
+        }     
+        
+        private function generateInvoicePDFByIdOrder($order_id)
+        {
+            // Fetch the order details from the database
+            $order = new Order($order_id);
+                 
+            // Fetch the store object using the $order->id_store property
+            $store = new Store($order->id_store);
+        
+            $siret = $store->siret;
+            $vat_number = $store->vat_number;
+            $iban = $store->iban;
+        
+            // Use these values in the PDF
+            $template_vars = array(
+                ...
+                'siret' => $siret,
+                'vat_number' => $vat_number,
+                'iban' => $iban,
+            );
+            $pdf = new PDF($order, PDF::TEMPLATE_INVOICE, $this->context->smarty, $this->context->language->iso_code, $template_vars);
         }
+
     }
 
     public function processGenerateOrderSlipPDF()
@@ -74,6 +97,15 @@ class AdminPdfControllerCore extends AdminController
 
         $this->generatePDF($order_slip, PDF::TEMPLATE_ORDER_SLIP);
     }
+
+    $template_vars = array(
+        ...
+        'siret' => $siret,
+        'vat_number' => $vat_number,
+        'iban' => $iban,
+    );
+    $pdf = new PDF($order_slip, PDF::TEMPLATE_ORDER_SLIP, $this->context->smarty, $this->context->language->iso_code, $template_vars);
+    
 
     public function processGenerateDeliverySlipPDF()
     {

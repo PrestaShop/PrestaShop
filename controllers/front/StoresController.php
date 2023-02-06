@@ -122,6 +122,12 @@ class StoresControllerCore extends FrontController
             $newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
             $newnode->addAttribute('address', $address);
             $newnode->addAttribute('hours', trim($store['hours']));
+            $newnode->addAttribute('siret', $store['siret']);
+            $newnode->addAttribute('APE',$store['APE']);
+            $newnode->addAttribute('vat_number', $store['vat_number']);
+            $newnode->addAttribute('iban', $store['iban']);
+            $newnode->addAttribute('note',$store['note']);
+            $newnode->addAttribute('dni', $store['dni']);
             $newnode->addAttribute('phone', $store['phone']);
             $newnode->addAttribute('fax', $store['fax']);
             $newnode->addAttribute('note', $store['note']);

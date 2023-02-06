@@ -68,6 +68,18 @@ class StoreCore extends ObjectModel
     /** @var string Fax number */
     public $fax;
 
+    /** @var string Siret number */
+    public $siret;
+
+    /** @var string APE number */
+    public $APE;
+
+    /** @var string VAT number */
+    public $vat_number;
+
+    /** @var string Iban number */
+    public $iban;
+
     /** @var string|array<string> Note */
     public $note;
 
@@ -106,6 +118,10 @@ class StoreCore extends ObjectModel
 
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'siret' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => false, 'size' => 18],
+            'APE' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => false, 'size' => 7],
+            'vat_number' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => false, 'size' => 28],
+            'iban' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => false, 'size' => 28],
             'address1' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 255],
             'address2' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 255],
             'hours' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => 65000],

@@ -87,6 +87,8 @@ final class GetCustomerAddressForEditingHandler extends AbstractCustomerAddressH
             $address->postcode,
             $address->dni,
             $address->company,
+            $address->siret,
+            $address->APE,
             $address->vat_number,
             $address->address2,
             (int) $address->id_state !== NoStateId::NO_STATE_ID_VALUE ? new StateId($address->id_state) : new NoStateId(),

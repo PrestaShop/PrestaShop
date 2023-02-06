@@ -75,6 +75,7 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             (string) $customer->company,
             (string) $customer->siret,
             (string) $customer->ape,
+            (string) $customer->vat_number,
             (string) $customer->website,
             (float) $customer->outstanding_allow_amount,
             (int) $customer->max_payment_days,

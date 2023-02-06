@@ -58,6 +58,10 @@ class AdminStoresControllerCore extends AdminController
             'country' => ['title' => $this->trans('Country', [], 'Admin.Global'), 'filter_key' => 'cl!name'],
             'phone' => ['title' => $this->trans('Phone', [], 'Admin.Global')],
             'fax' => ['title' => $this->trans('Fax', [], 'Admin.Global')],
+            'siret' => ['title' => $this->trans('Siret', [], 'Admin.Global')],
+            'APE' => ['title' => $this->trans('APE', [], 'Admin.Global')],
+            'vat_number' => ['title' => $this->trans('VAT number', [], 'Admin.Global')],
+            'iban' => ['title' => $this->trans('Iban', [], 'Admin.Global')],
             'active' => ['title' => $this->trans('Enabled', [], 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false],
         ];
 
@@ -242,6 +246,34 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Fax', [], 'Admin.Global'),
                     'name' => 'fax',
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->trans('Siret', [], 'Admin.Global'),
+                    'name' => 'siret',
+					'lang' => false,
+                    'required' => false,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->trans('APE', [], 'Admin.Global'),
+                    'name' => 'ape',
+					'lang' => false,
+                    'required' => false,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->trans('VAT number', [], 'Admin.Global'),
+                    'name' => 'vat_number',
+					'lang' => false,
+                    'required' => false,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->trans('Iban', [], 'Admin.Global'),
+                    'name' => 'iban',
+					'lang' => false,
+                    'required' => false,
                 ],
                 [
                     'type' => 'text',
@@ -468,11 +500,44 @@ class AdminStoresControllerCore extends AdminController
             ],
             'PS_SHOP_DETAILS' => [
                 'title' => $this->trans('Registration number', [], 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Shop registration information (e.g. SIRET or RCS).', [], 'Admin.Shopparameters.Help'),
+                'hint' => $this->trans('Shop registration information (e.g. BiC).', [], 'Admin.Shopparameters.Help'),
                 'validation' => 'isGenericName',
                 'type' => 'textarea',
                 'cols' => 30,
                 'rows' => 5,
+            ],
+            'PS_SHOP_IBAN' => [
+                'title' => $this->trans('Registration number Iban', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. iban or bic).', [], 'Admin.Shopparameters.Help'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+
+            ],
+            'PS_SHOP_SIRET' => [
+                'title' => $this->trans('Registration number Siret', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. SIRET or RCS).', [], 'Admin.Shopparameters.Help'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+
+            ],
+            'PS_SHOP_APE' => [
+                'title' => $this->trans('Registration number APE', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. Activite Principale de l’Entreprise - or NAF code.).', [], 'Admin.Shopparameters.Help'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+            ],
+            'PS_SHOP_VAT_NUMBER' => [
+                'title' => $this->trans('Registration number VAT', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. VAT or BTW).', [], 'Admin.Shopparameters.Help'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+            ],
+            'PS_SHOP_DNI' => [
+                'title' => $this->trans('Registration number DNI', [], 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Shop registration (France) information maybe later EU. (e.g. National identity card DNI (France)).', [], 'Admin.Shopparameters.Help'),
+                'validation' => 'isGenericName',
+                'type' => 'text',
+
             ],
             'PS_SHOP_ADDR1' => [
                 'title' => $this->trans('Shop address line 1', [], 'Admin.Shopparameters.Feature'),

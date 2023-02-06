@@ -175,6 +175,8 @@ class AdminCountriesControllerCore extends AdminController
         $default_layout_tab = [
             ['firstname', 'lastname'],
             ['company'],
+            ['siret'],
+            ['APE'],
             ['vat_number'],
             ['address1'],
             ['address2'],
