@@ -35,8 +35,10 @@ interface AuthorizedApplicationInterface
 
     /**
      * @param int $id
+     *
+     * @return AuthorizedApplicationInterface
      */
-    public function setId(int $id): void;
+    public function setId(int $id): AuthorizedApplicationInterface;
 
     /**
      * @return string
@@ -45,8 +47,10 @@ interface AuthorizedApplicationInterface
 
     /**
      * @param string $name
+     *
+     * @return AuthorizedApplicationInterface
      */
-    public function setName(string $name): void;
+    public function setName(string $name): AuthorizedApplicationInterface;
 
     /**
      * @return string
@@ -55,6 +59,8 @@ interface AuthorizedApplicationInterface
 
     /**
      * @param string $description
+     *
+     * @return AuthorizedApplicationInterface
      */
-    public function setDescription(string $description): void;
+    public function setDescription(string $description): AuthorizedApplicationInterface;
 }

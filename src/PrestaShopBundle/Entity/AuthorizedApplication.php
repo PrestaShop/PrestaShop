@@ -63,7 +63,7 @@ class AuthorizedApplication implements AuthorizedApplicationInterface
     private $description;
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getId(): int
     {
@@ -71,15 +71,17 @@ class AuthorizedApplication implements AuthorizedApplicationInterface
     }
 
     /**
-     * @param int $id
+     * {@inheritdoc}
      */
-    public function setId(int $id): void
+    public function setId(int $id): AuthorizedApplicationInterface
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -87,15 +89,17 @@ class AuthorizedApplication implements AuthorizedApplicationInterface
     }
 
     /**
-     * @param string $name
+     * {@inheritdoc}
      */
-    public function setName(string $name): void
+    public function setName(string $name): AuthorizedApplicationInterface
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getDescription(): string
     {
@@ -103,10 +107,12 @@ class AuthorizedApplication implements AuthorizedApplicationInterface
     }
 
     /**
-     * @param string $description
+     * {@inheritdoc}
      */
-    public function setDescription(string $description): void
+    public function setDescription(string $description): AuthorizedApplicationInterface
     {
         $this->description = $description;
+
+        return $this;
     }
 }

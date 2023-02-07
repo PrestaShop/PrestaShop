@@ -35,8 +35,10 @@ interface ApiAccessInterface
 
     /**
      * @param int $id
+     *
+     * @return $this
      */
-    public function setId(int $id): void;
+    public function setId(int $id): ApiAccessInterface;
 
     /**
      * @return string
@@ -45,8 +47,10 @@ interface ApiAccessInterface
 
     /**
      * @param string $clientId
+     *
+     * @return $this
      */
-    public function setClientId(string $clientId): void;
+    public function setClientId(string $clientId): ApiAccessInterface;
 
     /**
      * @return string
@@ -54,9 +58,11 @@ interface ApiAccessInterface
     public function getClientSecret(): string;
 
     /**
-     * @param mixed $clientSecret
+     * @param $clientSecret
+     *
+     * @return $this
      */
-    public function setClientSecret($clientSecret): void;
+    public function setClientSecret($clientSecret): ApiAccessInterface;
 
     /**
      * @return AuthorizedApplicationInterface
@@ -65,8 +71,10 @@ interface ApiAccessInterface
 
     /**
      * @param AuthorizedApplicationInterface $authorizedApplication
+     *
+     * @return $this
      */
-    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): void;
+    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): ApiAccessInterface;
 
     /**
      * @return bool
@@ -75,8 +83,10 @@ interface ApiAccessInterface
 
     /**
      * @param bool $active
+     *
+     * @return $this
      */
-    public function setActive(bool $active): void;
+    public function setActive(bool $active): ApiAccessInterface;
 
     /**
      * @return array
@@ -85,6 +95,8 @@ interface ApiAccessInterface
 
     /**
      * @param array $scopes
+     *
+     * @return $this
      */
-    public function setScopes(array $scopes): void;
+    public function setScopes(array $scopes): ApiAccessInterface;
 }

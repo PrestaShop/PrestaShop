@@ -84,7 +84,7 @@ class ApiAccess implements ApiAccessInterface
     private $scopes = [];
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getId(): int
     {
@@ -92,15 +92,17 @@ class ApiAccess implements ApiAccessInterface
     }
 
     /**
-     * @param int $id
+     * {@inheritdoc}
      */
-    public function setId(int $id): void
+    public function setId(int $id): ApiAccessInterface
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getClientId(): string
     {
@@ -108,15 +110,17 @@ class ApiAccess implements ApiAccessInterface
     }
 
     /**
-     * @param string $clientId
+     * {@inheritdoc}
      */
-    public function setClientId(string $clientId): void
+    public function setClientId(string $clientId): ApiAccessInterface
     {
         $this->clientId = $clientId;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getClientSecret(): string
     {
@@ -124,15 +128,17 @@ class ApiAccess implements ApiAccessInterface
     }
 
     /**
-     * @param mixed $clientSecret
+     * {@inheritdoc}
      */
-    public function setClientSecret($clientSecret): void
+    public function setClientSecret($clientSecret): ApiAccessInterface
     {
         $this->clientSecret = $clientSecret;
+
+        return $this;
     }
 
     /**
-     * @return AuthorizedApplicationInterface
+     * {@inheritdoc}
      */
     public function getAuthorizedApplication(): AuthorizedApplicationInterface
     {
@@ -140,15 +146,17 @@ class ApiAccess implements ApiAccessInterface
     }
 
     /**
-     * @param AuthorizedApplicationInterface $authorizedApplication
+     * {@inheritdoc}
      */
-    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): void
+    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): ApiAccessInterface
     {
         $this->authorizedApplication = $authorizedApplication;
+
+        return $this;
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isActive(): bool
     {
@@ -156,15 +164,17 @@ class ApiAccess implements ApiAccessInterface
     }
 
     /**
-     * @param bool $active
+     * {@inheritdoc}
      */
-    public function setActive(bool $active): void
+    public function setActive(bool $active): ApiAccessInterface
     {
         $this->active = $active;
+
+        return $this;
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getScopes(): array
     {
@@ -172,10 +182,12 @@ class ApiAccess implements ApiAccessInterface
     }
 
     /**
-     * @param array $scopes
+     * {@inheritdoc}
      */
-    public function setScopes(array $scopes): void
+    public function setScopes(array $scopes): ApiAccessInterface
     {
         $this->scopes = $scopes;
+
+        return $this;
     }
 }
