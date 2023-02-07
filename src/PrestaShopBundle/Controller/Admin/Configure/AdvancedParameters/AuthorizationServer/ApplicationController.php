@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\Authori
 
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -57,6 +57,30 @@ class ApplicationController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => $this->getApplicationToolbarButtons(),
             'grid' => $this->presentGrid($grid),
         ]);
+    }
+
+    public function viewAction(): void
+    {
+        // TODO: Implement viewAction() method in view PR.
+        throw new NotImplementedException();
+    }
+
+    public function createAction(): void
+    {
+        // TODO: Implement createAction() method in create PR.
+        throw new NotImplementedException();
+    }
+
+    public function editAction(): void
+    {
+        // TODO: Implement editAction() method in edit PR.
+        throw new NotImplementedException();
+    }
+
+    public function deleteAction(): void
+    {
+        // TODO: Implement deleteAction() method in delete PR.
+        throw new NotImplementedException();
     }
 
     /**
