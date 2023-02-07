@@ -47,18 +47,20 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
     arguments:
-      [ '@prestashop.adapter.order_return.repository.order_return_repository', '@prestashop.adapter.order_return_state.repository.order_return_state_repository' ]
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+      - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'
 
-  PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandler:
+  PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandler:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand'
     arguments:
-      [ '@prestashop.adapter.order_return.repository.order_return_repository' ]
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
 
-  PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandler:
+  PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandler:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand'
     arguments:
-      [ '@prestashop.adapter.order_return.repository.order_return_repository', '@prestashop.adapter.order.repository.order_repository' ]
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+      - '@prestashop.adapter.order.repository.order_repository'
