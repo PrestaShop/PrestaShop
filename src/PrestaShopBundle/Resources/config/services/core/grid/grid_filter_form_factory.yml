@@ -40,5 +40,3 @@ services:
     autowire: true
     arguments:
       - '@prestashop.core.grid.filter.form_factory'
-      - '@router'
-      - '@request_stack'
