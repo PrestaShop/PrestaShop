@@ -119,7 +119,6 @@ services:
   PrestaShopBundle\EventListener\FilterOrderReturnProductsSearchCriteriaListener:
     autowire: true
     arguments:
-      - '@request_stack'
     tags:
       - name: kernel.event_listener
         event: prestashop.search_criteria.filter
