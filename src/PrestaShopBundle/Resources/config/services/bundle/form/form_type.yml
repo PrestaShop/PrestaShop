@@ -173,12 +173,9 @@ services:
     abstract: true
 
   PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType:
-    arguments:
-      $currencyDataProvider: '@prestashop.adapter.data_provider.currency'
-
   PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType:
     arguments:
-      $carriers: '@=service("prestashop.adapter.data_provider.carrier").getOrderWayChoices()'
+      $carriers: '@=service("prestashop.adapter.data_provider.carrier").getActiveCarriersChoices()'
       $orderByChoices: '@=service("prestashop.adapter.data_provider.carrier").getOrderByChoices()'
       $orderWayChoices: '@=service("prestashop.adapter.data_provider.carrier").getOrderWayChoices()'
 
@@ -190,7 +187,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType:
     arguments:
-      $defaultCurrencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       $tosCmsChoices: '@=service("prestashop.adapter.data_provider.cms").getCmsChoices()'
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType:
