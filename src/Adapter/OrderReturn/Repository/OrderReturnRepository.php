@@ -34,6 +34,7 @@ use Order;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnDetailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnDetail;
@@ -132,13 +133,6 @@ class OrderReturnRepository extends AbstractObjectModelRepository
         }
         $orderReturnDetail = $this->getOrderReturnDetailByOrderDetailId($orderReturnDetailId->getValue());
 
-        if (!$orderReturnDetail) {
-            throw new DeleteOrderReturnProductException(
-                'Couldn\'t find merchandise return detail',
-                DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND
-            );
-        }
-
         $this->deleteOrderReturnDetail(
             $orderReturnDetail->getOrderReturnId(),
             $orderReturnDetailId,
@@ -177,7 +171,14 @@ class OrderReturnRepository extends AbstractObjectModelRepository
         }
     }
 
-    public function getOrderReturnDetailByOrderDetailId(int $orderDetailId): ?OrderReturnDetail
+    /**
+     * @param int $orderDetailId
+     * @return OrderReturnDetail
+     * @throws OrderReturnDetailNotFoundException
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getOrderReturnDetailByOrderDetailId(int $orderDetailId): OrderReturnDetail
     {
         $result = $this->connection->createQueryBuilder()
             ->select('id_order_return, id_order_detail, id_customization, product_quantity')
@@ -185,17 +186,15 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             ->where('id_order_detail = :orderDetailId')
             ->setParameter('orderDetailId', $orderDetailId)
             ->execute()->fetchAssociative();
-
-        if ($result) {
-            return new OrderReturnDetail(
-                (int) $result['id_order_return'],
-                (int) $result['id_order_detail'],
-                (int) $result['product_quantity'],
-                (int) $result['id_customization'] ?: null
-            );
+        if (!$result) {
+            throw new OrderReturnDetailNotFoundException(sprintf('Order return detail with id "%s" not found', $orderDetailId));
         }
-
-        return null;
+        return new OrderReturnDetail(
+            (int) $result['id_order_return'],
+            (int) $result['id_order_detail'],
+            (int) $result['product_quantity'],
+            (int) $result['id_customization'] ?: null
+        );
     }
 
     /**
