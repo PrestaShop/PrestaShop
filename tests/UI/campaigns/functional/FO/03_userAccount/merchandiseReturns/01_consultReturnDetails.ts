@@ -120,14 +120,14 @@ describe('FO - Account : Consult return details', async () => {
       it('should get the created Order reference', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-        orderReference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
+        orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
         await expect(orderReference).to.not.be.null;
       });
 
       it('should get the created Order date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderDate', baseContext);
 
-        orderDate = await ordersPage.getTextColumn(page, 'date_add', 1) as string;
+        orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
         orderDate = orderDate.substr(0, 10);
         await expect(orderDate).to.not.be.null;
       });
@@ -294,7 +294,7 @@ describe('FO - Account : Consult return details', async () => {
     {args: {status: OrderReturnStatuses.returnDenied.name}},
     {args: {status: OrderReturnStatuses.returnCompleted.name}},
   ];
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`Case ${index + 2} : Check merchandise returns with the status ${test.args.status}`, async () => {
       describe('Change the merchandise returns status', async () => {
         it('should go to BO', async function () {

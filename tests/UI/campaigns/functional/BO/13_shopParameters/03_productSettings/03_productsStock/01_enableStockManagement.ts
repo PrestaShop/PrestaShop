@@ -47,7 +47,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable stock managem
       {args: {action: 'enable', enable: true, isQuantityVisible: true}},
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage_${index}`, baseContext);
 

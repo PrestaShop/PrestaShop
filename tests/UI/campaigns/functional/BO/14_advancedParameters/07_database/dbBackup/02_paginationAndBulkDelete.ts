@@ -73,9 +73,9 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
 
   // 1 - Create 11 DB backup
   describe('Create 11 new DB Backup in BO', async () => {
-    const creationTests = new Array(11).fill(0, 0, 11);
+    const creationTests: number[] = new Array(11).fill(0, 0, 11);
 
-    creationTests.forEach((test, index) => {
+    creationTests.forEach((test: number, index: number) => {
       it(`should generate db backup n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `generateNewDbBackup${index}`, baseContext);
 

@@ -496,13 +496,13 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
       await expect(filePath).to.be.not.null;
 
-      const exist = await files.doesFileExist(filePath as string);
+      const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File doesn\'t exist!').to.be.true;
 
-      const paymentMethodExist = await files.isTextInPDF(filePath as string, paymentDataAmountEqualRest.paymentMethod);
+      const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.paymentMethod);
       await expect(paymentMethodExist, 'Payment method does not exist in invoice!').to.be.true;
 
-      const amountExist = await files.isTextInPDF(filePath as string, paymentDataAmountEqualRest.amount);
+      const amountExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
       await expect(amountExist, 'Payment amount does not exist in invoice!').to.be.true;
     });
   });

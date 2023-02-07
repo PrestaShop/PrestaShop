@@ -112,7 +112,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0) as Page;
+      page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -147,7 +147,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-      page = await foProductPage.closePage(browserContext, page, 0) as Page;
+      page = await foProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await addProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addProductPage.pageTitle);

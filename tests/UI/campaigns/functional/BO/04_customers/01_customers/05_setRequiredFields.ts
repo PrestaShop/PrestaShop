@@ -97,7 +97,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await foCreateAccountPage.closePage(browserContext, page, 0) as Page;
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await customersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(customersPage.pageTitle);

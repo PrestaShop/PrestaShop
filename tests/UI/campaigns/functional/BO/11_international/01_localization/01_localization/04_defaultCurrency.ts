@@ -89,7 +89,7 @@ describe('BO - International - Localization : Update default currency', async ()
     },
   ];
 
-  currenciesToTest.forEach((test, index) => {
+  currenciesToTest.forEach((test, index: number) => {
     describe(`Choose default currency '${test.args.defaultCurrency}' and check it in FO`, async () => {
       before(async function () {
         browserContext = await helper.createBrowserContext(this.browser);

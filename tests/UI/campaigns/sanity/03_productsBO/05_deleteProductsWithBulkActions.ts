@@ -77,7 +77,7 @@ describe('BO - Catalog - Product : Create Standard product in BO and Delete it w
       await expect(numberOfProducts).to.be.above(0);
     });
 
-    [firstProductData, secondProductData].forEach((productData, index) => {
+    [firstProductData, secondProductData].forEach((productData: ProductData, index: number) => {
       it('should create new product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index + 1}`, baseContext);
 

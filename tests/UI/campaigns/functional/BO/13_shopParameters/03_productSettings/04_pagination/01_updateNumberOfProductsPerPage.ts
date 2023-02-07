@@ -50,7 +50,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
     {args: {numberOfProductsPerPage: defaultNumberOfProductsPerPage}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`Update number of product displayed to ${test.args.numberOfProductsPerPage}`, async () => {
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);

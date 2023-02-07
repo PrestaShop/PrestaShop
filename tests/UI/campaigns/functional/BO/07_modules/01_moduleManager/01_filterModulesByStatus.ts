@@ -47,7 +47,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
   });
 
   describe('Filter modules by status', async () => {
-    [false, true].forEach((status, index) => {
+    [false, true].forEach((status: boolean, index: number) => {
       it(`should filter by status enabled : '${status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${index}`, baseContext);
 

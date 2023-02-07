@@ -60,7 +60,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
       {args: {descriptionSize: defaultSummarySizeValue}},
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index + 1}`, baseContext);
 

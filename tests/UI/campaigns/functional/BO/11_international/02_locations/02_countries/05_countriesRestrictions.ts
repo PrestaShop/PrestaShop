@@ -107,7 +107,7 @@ describe('BO - International - Countries : Restrict country selections in front 
   [
     {args: {status: 'enable', enable: true, isCountryVisible: false}},
     {args: {status: 'disable', enable: false, isCountryVisible: true}},
-  ].forEach((status, index) => {
+  ].forEach((status, index: number) => {
     it(`should ${status.args.status} restrict country selections`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}RestrictCountry`, baseContext);
 

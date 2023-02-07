@@ -68,7 +68,7 @@ describe('BO - Customer Service : Contact options', async () => {
     [
       {args: {action: 'disable', enable: false}},
       {args: {action: 'enable', enable: true}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it(`should ${test.args.action} Allow file uploading`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}FileUploading`, baseContext);
 
@@ -104,7 +104,7 @@ describe('BO - Customer Service : Contact options', async () => {
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-        page = await contactUsPage.closePage(browserContext, page, 0) as Page;
+        page = await contactUsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await customerServicePage.getPageTitle(page);
         await expect(pageTitle).to.contains(customerServicePage.pageTitle);
@@ -140,7 +140,7 @@ describe('BO - Customer Service : Contact options', async () => {
       const validationMessage = await contactUsPage.getAlertSuccess(page);
       await expect(validationMessage).to.equal(contactUsPage.validationMessage);
 
-      page = await contactUsPage.closePage(browserContext, page, 0) as Page;
+      page = await contactUsPage.closePage(browserContext, page, 0);
     });
 
     it('should update default message', async function () {

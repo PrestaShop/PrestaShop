@@ -65,7 +65,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} guest checkout`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `guestCheckout${index}`, baseContext);
 

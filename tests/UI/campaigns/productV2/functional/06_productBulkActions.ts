@@ -195,7 +195,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
         productsNumber: 4,
       },
     },
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     describe(`Bulk ${test.args.action} created products`, async () => {
       it('should select the 2 products', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `selectProducts${index}`, baseContext);

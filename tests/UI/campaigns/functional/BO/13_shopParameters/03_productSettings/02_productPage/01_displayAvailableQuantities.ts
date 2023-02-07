@@ -62,7 +62,7 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} Display available quantities on the product page`, async function () {
       await testContext.addContextItem(this,
         'testIdentifier',

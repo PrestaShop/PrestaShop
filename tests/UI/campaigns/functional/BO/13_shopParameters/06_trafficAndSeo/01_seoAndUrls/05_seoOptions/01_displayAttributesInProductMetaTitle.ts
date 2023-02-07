@@ -72,7 +72,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       },
     },
   ];
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} display attributes in product meta title`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayAttributes`, baseContext);
 

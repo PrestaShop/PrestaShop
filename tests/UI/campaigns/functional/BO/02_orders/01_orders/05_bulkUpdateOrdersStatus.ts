@@ -91,7 +91,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
       await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
-    ['first', 'second'].forEach((arg, index) => {
+    ['first', 'second'].forEach((arg: string, index: number) => {
       it(`should check the ${arg} order status`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderStatus${index + 1}`, baseContext);
 

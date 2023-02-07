@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
           },
       },
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it('should go to \'Shop parameters > Product Settings\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPageTo${index}`, baseContext);
 

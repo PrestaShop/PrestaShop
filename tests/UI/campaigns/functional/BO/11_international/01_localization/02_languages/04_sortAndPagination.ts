@@ -153,7 +153,7 @@ describe('BO - International - Languages : Sort and pagination', async () => {
       {args: {languageData: Languages.traditionalChinese}},
     ];
     describe('Create 9 Languages', async () => {
-      tests.forEach((test, index) => {
+      tests.forEach((test, index: number) => {
         it('should go to add new language page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguagePage${index}`, baseContext);
 
@@ -206,7 +206,7 @@ describe('BO - International - Languages : Sort and pagination', async () => {
     });
 
     describe('Delete created Languages', async () => {
-      tests.forEach((test, index) => {
+      tests.forEach((test, index: number) => {
         it(`should filter language by name '${test.args.languageData.name}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 

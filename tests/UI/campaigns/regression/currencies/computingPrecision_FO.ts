@@ -261,7 +261,7 @@ describe(
       it('should add percent discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, percentCartRule.code as string);
+        await cartPage.addPromoCode(page, percentCartRule.code);
         const firstSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
 
         await expect(firstSubtotalDiscountValue, 'First discount was not applied')
@@ -271,7 +271,7 @@ describe(
       it('should add free gift discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addGiftDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, giftCartRule.code as string);
+        await cartPage.addPromoCode(page, giftCartRule.code);
         const finalSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
 
         await expect(finalSubtotalDiscountValue, 'Second discount was not applied')
@@ -337,7 +337,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
         // Get order reference to use in sql query
-        orderToMake.reference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
+        orderToMake.reference = await ordersPage.getTextColumn(page, 'reference', 1);
 
         // Check total price
         const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);
