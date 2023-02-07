@@ -400,11 +400,7 @@ class ConfigurationTestCore
 
     public static function test_sessions()
     {
-        if (!$path = @ini_get('session.save_path')) {
-            return true;
-        }
-
-        return is_writable($path);
+        return in_array(session_status(), [PHP_SESSION_ACTIVE, PHP_SESSION_NONE], true);
     }
 
     public static function test_dom()
