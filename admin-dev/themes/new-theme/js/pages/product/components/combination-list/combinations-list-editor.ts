@@ -114,10 +114,6 @@ export default class CombinationsListEditor {
       this.cancelEdition();
     });
 
-    $(CombinationsMap.list.footer.reset).on('click', () => {
-      this.resetEdition();
-    });
-
     $(CombinationsMap.list.footer.save).on('click', () => {
       this.saveEdition();
     });
@@ -128,7 +124,7 @@ export default class CombinationsListEditor {
     $input.data('initialChecked', $input.is(':checked'));
     this.updateInput($input, initialValue, $input.is(':checked'));
 
-    $input.on('change', () => {
+    $input.on('change keyup', () => {
       this.updateInput($input, $input.data('initialValue'), $input.data('initialChecked'));
     });
   }
