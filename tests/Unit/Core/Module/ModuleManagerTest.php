@@ -258,6 +258,13 @@ class ModuleManagerTest extends TestCase
             ])
         ;
 
+        $moduleDataProvider->method('getModuleIdByName')
+            ->willReturnMap([
+                [self::INSTALLED_MODULE_NAME, false, 1],
+                [self::UNINSTALLED_MODULE_NAME, false, null],
+            ])
+        ;
+
         $moduleDataProvider->method('isOnDisk')->willReturn(true);
 
         return $moduleDataProvider;
