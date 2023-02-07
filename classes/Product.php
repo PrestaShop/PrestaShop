@@ -39,6 +39,13 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class ProductCore extends ObjectModel
 {
+    /**
+     * @var string Tax name
+     *
+     * @deprecated Since 1.4
+     */
+    public $tax_name;
+
     /** @var float Tax rate */
     public $tax_rate;
 
@@ -68,6 +75,14 @@ class ProductCore extends ObjectModel
 
     /** @var string|array Short description or array of short description by id_lang */
     public $description_short;
+
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$quantity instead
+     *
+     * @var int Quantity available
+     */
+    public $quantity = 0;
 
     /** @var int Minimal quantity for add to cart */
     public $minimal_quantity = 1;
@@ -238,9 +253,24 @@ class ProductCore extends ObjectModel
     public $state = self::STATE_SAVED;
 
     /**
+     * @var float Base price of the product
+     *
+     * @deprecated 1.6.0.13
+     */
+    public $base_price;
+
+    /**
      * @var int|null TaxRulesGroup identifier
      */
     public $id_tax_rules_group;
+
+    /**
+     * @var int
+     *          We keep this variable for retrocompatibility for themes
+     *
+     * @deprecated 1.5.0
+     */
+    public $id_color_default = 0;
 
     /**
      * @deprecated since 1.7.8
@@ -260,6 +290,14 @@ class ProductCore extends ObjectModel
      *          - 2 Use global setting
      */
     public $out_of_stock = OutOfStockType::OUT_OF_STOCK_DEFAULT;
+
+    /**
+     * @deprecated since 1.7.8
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore
+     *
+     * @var bool|null
+     */
+    public $depends_on_stock;
 
     /**
      * @var bool
@@ -364,6 +402,20 @@ class ProductCore extends ObjectModel
      */
     protected static $_combination_associations = [];
 
+    /**
+     * @deprecated Since 1.5.6.1
+     *
+     * @var array
+     */
+    protected static $_cart_quantity = [];
+
+    /**
+     * @deprecated Since 1.5.0.9
+     *
+     * @var array
+     */
+    protected static $_tax_rules_group = [];
+
     /** @var array */
     protected static $_cacheFeatures = [];
 
@@ -372,6 +424,13 @@ class ProductCore extends ObjectModel
 
     /** @var array */
     protected static $productPropertiesCache = [];
+
+    /**
+     * @deprecated Since 1.5.0.1 Unused
+     *
+     * @var array cache stock data in getStock() method
+     */
+    protected static $cacheStock = [];
 
     /** @var int|null */
     protected static $psEcotaxTaxRulesGroupId = null;
@@ -666,6 +725,7 @@ class ProductCore extends ObjectModel
             }
 
             $this->isFullyLoaded = $full;
+            $this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
             $this->manufacturer_name = Manufacturer::getNameById((int) $this->id_manufacturer);
             $this->supplier_name = Supplier::getNameById((int) $this->id_supplier);
             $address = null;
@@ -1714,6 +1774,90 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * addProductAttribute is deprecated.
+     *
+     * The quantity params now set StockAvailable for the current shop with the specified quantity
+     * The supplier_reference params now set the supplier reference of the default supplier of the product if possible
+     *
+     * @deprecated since 1.5.0
+     * @see StockManager if you want to manage real stock
+     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
+     * @see ProductSupplier for manage supplier reference(s)
+     *
+     * @param float $price Additional price
+     * @param float $weight Additional weight
+     * @param float $unit_impact
+     * @param float $ecotax Additional ecotax
+     * @param int $quantity
+     * @param int[] $id_images Image ids
+     * @param string $reference Reference
+     * @param int $id_supplier Supplier identifier
+     * @param string $ean13
+     * @param bool $default Is default attribute for product
+     * @param string $location
+     * @param string $upc
+     * @param int $minimal_quantity
+     * @param string $isbn
+     * @param int|null $low_stock_threshold Low stock for mail alert
+     * @param bool $low_stock_alert Low stock mail alert activated
+     * @param string|null $mpn
+     *
+     * @return int|false Attribute identifier if success, false if it fail
+     */
+    public function addProductAttribute(
+        $price,
+        $weight,
+        $unit_impact,
+        $ecotax,
+        $quantity,
+        $id_images,
+        $reference,
+        $id_supplier,
+        $ean13,
+        $default,
+        $location,
+        $upc,
+        $minimal_quantity,
+        $isbn,
+        $low_stock_threshold = null,
+        $low_stock_alert = false,
+        $mpn = null
+    ) {
+        Tools::displayAsDeprecated();
+
+        $id_product_attribute = $this->addAttribute(
+            $price,
+            $weight,
+            $unit_impact,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location,
+            $upc,
+            $minimal_quantity,
+            [],
+            null,
+            0,
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert,
+            $mpn
+        );
+
+        if (!$id_product_attribute) {
+            return false;
+        }
+
+        StockAvailable::setQuantity($this->id, $id_product_attribute, $quantity);
+        //Try to set the default supplier reference
+        $this->addSupplierReference($id_supplier, $id_product_attribute);
+
+        return $id_product_attribute;
+    }
+
+    /**
      * @param array $combinations
      * @param array $attributes
      * @param bool $resetExistingCombination
@@ -1930,6 +2074,91 @@ class ProductCore extends ObjectModel
         } else {
             return $result;
         }
+    }
+
+    /**
+     * Update a product attribute.
+     *
+     * @deprecated since 1.5
+     * @see updateAttribute() to use instead
+     * @see ProductSupplier for manage supplier reference(s)
+     *
+     * @param int $id_product_attribute Attribute identifier
+     * @param float $wholesale_price
+     * @param float $price Additional price
+     * @param float $weight Additional weight
+     * @param float $unit
+     * @param float $ecotax Additional ecotax
+     * @param int[] $id_images Image ids
+     * @param string $reference
+     * @param int $id_supplier Supplier identifier
+     * @param string $ean13
+     * @param bool $default Is default attribute for product
+     * @param string $location
+     * @param string $upc
+     * @param int $minimal_quantity
+     * @param string $available_date Date in mysql format Y-m-d
+     * @param string $isbn
+     * @param int|null $low_stock_threshold Low stock for mail alert
+     * @param bool $low_stock_alert Low stock mail alert activated
+     * @param string|null $mpn
+     * @param string[]|string|null $available_now Combination available now labels
+     * @param string[]|string|null $available_later Combination available later labels
+     *
+     * @return bool
+     */
+    public function updateProductAttribute(
+        $id_product_attribute,
+        $wholesale_price,
+        $price,
+        $weight,
+        $unit,
+        $ecotax,
+        $id_images,
+        $reference,
+        $id_supplier,
+        $ean13,
+        $default,
+        $location,
+        $upc,
+        $minimal_quantity,
+        $available_date,
+        $isbn = '',
+        $low_stock_threshold = null,
+        $low_stock_alert = false,
+        $mpn = null,
+        $available_now = null,
+        $available_later = null
+    ) {
+        Tools::displayAsDeprecated('Use updateAttribute() instead');
+
+        $return = $this->updateAttribute(
+            $id_product_attribute,
+            $wholesale_price,
+            $price,
+            $weight,
+            $unit,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location = null,
+            $upc = null,
+            $minimal_quantity,
+            $available_date,
+            true,
+            [],
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert,
+            $mpn = null,
+            $available_now,
+            $available_later
+        );
+        $this->addSupplierReference($id_supplier, $id_product_attribute);
+
+        return $return;
     }
 
     /**
@@ -2234,6 +2463,26 @@ class ProductCore extends ObjectModel
         }
 
         return (int) $combination->id;
+    }
+
+    /**
+     * @deprecated since 1.5.0
+     *
+     * @return bool
+     */
+    public function updateQuantityProductWithAttributeQuantity()
+    {
+        Tools::displayAsDeprecated();
+
+        return Db::getInstance()->execute('
+        UPDATE `' . _DB_PREFIX_ . 'product`
+        SET `quantity` = IFNULL(
+        (
+            SELECT SUM(`quantity`)
+            FROM `' . _DB_PREFIX_ . 'product_attribute`
+            WHERE `id_product` = ' . (int) $this->id . '
+        ), \'0\')
+        WHERE `id_product` = ' . (int) $this->id);
     }
 
     /**
@@ -6417,6 +6666,81 @@ class ProductCore extends ObjectModel
         }
 
         return Cache::retrieve($cache_id);
+    }
+
+    /**
+     * Add a stock movement for current product.
+     *
+     * Since 1.5, this method only permit to add/remove available quantities of the current product in the current shop
+     *
+     * @see StockManager if you want to manage real stock
+     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
+     * @deprecated since 1.5.0
+     *
+     * @param int $quantity
+     * @param int $id_reason StockMvtReason identifier - useless
+     * @param int|null $id_product_attribute Attribute identifier
+     * @param int|null $id_order Order identifier - DEPRECATED
+     * @param int|null $id_employee Employee identifier - DEPRECATED
+     *
+     * @return bool
+     */
+    public function addStockMvt($quantity, $id_reason, $id_product_attribute = null, $id_order = null, $id_employee = null)
+    {
+        if (!$this->id || !$id_reason) {
+            return false;
+        }
+
+        if ($id_product_attribute == null) {
+            $id_product_attribute = 0;
+        }
+
+        $reason = new StockMvtReason((int) $id_reason);
+        if (!Validate::isLoadedObject($reason)) {
+            return false;
+        }
+
+        $quantity = abs((int) $quantity) * $reason->sign;
+
+        return StockAvailable::updateQuantity($this->id, $id_product_attribute, $quantity);
+    }
+
+    /**
+     * @deprecated since 1.5.0
+     *
+     * @param int $id_lang Language identifier
+     *
+     * @return array
+     */
+    public function getStockMvts($id_lang)
+    {
+        Tools::displayAsDeprecated();
+
+        return Db::getInstance()->executeS('
+            SELECT sm.id_stock_mvt, sm.date_add, sm.quantity, sm.id_order,
+            CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason
+            FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
+            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
+                sm.id_product = pl.id_product
+                AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
+            )
+            LEFT JOIN `' . _DB_PREFIX_ . 'stock_mvt_reason_lang` mrl ON (
+                sm.id_stock_mvt_reason = mrl.id_stock_mvt_reason
+                AND mrl.id_lang = ' . (int) $id_lang . '
+            )
+            LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON (
+                e.id_employee = sm.id_employee
+            )
+            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (
+                pac.id_product_attribute = sm.id_product_attribute
+            )
+            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (
+                al.id_attribute = pac.id_attribute
+                AND al.id_lang = ' . (int) $id_lang . '
+            )
+            WHERE sm.id_product=' . (int) $this->id . '
+            GROUP BY sm.id_stock_mvt
+        ');
     }
 
     /**
