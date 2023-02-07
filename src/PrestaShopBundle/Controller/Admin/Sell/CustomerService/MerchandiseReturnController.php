@@ -287,7 +287,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      * @param int $orderReturnId
      *
-     * @return void
+     * @return Response
      */
     public function generateOrderReturnPdfAction(Request $request, int $orderReturnId): Response
     {
