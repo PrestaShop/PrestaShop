@@ -28,13 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler;
 
-use Order;
-use PrestaShop\PrestaShop\Adapter\Entity\OrderDetail;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomization;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomizations;
-use Product;
 
 class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomizationsHandlerInterface
 {
@@ -43,46 +41,30 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
      */
     private $contextLangId;
 
+    /** @var OrderRepository */
+    private $orderRepository;
+
     /**
      * GetOrderDetailCustomizationsHandler constructor.
      *
      * @param int $contextLangId
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
-        int $contextLangId
+        int $contextLangId,
+        OrderRepository $orderRepository
     ) {
         $this->contextLangId = $contextLangId;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
      * @param GetOrderDetailCustomizations $query
      *
      * @return OrderDetailCustomizations|null
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
     public function handle(GetOrderDetailCustomizations $query): ?OrderDetailCustomizations
     {
-        $orderDetail = new OrderDetail($query->getOrderDetailId()->getValue());
-        $order = new Order($orderDetail->id_order);
-        $customizations = [];
-        $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $this->contextLangId, true, $order->id_shop, $orderDetail->id_customization);
-        $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id] ?? null;
-        if (!is_array($customizedDatas)) {
-            return null;
-        }
-
-        foreach ($customizedDatas as $customizationPerAddress) {
-            foreach ($customizationPerAddress as $customizationId => $customization) {
-                foreach ($customization['datas'] as $datas) {
-                    foreach ($datas as $data) {
-                        $customizations[] = new OrderDetailCustomization((int) $data['type'], $data['name'], $data['value']);
-                    }
-                }
-            }
-        }
-
-        return new OrderDetailCustomizations($customizations);
+        return $this->orderRepository->getOrderDetailCustomizations($query->getOrderDetailId(), new LanguageId($this->contextLangId));
     }
 }

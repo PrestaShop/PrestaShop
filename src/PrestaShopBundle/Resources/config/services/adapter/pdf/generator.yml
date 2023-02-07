@@ -35,5 +35,3 @@ services:
 
   PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator:
     autowire: true
-    arguments:
-      - '@translator'

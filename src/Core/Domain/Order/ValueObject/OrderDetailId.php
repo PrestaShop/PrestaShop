@@ -24,37 +24,47 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailId;
 
-class GetOrderDetailCustomizations
+/**
+ * Order identity
+ */
+class OrderDetailId
 {
     /**
-     * @var OrderDetailId
+     * @var int
      */
     private $orderDetailId;
 
     /**
-     * GetOrderDetailCustomizations constructor.
-     *
      * @param int $orderDetailId
      *
      * @throws OrderException
      */
-    public function __construct(int $orderDetailId)
+    public function __construct($orderDetailId)
     {
-        $this->orderDetailId = new OrderDetailId($orderDetailId);
+        $this->assertIntegerIsGreaterThanZero($orderDetailId);
+
+        $this->orderDetailId = $orderDetailId;
     }
 
     /**
-     * @return OrderDetailId
+     * @return int
      */
-    public function getOrderDetailId(): OrderDetailId
+    public function getValue()
     {
         return $this->orderDetailId;
+    }
+
+    /**
+     * @param int $orderId
+     */
+    private function assertIntegerIsGreaterThanZero($orderId)
+    {
+        if (!is_int($orderId) || 0 > $orderId) {
+            throw new OrderException(sprintf('Order detail id %s is invalid. Order detail id must be number that is greater than zero.', var_export($orderId, true)));
+        }
     }
 }

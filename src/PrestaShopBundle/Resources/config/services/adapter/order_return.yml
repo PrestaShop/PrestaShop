@@ -35,6 +35,7 @@ services:
     autowire: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@prestashop.adapter.order.repository.order_repository'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations'

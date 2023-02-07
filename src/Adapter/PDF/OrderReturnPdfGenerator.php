@@ -31,7 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\PDF;
 use Context;
 use OrderReturn;
 use PDF;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use RuntimeException;
@@ -49,11 +51,17 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
     private $translator;
 
     /**
+     * @var OrderReturnRepository
+     */
+    private $orderReturnRepository;
+
+    /**
      * @param TranslatorInterface $translator
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, OrderReturnRepository $orderReturnRepository)
     {
         $this->translator = $translator;
+        $this->orderReturnRepository = $orderReturnRepository;
     }
 
     /**
@@ -66,7 +74,7 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
         }
 
         $orderReturnId = reset($orderReturnId);
-        $orderReturn = new OrderReturn((int) $orderReturnId);
+        $orderReturn = $this->orderReturnRepository->get(new OrderReturnId((int) $orderReturnId));
         if (!Validate::isLoadedObject($orderReturn)) {
             throw new RuntimeException($this->translator->trans('The order return cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
