@@ -273,7 +273,6 @@ services:
     arguments:
       - '@doctrine.orm.entity_manager'
       - 'stable'
-      - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@prestashop.bundle.routing.converter.cache_provider'
 
   prestashop.admin.configure.advanced_parameters.beta_feature_flags_form_data_provider:
@@ -281,7 +280,6 @@ services:
     arguments:
       - '@doctrine.orm.entity_manager'
       - 'beta'
-      - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@prestashop.bundle.routing.converter.cache_provider'
 
   prestashop.adapter.security.general.form_provider:
