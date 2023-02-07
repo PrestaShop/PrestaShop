@@ -42,7 +42,7 @@ class Cart extends FOBasePage {
 
   private readonly deleteIcon: (number: number) => string;
 
-  public readonly itemsNumber: string;
+  private readonly itemsNumber: string;
 
   private readonly subtotalDiscountValueSpan: string;
 
@@ -129,6 +129,15 @@ class Cart extends FOBasePage {
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
 
     this.alertPromoCode = '#promo-code > div > div > span';
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.itemsNumber);
   }
 
   /**

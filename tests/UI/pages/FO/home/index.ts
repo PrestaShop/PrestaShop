@@ -43,11 +43,11 @@ class Home extends FOBasePage {
 
   private readonly productColorLink: (number: number, color: string) => string;
 
-  public readonly allProductLink: string;
+  private readonly allProductLink: string;
 
   private readonly allProductsBlockLink: (blockId: number) => string;
 
-  public readonly totalProducts: string;
+  private readonly totalProducts: string;
 
   private readonly productPrice: (number: number) => string;
 
@@ -216,6 +216,15 @@ class Home extends FOBasePage {
     // Newsletter subscription messages
     this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
     this.alreadyUsedEmailMessage = 'This email address is already registered.';
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.totalProducts);
   }
 
   /**

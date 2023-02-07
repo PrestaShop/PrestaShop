@@ -55,9 +55,9 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     it('should check and get the products number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-      await homePage.waitForSelectorAndClick(page, homePage.allProductLink);
+      await homePage.goToAllProductsPage(page);
 
-      allProductsNumber = await homePage.getNumberFromText(page, homePage.totalProducts);
+      allProductsNumber = await homePage.getProductsNumber(page);
       await expect(allProductsNumber).to.be.above(0);
     });
 
@@ -66,7 +66,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
 
       await homePage.goToCategory(page, Categories.accessories.id);
 
-      const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
+      const numberOfProducts = await homePage.getProductsNumber(page);
       await expect(numberOfProducts).to.be.below(allProductsNumber);
     });
 
@@ -75,7 +75,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
 
       await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
 
-      const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
+      const numberOfProducts = await homePage.getProductsNumber(page);
       await expect(numberOfProducts).to.be.below(allProductsNumber);
     });
   });

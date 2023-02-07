@@ -134,7 +134,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await foProductPage.addProductToTheCart(page);
 
       // getNumberFromText is used to get the notifications number in the cart
-      const notificationsNumber = await cartPage.getNumberFromText(page, foProductPage.cartProductsCount);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(1);
     });
 
@@ -246,7 +246,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await foProductPage.addProductToTheCart(page);
 
       // getNumberFromText is used to get the notifications number in the cart
-      const notificationsNumber = await cartPage.getNumberFromText(page, foProductPage.cartProductsCount);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(1);
     });
 

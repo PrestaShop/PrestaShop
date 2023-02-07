@@ -150,12 +150,9 @@ class CustomerBlock extends ViewOrderBasePage {
 
     const addressFrame: Frame = await page.frame({url: /sell\/addresses\/order/gmi});
 
-    await addAddressPage.createEditAddress(addressFrame, addressData, false);
+    await addAddressPage.createEditAddress(addressFrame, addressData, true, false);
 
-    await Promise.all([
-      addressFrame.click(addAddressPage.saveAddressButton),
-      this.waitForHiddenSelector(page, this.editAddressIframe),
-    ]);
+    await this.waitForHiddenSelector(page, this.editAddressIframe);
 
     return this.getShippingAddress(page);
   }

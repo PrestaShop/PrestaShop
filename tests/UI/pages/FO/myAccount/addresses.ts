@@ -108,7 +108,9 @@ class Addresses extends FOBasePage {
     const deleteButtons = await page.$$(this.deleteAddressLink);
 
     await Promise.all([
-      page.waitForNavigation('networkidle'),
+      page.waitForNavigation({
+        waitUntil: 'networkidle',
+      }),
       deleteButtons[position === 'last' ? (deleteButtons.length - 1) : (position - 1)].click(),
     ]);
 

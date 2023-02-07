@@ -219,7 +219,7 @@ export default class BOBasePage extends CommonPage {
 
   protected alertBlock: string;
 
-  public alertBlockCloseButton: string;
+  protected alertBlockCloseButton: string;
 
   protected readonly alertSuccessBlock: string;
 
