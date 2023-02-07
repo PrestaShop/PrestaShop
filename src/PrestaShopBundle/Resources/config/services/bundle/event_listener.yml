@@ -117,6 +117,7 @@ services:
       - { name: kernel.event_listener, method: onKernelRequest }
 
   PrestaShopBundle\EventListener\FilterOrderReturnProductsSearchCriteriaListener:
+    public: false
     autowire: true
     arguments:
     tags:
