@@ -28,15 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
+
 class OrderDetailCustomizations
 {
     /**
-     * @var OrderDetailCustomization[]
+     * @var OrderProductCustomizationForViewing[]
      */
     private $orderDetailCustomizations = [];
 
     /**
-     * @param OrderDetailCustomization[] $orderDetailCustomizations
+     * @param OrderProductCustomizationForViewing[] $orderDetailCustomizations
      */
     public function __construct(array $orderDetailCustomizations)
     {
@@ -46,15 +48,15 @@ class OrderDetailCustomizations
     }
 
     /**
-     * @param OrderDetailCustomization $orderDetailCustomization
+     * @param OrderProductCustomizationForViewing $orderDetailCustomization
      */
-    private function addOrderDetailCustomization(OrderDetailCustomization $orderDetailCustomization): void
+    private function addOrderDetailCustomization(OrderProductCustomizationForViewing $orderDetailCustomization): void
     {
         $this->orderDetailCustomizations[] = $orderDetailCustomization;
     }
 
     /**
-     * @return OrderDetailCustomization[]
+     * @return OrderProductCustomizationForViewing[]
      */
     public function getOrderDetailCustomizations(): array
     {

@@ -33,6 +33,7 @@ use OrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomization;
@@ -78,6 +79,13 @@ class OrderRepository extends AbstractObjectModelRepository
         return $order;
     }
 
+    /**
+     * @param OrderDetailId $detailId
+     * @param LanguageId $languageId
+     * @return OrderDetailCustomizations|null
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     */
     public function getOrderDetailCustomizations(OrderDetailId $detailId, LanguageId $languageId): ?OrderDetailCustomizations
     {
         $orderDetail = new OrderDetail($detailId->getValue());
@@ -93,7 +101,7 @@ class OrderRepository extends AbstractObjectModelRepository
             foreach ($customizationPerAddress as $customization) {
                 foreach ($customization['datas'] as $datas) {
                     foreach ($datas as $data) {
-                        $customizations[] = new OrderDetailCustomization((int) $data['type'], $data['name'], $data['value']);
+                        $customizations[] = new OrderProductCustomizationForViewing((int) $data['type'], $data['name'], $data['value']);
                     }
                 }
             }
