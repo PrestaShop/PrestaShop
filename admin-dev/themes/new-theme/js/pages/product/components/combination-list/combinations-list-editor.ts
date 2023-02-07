@@ -241,7 +241,7 @@ export default class CombinationsListEditor {
     if (jsonResponse.errors) {
       // If formContent is available we can replace the content to display the inline errors
       if (jsonResponse.formContent) {
-        this.updateForm(jsonResponse.formContent);
+        this.updateFormWithErrors(jsonResponse.formContent);
       } else {
         notifyFormErrors(jsonResponse);
       }
@@ -271,7 +271,7 @@ export default class CombinationsListEditor {
     return new FormData(combinationListForm);
   }
 
-  private updateForm(formContent: string): void {
+  private updateFormWithErrors(formContent: string): void {
     // Replace form content with output from response
     this.$combinationsFormContainer.html(formContent);
 
@@ -282,7 +282,11 @@ export default class CombinationsListEditor {
     });
 
     // Trigger event so that external components can update the content (like checkboxes labels)
-    this.eventEmitter.emit(CombinationEvents.listRendered);
+    // We trigger a different event from CombinationEvents.listRendered because this component also listens to it
+    // to reset its saved value but it needs to do this only when the list is really updated (like the page has changed
+    // not when the list contains error values or we would lose the initial saved values).
+    this.eventEmitter.emit(CombinationEvents.errorListRendered);
+
     // Elements were re-rendered so they must be disabled again
     this.disableElements();
   }
