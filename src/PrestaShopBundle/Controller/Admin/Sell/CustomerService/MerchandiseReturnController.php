@@ -47,6 +47,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Class MerchandiseReturnController responsible for "Sell > Customer Service > Merchandise Returns" page
@@ -288,13 +289,9 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @return void
      */
-    public function generateOrderReturnPdfAction(Request $request, int $orderReturnId): void
+    public function generateOrderReturnPdfAction(Request $request, int $orderReturnId): Response
     {
-        $this->get(OrderReturnPdfGenerator::class)->generatePDF([$orderReturnId]);
-
-        // When using legacy generator,
-        // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        return new StreamedResponse($this->get(OrderReturnPdfGenerator::class)->generatePDF([$orderReturnId]));
     }
 
     /**
