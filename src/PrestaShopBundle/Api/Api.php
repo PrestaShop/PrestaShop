@@ -24,42 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\Core\Util;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+namespace PrestaShopBundle\Api;
 
-class ColorBrightnessCalculatorTest extends TestCase
+final class Api
 {
-    /**
-     * @var ColorBrightnessCalculator
-     */
-    private $colorBrightnessCalculator;
-
-    public function setUp(): void
-    {
-        $this->colorBrightnessCalculator = new ColorBrightnessCalculator();
-    }
+    public const API_BASE_PATH = '/new-api';
 
     /**
-     * @dataProvider getColors
+     * This class is not meant to be instantiated as it is used to access encoding constants only.
      */
-    public function testColorBrightness($hexColor, $isBright)
+    private function __construct()
     {
-        $this->assertEquals($isBright, $this->colorBrightnessCalculator->isBright($hexColor));
-    }
-
-    public function getColors()
-    {
-        yield ['#8B0000', false];
-        yield ['#FFD700', true];
-        yield ['#FFFFE0', true];
-        yield ['#6B8E23', false];
-        yield ['#E0FFFF', true];
-        yield ['#E0FFFF', true];
-        yield ['#00008B', false];
-        yield ['#00F', false];
-        yield ['#0F1', true];
-        yield ['transparent', true];
     }
 }

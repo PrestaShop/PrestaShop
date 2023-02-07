@@ -554,6 +554,10 @@ class Products extends BOBasePage {
    * @return {Promise<string>}
    */
   async bulkSetStatus(page, status) {
+    if (await this.elementVisible(page, this.alertSuccessBlockParagraph, 1000)) {
+      await this.waitForSelectorAndClick(page, this.alertBlockCloseButton);
+    }
+
     await this.selectAllProducts(page);
 
     await Promise.all([
@@ -562,6 +566,7 @@ class Products extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, status ? this.productBulkEnableLink : this.productBulkDisableLink);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
