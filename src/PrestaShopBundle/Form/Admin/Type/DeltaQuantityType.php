@@ -30,8 +30,11 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\StockSettings;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -75,9 +78,23 @@ class DeltaQuantityType extends TranslatorAwareType
                 ],
                 'required' => false,
                 'modify_all_shops' => $options['modify_delta_for_all_shops'],
-            ]);
+            ])
+            // This field is mostly used on submit so that we can provide the initial quantity and avoid increasing the
+            // offset in quantity on each submit
+            ->add('initial_quantity', HiddenType::class)
+        ;
 
         $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
+        $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) {
+            $formData = $event->getData();
+            if (isset($formData['quantity'], $formData['delta'])) {
+                $deltaQuantity = (int) $formData['delta'];
+                $initialQuantity = (int) $formData['quantity'] - $deltaQuantity;
+                $event->setData(array_merge($event->getData(), [
+                    'initial_quantity' => $initialQuantity,
+                ]));
+            }
+        });
     }
 
     /**
@@ -91,13 +108,8 @@ class DeltaQuantityType extends TranslatorAwareType
         // so we can't rely on it to initialize the data attributes containing the initial value which is used in FO later. If
         // we don't handle this the quantity will keep increasing (or decreasing) on each submit.
         $formData = $form->getData();
-        if (isset($formData['quantity'], $formData['delta'])) {
-            $deltaQuantity = (int) $formData['delta'];
-            $initialQuantity = (int) $formData['quantity'] - $deltaQuantity;
-        } else {
-            $deltaQuantity = 0;
-            $initialQuantity = null;
-        }
+        $deltaQuantity = (int) ($formData['delta'] ?? 0);
+        $initialQuantity = isset($formData['initial_quantity']) ? (int) $formData['initial_quantity'] : null;
         $view->vars['deltaQuantity'] = $deltaQuantity;
         $view->vars['initialQuantity'] = $initialQuantity;
     }

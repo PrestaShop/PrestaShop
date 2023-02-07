@@ -1335,6 +1335,7 @@
   {% endif %}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': initialQuantity}) %}
   <div {{ block('widget_container_attributes') }}>
+    {{ form_widget(form.initial_quantity, {value: initialQuantity}) }}
     {{ form_widget(form.quantity, {initialQuantity: initialQuantity, deltaQuantity: deltaQuantity, value: quantity}) }}
     {{ form_row(form.delta) }}
   </div>
