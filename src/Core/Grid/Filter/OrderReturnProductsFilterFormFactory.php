@@ -78,8 +78,7 @@ final class OrderReturnProductsFilterFormFactory implements GridFilterFormFactor
         $orderReturnProductsFilterForm = $this->formFactory->create($definition);
 
         $newOrderReturnFormBuilder = $orderReturnProductsFilterForm->getConfig()->getFormFactory()->createNamedBuilder(
-            $definition->getId(),
-            FormType::class
+            $definition->getId()
         );
 
         /* @var FormInterface $orderReturnFormItem */

@@ -31,8 +31,10 @@ services:
   prestashop.adapter.order_return.repository.order_return_repository:
     alias: PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository
 
+  PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator:
+
   prestashop.adapter.order_return.validator.order_return_validator:
-    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'
+    alias: PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator
 
   PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler:
     autowire: true
@@ -46,22 +48,20 @@ services:
   PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandlerInterface: '@PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler'
 
   PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler:
+    autowire: true
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
-    arguments:
-      - '@prestashop.adapter.order_return.repository.order_return_repository'
-      - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'
 
   PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandler:
+    autowire: true;
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand'
-    autowire: true;
 
   PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandler:
+    autowire: true;
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand'
-    autowire: true;
 
