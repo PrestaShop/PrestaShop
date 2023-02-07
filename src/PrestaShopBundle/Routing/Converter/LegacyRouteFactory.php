@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-
 namespace PrestaShopBundle\Routing\Converter;
 
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;

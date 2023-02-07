@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Security\OpenSsl;
 
 use function openssl_random_pseudo_bytes;
