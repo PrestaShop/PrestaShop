@@ -34,4 +34,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator
 
   PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator:
+    arguments:
+      $orderReturnRepository: '@prestashop.adapter.order.repository.order_repository'
     autowire: true

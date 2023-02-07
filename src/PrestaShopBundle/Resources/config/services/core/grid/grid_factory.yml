@@ -370,6 +370,10 @@ services:
 
   PrestaShop\Core\Grid\Factory\OrderReturnProducts:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDefinitionFactory'
+      - '@PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsDecorator'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\OrderReturnProductsFilterFormFactory'
     autowire: true
 
   prestashop.core.grid.factory.order_return_states:
