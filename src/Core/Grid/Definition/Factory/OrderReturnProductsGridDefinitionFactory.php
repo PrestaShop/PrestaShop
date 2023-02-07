@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderReturnCustomizationColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\TemplateColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -145,8 +145,11 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                     ])
             )
             ->add(
-                (new OrderReturnCustomizationColumn('customizations'))
+                (new TemplateColumn('customizations'))
                     ->setName($this->trans('Customizations', [], 'Admin.Global'))
+                    ->setOptions([
+                        'template_path' => '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/customizations_column.html.twig',
+                    ])
             )
             ->add(
                 (new ActionColumn('actions'))

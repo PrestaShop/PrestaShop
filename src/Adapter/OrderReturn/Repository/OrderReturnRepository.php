@@ -173,7 +173,9 @@ class OrderReturnRepository extends AbstractObjectModelRepository
 
     /**
      * @param int $orderDetailId
+     *
      * @return OrderReturnDetail
+     *
      * @throws OrderReturnDetailNotFoundException
      * @throws \Doctrine\DBAL\Driver\Exception
      * @throws \Doctrine\DBAL\Exception
@@ -189,6 +191,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
         if (!$result) {
             throw new OrderReturnDetailNotFoundException(sprintf('Order return detail with id "%s" not found', $orderDetailId));
         }
+
         return new OrderReturnDetail(
             (int) $result['id_order_return'],
             (int) $result['id_order_detail'],

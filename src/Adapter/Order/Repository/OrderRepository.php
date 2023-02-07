@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomization;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomizations;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -82,7 +81,9 @@ class OrderRepository extends AbstractObjectModelRepository
     /**
      * @param OrderDetailId $detailId
      * @param LanguageId $languageId
+     *
      * @return OrderDetailCustomizations|null
+     *
      * @throws PrestaShopException
      * @throws \PrestaShopDatabaseException
      */

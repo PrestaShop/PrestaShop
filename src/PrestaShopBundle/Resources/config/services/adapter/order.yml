@@ -284,5 +284,8 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand
 
+  PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository:
+    autowire: true
+
   prestashop.adapter.order.repository.order_repository:
-    class: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository
+    alias: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository

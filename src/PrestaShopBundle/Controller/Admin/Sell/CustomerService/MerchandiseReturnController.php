@@ -138,7 +138,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         $allowPrintingOrderReturnPdf =
             $editableOrderReturn->getOrderReturnStateId() === OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID;
 
-        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
             'allowPrintingOrderReturnPdf' => $allowPrintingOrderReturnPdf,
             'editableOrderReturn' => $editableOrderReturn,
             'orderReturnForm' => $form->createView(),

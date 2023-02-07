@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use Context;
-use OrderReturn;
 use PDF;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
@@ -57,6 +56,7 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
 
     /**
      * @param TranslatorInterface $translator
+     * @param OrderReturnRepository $orderReturnRepository
      */
     public function __construct(TranslatorInterface $translator, OrderReturnRepository $orderReturnRepository)
     {
