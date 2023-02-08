@@ -9,6 +9,7 @@ services:
     bind:
       $multistoreFeature: '@prestashop.adapter.feature.multistore'
       $defaultCurrencyId: '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+      $defaultLanguageId: '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       $formRenderer: '@twig.form.renderer'
       $flashBag: '@session.flash_bag'
       $addDisablingSwitchListener: '@form.event_listener.add_disabling_switch_listener'
@@ -18,9 +19,14 @@ services:
       $multiStoreContext: '@prestashop.adapter.shop.context'
 
   PrestaShopBundle\Form\:
-    resource: "../../../../Form/{Extension,Validator}/*"
+    resource: "../../../../Form/{Extension,Validator,DataTransformer}/*"
 
   PrestaShopBundle\Form\FormCloner:
   PrestaShopBundle\Form\FormBuilderModifier:
   PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler:
-    public: true
+
+  PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationFormFactory:
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.addon.theme.repository'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme.getName()'
