@@ -1,8 +1,8 @@
-admin_products_v2_get_images:
-  path: /{productId}/images
+admin_products_v2_images_for_all_shops:
+  path: /{productId}/images-for-all-shops
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::getImagesAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::getImagesForAllShopsAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:getimages

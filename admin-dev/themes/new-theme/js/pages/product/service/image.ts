@@ -30,8 +30,8 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getProductImages = async (productId: number): Promise<JQuery.jqXHR<any>> => {
-  const imagesUrl = router.generate('admin_products_v2_get_images', {
+export const getProductImagesForAllShops = async (productId: number): Promise<JQuery.jqXHR<any>> => {
+  const imagesUrl = router.generate('admin_products_v2_images_for_all_shops', {
     productId,
   });
 
@@ -39,7 +39,6 @@ export const getProductImages = async (productId: number): Promise<JQuery.jqXHR<
 };
 
 export const getProductShopImages = async (productId: number): Promise<Response> => fetch(router.generate('admin_products_v2_product_shop_images', {productId}));
-
 export const updateProductShopImages = async (productId: number, imageAssociations: any): Promise<Response> => {
   const formData = new FormData();
   formData.append('image_associations', JSON.stringify(imageAssociations));
@@ -127,7 +126,7 @@ export const removeProductImage = async (productImageId: string): Promise<JQuery
 };
 
 export default {
-  getProductImages,
+  getProductImagesForAllShops,
   saveImageInformations,
   replaceImage,
   saveImagePosition,

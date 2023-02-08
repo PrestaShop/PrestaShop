@@ -67,15 +67,15 @@ class ImageController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getImagesAction(int $productId, ?int $shopId): JsonResponse
+    public function getImagesForAllShopsAction(int $productId): JsonResponse
     {
         /** @var ProductImage[] $images */
         $images = $this->getQueryBus()->handle(new GetProductImages(
             $productId,
-            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops(),
+            ShopConstraint::allShops()
         ));
 
-        return new JsonResponse(array_map([$this, 'formatImage'], $images));
+        return $this->json(array_map([$this, 'formatImage'], $images));
     }
 
     /**
@@ -230,7 +230,7 @@ class ImageController extends FrameworkBundleAdminController
     {
         $productImage = $this->getQueryBus()->handle(new GetProductImage($productImageId));
 
-        return new JsonResponse($this->formatImage($productImage));
+        return $this->json($this->formatImage($productImage));
     }
 
     /**

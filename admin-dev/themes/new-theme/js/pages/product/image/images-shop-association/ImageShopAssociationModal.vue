@@ -106,7 +106,7 @@
   const updateImages = async (shopImages: any[]): Promise<void> => {
     // Reformat data for product images
     const newProductImages: ProductImage[] = [];
-    const images = await getProductImages(props.productId);
+    const images = await getProductImagesForAllShops(props.productId);
     images.forEach((productImage: any) => {
       const shopAssociations = shopImages.map((productShopImage: any) => {
         let isAssociated = false;
