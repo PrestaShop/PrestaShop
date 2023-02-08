@@ -134,12 +134,12 @@ services:
     arguments:
       - PrestaShopBundle\Entity\FeatureFlag
 
+  prestashop.core.admin.feature_flag.repository:
+    alias: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
+    deprecated: ~
+
   PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\AuthorizedApplication
     public: true
-
-  prestashop.core.admin.feature_flag.repository:
-    alias: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
-    deprecated: ~
