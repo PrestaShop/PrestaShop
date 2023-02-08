@@ -70,11 +70,13 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configureStockInformation($config, $formData)
         ;
 
-        $config->addField('[header][active]', 'setActive', DataField::TYPE_BOOL);
+        $config->addMultiShopField('[header][active]', 'setActive', DataField::TYPE_BOOL);
 
         $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductCommand($productId->getValue(), $singleShopConstraint);
         $allShopsCommand = new UpdateProductCommand($productId->getValue(), ShopConstraint::allShops());
+
+        $this->setNameDependingOnStatus($formData, $shopCommand);
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
@@ -238,5 +240,33 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         }
 
         return $this;
+    }
+
+    /**
+     * Name and status are related - when name is not filled, then product cannot be enabled.
+     * When name is being updated for all shops, but status only for single shop, then status would be filled into
+     * single shop command while name only in all shops command. Since single shop command is always executed first,
+     * it will try to enable product before name is inserted in allShopsCommand and will end up throwing
+     * error about name being empty.
+     *
+     * So to solve that, we check if status is being updated for single shop,
+     * and if that is the case, then we manually fill the name into single shop command too.
+     * So at the end it will end up updating name twice - with single shop command and with all shops command,
+     * but at least it won't throw the error.
+     *
+     * @param array<string, mixed> $formData
+     * @param UpdateProductCommand $singleShopCommand
+     *
+     * @return void
+     */
+    private function setNameDependingOnStatus(array $formData, UpdateProductCommand $singleShopCommand): void
+    {
+        if (
+            !empty($formData['header']['active']) &&
+            empty($formData['header'][$this->modifyAllNamePrefix . 'active']) &&
+            isset($formData['header']['name'])
+        ) {
+            $singleShopCommand->setLocalizedNames($formData['header']['name']);
+        }
     }
 }
