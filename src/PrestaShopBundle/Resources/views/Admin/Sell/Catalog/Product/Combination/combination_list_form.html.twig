@@ -1,4 +1,4 @@
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,38 +21,8 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-/**
- * Used to display errors fetched from PrestaShop API in a JSON format.
- * The expected format looks like this:
- * {
- *   errors: {
- *     price: 'Invalid negative value',
- *     name: 'Forbidden blank value',
- *   },
- * }
- *
- * @param jsonResponse
- */
-export function notifyFormErrors(jsonResponse: any): void {
-  Object.keys(jsonResponse.errors).forEach((field: string) => {
-    if (Object.prototype.hasOwnProperty.call(jsonResponse.errors, field)) {
-      let fieldErrors: string[];
+{% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination_listing.html.twig' %}
 
-      if (Array.isArray(jsonResponse.errors[field])) {
-        fieldErrors = jsonResponse.errors[field];
-      } else {
-        fieldErrors = [jsonResponse.errors[field]];
-      }
-
-      fieldErrors.forEach((error: string) => {
-        $.growl.error({message: `${field}: ${error}`});
-      });
-    }
-  });
-};
-
-export default {
-  notifyFormErrors,
-};
+{{ form_row(combinationsForm) }}

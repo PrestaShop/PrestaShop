@@ -119,14 +119,14 @@ class FrameworkBundleAdminController extends AbstractController
         $translator = $this->get('translator');
 
         foreach ($form->getErrors(true) as $error) {
-            if (!$error->getCause()) {
-                $formId = 'bubbling_errors';
-            } else {
+            if ($error->getCause() && method_exists($error->getCause(), 'getPropertyPath')) {
                 $formId = str_replace(
                     ['.', 'children[', ']', '_data'],
                     ['_', '', '', ''],
                     $error->getCause()->getPropertyPath()
                 );
+            } else {
+                $formId = 'bubbling_errors';
             }
 
             if ($error->getMessagePluralization()) {

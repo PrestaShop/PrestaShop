@@ -90,17 +90,20 @@ export default class BulkChoicesSelector {
   }
 
   private init() {
-    this.eventEmitter.on(CombinationEvents.listRendered, async () => {
-      this.listenCheckboxesChange();
-      // It is important to uncheck the bulk checkboxes before we call the update functions
-      // because they are based on the state of the checkboxes
-      this.uncheckBulkAllSelection();
+    this.eventEmitter.on(CombinationEvents.listRendered, () => this.onListRendered());
+    this.eventEmitter.on(CombinationEvents.errorListRendered, () => this.onListRendered());
+  }
 
-      const selectedCombinationsCount = await this.countSelectedIds();
+  private async onListRendered(): Promise<void> {
+    this.listenCheckboxesChange();
+    // It is important to uncheck the bulk checkboxes before we call the update functions
+    // because they are based on the state of the checkboxes
+    this.uncheckBulkAllSelection();
 
-      this.updateBulkAllSelectionLabels(selectedCombinationsCount);
-      this.updateBulkActionButtons(selectedCombinationsCount);
-    });
+    const selectedCombinationsCount = await this.countSelectedIds();
+
+    this.updateBulkAllSelectionLabels(selectedCombinationsCount);
+    this.updateBulkActionButtons(selectedCombinationsCount);
   }
 
   /**
