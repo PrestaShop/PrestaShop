@@ -13,6 +13,10 @@ import CustomerData from '@data/faker/customer';
  * @extends FOBasePage
  */
 class Checkout extends FOBasePage {
+  public readonly deleteAddressSuccessMessage: string;
+
+  private readonly successAlert: string;
+
   private readonly checkoutPageBody: string;
 
   private readonly paymentStepSection: string;
@@ -91,6 +95,10 @@ class Checkout extends FOBasePage {
 
   private readonly addressStepContent: string;
 
+  private readonly addressStepCreateAddressForm: string;
+
+  private readonly addressStepAliasInput: string;
+
   private readonly addressStepCompanyInput: string;
 
   private readonly addressStepAddress1Input: string;
@@ -106,6 +114,20 @@ class Checkout extends FOBasePage {
   private readonly addressStepUseSameAddressCheckbox: string;
 
   private readonly addressStepContinueButton: string;
+
+  private readonly addressStepSubmitButton: string;
+
+  private readonly addressStepEditButton: string;
+
+  private readonly addAddressButton: string;
+
+  private readonly addInvoiceAddressButton: string;
+
+  private readonly differentInvoiceAddressLink: string;
+
+  private readonly invoiceAddressesBlock: string;
+
+  private readonly invoiceAddressSection: string;
 
   private readonly deliveryStepSection: string;
 
@@ -129,6 +151,16 @@ class Checkout extends FOBasePage {
 
   private readonly deliveryAddressPosition: (position: number) => string;
 
+  private readonly invoiceAddressPosition: (position: number) => string;
+
+  private readonly deliveryAddressEditButton: (addressID: number) => string;
+
+  private readonly deliveryAddressDeleteButton: (addressID: number) => string;
+
+  private readonly deliveryAddressRadioButton: (addressID: number) => string;
+
+  private readonly invoiceAddressRadioButton: (addressID: number) => string;
+
   private readonly cartTotalATI: string;
 
   private readonly cartRuleAlertMessage: string;
@@ -151,26 +183,17 @@ class Checkout extends FOBasePage {
    */
   constructor() {
     super();
+    this.cartRuleAlertMessageText = 'You cannot use this voucher with this carrier';
+    this.deleteAddressSuccessMessage = 'Address successfully deleted.';
+    this.noPaymentNeededText = 'No payment needed for this order';
 
     // Selectors
+    this.successAlert = '#notifications article.alert-success';
     this.checkoutPageBody = 'body#checkout';
-    this.paymentStepSection = '#checkout-payment-step';
-    this.paymentOptionInput = (name: string) => `${this.paymentStepSection} input[name='payment-option']`
-      + `[data-module-name='${name}']`;
-    this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
-    this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
-    this.termsOfServiceLink = '#cta-terms-and-conditions-0';
-    this.termsOfServiceModalDiv = '#modal div.js-modal-content';
-    this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
-    this.shippingValueSpan = '#cart-subtotal-shipping span.value';
-    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
-    this.noPaymentNeededText = 'No payment needed for this order';
-    this.promoCodeArea = '#promo-code';
-    this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
-    this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
+    // Order as a guest selectors
     this.activeLink = `${this.personalInformationStepForm} .nav-link.active`;
     this.checkoutSignInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
@@ -185,31 +208,47 @@ class Checkout extends FOBasePage {
     this.checkoutGuestNewsletterCheckbox = `${this.checkoutGuestForm} input[name='newsletter']`;
     this.checkoutGuestGdprCheckbox = `${this.checkoutGuestForm} input[name='psgdpr']`;
     this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
-
-    this.checkoutSummary = '#js-checkout-summary';
-    this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
-    this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
-    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} i.material-icons`;
-
-    // Checkout login form
+    // Sign in selectors
+    this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
     this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
 
-    // Checkout address form
+    // Addresses step selectors
     this.addressStepSection = '#checkout-addresses-step';
     this.addressStepContent = `${this.addressStepSection} div.content`;
-    this.addressStepCompanyInput = `${this.addressStepSection} input[name='company']`;
-    this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
-    this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
-    this.addressStepCityInput = `${this.addressStepSection} input[name='city']`;
-    this.addressStepCountrySelect = `${this.addressStepSection} select[name='id_country']`;
-    this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
+    this.addressStepCreateAddressForm = `${this.addressStepSection} .js-address-form`;
+    this.addressStepAliasInput = '#field-alias';
+    this.addressStepCompanyInput = '#field-company';
+    this.addressStepAddress1Input = '#field-address1';
+    this.addressStepPostCodeInput = '#field-postcode';
+    this.addressStepCityInput = '#field-city';
+    this.addressStepCountrySelect = '#field-id_country';
+    this.addressStepPhoneInput = '#field-phone';
     this.addressStepUseSameAddressCheckbox = '#use_same_address';
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
+    this.addressStepSubmitButton = `${this.addressStepSection} button[type=submit]`;
+    this.addressStepEditButton = `${this.addressStepSection} span.step-edit`;
+    this.addAddressButton = '#checkout-addresses-step p.add-address a';
+    this.addInvoiceAddressButton = '#checkout-addresses-step  p.add-address a[href*="invoice"]';
+    this.differentInvoiceAddressLink = '#checkout-addresses-step form a[data-link-action="different-invoice-address"]';
+    // Delivery address selectors
+    this.deliveryAddressBlock = '#delivery-addresses';
+    this.deliveryAddressSection = `${this.deliveryAddressBlock} article.js-address-item`;
+    this.deliveryAddressEditButton = (addressID: number) => `#id_address_delivery-address-${addressID} a.edit-address`;
+    this.deliveryAddressDeleteButton = (addressID: number) => `#id_address_delivery-address-${addressID} a.delete-address`;
+    this.deliveryAddressRadioButton = (addressID: number) => `#id_address_delivery-address-${addressID} `
+      + 'input[name="id_address_delivery"]';
+    // Invoice address selectors
+    this.invoiceAddressesBlock = '#invoice-addresses';
+    this.invoiceAddressSection = `${this.invoiceAddressesBlock} article.js-address-item`;
+    this.deliveryAddressPosition = (position: number) => `#delivery-addresses article:nth-child(${position})`;
+    this.invoiceAddressPosition = (position: number) => `#invoice-addresses article:nth-child(${position})`;
+    this.invoiceAddressRadioButton = (addressID: number) => `#id_address_invoice-address-${addressID}`
+      + ' input[name="id_address_invoice"]';
 
-    // Shipping method step
+    // Shipping method selectors
     this.deliveryStepSection = '#checkout-delivery-step';
     this.deliveryOptionsRadioButton = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = (id: number) => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
@@ -218,13 +257,29 @@ class Checkout extends FOBasePage {
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
-    this.deliveryAddressBlock = '#delivery-addresses';
-    this.deliveryAddressSection = `${this.deliveryAddressBlock} article.js-address-item`;
-    this.deliveryAddressPosition = (position: number) => `#delivery-addresses article:nth-child(${position})`;
 
+    // Payment step selectors
+    this.paymentStepSection = '#checkout-payment-step';
+    this.paymentOptionInput = (name: string) => `${this.paymentStepSection} input[name='payment-option']`
+      + `[data-module-name='${name}']`;
+    this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
+    this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
+    this.termsOfServiceLink = '#cta-terms-and-conditions-0';
+    this.termsOfServiceModalDiv = '#modal div.js-modal-content';
+    this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
+    this.shippingValueSpan = '#cart-subtotal-shipping span.value';
+    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
+
+    // Checkout summary selectors
+    this.checkoutSummary = '#js-checkout-summary';
+    this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
+    this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
+    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} i.material-icons`;
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
-    this.cartRuleAlertMessageText = 'You cannot use this voucher with this carrier';
+    this.promoCodeArea = '#promo-code';
+    this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
+    this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
@@ -256,6 +311,313 @@ class Checkout extends FOBasePage {
   async isStepCompleted(page: Page, stepSelector: string): Promise<boolean> {
     return this.elementVisible(page, `${stepSelector}.-complete`, 1000);
   }
+
+  // Methods for personal information step
+  /**
+   * Click on sign in
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async clickOnSignIn(page: Page): Promise<void> {
+    await page.click(this.signInLink);
+  }
+
+  /**
+   * Login in FO
+   * @param page {Page} Browser tab
+   * @param customer {object} Customer's information (email and password)
+   * @return {Promise<boolean>}
+   */
+  async customerLogin(page: Page, customer: any): Promise<boolean> {
+    await this.waitForVisibleSelector(page, this.emailInput);
+    await this.setValue(page, this.emailInput, customer.email);
+    await this.setValue(page, this.passwordInput, customer.password);
+    await this.clickAndWaitForNavigation(page, this.personalInformationContinueButton);
+
+    return this.isStepCompleted(page, this.personalInformationStepForm);
+  }
+
+  /**
+   * Get active link from personal information block
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getActiveLinkFromPersonalInformationBlock(page: Page): Promise<string> {
+    return this.getTextContent(page, this.activeLink);
+  }
+
+  /**
+   * Is password input required
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isPasswordRequired(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.checkoutGuestPasswordInput}:required`, 1000);
+  }
+
+  /**
+   * Fill personal information form and click on continue
+   * @param page {Page} Browser tab
+   * @param customerData {CustomerData} Guest Customer's information to fill on form
+   * @return {Promise<boolean>}
+   */
+  async setGuestPersonalInformation(page: Page, customerData: CustomerData): Promise<boolean> {
+    await this.setChecked(page, this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
+
+    await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
+    await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
+    await this.setValue(page, this.checkoutGuestEmailInput, customerData.email);
+    await this.setValue(page, this.checkoutGuestPasswordInput, customerData.password);
+
+    // Fill birthday input
+    await this.setValue(
+      page,
+      this.checkoutGuestBirthdayInput,
+      `${customerData.monthOfBirth.padStart(2, '0')}/`
+      + `${customerData.dayOfBirth.padStart(2, '0')}/`
+      + `${customerData.yearOfBirth}`,
+    );
+
+    if (customerData.partnerOffers) {
+      await this.setChecked(page, this.checkoutGuestOptinCheckbox);
+    }
+
+    if (customerData.newsletter) {
+      await this.setChecked(page, this.checkoutGuestNewsletterCheckbox);
+    }
+
+    // Check customer privacy input if visible
+    if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox, 500)) {
+      await this.setChecked(page, this.checkoutGuestCustomerPrivacyCheckbox);
+    }
+
+    // Check gdpr input if visible
+    if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox, 500)) {
+      await this.setChecked(page, this.checkoutGuestGdprCheckbox);
+    }
+
+    // Click on continue
+    await page.click(this.checkoutGuestContinueButton);
+
+    return this.isStepCompleted(page, this.personalInformationStepForm);
+  }
+
+  // Methods for Addresses step
+
+  /**
+   * Get address ID
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   */
+  async getDeliveryAddressID(page: Page, row: number = 1): Promise<number> {
+    const addressSelectorValue = await this.getAttributeContent(page, this.deliveryAddressPosition(row), 'id');
+    const text: string = (/\d+/g.exec(addressSelectorValue) ?? '').toString();
+
+    return parseInt(text, 10);
+  }
+
+  /**
+   * Get invoice address ID
+   * @param page  {Page} Browser tab
+   * @param row {number} The row of the address
+   */
+  async getInvoiceAddressID(page: Page, row: number = 1): Promise<number> {
+    const addressSelectorValue = await this.getAttributeContent(page, this.invoiceAddressPosition(row), 'id');
+    const text: string = (/\d+/g.exec(addressSelectorValue) ?? '').toString();
+
+    return parseInt(text, 10);
+  }
+
+  /**
+   * Click on edit address
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   */
+  async clickOnEditAddress(page: Page, row: number = 1): Promise<void> {
+    const addressID = await this.getDeliveryAddressID(page, row);
+    await this.waitForSelectorAndClick(page, this.deliveryAddressEditButton(addressID));
+  }
+
+  /**
+   * Delete address
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   */
+  async deleteAddress(page: Page, row: number = 1): Promise<string> {
+    const addressID = await this.getDeliveryAddressID(page, row);
+    await this.waitForSelectorAndClick(page, this.deliveryAddressDeleteButton(addressID));
+
+    return this.getTextContent(page, this.successAlert);
+  }
+
+  /**
+   * Select delivery address
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   */
+  async selectDeliveryAddress(page: Page, row: number = 1): Promise<void> {
+    const addressID = await this.getDeliveryAddressID(page, row);
+    await this.setChecked(page, this.deliveryAddressRadioButton(addressID), true);
+  }
+
+  /**
+   * Select invoice address
+   * @param page {Page} Browser tab
+   * @param row {number} The row of the address
+   */
+  async selectInvoiceAddress(page: Page, row: number = 1): Promise<void> {
+    const addressID = await this.getInvoiceAddressID(page, row);
+    await this.setChecked(page, this.invoiceAddressRadioButton(addressID), true);
+  }
+
+  /**
+   * Click on continue button from address step
+   * @param page {Page} Browser tab
+   */
+  async clickOnContinueButtonFromAddressStep(page: Page): Promise<boolean> {
+    await page.click(this.addressStepContinueButton);
+
+    return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Is address form visible
+   * @param page {Page} Browser tab
+   */
+  isAddressFormVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.addressStepCreateAddressForm, 2000);
+  }
+
+  /**
+   * Fill address form, used for delivery and invoice addresses
+   * @param page {Page} Browser tab
+   * @param address {AddressData} Address's information to fill form with
+   * @returns {Promise<void>}
+   */
+  async fillAddressForm(page: Page, address: AddressData): Promise<void> {
+    if (await this.elementVisible(page, this.addressStepAliasInput)) {
+      await this.setValue(page, this.addressStepAliasInput, address.alias);
+    }
+    await this.setValue(page, this.addressStepCompanyInput, address.company);
+    await this.setValue(page, this.addressStepAddress1Input, address.address);
+    await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
+    await this.setValue(page, this.addressStepCityInput, address.city);
+    await this.selectByVisibleText(page, this.addressStepCountrySelect, address.country);
+    await page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
+    await this.setValue(page, this.addressStepPhoneInput, address.phone);
+  }
+
+  /**
+   * Set invoice address
+   * @param page {Page} Browser tab
+   * @param invoiceAddress {AddressData} Address's information to fill form with
+   */
+  async setInvoiceAddress(page: Page, invoiceAddress: AddressData): Promise<boolean> {
+    await this.fillAddressForm(page, invoiceAddress);
+
+    if (await this.elementVisible(page, this.addressStepContinueButton, 2000)) {
+      await page.click(this.addressStepContinueButton);
+    } else {
+      await page.click(this.addressStepSubmitButton);
+    }
+
+    return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Set address step
+   * @param page {Page} Browser tab
+   * @param deliveryAddress {AddressData|null} Address's information to add (for delivery)
+   * @param invoiceAddress {AddressData|null} Address's information to add (for invoice)
+   * @returns {Promise<boolean>}
+   */
+  async setAddress(page: Page, deliveryAddress: AddressData, invoiceAddress: AddressData | null = null): Promise<boolean> {
+    // Set delivery address
+    await this.fillAddressForm(page, deliveryAddress);
+
+    // Set invoice address if not null
+    if (invoiceAddress !== null) {
+      await this.setChecked(page, this.addressStepUseSameAddressCheckbox, false);
+      await page.click(this.addressStepContinueButton);
+      await this.fillAddressForm(page, invoiceAddress);
+    } else {
+      await this.setChecked(page, this.addressStepUseSameAddressCheckbox, true);
+    }
+
+    if (await this.elementVisible(page, this.addressStepContinueButton, 2000)) {
+      await page.click(this.addressStepContinueButton);
+    } else {
+      await page.click(this.addressStepSubmitButton);
+    }
+
+    return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Get number od addresses
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfAddresses(page: Page): Promise<number> {
+    await this.waitForSelector(page, this.deliveryAddressBlock, 'visible');
+
+    return (await page.$$(this.deliveryAddressSection)).length;
+  }
+
+  /**
+   * Get number od addresses
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfInvoiceAddresses(page: Page): Promise<number> {
+    await this.waitForSelector(page, this.invoiceAddressesBlock, 'visible');
+
+    return (await page.$$(this.invoiceAddressSection)).length;
+  }
+
+  /**
+   * Click on edit addresses step
+   * @param page {Page} Browser tab
+   */
+  async clickOnEditAddressesStep(page: Page): Promise<void> {
+    if (!await this.elementVisible(page, this.deliveryAddressBlock, 1000)) {
+      await this.waitForSelectorAndClick(page, this.addressStepEditButton);
+    }
+  }
+
+  /**
+   * Click on new address button
+   * @param page {Page} Browser tab
+   */
+  async clickOnAddNewAddressButton(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.addAddressButton);
+  }
+
+  /**
+   * Click on different invoice address link
+   * @param page {Page} Browser tab
+   */
+  async clickOnDifferentInvoiceAddressLink(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.differentInvoiceAddressLink);
+  }
+
+  /**
+   * Is invoice address block visible
+   * @param page {Page} Browser tab
+   */
+  async isInvoiceAddressBlockVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.invoiceAddressesBlock, 3000);
+  }
+
+  /**
+   * Click on new invoice address button
+   * @param page {Page} Browser tab
+   */
+  async clickOnAddNewInvoiceAddressButton(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.addInvoiceAddressButton);
+  }
+
+  // Methods for Shipping methods step
 
   /**
    * Go to Delivery Step and check that Address step is complete
@@ -325,6 +687,55 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Get all carriers prices
+   * @param page {Page} Browser tab
+   * @returns {Promise<Array<string>>}
+   */
+  async getAllCarriersPrices(page: Page): Promise<(string | null)[]> {
+    return page.$$eval(this.deliveryOptionAllPricesSpan, (all) => all.map((el) => el.textContent));
+  }
+
+  /**
+   * Get shipping value
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getShippingCost(page: Page): Promise<string> {
+    return this.getTextContent(page, this.shippingValueSpan);
+  }
+
+  /**
+   * Get all carriers names
+   * @param page {Page} Browser tab
+   * @returns {Promise<Array<string>>}
+   */
+  async getAllCarriersNames(page: Page): Promise<(string | null)[]> {
+    return page.$$eval(this.deliveryOptionAllNamesSpan, (all) => all.map((el) => el.textContent));
+  }
+
+  /**
+   * Go to Payment Step and check that delivery step is complete
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToShippingStep(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.deliveryStepSection);
+  }
+
+  /**
+   * Go to Payment Step and check that delivery step is complete
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async goToPaymentStep(page: Page): Promise<boolean> {
+    await this.clickAndWaitForNavigation(page, this.deliveryStepContinueButton);
+
+    return this.isStepCompleted(page, this.deliveryStepSection);
+  }
+
+  // Methods for payment methods step
+
+  /**
    * Is confirm button visible and enabled
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
@@ -369,24 +780,6 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Get all carriers prices
-   * @param page {Page} Browser tab
-   * @returns {Promise<Array<string>>}
-   */
-  async getAllCarriersPrices(page: Page): Promise<(string | null)[]> {
-    return page.$$eval(this.deliveryOptionAllPricesSpan, (all) => all.map((el) => el.textContent));
-  }
-
-  /**
-   * Get shipping value
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  getShippingCost(page: Page): Promise<string> {
-    return this.getTextContent(page, this.shippingValueSpan);
-  }
-
-  /**
    * Set promo code
    * @param page {Page} Browser tab
    * @param code {string} The promo code
@@ -399,35 +792,6 @@ class Checkout extends FOBasePage {
     }
     await this.setValue(page, this.checkoutHavePromoInputArea, code);
     await page.click(this.checkoutPromoCodeAddButton);
-  }
-
-  /**
-   * Get all carriers names
-   * @param page {Page} Browser tab
-   * @returns {Promise<Array<string>>}
-   */
-  async getAllCarriersNames(page: Page): Promise<(string | null)[]> {
-    return page.$$eval(this.deliveryOptionAllNamesSpan, (all) => all.map((el) => el.textContent));
-  }
-
-  /**
-   * Go to Payment Step and check that delivery step is complete
-   * @param page {Page} Browser tab
-   * @return {Promise<void>}
-   */
-  async goToShippingStep(page: Page): Promise<void> {
-    await this.waitForSelectorAndClick(page, this.deliveryStepSection);
-  }
-
-  /**
-   * Go to Payment Step and check that delivery step is complete
-   * @param page {Page} Browser tab
-   * @return {Promise<boolean>}
-   */
-  async goToPaymentStep(page: Page): Promise<boolean> {
-    await this.clickAndWaitForNavigation(page, this.deliveryStepContinueButton);
-
-    return this.isStepCompleted(page, this.deliveryStepSection);
   }
 
   /**
@@ -500,48 +864,6 @@ class Checkout extends FOBasePage {
    */
   isPaymentMethodExist(page: Page, paymentModuleName: string): Promise<boolean> {
     return this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 2000);
-  }
-
-  /**
-   * Click on sign in
-   * @param page {Page} Browser tab
-   * @return {Promise<void>}
-   */
-  async clickOnSignIn(page: Page): Promise<void> {
-    await page.click(this.checkoutSignInLink);
-  }
-
-  /**
-   * Login in FO
-   * @param page {Page} Browser tab
-   * @param customer {object} Customer's information (email and password)
-   * @return {Promise<boolean>}
-   */
-  async customerLogin(page: Page, customer: any): Promise<boolean> {
-    await this.waitForVisibleSelector(page, this.emailInput);
-    await this.setValue(page, this.emailInput, customer.email);
-    await this.setValue(page, this.passwordInput, customer.password);
-    await this.clickAndWaitForNavigation(page, this.personalInformationContinueButton);
-
-    return this.isStepCompleted(page, this.personalInformationStepForm);
-  }
-
-  /**
-   * Get active link from personal information block
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  getActiveLinkFromPersonalInformationBlock(page: Page): Promise<string> {
-    return this.getTextContent(page, this.activeLink);
-  }
-
-  /**
-   * Is password input required
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  isPasswordRequired(page: Page): Promise<boolean> {
-    return this.elementVisible(page, `${this.checkoutGuestPasswordInput}:required`, 1000);
   }
 
   /**
@@ -629,105 +951,6 @@ class Checkout extends FOBasePage {
     await this.setChecked(page, this.giftCheckbox, true);
 
     return this.getTextContent(page, this.cartSubtotalGiftWrappingValueSpan);
-  }
-
-  /**
-   * Fill address form, used for delivery and invoice addresses
-   * @param page {Page} Browser tab
-   * @param address {AddressData} Address's information to fill form with
-   * @returns {Promise<void>}
-   */
-  async fillAddressForm(page: Page, address: AddressData): Promise<void> {
-    await this.setValue(page, this.addressStepCompanyInput, address.company);
-    await this.setValue(page, this.addressStepAddress1Input, address.address);
-    await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
-    await this.setValue(page, this.addressStepCityInput, address.city);
-    await this.selectByVisibleText(page, this.addressStepCountrySelect, address.country);
-    await page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
-    await this.setValue(page, this.addressStepPhoneInput, address.phone);
-  }
-
-  /**
-   * Set address step
-   * @param page {Page} Browser tab
-   * @param deliveryAddress {AddressData|null} Address's information to add (for delivery)
-   * @param invoiceAddress {AddressData|null} Address's information to add (for invoice)
-   * @returns {Promise<boolean>}
-   */
-  async setAddress(page: Page, deliveryAddress: AddressData, invoiceAddress: AddressData|null = null): Promise<boolean> {
-    // Set delivery address
-    await this.fillAddressForm(page, deliveryAddress);
-
-    // Set invoice address if not null
-    if (invoiceAddress !== null) {
-      await this.setChecked(page, this.addressStepUseSameAddressCheckbox, false);
-      await page.click(this.addressStepContinueButton);
-      await this.fillAddressForm(page, invoiceAddress);
-    } else {
-      await this.setChecked(page, this.addressStepUseSameAddressCheckbox);
-    }
-
-    await page.click(this.addressStepContinueButton);
-
-    return this.isStepCompleted(page, this.addressStepSection);
-  }
-
-  /**
-   * Get number od addresses
-   * @param page {Page} Browser tab
-   * @returns {Promise<number>}
-   */
-  async getNumberOfAddresses(page: Page): Promise<number> {
-    await this.waitForSelector(page, this.deliveryAddressBlock, 'visible');
-
-    return (await page.$$(this.deliveryAddressSection)).length;
-  }
-
-  /**
-   * Fill personal information form and click on continue
-   * @param page {Page} Browser tab
-   * @param customerData {CustomerData} Guest Customer's information to fill on form
-   * @return {Promise<boolean>}
-   */
-  async setGuestPersonalInformation(page: Page, customerData: CustomerData): Promise<boolean> {
-    await this.setChecked(page, this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
-
-    await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
-    await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
-    await this.setValue(page, this.checkoutGuestEmailInput, customerData.email);
-    await this.setValue(page, this.checkoutGuestPasswordInput, customerData.password);
-
-    // Fill birthday input
-    await this.setValue(
-      page,
-      this.checkoutGuestBirthdayInput,
-      `${customerData.monthOfBirth.padStart(2, '0')}/`
-      + `${customerData.dayOfBirth.padStart(2, '0')}/`
-      + `${customerData.yearOfBirth}`,
-    );
-
-    if (customerData.partnerOffers) {
-      await this.setChecked(page, this.checkoutGuestOptinCheckbox);
-    }
-
-    if (customerData.newsletter) {
-      await this.setChecked(page, this.checkoutGuestNewsletterCheckbox);
-    }
-
-    // Check customer privacy input if visible
-    if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox, 500)) {
-      await this.setChecked(page, this.checkoutGuestCustomerPrivacyCheckbox);
-    }
-
-    // Check gdpr input if visible
-    if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox, 500)) {
-      await this.setChecked(page, this.checkoutGuestGdprCheckbox);
-    }
-
-    // Click on continue
-    await page.click(this.checkoutGuestContinueButton);
-
-    return this.isStepCompleted(page, this.personalInformationStepForm);
   }
 }
 
