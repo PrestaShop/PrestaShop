@@ -713,10 +713,10 @@ class WebserviceOutputBuilderCore
             if (!is_array($this->fieldsToDisplay) || in_array($field_name, $this->fieldsToDisplay[$assoc_name])) {
                 if ($field_name == 'id' && !isset($field['sqlId'])) {
                     $field['sqlId'] = 'id';
-                    $field['value'] = $object_assoc['id'];
+                    $field['value'] = isset($object_assoc['id']) ? $object_assoc['id'] : null;
                 } elseif (!isset($field['sqlId'])) {
                     $field['sqlId'] = $field_name;
-                    $field['value'] = $object_assoc[$field_name];
+                    $field['value'] = isset($object_assoc[$field_name]) ? $object_assoc[$field_name] : null;
                 }
                 $field['entities_name'] = $assoc_name;
                 $field['entity_name'] = $resource_name;
