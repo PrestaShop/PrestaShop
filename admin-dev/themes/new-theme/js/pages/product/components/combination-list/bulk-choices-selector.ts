@@ -90,8 +90,8 @@ export default class BulkChoicesSelector {
   }
 
   private init() {
-    this.eventEmitter.on(CombinationEvents.listRendered, this.onListRendered);
-    this.eventEmitter.on(CombinationEvents.errorListRendered, this.onListRendered);
+    this.eventEmitter.on(CombinationEvents.listRendered, () => this.onListRendered());
+    this.eventEmitter.on(CombinationEvents.errorListRendered, () => this.onListRendered());
   }
 
   private async onListRendered(): Promise<void> {
