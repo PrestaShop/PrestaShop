@@ -16,24 +16,6 @@ let browserContext: BrowserContext;
 let page: Page;
 
 /**
- * Function to enable new product page
- * @param baseContext {string} String to identify the test
- * @deprecated Use setFeatureFlag
- */
-function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewProductPage'): void {
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, baseContext);
-}
-
-/**
- * Function to disable new product page
- * @param baseContext {string} String to identify the test
- * @deprecated Use setFeatureFlag
- */
-function disableNewProductPageTest(baseContext: string = 'commonTests-disableNewProductPage'): void {
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, baseContext);
-}
-
-/**
  * Indicate the default state of new page with feature flags, depending on its initial value we need to
  * adapt the tests behaviour especially the part that enables/disables the page. We keep this value editable
  * here in case the default value changes the tests will be easy to adapt.
@@ -104,8 +86,6 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
 }
 
 export {
-  enableNewProductPageTest,
-  disableNewProductPageTest,
   isNewProductPageEnabledByDefault,
   resetNewProductPageAsDefault,
   setFeatureFlag,

@@ -133,7 +133,8 @@ class CustomerService extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -147,15 +148,17 @@ class CustomerService extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.clickAndWaitForURL(page, this.filterSearchButton);
         break;
 
       case 'select':
         await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
+          page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
           this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
         ]);
         break;
@@ -275,7 +278,7 @@ class CustomerService extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToViewMessagePage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsViewLink(row));
   }
 
   /**
@@ -293,7 +296,8 @@ class CustomerService extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await page.click(this.deleteModalButtonYes);
+    await this.elementNotVisible(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockContent(page);
@@ -307,7 +311,8 @@ class CustomerService extends BOBasePage {
    */
   async allowFileUploading(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.allowFileUploadingToggleInput(toEnable ? 'on' : 'off'));
-    await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
+    await page.click(this.contactOptionSaveButton);
+    await this.elementNotVisible(page, this.allowFileUploadingToggleInput(!toEnable ? 'on' : 'off'));
 
     return this.getAlertSuccessBlockContent(page);
   }
@@ -320,7 +325,7 @@ class CustomerService extends BOBasePage {
    */
   async setDefaultMessage(page: Page, message: string): Promise<string> {
     await page.fill(this.defaultMessageTextarea, message);
-    await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
+    await page.click(this.contactOptionSaveButton);
 
     return this.getAlertSuccessBlockContent(page);
   }

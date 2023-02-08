@@ -135,7 +135,7 @@ class SqlManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToDbBackupPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.dbBackupSubTabLink);
+    await this.clickAndWaitForURL(page, this.dbBackupSubTabLink);
   }
 
   /**
@@ -144,7 +144,7 @@ class SqlManager extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToNewSQLQueryPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewSQLQueryButton);
+    await this.clickAndWaitForURL(page, this.addNewSQLQueryButton);
   }
 
   /**
@@ -154,7 +154,8 @@ class SqlManager extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -187,7 +188,7 @@ class SqlManager extends BOBasePage {
   async filterSQLQuery(page: Page, filterBy: string, value: string = ''): Promise<void> {
     await this.setValue(page, this.filterInput(filterBy), value);
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -233,7 +234,7 @@ class SqlManager extends BOBasePage {
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.sqlQueryListTableViewLink(row));
+    await this.clickAndWaitForURL(page, this.sqlQueryListTableViewLink(row));
   }
 
   /**
@@ -249,7 +250,7 @@ class SqlManager extends BOBasePage {
         page,
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.sqlQueryListTableEditLink(row));
+    await this.clickAndWaitForURL(page, this.sqlQueryListTableEditLink(row));
   }
 
   /**
@@ -294,7 +295,7 @@ class SqlManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteSQLQuery(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
   }
 
   /* Sort functions */
@@ -311,7 +312,7 @@ class SqlManager extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -335,9 +336,11 @@ class SqlManager extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page);
@@ -349,7 +352,7 @@ class SqlManager extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
   }
@@ -360,7 +363,7 @@ class SqlManager extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
@@ -388,7 +391,7 @@ class SqlManager extends BOBasePage {
       page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(page, this.deleteModal),
     ]);
-    await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
+    await this.clickAndWaitForURL(page, this.modalDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

@@ -63,9 +63,9 @@ class EditMerchandiseReturns extends BOBasePage {
   async setStatus(page: Page, status: string, saveAndStay: boolean = false): Promise<string> {
     await this.selectByVisibleText(page, this.status, status);
     if (saveAndStay) {
-      await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+      await this.clickAndWaitForURL(page, this.saveAndStayButton);
     } else {
-      await this.clickAndWaitForNavigation(page, this.orderReturnSaveButton);
+      await this.clickAndWaitForURL(page, this.orderReturnSaveButton);
     }
     return this.getAlertSuccessBlockContent(page);
   }
@@ -95,7 +95,7 @@ class EditMerchandiseReturns extends BOBasePage {
    */
   async clickOnCancelButton(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.orderReturnCancelButton);
-    await this.clickAndWaitForNavigation(page, this.orderReturnCancelButton);
+    await this.clickAndWaitForURL(page, this.orderReturnCancelButton);
   }
 
   /**
@@ -105,7 +105,7 @@ class EditMerchandiseReturns extends BOBasePage {
    * @returns {Promise<string>}
    */
   async clickOnDeleteLastProductButton(page: Page, row: number = 1): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.productsTableDeleteColumn(row));
+    await this.clickAndWaitForURL(page, this.productsTableDeleteColumn(row));
 
     return this.getTextContent(page, this.alertBlock);
   }
@@ -118,13 +118,13 @@ class EditMerchandiseReturns extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteProduct(page: Page, row: number = 1, understandTheRisk: boolean = true): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.productsTableDeleteColumn(row));
+    await this.clickAndWaitForURL(page, this.productsTableDeleteColumn(row));
     if (understandTheRisk) {
-      await this.clickAndWaitForNavigation(page, this.continueButton);
+      await this.clickAndWaitForURL(page, this.continueButton);
 
       return this.getTextContent(page, this.alertBlock);
     }
-    await this.clickAndWaitForNavigation(page, this.cancelButton);
+    await this.clickAndWaitForURL(page, this.cancelButton);
 
     return this.getPageTitle(page);
   }

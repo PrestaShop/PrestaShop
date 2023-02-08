@@ -1,6 +1,3 @@
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -11,11 +8,12 @@ import basicHelper from '@utils/basicHelper';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  enableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
@@ -31,6 +29,9 @@ import type {
   ProductCombinationBulk,
   ProductCombinationOptions,
 } from '@data/types/product';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'productV2_functional_CRUDProductWithCombinations';
 
@@ -138,7 +139,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   });
 
   // Pre-condition: Enable new product page
-  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {

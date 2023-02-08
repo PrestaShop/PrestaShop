@@ -153,7 +153,7 @@ describe('FO - Login : Password reminder', async () => {
     it('should try to login with old password and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFOWithOldPassword', baseContext);
 
-      await loginPage.customerLogin(page, customerData);
+      await loginPage.customerLogin(page, customerData, false);
 
       const loginError = await loginPage.getLoginError(page);
       await expect(loginError).to.contains(loginPage.loginErrorText);

@@ -177,7 +177,7 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToNewOrderStatusPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newOrderStatusLink);
+    await this.clickAndWaitForURL(page, this.newOrderStatusLink);
   }
 
   /**
@@ -186,7 +186,7 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToNewOrderReturnStatusPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newOrderReturnStatusLink);
+    await this.clickAndWaitForURL(page, this.newOrderReturnStatusLink);
   }
 
   /* Filter methods */
@@ -208,8 +208,9 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page: Page, tableName: string): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton(tableName), 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
+    if (await this.elementVisible(page, this.filterResetButton(tableName), 2000)) {
+      await page.click(this.filterResetButton(tableName));
+      await this.elementNotVisible(page, this.filterResetButton(tableName), 2000);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton(tableName), 2000);
   }
@@ -239,19 +240,18 @@ class Statuses extends BOBasePage {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton(tableName));
+        await page.click(this.filterSearchButton(tableName));
         break;
 
       case 'select':
-        await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No'),
-        ]);
+        await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No');
         break;
 
       default:
         throw new Error(`Filter ${filterBy} was not found`);
     }
+
+    await this.elementVisible(page, this.filterResetButton(tableName), 2000);
   }
 
   /* Column methods */
@@ -276,7 +276,7 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditPage(page: Page, tableName: string, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(tableName, row));
+    await this.clickAndWaitForURL(page, this.tableColumnActionsEditLink(tableName, row));
   }
 
   /**
@@ -295,7 +295,7 @@ class Statuses extends BOBasePage {
     await page.click(this.tableColumnActionsDeleteLink(tableName, row));
 
     // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+    await this.clickAndWaitForURL(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getAlertSuccessBlockContent(page);
@@ -321,7 +321,7 @@ class Statuses extends BOBasePage {
    */
   async selectPaginationLimit(page: Page, tableName: string, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton(tableName));
-    await this.clickAndWaitForNavigation(page, this.paginationItems(tableName, number));
+    await page.click(this.paginationItems(tableName, number));
 
     return this.getPaginationLabel(page, tableName);
   }
@@ -333,7 +333,7 @@ class Statuses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page, tableName: string): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink(tableName));
+    await page.click(this.paginationNextLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
   }
@@ -345,7 +345,7 @@ class Statuses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page, tableName: string): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(tableName));
+    await page.click(this.paginationPreviousLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
   }
@@ -382,7 +382,7 @@ class Statuses extends BOBasePage {
   async sortTable(page: Page, tableName: string, sortBy: string, columnID: number, sortDirection: string): Promise<void> {
     const sortColumnButton: string = `${this.sortColumnDiv(tableName, columnID)} i.icon-caret-${sortDirection}`;
 
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.clickAndWaitForURL(page, sortColumnButton);
   }
 
   /* Bulk actions methods */
@@ -416,7 +416,7 @@ class Statuses extends BOBasePage {
     await page.click(this.bulkActionMenuButton(tableName));
 
     // Click on delete
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    await this.clickAndWaitForURL(page, this.bulkDeleteLink);
     return this.getAlertSuccessBlockContent(page);
   }
 

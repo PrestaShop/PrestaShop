@@ -221,7 +221,7 @@ export default class FOBasePage extends CommonPage {
    * @param link {string} Header selector that contain link to click on to
    * @returns {Promise<void>}
    */
-  async clickOnHeaderLink(page: Page, link: string): Promise<void> {
+  async clickOnHeaderLink(page: Page, link: string, hasPageChange: boolean = true): Promise<void> {
     let selector;
 
     switch (link) {
@@ -245,7 +245,10 @@ export default class FOBasePage extends CommonPage {
         throw new Error(`The page ${link} was not found`);
     }
 
-    return this.clickAndWaitForNavigation(page, selector);
+    if (hasPageChange) {
+      return this.clickAndWaitForURL(page, selector);
+    }
+    return this.clickAndWaitForLoadState(page, selector);
   }
 
   /**
@@ -255,7 +258,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async clickOnBreadCrumbLink(page: Page, link: string): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.breadCrumbLink(link));
+    await this.clickAndWaitForURL(page, this.breadCrumbLink(link));
   }
 
   /**
@@ -265,7 +268,7 @@ export default class FOBasePage extends CommonPage {
    */
   async goToHomePage(page: Page): Promise<void> {
     await this.waitForVisibleSelector(page, this.desktopLogo);
-    await this.clickAndWaitForNavigation(page, this.desktopLogoLink);
+    await this.clickAndWaitForLoadState(page, this.desktopLogoLink);
   }
 
   /**
@@ -274,7 +277,7 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async goToLoginPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.userInfoLink);
+    await this.clickAndWaitForURL(page, this.userInfoLink);
   }
 
   /**
@@ -285,11 +288,12 @@ export default class FOBasePage extends CommonPage {
   async logout(page: Page): Promise<void> {
     if (this.theme === 'hummingbird') {
       await page.click(this.userMenuDropdown);
-      await this.clickAndWaitForNavigation(page, this.logoutLink);
+      await this.clickAndWaitForLoadState(page, this.logoutLink);
+      await this.elementNotVisible(page, this.logoutLink, 2000);
 
       return;
     }
-    await this.clickAndWaitForNavigation(page, this.logoutLink);
+    await this.clickAndWaitForLoadState(page, this.logoutLink);
   }
 
   /**
@@ -309,11 +313,11 @@ export default class FOBasePage extends CommonPage {
   async goToMyAccountPage(page: Page): Promise<void> {
     if (this.theme === 'hummingbird') {
       await page.click(this.userMenuDropdown);
-      await this.clickAndWaitForNavigation(page, this.accountLink);
+      await this.clickAndWaitForURL(page, this.accountLink);
 
       return;
     }
-    await this.clickAndWaitForNavigation(page, this.accountLink);
+    await this.clickAndWaitForURL(page, this.accountLink);
   }
 
   /**
@@ -345,7 +349,7 @@ export default class FOBasePage extends CommonPage {
       page.click(this.languageSelectorExpandIcon),
       this.waitForVisibleSelector(page, this.languageSelectorList),
     ]);
-    await this.clickAndWaitForNavigation(page, this.languageSelectorMenuItemLink(lang));
+    await this.clickAndWaitForLoadState(page, this.languageSelectorMenuItemLink(lang));
   }
 
   /**
@@ -377,13 +381,12 @@ export default class FOBasePage extends CommonPage {
    */
   async changeCurrency(page: Page, isoCode: string = 'EUR', symbol: string = '€'): Promise<void> {
     // If isoCode and symbol are the same, only isoCode id displayed in FO
+    const currentUrl: string = page.url();
     const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
 
     await Promise.all([
       this.selectByVisibleText(page, this.currencySelect, currency, true),
-      page.waitForNavigation({
-        waitUntil: 'networkidle',
-      }),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
   }
 
@@ -423,7 +426,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCategory(page: Page, categoryID: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.categoryMenu(categoryID));
+    await this.clickAndWaitForURL(page, this.categoryMenu(categoryID));
   }
 
   /**
@@ -435,7 +438,7 @@ export default class FOBasePage extends CommonPage {
    */
   async goToSubCategory(page: Page, categoryID: number, subCategoryID: number): Promise<void> {
     await page.hover(this.categoryMenu(categoryID));
-    await this.clickAndWaitForNavigation(page, this.categoryMenu(subCategoryID));
+    await this.clickAndWaitForURL(page, this.categoryMenu(subCategoryID));
   }
 
   /**
@@ -462,7 +465,7 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCartPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.cartLink);
+    await this.clickAndWaitForURL(page, this.cartLink);
   }
 
   /**
@@ -477,7 +480,6 @@ export default class FOBasePage extends CommonPage {
   /**
    * Check if there are autocomplete search result
    * @param page {Page} Browser tab
-   * @param productName {string} Product name to search
    * @returns {Promise<boolean>}
    */
   async isAutocompleteSearchResultVisible(page: Page): Promise<boolean> {
@@ -526,11 +528,11 @@ export default class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async searchProduct(page: Page, productName: string): Promise<void > {
+    const currentUrl: string = page.url();
+
     await this.setValue(page, this.searchInput, productName);
     await page.keyboard.press('Enter');
-    await page.waitForNavigation({
-      waitUntil: 'networkidle',
-    });
+    await page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'});
   }
 
   /**
@@ -543,7 +545,7 @@ export default class FOBasePage extends CommonPage {
   async clickAutocompleteSearchResult(page: Page, productName: string, nthResult: number): Promise<void> {
     await this.setValue(page, this.searchInput, productName);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
-    await this.clickAndWaitForNavigation(page, this.autocompleteSearchResultItemLink(nthResult));
+    await this.clickAndWaitForURL(page, this.autocompleteSearchResultItemLink(nthResult));
   }
 
   // Footer methods
@@ -672,7 +674,7 @@ export default class FOBasePage extends CommonPage {
         throw new Error(`The page ${textSelector} was not found`);
     }
 
-    return this.clickAndWaitForNavigation(page, selector);
+    return this.clickAndWaitForURL(page, selector);
   }
 
   /**

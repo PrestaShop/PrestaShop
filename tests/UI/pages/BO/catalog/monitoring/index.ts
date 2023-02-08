@@ -168,8 +168,9 @@ class Monitoring extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page: Page, tableName: string): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton(tableName), 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
+    if (await this.elementVisible(page, this.filterResetButton(tableName), 2000)) {
+      await page.click(this.filterResetButton(tableName));
+      await this.elementNotVisible(page, this.filterResetButton(tableName), 2000);
     }
   }
 
@@ -206,7 +207,7 @@ class Monitoring extends BOBasePage {
         throw new Error(`Filter column not found : ${filterBy}`);
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton(tableName));
+    await this.clickAndWaitForURL(page, this.filterSearchButton(tableName));
   }
 
   /* table methods */
@@ -252,7 +253,7 @@ class Monitoring extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(tableName));
+    await this.clickAndWaitForURL(page, this.submitDeleteProductButton(tableName));
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -281,7 +282,7 @@ class Monitoring extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(tableName));
+    await page.click(this.submitDeleteProductButton(tableName));
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -306,7 +307,7 @@ class Monitoring extends BOBasePage {
 
     // choose deletion mode
     await page.click(this.deleteModeInput(deletionModePosition));
-    await this.clickAndWaitForNavigation(page, this.submitDeleteCategoryButton);
+    await this.clickAndWaitForURL(page, this.submitDeleteCategoryButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -360,7 +361,7 @@ class Monitoring extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -386,9 +387,11 @@ class Monitoring extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, tableName: string, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect(tableName), number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
 
     return this.getPaginationLabel(page, tableName);
@@ -401,7 +404,7 @@ class Monitoring extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page, tableName: string): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink(tableName));
+    await this.clickAndWaitForURL(page, this.paginationNextLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
   }
@@ -413,7 +416,7 @@ class Monitoring extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page, tableName: string): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(tableName));
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink(tableName));
     return this.getPaginationLabel(page, tableName);
   }
 }

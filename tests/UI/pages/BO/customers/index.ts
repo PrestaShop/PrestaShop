@@ -166,8 +166,9 @@ class Customers extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page: Page): Promise<void> {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -214,7 +215,7 @@ class Customers extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -244,7 +245,7 @@ class Customers extends BOBasePage {
     await page.type(this.customerFilterColumnInput('date_add_from'), dateFrom);
     await page.type(this.customerFilterColumnInput('date_add_to'), dateTo);
     // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /**
@@ -408,7 +409,7 @@ class Customers extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewCustomerPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewCustomerLink);
+    await this.clickAndWaitForURL(page, this.addNewCustomerLink);
   }
 
   /**
@@ -422,7 +423,7 @@ class Customers extends BOBasePage {
       page.click(this.customersListTableToggleDropDown(row)),
       this.waitForVisibleSelector(page, `${this.customersListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.customersListTableViewLink(row));
+    await this.clickAndWaitForURL(page, this.customersListTableViewLink(row));
   }
 
   /**
@@ -432,7 +433,7 @@ class Customers extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditCustomerPage(page: Page, row: number): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.customersListTableEditLink(row));
+    await this.clickAndWaitForURL(page, this.customersListTableEditLink(row));
   }
 
   /**
@@ -494,7 +495,7 @@ class Customers extends BOBasePage {
     await this.setChecked(page, this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
 
     // Click on delete button and wait for action to finish
-    await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);
+    await this.clickAndWaitForURL(page, this.deleteCustomerModalDeleteButton);
     await this.waitForVisibleSelector(page, this.alertSuccessBlockParagraph);
   }
 
@@ -516,7 +517,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await this.clickAndWaitForLoadState(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -534,7 +535,7 @@ class Customers extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 
@@ -561,7 +562,7 @@ class Customers extends BOBasePage {
     await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
 
     // Save setting
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -624,9 +625,11 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page: Page, number: number): Promise<string> {
+    const currentUrl: string = page.url();
+
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
-      page.waitForNavigation({waitUntil: 'networkidle'}),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
     ]);
     return this.getPaginationLabel(page);
   }
@@ -638,7 +641,7 @@ class Customers extends BOBasePage {
    */
   async paginationNext(page: Page): Promise<string> {
     await this.scrollTo(page, this.paginationNextLink);
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
 
@@ -649,7 +652,7 @@ class Customers extends BOBasePage {
    */
   async paginationPrevious(page: Page): Promise<string> {
     await this.scrollTo(page, this.paginationPreviousLink);
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
 }

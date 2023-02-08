@@ -158,7 +158,7 @@ class AddSupplier extends BOBasePage {
     await this.setChecked(page, this.statusToggleInput(supplierData.enabled ? 1 : 0));
 
     // Save Supplier
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

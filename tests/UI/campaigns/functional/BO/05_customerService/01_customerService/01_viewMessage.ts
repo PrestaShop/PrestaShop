@@ -124,7 +124,7 @@ describe('BO - Customer Service : View message', async () => {
       const text = await viewPage.getCustomerMessage(page);
       expect(text).to.contains(contactUsData.emailAddress);
       expect(text).to.contains(contactUsData.subject);
-      expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
+      expect(text).to.contains(`${messageDateTime.substring(0, 10)} - ${messageDateTime.substring(11, 16)}`);
       expect(text).to.contains('Attachment');
       expect(text).to.contains(contactUsData.message);
     });
@@ -146,7 +146,7 @@ describe('BO - Customer Service : View message', async () => {
 
       const text = await viewPage.getOrdersAndMessagesTimeline(page);
       expect(text).to.contains('Orders and messages timeline');
-      expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
+      expect(text).to.contains(`${messageDateTime.substring(0, 10)} - ${messageDateTime.substring(11, 16)}`);
       expect(text).to.contains(`Message to: ${contactUsData.subject}`);
       expect(text).to.contains(contactUsData.message);
     });
@@ -168,12 +168,6 @@ describe('BO - Customer Service : View message', async () => {
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
-      );
 
       const textResult = await customerServicePage.deleteMessage(page, 1);
       await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);

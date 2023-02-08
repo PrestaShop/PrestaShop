@@ -63,7 +63,8 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async changeShopStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.shopStatusToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
+    await this.elementNotVisible(page, this.shopStatusToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -76,7 +77,8 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async changeStoreForLoggedInEmployees(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.allowAdminsToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
+    await this.elementNotVisible(page, this.allowAdminsToggleInput(!toEnable ? 1 : 0), 2000);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -91,7 +93,7 @@ class ShopParamsMaintenance extends BOBasePage {
     await this.setValueOnTinymceInput(page, this.maintenanceTextInputEN, text);
     await page.click(this.customMaintenanceFrTab);
     await this.setValueOnTinymceInput(page, this.maintenanceTextInputFR, text);
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await page.click(this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -103,7 +105,7 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async addMyIpAddress(page: Page): Promise<string> {
     await page.click(this.addMyIPAddressButton);
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await page.click(this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -116,7 +118,7 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async addMaintenanceIPAddress(page: Page, ipAddress: string): Promise<string> {
     await this.setValue(page, this.maintenanceIpInput, ipAddress);
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await page.click(this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

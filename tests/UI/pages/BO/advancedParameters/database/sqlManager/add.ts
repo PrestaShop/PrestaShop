@@ -46,7 +46,7 @@ class AddSQLQuery extends BOBasePage {
   async createEditSQLQuery(page: Page, sqlQueryData: SqlQueryData): Promise<string> {
     await this.setValue(page, this.sqlQueryNameInput, sqlQueryData.name);
     await this.setValue(page, this.sqlQueryTextArea, sqlQueryData.sqlQuery);
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

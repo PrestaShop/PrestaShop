@@ -47,7 +47,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabMaintenance(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.maintenanceNavItemLink);
+    await this.clickAndWaitForURL(page, this.maintenanceNavItemLink);
   }
 
   /**
@@ -58,7 +58,7 @@ class ShopParamsGeneral extends BOBasePage {
    */
   async setDisplaySuppliers(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displaySuppliersToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -70,7 +70,7 @@ class ShopParamsGeneral extends BOBasePage {
    */
   async setDisplayBrands(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displayBrandsToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -82,7 +82,7 @@ class ShopParamsGeneral extends BOBasePage {
    */
   async setMultiStoreStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableMultiStoreToggleInput(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    await this.clickAndWaitForLoadState(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

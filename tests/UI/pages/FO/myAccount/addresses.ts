@@ -64,7 +64,7 @@ class Addresses extends FOBasePage {
    */
   async openNewAddressForm(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.createNewAddressLink, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.createNewAddressLink);
+      await this.clickAndWaitForURL(page, this.createNewAddressLink);
     }
   }
 
@@ -92,11 +92,10 @@ class Addresses extends FOBasePage {
   async goToEditAddressPage(page: Page, position: string | number = 'last'): Promise<void> {
     const editButtons = await page.$$(this.editAddressLink);
     const positionEditButtons: number = typeof position === 'string' ? (editButtons.length - 1) : (position - 1);
+    const currentUrl: string = page.url();
 
     await Promise.all([
-      page.waitForNavigation({
-        waitUntil: 'networkidle',
-      }),
+      page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'}),
       editButtons[positionEditButtons].click(),
     ]);
   }
@@ -112,9 +111,7 @@ class Addresses extends FOBasePage {
     const positionDeleteButtons: number = typeof position === 'string' ? (deleteButtons.length - 1) : (position - 1);
 
     await Promise.all([
-      page.waitForNavigation({
-        waitUntil: 'networkidle',
-      }),
+      page.waitForLoadState(),
       deleteButtons[positionDeleteButtons].click(),
     ]);
 

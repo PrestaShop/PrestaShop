@@ -33,7 +33,7 @@ export default class LocalizationBasePage extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabLocalizations(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.localizationNavItemLink);
+    await this.clickAndWaitForURL(page, this.localizationNavItemLink);
   }
 
   /**
@@ -42,7 +42,7 @@ export default class LocalizationBasePage extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabLanguages(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.languagesNavItemLink);
+    await this.clickAndWaitForURL(page, this.languagesNavItemLink);
   }
 
   /**
@@ -51,6 +51,6 @@ export default class LocalizationBasePage extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabCurrencies(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.currenciesNavItemLink);
+    await this.clickAndWaitForURL(page, this.currenciesNavItemLink);
   }
 };

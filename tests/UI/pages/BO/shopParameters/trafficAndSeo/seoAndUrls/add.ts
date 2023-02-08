@@ -128,7 +128,7 @@ class AddSeoUrl extends BOBasePage {
     await this.setValue(page, this.friendlyUrlInput(2), seoPageData.frFriendlyUrl);
 
     // Save seo page
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

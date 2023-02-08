@@ -96,7 +96,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabPagesConfiguration(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.pagesConfigurationNavItemLink);
+    await this.clickAndWaitForURL(page, this.pagesConfigurationNavItemLink);
   }
 
   /**
@@ -105,7 +105,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabAdvancedCustomization(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.advancedCustomizationNavItemLink);
+    await this.clickAndWaitForURL(page, this.advancedCustomizationNavItemLink);
   }
 
   /**

@@ -77,7 +77,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
     });
-    customersData.forEach((customerData: CustomerData, index: number = 1) => {
+    customersData.forEach((customerData: CustomerData, index: number) => {
       const addressData: AddressData = new AddressData({
         email: customerData.email,
         country: 'France',
@@ -108,11 +108,15 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         it('should go to Orders > Orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
-          await dashboardPage.goToSubMenu(
-            page,
-            dashboardPage.ordersParentLink,
-            dashboardPage.ordersLink,
-          );
+          if (index === 0) {
+            await dashboardPage.goToSubMenu(
+              page,
+              dashboardPage.ordersParentLink,
+              dashboardPage.ordersLink,
+            );
+          } else {
+            await ordersPage.reloadPage(page);
+          }
 
           const pageTitle = await ordersPage.getPageTitle(page);
           await expect(pageTitle).to.contains(ordersPage.pageTitle);

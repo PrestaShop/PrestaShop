@@ -64,6 +64,7 @@ describe('BO - Header : Search bar', async () => {
 
   it('should search for "John Doe"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForJohnDoe', baseContext);
+
     await searchResultsPage.search(page, 'John Doe');
 
     const pageTitle = await searchResultsPage.getPageTitle(page);

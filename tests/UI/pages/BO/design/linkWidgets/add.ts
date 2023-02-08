@@ -232,7 +232,7 @@ class AddLinkBlock extends BOBasePage {
     // Add custom pages
     await this.addCustomPages(page, linkWidgetData.customPages);
     // Save
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

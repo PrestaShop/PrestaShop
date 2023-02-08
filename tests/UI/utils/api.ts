@@ -114,8 +114,8 @@ export default {
     const payloadString: string = JSON.stringify(payload);
 
     // Transform string in base64
-    const headerBase64: string = atob(headerString);
-    const payloadBase64: string = atob(payloadString);
+    const headerBase64: string = Buffer.from(headerString, 'base64').toString();
+    const payloadBase64: string = Buffer.from(payloadString, 'base64').toString();
 
     // Sign the header & payload
     const signatureFunction: crypto.Sign = crypto.createSign('RSA-SHA256');
@@ -129,6 +129,6 @@ export default {
     const headerBuffer: Buffer = Buffer.from(headerString);
     const payloadBuffer: Buffer = Buffer.from(payloadString);
 
-    return `${headerBuffer.toString('base64')}.${payloadBuffer.toString('base64')}.${btoa(signatureBase64)}`;
+    return `${headerBuffer.toString('base64')}.${payloadBuffer.toString('base64')}.${signatureBase64.toString()}`;
   },
 };

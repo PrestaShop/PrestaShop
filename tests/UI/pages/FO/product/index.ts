@@ -491,7 +491,7 @@ class Product extends FOBasePage {
 
     if (proceedToCheckout) {
       await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
-      await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
+      await this.clickAndWaitForURL(page, this.proceedToCheckoutButton);
       await this.waitForPageTitleToLoad(page);
     } else {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
@@ -553,7 +553,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAvailabilityQuantityDisplayed(page: Page): Promise<boolean> {
+  async isAvailabilityQuantityDisplayed(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productAvailabilityIcon, 1000);
   }
 
@@ -562,7 +562,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPriceDisplayed(page: Page): Promise<boolean> {
+  async isPriceDisplayed(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productPrice, 1000);
   }
 
@@ -571,7 +571,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddToCartButtonDisplayed(page: Page): Promise<boolean> {
+  async isAddToCartButtonDisplayed(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.addToCartButton, 1000);
   }
 
@@ -592,7 +592,7 @@ class Product extends FOBasePage {
    * @param color {string} Product's color to check
    * @returns {Promise<boolean>}
    */
-  isUnavailableProductColorDisplayed(page: Page, color: string): Promise<boolean> {
+  async isUnavailableProductColorDisplayed(page: Page, color: string): Promise<boolean> {
     return this.elementVisible(page, this.productColorInput(color), 1000);
   }
 
@@ -601,7 +601,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddToCartButtonEnabled(page: Page): Promise<boolean> {
+  async isAddToCartButtonEnabled(page: Page): Promise<boolean> {
     return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
   }
 
@@ -610,7 +610,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isDeliveryInformationVisible(page: Page): Promise<boolean> {
+  async isDeliveryInformationVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.deliveryInformationSpan, 1000);
   }
 
@@ -640,7 +640,7 @@ class Product extends FOBasePage {
    * @param page {Page} The browser tab
    * @returns {Promise<number>}
    */
-  getNumberOfComments(page: Page): Promise<number> {
+  async getNumberOfComments(page: Page): Promise<number> {
     return page.$$eval(this.productReviewRows, (rows) => rows.length);
   }
 
@@ -650,7 +650,7 @@ class Product extends FOBasePage {
    * @param row {Number} the review number in the list
    * @returns {Promise<string>}
    */
-  getReviewTitle(page: Page, row: number = 1): Promise<string> {
+  async getReviewTitle(page: Page, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.productReviewTitle(row));
   }
 
@@ -660,7 +660,7 @@ class Product extends FOBasePage {
    * @param row {Number} the review number in the list
    * @returns {Promise<string>}
    */
-  getReviewTextContent(page: Page, row: number = 1): Promise<string> {
+  async getReviewTextContent(page: Page, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.productReviewContent(row));
   }
 
@@ -670,7 +670,7 @@ class Product extends FOBasePage {
    * @param row {Number} the review number in the list
    * @returns {Promise<number>}
    */
-  getReviewRating(page: Page, row: number = 1): Promise<number> {
+  async getReviewRating(page: Page, row: number = 1): Promise<number> {
     return page.$$eval(this.productRatingStar(row), (divs) => divs.length);
   }
 }

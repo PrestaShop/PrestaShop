@@ -111,7 +111,7 @@ class AccountIdentity extends FOBasePage {
       await this.setChecked(page, this.psgdprCheckbox);
     }
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
 
     return this.getTextContent(page, this.notificationsBlock);
   }
@@ -158,7 +158,7 @@ class AccountIdentity extends FOBasePage {
     }
     await page.click(this.newsletterCheckbox);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForLoadState(page, this.saveButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }

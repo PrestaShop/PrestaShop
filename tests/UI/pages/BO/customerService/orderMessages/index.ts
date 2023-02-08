@@ -122,7 +122,7 @@ class OrderMessages extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewOrderMessagePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.newOrderMessageLink);
+    await this.clickAndWaitForURL(page, this.newOrderMessageLink);
   }
 
   /* Reset Methods */
@@ -133,7 +133,8 @@ class OrderMessages extends BOBasePage {
    */
   async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+      await this.clickAndWaitForLoadState(page, this.filterResetButton);
+      await this.elementNotVisible(page, this.filterResetButton, 2000);
     }
   }
 
@@ -166,7 +167,7 @@ class OrderMessages extends BOBasePage {
    */
   async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value);
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+    await this.clickAndWaitForURL(page, this.filterSearchButton);
   }
 
   /* Column Methods */
@@ -177,7 +178,7 @@ class OrderMessages extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditOrderMessage(page: Page, row: number = 1): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+    await this.clickAndWaitForURL(page, this.editRowLink(row));
   }
 
   /**
@@ -250,7 +251,7 @@ class OrderMessages extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDeleteOrderMessages(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    await this.clickAndWaitForURL(page, this.confirmDeleteButton);
   }
 
   /* Pagination methods */
@@ -280,7 +281,7 @@ class OrderMessages extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    await this.clickAndWaitForURL(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
 
@@ -290,7 +291,7 @@ class OrderMessages extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    await this.clickAndWaitForURL(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
 
@@ -326,7 +327,7 @@ class OrderMessages extends BOBasePage {
 
     let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
-      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      await this.clickAndWaitForURL(page, sortColumnSpanButton);
       i += 1;
     }
 

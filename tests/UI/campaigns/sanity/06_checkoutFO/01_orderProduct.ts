@@ -67,7 +67,11 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should go to home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-    await homePage.goToHomePage(page);
+    const isHomepage = await homePage.isHomePage(page);
+
+    if (!isHomepage) {
+      await homePage.goToHomePage(page);
+    }
 
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;

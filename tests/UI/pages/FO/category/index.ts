@@ -238,7 +238,7 @@ class Category extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToNextPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.paginationNext);
+    await this.clickAndWaitForURL(page, this.paginationNext);
   }
 
   /**
@@ -247,7 +247,7 @@ class Category extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToPreviousPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.paginationPrevious);
+    await this.clickAndWaitForURL(page, this.paginationPrevious);
   }
 
   // Quick view methods

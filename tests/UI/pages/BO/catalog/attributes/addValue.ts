@@ -81,9 +81,9 @@ class AddValue extends BOBasePage {
 
     // Save value
     if (saveAndStay) {
-      await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+      await page.click(this.saveAndStayButton);
     } else {
-      await this.clickAndWaitForNavigation(page, this.saveButton);
+      await this.clickAndWaitForURL(page, this.saveButton);
     }
 
     // Return successful message
