@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -66,10 +67,13 @@ class ImageController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getImagesAction(int $productId, Request $request): JsonResponse
+    public function getImagesAction(int $productId, ?int $shopId): JsonResponse
     {
         /** @var ProductImage[] $images */
-        $images = $this->getQueryBus()->handle(new GetProductImages($productId, $request->attributes->get('shopConstraint')));
+        $images = $this->getQueryBus()->handle(new GetProductImages(
+            $productId,
+            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops(),
+        ));
 
         return new JsonResponse(array_map([$this, 'formatImage'], $images));
     }
@@ -232,7 +236,7 @@ class ImageController extends FrameworkBundleAdminController
     /**
      * @param ProductImage $image
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function formatImage(ProductImage $image): array
     {
@@ -243,6 +247,7 @@ class ImageController extends FrameworkBundleAdminController
             'image_url' => $image->getImageUrl(),
             'thumbnail_url' => $image->getThumbnailUrl(),
             'legends' => $image->getLocalizedLegends(),
+            'shop_ids' => $image->getShopIds(),
         ];
     }
 

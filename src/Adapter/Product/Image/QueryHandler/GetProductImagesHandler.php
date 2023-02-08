@@ -69,7 +69,6 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
      */
     public function handle(GetProductImages $query): array
     {
-        //todo throw exception if not single shop
         $images = $this->productImageRepository->getImages($query->getProductId(), $query->getShopConstraint());
         $productImages = [];
         foreach ($images as $image) {

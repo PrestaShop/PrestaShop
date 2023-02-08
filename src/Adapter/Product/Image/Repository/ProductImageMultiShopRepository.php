@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -182,12 +183,20 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
     public function getForAllShops(ImageId $imageId): Image
     {
+        $shopIds = $this->getAssociatedShopIds($imageId);
+        // finds first associated shop and uses it to load object model
+        $shopId = reset($shopIds);
+
+        if (!$shopId) {
+            throw new ShopAssociationNotFound(sprintf('Image %d is not associated to any shop', $imageId->getValue()));
+        }
+
         /** @var Image $image */
         $image = $this->fetchObjectModel(
             $imageId->getValue(),
             Image::class,
             ProductImageNotFoundException::class,
-            null
+            $shopId->getValue()
         );
 
         return $image;
