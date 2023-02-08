@@ -84,7 +84,6 @@ class ValidateCore
         return (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
             new RFCValidation(),
             new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
-            new NoRFCWarningsValidation(),
         ]));
     }
 
