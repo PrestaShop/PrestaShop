@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
@@ -29,6 +33,9 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
   let page: Page;
 
   const productData: ProductData = new ProductData({type: 'Standard product', quantity: 0});
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -88,7 +95,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       {args: {action: 'enable', enable: true, deliveryTimeText: '8-9 days'}},
       {args: {action: 'disable', enable: false, deliveryTimeText: ''}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       describe(`Check delivery time of out-of-stock products ${test.args.enable} status`, async () => {
         it(`should ${test.args.action} delivery time of out-of-stock products in BO`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
@@ -174,4 +181,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
       await expect(numberOfProducts).to.be.above(0);
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

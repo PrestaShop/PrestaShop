@@ -77,12 +77,10 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
 
   // 1 : Create 2 tax rules with data from faker
   describe('Create 2 Tax rules in BO', async () => {
-    const tests = [
+    [
       {args: {taxRuleToCreate: firstTaxRuleData}},
       {args: {taxRuleToCreate: secondTaxRuleData}},
-    ];
-
-    tests.forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to add new tax rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTaxRulePage${index + 1}`, baseContext);
 
@@ -156,7 +154,7 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
     [
       {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}},
       {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterTaxesToChangeStatus${index}`, baseContext);
 

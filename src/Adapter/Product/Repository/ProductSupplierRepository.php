@@ -111,7 +111,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      *
      * @throws InvalidProductSupplierAssociationException
      */
-    public function getIdByAssociation(SupplierAssociationInterface $association): ?ProductSupplierId
+    public function findIdByAssociation(SupplierAssociationInterface $association): ?ProductSupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -164,7 +164,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      */
     public function getByAssociation(SupplierAssociationInterface $association): ProductSupplier
     {
-        $productSupplierId = $this->getIdByAssociation($association);
+        $productSupplierId = $this->findIdByAssociation($association);
         if (!$productSupplierId) {
             throw new ProductSupplierNotAssociatedException(sprintf(
                 'Could not find a ProductSupplier matching this association: %s',

@@ -29,11 +29,20 @@ import {AttributeGroup} from '@pages/product/types';
 const router = new Router();
 const {$} = window;
 
-export const getProductAttributeGroups = async (productId: number): Promise<Array<AttributeGroup>> => $.get(router.generate('admin_products_attribute_groups', {
-  productId,
-}));
+export const getProductAttributeGroups = async (productId: number, shopId: number|null): Promise<Array<AttributeGroup>> => {
+  const routeParams = <Record<string, number>> {productId};
 
-export const getAllAttributeGroups = async (): Promise<Array<AttributeGroup>> => $.get(router.generate('admin_all_attribute_groups'));
+  if (shopId) {
+    routeParams.shopId = shopId;
+  }
+
+  return $.get(router.generate('admin_products_attribute_groups', routeParams));
+};
+
+export const getAllAttributeGroups = async (shopId: number|null): Promise<Array<AttributeGroup>> => $.get(router.generate(
+  'admin_all_attribute_groups',
+  shopId ? {shopId} : {},
+));
 
 export default {
   getProductAttributeGroups,

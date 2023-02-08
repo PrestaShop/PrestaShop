@@ -88,7 +88,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} terms of service`, async function () {
       await testContext.addContextItem(
         this,

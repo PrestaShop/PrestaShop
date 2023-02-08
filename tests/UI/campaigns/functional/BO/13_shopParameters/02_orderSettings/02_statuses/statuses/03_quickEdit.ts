@@ -116,7 +116,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
     },
   ];
 
-  statuses.forEach((orderStatus, index) => {
+  statuses.forEach((orderStatus, index: number) => {
     it(`should ${orderStatus.args.status} ${orderStatus.args.columnName} by quick edit`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${orderStatus.args.status}${index}`, baseContext);
 

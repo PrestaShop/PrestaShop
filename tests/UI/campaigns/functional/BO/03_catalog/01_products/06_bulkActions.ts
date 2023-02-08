@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import productsPage from '@pages/BO/catalog/products';
@@ -33,6 +37,9 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
   const firstProductData: ProductData = new ProductData({name: 'TO DELETE 1', type: 'Standard product'});
   const secondProductData: ProductData = new ProductData({name: 'TO DELETE 2', type: 'Standard product'});
 
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,48 +50,50 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-    await productsPage.closeSfToolBar(page);
-
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-
-  it('should reset all filters and get number of products', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
-
-  [firstProductData, secondProductData].forEach((productData: ProductData, index: number) => {
-    it(`should create product n°${index + 1}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `createProduct${index + 1}`, baseContext);
-
-      await productsPage.goToAddProductPage(page);
-
-      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+  describe('Create 2 products', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
     });
 
-    it('should go to catalog page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToCatalogPage${index + 1}`, baseContext);
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await addProductPage.goToCatalogPage(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+      await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+      numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    [firstProductData, secondProductData].forEach((productData: ProductData, index: number) => {
+      it(`should create product n°${index + 1}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createProduct${index + 1}`, baseContext);
+
+        await productsPage.goToAddProductPage(page);
+
+        const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      });
+
+      it('should go to catalog page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToCatalogPage${index + 1}`, baseContext);
+
+        await addProductPage.goToCatalogPage(page);
+
+        const pageTitle = await productsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(productsPage.pageTitle);
+      });
     });
   });
 
@@ -181,4 +190,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts);
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -121,7 +121,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
-        for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
+        for (let i: number = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, i, 'name');
           await expect(textColumn).to.contains(createCategoryData.name);
         }

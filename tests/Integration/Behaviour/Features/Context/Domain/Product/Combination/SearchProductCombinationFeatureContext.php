@@ -49,7 +49,7 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
      *
      * @return void
      *
-     *@see transformProductCombinationsResult for $expectedResults type transformation
+     * @see transformProductCombinationsResult for $expectedResults type transformation
      */
     public function searchProductCombinationsForShop(
         string $productReference,
@@ -80,7 +80,7 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
      *
      * @return void
      *
-     *@see transformProductCombinationsResult for $expectedResults type transformation
+     * @see transformProductCombinationsResult for $expectedResults type transformation
      */
     public function searchProductCombinationsForAllShops(
         string $productReference,
@@ -129,7 +129,7 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
      *
      * @return void
      *
-     *@see transformProductCombinationsResult for $expectedResults type transformation
+     * @see transformProductCombinationsResult for $expectedResults type transformation
      */
     private function searchProductCombinations(
         string $productReference,

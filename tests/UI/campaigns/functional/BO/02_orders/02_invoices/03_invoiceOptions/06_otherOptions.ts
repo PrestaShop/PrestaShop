@@ -151,7 +151,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLegalFreeText', baseContext);
 
       // Check the existence of the Legal free text
-      const exist = await files.isTextInPDF(filePath as string, invoiceData.legalFreeText);
+      const exist = await files.isTextInPDF(filePath, invoiceData.legalFreeText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
     });
 
@@ -159,7 +159,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
 
       // Check the existence of the Footer text
-      const exist = await files.isTextInPDF(filePath as string, invoiceData.footerText);
+      const exist = await files.isTextInPDF(filePath, invoiceData.footerText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
     });
   });

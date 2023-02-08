@@ -14,7 +14,7 @@ import categoriesPage from '@pages/BO/catalog/categories';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {Data} from '@data/import/categories';
+import ImportCategories from '@data/import/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,14 +41,14 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
   const categoryData: object = {filterBy: 'name', value: 'category'};
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, ImportCategories.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all categories data
-    await files.createCSVFile('.', fileName, Data);
+    await files.createCSVFile('.', fileName, ImportCategories);
   });
 
   after(async () => {

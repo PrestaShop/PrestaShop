@@ -293,7 +293,7 @@ class AdminControllerTest extends TestCase
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
                 }
-                if ($param === 'prestashop.core.admin.feature_flag.repository') {
+                if ($param === 'prestashop.core.admin.feature_flag.repository' || $param === FeatureFlagRepository::class) {
                     return $this->getMockedFeatureFlagRepository();
                 }
             });

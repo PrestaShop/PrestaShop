@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 
 /**
  * @property ImageType $object
@@ -96,7 +97,7 @@ class AdminImagesControllerCore extends AdminController
         parent::init();
 
         $this->canGenerateAvif = $this->get('PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker')->isAvailable();
-        $this->isMultipleImageFormatFeatureEnabled = $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+        $this->isMultipleImageFormatFeatureEnabled = $this->get(FeatureFlagRepository::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
         $this->imageFormatConfiguration = $this->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
 
         $fields = [

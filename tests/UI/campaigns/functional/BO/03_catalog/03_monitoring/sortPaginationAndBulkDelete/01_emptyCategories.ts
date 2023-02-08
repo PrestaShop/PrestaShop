@@ -15,7 +15,7 @@ import monitoringPage from '@pages/BO/catalog/monitoring';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {Data} from '@data/import/categories';
+import ImportCategories from '@data/import/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,14 +43,14 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
   const categoryData: object = {filterBy: 'name', value: 'category'};
 
   // Pre-condition: Import empty category list
-  importFileTest(fileName, Data.entity, baseContext);
+  importFileTest(fileName, ImportCategories.entity, baseContext);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all data
-    await files.createCSVFile('.', fileName, Data);
+    await files.createCSVFile('.', fileName, ImportCategories);
   });
 
   after(async () => {

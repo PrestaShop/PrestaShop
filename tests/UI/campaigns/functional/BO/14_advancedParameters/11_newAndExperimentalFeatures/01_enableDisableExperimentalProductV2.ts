@@ -15,6 +15,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+import {isNewProductPageEnabledByDefault} from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'functional_BO_advancedParameters_newAndExperimentalFeatures_enableDisableExperimentalProductV2';
 
@@ -40,103 +41,116 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Enable new product page', async () => {
-    it('should go to \'Advanced Parameters > New & Experimental Features\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFeatureFlagPage', baseContext);
+  // Depending on the initial status we don't test in the same order
+  if (isNewProductPageEnabledByDefault()) {
+    testDisableProductPage();
+    testEnableProductPage();
+  } else {
+    testEnableProductPage();
+    testDisableProductPage();
+  }
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.featureFlagLink,
-      );
-      await featureFlagPage.closeSfToolBar(page);
+  function testEnableProductPage() {
+    describe('Enable new product page', async () => {
+      it('should go to \'Advanced Parameters > New & Experimental Features\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFeatureFlagPage', baseContext);
 
-      const pageTitle = await featureFlagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.advancedParametersLink,
+          dashboardPage.featureFlagLink,
+        );
+        await featureFlagPage.closeSfToolBar(page);
+
+        const pageTitle = await featureFlagPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+      });
+
+      it('should enable New product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'enableNewProductPage', baseContext);
+
+        const successMessage = await featureFlagPage.setNewProductPage(page, true);
+        await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+      });
+
+      it('should go to \'Catalog > Products\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageV2', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.catalogParentLink,
+          dashboardPage.productsLink,
+        );
+        await productsPageV2.closeSfToolBar(page);
+
+        const pageTitle = await productsPageV2.getPageTitle(page);
+        await expect(pageTitle).to.contains(productsPageV2.pageTitle);
+      });
+
+      it('should click on \'New product\' button and check new product modal', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
+
+        const isModalVisible = await productsPageV2.clickOnNewProductButton(page);
+        await expect(isModalVisible).to.be.true;
+      });
+
+      it('should choose \'Standard product\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+        await productsPageV2.selectProductType(page, 'standard');
+        await productsPageV2.clickOnAddNewProduct(page);
+
+        const pageTitle = await createProductsPageV2.getPageTitle(page);
+        await expect(pageTitle).to.contains(createProductsPageV2.pageTitle);
+      });
     });
+  }
 
-    it('should enable New product page - Single store', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableNewProductPage', baseContext);
+  function testDisableProductPage() {
+    describe('Disable new product page', async () => {
+      it('should go back to \'Advanced Parameters > New & Experimental Features\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFeatureFlagPage2', baseContext);
 
-      const successMessage = await featureFlagPage.setNewProductPage(page, true);
-      await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.advancedParametersLink,
+          dashboardPage.featureFlagLink,
+        );
+        await featureFlagPage.closeSfToolBar(page);
+
+        const pageTitle = await featureFlagPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
+      });
+
+      it('should disable New product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'disableNewProductPage', baseContext);
+
+        const successMessage = await featureFlagPage.setNewProductPage(page, false);
+        await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
+      });
+
+      it('should go to \'Catalog > Products\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsV1Page', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.catalogParentLink,
+          dashboardPage.productsLink,
+        );
+        await productsPageV1.closeSfToolBar(page);
+
+        const pageTitle = await productsPageV1.getPageTitle(page);
+        await expect(pageTitle).to.contains(productsPageV1.pageTitle);
+      });
+
+      it('should go to Add product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductV1Page', baseContext);
+
+        await productsPageV1.goToAddProductPage(page);
+
+        const createProductTitle = await addProductPage.getPageTitle(page);
+        await expect(createProductTitle).to.contains(addProductPage.pageTitle);
+      });
     });
-
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageV2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
-      );
-      await productsPageV2.closeSfToolBar(page);
-
-      const pageTitle = await productsPageV2.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPageV2.pageTitle);
-    });
-
-    it('should click on \'New product\' button and check new product modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
-
-      const isModalVisible = await productsPageV2.clickOnNewProductButton(page);
-      await expect(isModalVisible).to.be.true;
-    });
-
-    it('should choose \'Standard product\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
-
-      await productsPageV2.selectProductType(page, 'standard');
-      await productsPageV2.clickOnAddNewProduct(page);
-
-      const pageTitle = await createProductsPageV2.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPageV2.pageTitle);
-    });
-  });
-
-  describe('Disable new product page', async () => {
-    it('should go back to \'Advanced Parameters > New & Experimental Features\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFeatureFlagPage2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.featureFlagLink,
-      );
-      await featureFlagPage.closeSfToolBar(page);
-
-      const pageTitle = await featureFlagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
-    });
-
-    it('should disable New product page - Single store', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableNewProductPage', baseContext);
-
-      const successMessage = await featureFlagPage.setNewProductPage(page, false);
-      await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
-    });
-
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsV1Page', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
-      );
-      await productsPageV1.closeSfToolBar(page);
-
-      const pageTitle = await productsPageV1.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPageV1.pageTitle);
-    });
-
-    it('should go to Add product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductV1Page', baseContext);
-
-      await productsPageV1.goToAddProductPage(page);
-
-      const createProductTitle = await addProductPage.getPageTitle(page);
-      await expect(createProductTitle).to.contains(addProductPage.pageTitle);
-    });
-  });
+  }
 });

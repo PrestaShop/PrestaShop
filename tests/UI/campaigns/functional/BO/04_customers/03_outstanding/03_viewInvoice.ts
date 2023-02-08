@@ -97,7 +97,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
 
       await ordersPage.resetFilter(page);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
+      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
       await expect(orderReference).to.not.equal(null);
     });
 
@@ -137,7 +137,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
 
       await outstandingPage.resetFilter(page);
 
-      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1) as string;
+      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1);
       await expect(outstandingId).to.be.at.least(1);
     });
 

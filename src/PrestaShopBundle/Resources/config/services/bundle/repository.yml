@@ -129,17 +129,7 @@ services:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
 
-  PrestaShopBundle\Entity\Repository\AttributeGroupRepository:
-    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
-    arguments:
-      - PrestaShopBundle\Entity\AttributeGroup
-
-  prestashop.core.admin.attribute_group.repository:
-    alias: PrestaShopBundle\Entity\Repository\AttributeGroupRepository
-    deprecated: ~
-
-  prestashop.core.admin.feature_flag.repository:
-    class: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
+  PrestaShopBundle\Entity\Repository\FeatureFlagRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\FeatureFlag
@@ -148,3 +138,8 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\AuthorizedApplication
+    public: true
+
+  prestashop.core.admin.feature_flag.repository:
+    alias: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
+    deprecated: ~

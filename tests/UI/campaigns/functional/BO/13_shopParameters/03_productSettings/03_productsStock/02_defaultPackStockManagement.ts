@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -50,6 +54,9 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
     ],
   });
 
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -70,7 +77,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       {args: {productToCreate: secondProductData}},
       {args: {productToCreate: productPackData}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
@@ -123,7 +130,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         },
       },
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       describe(`Test the option '${test.args.option}'`, async () => {
         it('should go to \'Shop parameters > Product Settings\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index}`, baseContext);
@@ -288,7 +295,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       {args: {productToCreate: secondProductData}},
       {args: {productToCreate: productPackData}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should delete product n°${index}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
 
@@ -307,4 +314,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       });
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

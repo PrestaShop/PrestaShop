@@ -135,6 +135,10 @@
         type: Number,
         required: true,
       },
+      shopId: {
+        type: Number,
+        required: true,
+      },
       eventEmitter: {
         type: Object,
         required: true,
@@ -177,7 +181,7 @@
        */
       async initAttributeGroups(): Promise<void> {
         try {
-          this.attributeGroups = await getAllAttributeGroups();
+          this.attributeGroups = await getAllAttributeGroups(this.shopId);
           window.prestaShopUiKit.init();
           this.preLoading = false;
           this.eventEmitter.emit(CombinationEvents.combinationGeneratorReady);
@@ -212,10 +216,8 @@
        */
       async generateCombinations(): Promise<void> {
         this.loading = true;
-        const data: Record<string, any> = {
-          attributes: {},
-          applyToAllShops: this.applyToAllShops ? 1 : 0,
-        };
+        const data: Record<string, any> = {attributes: {}};
+
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
           this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
@@ -226,7 +228,11 @@
         });
 
         try {
-          const response = await this.combinationsService.generateCombinations(this.productId, data);
+          const response = await this.combinationsService.generateCombinations(
+            this.productId,
+            this.applyToAllShops ? null : this.shopId,
+            data,
+          );
           $.growl({
             message: this.$t('generator.success', {
               combinationsNb: response.combination_ids.length,

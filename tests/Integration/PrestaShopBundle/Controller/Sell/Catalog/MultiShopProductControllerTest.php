@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreConfig;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Product;
 use Shop;
 use ShopGroup;
@@ -153,14 +154,14 @@ class MultiShopProductControllerTest extends GridControllerTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-        $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+        $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
+        $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 
     public function tearDown(): void
     {
-        $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-        $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+        $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
+        $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
 
         // Call parent tear down later or the kernel will be shut down
         parent::tearDown();

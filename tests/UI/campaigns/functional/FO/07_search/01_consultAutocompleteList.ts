@@ -76,7 +76,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
       searchValue: 'Notebook',
       numResults: 3,
     },
-  ].forEach((search, index) => {
+  ].forEach((search, index: number) => {
     it(`should check the autocomplete list with the value ${search.searchValue}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAutocompleteList_${index}`, baseContext);
 

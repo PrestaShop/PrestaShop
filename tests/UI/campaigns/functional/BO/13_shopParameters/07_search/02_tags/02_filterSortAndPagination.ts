@@ -74,7 +74,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
   describe('Create 21 tags in BO', async () => {
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
 
-    creationTests.forEach((test, index) => {
+    creationTests.forEach((test: number, index: number) => {
       const tagData: TagData = new TagData({name: `todelete${index}`, language: Languages.english.name});
 
       it('should go to add new tag page', async function () {

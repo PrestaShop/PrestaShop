@@ -31,7 +31,7 @@ class ViewCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'View • PrestaShop';
+    this.pageTitle = `View • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';

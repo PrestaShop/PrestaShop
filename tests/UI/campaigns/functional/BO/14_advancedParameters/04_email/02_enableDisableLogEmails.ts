@@ -54,7 +54,7 @@ describe('BO - Advanced Parameters - E-mail : Enable/Disable log emails', async 
     {args: {action: 'enable', exist: true}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} log emails`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}LogEmails`, baseContext);
 

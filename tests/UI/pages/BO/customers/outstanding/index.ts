@@ -49,7 +49,7 @@ class Outstanding extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Outstanding • PrestaShop';
+    this.pageTitle = `Outstanding • ${global.INSTALL.SHOP_NAME}`;
     this.gridTable = '#outstanding_grid_table';
 
     // Filters

@@ -105,7 +105,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       {args: {productID: 1, quantity: 2, documentRow: 5}},
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should create the partial refund n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 

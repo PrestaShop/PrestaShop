@@ -10,7 +10,10 @@ import basicHelper from '@utils/basicHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
+import {
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -390,8 +393,8 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
         const sortedTable = await combinationsTab.getAllRowsColumnContent(page, 40, test.args.sortBy);
 
-        const nonSortedTableFloat: number[] = await nonSortedTable.map((text: string): number => parseFloat(text));
-        const sortedTableFloat: number[] = await sortedTable.map((text: string): number => parseFloat(text));
+        const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+        const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
         const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
@@ -674,6 +677,6 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     });
   });
 
-  // Post-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

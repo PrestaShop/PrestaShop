@@ -14,7 +14,10 @@ import createProductsPage from '@pages/BO/catalog/productsV2/add';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
+import {
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -40,6 +43,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     minimumQuantity: 1,
     status: true,
   });
+
   // Pre-condition: Enable new product page
   enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
@@ -202,6 +206,6 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     });
   });
 
-  // Post-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

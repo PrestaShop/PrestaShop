@@ -20,7 +20,7 @@ let page: Page;
  * @param baseContext {string} String to identify the test
  */
 function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewProductPage'): void {
-  describe('PRE-TEST: Enable "New product page - Single store"', async () => {
+  describe('Enable "New product page"', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +49,7 @@ function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewPr
       await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
     });
 
-    it('should enable New product page - Single store', async function () {
+    it('should enable New product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNewProductPage', baseContext);
 
       const successMessage = await featureFlagPage.setNewProductPage(page, true);
@@ -63,7 +63,7 @@ function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewPr
  * @param baseContext {string} String to identify the test
  */
 function disableNewProductPageTest(baseContext: string = 'commonTests-disableNewProductPage'): void {
-  describe('POST-TEST: Disable "New product page - Single store"', async () => {
+  describe('Disable "New product page"', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -92,7 +92,7 @@ function disableNewProductPageTest(baseContext: string = 'commonTests-disableNew
       await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
     });
 
-    it('should disable New product page - Single store', async function () {
+    it('should disable New product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableNewProductPage', baseContext);
 
       const successMessage = await featureFlagPage.setNewProductPage(page, false);
@@ -101,4 +101,42 @@ function disableNewProductPageTest(baseContext: string = 'commonTests-disableNew
   });
 }
 
-export {enableNewProductPageTest, disableNewProductPageTest};
+/**
+ * Indicate the default state of new page with feature flags, depending on its initial value we need to
+ * adapt the tests behaviour especially the part that enables/disables the page. We keep this value editable
+ * here in case the default value changes the tests will be easy to adapt.
+ */
+function isNewProductPageEnabledByDefault(): boolean {
+  return true;
+}
+
+/**
+ * Reset the new product page to its initial state.
+ *
+ * @param baseContext {string}
+ */
+function resetNewProductPageAsDefault(baseContext: string = 'commonTests-resetNewProductPage'): void {
+  setNewProductPageTest(isNewProductPageEnabledByDefault(), baseContext);
+}
+
+/**
+ * Set the new product page state via a boolean.
+ *
+ * @param expectedStatus {boolean}
+ * @param baseContext {string}
+ */
+function setNewProductPageTest(expectedStatus: boolean, baseContext: string = 'commonTests-setNewProductPage'): void {
+  if (expectedStatus) {
+    enableNewProductPageTest(baseContext);
+  } else {
+    disableNewProductPageTest(baseContext);
+  }
+}
+
+export {
+  enableNewProductPageTest,
+  disableNewProductPageTest,
+  isNewProductPageEnabledByDefault,
+  setNewProductPageTest,
+  resetNewProductPageAsDefault,
+};

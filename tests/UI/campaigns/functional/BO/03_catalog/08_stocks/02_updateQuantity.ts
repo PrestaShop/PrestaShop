@@ -131,7 +131,7 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
 
         // Check movement quantity
         const movementQuantity = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'quantity');
-        await expect(movementQuantity).to.equal(test.args.updateValue);
+        await expect(parseFloat(movementQuantity)).to.equal(test.args.updateValue);
       });
 
       it('should go back to stocks page', async function () {

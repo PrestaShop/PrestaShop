@@ -85,7 +85,7 @@ class AttributeGroup
     private $shops;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection<AttributeGroupLang>
      *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\AttributeGroupLang", mappedBy="attributeGroup", orphanRemoval=true)
      */
@@ -191,7 +191,7 @@ class AttributeGroup
     }
 
     /**
-     * @return Collection
+     * @return Collection<Attribute>
      */
     public function getAttributes(): Collection
     {
@@ -246,6 +246,9 @@ class AttributeGroup
         $this->attributeGroupLangs->removeElement($attributeGroupLang);
     }
 
+    /**
+     * @return Collection<AttributeGroupLang>
+     */
     public function getAttributeGroupLangs()
     {
         return $this->attributeGroupLangs;

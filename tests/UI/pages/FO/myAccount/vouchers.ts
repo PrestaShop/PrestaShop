@@ -71,31 +71,31 @@ class Vouchers extends FOBasePage {
 
     switch (columnName) {
       case 'code':
-        columnSelector = this.tableColumnCode(row) as string;
+        columnSelector = this.tableColumnCode(row);
         break;
 
       case 'description':
-        columnSelector = this.tableColumnDescription(row) as string;
+        columnSelector = this.tableColumnDescription(row);
         break;
 
       case 'quantity':
-        columnSelector = this.tableColumnQuantity(row) as string;
+        columnSelector = this.tableColumnQuantity(row);
         break;
 
       case 'value':
-        columnSelector = this.tableColumnValue(row) as string;
+        columnSelector = this.tableColumnValue(row);
         break;
 
       case 'minimum':
-        columnSelector = this.tableColumnMinimum(row) as string;
+        columnSelector = this.tableColumnMinimum(row);
         break;
 
       case 'cumulative':
-        columnSelector = this.tableColumnCumulative(row) as string;
+        columnSelector = this.tableColumnCumulative(row);
         break;
 
       case 'expiration_date':
-        columnSelector = this.tableColumnExpirationDate(row) as string;
+        columnSelector = this.tableColumnExpirationDate(row);
         break;
 
       default:

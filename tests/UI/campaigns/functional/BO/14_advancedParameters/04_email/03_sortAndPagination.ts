@@ -113,9 +113,9 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    const tests = new Array(6).fill(0, 0, 6);
+    const tests: number[] = new Array(6).fill(0, 0, 6);
 
-    tests.forEach((test, index) => {
+    tests.forEach((test: number, index: number) => {
       it(`should create the order n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
 
