@@ -3,6 +3,7 @@
 @clear-cache-before-feature
 @reset-img-after-feature
 @product-image
+@product-multishop
 @update-image-multishop
 Feature: Update product image from Back Office (BO)
   As an employee I need to be able to update new product image

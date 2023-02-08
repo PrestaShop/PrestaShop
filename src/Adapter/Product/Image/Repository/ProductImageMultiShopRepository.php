@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -92,20 +91,12 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      * @param ProductId $productId
      *
      * @return Image[]
-     *
-     * @throws CoreException
      */
     public function getImages(ProductId $productId, ShopConstraint $shopConstraint): array
     {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException(sprintf('%s::getImages does not handle shop group constraint', self::class));
-        }
-
-        $shopId = $shopConstraint->getShopId() ?: null;
-
         return array_map(
-            function (ImageId $imageId) use ($shopId): Image {
-                return $shopId ? $this->get($imageId, $shopId) : $this->getForAllShops($imageId);
+            function (ImageId $imageId) use ($shopConstraint): Image {
+                return $this->getByShopConstraint($imageId, $shopConstraint);
             },
             $this->getImagesIds($productId, $shopConstraint)
         );
@@ -181,9 +172,13 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         return $image;
     }
 
-    public function getForAllShops(ImageId $imageId): Image
+    public function getByShopConstraint(ImageId $imageId, ShopConstraint $shopConstraint): Image
     {
-        $shopIds = $this->getAssociatedShopIds($imageId);
+        if ($shopConstraint->getShopId()) {
+            return $this->get($imageId, $shopConstraint->getShopId());
+        }
+
+        $shopIds = $this->getAssociatedShopIdsByShopConstraint($imageId, $shopConstraint);
         // finds first associated shop and uses it to load object model
         $shopId = reset($shopIds);
 
@@ -191,15 +186,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             throw new ShopAssociationNotFound(sprintf('Image %d is not associated to any shop', $imageId->getValue()));
         }
 
-        /** @var Image $image */
-        $image = $this->fetchObjectModel(
-            $imageId->getValue(),
-            Image::class,
-            ProductImageNotFoundException::class,
-            $shopId->getValue()
-        );
-
-        return $image;
+        return $this->get($imageId, $shopId);
     }
 
     /**
