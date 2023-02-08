@@ -64,12 +64,12 @@ class StockMovementType extends TranslatorAwareType
 
                 // For orders, we display the kind of movements instead of the data range
                 if ($type === StockMovement::ORDERS_TYPE) {
-                    $dateData = $increasedQuantity ?
-                        $this->trans('Returned products', 'Admin.Catalog.Feature') :
-                        ProductType::TYPE_VIRTUAL === $options['product_type'] ?
-                            $this->trans('Sold products', 'Admin.Catalog.Feature') :
-                            $this->trans('Shipped products', 'Admin.Catalog.Feature')
+                    $label = ProductType::TYPE_VIRTUAL === $options['product_type'] ?
+                        $this->trans('Sold products', 'Admin.Catalog.Feature') :
+                        $this->trans('Shipped products', 'Admin.Catalog.Feature')
                     ;
+
+                    $dateData = $increasedQuantity ? $this->trans('Returned products', 'Admin.Catalog.Feature') : $label;
                     $event->setData(array_merge($event->getData(), [
                         'date' => $dateData,
                     ]));
