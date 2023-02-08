@@ -20,7 +20,12 @@ const baseContext: string = 'functional_FO_checkout_shippingMethods_addOrderMess
 
 /*
 Scenario:
-
+- Go to FO and login by default customer
+- Add a product to cart and checkout
+- In shipping methods, choose My carrier and add a message
+- Go to payment step
+- Click on edit shipping methods and check the message
+- Choose the other carrier and check the message
  */
 
 describe('FO - Checkout - Shipping methods : Add order message', async () => {
@@ -28,8 +33,8 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
   let page: Page;
   const message: string = 'Morbi a metus. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit. '
     + 'Nullam sapien sem, ornare ac, nonummy non, lobortis a, enim. Nunc tincidunt ante vitae massa. Duis ante orci, '
-    + ' molestie vitae, vehicula venenatis, tincidunt ac, pede. Nulla accumsan, elit sit123456789&é"'
-    + '"\'(-è_çà)=+°&~#\\{[|`\\^@]}^$ù*!:;,<>?./§%µ¤²';
+    + 'molestie vitae, vehicula venenatis, tincidunt ac, pede. Nulla accumsan, elit sit123456789&é"'
+    + '"\'(-è_çà)=+°&~#\\{[|`\\^@]}^$ù*!:;,?./§%µ¤²';
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -96,7 +101,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
   });
 
-  it(`should select '${Carriers.myCarrier}' and add a message`, async function () {
+  it(`should select '${Carriers.myCarrier.name}' and add a message`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
     const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(
@@ -107,7 +112,28 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.be.true;
   });
 
-  it('should click on edit \'Shipping methods\' step', async function () {
+  it('should click on edit \'Shipping methods\' step and check the order message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditShippingStep', baseContext);
+
+    await checkoutPage.clickOnEditShippingMethodStep(page);
+
+    const orderMessage = await checkoutPage.getOrderMessage(page);
+    await expect(orderMessage).to.equal(message);
+  });
+
+  it(`should choose the other carrier '${Carriers.default.name}' and check the order message`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'chooseAnotherCarrier', baseContext);
+
+    await checkoutPage.chooseShippingMethod(page, Carriers.default.id);
+
+    const orderMessage = await checkoutPage.getOrderMessage(page);
+    await expect(orderMessage).to.equal(message);
+  });
+
+  it('should click on continue button and check the payment step', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinue', baseContext);
+
+    const isPaymentStep = await checkoutPage.goToPaymentStep(page);
+    await expect(isPaymentStep).to.be.true;
   });
 });
