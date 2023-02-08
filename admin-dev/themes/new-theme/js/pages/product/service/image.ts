@@ -30,9 +30,10 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getProductImagesForAllShops = async (productId: number): Promise<JQuery.jqXHR<any>> => {
-  const imagesUrl = router.generate('admin_products_v2_images_for_all_shops', {
+export const getProductImages = async (productId: number, shopId: number): Promise<JQuery.jqXHR<any>> => {
+  const imagesUrl = router.generate('admin_products_v2_images_for_shop', {
     productId,
+    shopId,
   });
 
   return $.get(imagesUrl);
@@ -126,7 +127,7 @@ export const removeProductImage = async (productImageId: string): Promise<JQuery
 };
 
 export default {
-  getProductImagesForAllShops,
+  getProductImagesForAllShops: getProductImages,
   saveImageInformations,
   replaceImage,
   saveImagePosition,

@@ -144,7 +144,7 @@
 <script lang="ts">
   import Router from '@components/router';
   import {
-    getProductImagesForAllShops,
+    getProductImages,
     saveImageInformations,
     saveImagePosition,
     replaceImage,
@@ -284,7 +284,7 @@
        */
       async initProductImages(): Promise<void> {
         try {
-          const images = await getProductImagesForAllShops(this.productId);
+          const images = await getProductImages(this.productId, this.shopId);
 
           this.loading = false;
           this.initDropZone();

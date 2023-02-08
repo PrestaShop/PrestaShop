@@ -61,18 +61,21 @@ use Symfony\Component\HttpFoundation\Response;
 class ImageController extends FrameworkBundleAdminController
 {
     /**
+     * Retrieves images for all shops, but the cover (which is multi-shop compatable) is retrieved based on $shopId
+     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param int $productId
+     * @param int $shopId
      *
      * @return JsonResponse
      */
-    public function getImagesForAllShopsAction(int $productId): JsonResponse
+    public function getImagesForShopAction(int $productId, int $shopId): JsonResponse
     {
         /** @var ProductImage[] $images */
         $images = $this->getQueryBus()->handle(new GetProductImages(
             $productId,
-            ShopConstraint::allShops()
+            ShopConstraint::shop($shopId)
         ));
 
         return $this->json(array_map([$this, 'formatImage'], $images));
