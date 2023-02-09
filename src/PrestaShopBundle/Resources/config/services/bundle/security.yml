@@ -10,12 +10,14 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.static_cache.adapter"
+      - '@PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface'
 
   prestashop.security.role.dynamic_role_hierarchy:
     class: PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
   prestashop.security.voter.product:
     class: "%prestashop.security.voter.product.class%"
+    autowire: true
     tags:
       - { name: security.voter }
     public: false

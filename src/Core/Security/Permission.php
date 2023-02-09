@@ -24,24 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Security;
 
-namespace Tests\Integration\Utility;
-
-use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
-class PageVoter extends BaseVoter
+class Permission
 {
-    /**
-     * @param string $attribute
-     * @param mixed $subject
-     * @param TokenInterface $token
-     *
-     * @return bool
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    public const PREFIX_TAB = 'ROLE_MOD_TAB_';
+    public const PREFIX_MODULE = 'ROLE_MOD_MODULE_';
+
+    public const CREATE = 'create';
+    public const UPDATE = 'update';
+    public const DELETE = 'delete';
+    public const READ = 'read';
+
+    public const LEVEL_READ = 1;
+    public const LEVEL_UPDATE = 2;
+    public const LEVEL_CREATE = 3;
+    public const LEVEL_DELETE = 4;
+
+    // This class should not be instanciated
+    private function __construct()
     {
-        return true;
     }
 }

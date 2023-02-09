@@ -24,24 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Security;
 
-namespace Tests\Integration\Utility;
-
-use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
-class PageVoter extends BaseVoter
+interface EmployeePermissionProviderInterface
 {
-    /**
-     * @param string $attribute
-     * @param mixed $subject
-     * @param TokenInterface $token
-     *
-     * @return bool
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
-    {
-        return true;
-    }
+    public function getRoles(int $employeeProfileId): array;
 }

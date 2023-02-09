@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -243,20 +243,20 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(PageVoter::DELETE, $controller)) {
-            return PageVoter::LEVEL_DELETE;
+        if ($this->isGranted(Permission::DELETE, $controller)) {
+            return Permission::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(PageVoter::CREATE, $controller)) {
-            return PageVoter::LEVEL_CREATE;
+        if ($this->isGranted(Permission::CREATE, $controller)) {
+            return Permission::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(PageVoter::UPDATE, $controller)) {
-            return PageVoter::LEVEL_UPDATE;
+        if ($this->isGranted(Permission::UPDATE, $controller)) {
+            return Permission::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(PageVoter::READ, $controller)) {
-            return PageVoter::LEVEL_READ;
+        if ($this->isGranted(Permission::READ, $controller)) {
+            return Permission::LEVEL_READ;
         }
 
         return 0;
@@ -318,13 +318,13 @@ class FrameworkBundleAdminController extends AbstractController
     protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
+                $action === 'delete' . $suffix && $this->isGranted(Permission::DELETE, $object)
             ) || (
                 ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
-                $this->isGranted(PageVoter::UPDATE, $object)
+                $this->isGranted(Permission::UPDATE, $object)
             ) || (
                 ($action === 'duplicate' . $suffix) &&
-                ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
+                ($this->isGranted(Permission::UPDATE, $object) || $this->isGranted(Permission::CREATE, $object))
             );
     }
 

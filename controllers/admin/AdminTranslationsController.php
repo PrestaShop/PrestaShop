@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -190,10 +191,10 @@ class AdminTranslationsControllerCore extends AdminController
             !in_array(
                 $this->authorizationLevel(),
                 [
-                    AdminController::LEVEL_VIEW,
-                    AdminController::LEVEL_EDIT,
-                    AdminController::LEVEL_ADD,
-                    AdminController::LEVEL_DELETE,
+                    Permission::LEVEL_READ,
+                    Permission::LEVEL_UPDATE,
+                    Permission::LEVEL_CREATE,
+                    Permission::LEVEL_DELETE,
                 ]
             )
         ) {

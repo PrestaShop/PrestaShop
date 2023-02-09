@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -172,16 +172,14 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_DISABLE:
             case ModuleAdapter::ACTION_ENABLE_MOBILE:
             case ModuleAdapter::ACTION_DISABLE_MOBILE:
-                $deniedAccess = $this->checkPermission(PageVoter::UPDATE);
+                $deniedAccess = $this->checkPermission(Permission::UPDATE);
                 break;
             case ModuleAdapter::ACTION_INSTALL:
-                $deniedAccess = $this->checkPermission(PageVoter::CREATE);
-                break;
-            case ModuleAdapter::ACTION_UNINSTALL:
-                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
+                $deniedAccess = $this->checkPermission(Permission::CREATE);
                 break;
             case ModuleAdapter::ACTION_DELETE:
-                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
+            case ModuleAdapter::ACTION_UNINSTALL:
+                $deniedAccess = $this->checkPermission(Permission::DELETE);
                 break;
 
             default:
@@ -309,8 +307,8 @@ class ModuleController extends ModuleAbstractController
 
         $deniedAccess = $this->checkPermissions(
             [
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
+                Permission::LEVEL_CREATE,
+                Permission::LEVEL_DELETE,
             ]
         );
         if (null !== $deniedAccess) {

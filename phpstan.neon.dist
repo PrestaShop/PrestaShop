@@ -86,3 +86,19 @@ parameters:
             disallowIn:
                 - src/*
 
+  disallowedConstants:
+        -
+            class: PrestaShopBundle\Security\Voter\PageVoter
+            constant: ['CREATE', 'READ', 'UPDATE', 'DELETE', 'LEVEL_DELETE', 'LEVEL_CREATE', 'LEVEL_READ', 'LEVEL_UPDATE']
+            message: 'Use \PrestaShop\PrestaShop\Core\Security\Permission constants instead.'
+            disallowIn:
+                - src/*
+        -
+            class: AdminController
+            constant: ['LEVEL_DELETE', 'LEVEL_ADD', 'LEVEL_VIEW', 'LEVEL_EDIT']
+            message: 'Use \PrestaShop\PrestaShop\Core\Security\Permission constants instead.'
+            disallowIn:
+                - src/*
+                - classes/*
+                - controllers/*
+
