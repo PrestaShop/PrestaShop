@@ -167,7 +167,11 @@ class CustomerPersisterCore
             if ($guestToCustomerConversion) {
                 $customer->cleanGroups();
                 $customer->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
-                $this->sendConfirmationMail($customer);
+
+                // Send him a welcome email, if enabled
+                if (Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+                    $customer->sendWelcomeEmail($this->context->language->id);
+                }
             }
         }
 
@@ -235,44 +239,17 @@ class CustomerPersisterCore
         if ($ok) {
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
-            // Send a welcome information email, only for registered customers
-            $this->sendConfirmationMail($customer);
+
+            // Send a welcome information email, only for registered customers and if enabled
+            if (!$customer->is_guest && Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+                $customer->sendWelcomeEmail($this->context->language->id);
+            }
+
             Hook::exec('actionCustomerAccountAdd', [
                 'newCustomer' => $customer,
             ]);
         }
 
         return $ok;
-    }
-
-    /**
-     * Send a welcome email after converting the customer, if configured.
-     *
-     * @param Customer $customer
-     *
-     * @return bool Indicates if mail was sent OK
-     */
-    private function sendConfirmationMail(Customer $customer)
-    {
-        if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
-            return true;
-        }
-
-        return Mail::Send(
-            $this->context->language->id,
-            'account',
-            $this->translator->trans(
-                'Welcome!',
-                [],
-                'Emails.Subject'
-            ),
-            [
-                '{firstname}' => $customer->firstname,
-                '{lastname}' => $customer->lastname,
-                '{email}' => $customer->email,
-            ],
-            $customer->email,
-            $customer->firstname . ' ' . $customer->lastname
-        );
     }
 }

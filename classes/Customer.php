@@ -1194,23 +1194,21 @@ class CustomerCore extends ObjectModel
 
         $this->is_guest = false;
 
-        /*
-        * If this is an anonymous conversion and we want the customer to set his own password,
-        * we set a random one for now.
-        * TODO - This should be revised in the future because 16 chars can be outside of bounds of
-        * isAcceptablePasswordLength. It should not be checked.
-        */
-        if (empty($password)) {
-            $password = Tools::passwdGen(16, 'RANDOM');
-        }
-
-        if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
-            return false;
-        }
-
         /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-        $this->passwd = $crypto->hash($password);
+
+        /*
+        * If this is an anonymous conversion and we want the customer to set his own password,
+        * we set a random one for now. If a password was provided, we check it's validity.
+        */
+        if (empty($password)) {
+            $this->passwd = $crypto->hash(Tools::passwdGen(16, 'RANDOM'));
+        } else {
+            if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
+                return false;
+            }
+            $this->passwd = $crypto->hash($password);
+        }
 
         /*
         * Now, we need to update his group. The guest should have had a PS_GUEST_GROUP previously, but if
@@ -1228,27 +1226,61 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
+        // If it's an anonymous conversion, we send him a link to set his new password.
+        // Otherwise, just a welcome email, if configured.
+        if (empty($password)) {
+            $this->sendWelcomeEmail($idLang, true);
+        } elseif (Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+            $this->sendWelcomeEmail($idLang);
+        }
+
+        return true;
+    }
+
+    /**
+     * Sends an informational email to the customer, to notify him that
+     * his account was created.
+     *
+     * This email can optionally contain a link to set his new password.
+     *
+     * @param int $idLang Language ID to send the email in
+     * @param bool $sendPasswordLink Should a template with a password reset link be used
+     *
+     * @return bool If the mail was sent successfully
+     */
+    public function sendWelcomeEmail(int $idLang, bool $sendPasswordLink = false)
+    {
+        // Use provided lang ID, or take the one from context
         $language = new Language($idLang);
         if (!Validate::isLoadedObject($language)) {
             $language = Context::getContext()->language;
         }
 
-        /*
-        * Now, we will send out an email where he can set his new password.
-        *
-        * TODO:
-        * This 'guest_to_customer' email should be sent only if password was not provided. Otherwise,
-        * it should send an 'account' email without an URL. This is what CustomerPersister does. (These functions
-        * should be unified.)
-        *
-        * OrderConfirmationController and GuestTrackingController call this logic with a password and user still
-        * receives the below email, that should be changed.
-        */
+        // Build basic email variables
+        $template = 'account';
+        $subject = Context::getContext()->getTranslator()->trans(
+            'Welcome!',
+            [],
+            'Emails.Subject',
+            $language->locale
+        );
         $vars = [
             '{firstname}' => $this->firstname,
             '{lastname}' => $this->lastname,
             '{email}' => $this->email,
-            '{url}' => Context::getContext()->link->getPageLink(
+        ];
+
+        // If we are also sending a link to password, we will alter the template,
+        // change subject and add password URL to variables.
+        if ($sendPasswordLink) {
+            $template = 'guest_to_customer';
+            $subject = Context::getContext()->getTranslator()->trans(
+                'Your guest account has been transformed into a customer account',
+                [],
+                'Emails.Subject',
+                $language->locale
+            );
+            $vars['{url}'] = Context::getContext()->link->getPageLink(
                 'password',
                 true,
                 null,
@@ -1258,17 +1290,13 @@ class CustomerCore extends ObjectModel
                     (int) $this->id,
                     $this->reset_password_token
                 )
-            ),
-        ];
-        Mail::Send(
+            );
+        }
+
+        return Mail::Send(
             (int) $idLang,
-            'guest_to_customer',
-            Context::getContext()->getTranslator()->trans(
-                'Your guest account has been transformed into a customer account',
-                [],
-                'Emails.Subject',
-                $language->locale
-            ),
+            $template,
+            $subject,
             $vars,
             $this->email,
             $this->firstname . ' ' . $this->lastname,
@@ -1280,8 +1308,6 @@ class CustomerCore extends ObjectModel
             false,
             (int) $this->id_shop
         );
-
-        return true;
     }
 
     /**
