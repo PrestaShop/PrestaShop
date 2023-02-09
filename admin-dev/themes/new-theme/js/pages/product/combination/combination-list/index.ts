@@ -25,14 +25,14 @@
 
 import ProductMap from '@pages/product/product-map';
 import CombinationsListRenderer from '@pages/product/combination/combination-list/combinations-list-renderer';
-import CombinationsService from '@pages/product/service/combinations-service';
+import CombinationService from '@pages/product/service/combination-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/combination/combination-modal';
 import initFilters from '@pages/product/combination/filters';
 import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/combination/generator';
-import {getProductAttributeGroups} from '@pages/product/service/attribute-groups';
+import {getProductAttributeGroups} from '@pages/product/service/attribute-group';
 import BulkEditionHandler from '@pages/product/combination/combination-list/bulk-edition-handler';
 import PaginatedCombinationsService from '@pages/product/service/paginated-combinations-service';
 import BulkDeleteHandler from '@pages/product/combination/combination-list/bulk-delete-handler';
@@ -73,7 +73,7 @@ export default class CombinationsList {
 
   private readonly $emptyFiltersState: JQuery;
 
-  private readonly combinationsService: CombinationsService;
+  private readonly combinationsService: CombinationService;
 
   private readonly paginatedCombinationsService: PaginatedCombinationsService;
 
@@ -110,7 +110,7 @@ export default class CombinationsList {
     this.$emptyFiltersState = $(CombinationsMap.emptyFiltersState);
 
     this.initialized = false;
-    this.combinationsService = new CombinationsService();
+    this.combinationsService = new CombinationService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId, shopId);
     this.productAttributeGroups = [];
 

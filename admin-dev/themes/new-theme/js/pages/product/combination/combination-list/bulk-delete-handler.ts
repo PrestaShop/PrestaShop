@@ -26,7 +26,7 @@
 import {ConfirmModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
-import CombinationsService from '@pages/product/service/combinations-service';
+import CombinationService from '@pages/product/service/combination-service';
 import BulkChoicesSelector from '@pages/product/combination/combination-list/bulk-choices-selector';
 import {EventEmitter} from 'events';
 import ProgressModal from '@components/modal/progress-modal';
@@ -42,7 +42,7 @@ export default class BulkDeleteHandler {
 
   private readonly eventEmitter: EventEmitter;
 
-  private readonly combinationsService: CombinationsService;
+  private readonly combinationsService: CombinationService;
 
   private readonly bulkChoicesSelector: BulkChoicesSelector;
 
@@ -50,7 +50,7 @@ export default class BulkDeleteHandler {
     productId: number,
     eventEmitter: EventEmitter,
     bulkChoicesSelector: BulkChoicesSelector,
-    combinationsService: CombinationsService,
+    combinationsService: CombinationService,
   ) {
     this.productId = productId;
     this.eventEmitter = eventEmitter;

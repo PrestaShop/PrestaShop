@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-  import CombinationsService from '@pages/product/service/combinations-service';
+  import CombinationService from '@pages/product/service/combination-service';
   import AttributesSelector from '@pages/product/combination/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/combination/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/service/attribute-groups';
@@ -108,7 +108,7 @@
   interface CombinationGeneratorStates {
     attributeGroups: Array<AttributeGroup>,
     selectedAttributeGroups: Record<string, AttributeGroup>,
-    combinationsService: CombinationsService,
+    combinationsService: CombinationService,
     isModalShown: boolean,
     preLoading: boolean,
     loading: boolean,
@@ -122,7 +122,7 @@
       return {
         attributeGroups: [],
         selectedAttributeGroups: {},
-        combinationsService: new CombinationsService(),
+        combinationsService: new CombinationService(),
         isModalShown: false,
         preLoading: true,
         loading: false,

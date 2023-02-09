@@ -147,7 +147,7 @@
     saveImagePosition,
     replaceImage,
     removeProductImage,
-  } from '@pages/product/service/images-service';
+  } from '@pages/product/service/image';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@PSVue/components/Modal.vue';

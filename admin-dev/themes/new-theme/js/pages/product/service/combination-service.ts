@@ -27,7 +27,7 @@ import Router from '@components/router';
 
 const {$} = window;
 
-export default class CombinationsService {
+export default class CombinationService {
   router: Router;
 
   filters: Record<string, any>;

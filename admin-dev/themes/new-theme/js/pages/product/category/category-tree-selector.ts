@@ -29,7 +29,7 @@ import AutoCompleteSearch, {InputAutoCompleteSearchConfig} from '@components/aut
 import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import {getCategories} from '@pages/product/service/categories-service';
+import {getCategories} from '@pages/product/service/category';
 import TagsRenderer from '@pages/product/category/tags-renderer';
 import {EventEmitter} from 'events';
 import Modal, {ModalType} from '@components/modal/modal';

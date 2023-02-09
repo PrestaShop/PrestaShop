@@ -30,7 +30,7 @@ import {EventEmitter} from 'events';
 import {isUndefined} from '@PSTypes/typeguard';
 import BigNumber from '@node_modules/bignumber.js';
 import {notifyFormErrors} from '@components/form/helpers';
-import CombinationsService from '@pages/product/service/combinations-service';
+import CombinationService from '@pages/product/service/combination-service';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -65,7 +65,7 @@ export default class CombinationsListEditor {
     CombinationsMap.list.rowActionButtons,
   ];
 
-  private readonly combinationsService: CombinationsService;
+  private readonly combinationsService: CombinationService;
 
   private editionMode: boolean = false;
 
@@ -75,7 +75,7 @@ export default class CombinationsListEditor {
     productId: number,
     eventEmitter: EventEmitter,
     combinationsRenderer: CombinationsListRenderer,
-    combinationsService: CombinationsService,
+    combinationsService: CombinationService,
   ) {
     this.productId = productId;
     this.eventEmitter = eventEmitter;
