@@ -24,7 +24,7 @@
  */
 
 import ProductSuppliersMap from '@pages/product/supplier/product-suppliers-map';
-import {Supplier, ProductSupplier, BaseProductSupplier} from '@pages/product/supplier/type';
+import {Supplier, ProductSupplier, BaseProductSupplier} from '@pages/product/supplier/types';
 
 export default class ProductSuppliersCollection {
   private defaultSupplierId: string;

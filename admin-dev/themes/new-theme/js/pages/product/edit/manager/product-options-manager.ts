@@ -25,7 +25,7 @@
 
 import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
 import ProductSuppliersCollection from '@pages/product/supplier/product-suppliers-collection';
-import {Supplier} from '@pages/product/supplier/type';
+import {Supplier} from '@pages/product/supplier/types';
 import SuppliersSelector from '@pages/product/supplier/suppliers-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductMap from '@pages/product/product-map';

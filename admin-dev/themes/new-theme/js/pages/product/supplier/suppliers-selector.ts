@@ -24,7 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import {Supplier} from '@pages/product/supplier/type';
+import {Supplier} from '@pages/product/supplier/types';
 
 const {$} = window;
 
