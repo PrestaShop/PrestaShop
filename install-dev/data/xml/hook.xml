@@ -4494,5 +4494,10 @@
       <title>Modify customer thread grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for customer thread grid</description>
     </hook>
+    <hook id="actionUpdateCartAddress">
+      <name>actionUpdateCartAddress</name>
+      <title>Triggers after changing address on the cart</title>
+      <description>This hook is called after address is changed on the cart</description>
+    </hook>
   </entities>
 </entity_hook>
