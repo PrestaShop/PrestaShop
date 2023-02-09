@@ -1,3 +1,4 @@
+# This file will be removed in next version, do not add any service here
 services:
   prestashop.bundle.form.data_transformer.string_array_to_integer_array:
     alias: 'PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
