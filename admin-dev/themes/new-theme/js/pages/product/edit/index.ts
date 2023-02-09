@@ -37,7 +37,7 @@ import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductModulesManager from '@pages/product/edit/manager/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/manager/product-seo-manager';
-import ProductShopsModal from '@pages/product/shops/product-shops-modal';
+import ProductShopsModal from '@pages/product/shop/product-shops-modal';
 import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/manager/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/manager/related-products-manager';

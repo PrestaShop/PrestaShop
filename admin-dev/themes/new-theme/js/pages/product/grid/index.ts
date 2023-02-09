@@ -25,7 +25,7 @@
 
 import CategoryTreeFilter from '@pages/product/category/category-tree-filter';
 import ProductMap from '@pages/product/product-map';
-import selectShopForEdition from '@pages/product/shops/select-shop-modal';
+import selectShopForEdition from '@pages/product/shop/select-shop-modal';
 import initGridShopPreviews from '@pages/product/grid/grid-shop-previews';
 
 const {$} = window;
