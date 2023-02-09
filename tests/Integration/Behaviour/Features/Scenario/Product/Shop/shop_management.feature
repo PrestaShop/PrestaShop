@@ -410,18 +410,10 @@ Feature: Copy product from shop to shop.
     And I add new image "image1" named "app_icon.png" to product "graphicProduct" for shop "shop1"
     And I add new image "image2" named "some_image.jpg" to product "graphicProduct" for shop "shop1"
     And I copy product graphicProduct from shop shop1 to shop shop2
-    Then product "graphicProduct" should have following images for shop "shop1":
+    Then product "graphicProduct" should have following images for shop "shop1, shop2, shop3, shop4":
       | image reference | position | shops        |
       | image1          | 1        | shop1, shop2 |
       | image2          | 2        | shop1, shop2 |
-    And product "graphicProduct" should have following images for shop "shop2":
-      | image reference | position | shops        |
-      | image1          | 1        | shop1, shop2 |
-      | image2          | 2        | shop1, shop2 |
-    And product "graphicProduct" should have following images for shop "shop3":
-      | image reference | position | shops |
-    And product "graphicProduct" should have following images for shop "shop4":
-      | image reference | position | shops |
     And following image types should be applicable to products:
       | reference     | name           | width | height |
       | cartDefault   | cart_default   | 125   | 125    |
@@ -620,24 +612,23 @@ Feature: Copy product from shop to shop.
       | name[en-US] | universal T-shirt |
       | type        | standard          |
     And product product1 type should be standard
-    And product "product1" should have no images for shops "shop1"
+    And product "product1" should have no images
     And product "product1" is not associated to shop "shop2"
     When I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
-    Then product "product1" should have following images for shops "shop1":
-      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    Then product "product1" should have following images for shops "shop1, shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1 |
     When I copy product "product1" from shop "shop1" to shop "shop2"
-    Then product "product1" should have following images for shops "shop1,shop2":
-      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    Then product "product1" should have following images for shops "shop1, shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops        |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2 |
     When I delete product "product1" from shops "shop2"
-    Then product "product1" should have no images for shops "shop2"
     And product "product1" is not associated to shop "shop2"
-    And product "product1" should have following images for shops "shop1":
-      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    And product "product1" should have following images for shops "shop1, shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1 |
     # copy product again to make sure there are no images left from the previous product, therefore no uniqueConstraint errors
     When I copy product "product1" from shop "shop1" to shop "shop2"
-    Then product "product1" should have following images for shops "shop1,shop2":
-      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    Then product "product1" should have following images for shops "shop1, shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops        |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2 |
