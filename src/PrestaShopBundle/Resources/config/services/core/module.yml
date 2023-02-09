@@ -10,8 +10,8 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@prestashop.adapter.module.payment_module_provider'
 
-  prestashop.core.admin.module.repository:
-    class: PrestaShop\PrestaShop\Core\Module\ModuleRepository
+  PrestaShop\PrestaShop\Core\Module\ModuleRepository:
+    public: false
     arguments:
       - '@prestashop.adapter.data_provider.module'
       - '@prestashop.adapter.admin.data_provider.module'
@@ -27,24 +27,48 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
-  prestashop.module.sourcehandler.zip:
-    class: PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler
+  PrestaShop\PrestaShop\Core\Module\ModuleManager:
+    public: false
+    autowire: true
     arguments:
-      - '%modules_dir%'
-      - '@translator'
+      $moduleDataProvider: '@prestashop.adapter.data_provider.module'
+      $adminModuleDataProvider: '@prestashop.core.admin.data_provider.module_interface'
+      $hookManager: '@prestashop.adapter.hook.manager'
+
+  PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler:
+    autowire: true
+    public: false
+    arguments:
+      $modulePath: '%modules_dir%'
+    tags: [ core.module.source_handler ]
+
+  PrestaShop\PrestaShop\Core\Module\SourceHandler\RemoteZipSourceHandler:
+    autowire: true
+    public: false
+    arguments:
+      $downloadDir: '%ps_cache_dir%/downloads'
+    tags: [ core.module.source_handler ]
+
+  PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory:
+    arguments:
+      - !tagged core.module.source_handler
+
+  prestashop.core.admin.module.repository:
+    alias: PrestaShop\PrestaShop\Core\Module\ModuleRepository
+    public: true
+    deprecated: ~
 
   prestashop.module.factory.sourcehandler:
-    class: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
-    calls:
-      - [ 'addHandler', [ '@prestashop.module.sourcehandler.zip' ] ]
+    alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
+    public: true
+    deprecated: ~
+
+  prestashop.module.sourcehandler.zip:
+    alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler
+    public: true
+    deprecated: ~
 
   prestashop.module.manager:
-    class: PrestaShop\PrestaShop\Core\Module\ModuleManager
-    arguments:
-      - '@prestashop.core.admin.module.repository'
-      - '@prestashop.adapter.data_provider.module'
-      - '@prestashop.adapter.admin.data_provider.module'
-      - '@prestashop.module.factory.sourcehandler'
-      - '@translator'
-      - '@event_dispatcher'
-      - '@prestashop.adapter.hook.manager'
+    alias: PrestaShop\PrestaShop\Core\Module\ModuleManager
+    public: true
+    deprecated: ~

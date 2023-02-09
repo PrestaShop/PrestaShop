@@ -182,6 +182,8 @@ class ModuleManager implements ModuleManagerInterface
             $handler->handle($source);
         }
 
+        $this->hookManager->disableHooksForModule($this->moduleDataProvider->getModuleIdByName($name));
+
         $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name, 'source' => $source]);
 
         $module = $this->moduleRepository->getModule($name);
