@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
+use Cache;
 use Cart;
 use CartRule;
 use Configuration;
