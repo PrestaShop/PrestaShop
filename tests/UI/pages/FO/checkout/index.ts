@@ -45,7 +45,7 @@ class Checkout extends FOBasePage {
 
   private readonly activeLink: string;
 
-  private readonly signInLink: string;
+  private readonly checkoutSignInLink: string;
 
   private readonly checkoutGuestForm: string;
 
@@ -172,7 +172,7 @@ class Checkout extends FOBasePage {
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
     this.activeLink = `${this.personalInformationStepForm} .nav-link.active`;
-    this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
+    this.checkoutSignInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
     this.checkoutGuestGenderInput = (pos) => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;
     this.checkoutGuestFirstnameInput = `${this.checkoutGuestForm} input[name='firstname']`;
@@ -356,7 +356,7 @@ class Checkout extends FOBasePage {
     // Get id of selected option
     for (let position: number = 1; position <= optionsRadiosElement.length; position++) {
       if (await (await optionsRadiosElement[position - 1].getProperty('checked')).jsonValue()) {
-        selectedOptionId = position as number;
+        selectedOptionId = position;
         break;
       }
     }
@@ -508,7 +508,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<void>}
    */
   async clickOnSignIn(page: Page): Promise<void> {
-    await page.click(this.signInLink);
+    await page.click(this.checkoutSignInLink);
   }
 
   /**

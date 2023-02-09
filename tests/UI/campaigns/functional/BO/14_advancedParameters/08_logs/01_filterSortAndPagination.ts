@@ -72,7 +72,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   describe('Logout then login 11 times to have 11 logs', async () => {
     const tests: number[] = new Array(11).fill(0, 0, 11);
 
-    tests.forEach((test, index) => {
+    tests.forEach((test: number, index: number) => {
       it(`should logout from BO n°${index + 1}`, async function () {
         await loginCommon.logoutBO(this, page);
       });

@@ -187,6 +187,15 @@ $product-page-padding-bottom: 80px !default;
           color: $primary;
         }
       }
+
+      .product-type-preview.disabled {
+        color: $gray-500;
+        cursor: not-allowed;
+
+        &:hover {
+          color: $gray-500;
+        }
+      }
     }
 
     .product-header-details {

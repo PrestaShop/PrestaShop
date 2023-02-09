@@ -32,7 +32,7 @@ class ProductAttributeCore extends ObjectModel
     /** @var int Group id which attribute belongs */
     public $id_attribute_group;
 
-    /** @var string Name */
+    /** @var string|string[] Name */
     public $name;
     /** @var string */
     public $color;

@@ -64,7 +64,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
     {args: {action: 'disable', enable: false}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} B2B mode`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}B2BMode`, baseContext);
 

@@ -71,7 +71,7 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
     [
       {args: {orderMessageToCreate: firstOrderMessageData}},
       {args: {orderMessageToCreate: secondOrderMessageData}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to new order message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index + 1}`, baseContext);
 

@@ -186,9 +186,9 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
 
   describe('Pagination stores', async () => {
     describe('Create 16 stores for pagination', async () => {
-      const creationTests = new Array(16).fill(0, 0, 16);
+      const creationTests: number[] = new Array(16).fill(0, 0, 16);
 
-      creationTests.forEach((test, index) => {
+      creationTests.forEach((test: number, index: number) => {
         describe(`Create store n°${index + 1} in BO`, async () => {
           const createStoreData: StoreData = new StoreData({name: `todelete${index}`});
 

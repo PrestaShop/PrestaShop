@@ -72,7 +72,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
   // 1 - Create 11 webservice keys
   describe('Create 11 webservice keys in BO', async () => {
     const creationTests: number[] = new Array(11).fill(0, 0, 11);
-    creationTests.forEach((test, index) => {
+    creationTests.forEach((test: number, index: number) => {
       const webserviceData: WebserviceData = new WebserviceData({keyDescription: `todelete${index}`});
 
       it('should go to add new webservice key page', async function () {

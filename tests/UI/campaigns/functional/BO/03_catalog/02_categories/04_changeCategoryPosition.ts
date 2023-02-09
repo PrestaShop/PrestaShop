@@ -64,9 +64,8 @@ describe('BO - Catalog - Categories : Change category position', async () => {
 
     const sortedTable = await categoriesPage.getAllRowsColumnContent(page, 'position');
 
-    const nonSortedTableFloat = await nonSortedTable.map((text) => parseFloat(text));
-
-    const sortedTableFloat = await sortedTable.map((text) => parseFloat(text));
+    const nonSortedTableFloat: number[] = await nonSortedTable.map((text: string): number => parseFloat(text));
+    const sortedTableFloat: number[] = await sortedTable.map((text: string): number => parseFloat(text));
 
     const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
     await expect(sortedTableFloat).to.deep.equal(expectedResult);

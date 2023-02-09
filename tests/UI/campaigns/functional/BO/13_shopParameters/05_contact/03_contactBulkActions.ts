@@ -69,7 +69,7 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
       {args: {contactToCreate: secondContactData}},
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it('should go to add new contact page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewContactPage${index + 1}`, baseContext);
 

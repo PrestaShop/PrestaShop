@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableAp
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,6 +66,12 @@ class ApplicationController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => $this->getApplicationToolbarButtons(),
             'grid' => $this->presentGrid($grid),
         ]);
+    }
+
+    public function viewAction(): void
+    {
+        // TODO: Implement viewAction() method in view PR.
+        throw new NotImplementedException();
     }
 
     /**
@@ -131,6 +138,12 @@ class ApplicationController extends FrameworkBundleAdminController
             'applicationForm' => $authorizedApplicationForm->createView(),
             'editableApplication' => $editableApplication,
         ]);
+    }
+
+    public function deleteAction(): void
+    {
+        // TODO: Implement deleteAction() method in delete PR.
+        throw new NotImplementedException();
     }
 
     /**

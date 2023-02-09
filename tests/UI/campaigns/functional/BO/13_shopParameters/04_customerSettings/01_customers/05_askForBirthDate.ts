@@ -64,7 +64,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birt
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} ask for birth date`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AskForBirthDate`, baseContext);
 

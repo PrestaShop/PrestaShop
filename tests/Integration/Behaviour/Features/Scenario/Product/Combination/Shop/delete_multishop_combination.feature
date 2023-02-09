@@ -24,6 +24,13 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And I enable multishop feature
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
+    And I associate attribute group "Size" with shops "shop1,shop2"
+    And I associate attribute group "Color" with shops "shop1,shop2"
+    And I associate attribute "S" with shops "shop1,shop2"
+    And I associate attribute "M" with shops "shop1,shop2"
+    And I associate attribute "White" with shops "shop1,shop2"
+    And I associate attribute "Black" with shops "shop1,shop2"
+    And I associate attribute "Blue" with shops "shop1,shop2"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"

@@ -30,8 +30,8 @@ describe('BO - Header : Left menu', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  dashboardPage.menuTree.forEach((test, index) => {
-    test.children.forEach((subTest, subIndex) => {
+  dashboardPage.menuTree.forEach((test, index: number) => {
+    test.children.forEach((subTest: string, subIndex: number) => {
       it(`should check that the child menu '${subTest}' is displayed and works`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkChildrenClick${index}_${subIndex}`, baseContext);
 
@@ -58,7 +58,7 @@ describe('BO - Header : Left menu', async () => {
   });
 
   dashboardPage.menuTree.forEach((test, index) => {
-    test.children.forEach((subTest, subIndex) => {
+    test.children.forEach((subTest: string, subIndex: number) => {
       it(`should check that the child menu '${subTest}' is displayed and works`, async function () {
         await testContext.addContextItem(
           this,

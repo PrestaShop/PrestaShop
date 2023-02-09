@@ -14,7 +14,7 @@ import customersPage from '@pages/BO/customers';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {Data} from '@data/import/customers';
+import ImportCustomers from '@data/import/customers';
 
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
@@ -39,14 +39,14 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
   const fileName: string = 'customers.csv';
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, ImportCustomers.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all customers data
-    await files.createCSVFile('.', fileName, Data);
+    await files.createCSVFile('.', fileName, ImportCustomers);
   });
 
   after(async () => {

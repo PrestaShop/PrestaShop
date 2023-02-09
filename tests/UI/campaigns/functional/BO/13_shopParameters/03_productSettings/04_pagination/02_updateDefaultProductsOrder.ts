@@ -99,7 +99,7 @@ describe('BO - Shop Parameters - Product Settings : Update default product order
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`Set products default order to: '${test.args.orderBy} - ${test.args.orderMethod}'`, async () => {
       it(`should set products default order to: '${test.args.orderBy} - ${test.args.orderMethod}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateProductsOrder${index + 1}`, baseContext);

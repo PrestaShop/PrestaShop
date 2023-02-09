@@ -23,7 +23,10 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
+import {
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
@@ -418,6 +421,6 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     });
   });
 
-  // Post-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

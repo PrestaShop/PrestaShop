@@ -108,7 +108,7 @@ describe('FO - Account - Order history : download invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
       // Get invoice file name
-      fileName = await orderPageTabListBlock.getFileName(page) as string;
+      fileName = await orderPageTabListBlock.getFileName(page);
       await expect(fileName).not.null;
     });
   });

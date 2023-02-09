@@ -588,11 +588,11 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should get order data', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderData', baseContext);
 
-        orderReference = await ordersPage.getTextColumn(page, 'reference') as string;
+        orderReference = await ordersPage.getTextColumn(page, 'reference');
         await expect(orderReference).to.not.be.null;
 
         totalPaid = await ordersPage.getOrderATIPrice(page);
-        orderDate = await ordersPage.getTextColumn(page, 'date_add') as string;
+        orderDate = await ordersPage.getTextColumn(page, 'date_add');
         orderDate = `${orderDate.substr(6, 4)}-${orderDate.substr(0, 2)}-${orderDate.substr(3, 2)}`
           + `${orderDate.substr(11, 8)}`;
       });

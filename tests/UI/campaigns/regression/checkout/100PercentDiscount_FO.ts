@@ -197,7 +197,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         baseContext,
       );
 
-      await cartPage.addPromoCode(page, percentCartRule.code as string);
+      await cartPage.addPromoCode(page, percentCartRule.code);
 
       const totalPrice = await cartPage.getATIPrice(page);
       await expect(totalPrice, 'Order total price is incorrect').to.equal(0);

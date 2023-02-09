@@ -121,7 +121,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0) as Page;
+      page = await foHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await linkWidgetsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);

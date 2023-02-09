@@ -72,7 +72,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
   [
     {args: {action: 'disable', value: false}},
     {args: {action: 'enable', value: true}},
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
 

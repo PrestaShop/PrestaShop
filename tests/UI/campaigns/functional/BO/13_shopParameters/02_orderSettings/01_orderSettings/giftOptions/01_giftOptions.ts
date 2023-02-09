@@ -104,7 +104,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`Set gift option with status: '${test.args.isGiftWrapping}', price: '${test.args.giftWrappingPrice}', `
       + `tax: '${test.args.isGiftWrappingTax}', recyclable packaging: '${test.args.isRecycledPackaging}'`, async () => {
       describe('Set gift options in BO', async () => {

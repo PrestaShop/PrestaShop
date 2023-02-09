@@ -195,9 +195,6 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         $this->assertCombinationExists($combinationId);
         $this->attributeRepository->assertAllAttributesExist($attributeIds);
 
-        // @todo: need to check if these doesn't exist?
-        // especially when dealing with combination which has to be only added to another shop,
-        // then we get duplicate insert error :/
         $attributesList = [];
         foreach ($attributeIds as $attributeId) {
             $attributesList[] = [
@@ -275,7 +272,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
      *
      * @return Combination
      *
-     * @throws CoreException
+     * @throws InvalidShopConstraintException
      */
     public function getByShopConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): Combination
     {
@@ -284,12 +281,22 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         }
 
         if ($shopConstraint->forAllShops()) {
-            $shopId = $this->getDefaultShopIdForCombination($combinationId);
-        } else {
-            $shopId = $shopConstraint->getShopId();
-        }
+            try {
+                return $this->get($combinationId, $this->getDefaultShopIdForCombination($combinationId));
+                // We try to fetch combination for default shop first,
+                // but in case it is not associated to default shop,
+                // then we load first found associated combination
+            } catch (CombinationShopAssociationNotFoundException $e) {
+                $associatedShopIds = $this->getAssociatedShopIds($combinationId);
+                if (empty($associatedShopIds)) {
+                    throw $e;
+                }
 
-        return $this->get($combinationId, $shopId);
+                return $this->get($combinationId, reset($associatedShopIds));
+            }
+        } else {
+            return $this->get($combinationId, $shopConstraint->getShopId());
+        }
     }
 
     /**

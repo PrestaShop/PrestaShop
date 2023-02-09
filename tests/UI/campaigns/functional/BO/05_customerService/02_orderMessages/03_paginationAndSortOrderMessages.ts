@@ -66,8 +66,8 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
   });
 
   describe('Create 10 order messages in BO', async () => {
-    const tests = new Array(10).fill(0, 0, 10);
-    tests.forEach((test, index) => {
+    const tests: number[] = new Array(10).fill(0, 0, 10);
+    tests.forEach((test: number, index: number) => {
       const createOrderMessageData: OrderMessageData = new OrderMessageData({
         name: `toSortAndPaginate${index}`,
       });

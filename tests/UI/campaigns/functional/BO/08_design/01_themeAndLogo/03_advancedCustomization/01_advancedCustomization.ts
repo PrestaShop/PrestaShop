@@ -202,7 +202,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should close the current page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0) as Page;
+      page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
       await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);

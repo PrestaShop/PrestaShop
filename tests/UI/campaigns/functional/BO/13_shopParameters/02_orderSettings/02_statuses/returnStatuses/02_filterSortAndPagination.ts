@@ -215,9 +215,9 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
   });
 
   // 3 - Create 16 order return statuses
-  const creationTests = new Array(16).fill(0, 0, 16);
+  const creationTests: number[] = new Array(16).fill(0, 0, 16);
 
-  creationTests.forEach((test, index) => {
+  creationTests.forEach((test: number, index: number) => {
     describe(`Create order return status n°${index + 1} in BO`, async () => {
       const orderReturnStatusData: OrderReturnStatusData = new OrderReturnStatusData({name: `todelete${index}`});
 

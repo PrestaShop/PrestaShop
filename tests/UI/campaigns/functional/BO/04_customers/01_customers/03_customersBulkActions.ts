@@ -70,7 +70,7 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
     [
       {args: {customerToCreate: firstCustomerData}},
       {args: {customerToCreate: secondCustomerData}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCustomerPage${index + 1}`, baseContext);
 
