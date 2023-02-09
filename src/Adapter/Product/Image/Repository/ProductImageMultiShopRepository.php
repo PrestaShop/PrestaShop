@@ -370,7 +370,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         return ShopProductImagesCollection::from(...$shopProductImagesArray);
     }
 
-    public function getCoverImageId(ProductId $productId, ShopId $shopId): ?ImageId
+    public function findCoverImageId(ProductId $productId, ShopId $shopId): ?ImageId
     {
         $result = $this->connection->createQueryBuilder()
             ->select('id_image')
@@ -426,7 +426,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         ;
 
         foreach ($results as $image) {
-            $coverId = $this->getCoverImageId($productId, new ShopId((int) $image['id_shop']));
+            $coverId = $this->findCoverImageId($productId, new ShopId((int) $image['id_shop']));
             if ($coverId !== null && $coverId->getValue() === (int) $image['id_image']) {
                 continue;
             }

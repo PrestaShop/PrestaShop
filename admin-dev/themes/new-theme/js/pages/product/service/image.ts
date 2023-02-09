@@ -127,7 +127,7 @@ export const removeProductImage = async (productImageId: string): Promise<JQuery
 };
 
 export default {
-  getProductImagesForAllShops: getProductImages,
+  getProductImages,
   saveImageInformations,
   replaceImage,
   saveImagePosition,

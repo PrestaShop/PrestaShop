@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -76,16 +75,28 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
             throw new InvalidShopConstraintException('Only single shop constraint is supported');
         }
 
+        $coverId = $this->productImageRepository->findCoverImageId(
+            $query->getProductId(),
+            $query->getShopConstraint()->getShopId()
+        );
+
         // we still use hardcoded AllShops constraint here to get images for all the shops
         // but when we format the image we will check if it is cover for the shopId from query,
-        // because that is the only property of image that differs between shops
+        // because cover is the only property of image that might differ between shops
         $images = $this->productImageRepository->getImages($query->getProductId(), ShopConstraint::allShops());
+
         $productImages = [];
         foreach ($images as $image) {
+            // if for some reason there is no cover, we set first found image as cover to avoid further errors
+            if (!$coverId) {
+                $imageId = new ImageId($image->id);
+                $coverId = $imageId;
+            }
+
             $productImages[] = $this->formatImage(
                 $image,
                 $this->productImageRepository->getAssociatedShopIds(new ImageId($image->id)),
-                $query->getShopConstraint()->getShopId()
+                $coverId
             );
         }
 
@@ -97,15 +108,14 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
      *
      * @return ProductImage
      */
-    private function formatImage(Image $image, array $shopIds, ShopId $currentShopId): ProductImage
+    private function formatImage(Image $image, array $shopIds, ImageId $coverId): ProductImage
     {
         $imageIdValue = (int) $image->id;
         $imageId = new ImageId($imageIdValue);
-        $coverId = $this->productImageRepository->getCoverImageId(new ProductId((int) $image->id_product), $currentShopId);
 
         return new ProductImage(
             $imageIdValue,
-            $coverId && ($imageIdValue === $coverId->getValue()),
+            $coverId->getValue() === $imageIdValue,
             (int) $image->position,
             $image->legend,
             $this->productImageUrlFactory->getPath($imageId),

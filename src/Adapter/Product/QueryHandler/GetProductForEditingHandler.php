@@ -549,7 +549,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
     private function getCover(ProductId $productId, int $shopId): string
     {
-        $idOfCoverImage = $this->productImageMultiShopRepository->getCoverImageId($productId, new ShopId($shopId));
+        $idOfCoverImage = $this->productImageMultiShopRepository->findCoverImageId($productId, new ShopId($shopId));
 
         if ($idOfCoverImage) {
             return $this->productImageUrlFactory->getPathByType($idOfCoverImage, ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
