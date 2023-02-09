@@ -30,7 +30,7 @@ import {EventEmitter} from 'events';
 import {isUndefined} from '@PSTypes/typeguard';
 import BigNumber from '@node_modules/bignumber.js';
 import {notifyFormErrors} from '@components/form/helpers';
-import {updateCombinationList} from '@pages/product/service/combination-service';
+import {updateCombinationList} from '@pages/product/service/combination';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;

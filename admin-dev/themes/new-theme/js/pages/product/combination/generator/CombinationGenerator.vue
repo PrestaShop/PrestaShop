@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-  import {generateCombinations} from '@pages/product/service/combination-service';
+  import {generateCombinations} from '@pages/product/service/combination';
   import AttributesSelector from '@pages/product/combination/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/combination/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/service/attribute-group';
