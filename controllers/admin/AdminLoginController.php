@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
+use PrestaShopBundle\Security\Admin\SessionRenewer;
 use Symfony\Component\HttpFoundation\IpUtils;
 
 class AdminLoginControllerCore extends AdminController
@@ -273,6 +274,8 @@ class AdminLoginControllerCore extends AdminController
                     $tab = new Tab((int) $this->context->employee->default_tab);
                     $url = $this->context->link->getAdminLink($tab->class_name);
                 }
+
+                $this->get(SessionRenewer::class)->renew();
 
                 Hook::exec(
                     'actionAdminLoginControllerLoginAfter',
