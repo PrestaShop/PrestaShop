@@ -26,7 +26,7 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import CombinationService from '@pages/product/service/combination-service';
+import {deleteCombination} from '@pages/product/service/combination-service';
 import ConfirmModal from '@components/modal/confirm-modal';
 
 const {$} = window;
@@ -39,14 +39,10 @@ const CombinationEvents = ProductEventMap.combinations;
 export default class RowDeleteHandler {
   private eventEmitter: EventEmitter;
 
-  private combinationsService: CombinationService;
-
   constructor(
     eventEmitter: EventEmitter,
-    combinationsService: CombinationService,
   ) {
     this.eventEmitter = eventEmitter;
-    this.combinationsService = combinationsService;
 
     const $combinationsFormContainer = $(CombinationsMap.combinationsFormContainer);
     $combinationsFormContainer.on('click', CombinationsMap.deleteCombinationSelector, async (e) => {
@@ -76,7 +72,7 @@ export default class RowDeleteHandler {
         closable: true,
       },
       async () => {
-        const response = await this.combinationsService.deleteCombination(
+        const response = await deleteCombination(
           this.findCombinationId(button),
           allShops ? null : <number> <unknown> button.dataset.shopId,
         );

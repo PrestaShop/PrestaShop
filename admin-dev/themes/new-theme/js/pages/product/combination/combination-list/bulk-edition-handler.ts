@@ -26,7 +26,7 @@
 import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
-import CombinationService from '@pages/product/service/combination-service';
+import {bulkUpdate} from '@pages/product/service/combination-service';
 import {EventEmitter} from 'events';
 import BulkChoicesSelector from '@pages/product/combination/combination-list/bulk-choices-selector';
 import ProgressModal from '@components/modal/progress-modal';
@@ -40,8 +40,6 @@ const CombinationEvents = ProductEvents.combinations;
 export default class BulkEditionHandler {
   readonly productId: number;
 
-  private combinationsService: CombinationService;
-
   private eventEmitter: EventEmitter;
 
   private tabContainer: HTMLDivElement;
@@ -52,12 +50,10 @@ export default class BulkEditionHandler {
     productId: number,
     eventEmitter: EventEmitter,
     bulkChoicesSelector: BulkChoicesSelector,
-    combinationsService: CombinationService,
   ) {
     this.productId = productId;
     this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;
-    this.combinationsService = combinationsService;
     this.tabContainer = document.querySelector<HTMLDivElement>(CombinationMap.combinationManager)!;
 
     this.init();
@@ -163,7 +159,7 @@ export default class BulkEditionHandler {
 
       try {
         // eslint-disable-next-line no-await-in-loop
-        const response: Response = await this.combinationsService.bulkUpdate(
+        const response: Response = await bulkUpdate(
           this.productId,
           chunkIds,
           new FormData(form),

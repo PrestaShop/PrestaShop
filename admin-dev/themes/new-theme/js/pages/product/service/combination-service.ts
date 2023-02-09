@@ -22,111 +22,111 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 import Router from '@components/router';
 
+const router = new Router();
 const {$} = window;
 
-export default class CombinationService {
-  router: Router;
+export const deleteCombination = async (combinationId: number, shopId: number|null): Promise<JQuery.jqXHR> => {
+  const routeParams: Record<string, unknown> = {combinationId};
 
-  filters: Record<string, any>;
-
-  orderBy: string | null;
-
-  orderWay: string | null;
-
-  constructor() {
-    this.router = new Router();
-    this.filters = {};
-    this.orderBy = null;
-    this.orderWay = null;
+  if (shopId !== null) {
+    routeParams.shopId = shopId;
   }
 
-  deleteCombination(combinationId: number, shopId: number|null): JQuery.jqXHR<any> {
-    const routeParams:Record<string, unknown> = {combinationId};
+  return $.ajax({
+    url: router.generate('admin_products_combinations_delete_combination', routeParams),
+    type: 'DELETE',
+  });
+};
 
-    if (shopId !== null) {
-      routeParams.shopId = shopId;
-    }
+export const bulkDeleteCombinations = async (
+  productId: number,
+  combinationIds: number[],
+  shopId: number|null,
+  abortSignal: AbortSignal,
+): Promise<Response> => {
+  const formData = new FormData();
+  const routeParams:Record<string, unknown> = {productId};
+  formData.append('combinationIds', JSON.stringify(combinationIds));
 
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_delete_combination', routeParams),
-      type: 'DELETE',
-    });
+  if (shopId !== null) {
+    routeParams.shopId = shopId;
   }
 
-  bulkDeleteCombinations(
-    productId: number,
-    combinationIds: number[],
-    shopId: number|null,
-    abortSignal: AbortSignal,
-  ): Promise<Response> {
-    const formData = new FormData();
-    const routeParams:Record<string, unknown> = {productId};
-    formData.append('combinationIds', JSON.stringify(combinationIds));
-
-    if (shopId !== null) {
-      routeParams.shopId = shopId;
-    }
-
-    return fetch(
-      this.router.generate('admin_products_combinations_bulk_delete', routeParams), {
-        method: 'POST',
-        body: formData,
-        signal: abortSignal,
-      },
-    );
-  }
-
-  updateCombinationList(productId: number, formData: FormData): Promise<Response> {
-    formData.append('_method', 'PATCH');
-
-    return fetch(
-      this.router.generate('admin_products_combinations_update_combination_from_listing', {productId}),
-      {
-        method: 'POST',
-        body: formData,
-        headers: {
-          _method: 'PATCH',
-        },
-      },
-    );
-  }
-
-  /**
-   * @param {number} productId
-   * @param {number|null} shopId
-   * @param {Record<number, number[]>} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
-   */
-  generateCombinations(productId: number, shopId: number|null, data: Record<number, number[]>): JQuery.jqXHR {
-    const routeParams = <Record<string, number>> {productId};
-
-    if (shopId) {
-      routeParams.shopId = shopId;
-    }
-
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_generate', routeParams),
-      data,
+  return fetch(
+    router.generate('admin_products_combinations_bulk_delete', routeParams), {
       method: 'POST',
-    });
-  }
+      body: formData,
+      signal: abortSignal,
+    },
+  );
+};
 
-  bulkUpdate(productId: number, combinationIds: number[], formData: FormData, abortSignal: AbortSignal): Promise<Response> {
-    formData.append('_method', 'PATCH');
-    formData.append('combinationIds', JSON.stringify(combinationIds));
+export const updateCombinationList = async (productId: number, formData: FormData): Promise<Response> => {
+  formData.append('_method', 'PATCH');
 
-    return fetch(this.router.generate('admin_products_combinations_bulk_edit_combination',
-      {
-        productId,
-      }), {
+  return fetch(
+    router.generate('admin_products_combinations_update_combination_from_listing', {productId}),
+    {
       method: 'POST',
       body: formData,
       headers: {
         _method: 'PATCH',
       },
-      signal: abortSignal,
-    });
+    },
+  );
+};
+
+/**
+ * @param {number} productId
+ * @param {number|null} shopId
+ * @param {Record<number, number[]>} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
+ */
+export const generateCombinations = async (
+  productId: number,
+  shopId: number|null,
+  data: Record<number, number[]>,
+): Promise<JQuery.jqXHR> => {
+  const routeParams = <Record<string, number>> {productId};
+
+  if (shopId) {
+    routeParams.shopId = shopId;
   }
-}
+
+  return $.ajax({
+    url: router.generate('admin_products_combinations_generate', routeParams),
+    data,
+    method: 'POST',
+  });
+};
+
+export const bulkUpdate = async (
+  productId: number,
+  combinationIds: number[],
+  formData: FormData,
+  abortSignal: AbortSignal,
+): Promise<Response> => {
+  formData.append('_method', 'PATCH');
+  formData.append('combinationIds', JSON.stringify(combinationIds));
+
+  return fetch(router.generate('admin_products_combinations_bulk_edit_combination',
+    {
+      productId,
+    }), {
+    method: 'POST',
+    body: formData,
+    headers: {
+      _method: 'PATCH',
+    },
+    signal: abortSignal,
+  });
+};
+
+export default {
+  deleteCombination,
+  bulkDeleteCombinations,
+  updateCombinationList,
+  generateCombinations,
+  bulkUpdate,
+};

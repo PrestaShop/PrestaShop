@@ -30,7 +30,7 @@ import {EventEmitter} from 'events';
 import {isUndefined} from '@PSTypes/typeguard';
 import BigNumber from '@node_modules/bignumber.js';
 import {notifyFormErrors} from '@components/form/helpers';
-import CombinationService from '@pages/product/service/combination-service';
+import {updateCombinationList} from '@pages/product/service/combination-service';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -65,8 +65,6 @@ export default class CombinationsListEditor {
     CombinationsMap.list.rowActionButtons,
   ];
 
-  private readonly combinationsService: CombinationService;
-
   private editionMode: boolean = false;
 
   private savedInputValues: Record<string, any>;
@@ -75,12 +73,10 @@ export default class CombinationsListEditor {
     productId: number,
     eventEmitter: EventEmitter,
     combinationsRenderer: CombinationsListRenderer,
-    combinationsService: CombinationService,
   ) {
     this.productId = productId;
     this.eventEmitter = eventEmitter;
     this.renderer = combinationsRenderer;
-    this.combinationsService = combinationsService;
 
     this.$combinationsFormContainer = $(CombinationsMap.combinationsFormContainer);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
@@ -231,7 +227,7 @@ export default class CombinationsListEditor {
   private async saveEdition(): Promise<void> {
     this.renderer.setLoading(true);
 
-    const response = await this.combinationsService.updateCombinationList(this.productId, this.getFormData());
+    const response = await updateCombinationList(this.productId, this.getFormData());
     const jsonResponse = await response.json();
 
     if (jsonResponse.errors) {

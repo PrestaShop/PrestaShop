@@ -25,7 +25,6 @@
 
 import ProductMap from '@pages/product/product-map';
 import CombinationsListRenderer from '@pages/product/combination/combination-list/combinations-list-renderer';
-import CombinationService from '@pages/product/service/combination-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/combination/combination-modal';
@@ -73,8 +72,6 @@ export default class CombinationsList {
 
   private readonly $emptyFiltersState: JQuery;
 
-  private readonly combinationsService: CombinationService;
-
   private readonly paginatedCombinationsService: PaginatedCombinationsService;
 
   private readonly productFormModel: ProductFormModel;
@@ -110,11 +107,10 @@ export default class CombinationsList {
     this.$emptyFiltersState = $(CombinationsMap.emptyFiltersState);
 
     this.initialized = false;
-    this.combinationsService = new CombinationService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId, shopId);
     this.productAttributeGroups = [];
 
-    new RowDeleteHandler(this.eventEmitter, this.combinationsService);
+    new RowDeleteHandler(this.eventEmitter);
 
     this.init();
   }
@@ -214,7 +210,6 @@ export default class CombinationsList {
       this.productId,
       this.eventEmitter,
       this.renderer,
-      this.combinationsService,
     );
     const bulkChoicesSelector = new BulkChoicesSelector(
       this.eventEmitter,
@@ -223,8 +218,8 @@ export default class CombinationsList {
       this.paginator,
     );
 
-    new BulkEditionHandler(this.productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
-    new BulkDeleteHandler(this.productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
+    new BulkEditionHandler(this.productId, this.eventEmitter, bulkChoicesSelector);
+    new BulkDeleteHandler(this.productId, this.eventEmitter, bulkChoicesSelector);
 
     this.refreshCombinationList();
   }

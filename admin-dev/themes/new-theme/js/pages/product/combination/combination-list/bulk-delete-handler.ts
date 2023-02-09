@@ -26,7 +26,7 @@
 import {ConfirmModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
-import CombinationService from '@pages/product/service/combination-service';
+import {bulkDeleteCombinations} from '@pages/product/service/combination-service';
 import BulkChoicesSelector from '@pages/product/combination/combination-list/bulk-choices-selector';
 import {EventEmitter} from 'events';
 import ProgressModal from '@components/modal/progress-modal';
@@ -42,19 +42,15 @@ export default class BulkDeleteHandler {
 
   private readonly eventEmitter: EventEmitter;
 
-  private readonly combinationsService: CombinationService;
-
   private readonly bulkChoicesSelector: BulkChoicesSelector;
 
   constructor(
     productId: number,
     eventEmitter: EventEmitter,
     bulkChoicesSelector: BulkChoicesSelector,
-    combinationsService: CombinationService,
   ) {
     this.productId = productId;
     this.eventEmitter = eventEmitter;
-    this.combinationsService = combinationsService;
     this.bulkChoicesSelector = bulkChoicesSelector;
 
     this.init();
@@ -134,7 +130,7 @@ export default class BulkDeleteHandler {
 
       try {
         // eslint-disable-next-line no-await-in-loop
-        const response: Response = await this.combinationsService.bulkDeleteCombinations(
+        const response: Response = await bulkDeleteCombinations(
           this.productId,
           chunkIds,
           shopId,

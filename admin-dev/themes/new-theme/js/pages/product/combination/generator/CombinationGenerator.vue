@@ -92,10 +92,10 @@
 </template>
 
 <script lang="ts">
-  import CombinationService from '@pages/product/service/combination-service';
+  import {generateCombinations} from '@pages/product/service/combination-service';
   import AttributesSelector from '@pages/product/combination/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/combination/mixins/is-attribute-selected';
-  import {getAllAttributeGroups} from '@pages/product/service/attribute-groups';
+  import {getAllAttributeGroups} from '@pages/product/service/attribute-group';
   import Modal from '@PSVue/components/Modal.vue';
   import {defineComponent} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';
@@ -108,7 +108,6 @@
   interface CombinationGeneratorStates {
     attributeGroups: Array<AttributeGroup>,
     selectedAttributeGroups: Record<string, AttributeGroup>,
-    combinationsService: CombinationService,
     isModalShown: boolean,
     preLoading: boolean,
     loading: boolean,
@@ -122,7 +121,6 @@
       return {
         attributeGroups: [],
         selectedAttributeGroups: {},
-        combinationsService: new CombinationService(),
         isModalShown: false,
         preLoading: true,
         loading: false,
@@ -228,7 +226,7 @@
         });
 
         try {
-          const response = await this.combinationsService.generateCombinations(
+          const response = await generateCombinations(
             this.productId,
             this.applyToAllShops ? null : this.shopId,
             data,
