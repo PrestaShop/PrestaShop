@@ -315,6 +315,10 @@ class CartPresenter implements PresenterInterface
      */
     public function present($cart, $shouldSeparateGifts = false)
     {
+        $cache_id = 'presentedCart_' . (int)$shouldSeparateGifts;
+        if (Cache::isStored($cache_id)) {
+            return Cache::retrieve($cache_id);
+        }
         if (!is_a($cart, 'Cart')) {
             throw new \Exception('CartPresenter can only present instance of Cart');
         }
@@ -489,6 +493,8 @@ class CartPresenter implements PresenterInterface
         Hook::exec('actionPresentCart',
             ['presentedCart' => &$result]
         );
+
+        Cache::store($cache_id, $result);
 
         return $result;
     }
