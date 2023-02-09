@@ -131,6 +131,10 @@ class Checkout extends FOBasePage {
 
   private readonly deliveryStepSection: string;
 
+  private readonly deliveryStepEditButton: string;
+
+  private readonly deliveryStepCarriersList: string;
+
   private readonly deliveryOptionsRadioButton: string;
 
   private readonly deliveryOptionLabel: (id: number) => string;
@@ -250,6 +254,8 @@ class Checkout extends FOBasePage {
 
     // Shipping method selectors
     this.deliveryStepSection = '#checkout-delivery-step';
+    this.deliveryStepEditButton = `${this.deliveryStepSection} span.step-edit`;
+    this.deliveryStepCarriersList = `${this.deliveryStepSection} .delivery-options-list`;
     this.deliveryOptionsRadioButton = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = (id: number) => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
     this.deliveryOptionNameSpan = (id: number) => `${this.deliveryOptionLabel(id)} span.carrier-name`;
@@ -651,6 +657,25 @@ class Checkout extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.deliveryAddressPosition(position));
   }
 
+  // Methods for shipping method step
+
+  /**
+   * Choose shipping method
+   * @param page {Page} Browser tab
+   * @param shippingMethodID {number} Position of the shipping method
+   */
+  async chooseShippingMethod(page: Page, shippingMethodID: number): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethodID));
+  }
+
+  /**
+   * Get order message
+   * @param page {Page} Browser tab
+   */
+  getOrderMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.deliveryMessage);
+  }
+
   /**
    * Choose shipping method and add a comment
    * @param page {Page} Browser tab
@@ -731,6 +756,16 @@ class Checkout extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.deliveryStepContinueButton);
 
     return this.isStepCompleted(page, this.deliveryStepSection);
+  }
+
+  /**
+   * Click on edit shipping method step
+   * @param page {Page} Browser tab
+   */
+  async clickOnEditShippingMethodStep(page: Page): Promise<void> {
+    if (!await this.elementVisible(page, this.deliveryStepCarriersList, 1000)) {
+      await this.waitForSelectorAndClick(page, this.deliveryStepEditButton);
+    }
   }
 
   // Methods for payment methods step
