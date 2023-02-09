@@ -735,6 +735,16 @@ class AdminModuleController {
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
           self.displayOnUploadDone(responseObject);
+
+          const {postModuleImportActions} = window;
+
+          if (
+            responseObject.module_name !== null
+            && postModuleImportActions
+            && typeof window[postModuleImportActions] === 'function'
+          ) {
+            window[postModuleImportActions](responseObject.module_name);
+          }
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;

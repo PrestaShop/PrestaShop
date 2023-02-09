@@ -135,7 +135,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return Module
      */
-    public function getModule(string $moduleName, bool $getAvailableVersionsFromExternalSources = true): ModuleInterface
+    public function getModule(string $moduleName): ModuleInterface
     {
         $filePath = $this->getModulePath($moduleName);
 
@@ -149,7 +149,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             /** @var Module $module */
             $module = $this->cacheProvider->fetch($cacheKey);
             if ($module->getDiskAttributes()->get('filemtime') === $filemtime) {
-                return $this->enrichModuleAttributesFromHook($module, $getAvailableVersionsFromExternalSources);
+                return $this->enrichModuleAttributesFromHook($module);
             }
         }
 
@@ -165,7 +165,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $coreModule = new Module($attributes, $disk, $database);
         $this->cacheProvider->save($cacheKey, $coreModule);
 
-        return $this->enrichModuleAttributesFromHook($coreModule, $getAvailableVersionsFromExternalSources);
+        return $this->enrichModuleAttributesFromHook($coreModule);
     }
 
     public function getModulePath(string $moduleName): ?string
@@ -321,25 +321,9 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return Module
      */
-    protected function enrichModuleAttributesFromHook(Module $module, bool $getAvailableVersionsFromExternalSources = true): ModuleInterface
+    protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
     {
-        // We don't have to get
-        if (!$getAvailableVersionsFromExternalSources) {
-            $coreModule = $module->getInstance();
-            if (null !== $coreModule && $coreModule->isRegisteredInHook('actionListModules')) {
-                $diskVersion = $this->getNextModuleVersion($module);
-                $modulesFromHook = [
-                    [
-                        'name' => $module->get('name'),
-                        'version' => $diskVersion,
-                        'version_available' => $diskVersion,
-                    ]
-                ];
-            }
-        } else {
-            $modulesFromHook = $this->getModulesFromHook();
-        }
-
+        $modulesFromHook = $this->getModulesFromHook();
         foreach ($modulesFromHook as $moduleFromHook) {
             if ($module->get('name') === $moduleFromHook['name']) {
                 $module->getAttributes()->add($moduleFromHook);
@@ -347,37 +331,5 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $module;
-    }
-
-    /**
-     * Because there is an issue after upgrade : the version in module->version is the old one.
-     *
-     * @return string
-     */
-    private function getNextModuleVersion(Module $module): string
-    {
-        $moduleMainFile = sprintf('%s/%s.php', $this->getModulePath($module->get('name')), $module->get('name'));
-        if (!file_exists($moduleMainFile)) {
-            return $module->get('version');
-        }
-
-        $moduleClassContent = file_get_contents($moduleMainFile);
-        preg_match('/const[ ]+VERSION[ ]*=[ ]*\'(.+)\'/', $moduleClassContent, $matches);
-
-        if (!empty($matches)) {
-            $version = $matches[1];
-        } else {
-            preg_match('/this->version[ ]*=[ ]*\'(.+)\'/', $moduleClassContent, $matches);
-
-            if (!empty($matches)) {
-                $version = $matches[1];
-            }
-        }
-
-        if (empty($version)) {
-            return $module->get('version');
-        }
-
-        return (string) $version;
     }
 }

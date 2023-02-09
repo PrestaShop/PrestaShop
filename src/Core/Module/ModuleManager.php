@@ -183,7 +183,7 @@ class ModuleManager implements ModuleManagerInterface
 
         $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name, 'source' => $source]);
 
-        $module = $this->moduleRepository->getModule($name, false);
+        $module = $this->moduleRepository->getModule($name);
         $upgraded = $this->upgradeMigration($name) && $module->onUpgrade($module->get('version'));
 
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
@@ -226,7 +226,7 @@ class ModuleManager implements ModuleManagerInterface
 
         $this->hookManager->exec('actionBeforeDisableModule', ['moduleName' => $name]);
 
-        $module = $this->moduleRepository->getModule($name, false);
+        $module = $this->moduleRepository->getModule($name);
         $disabled = $module->onDisable();
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
 
