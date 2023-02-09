@@ -50,6 +50,7 @@ import PriceSummary from '@pages/product/edit/price-summary';
 import ProductOptionsManager from '@pages/product/edit/manager/product-options-manager';
 import ProductShippingManager from '@pages/product/edit/manager/product-shipping-manager';
 import ProductDetailsManager from '@pages/product/edit/manager/product-details-manager';
+import SummaryQuantityUpdater from '@pages/product/edit/summary-quantity-updater';
 
 const {$} = window;
 
@@ -78,6 +79,8 @@ $(() => {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
     new CombinationsList(productId, productFormModel, shopId);
+    //  quantity dynamically updates only in combination list
+    new SummaryQuantityUpdater(eventEmitter, productId, shopId);
   }
 
   // Responsive navigation tabs

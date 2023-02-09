@@ -1031,6 +1031,24 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return JsonResponse
+     */
+    public function quantityAction(int $productId, int $shopId): JsonResponse
+    {
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(
+            new GetProductForEditing($productId, ShopConstraint::shop($shopId), $this->getContextLangId())
+        );
+
+        return $this->json(['quantity' => $productForEditing->getStockInformation()->getQuantity()]);
+    }
+
+    /**
      * @param ProductForAssociation[] $productsForAssociation
      *
      * @return array
