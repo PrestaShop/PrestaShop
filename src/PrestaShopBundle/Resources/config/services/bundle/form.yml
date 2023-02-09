@@ -14,9 +14,11 @@ services:
       $addDisablingSwitchListener: '@form.event_listener.add_disabling_switch_listener'
       $locale: '@prestashop.core.localization.locale.context_locale'
       $multistoreController: '@prestashop.core.admin.multistore'
+      $validate: "@prestashop.adapter.validate"
+      $multiStoreContext: '@prestashop.adapter.shop.context'
 
-  PrestaShopBundle\Form\Extension\:
-    resource: "../../../../../Form/Extension/*"
+  PrestaShopBundle\Form\:
+    resource: "../../../../Form/{Extension,Validator}/*"
 
   PrestaShopBundle\Form\FormCloner:
   PrestaShopBundle\Form\FormBuilderModifier:
