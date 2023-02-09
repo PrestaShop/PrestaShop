@@ -289,9 +289,6 @@ class AdminCartsControllerCore extends AdminController
 
             $customized_datas = Product::getAllCustomizedDatas($this->context->cart->id, null, true, null, (int) $product['id_customization']);
             $this->context->cart->setProductCustomizedDatas($product, $customized_datas);
-            if ($customized_datas) {
-                Product::addProductCustomizationPrice($product, $customized_datas);
-            }
         }
 
         $helper = new HelperKpi();

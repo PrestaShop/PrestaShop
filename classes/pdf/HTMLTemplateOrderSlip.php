@@ -58,14 +58,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $this->order = new Order((int) $order_slip->id_order);
         $this->id_cart = $this->order->id_cart;
 
-        $products = OrderSlip::getOrdersSlipProducts($this->order_slip->id, $this->order);
-
-        foreach ($products as $product) {
-            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int) $product['id_customization']);
-            Product::addProductCustomizationPrice($product, $customized_datas);
-        }
-
-        $this->order->products = $products;
+        $this->order->products = OrderSlip::getOrdersSlipProducts($this->order_slip->id, $this->order);
         $this->smarty = $smarty;
         $this->smarty->assign('isTaxEnabled', (bool) Configuration::get('PS_TAX'));
 

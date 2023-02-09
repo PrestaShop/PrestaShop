@@ -657,6 +657,8 @@ class OrderDetailCore extends ObjectModel
         $this->setContext((int) $product['id_shop']);
         Product::getPriceStatic((int) $product['id_product'], true, (int) $product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
         $this->specificPrice = $specific_price;
+        $this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int) $product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, $null, true, true, $this->context, true, $product['id_customization']);
+        $this->product_price = $this->original_product_price;
         $this->original_product_price = Product::getPriceStatic(
             $product['id_product'],
             false,
@@ -673,7 +675,9 @@ class OrderDetailCore extends ObjectModel
             $null,
             true,
             true,
-            $this->context
+            $this->context,
+            true,
+            $product['id_customization']
         );
         $this->unit_price_tax_incl = (float) $product['price_wt'];
         $this->product_price = $this->unit_price_tax_excl = (float) $product['price'];
@@ -718,7 +722,9 @@ class OrderDetailCore extends ObjectModel
             $null,
             true,
             true,
-            $this->context
+            $this->context,
+            true,
+            $product['id_customization']
         );
         $this->product_quantity_discount = 0.00;
         if ($quantity_discount) {
@@ -768,7 +774,8 @@ class OrderDetailCore extends ObjectModel
         $this->product_mpn = empty($product['mpn']) ? null : pSQL($product['mpn']);
         $this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
         $this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
-        $this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
+        $product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
+        $this->product_weight = $product_weight + Customization::getCustomizationWeight($product['id_customization']);
         $this->id_warehouse = $id_warehouse;
 
         // We get the real quantity of the product in stock and save how much of the ordered quantity was in stock
