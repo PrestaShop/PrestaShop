@@ -102,3 +102,8 @@ services:
     autowire: true
     arguments:
       - '@prestashop.core.query_bus'
+
+  PrestaShopBundle\Security\Admin\SessionRenewer:
+    arguments:
+      $storage: "@security.csrf.token_storage"
+    autowire: true
