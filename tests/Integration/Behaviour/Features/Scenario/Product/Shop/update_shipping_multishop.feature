@@ -1,11 +1,11 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-shipping
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-shipping-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @restore-languages-after-feature
 @clear-cache-after-feature
-@product-multi-shop
-@update-multi-shop-shipping
+@product-multishop
+@update-shipping-multishop
 Feature: Update product shipping information from Back Office (BO) for multiple shops.
   As a BO user I want to be able to update product fields associated with shipping for multiple shops.
 

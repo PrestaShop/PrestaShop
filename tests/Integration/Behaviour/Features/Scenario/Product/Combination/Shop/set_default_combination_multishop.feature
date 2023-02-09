@@ -1,8 +1,8 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags set-default-multi-shop-combination
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags set-default-combination-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
-@set-default-multi-shop-combination
+@set-default-combination-multishop
 Feature: Set default combination for product in Back Office (BO) in multi shop context
   As an employee
   I need to be able to set default combination from BO in multiple shops

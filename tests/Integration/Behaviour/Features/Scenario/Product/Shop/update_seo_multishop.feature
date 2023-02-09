@@ -1,10 +1,10 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-seo
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-seo-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @clear-cache-after-feature
-@product-multi-shop
-@update-multi-shop-seo
+@product-multishop
+@update-seo-multishop
 Feature: Update product SEO options from Back Office (BO)
   As a BO user
   I need to be able to update product SEO options from BO

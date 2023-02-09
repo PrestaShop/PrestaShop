@@ -1,10 +1,10 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-basic-information
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-basic-information-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @clear-cache-after-feature
-@product-multi-shop
-@update-multi-shop-basic-information
+@product-multishop
+@update-basic-information-multishop
 Feature: Update product basic information from Back Office (BO)
   As a BO user
   I need to be able to update product basic information from BO

@@ -1,12 +1,12 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags generate-multi-shop-combination
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags generate-combination-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @clear-cache-after-feature
 @product-combination
 @generate-combination
-@product-multi-shop
-@generate-multi-shop-combination
+@product-multishop
+@generate-combination-multishop
 Feature: Generate combination from Back Office (BO) when using multi-shop feature
   As a BO user
   I need to be able to generate product combinations from BO for specified shop when using multi-shop feature

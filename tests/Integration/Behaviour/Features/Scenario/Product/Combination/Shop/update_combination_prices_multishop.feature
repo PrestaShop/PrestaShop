@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-multi-shop-prices
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-prices-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
 @update-product-prices
-@update-combination-multi-shop-prices
+@update-combination-prices-multishop
 Feature: Update product combination prices in Back Office (BO) in multi shop context
   As an employee
   I need to be able to update product combination prices from BO for multiple shops

@@ -1,12 +1,12 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags bulk-multi-shop-delete-product
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags bulk-delete-product-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
 @restore-languages-after-feature
 @reset-img-after-feature
 @clear-cache-after-feature
-@product-multi-shop
-@bulk-multi-shop-delete-product
+@product-multishop
+@bulk-delete-product-multishop
 Feature: Copy product from shop to shop.
   As a BO user I want to be able to bulk product depending on shop context.
 

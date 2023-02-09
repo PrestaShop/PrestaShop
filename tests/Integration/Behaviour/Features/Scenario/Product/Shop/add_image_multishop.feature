@@ -1,10 +1,10 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add-multishop-image
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add-image-multishop
 @restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
 @restore-shops-after-feature
 @product-image
-@add-multishop-image
+@add-image-multishop
 Feature: Add product image from Back Office (BO)
   As an employee I need to be able to add new product image in multishop context
 
