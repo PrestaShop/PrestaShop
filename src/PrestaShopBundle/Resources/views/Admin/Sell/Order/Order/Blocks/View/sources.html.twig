@@ -26,13 +26,14 @@
   {% if orderForViewing.sources.sources is not empty %}
     <div class="card mt-2 d-print-none">
       <div class="card-header">
-        <div class="row">
           <div class="col-md-6">
             <i class="material-icons">public</i>
             {{ 'Sources'|trans({}, 'Admin.Orderscustomers.Feature') }}
             <span class="badge badge-primary rounded">{{ orderForViewing.sources.sources|length }}</span>
           </div>
+        </div>
 
+      <div class="card-body">
           <ul id="order-sources-list">
             {% for source in orderForViewing.sources.sources %}
               <li>
@@ -58,6 +59,5 @@
             {% endfor %}
           </ul>
         </div>
-      </div>
     </div>
   {% endif %}
