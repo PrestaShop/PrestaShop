@@ -24,7 +24,7 @@ describe('BO - Customers - Customers : Export customers', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCustomers: number = 0;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {

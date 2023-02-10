@@ -2,7 +2,7 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import type AddressData from '@data/faker/address';
 
-import type {Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
 
 /**
  * Add address page, contains functions that can be used on the page
@@ -90,14 +90,14 @@ class AddAddress extends BOBasePage {
 
   /**
    * Fill form for add/edit address
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param addressData {AddressData} Data to set on new address form
    * @param save {boolean} True if we need to save the new address, false if not
    * @param waitForNavigation {boolean} True if we need to wait for navigation after save, false if not
    * @returns {Promise<?string>}
    */
   async createEditAddress(
-    page: Page,
+    page: Frame|Page,
     addressData: AddressData,
     save: boolean = true,
     waitForNavigation: boolean = true,
@@ -139,10 +139,10 @@ class AddAddress extends BOBasePage {
 
   /**
    * Save address
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @returns {Promise<string>}
    */
-  async saveAddress(page: Page): Promise<string> {
+  async saveAddress(page: Frame|Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.saveAddressButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }

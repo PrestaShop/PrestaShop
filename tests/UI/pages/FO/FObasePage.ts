@@ -328,9 +328,9 @@ export default class FOBasePage extends CommonPage {
   /**
    * Get shop language
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  getShopLanguage(page: Page): Promise<string|null> {
+  getShopLanguage(page: Page): Promise<string> {
     return this.getAttributeContent(page, 'html[lang]', 'lang');
   }
 
@@ -480,9 +480,19 @@ export default class FOBasePage extends CommonPage {
    * @param productName {string} Product name to search
    * @returns {Promise<boolean>}
    */
+  async isAutocompleteSearchResultVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.autocompleteSearchResult, 2000);
+  }
+
+  /**
+   * Check if there are autocomplete search result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<boolean>}
+   */
   async hasAutocompleteSearchResult(page: Page, productName:string): Promise<boolean> {
     await this.setValue(page, this.searchInput, productName);
-    return this.elementVisible(page, this.autocompleteSearchResult, 2000);
+    return this.isAutocompleteSearchResultVisible(page);
   }
 
   /**

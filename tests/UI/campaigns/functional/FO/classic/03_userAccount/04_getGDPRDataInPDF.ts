@@ -53,7 +53,7 @@ Post condition:
 describe('FO - Account : Get GDPR data in PDF', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
   let registrationDate: string;
   let lastVisitDate: string;
   let secondLastVisitDate: string;

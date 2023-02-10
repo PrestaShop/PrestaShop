@@ -3,7 +3,7 @@ import Pages from '@data/demo/pages';
 import Profiles from '@data/demo/profiles';
 import LanguageData from '@data/faker/language';
 import ProfileData from '@data/faker/profile';
-import EmployeeCreator from '@data/types/employee';
+import {EmployeeCreator} from '@data/types/employee';
 
 import {faker} from '@faker-js/faker';
 

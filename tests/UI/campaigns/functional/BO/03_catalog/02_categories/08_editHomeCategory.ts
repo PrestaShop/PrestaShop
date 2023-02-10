@@ -29,7 +29,7 @@ const baseContext: string = 'functional_BO_catalog_categories_editHomeCategory';
 describe('BO - Catalog - Categories : Edit home category', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let categoryID: string;
+  let categoryID: number;
 
   const editCategoryData: CategoryData = new CategoryData({name: 'Home'});
 
@@ -84,7 +84,7 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
   it('should go to FO and check the updated category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO', baseContext);
 
-    categoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
+    categoryID = parseInt(await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
     // View Shop
     page = await categoriesPage.viewMyShop(page);
     // Change FO language

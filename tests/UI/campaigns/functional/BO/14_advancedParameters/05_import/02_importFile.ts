@@ -100,7 +100,7 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
     it(`should upload '${fileName}' file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      const uploadSuccessText = await importPage.uploadFile(page, 'Categories', fileName);
+      const uploadSuccessText = await importPage.uploadImportFile(page, 'Categories', fileName);
       await expect(uploadSuccessText).contain(fileName);
     });
 

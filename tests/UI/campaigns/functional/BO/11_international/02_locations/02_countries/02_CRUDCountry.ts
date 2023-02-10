@@ -52,7 +52,7 @@ describe('BO - International - Countries : CRUD country', async () => {
   const createCountryData: CountryData = new CountryData({
     name: 'countryTest',
     isoCode: 'CT',
-    callPrefix: 216,
+    callPrefix: '216',
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: true,
@@ -60,7 +60,7 @@ describe('BO - International - Countries : CRUD country', async () => {
   const editCountryData: CountryData = new CountryData({
     name: 'countryTestEdit',
     isoCode: 'CT',
-    callPrefix: 333,
+    callPrefix: '333',
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: false,

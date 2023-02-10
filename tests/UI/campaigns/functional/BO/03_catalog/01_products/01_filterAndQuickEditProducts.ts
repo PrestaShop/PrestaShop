@@ -41,7 +41,7 @@ describe('BO - Catalog - Products : Filter and quick edit Products table', async
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('GEt number of products', async () => {
+  describe('Get the number of products', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -159,7 +159,7 @@ describe('BO - Catalog - Products : Filter and quick edit Products table', async
             const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
 
             if (typeof test.args.filterValue === 'object') {
-              await expect(textColumn).to.within(test.args.filterValue.min, test.args.filterValue.max);
+              await expect(parseFloat(textColumn)).to.within(test.args.filterValue.min, test.args.filterValue.max);
             } else {
               await expect(textColumn).to.contains(test.args.filterValue);
             }

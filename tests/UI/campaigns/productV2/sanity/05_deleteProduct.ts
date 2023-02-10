@@ -63,7 +63,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
       );
       await productsPage.closeSfToolBar(page);
 
-      const pageTitle: string = await productsPage.getPageTitle(page);
+      const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
@@ -77,7 +77,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
@@ -86,7 +86,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
 
       await productsPage.selectProductType(page, newProductData.type);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
+      const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -95,7 +95,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
 
       await productsPage.clickOnAddNewProduct(page);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
+      const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -104,7 +104,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
 
       await createProductsPage.closeSfToolBar(page);
 
-      const createProductMessage: string = await createProductsPage.setProduct(page, newProductData);
+      const createProductMessage = await createProductsPage.setProduct(page, newProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
@@ -115,7 +115,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
 
       await createProductsPage.goToCatalogPage(page);
 
-      const pageTitle: string = await productsPage.getPageTitle(page);
+      const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
@@ -124,31 +124,31 @@ describe('BO - Catalog - Products : Delete product', async () => {
 
       await productsPage.filterProducts(page, 'reference', newProductData.reference, 'input');
 
-      const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
+      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       await expect(numberOfProductsAfterFilter).to.equal(1);
 
-      const textColumn: string = await productsPage.getTextColumn(page, 'reference', 1);
+      const textColumn = await productsPage.getTextColumn(page, 'reference', 1);
       await expect(textColumn).to.equal(newProductData.reference);
     });
 
     it('should click on delete product button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
 
-      const isModalVisible: boolean = await productsPage.clickOnDeleteProductButton(page);
+      const isModalVisible = await productsPage.clickOnDeleteProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const textMessage: string = await productsPage.clickOnConfirmDialogButton(page);
+      const textMessage = await productsPage.clickOnConfirmDialogButton(page);
       await expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfProductsAfterReset: number = await productsPage.resetAndGetNumberOfLines(page);
+      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });

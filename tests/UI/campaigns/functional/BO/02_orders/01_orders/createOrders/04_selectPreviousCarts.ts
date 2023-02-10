@@ -29,7 +29,7 @@ import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Frame, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_selectPreviousCarts';
 
@@ -50,7 +50,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   // Variable used to identify shopping cart page
-  let shoppingCartPage: Page;
+  let shoppingCartPage: Frame|null;
   // Variable used to get the number of shopping carts
   let numberOfShoppingCarts: number;
   // Variable used to get the number of non ordered shopping carts
@@ -363,7 +363,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should get the Available stock of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockOfOrderedProduct', baseContext);
 
-      availableStockOfOrderedProduct = await stocksPage.getTextColumnFromTableStocks(page, 1, 'available');
+      availableStockOfOrderedProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       await expect(availableStockOfOrderedProduct).to.be.above(0);
     });
   });
@@ -446,15 +446,16 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCardId', baseContext);
 
       shoppingCartPage = addOrderPage.getShoppingCartIframe(page, lastShoppingCartId);
+      await expect(shoppingCartPage).to.be.not.null;
 
-      const cartId = await viewShoppingCartPage.getCartId(shoppingCartPage);
+      const cartId = await viewShoppingCartPage.getCartId(shoppingCartPage!);
       await expect(cartId).to.be.equal(`Cart #${lastShoppingCartId}`);
     });
 
     it('should check the cart total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCardTotal', baseContext);
 
-      const cartTotal = await viewShoppingCartPage.getCartTotal(shoppingCartPage);
+      const cartTotal = await viewShoppingCartPage.getCartTotal(shoppingCartPage!);
       await expect(cartTotal.toString())
         .to.be.equal((Products.demo_1.finalPrice + myCarrierCost).toFixed(2));
     });
@@ -463,7 +464,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock', baseContext);
 
       const customerInformation = await viewShoppingCartPage
-        .getCustomerInformation(shoppingCartPage);
+        .getCustomerInformation(shoppingCartPage!);
       await expect(customerInformation)
         .to.contains(`${Customers.johnDoe.socialTitle} ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`)
         .and.to.contains(Customers.johnDoe.email)
@@ -473,10 +474,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should check the order Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
 
-      const orderInformation = await viewShoppingCartPage.getOrderInformation(shoppingCartPage);
+      const orderInformation = await viewShoppingCartPage.getOrderInformation(shoppingCartPage!);
       await expect(orderInformation).to.contains('No order was created from this cart.');
 
-      const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(shoppingCartPage);
+      const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(shoppingCartPage!);
       await expect(hasButtonCreateOrderFromCart).to.be.true;
     });
 
@@ -484,7 +485,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext
         .addContextItem(this, 'testIdentifier', 'checkProductStockAvailableInCartSummaryBlock', baseContext);
 
-      const cartSummary = await viewShoppingCartPage.getTextColumn(shoppingCartPage, 'stock_available');
+      const cartSummary = await viewShoppingCartPage.getTextColumn(shoppingCartPage!, 'stock_available');
       await expect(cartSummary).to.contains(availableStockOfOrderedProduct.toString());
     });
 
@@ -502,7 +503,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
         await testContext
           .addContextItem(this, 'testIdentifier', `checkProduct${test.args.columnName}InCartSummaryBlock`, baseContext);
 
-        const cartSummary = await viewShoppingCartPage.getTextColumn(shoppingCartPage, test.args.columnName);
+        const cartSummary = await viewShoppingCartPage.getTextColumn(shoppingCartPage!, test.args.columnName);
 
         if (test.args.columnName === 'title') {
           await expect(cartSummary).to.contains(test.args.result).and.to.contains(test.args.result_2);

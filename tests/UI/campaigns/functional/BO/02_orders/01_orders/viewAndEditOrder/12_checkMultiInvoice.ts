@@ -29,6 +29,7 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import OrderShippingData from '@data/faker/orderShipping';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_checkMultiInvoice';
 
@@ -83,12 +84,11 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     ],
     paymentMethod: PaymentMethods.wirePayment,
   });
-  const carrierDataToSelect = {
+  const carrierDataToSelect: OrderShippingData = new OrderShippingData({
     trackingNumber: '',
     carrier: Carriers.myCarrier.name,
     carrierID: Carriers.myCarrier.id,
-    shippingCost: '€8.40',
-  };
+  });
 
   // Pre-condition: Disable new product page
   disableNewProductPageTest(`${baseContext}_disableNewProduct`);

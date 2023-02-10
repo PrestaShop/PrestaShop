@@ -262,8 +262,14 @@ class Category extends FOBasePage {
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
-          .getPropertyValue('display') === 'block',
+        (selector) => {
+          const element: HTMLElement|null = document.querySelector(selector);
+
+          if (element === null) {
+            return false;
+          }
+          return window.getComputedStyle(element, ':after').getPropertyValue('display') === 'block';
+        },
         this.productDescriptionDiv(id),
       );
       await page.waitForTimeout(100);
@@ -271,7 +277,7 @@ class Category extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el) => el.click()),
+      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
     ]);
   }
 

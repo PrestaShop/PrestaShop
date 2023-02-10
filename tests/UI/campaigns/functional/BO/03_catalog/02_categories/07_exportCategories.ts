@@ -23,7 +23,7 @@ Check existence of categories data in csv file
 describe('BO - Catalog - Categories : Export categories', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {

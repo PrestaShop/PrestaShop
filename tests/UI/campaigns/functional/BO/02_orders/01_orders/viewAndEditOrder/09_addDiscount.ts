@@ -23,6 +23,8 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import OrderShippingData from '@data/faker/orderShipping';
+import type {ProductDiscount} from '@data/types/product';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_addDiscount';
 
@@ -64,64 +66,65 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
   });
   const numberOfCartRules: number = 0;
   // Discount data invalid value
-  const discountDataInvalidValue = {
+  const discountDataInvalidValue: ProductDiscount = {
     name: 'Test discount',
     type: 'Percent',
     value: '10%',
   };
   // Discount percent superior to 100
-  const discountPercentSup100Value = {
+  const discountPercentSup100Value: ProductDiscount = {
     name: 'Test discount',
     type: 'Percent',
-    value: 500,
+    value: '500',
   };
   // Discount percent inferior to 0
-  const discountPercentInf0Value = {
+  const discountPercentInf0Value: ProductDiscount = {
     name: 'Test discount',
     type: 'Percent',
-    value: -2,
+    value: '-2',
   };
   // Discount percent good value
-  const discountPercentGoodValue = {
+  const discountPercentGoodValue: ProductDiscount = {
     name: 'Test discount percent',
     type: 'Percent',
-    value: 50,
+    value: '50',
   };
   // Discount amount invalid value
-  const discountAmountTextValue = {
+  const discountAmountTextValue: ProductDiscount = {
     name: 'Test discount',
     type: 'Amount',
     value: '10 euro',
   };
   // Discount amount negative value
-  const discountAmountNegativeValue = {
+  const discountAmountNegativeValue: ProductDiscount = {
     name: 'Test discount',
     type: 'Amount',
-    value: -10,
+    value: '-10',
   };
   // Discount amount greater than total
-  const discountAmountGreaterThanTotal = {
+  const discountAmountGreaterThanTotal: ProductDiscount = {
     name: 'Test discount',
     type: 'Amount',
-    value: 1000,
+    value: '1000',
   };
   // Discount amount good value
-  const discountAmountGoodValue = {
+  const discountAmountGoodValue: ProductDiscount = {
     name: 'Test discount amount',
     type: 'Amount',
-    value: 10.55,
+    value: '10.55',
   };
   // Discount amount good value
-  const discountFreeShipping = {
+  const discountFreeShipping: ProductDiscount = {
     name: 'Test discount free shipping',
     type: 'Free shipping',
+    value: '',
   };
-  const shippingDetailsData = {
+  const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
     carrier: Carriers.myCarrier.name,
     carrierID: Carriers.myCarrier.id,
-    shippingCost: '€8.40',
-  };
+  });
+  const shippingDetailsCost: string = '€8.40';
 
   // Pre-condition - Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, baseContext);
@@ -242,7 +245,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
 
       const discountValue = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'value');
       await expect(discountValue).to.equal(
-        `- €${totalOrder - (totalOrder * discountPercentGoodValue.value) / 100}`,
+        `- €${totalOrder - (totalOrder * parseFloat(discountPercentGoodValue.value)) / 100}`,
       );
     });
 
@@ -251,14 +254,14 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
 
       const totalAfterDiscount = await orderPageProductsBlock.getOrderTotalPrice(page);
       await expect(totalAfterDiscount)
-        .to.be.equal(totalOrder - (totalOrder * discountPercentGoodValue.value) / 100);
+        .to.be.equal(totalOrder - (totalOrder * parseFloat(discountPercentGoodValue.value)) / 100);
     });
 
     it('should check the total discounts value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
-      await expect(discountValue).to.equal((totalOrder * discountPercentGoodValue.value) / 100 - totalOrder);
+      await expect(discountValue).to.equal((totalOrder * parseFloat(discountPercentGoodValue.value)) / 100 - totalOrder);
     });
 
     it('should delete the discount', async function () {
@@ -327,14 +330,14 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount2', baseContext);
 
       const totalAfterDiscount = await orderPageProductsBlock.getOrderTotalPrice(page);
-      await expect(totalAfterDiscount).to.be.equal(totalOrder - discountAmountGoodValue.value);
+      await expect(totalAfterDiscount).to.be.equal(totalOrder - parseFloat(discountAmountGoodValue.value));
     });
 
     it('should check the total discounts value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue2', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
-      await expect(discountValue).to.equal(discountAmountGoodValue.value * -1);
+      await expect(discountValue).to.equal(parseFloat(discountAmountGoodValue.value) * -1);
     });
   });
 
@@ -497,7 +500,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrierDiscountValue', baseContext);
 
       const discountValue = await orderPageProductsBlock.getTextColumnFromDiscountTable(page, 'value');
-      await expect(discountValue).to.equal(`- ${shippingDetailsData.shippingCost}`);
+      await expect(discountValue).to.equal(`- ${shippingDetailsCost}`);
     });
 
     it('should check total after discount', async function () {

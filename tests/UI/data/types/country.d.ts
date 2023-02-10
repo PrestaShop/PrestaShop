@@ -2,7 +2,7 @@ type CountryCreator = {
   id?: number
   name?: string
   isoCode?: string
-  callPrefix?: number
+  callPrefix?: string
   currency?: string
   zone?: string
   needZipCode?: boolean

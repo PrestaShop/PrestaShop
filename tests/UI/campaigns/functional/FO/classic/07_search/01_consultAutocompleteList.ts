@@ -59,7 +59,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
 
     await homePage.closeAutocompleteSearch(page);
 
-    const hasAutocompleteList = await homePage.elementVisible(page, homePage.autocompleteSearchResult);
+    const hasAutocompleteList = await homePage.isAutocompleteSearchResultVisible(page);
     await expect(hasAutocompleteList).to.be.false;
   });
 

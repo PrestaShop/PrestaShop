@@ -101,8 +101,14 @@ class SearchResults extends FOBasePage {
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
-          .getPropertyValue('display') === 'block',
+        (selector) => {
+          const element: HTMLElement|null = document.querySelector(selector);
+
+          if (!element) {
+            return false;
+          }
+          return window.getComputedStyle(element, ':after').getPropertyValue('display') === 'block';
+        },
         this.productDescriptionDiv(id),
       );
       await page.waitForTimeout(100);
@@ -110,7 +116,7 @@ class SearchResults extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el) => el.click()),
+      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
     ]);
   }
 
@@ -129,7 +135,7 @@ class SearchResults extends FOBasePage {
    * @param position {number} Position of the image
    * @returns {Promise<string>}
    */
-  async selectThumbImage(page: Page, position: number): Promise<string | null> {
+  async selectThumbImage(page: Page, position: number): Promise<string> {
     await page.click(this.quickViewThumbImage(position));
     await this.waitForVisibleSelector(page, `${this.quickViewThumbImage(position)}.selected`);
 

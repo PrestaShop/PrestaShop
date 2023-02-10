@@ -186,12 +186,12 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   });
   // Data to add customized value for product
   const customizedValue: string = 'Test';
-  const customizedProduct = {
+  const customizedProduct: ProductData = new ProductData({
     name: Products.demo_14.name,
     reference: Products.demo_14.reference,
     price: Products.demo_14.priceTaxExcluded,
-    thumbnailImage: Products.demo_14.thumbImage,
-  };
+    thumbImage: Products.demo_14.thumbImage,
+  });
 
   // Pre-condition: Enable EcoTax
   enableEcoTaxTest(`${baseContext}_preTest_1`);
@@ -291,7 +291,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       await stocksPage.simpleFilter(page, Products.demo_11.name);
 
-      availableStockSimpleProduct = await stocksPage.getTextColumnFromTableStocks(page, 1, 'available');
+      availableStockSimpleProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       await expect(availableStockSimpleProduct).to.be.above(0);
     });
 
@@ -307,7 +307,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       await stocksPage.simpleFilter(page, Products.demo_1.name);
 
-      availableStockCombinationProduct = await stocksPage.getTextColumnFromTableStocks(page, 1, 'available');
+      availableStockCombinationProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       await expect(availableStockCombinationProduct).to.be.above(0);
     });
 
@@ -323,7 +323,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       await stocksPage.simpleFilter(page, Products.demo_18.name);
 
-      availableStockVirtualProduct = await stocksPage.getTextColumnFromTableStocks(page, 1, 'available');
+      availableStockVirtualProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       await expect(availableStockVirtualProduct).to.be.above(0);
     });
 
@@ -339,7 +339,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       await stocksPage.simpleFilter(page, Products.demo_14.name);
 
-      availableStockCustomizedProduct = await stocksPage.getTextColumnFromTableStocks(page, 1, 'available');
+      availableStockCustomizedProduct = parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10);
       await expect(availableStockCustomizedProduct).to.be.above(0);
     });
   });
@@ -400,7 +400,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         expect(result.description).to.equal(Products.demo_11.name),
         expect(result.reference).to.equal(Products.demo_11.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.quantityMax).to.equal(parseInt(availableStockSimpleProduct, 10)),
+        expect(result.quantityMax).to.equal(availableStockSimpleProduct),
         expect(result.price).to.equal(Products.demo_11.price),
       ]);
     });
@@ -417,7 +417,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         expect(result.description).to.equal(Products.demo_11.name),
         expect(result.reference).to.equal(Products.demo_11.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.quantityMax).to.equal(parseInt(availableStockSimpleProduct, 10)),
+        expect(result.quantityMax).to.equal(availableStockSimpleProduct),
         expect(result.price).to.equal(Products.demo_11.price * 2),
       ]);
     });
@@ -434,7 +434,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         expect(result.description).to.equal(`${Products.demo_1.name} S - White`),
         expect(result.reference).to.equal(Products.demo_1.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.quantityMax).to.equal(parseInt(availableStockCombinationProduct, 10)),
+        expect(result.quantityMax).to.equal(availableStockCombinationProduct),
         expect(result.price).to.equal(parseFloat((Products.demo_1.price - discountValue).toFixed(2))),
       ]);
     });
@@ -451,7 +451,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         expect(result.description).to.equal(Products.demo_18.name),
         expect(result.reference).to.equal(Products.demo_18.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.quantityMax).to.equal(parseInt(availableStockVirtualProduct, 10)),
+        expect(result.quantityMax).to.equal(availableStockVirtualProduct),
         expect(result.price).to.equal(Products.demo_18.price),
       ]);
     });
@@ -502,7 +502,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       const result = await addOrderPage.getProductDetailsFromTable(page, 5);
       await Promise.all([
-        expect(result.image).to.contains(customizedProduct.thumbnailImage),
+        expect(result.image).to.contains(customizedProduct.thumbImage),
         expect(result.description).to.equal(
           `${customizedProduct.name} Type your text here : ${customizedValue}`),
         expect(result.reference).to.equal(customizedProduct.reference),

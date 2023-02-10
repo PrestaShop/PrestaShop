@@ -36,7 +36,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   // Variable used to create temporary theme file
-  let filePath: string;
+  let filePath: string|null;
 
   // Variable used to create child_classic.zip file
   const renamedFilePath: string = 'child_classic.zip';

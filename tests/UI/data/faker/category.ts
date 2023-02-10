@@ -1,6 +1,6 @@
 import Groups from '@data/demo/groups';
 import type GroupData from '@data/faker/group';
-import type CategoryCreator from '@data/types/category';
+import type {CategoryCreator} from '@data/types/category';
 
 import {faker} from '@faker-js/faker';
 

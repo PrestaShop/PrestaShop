@@ -26,6 +26,7 @@ import Employees from '@data/demo/employees';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+import type {OrderHistoryMessage, OrderMessage} from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -51,8 +52,8 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
   let textMessage: string = '';
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
-  const messageData = {orderMessage: 'Delay', displayToCustomer: true, message: ''};
-  const secondMessageData = {orderMessage: 'Delay', displayToCustomer: false, message: 'test message visibility'};
+  const messageData: OrderMessage = {orderMessage: 'Delay', displayToCustomer: true, message: ''};
+  const secondMessageData: OrderMessage = {orderMessage: 'Delay', displayToCustomer: false, message: 'test message visibility'};
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
@@ -64,7 +65,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     ],
     paymentMethod: PaymentMethods.wirePayment,
   });
-  const messageToSendData = {product: '', message: 'Test customer message'};
+  const messageToSendData: OrderHistoryMessage = {product: '', message: 'Test customer message'};
 
   // Pre-condition - Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);

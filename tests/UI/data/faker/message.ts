@@ -19,11 +19,11 @@ export default class MessageData {
 
   public readonly emailAddress: string;
 
-  public readonly reference: string;
+  public reference: string;
 
   public readonly fileName: string;
 
-  public readonly message: string;
+  public message: string;
 
   /**
    * Constructor for class MessageData

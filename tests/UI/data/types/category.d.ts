@@ -14,4 +14,12 @@ type CategoryCreator = {
   metaImage?: string
 };
 
-export default CategoryCreator;
+type CategoryFilter = {
+  filterBy: string
+  value: string
+};
+
+export {
+  CategoryCreator,
+  CategoryFilter,
+};

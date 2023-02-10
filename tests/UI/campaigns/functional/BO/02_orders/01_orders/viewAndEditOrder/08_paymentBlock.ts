@@ -23,6 +23,7 @@ import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+import type {OrderPayment} from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -64,38 +65,38 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     ],
     paymentMethod: PaymentMethods.wirePayment,
   });
-  const paymentDataAmountInfTotal = {
+  const paymentDataAmountInfTotal: OrderPayment = {
     date: today,
     paymentMethod: 'Payment by check',
-    transactionID: '12156',
+    transactionID: 12156,
     amount: 12.25,
     currency: '€',
   };
-  const paymentDataAmountEqualTotal = {
+  const paymentDataAmountEqualTotal: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12190',
-    amount: (totalOrder - paymentDataAmountInfTotal.amount).toFixed(2),
+    transactionID: 12190,
+    amount: parseFloat((totalOrder - paymentDataAmountInfTotal.amount).toFixed(2)),
     currency: '€',
   };
-  const paymentDataAmountSupTotal = {
+  const paymentDataAmountSupTotal: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12639',
+    transactionID: 12639,
     amount: 30.56,
     currency: '€',
   };
-  const paymentDataWithNewCurrency = {
+  const paymentDataWithNewCurrency: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12640',
+    transactionID: 12640,
     amount: 5.25,
     currency: Currencies.mad.isoCode,
   };
-  const paymentDataAmountEqualRest = {
+  const paymentDataAmountEqualRest: OrderPayment = {
     date: today,
     paymentMethod: 'Bank transfer',
-    transactionID: '12190',
+    transactionID: 12190,
     amount: Products.demo_5.price,
     currency: '€',
   };
@@ -205,7 +206,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountInfTotal.paymentMethod),
-        expect(result.transactionID).to.equal(paymentDataAmountInfTotal.transactionID),
+        expect(result.transactionID).to.equal(paymentDataAmountInfTotal.transactionID.toString()),
         expect(result.amount).to.equal(`€${paymentDataAmountInfTotal.amount}`),
         expect(result.invoice).to.equal(''),
       ]);
@@ -236,7 +237,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountEqualTotal.paymentMethod),
-        expect(result.transactionID).to.equal(paymentDataAmountEqualTotal.transactionID),
+        expect(result.transactionID).to.equal(paymentDataAmountEqualTotal.transactionID.toString()),
         expect(result.amount).to.equal(`€${paymentDataAmountEqualTotal.amount}`),
         expect(result.invoice).to.equal(''),
       ]);
@@ -276,7 +277,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountSupTotal.paymentMethod),
-        expect(result.transactionID).to.equal(paymentDataAmountSupTotal.transactionID),
+        expect(result.transactionID).to.equal(paymentDataAmountSupTotal.transactionID.toString()),
         expect(result.amount).to.equal(`€${paymentDataAmountSupTotal.amount}`),
         expect(result.invoice).to.equal(''),
       ]);
@@ -502,7 +503,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.paymentMethod);
       await expect(paymentMethodExist, 'Payment method does not exist in invoice!').to.be.true;
 
-      const amountExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+      const amountExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount.toString());
       await expect(amountExist, 'Payment amount does not exist in invoice!').to.be.true;
     });
   });

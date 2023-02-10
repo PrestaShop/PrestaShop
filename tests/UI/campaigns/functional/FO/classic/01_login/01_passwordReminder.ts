@@ -16,7 +16,7 @@ import passwordReminderPage from '@pages/FO/passwordReminder';
 
 // Import data
 import CustomerData from '@data/faker/customer';
-import MailDevEmail from '@data/types/maildev';
+import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';

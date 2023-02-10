@@ -1,5 +1,3 @@
-import type {Page} from 'playwright';
-
 // Import pages
 import virtualProductTab from '@pages/BO/catalog/productsV2/add/virtualProductTab';
 import BOBasePage from '@pages/BO/BObasePage';
@@ -9,6 +7,11 @@ import detailsTab from '@pages/BO/catalog/productsV2/add/detailsTab';
 import stocksTab from '@pages/BO/catalog/productsV2/add/stocksTab';
 import pricingTab from '@pages/BO/catalog/productsV2/add/pricingTab';
 import packTab from '@pages/BO/catalog/productsV2/add/packTab';
+
+import type ProductData from '@data/faker/product';
+import type {ProductHeaderSummary} from '@data/types/product';
+
+import type {Page} from 'playwright';
 
 /**
  * Create Product V2 page, contains functions that can be used on the page
@@ -105,9 +108,9 @@ class CreateProduct extends BOBasePage {
   /**
    * Get product header summary
    * @param page {Page} Browser tab
-   * @returns {Promise<{reference: string, quantity: string, priceTaxIncl: string, priceTaxExc: string}>}
+   * @returns {Promise<ProductHeaderSummary>}
    */
-  async getProductHeaderSummary(page: Page): Promise<object> {
+  async getProductHeaderSummary(page: Page): Promise<ProductHeaderSummary> {
     return {
       priceTaxExc: await this.getTextContent(page, this.productHeaderTaxExcluded),
       priceTaxIncl: await this.getTextContent(page, this.productHeaderTaxIncluded),
@@ -141,7 +144,7 @@ class CreateProduct extends BOBasePage {
    * @param productData {ProductData} Data to set in new product page
    * @returns {Promise<string>}
    */
-  async setProduct(page: Page, productData: object): Promise<string> {
+  async setProduct(page: Page, productData: ProductData): Promise<string> {
     await this.setValue(page, this.productNameInput, productData.name);
 
     await descriptionTab.setProductDescription(page, productData);

@@ -24,7 +24,7 @@ import contactUsPage from '@pages/FO/contactUs';
 import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import PaymentMethods from '@data/demo/paymentMethods';
-import type ContactUsData from '@data/types/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -48,12 +48,12 @@ describe('FO - Order confirmation : Contact us', async () => {
   let page: Page;
   const filename: string = 'testfile.txt';
 
-  const contactUsData: ContactUsData = {
+  const contactUsData: MessageData = new MessageData({
     subject: 'Customer service',
     message: 'Test message to customer service for order reference',
     emailAddress: Customers.johnDoe.email,
     reference: '',
-  };
+  });
 
   // before and after functions
   before(async function () {

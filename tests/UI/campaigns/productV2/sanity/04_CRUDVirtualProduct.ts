@@ -133,7 +133,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(newProductData.price),
@@ -178,7 +178,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       const taxValue = await basicHelper.percentage(editProductData.price, 10);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price).to.equal(editProductData.price + taxValue),

@@ -20,7 +20,6 @@
       "@tools/*": ["tools/*"]
     },
     "typeRoots": ["types", "node_modules/@types"],
-    "outDir": "dist",
     "skipLibCheck": true,
     "noEmit": true
   },

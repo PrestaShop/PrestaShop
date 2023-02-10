@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import type QuickAccessData from '@data/faker/quickAccess';
+
 import type {Page} from 'playwright';
 
 /**
@@ -40,11 +42,10 @@ class AddQuickAccess extends BOBasePage {
   /**
    * Set quick access link
    * @param page {Page} Browser tab
-   * @param quickAccessLinkData {{name: string, url: string,
-   * openNewWindow: boolean}} Data to set on new quick access form
+   * @param quickAccessLinkData {QuickAccessData} Data to set on new quick access form
    * @returns {Promise<string>}
    */
-  async setQuickAccessLink(page: Page, quickAccessLinkData): Promise<string> {
+  async setQuickAccessLink(page: Page, quickAccessLinkData: QuickAccessData): Promise<string> {
     await this.setValue(page, this.nameInput, quickAccessLinkData.name);
     await this.setValue(page, this.urlInput, quickAccessLinkData.url);
     await this.setChecked(page, this.newWindowToggle(quickAccessLinkData.openNewWindow ? 'on' : 'off'));

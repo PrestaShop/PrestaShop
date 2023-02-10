@@ -98,11 +98,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         const isActionPerformed = await carriersPage.setStatus(page, 1, true);
 
         if (isActionPerformed) {
-          const resultMessage = await carriersPage.getTextContent(
-            page,
-            carriersPage.alertSuccessBlock,
-          );
-
+          const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
           await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 
@@ -191,7 +187,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         if (test.args.sortBy === 'Price') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
-          const expectedResult = await basicHelper.sortArrayNumber(sortedCarriers);
+          const expectedResult = await basicHelper.sortArray(sortedCarriers);
 
           if (test.args.orderBy === 'Ascending') {
             await expect(sortedCarriers).to.deep.equal(expectedResult);
@@ -250,11 +246,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         const isActionPerformed = await carriersPage.setStatus(page, 1, false);
 
         if (isActionPerformed) {
-          const resultMessage = await carriersPage.getTextContent(
-            page,
-            carriersPage.alertSuccessBlock,
-          );
-
+          const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
           await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 

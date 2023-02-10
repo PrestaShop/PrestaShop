@@ -175,7 +175,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
       const totalAfterDiscount = Products.demo_1.finalPrice
-        - (cartRulePriority2.discountAmount.value + cartRulePriority1.discountAmount.value);
+        - (cartRulePriority2.discountAmount!.value + cartRulePriority1.discountAmount!.value);
 
       const priceATI = await cartPage.getATIPrice(page);
       await expect(priceATI).to.equal(parseFloat(totalAfterDiscount.toFixed(2)));
@@ -186,13 +186,13 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
 
       const totalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
       await expect(totalDiscountValue)
-        .to.equal(-(cartRulePriority2.discountAmount.value + cartRulePriority1.discountAmount.value));
+        .to.equal(-(cartRulePriority2.discountAmount!.value + cartRulePriority1.discountAmount!.value));
 
       const firstDiscountValue = await cartPage.getDiscountValue(page, 1);
-      await expect(firstDiscountValue).to.equal(-(cartRulePriority1.discountAmount.value));
+      await expect(firstDiscountValue).to.equal(-(cartRulePriority1.discountAmount!.value));
 
       const secondDiscountValue = await cartPage.getDiscountValue(page, 1);
-      await expect(secondDiscountValue).to.equal(-(cartRulePriority2.discountAmount.value));
+      await expect(secondDiscountValue).to.equal(-(cartRulePriority2.discountAmount!.value));
     });
 
     it('should remove product from shopping cart', async function () {

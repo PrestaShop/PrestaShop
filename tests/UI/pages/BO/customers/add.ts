@@ -2,7 +2,7 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import type CustomerData from '@data/faker/customer';
 
-import type {Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
 
 /**
  * Add customer page, contains functions that can be used on the page
@@ -99,11 +99,11 @@ class AddCustomer extends BOBasePage {
 
   /**
    * Fill form for add/edit customer
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param customerData {CustomerData} Data to set on new customer form
    * @return {Promise<void>}
    */
-  async fillCustomerForm(page: Page, customerData: CustomerData): Promise<void> {
+  async fillCustomerForm(page: Frame|Page, customerData: CustomerData): Promise<void> {
     // Click on label for social input
     await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
 
@@ -150,12 +150,12 @@ class AddCustomer extends BOBasePage {
 
   /**
    * Fill form for add/edit customer and get successful message after saving
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param customerData {CustomerData} Data to set on new customer form
    * @param waitForNavigation {boolean} True if we need save and waitForNavigation, false if not
    * @return {Promise<string>}
    */
-  async createEditCustomer(page: Page, customerData: CustomerData, waitForNavigation: boolean = true): Promise<string> {
+  async createEditCustomer(page: Frame|Page, customerData: CustomerData, waitForNavigation: boolean = true): Promise<string> {
     // Fill form
     await this.fillCustomerForm(page, customerData);
 
@@ -185,11 +185,11 @@ class AddCustomer extends BOBasePage {
 
   /**
    * Set customer group access in form
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param customerGroup {string} Value to set on customer group input
    * @return {Promise<void>}
    */
-  async setCustomerGroupAccess(page: Page, customerGroup: string): Promise<void> {
+  async setCustomerGroupAccess(page: Frame|Page, customerGroup: string): Promise<void> {
     switch (customerGroup) {
       case 'Customer':
         await this.setCheckedWithIcon(page, this.visitorCheckbox, false);

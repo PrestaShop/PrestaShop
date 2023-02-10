@@ -1,7 +1,10 @@
-import type {Page} from 'playwright';
-
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
+
+import type {ProductPackInformation, ProductPackItem} from '@data/types/product';
+
+import type {Page} from 'playwright';
+import {ProductPackOptions, ProductStockMovement} from '@data/types/product';
 
 /**
  * Pack tab on new product V2 page, contains functions that can be used on the page
@@ -171,13 +174,13 @@ class PackTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param productInList {number} The row of product in pack
    */
-  async getProductInPackInformation(page: Page, productInList: number): Promise<object> {
+  async getProductInPackInformation(page: Page, productInList: number): Promise<ProductPackInformation> {
     await this.waitForVisibleSelector(page, this.listOfProducts);
     return {
       image: await this.getAttributeContent(page, this.productInListImage(productInList), 'src'),
       name: await this.getAttributeContent(page, this.productInListName(productInList), 'value'),
       reference: await this.getTextContent(page, this.productInListReference(productInList)),
-      quantity: await this.getAttributeContent(page, this.productInListQuantity(productInList), 'value'),
+      quantity: parseInt(await this.getAttributeContent(page, this.productInListQuantity(productInList), 'value'), 10),
     };
   }
 
@@ -186,9 +189,9 @@ class PackTab extends BOBasePage {
    * Set product in pack quantity
    * @param page {Page} Browser tab
    * @param productInList {number} The row of product in pack
-   * @param quantity {number} The product quantity to set
+   * @param quantity {number|string} The product quantity to set
    */
-  async setProductQuantity(page: Page, productInList: number, quantity: number): Promise<void> {
+  async setProductQuantity(page: Page, productInList: number, quantity: number|string): Promise<void> {
     await this.setValue(page, this.quantityInput(productInList), quantity);
   }
 
@@ -223,15 +226,14 @@ class PackTab extends BOBasePage {
   /**
    * Add combination
    * @param page {Page} Browser tab
-   * @param packData {object} Data of the pack
+   * @param packData {ProductPackItem[]} Data of the pack
    * @returns {Promise<void>}
    */
-  async setPackOfProducts(page: Page, packData: object): Promise<void> {
+  async setPackOfProducts(page: Page, packData: ProductPackItem[]): Promise<void> {
     await this.waitForSelectorAndClick(page, this.packTabLink);
-    const keys: string[] = Object.keys(packData);
 
-    for (let i = 0; i < keys.length; i += 1) {
-      await this.addProductToPack(page, packData[keys[i]].reference, packData[keys[i]].quantity);
+    for (let i = 0; i < packData.length; i += 1) {
+      await this.addProductToPack(page, packData[i].reference, packData[i].quantity);
     }
   }
 
@@ -240,7 +242,7 @@ class PackTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param movementRow {number} Movement row in table stock movements
    */
-  async getStockMovement(page: Page, movementRow: number): Promise<object> {
+  async getStockMovement(page: Page, movementRow: number): Promise<ProductStockMovement> {
     return {
       dateTime: await this.getTextContent(page, this.dateTimeRowInTable(movementRow - 1)),
       employee: await this.getTextContent(page, this.employeeRowInTable(movementRow - 1)),
@@ -296,9 +298,9 @@ class PackTab extends BOBasePage {
   /**
    * Edit pack of products
    * @param page {Page} Browser tab
-   * @param packData {object} Data to edit pack of products
+   * @param packData {ProductPackOptions} Data to edit pack of products
    */
-  async editPackOfProducts(page: Page, packData: object): Promise<void> {
+  async editPackOfProducts(page: Page, packData: ProductPackOptions): Promise<void> {
     await this.setValue(page, this.editQuantityInput, packData.quantity);
     await this.setValue(page, this.minimalQuantityInput, packData.minimalQuantity);
 

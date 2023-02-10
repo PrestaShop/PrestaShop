@@ -38,7 +38,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCarriers: number = 0;
-  let carrierID: string = '0';
+  let carrierID: number = 0;
 
   const createCarrierData: CarrierData = new CarrierData({freeShipping: false, zoneID: 4, allZones: false});
   const editCarrierData: CarrierData = new CarrierData({
@@ -126,7 +126,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
         createCarrierData.name,
       );
 
-      carrierID = await carriersPage.getTextColumn(page, 1, 'id_carrier');
+      carrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
       const name = await carriersPage.getTextColumn(page, 1, 'name');
       await expect(name).to.contains(createCarrierData.name);
@@ -256,7 +256,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
         editCarrierData.name,
       );
 
-      carrierID = await carriersPage.getTextColumn(page, 1, 'id_carrier');
+      carrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
       const name = await carriersPage.getTextColumn(page, 1, 'name');
       await expect(name).to.contains(editCarrierData.name);

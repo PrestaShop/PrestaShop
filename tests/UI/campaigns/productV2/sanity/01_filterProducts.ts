@@ -146,8 +146,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
           const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
 
-          if (test.args.filterBy === 'id_product' || test.args.filterBy === 'price'
-            || test.args.filterBy === 'quantity') {
+          if (typeof test.args.filterValue !== 'string') {
             await expect(textColumn).to.within(test.args.filterValue.min, test.args.filterValue.max);
           } else if (test.args.filterBy === 'active') {
             await expect(textColumn).to.be.true;

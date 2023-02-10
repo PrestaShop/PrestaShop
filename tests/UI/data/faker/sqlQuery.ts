@@ -15,7 +15,7 @@ export default class SqlQueryData {
 
   public readonly tableName: string;
 
-  public readonly sqlQuery: string;
+  public sqlQuery: string;
 
   /**
    * Constructor for class SqlQueryData

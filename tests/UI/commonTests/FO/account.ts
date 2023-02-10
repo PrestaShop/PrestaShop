@@ -79,7 +79,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
 }
 
 function createAddressTest(
-  customerLoginData: object,
+  customerLoginData: CustomerData,
   addressData: AddressData,
   baseContext: string = 'commonTests-createAddressTest',
 ): void {

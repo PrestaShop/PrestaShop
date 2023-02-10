@@ -27,7 +27,7 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
   let browserContext: BrowserContext;
   let page: Page;
 
-  let shopID: string = '0';
+  let shopID: number = 0;
   const createShopData: ShopData = new ShopData({shopGroup: 'Default', categoryRoot: 'Home'});
   const updateShopData: ShopData = new ShopData({shopGroup: 'Default', categoryRoot: 'Home'});
 
@@ -107,7 +107,7 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
       const numberOfShops = await shopPage.getNumberOfElementInGrid(page);
       await expect(numberOfShops).to.be.above(0);
 
-      shopID = await shopPage.getTextColumn(page, 1, 'id_shop');
+      shopID = parseInt(await shopPage.getTextColumn(page, 1, 'id_shop'), 10);
     });
   });
 

@@ -9,6 +9,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import categoriesPage from '@pages/BO/catalog/categories';
 
+// Import data
+import {CategoryFilter} from '@data/types/category';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -18,11 +21,11 @@ let numberOfCategories: number;
 
 /**
  * Function to bulk delete categories
- * @param categoryData {{ filterBy: string, value: string }} Category to delete
+ * @param categoryData {CategoryFilter} Category to delete
  * @param baseContext {string} String to identify the test
  */
 function bulkDeleteCategoriesTest(
-  categoryData: { filterBy: string, value: string },
+  categoryData: CategoryFilter,
   baseContext: string = 'commonTests-bulkDeleteCategoriesTest',
 ): void {
   describe(`POST-TEST: Bulk delete categories (filtered by ${categoryData.filterBy} "${categoryData.value}")`, async () => {

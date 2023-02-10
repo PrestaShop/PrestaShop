@@ -55,7 +55,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   let orderReference: string;
   let creditSlipID: string;
   let dateIssued: string;
-  let filePath: string;
+  let filePath: string|null;
 
   const customerData: CustomerData = new CustomerData();
   const addressData: AddressData = new AddressData({
