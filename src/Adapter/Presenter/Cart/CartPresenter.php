@@ -316,7 +316,7 @@ class CartPresenter implements PresenterInterface
      */
     public function present($cart, $shouldSeparateGifts = false)
     {
-        $cache_id = 'presentedCart_' . (int)$shouldSeparateGifts;
+        $cache_id = 'presentedCart_' . (int) $shouldSeparateGifts;
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
