@@ -87,7 +87,7 @@ describe('BO - International - States : CRUD state', async () => {
       const textResult = await addStatePage.createEditState(page, createStateData);
       await expect(textResult).to.to.contains(statesPage.successfulCreationMessage);
 
-      const numberOfStatesAfterCreation = await statesPage.getNumberOfElementInGrid(page);
+      const numberOfStatesAfterCreation = await statesPage.getNumberOfElement(page);
       await expect(numberOfStatesAfterCreation).to.be.equal(numberOfStates + 1);
     });
   });
@@ -97,14 +97,14 @@ describe('BO - International - States : CRUD state', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await statesPage.filterStates(page, 'input', 'a!name', createStateData.name);
+      await statesPage.filterStates(page, 'input', 'name', createStateData.name);
 
       // Check number of states
       const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
       await expect(numberOfStatesAfterFilter).to.be.at.least(1);
 
       // row = 1 (first row)
-      const textColumn = await statesPage.getTextColumn(page, 1, 'a!name');
+      const textColumn = await statesPage.getTextColumn(page, 1, 'name');
       await expect(textColumn).to.contains(createStateData.name);
     });
 
@@ -133,13 +133,13 @@ describe('BO - International - States : CRUD state', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await statesPage.filterStates(page, 'input', 'a!name', editStateData.name);
+      await statesPage.filterStates(page, 'input', 'name', editStateData.name);
 
       // Check number of state
       const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
       await expect(numberOfStatesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await statesPage.getTextColumn(page, 1, 'a!name');
+      const textColumn = await statesPage.getTextColumn(page, 1, 'name');
       await expect(textColumn).to.contains(editStateData.name);
     });
 
