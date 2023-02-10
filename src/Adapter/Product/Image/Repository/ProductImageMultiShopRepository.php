@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -94,11 +95,19 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      */
     public function getImages(ProductId $productId, ShopConstraint $shopConstraint): array
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Shop group constraint is not supported');
+        }
+
+        if ($shopConstraint->getShopId()) {
+            $this->productMultiShopRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
+        }
+
         return array_map(
             function (ImageId $imageId) use ($shopConstraint): Image {
                 return $this->getByShopConstraint($imageId, $shopConstraint);
             },
-            $this->getImagesIds($productId, $shopConstraint)
+            $this->getImageIds($productId, $shopConstraint)
         );
     }
 
@@ -108,7 +117,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      *
      * @return ImageId[]
      */
-    public function getImagesIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    public function getImageIds(ProductId $productId, ShopConstraint $shopConstraint): array
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('i.id_image')
@@ -141,6 +150,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
                     ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
                 ;
             } else {
+                $this->productMultiShopRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
                 $qb->andWhere('img_shop.id_shop = :shopId')
                     ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
                 ;

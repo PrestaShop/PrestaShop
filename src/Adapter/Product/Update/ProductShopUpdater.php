@@ -266,7 +266,7 @@ class ProductShopUpdater
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         $targetImageIds = array_map(static function (ImageId $imageId): int {
             return $imageId->getValue();
-        }, $this->productImageMultiShopRepository->getImagesIds($productId, ShopConstraint::shop($targetShopId->getValue())));
+        }, $this->productImageMultiShopRepository->getImageIds($productId, ShopConstraint::shop($targetShopId->getValue())));
 
         foreach ($imagesFromSourceShop as $image) {
             // skip image if it is already associated with the target shop

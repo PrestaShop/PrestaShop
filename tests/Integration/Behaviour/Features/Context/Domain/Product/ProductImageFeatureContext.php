@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAs
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
@@ -499,6 +500,21 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         try {
             $this->getProductImages($productReference, ShopConstraint::allShops());
         } catch (InvalidShopConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I try to get product ":productReference" images for shop ":shopReference"
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     */
+    public function tryToGetProductImagesForShop(string $productReference, string $shopReference): void
+    {
+        try {
+            $this->getProductImages($productReference, ShopConstraint::shop($this->getSharedStorage()->get($shopReference)));
+        } catch (ShopAssociationNotFound $e) {
             $this->setLastException($e);
         }
     }

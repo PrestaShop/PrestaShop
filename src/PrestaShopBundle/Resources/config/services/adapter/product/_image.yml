@@ -42,6 +42,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages

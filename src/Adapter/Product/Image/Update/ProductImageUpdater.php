@@ -170,9 +170,6 @@ class ProductImageUpdater
         ];
 
         try {
-            //@todo: Does this have a related tests at all?
-            // needs additional testing. It insert productId 0 and throws CannotUpdateProductImageException,
-            // because it seems to not load the image fully. id_product and id_image are null.
             $positionUpdate = $this->positionUpdateFactory->buildPositionUpdate($positionsData, $this->positionDefinition);
             $this->positionUpdater->update($positionUpdate);
         } catch (PositionDataException|PositionUpdateException $e) {

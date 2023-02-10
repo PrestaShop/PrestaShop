@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -55,15 +56,23 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     private $productImageUrlFactory;
 
     /**
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
+
+    /**
      * @param ProductImageMultiShopRepository $productImageRepository
      * @param ProductImagePathFactory $productImageUrlFactory
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
         ProductImageMultiShopRepository $productImageRepository,
-        ProductImagePathFactory $productImageUrlFactory
+        ProductImagePathFactory $productImageUrlFactory,
+        ProductMultiShopRepository $productRepository
     ) {
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -75,15 +84,15 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
             throw new InvalidShopConstraintException('Only single shop constraint is supported');
         }
 
-        $coverId = $this->productImageRepository->findCoverImageId(
-            $query->getProductId(),
-            $query->getShopConstraint()->getShopId()
-        );
+        $shopId = $query->getShopConstraint()->getShopId();
+        $productId = $query->getProductId();
+        $this->productRepository->assertProductIsAssociatedToShop($productId, $shopId);
+        $coverId = $this->productImageRepository->findCoverImageId($productId, $shopId);
 
         // we still use hardcoded AllShops constraint here to get images for all the shops
         // but when we format the image we will check if it is cover for the shopId from query,
         // because cover is the only property of image that might differ between shops
-        $images = $this->productImageRepository->getImages($query->getProductId(), ShopConstraint::allShops());
+        $images = $this->productImageRepository->getImages($productId, ShopConstraint::allShops());
 
         $productImages = [];
         foreach ($images as $image) {

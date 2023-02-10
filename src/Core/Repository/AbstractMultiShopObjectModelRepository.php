@@ -185,14 +185,18 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
      * @param int $id
      * @param string $objectModelClassName
      * @param ShopId $shopId
-     * @param string $shopAssociationClass
+     * @param string $shopAssociationExceptionClass
      *
      * @throws ShopAssociationNotFound
      */
-    protected function checkShopAssociation(int $id, string $objectModelClassName, ShopId $shopId, string $shopAssociationClass = ShopAssociationNotFound::class): void
-    {
+    protected function checkShopAssociation(
+        int $id,
+        string $objectModelClassName,
+        ShopId $shopId,
+        string $shopAssociationExceptionClass = ShopAssociationNotFound::class
+    ): void {
         if (!$this->hasShopAssociation($id, $objectModelClassName, $shopId)) {
-            throw new $shopAssociationClass(sprintf(
+            throw new $shopAssociationExceptionClass(sprintf(
                 'Could not find association between %s %d and Shop %d',
                 $objectModelClassName,
                 $id,
