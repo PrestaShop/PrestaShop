@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Combination\CombinationSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
@@ -50,6 +51,7 @@ class CombinationStockType extends TranslatorAwareType
         $builder
             ->add('quantities', QuantityType::class, [
                 'product_id' => $options['product_id'],
+                'product_type' => ProductType::TYPE_COMBINATIONS,
             ])
             ->add('options', StockOptionsType::class)
             ->add('available_date', DatePickerType::class, [
