@@ -134,7 +134,7 @@ class ImageRetriever
     }
 
     /**
-     * @param Product|Store|Category $object
+     * @param Product|Store|Category|Manufacturer|Supplier $object
      * @param int $id_image
      *
      * @return array|null
@@ -147,24 +147,32 @@ class ImageRetriever
             return null;
         }
 
+        // Resolve functions we will use to get image links from Link class
         if (get_class($object) === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
-            $root = _PS_PRODUCT_IMG_DIR_;
+            // Product images are the only exception in path structure, they are placed in folder
+            // tree according to their ID.
             $imageFolderPath = implode(DIRECTORY_SEPARATOR, [
-                rtrim($root, DIRECTORY_SEPARATOR),
+                rtrim(_PS_PRODUCT_IMG_DIR_, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
             ]);
         } elseif (get_class($object) === 'Store') {
             $type = 'stores';
             $getImageURL = 'getStoreImageLink';
-            $root = _PS_STORE_IMG_DIR_;
-            $imageFolderPath = rtrim($root, DIRECTORY_SEPARATOR);
+            $imageFolderPath = rtrim(_PS_STORE_IMG_DIR_, DIRECTORY_SEPARATOR);
+        } elseif (get_class($object) === 'Manufacturer') {
+            $type = 'manufacturers';
+            $getImageURL = 'getManufacturerImageLink';
+            $imageFolderPath = rtrim(_PS_MANU_IMG_DIR_, DIRECTORY_SEPARATOR);
+        } elseif (get_class($object) === 'Supplier') {
+            $type = 'suppliers';
+            $getImageURL = 'getSupplierImageLink';
+            $imageFolderPath = rtrim(_PS_SUPP_IMG_DIR_, DIRECTORY_SEPARATOR);
         } else {
             $type = 'categories';
             $getImageURL = 'getCatImageLink';
-            $root = _PS_CAT_IMG_DIR_;
-            $imageFolderPath = rtrim($root, DIRECTORY_SEPARATOR);
+            $imageFolderPath = rtrim(_PS_CAT_IMG_DIR_, DIRECTORY_SEPARATOR);
         }
 
         $urls = [];
@@ -200,7 +208,15 @@ class ImageRetriever
             // The format is decided by ImageManager
             if (!$this->isMultipleImageFormatFeatureActive) {
                 $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
-                $sources['jpg'] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], 'jpg');
+
+                // Get URL of the thumbnail
+                // Manufacturer and supplier use only IDs
+                if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
+                    $sources['jpg'] = $this->link->$getImageURL($id_image, $image_type['name'], 'jpg');
+                // Products, categories and stores pass both rewrite and ID
+                } else {
+                    $sources['jpg'] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], 'jpg');
+                }
 
                 if ($generateHighDpiImages) {
                     $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
@@ -209,7 +225,14 @@ class ImageRetriever
             } else {
                 foreach ($configuredImageFormats as $imageFormat) {
                     $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
-                    $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
+
+                    // Manufacturer and supplier use only IDs
+                    if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
+                        $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
+                    // Products, categories and stores pass both rewrite and ID
+                    } else {
+                        $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
+                    }
 
                     if ($generateHighDpiImages) {
                         $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
