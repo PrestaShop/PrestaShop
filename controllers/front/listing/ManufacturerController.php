@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
+use PrestaShop\PrestaShop\Adapter\Presenter\Manufacturer\ManufacturerPresenter;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
@@ -35,6 +36,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /** @var Manufacturer|null */
     protected $manufacturer;
     protected $label;
+
+    /** @var ManufacturerPresenter */
+    protected $manufacturerPresenter;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -71,6 +75,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 $this->canonicalRedirection();
             }
         }
+
+        // Initialize presenter, we will use it for all cases
+        $this->manufacturerPresenter = new ManufacturerPresenter($this->context->link);
 
         parent::init();
     }
@@ -145,7 +152,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
      */
     protected function assignManufacturer()
     {
-        $manufacturerVar = $this->objectPresenter->present($this->manufacturer);
+        $manufacturerVar = $this->manufacturerPresenter->present(
+            $this->manufacturer,
+            $this->context->language
+        );
 
         $filteredManufacturer = Hook::exec(
             'filterManufacturerContent',
@@ -199,17 +209,15 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public function getTemplateVarManufacturers()
     {
         $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id);
-        $manufacturers_for_display = [];
 
-        foreach ($manufacturers as $manufacturer) {
-            $manufacturers_for_display[$manufacturer['id_manufacturer']] = $manufacturer;
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['text'] = $manufacturer['short_description'];
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['image'] = $this->context->link->getManufacturerImageLink($manufacturer['id_manufacturer'], 'small_default');
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getManufacturerLink($manufacturer['id_manufacturer']);
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', ['%number%' => $manufacturer['nb_products']], 'Shop.Theme.Catalog')) : $this->trans('%number% product', ['%number%' => $manufacturer['nb_products']], 'Shop.Theme.Catalog');
+        foreach ($manufacturers as &$manufacturer) {
+            $manufacturer = $this->manufacturerPresenter->present(
+                $manufacturer,
+                $this->context->language
+            );
         }
 
-        return $manufacturers_for_display;
+        return $manufacturers;
     }
 
     public function getListingLabel()

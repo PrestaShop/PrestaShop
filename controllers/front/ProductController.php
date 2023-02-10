@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Manufacturer\ManufacturerPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -434,15 +435,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product_for_template = $filteredProduct['object'];
             }
 
-            $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
-
-            $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
-            $undefinedImage = $this->context->link->getManufacturerImageLink(0);
-            if ($manufacturerImageUrl === $undefinedImage) {
-                $manufacturerImageUrl = null;
-            }
-
-            $productBrandUrl = $this->context->link->getManufacturerLink($productManufacturer->id);
+            $manufacturerPresenter = new ManufacturerPresenter($this->context->link);
+            $productManufacturer = $manufacturerPresenter->present(
+                new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
+                $this->context->language
+            );
 
             $this->context->smarty->assign([
                 'priceDisplay' => $priceDisplay,
@@ -453,8 +450,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product' => $product_for_template,
                 'displayUnitPrice' => !empty($this->product->unity) && $this->product->unit_price > 0.000000,
                 'product_manufacturer' => $productManufacturer,
-                'manufacturer_image_url' => $manufacturerImageUrl,
-                'product_brand_url' => $productBrandUrl,
+                'manufacturer_image_url' => $productManufacturer['image']['small']['url'],
+                'product_brand_url' => $productManufacturer['url'],
             ]);
 
             // Assign attribute groups to the template
