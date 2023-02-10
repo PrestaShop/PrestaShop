@@ -34,11 +34,13 @@ use ImageManager;
 use ImageType;
 use Language;
 use Link;
+use Manufacturer;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use Store;
+use Supplier;
 
 /**
  * This class is mainly responsible of Product images.
