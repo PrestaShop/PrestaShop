@@ -34,7 +34,7 @@ class AdminImagesControllerCore extends AdminController
 {
     protected $start_time = 0;
     protected $max_execution_time = 7200;
-    protected $display_move;
+    protected $display_move = false;
 
     /**
      * @var bool
@@ -72,20 +72,6 @@ class AdminImagesControllerCore extends AdminController
             'suppliers' => ['title' => $this->trans('Suppliers', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
             'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
         ];
-
-        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
-        $this->display_move = false;
-        $dir = _PS_PRODUCT_IMG_DIR_;
-        if (is_dir($dir)) {
-            if ($dh = opendir($dir)) {
-                while (($file = readdir($dh)) !== false && $this->display_move == false) {
-                    if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
-                        $this->display_move = true;
-                    }
-                }
-                closedir($dh);
-            }
-        }
     }
 
     public function init()
@@ -226,18 +212,6 @@ class AdminImagesControllerCore extends AdminController
                 'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
             ],
         ];
-
-        if ($this->display_move) {
-            $this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = [
-                'title' => $this->trans('Use the legacy image filesystem', [], 'Admin.Design.Feature'),
-                'hint' => $this->trans('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.', [], 'Admin.Design.Help'),
-                'validation' => 'isBool',
-                'cast' => 'intval',
-                'required' => false,
-                'type' => 'bool',
-                'visibility' => Shop::CONTEXT_ALL,
-            ];
-        }
 
         $this->fields_form = [
             'legend' => [
