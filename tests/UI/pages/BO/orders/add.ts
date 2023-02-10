@@ -421,12 +421,10 @@ class AddOrder extends BOBasePage {
 
     const customerFrame = await page.frame({url: /sell\/customers\/new/gmi});
 
-    await addCustomerPage.fillCustomerForm(customerFrame, customerData);
+    await addCustomerPage.closeSfToolBar(customerFrame);
+    await addCustomerPage.createEditCustomer(customerFrame, customerData, false);
 
-    await Promise.all([
-      customerFrame.click(addCustomerPage.saveCustomerButton),
-      this.waitForHiddenSelector(page, this.iframe),
-    ]);
+    await this.waitForHiddenSelector(page, this.iframe);
 
     return this.getCustomerNameFromResult(page);
   }

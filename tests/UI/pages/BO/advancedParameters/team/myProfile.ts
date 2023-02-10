@@ -28,7 +28,7 @@ class MyProfile extends EmployeeBasePage {
 
   private readonly avatarFileInput: string;
 
-  public readonly enableGravatarInput: (toggle: number) => string;
+  private readonly enableGravatarInput: (toggle: number) => string;
 
   /**
    * @constructs
@@ -88,7 +88,20 @@ class MyProfile extends EmployeeBasePage {
    * @returns {Promise<string>}
    */
   async getInputValue(page: Page, input: string): Promise<string> {
-    return page.inputValue(input);
+    let inputSelector: string;
+
+    switch (input) {
+      case 'firstname':
+        inputSelector = this.firstNameInput;
+        break;
+      case 'lastname':
+        inputSelector = this.lastNameInput;
+        break;
+      default:
+        throw new Error(`Field ${input} was not found`);
+    }
+
+    return page.inputValue(inputSelector);
   }
 
   /**
@@ -107,6 +120,14 @@ class MyProfile extends EmployeeBasePage {
    */
   async getAlertError(page: Page): Promise<string> {
     return this.getAlertDangerBlockParagraphContent(page);
+  }
+
+  /**
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isGravatarEnabled(page: Page): Promise<boolean> {
+    return this.isChecked(page, this.enableGravatarInput(1));
   }
 }
 

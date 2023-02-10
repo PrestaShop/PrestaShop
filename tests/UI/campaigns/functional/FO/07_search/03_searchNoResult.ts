@@ -53,7 +53,7 @@ describe('FO - Search Page : Search product', async () => {
     const hasResults = await searchResultsPage.hasResults(page);
     await expect(hasResults, 'There are results!').to.be.false;
 
-    const searchInputValue = await searchResultsPage.getInputValue(page, searchResultsPage.searchInput);
+    const searchInputValue = await searchResultsPage.getSearchValue(page);
     await expect(searchInputValue, 'A search value exists').to.be.equal('te');
   });
 
@@ -68,7 +68,7 @@ describe('FO - Search Page : Search product', async () => {
     const hasResults = await searchResultsPage.hasResults(page);
     await expect(hasResults, 'There are results!').to.be.false;
 
-    const searchInputValue = await searchResultsPage.getInputValue(page, searchResultsPage.searchInput);
+    const searchInputValue = await searchResultsPage.getSearchValue(page);
     await expect(searchInputValue, 'A search value exists').to.be.equal('');
   });
 });
