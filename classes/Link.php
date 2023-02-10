@@ -978,25 +978,21 @@ class LinkCore
 
     /**
      * Returns a link to a product image for display
-     * Note: the new image filesystem stores product images in subdirectories of img/p/.
+     * Note: image filesystem stores product images in subdirectories of img/p/.
      *
-     * @param string $name rewrite link of the image
-     * @param string $ids id part of the image filename - can be "id_product-id_image" (legacy support, recommended) or "id_image" (new)
+     * @param string $name Rewrite link of the image
+     * @param string $idImage ID of product image
      * @param string|null $type
      *
      * @return string
      */
-    public function getImageLink($name, $ids, $type = null, string $extension = 'jpg')
+    public function getImageLink($name, $idImage, $type = null, string $extension = 'jpg')
     {
-        // legacy mode or default image
-        $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
-
-        // if ids if of the form id_product-id_image, we want to extract the id_image part
-        $splitIds = explode('-', $ids);
-        $idImage = (isset($splitIds[1]) ? $splitIds[1] : $splitIds[0]);
         $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+        // If friendly URLs are enabled
         if ($this->allow) {
             $uriPath = __PS_BASE_URI__ . $idImage . ($type ? '-' . $type : '') . $theme . '/' . $name . '.' . $extension;
+        // If friendly URLs are disabled
         } else {
             $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . $theme . '.' . $extension;
         }

@@ -442,6 +442,7 @@ class ImageCore extends ObjectModel
                 $newPath = $imageNew->getPathForCreation();
                 foreach ($imagesTypes as $imageType) {
                     if (file_exists(_PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg')) {
+                        $imageNew->createImgFolder();
                         copy(
                             _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
                         $newPath . '-' . $imageType['name'] . '.jpg'
