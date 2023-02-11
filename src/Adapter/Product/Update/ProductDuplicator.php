@@ -58,9 +58,6 @@ use Shop;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @todo for now this service is mainly oriented for single shop (only prices are handled for multi shop)
- *       This service will likely have many things in common with ProductShopUpdater::copyToShop method, so it
- *       might be interesting to refacto and merge them into one at some point
  * Duplicates product
  */
 class ProductDuplicator extends AbstractMultiShopObjectModelRepository

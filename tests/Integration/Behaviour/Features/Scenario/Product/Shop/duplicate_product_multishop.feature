@@ -589,3 +589,46 @@ Feature: Copy product from shop to shop.
     And product productWithFieldsSecondGroup is not associated to shop shop4
     # The default shop is shop3 as it's the first associated one in the second group
     And default shop for product productWithFieldsSecondGroup is shop3
+
+  Scenario: I duplicate a product all its categories are correctly copied
+    Given category "home" in default language named "Home" exists
+    And category "home" is the default one
+    And category "men" in default language named "Men" exists
+    And category "clothes" in default language named "Clothes" exists
+    And I edit home category "home" with following details:
+      | associated shops | shop1,shop2,shop3,shop4 |
+    And I edit category "clothes" with following details:
+      | associated shops | shop1,shop2,shop3,shop4 |
+    And I edit category "men" with following details:
+      | associated shops | shop1,shop2,shop3,shop4 |
+    And I add product "productWithCategories" to shop shop1 with following information:
+      | name[en-US] | smart sunglasses   |
+      | name[fr-FR] | lunettes de soleil |
+      | type        | standard           |
+    And I assign product productWithCategories to following categories:
+      | categories       | [home, men, clothes] |
+      | default category | clothes              |
+    And I copy product productWithCategories from shop shop1 to shop shop2
+    And I copy product productWithCategories from shop shop1 to shop shop3
+    And I copy product productWithCategories from shop shop1 to shop shop4
+    # Duplicate on one shop
+    When I duplicate product productWithCategories to a productWithCategoriesCopyShop for shop shop1
+    Then product productWithCategoriesCopyShop should be assigned to following categories for shop shop1:
+      | id reference | name    | is default |
+      | home         | Home    | false      |
+      | men          | Men     | false      |
+      | clothes      | Clothes | true       |
+    # Duplicate on one shop group
+    When I duplicate product productWithCategories to a productWithCategoriesCopyShop for shop group default_shop_group
+    Then product productWithCategoriesCopyShop should be assigned to following categories for shops "shop1,shop2":
+      | id reference | name    | is default |
+      | home         | Home    | false      |
+      | men          | Men     | false      |
+      | clothes      | Clothes | true       |
+    # Duplicate on all shops
+    When I duplicate product productWithCategories to a productWithCategoriesCopyShop for all shops
+    Then product productWithCategoriesCopyShop should be assigned to following categories for shops "shop1,shop2,shop3,shop4":
+      | id reference | name    | is default |
+      | home         | Home    | false      |
+      | men          | Men     | false      |
+      | clothes      | Clothes | true       |
