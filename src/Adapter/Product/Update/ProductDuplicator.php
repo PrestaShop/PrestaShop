@@ -425,10 +425,19 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private function duplicateRelatedProducts(int $oldProductId, int $newProductId): void
     {
-        /* @see Product::duplicateAccessories() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateAccessories'],
-            [$oldProductId, $newProductId],
+        $oldRows = $this->getRows(
+            'accessory',
+            ['id_product_1' => $oldProductId],
+            CannotDuplicateProductException::FAILED_DUPLICATE_RELATED_PRODUCTS
+        );
+
+        if (empty($oldRows)) {
+            return;
+        }
+        $newRows = $this->replaceInRows($oldRows, ['id_product_1' => $newProductId]);
+        $this->bulkInsert(
+            'accessory',
+            $newRows,
             CannotDuplicateProductException::FAILED_DUPLICATE_RELATED_PRODUCTS
         );
     }
