@@ -27,9 +27,9 @@
 
 {{ form_start(cmsPageForm, {'attr': {'data-id': cmsPageId|default(0)}}) }}
 <div class="card">
-  <div class="card-header">
+  <h3 class="card-header">
     {{ 'Page'|trans({}, 'Admin.Shopparameters.Feature') }}
-  </div>
+  </h3>
   <div class="card-body">
     <div class="form-wrapper">
       {{ form_widget(cmsPageForm) }}

@@ -232,6 +232,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsCategoryParentId' => $categoryParentId,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'layoutTitle' => $this->trans('New page', 'Admin.Actions'),
             ]
         );
     }
@@ -309,6 +310,13 @@ class CmsPageController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'previewUrl' => $previewUrl,
+                'layoutTitle' => $this->trans(
+                    'Editing page %name%',
+                    'Admin.Actions',
+                    [
+                        '%name%' => $editableCmsPage->getLocalizedTitle()[$this->getContextLangId()],
+                    ]
+                ),
             ]
         );
     }
@@ -358,6 +366,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'layoutTitle' => $this->trans('New page category', 'Admin.Actions'),
             ]
         );
     }
@@ -423,6 +432,13 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsCategoryParentId' => $cmsCategoryParentId,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'layoutTitle' => $this->trans(
+                    'Editing page category %name%',
+                    'Admin.Actions',
+                    [
+                        '%name%' => $cmsPageCategoryForm->getData()['name'][$this->getContextLangId()],
+                    ]
+                ),
             ]
         );
     }

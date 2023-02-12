@@ -81,6 +81,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'merchandiseReturnsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'merchandiseReturnsOptionsForm' => $optionsForm->createView(),
+            'enableSidebar' => true,
         ]);
     }
 

@@ -101,6 +101,7 @@ class ApplicationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
             'enableSidebar' => true,
             'applicationForm' => $authorizedApplicationForm->createView(),
+            'layoutTitle' => $this->trans('New authorized application', 'Admin.Actions'),
         ]);
     }
 
@@ -139,6 +140,13 @@ class ApplicationController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'applicationForm' => $authorizedApplicationForm->createView(),
             'editableApplication' => $editableApplication,
+            'layoutTitle' => $this->trans(
+                'Editing application %application_name%',
+                'Admin.Actions',
+                [
+                    '%application_name%' => $editableApplication->getname(),
+                ]
+            ),
         ]);
     }
 

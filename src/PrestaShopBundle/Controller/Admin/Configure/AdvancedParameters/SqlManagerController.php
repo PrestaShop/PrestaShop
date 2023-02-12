@@ -191,7 +191,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', [
-            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New SQL request', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
@@ -244,7 +244,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
-            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Editing SQL request %request%', 'Admin.Actions', ['%request%' => $sqlRequestForm->getData()['name']]),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
@@ -344,7 +344,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Result of SQL request', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'sqlRequestResult' => $sqlRequestExecutionResult,

@@ -81,6 +81,7 @@ class LanguageController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'enableSidebar' => true,
         ]);
     }
 
@@ -141,6 +142,7 @@ class LanguageController extends FrameworkBundleAdminController
             'languageForm' => $languageForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New language', 'Admin.Actions'),
         ]);
     }
 
@@ -200,6 +202,13 @@ class LanguageController extends FrameworkBundleAdminController
             'editableLanguage' => $editableLanguage,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing language %name%',
+                'Admin.Actions',
+                [
+                    '%name%' => $editableLanguage->getName(),
+                ]
+            ),
         ]);
     }
 

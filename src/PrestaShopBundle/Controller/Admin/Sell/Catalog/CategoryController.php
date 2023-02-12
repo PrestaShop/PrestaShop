@@ -110,6 +110,11 @@ class CategoryController extends FrameworkBundleAdminController
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
         );
 
+        $layoutTitle = $this->trans('Categories', 'Admin.Navigation.Menu');
+        if (!$categoryViewData['is_home_category']) {
+            $layoutTitle = $this->trans('Category %name%', 'Admin.Actions', ['%name%' => $categoryViewData['name']]);
+        }
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
@@ -121,6 +126,7 @@ class CategoryController extends FrameworkBundleAdminController
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'showcaseCardName' => ShowcaseCard::CATEGORIES_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'layoutTitle' => $layoutTitle,
         ]);
     }
 
@@ -193,6 +199,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'allowMenuThumbnailsUpload' => true,
                 'categoryForm' => $categoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
+                'layoutTitle' => $this->trans('New category', 'Admin.Actions'),
                 'categoryUrl' => null,
             ]
         );
@@ -241,6 +248,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'allowMenuThumbnailsUpload' => true,
                 'rootCategoryForm' => $rootCategoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
+                'layoutTitle' => $this->trans('New category', 'Admin.Actions'),
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
                     ->getUrl(0, '{friendly-url}'),
             ]
@@ -326,6 +334,13 @@ class CategoryController extends FrameworkBundleAdminController
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
                     ->getUrl($categoryId, '{friendly-url}'),
+                'layoutTitle' => $this->trans(
+                    'Editing category %name%',
+                    'Admin.Actions',
+                    [
+                        '%name%' => $editableCategory->getName()[$this->getContextLangId()],
+                    ]
+                ),
             ]
         );
     }
@@ -399,6 +414,13 @@ class CategoryController extends FrameworkBundleAdminController
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
                     ->getUrl($categoryId, '{friendly-url}'),
+                'layoutTitle' => $this->trans(
+                    'Editing category %name%',
+                    'Admin.Actions',
+                    [
+                        '%name%' => $editableCategory->getName()[$this->getContextLangId()],
+                    ]
+                ),
             ]
         );
     }

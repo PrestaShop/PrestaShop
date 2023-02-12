@@ -159,6 +159,13 @@ class SearchEnginesController extends FrameworkBundleAdminController
             'searchEngineServer' => $editableSearchEngine->getServer(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing search engine %name%',
+                'Admin.Actions',
+                [
+                    '%name%' => $editableSearchEngine->getServer(),
+                ]
+            ),
         ]);
     }
 

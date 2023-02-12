@@ -236,6 +236,7 @@ class ThemeController extends AbstractAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/import.html.twig', [
             'importThemeForm' => $importThemeForm->createView(),
+            'layoutTitle' => $this->trans('Theme import', 'Admin.Actions'),
         ]);
     }
 
@@ -423,6 +424,7 @@ class ThemeController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.html.twig', [
             'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
             'pages' => $pages,
+            'layoutTitle' => $this->trans('Choose layouts', 'Admin.Actions'),
         ]);
     }
 

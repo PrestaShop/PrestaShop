@@ -140,6 +140,7 @@ class MetaController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'layoutTitle' => $this->trans('New page configuration', 'Admin.Actions'),
         ]
         );
     }
@@ -175,6 +176,13 @@ class MetaController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
             'meta_form' => $metaForm->createView(),
+            'layoutTitle' => $this->trans(
+                'Editing configuration for %name%',
+                'Admin.Actions',
+                [
+                    '%name%' => $metaForm->getData()['page_name'],
+                ]
+            ),
         ]
         );
     }

@@ -160,6 +160,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'manufacturerForm' => $manufacturerForm->createView(),
+            'layoutTitle' => $this->trans('New brand', 'Admin.Actions'),
         ]);
     }
 
@@ -187,12 +188,18 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
-            'layoutTitle' => $viewableManufacturer->getName(),
             'viewableManufacturer' => $viewableManufacturer,
             'isStockManagementEnabled' => $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'layoutTitle' => $this->trans(
+                'Brand %name%',
+                'Admin.Actions',
+                [
+                    '%name%' => $viewableManufacturer->getName(),
+                ]
+            ),
         ]);
     }
 
@@ -241,6 +248,13 @@ class ManufacturerController extends FrameworkBundleAdminController
             'manufacturerForm' => $manufacturerForm->createView(),
             'manufacturerName' => $editableManufacturer->getName(),
             'logoImage' => $editableManufacturer->getLogoImage(),
+            'layoutTitle' => $this->trans(
+                'Editing brand %name%',
+                'Admin.Actions',
+                [
+                    '%name%' => $editableManufacturer->getName(),
+                ]
+            ),
         ]);
     }
 
@@ -597,7 +611,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/create.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Add new address', 'Admin.Orderscustomers.Feature'),
+            'layoutTitle' => $this->trans('New brand address', 'Admin.Orderscustomers.Feature'),
             'addressForm' => $addressForm->createView(),
         ]);
     }
@@ -651,7 +665,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Brands', 'Admin.Catalog.Feature'),
+            'layoutTitle' => $this->trans('Editing brand address #%id%', 'Admin.Orderscustomers.Feature', ['%id%' => $addressId]),
             'addressForm' => $addressForm->createView(),
             'address' => $editableAddress->getAddress(),
         ]);

@@ -66,7 +66,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Webservice', [], 'Admin.Navigation.Menu');
+        return $this->trans('Webservice keys', [], 'Admin.Navigation.Menu');
     }
 
     /**

@@ -136,6 +136,7 @@ class ZoneController extends FrameworkBundleAdminController
             'zoneForm' => $zoneForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New zone', 'Admin.Actions'),
         ]);
     }
 
@@ -189,6 +190,13 @@ class ZoneController extends FrameworkBundleAdminController
             'zoneForm' => $zoneForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing zone %name%',
+                'Admin.Actions',
+                [
+                    '%name%' => $editableZone->getName(),
+                ]
+            ),
         ]);
     }
 

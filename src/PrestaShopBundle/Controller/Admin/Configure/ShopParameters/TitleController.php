@@ -64,6 +64,7 @@ class TitleController extends FrameworkBundleAdminController
             'titleGrid' => $this->presentGrid($titleGrid),
             'layoutTitle' => $this->trans('Titles', 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
         ]);
     }
 
