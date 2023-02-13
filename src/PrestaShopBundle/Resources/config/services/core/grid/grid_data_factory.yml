@@ -550,3 +550,11 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'authorized_application'
+
+  prestashop.core.grid.data.factory.customer_groups:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\CustomerGroupsQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'customer_groups'

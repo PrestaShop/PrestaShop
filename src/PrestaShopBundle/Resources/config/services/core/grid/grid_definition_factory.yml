@@ -362,3 +362,8 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: false
     autowire: true
+
+  prestashop.core.grid.definition.factory.customer_groups:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGroupsGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true

@@ -14,6 +14,10 @@ _customer_preferences:
   resource: "customer_preferences.yml"
   prefix: /customer-preferences/
 
+_customer_groups:
+  resource: "customer_groups.yml"
+  prefix: /customer-groups/
+
 _maintenance:
   resource: "maintenance.yml"
   prefix: /maintenance/
