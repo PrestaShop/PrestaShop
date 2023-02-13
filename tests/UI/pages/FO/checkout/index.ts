@@ -6,6 +6,7 @@ import AddressData from '@data/faker/address';
 
 import type {Page} from 'playwright';
 import CustomerData from '@data/faker/customer';
+import CarrierData from "@data/faker/carrier";
 
 /**
  * Checkout page, contains functions that can be used on the page
@@ -509,8 +510,10 @@ class Checkout extends FOBasePage {
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(page, this.addressStepCityInput, address.city);
     await this.selectByVisibleText(page, this.addressStepCountrySelect, address.country);
-    await page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
+    if (await this.elementVisible(page, '#field-id_state', 1000)) {
+      await this.selectByVisibleText(page, '#field-id_state', address.state);
+    }
   }
 
   /**
@@ -657,6 +660,15 @@ class Checkout extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.deliveryAddressPosition(position));
   }
 
+  /**
+   * Go to shipping Step and check that address step is complete
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToShippingStep(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.deliveryStepSection);
+  }
+
   // Methods for shipping method step
 
   /**
@@ -738,13 +750,12 @@ class Checkout extends FOBasePage {
     return page.$$eval(this.deliveryOptionAllNamesSpan, (all) => all.map((el) => el.textContent));
   }
 
-  /**
-   * Go to Payment Step and check that delivery step is complete
-   * @param page {Page} Browser tab
-   * @return {Promise<void>}
-   */
-  async goToShippingStep(page: Page): Promise<void> {
-    await this.waitForSelectorAndClick(page, this.deliveryStepSection);
+  async getCarrierData(page: Page, carrierID: number = 1): Promise<CarrierData> {
+    return {
+      name: await this.getTextContent(page, `#js-delivery div.delivery-options div:nth-child(${carrierID}) span.carrier-name`),
+      delay: await this.getTextContent(page, `#js-delivery div.delivery-options div:nth-child(${carrierID}) span.carrier-delay`),
+      price: await this.getTextContent(page, `#js-delivery div.delivery-options div:nth-child(${carrierID}) span.carrier-price`),
+    };
   }
 
   /**

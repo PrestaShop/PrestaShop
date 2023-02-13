@@ -20,7 +20,7 @@ type CarrierCreator = {
   maxDepth?: number
   maxWeight?: number
   enable?: boolean
-  price?: number
+  price?: number|string
   priceTTC?: number
 };
 

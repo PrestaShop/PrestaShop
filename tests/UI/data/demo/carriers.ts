@@ -6,6 +6,7 @@ export default {
     name: 'Click and collect',
     delay: 'Pick up in-store',
     enable: true,
+    price: 'Free',
     freeShipping: true,
     position: 1,
   }),
