@@ -33,8 +33,10 @@ use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
-/*
+/**
  * This class is the AccessToken entity managed by AccessTokenRepository
+ *
+ * @experimental
  */
 class AccessToken implements AccessTokenEntityInterface
 {
