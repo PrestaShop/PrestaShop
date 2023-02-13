@@ -137,7 +137,7 @@ class ProductController extends FrameworkBundleAdminController
             'categoryFilterForm' => $categoriesForm->createView(),
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,
-            'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
+            'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons($request->get('_legacy_controller')),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
         ]);
     }
@@ -1220,11 +1220,18 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return array
+     * @param string $securitySubject
+     *
+     * @return array<string, array<string, mixed>>
      */
-    private function getProductToolbarButtons(): array
+    private function getProductToolbarButtons(string $securitySubject): array
     {
         $toolbarButtons = [];
+
+        // do not show create button if user has no permissions for it
+        if (!$this->isGranted('create', $securitySubject)) {
+            return $toolbarButtons;
+        }
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),

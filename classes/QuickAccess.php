@@ -120,7 +120,13 @@ class QuickAccessCore extends ObjectModel
                 }
                 $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
                 if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
-                    //if new product page feature is enabled we create new product v2 modal popup
+                    if (!Access::isGranted('ROLE_MOD_TAB_ADMINPRODUCTS_CREATE', $context->employee->id_profile)) {
+                        // if employee has no access, we don't show product creation link,
+                        // because it causes modal-related issues in product v2
+                        unset($quickAccess[$index]);
+                        continue;
+                    }
+                    // if new product page feature is enabled we create new product v2 modal popup
                     if (self::productPageV2Enabled()) {
                         $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
                         $quickAccess[$index]['class'] = 'new-product-button';
