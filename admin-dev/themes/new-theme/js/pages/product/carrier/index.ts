@@ -24,7 +24,7 @@
  */
 
 import {createApp, App} from 'vue';
-import CarrierSelector from '@pages/product/components/carriers/CarrierSelector.vue';
+import CarrierSelector from '@pages/product/carrier/CarrierSelector.vue';
 import {createI18n} from 'vue-i18n';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import ProductMap from '@pages/product/product-map';

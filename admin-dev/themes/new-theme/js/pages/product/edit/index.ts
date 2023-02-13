@@ -51,7 +51,7 @@ import ProductOptionsManager from '@pages/product/edit/manager/product-options-m
 import ProductShippingManager from '@pages/product/edit/manager/product-shipping-manager';
 import ProductDetailsManager from '@pages/product/edit/manager/product-details-manager';
 import SummaryQuantityUpdater from '@pages/product/edit/summary-quantity-updater';
-import initCarrierSelector from '@pages/product/components/carriers';
+import initCarrierSelector from '@pages/product/carrier';
 
 const {$} = window;
 
