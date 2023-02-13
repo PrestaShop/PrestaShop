@@ -78,6 +78,32 @@ export default class CreateProductModal {
           }
         }
       },
+      // When form is missing we try to show error instead of loading some redirected content in modal
+      onFormFailedToLoad: () => {
+        const iframeDocument = <Document> iframeModal?.modal.iframe?.contentWindow?.document;
+
+        // check if product creation is successfully loaded first, and if yes, we do nothing,
+        // because the form may not yet be loaded, but creation is already in progress when it shows product type or shops selection
+        if (iframeDocument.querySelector(ProductMap.create.createFieldId)) {
+          return;
+        }
+        iframeModal.showLoading();
+
+        // if there was redirection with the error, we try to find alert box, which should contain error message
+        const alertDiv = <HTMLDivElement> iframeDocument.querySelector('div[role="alert"]');
+
+        if (alertDiv) {
+          // if there is an alert, we  remove close button if it exists (because there is already a modal close button),
+          // and then we render the alert content instead of original modal content
+          alertDiv.querySelector('button.close')?.remove();
+          iframeModal.render(`<div class="m-5">${alertDiv.outerHTML}</div>`);
+        } else {
+          // if we couldn't find the alert, then probably something unexpected happened,
+          // in that case we just hide the modal and show error in console
+          console.error('Something went wrong when loading form modal iframe');
+          iframeModal.hide();
+        }
+      },
     });
     iframeModal.show();
   }
