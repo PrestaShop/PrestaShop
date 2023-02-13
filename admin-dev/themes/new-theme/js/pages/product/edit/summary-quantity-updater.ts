@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {getProductQuantity, QuantityResult} from '@pages/product/services/product';
+import {getProductQuantity, QuantityResult} from '@pages/product/service/product';
 import ProductMap from '@pages/product/product-map';
 import {EventEmitter} from '@components/event-emitter';
 import ProductEventMap from '@pages/product/product-event-map';
