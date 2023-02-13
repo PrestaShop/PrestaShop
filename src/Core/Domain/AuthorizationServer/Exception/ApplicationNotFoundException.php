@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception;
 
 /**
  * Is thrown when application is not found
+ *
+ * @experimental
  */
 class ApplicationNotFoundException extends ApplicationException
 {

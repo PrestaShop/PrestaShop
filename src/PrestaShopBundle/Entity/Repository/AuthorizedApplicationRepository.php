@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplic
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
+/**
+ * @experimental
+ */
 class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
 {
     /**

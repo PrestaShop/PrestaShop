@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception;
 
 /**
  * Is thrown when Application constraint is violated
+ *
+ * @experimental
  */
 class DuplicateApplicationNameException extends ApplicationException
 {

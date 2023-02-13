@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableAp
 
 /**
  * Handles query which gets application for editing
+ *
+ * @experimental
  */
 class GetApplicationForEditingHandler implements GetApplicationForEditingHandlerInterface
 {

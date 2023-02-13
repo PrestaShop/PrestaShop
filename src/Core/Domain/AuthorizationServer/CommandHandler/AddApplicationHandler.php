@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 
 /**
  * Handles command which adds new manufacturer using legacy object model
+ *
+ * @experimental
  */
 class AddApplicationHandler implements AddApplicationHandlerInterface
 {

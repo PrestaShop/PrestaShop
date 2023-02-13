@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplic
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
+/**
+ * @experimental
+ */
 class AuthorizedApplicationFactory implements AuthorizedApplicationFactoryInterface
 {
     /**

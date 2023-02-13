@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
+/**
+ * @experimental
+ */
 interface AuthorizedApplicationFactoryInterface
 {
     /**

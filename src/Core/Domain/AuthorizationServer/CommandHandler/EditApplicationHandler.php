@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplic
 
 /**
  * Handles command which adds new manufacturer using legacy object model
+ *
+ * @experimental
  */
 class EditApplicationHandler implements EditApplicationHandlerInterface
 {

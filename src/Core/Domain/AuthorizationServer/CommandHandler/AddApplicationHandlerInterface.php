@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 
 /**
  * Defines contract for AddApplicationHandler
+ *
+ * @experimental
  */
 interface AddApplicationHandlerInterface
 {

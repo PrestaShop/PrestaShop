@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 
 /**
  * Edit application with provided data
+ *
+ * @experimental
  */
 class EditApplicationCommand
 {

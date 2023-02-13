@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
+/**
+ * @experimental
+ */
 interface AuthorizedApplicationRepositoryInterface
 {
     /**

@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
  * Base exception for AuthorizationServer subdomain
+ *
+ * @experimental
  */
 class ApplicationException extends DomainException
 {

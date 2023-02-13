@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 
 /**
  * Gets application for editing in Back Office
+ *
+ * @experimental
  */
 class GetApplicationForEditing
 {

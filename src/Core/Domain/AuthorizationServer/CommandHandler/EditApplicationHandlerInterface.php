@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicatio
 
 /**
  * Defines contract for EditApplicationHandler
+ *
+ * @experimental
  */
 interface EditApplicationHandlerInterface
 {
