@@ -171,7 +171,7 @@
             {% if customerInformation.generalInformation.customerBySameEmailExists %}
               <p class="text-muted">{{ 'You can\'t transform this guest to a registered customer, because a registered customer with this email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
             {% else %}
-              <p class="text-muted">{{ 'You can transform this guest to a registered customer. The customer will receive an email with a link to set his password.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+              <p class="text-muted">{{ 'You can transform this guest to a registered customer. The customer will receive an email with a link to set a password.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
               
               {% form_theme transferGuestAccountForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
               {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}
