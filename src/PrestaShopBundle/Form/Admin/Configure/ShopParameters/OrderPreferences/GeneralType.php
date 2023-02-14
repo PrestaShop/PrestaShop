@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -43,11 +44,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class GeneralType extends TranslatorAwareType
 {
     /**
-     * @var string
-     */
-    private $defaultCurrencyIsoCode;
-
-    /**
      * CMS pages choices for Terms Of Service.
      *
      * @var array
@@ -59,25 +55,30 @@ class GeneralType extends TranslatorAwareType
      */
     private $configuration;
 
+    /**
+     * @var CurrencyDataProviderInterface
+     */
+    private $currencyDataProvider;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        CurrencyDataProviderInterface $currencyDataProvider,
         ConfigurationInterface $configuration,
-        $defaultCurrencyIsoCode,
         array $tosCmsChoices
     ) {
         parent::__construct($translator, $locales);
 
-        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->tosCmsChoices = $tosCmsChoices;
         $this->configuration = $configuration;
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $configuration = $this->configuration;
         $isMultishippingEnabled = (bool) $configuration->get('PS_ALLOW_MULTISHIPPING');
-        $currencyIsoCode = $this->defaultCurrencyIsoCode;
+        $currencyIsoCode = $this->currencyDataProvider->getDefaultCurrencyIsoCode();
 
         $builder
             ->add('enable_final_summary', SwitchType::class, [
