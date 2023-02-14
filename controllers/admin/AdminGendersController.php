@@ -130,7 +130,7 @@ class AdminGendersControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Shopparameters.Help') . ' <>;=#{}:',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Shopparameters.Help') . ' <>;=#{}',
                     'required' => true,
                 ],
                 [
