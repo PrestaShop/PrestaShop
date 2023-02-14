@@ -151,3 +151,18 @@ Feature: Customer Management
       | defaultGroupId | Guest                        |
       | groupIds       | [Guest]                      |
     And customer "CUST-7" should be soft deleted
+
+  Scenario: Edit registered customer email
+    When I create a customer "CUST-10" with following properties:
+      | firstName | Mathieu                       |
+      | lastName  | Customer                      |
+      | email     | customereten@prestashop.com   |
+      | password  | PrestaShopForever1_!          |
+    And I create a customer "CUST-11" with following properties:
+      | firstName | Mathieu                       |
+      | lastName  | Customer                      |
+      | email     | customereleven@prestashop.com |
+      | password  | PrestaShopForever1_!          |
+    And I attempt to edit customer "CUST-10" and I change the following properties:
+      | email | customereleven@prestashop.com |
+    Then I should be returned an error message 'Customer with email "customereleven@prestashop.com" already exists'
