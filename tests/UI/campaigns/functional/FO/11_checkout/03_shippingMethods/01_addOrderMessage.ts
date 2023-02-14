@@ -2,7 +2,7 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import FO pages
+// Import pages
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import homePage from '@pages/FO/home';
