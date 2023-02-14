@@ -162,6 +162,7 @@ export default {
       deleteButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delete`,
     },
     list: {
+      attributeFilterInputName: 'combination-attribute-filter',
       combinationRow: '.combination-list-row',
       priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
       priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',

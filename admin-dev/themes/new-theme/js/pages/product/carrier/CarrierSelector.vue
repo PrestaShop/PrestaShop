@@ -34,9 +34,9 @@
         <checkboxes-dropdown
           :choices="carrierChoices"
           :label="getLabel"
+          :selected-choice-ids="this.selectedCarrierIds"
           @selectChoice="addCarrier"
           @unselectChoice="removeCarrier"
-          :selected-choice-ids="this.selectedCarrierIds"
           @click="showModifyAllShopsCheckbox"
         />
         <button
@@ -61,11 +61,6 @@
             :key="key"
           >
             {{ selectedCarrier.label }}<span v-if="key !== selectedCarriers.length -1 ">, </span>
-            <input
-              :name="choiceInputName"
-              type="hidden"
-              :value="selectedCarrier.id"
-            >
           </li>
         </ul>
       </span>
@@ -94,6 +89,8 @@
   import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
   import {Choice} from '@app/components/checkboxes-dropdown/types';
+  import EventEmitter from '@components/event-emitter';
+  import ProductEventMap from '@pages/product/product-event-map';
 
   export default defineComponent({
     name: 'CarrierSelector',
@@ -121,6 +118,10 @@
       },
       modifyAllShopsName: {
         type: String,
+        required: true,
+      },
+      eventEmitter: {
+        type: Object as PropType<typeof EventEmitter>,
         required: true,
       },
     },
@@ -155,6 +156,7 @@
       clearAllSelected(): void {
         this.selectedCarrierIds = [];
         this.showModifyAllShopsCheckbox();
+        this.eventEmitter.emit(ProductEventMap.shipping.clearAllCarriers);
       },
     },
   });

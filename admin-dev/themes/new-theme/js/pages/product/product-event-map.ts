@@ -44,7 +44,7 @@ export default {
     refreshPage: 'refreshPage',
     refreshCombinationList: 'refreshCombinationList',
     listEditionMode: 'listEditionMode',
-    updateAttributeGroups: 'updateAttributeGroups',
+    updateAttributeFilters: 'updateAttributeFilters',
     combinationGeneratorReady: 'combinationGeneratorReady',
     openCombinationsGenerator: 'openCombinationsGenerator',
     clearFilters: 'clearFilters',
@@ -65,6 +65,9 @@ export default {
   },
   specificPrice: {
     listUpdated: 'specificPricesListUpdated',
+  },
+  shipping: {
+    clearAllCarriers: 'productClearAllCarriers',
   },
   cancelProductShops: 'cancelProductShops',
 };

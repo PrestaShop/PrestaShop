@@ -38,31 +38,30 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        id="form_invoice_prefix"
-        :data-role="`filter-by-${label.toLowerCase()}`"
       >
         {{ label }} {{ nbFiles }}
       </button>
       <div
         class="dropdown-menu"
-        aria-labelledby="form_invoice_prefix"
-        @click="preventClose($event)"
+        @click="preventClose"
       >
         <div
           class="md-checkbox"
           v-for="choice in choices"
           :key="choice.id"
-          :data-role="`${label.toLowerCase()}-${choice.id}`"
         >
           <label class="dropdown-item">
-            <div class="md-checkbox-container">
+            <div
+              class="md-checkbox-container">
               <input
+                :value="choice.id"
+                :name="choice.name"
                 type="checkbox"
                 :checked="isSelected(choice)"
                 @change="toggleSelection(choice)"
               >
               <i class="md-checkbox-control" />
-              {{ choice.name }}
+              {{ choice.label }}
             </div>
           </label>
         </div>
@@ -106,14 +105,14 @@
       },
     },
     methods: {
-      isSelected(item: Record<string, any>): boolean {
-        return this.selectedChoiceIds.some((id) => item.id === id);
+      isSelected(choice: Choice): boolean {
+        return this.selectedChoiceIds.some((id) => choice.id === id);
       },
-      toggleSelection(item: Record<string, any>): void {
-        if (this.selectedChoiceIds.some((id) => item.id === id)) {
-          this.$emit('unselectChoice', item, this.parentId);
+      toggleSelection(choice: Choice): void {
+        if (this.selectedChoiceIds.some((id) => choice.id === id)) {
+          this.$emit('unselectChoice', choice, this.parentId);
         } else {
-          this.$emit('selectChoice', item, this.parentId);
+          this.$emit('selectChoice', choice, this.parentId);
         }
       },
       preventClose(event: Event): void {

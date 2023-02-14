@@ -41,6 +41,7 @@ import CombinationsListEditor from '@pages/product/combination/combination-list/
 import {App} from 'vue';
 import RowDeleteHandler from '@pages/product/combination/combination-list/row-delete-handler';
 import {AttributeGroup} from '@pages/product/combination/types';
+import {Choice} from "@app/components/checkboxes-dropdown/types";
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -129,17 +130,9 @@ export default class CombinationsList {
     this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList());
     this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
 
-    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
+    this.eventEmitter.on(CombinationEvents.updateAttributeFilters, (attributeIdsByGroupId: Array<number[]>) => {
       const currentFilters = this.paginatedCombinationsService.getFilters();
-      currentFilters.attributes = {};
-      Object.keys(attributeGroups).forEach((attributeGroupId) => {
-        currentFilters.attributes[attributeGroupId] = [];
-        const attributes = attributeGroups[attributeGroupId];
-        attributes.forEach((attribute: Record<string, any>) => {
-          currentFilters.attributes[attributeGroupId].push(attribute.id);
-        });
-      });
-
+      currentFilters.attributes = attributeIdsByGroupId.filter((attributeIds: number[]) => attributeIds.length !== 0);
       this.paginatedCombinationsService.setFilters(currentFilters);
 
       if (this.paginator) {
