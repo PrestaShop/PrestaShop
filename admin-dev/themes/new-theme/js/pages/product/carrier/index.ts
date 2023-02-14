@@ -72,11 +72,12 @@ export default function initCarrierSelector(
     }
   });
 
-  const vueApp = createApp(CarrierSelector, {
+  const vueApp: App<Element> = createApp(CarrierSelector, {
     i18n,
     carrierChoices,
     initialCarrierIds,
     choiceInputName,
+    modifyAllShopsName: container.dataset.modifyAllShopsName,
   }).use(i18n);
 
   vueApp.mount(carrierChoicesSelector);

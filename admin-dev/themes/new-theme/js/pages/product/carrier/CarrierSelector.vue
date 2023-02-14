@@ -37,6 +37,7 @@
           @selectChoice="addCarrier"
           @unselectChoice="removeCarrier"
           :selected-choice-ids="this.selectedCarrierIds"
+          @click="showModifyAllShopsCheckbox"
         />
         <button
           type="button"
@@ -69,6 +70,23 @@
         </ul>
       </span>
     </div>
+    <div>
+      <div
+        v-if="modifyAllShopsVisible"
+        class="form-check form-check-radio form-checkbox"
+      >
+        <div
+          class="md-checkbox md-checkbox-inline"
+        >
+          <label class="required">
+            <input
+              :name="modifyAllShopsName"
+              type="checkbox"
+              class="form-check-input"
+            ><i class="md-checkbox-control"/>{{ $t('modifyAllShops.label') }}</label>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -81,9 +99,11 @@
     name: 'CarrierSelector',
     data(): {
       selectedCarrierIds: number[],
+      modifyAllShopsVisible: boolean,
     } {
       return {
         selectedCarrierIds: [],
+        modifyAllShopsVisible: false,
       };
     },
     props: {
@@ -96,6 +116,10 @@
         required: true,
       },
       choiceInputName: {
+        type: String,
+        required: true,
+      },
+      modifyAllShopsName: {
         type: String,
         required: true,
       },
@@ -117,6 +141,9 @@
       },
     },
     methods: {
+      showModifyAllShopsCheckbox(): void {
+        this.modifyAllShopsVisible = true;
+      },
       addCarrier(carrier: Choice): void {
         this.selectedCarrierIds.push(carrier.id);
       },
@@ -127,6 +154,7 @@
       },
       clearAllSelected(): void {
         this.selectedCarrierIds = [];
+        this.showModifyAllShopsCheckbox();
       },
     },
   });
