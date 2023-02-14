@@ -177,7 +177,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I attempt to edit customer "(.+)" and I change the following properties:$/
      */
-    public function attemptToEditCustomerUsingCommand($customerReference, TableNode $table)
+    public function attemptToEditCustomerUsingCommand(string $customerReference, TableNode $table): void
     {
         try {
             $this->editCustomerUsingCommand($customerReference, $table);
