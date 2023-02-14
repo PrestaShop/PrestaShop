@@ -52,13 +52,14 @@ export default class CustomerForm {
     const checkedGroups: number[] = [];
     let firstGroupInList: number = 0;
     $(customerFormMap.customerGroupCheckboxes).each((index, input) => {
+      const groupId = Number(<string> $(input).val());
       // We will keep track of all checked groups
       if ($(input).is(':checked')) {
-        checkedGroups.push(Number(<string> $(input).val()));
+        checkedGroups.push(groupId);
       }
       // And store ID of the first group regardless of it's status
       if (index === 0) {
-        firstGroupInList = Number(<string> $(input).val());
+        firstGroupInList = groupId;
       }
     });
 
