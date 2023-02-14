@@ -454,8 +454,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType:
     arguments:
-      $themes: '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
-      $mailThemes: '@=service("prestashop.core.form.choice_provider.theme_by_name_with_emails").getChoices()'
+      $mailThemes: '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
+      $themes: '@=service("prestashop.core.form.choice_provider.theme_by_name_with_emails").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType:
     arguments:
