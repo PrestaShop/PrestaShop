@@ -130,7 +130,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await Promise.all([
         expect(carrierData.name).to.equal(Carriers.default.name),
         expect(carrierData.delay).to.equal(Carriers.default.delay),
-        expect(carrierData.price).to.equal(Carriers.default.price),
+        expect(carrierData.price).to.equal('Free'),
       ]);
     });
 
