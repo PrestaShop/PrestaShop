@@ -12,6 +12,9 @@ web_profiler:
   toolbar: '%use_debug_toolbar%'
   intercept_redirects: false
 
+twig:
+  auto_reload: true
+
 monolog:
   handlers:
     main:
