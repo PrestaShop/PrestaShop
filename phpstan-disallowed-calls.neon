@@ -399,3 +399,19 @@ parameters:
                 - src/*
                 - classes/*
                 - controllers/*
+        -
+            class: CookieCore
+            constant: ['SAMESITE_NONE', 'SAMESITE_LAX', 'SAMESITE_STRICT', 'SAMESITE_AVAILABLE_VALUES']
+            message: 'Use \PrestaShop\PrestaShop\Core\Http\CookieOptions constants instead.'
+            disallowIn:
+                - src/*
+                - classes/*
+                - controllers/*
+        -
+            class: PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider
+            constant: ['MAX_COOKIE_VALUE']
+            message: 'Use \PrestaShop\PrestaShop\Core\Http\CookieOptions constants instead.'
+            disallowIn:
+                - src/*
+                - classes/*
+                - controllers/*
