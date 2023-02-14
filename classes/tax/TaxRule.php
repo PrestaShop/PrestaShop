@@ -25,6 +25,10 @@
  */
 class TaxRuleCore extends ObjectModel
 {
+    public const BEHAVIOR_TAX_ONLY = 0;
+    public const BEHAVIOR_COMBINE = 1;
+    public const BEHAVIOR_ONE_AFTER_ANOTHER = 2;
+
     public $id_tax_rules_group;
     public $id_country;
     public $id_state;

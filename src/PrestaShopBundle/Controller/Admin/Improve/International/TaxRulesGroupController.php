@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEdi
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -122,10 +123,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param int $taxRulesGroupId
+     * @param TaxRulesFilters $filters
      *
      * @return Response
      */
-    public function editAction(Request $request, int $taxRulesGroupId): Response
+    public function editAction(Request $request, int $taxRulesGroupId, TaxRulesFilters $filters): Response
     {
         $taxRulesGroupForm = null;
 
@@ -148,11 +150,16 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
+        $filters->addFilter(['taxRulesGroupId' => $taxRulesGroupId]);
+        $taxRuleGridFactory = $this->get('prestashop.core.grid.factory.tax_rule');
+        $taxRuleGrid = $taxRuleGridFactory->getGrid($filters);
+
         return $this->render('@PrestaShop/Admin/Improve/International/TaxRulesGroup/edit.html.twig', [
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $taxRulesGroupForm->getData()['name']]),
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'taxRuleGrid' => $this->presentGrid($taxRuleGrid),
         ]);
     }
 

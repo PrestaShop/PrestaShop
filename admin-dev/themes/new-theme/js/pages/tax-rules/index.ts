@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +21,26 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+import Grid from '@components/grid/grid';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import ReloadListExtension from '@components/grid/extension/reload-list-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import FormSubmitButton from '@components/form-submit-button';
 
-{% block content %}
-  {{ include('@PrestaShop/Admin/Improve/International/TaxRulesGroup/Blocks/form.html.twig', {'taxRulesGroupForm': taxRulesGroupForm}) }}
+const {$} = window;
 
-  {% block tax_rules_list_panel %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxRuleGrid} %}
-  {% endblock %}
-{% endblock %}
+$(() => {
+  const taxRuleGrid = new Grid('tax_rule');
 
-{% block javascripts %}
-  {{ parent() }}
+  taxRuleGrid.addExtension(new ExportToSqlManagerExtension());
+  taxRuleGrid.addExtension(new ReloadListExtension());
+  taxRuleGrid.addExtension(new BulkActionCheckboxExtension());
+  taxRuleGrid.addExtension(new SubmitBulkExtension());
+  taxRuleGrid.addExtension(new SubmitRowActionExtension());
 
-  <script src="{{ asset('themes/new-theme/public/tax_rules.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+  new FormSubmitButton();
+});

@@ -367,3 +367,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGroupsGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRuleGridDefinitionFactory:
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+    autowire: true
