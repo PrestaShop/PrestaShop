@@ -3,11 +3,10 @@ import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
 import AddressData from '@data/faker/address';
+import CustomerData from '@data/faker/customer';
+import CarrierData from '@data/faker/carrier';
 
 import type {Page} from 'playwright';
-import CustomerData from '@data/faker/customer';
-import CarrierData from "@data/faker/carrier";
-import carriers from "@data/demo/carriers";
 
 /**
  * Checkout page, contains functions that can be used on the page
