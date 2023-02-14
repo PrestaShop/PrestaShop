@@ -24,10 +24,14 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_FO_checkout_shippingMethods_selectCarrier';
 
 /*
+Pre-condition:
+- Create new customer account in FO
 Scenario:
-- Go to FO and login by default customer
 - Add a product to cart and checkout
-- In shipping methods, choose My carrier
+- Create an address in Europe and check the carriers
+- Edit the address to US and check the carriers
+Post-condition:
+- Delete customer account
  */
 
 describe('FO - Checkout - Shipping methods : Select carrier', async () => {
@@ -151,7 +155,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
     });
 
     it('should select the second carrier and check the shipping price', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice2', baseContext);
 
       await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
 
@@ -182,14 +186,14 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
     });
 
     it('should check the carriers list', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersList', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersList2', baseContext);
 
       const carriers = await checkoutPage.getAllCarriersNames(page);
       await expect(carriers).to.deep.equal([Carriers.myCarrier.name]);
     });
 
     it('should check the carrier data', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkFirstCarrierData', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkFirstCarrierData2', baseContext);
 
       const carrierData = await checkoutPage.getCarrierData(page, 2);
       await Promise.all([
@@ -200,7 +204,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
     });
 
     it('should check the shipping price', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice3', baseContext);
 
       const shippingCost = await checkoutPage.getShippingCost(page);
       expect(shippingCost).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`);
