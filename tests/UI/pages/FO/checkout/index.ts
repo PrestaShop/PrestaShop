@@ -7,6 +7,7 @@ import AddressData from '@data/faker/address';
 import type {Page} from 'playwright';
 import CustomerData from '@data/faker/customer';
 import CarrierData from "@data/faker/carrier";
+import carriers from "@data/demo/carriers";
 
 /**
  * Checkout page, contains functions that can be used on the page
@@ -136,6 +137,8 @@ class Checkout extends FOBasePage {
 
   private readonly deliveryStepCarriersList: string;
 
+  private readonly deliveryOptions: string;
+
   private readonly deliveryOptionsRadioButton: string;
 
   private readonly deliveryOptionLabel: (id: number) => string;
@@ -149,6 +152,14 @@ class Checkout extends FOBasePage {
   private readonly deliveryMessage: string;
 
   private readonly deliveryStepContinueButton: string;
+
+  private readonly deliveryOption: (carrierID: number) => string;
+
+  private readonly deliveryStepCarrierName: (carrierID: number) => string;
+
+  private readonly deliveryStepCarrierDelay: (carrierID: number) => string;
+
+  private readonly deliveryStepCarrierPrice: (carrierID: number) => string;
 
   private readonly deliveryAddressBlock: string;
 
@@ -257,13 +268,18 @@ class Checkout extends FOBasePage {
     this.deliveryStepSection = '#checkout-delivery-step';
     this.deliveryStepEditButton = `${this.deliveryStepSection} span.step-edit`;
     this.deliveryStepCarriersList = `${this.deliveryStepSection} .delivery-options-list`;
+    this.deliveryOptions = '#js-delivery div.delivery-options';
     this.deliveryOptionsRadioButton = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = (id: number) => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
     this.deliveryOptionNameSpan = (id: number) => `${this.deliveryOptionLabel(id)} span.carrier-name`;
-    this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
+    this.deliveryOptionAllNamesSpan = `${this.deliveryOptions} .carriere-name-container span.carrier-name`;
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
+    this.deliveryOption = (carrierID: number) => `${this.deliveryOptions} label[for=delivery_option_${carrierID}] span.carrier`;
+    this.deliveryStepCarrierName = (carrierID: number) => `${this.deliveryOption(carrierID)}-name`;
+    this.deliveryStepCarrierDelay = (carrierID: number) => `${this.deliveryOption(carrierID)}-delay`;
+    this.deliveryStepCarrierPrice = (carrierID: number) => `${this.deliveryOption(carrierID)}-price`;
 
     // Payment step selectors
     this.paymentStepSection = '#checkout-payment-step';
@@ -274,7 +290,6 @@ class Checkout extends FOBasePage {
     this.termsOfServiceLink = '#cta-terms-and-conditions-0';
     this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
-    this.shippingValueSpan = '#cart-subtotal-shipping span.value';
     this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
 
     // Checkout summary selectors
@@ -287,6 +302,7 @@ class Checkout extends FOBasePage {
     this.promoCodeArea = '#promo-code';
     this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
     this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
+    this.shippingValueSpan = '#cart-subtotal-shipping span.value';
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
@@ -737,7 +753,9 @@ class Checkout extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getShippingCost(page: Page): Promise<string> {
+  async getShippingCost(page: Page): Promise<string> {
+    await page.waitForTimeout(2000);
+
     return this.getTextContent(page, this.shippingValueSpan);
   }
 
@@ -750,11 +768,16 @@ class Checkout extends FOBasePage {
     return page.$$eval(this.deliveryOptionAllNamesSpan, (all) => all.map((el) => el.textContent));
   }
 
+  /**
+   * Get carrier data
+   * @param page {Page} Browser tab
+   * @param carrierID {number} The carrier row in list
+   */
   async getCarrierData(page: Page, carrierID: number = 1): Promise<CarrierData> {
     return {
-      name: await this.getTextContent(page, `#js-delivery div.delivery-options div:nth-child(${carrierID}) span.carrier-name`),
-      delay: await this.getTextContent(page, `#js-delivery div.delivery-options div:nth-child(${carrierID}) span.carrier-delay`),
-      price: await this.getTextContent(page, `#js-delivery div.delivery-options div:nth-child(${carrierID}) span.carrier-price`),
+      name: await this.getTextContent(page, this.deliveryStepCarrierName(carrierID)),
+      delay: await this.getTextContent(page, this.deliveryStepCarrierDelay(carrierID)),
+      price: await this.getTextContent(page, this.deliveryStepCarrierPrice(carrierID)),
     };
   }
 

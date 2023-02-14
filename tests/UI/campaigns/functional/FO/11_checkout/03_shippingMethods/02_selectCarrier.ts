@@ -10,20 +10,16 @@ import {createAccountTest} from '@commonTests/FO/account';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import homePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import foHomePage from "@pages/FO/home";
-import foProductPage from "@pages/FO/product";
-import Products from "@data/demo/products";
-import foCartPage from "@pages/FO/cart";
 
 const baseContext: string = 'functional_FO_checkout_shippingMethods_selectCarrier';
 
@@ -60,7 +56,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Select carrier', async () => {
+  describe('Add a product to the cart and checkout', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
@@ -74,25 +70,25 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
     it('should go to first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 1);
+      await homePage.goToProductPage(page, 1);
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should add product to cart and go to cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page);
+      await productPage.addProductToTheCart(page);
 
-      const pageTitle = await foCartPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foCartPage.pageTitle);
+      const pageTitle = await cartPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
-      await foCartPage.clickOnProceedToCheckout(page);
+      await cartPage.clickOnProceedToCheckout(page);
 
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage).to.be.true;
@@ -106,7 +102,9 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       const isCustomerConnected = await checkoutPage.customerLogin(page, customerData);
       await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
     });
+  });
 
+  describe('Select carrier in Europe address', async () => {
     it('should create address in Europe then continue to shipping methods', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
@@ -139,10 +137,30 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await Promise.all([
         expect(carrierData.name).to.equal(Carriers.myCarrier.name),
         expect(carrierData.delay).to.equal(Carriers.myCarrier.delay),
-        expect(carrierData.price).to.equal(Carriers.myCarrier.price),
+        expect(carrierData.price).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)} tax incl.`),
       ]);
     });
 
+    it('should select the first carrier and check the shipping price', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
+
+      await checkoutPage.chooseShippingMethod(page, Carriers.default.id);
+
+      const shippingCost = await checkoutPage.getShippingCost(page);
+      expect(shippingCost).to.equal('Free');
+    });
+
+    it('should select the second carrier and check the shipping price', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice1', baseContext);
+
+      await checkoutPage.chooseShippingMethod(page, Carriers.myCarrier.id);
+
+      const shippingCost = await checkoutPage.getShippingCost(page);
+      expect(shippingCost).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)}`);
+    });
+  });
+
+  describe('Select carrier in US address', async () => {
     it('should click on edit addresses step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickEditAddressStep', baseContext);
 
@@ -173,12 +191,22 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
     it('should check the carrier data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstCarrierData', baseContext);
 
-      const carrierData = await checkoutPage.getCarrierData(page, 1);
+      const carrierData = await checkoutPage.getCarrierData(page, 2);
       await Promise.all([
         expect(carrierData.name).to.equal(Carriers.myCarrier.name),
         expect(carrierData.delay).to.equal(Carriers.myCarrier.delay),
-        expect(carrierData.price).to.equal(Carriers.myCarrier.price),
+        expect(carrierData.price).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`),
       ]);
     });
+
+    it('should check the shipping price', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingPrice2', baseContext);
+
+      const shippingCost = await checkoutPage.getShippingCost(page);
+      expect(shippingCost).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`);
+    });
   });
+
+  // Post-condition: Delete the created customer account
+  deleteCustomerTest(customerData, `${baseContext}_postTest`);
 });
