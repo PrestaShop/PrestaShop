@@ -271,7 +271,7 @@ class Checkout extends FOBasePage {
     this.deliveryOptionsRadioButton = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = (id: number) => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
     this.deliveryOptionNameSpan = (id: number) => `${this.deliveryOptionLabel(id)} span.carrier-name`;
-    this.deliveryOptionAllNamesSpan = `${this.deliveryOptions} .carriere-name-container span.carrier-name`;
+    this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
