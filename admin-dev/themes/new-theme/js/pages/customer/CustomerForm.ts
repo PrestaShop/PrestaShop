@@ -39,46 +39,46 @@ export default class CustomerForm {
 
     // Watch customer group checkbox change and if it was unchecked,
     // update default group below if it's no longer in the list.
-    $('input[type="checkbox"][name="customer[group_ids][]"]').on('change', (event) => {
+    $(customerFormMap.customerGroupCheckboxes).on('change', (event) => {
       this.checkOrUpdateDefaultGroup($(event.currentTarget).is(':checked'));
     });
   }
 
   private checkOrUpdateDefaultGroup(wasChecked: boolean): void {
     // Get currently selected group ID
-    const currentDefaultGroup = Number($('#customer_default_group_id option:selected').val() as string);
+    const currentDefaultGroup = Number(<string> $(customerFormMap.defaultGroupSelectedOption).val());
 
     // Get all checked groups in group access
     const checkedGroups: number[] = [];
     let firstGroupInList: number = 0;
-    $('input[type="checkbox"][name="customer[group_ids][]"]').each((index, value) => {
+    $(customerFormMap.customerGroupCheckboxes).each((index, input) => {
       // We will keep track of all checked groups
-      if ($(value).is(':checked')) {
-        checkedGroups.push(Number($(value).val() as string));
+      if ($(input).is(':checked')) {
+        checkedGroups.push(Number(<string> $(input).val()));
       }
       // And store ID of the first group regardless of it's status
       if (index === 0) {
-        firstGroupInList = Number($(value).val() as string);
+        firstGroupInList = Number(<string> $(input).val());
       }
     });
 
-    // If no groups are selected, use a the first group in the list, no matter
+    // If no groups are selected, use the first group in the list, no matter
     // if it's selected or not.
     if (!checkedGroups.length) {
-      $('#customer_default_group_id').val(firstGroupInList).trigger('change');
+      $(customerFormMap.defaultGroupSelect).val(firstGroupInList).trigger('change');
       return;
     }
 
     // If the last change was a newly added group and it's the only one in the list,
     // we will set it as the default group.
     if (wasChecked && checkedGroups.length === 1) {
-      $('#customer_default_group_id').val(checkedGroups[0]).trigger('change');
+      $(customerFormMap.defaultGroupSelect).val(checkedGroups[0]).trigger('change');
       return;
     }
 
     // If the default group is not in the list anymore, select the first checked group.
     if (!checkedGroups.includes(currentDefaultGroup)) {
-      $('#customer_default_group_id').val(checkedGroups[0]).trigger('change');
+      $(customerFormMap.defaultGroupSelect).val(checkedGroups[0]).trigger('change');
     }
   }
 }
