@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\AuthorizationServer;
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @experimental
+ */
 final class ApiAccessesStatesColumn extends AbstractColumn
 {
     /**

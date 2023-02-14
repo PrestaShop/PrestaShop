@@ -35,6 +35,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiAccessRepository")
  * @ORM\Table()
  * @UniqueEntity("name")
+ *
+ * @experimental
  */
 class ApiAccess
 {

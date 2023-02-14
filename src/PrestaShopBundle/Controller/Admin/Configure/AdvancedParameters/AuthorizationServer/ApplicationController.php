@@ -35,6 +35,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages the "Configure > Advanced Parameters > Authorization Server" page.
+ *
+ * @experimental
  */
 class ApplicationController extends FrameworkBundleAdminController
 {

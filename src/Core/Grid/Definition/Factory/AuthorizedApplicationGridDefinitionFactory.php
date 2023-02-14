@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 
 /**
  * Class AuthorizedApplicationGridDefinitionFactory is responsible for creating new instance of Authorized Application grid definition.
+ *
+ * @experimental
  */
 final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
