@@ -229,16 +229,17 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
      */
     private function assertCustomerCanAccessDefaultGroup(Customer $customer, EditCustomerCommand $command)
     {
-        // if neither default group
-        // nor group ids are being edited
-        // then no need to assert
-        if (null === $command->getDefaultGroupId()
-            || null === $command->getGroupIds()
-        ) {
+        // If nothing is updated on groups, nothing to do here
+        if (null === $command->getDefaultGroupId() && null === $command->getGroupIds()) {
             return;
         }
 
-        if (!in_array($command->getDefaultGroupId(), $command->getGroupIds())) {
+        // Arrange data to compare, we will use customer's original data if not provided in the command
+        $groupIds = ($command->getGroupIds() === null ? $customer->getGroups() : $command->getGroupIds());
+        $defaultGroupId = ($command->getDefaultGroupId() === null ? $customer->id_default_group : $command->getDefaultGroupId());
+
+        // If both was provided, we compare check it against submitted data
+        if (!in_array($defaultGroupId, $groupIds)) {
             throw new CustomerDefaultGroupAccessException(sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId()));
         }
     }
