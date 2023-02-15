@@ -55,6 +55,7 @@ framework:
     handler_id: ~
   fragments: ~
   http_method_override: true
+  http_client: ~
   cache:
     pools:
       '%cache.driver%':
