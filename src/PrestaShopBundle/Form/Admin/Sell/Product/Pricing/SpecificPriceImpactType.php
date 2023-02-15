@@ -54,15 +54,15 @@ class SpecificPriceImpactType extends TranslatorAwareType
     /**
      * @var string
      */
-    private $defaultCurrencyIso;
+    private $defaultCurrencyIsoCode;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        string $defaultCurrencyIso
+        string $defaultCurrencyIsoCode
     ) {
         parent::__construct($translator, $locales);
-        $this->defaultCurrencyIso = $defaultCurrencyIso;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -99,7 +99,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'js-fixed-price-row',
                 ],
-                'currency' => $this->defaultCurrencyIso,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(['groups' => [self::FIXED_PRICE_GROUP]]),
                     new Type(['type' => 'float', 'groups' => [self::FIXED_PRICE_GROUP]]),

@@ -236,6 +236,7 @@ class ProductOptions extends CommonAbstractType
                     'entry_type' => ProductSupplierCombination::class,
                     'entry_options' => [
                         'id_supplier' => $id,
+                        'id_currency' => $this->context->getContext()->currency->id,
                     ],
                     'prototype' => true,
                     'allow_add' => true,

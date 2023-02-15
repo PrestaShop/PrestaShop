@@ -3,39 +3,58 @@ services:
     public: false
     autowire: true
     autoconfigure: true
-
-  _instanceof:
-    # Add the console.command tag to all services defined in this file having this type
-    PrestaShopBundle\Form\Admin\Type\TranslatorAwareType:
-      bind:
-        $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
+    bind:
+      # We need to get rid of these service calls, but at least, they now all have the same name.
+      # Symfony will throw an error when an argument is no more used in all services definitions so we can safely remove them.
+      # Before adding your own, please check it does not already exist in the list.
+      # There could be some duplicates.
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
+      $isMultiShopEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      $isShopFeatureEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      $isMultistoreEnabled: '@=service("prestashop.adapter.multistore_feature").isActive()'
+      $isMultistoreFeatureActive: '@=service("prestashop.adapter.multistore_feature").isActive()'
+      $isMultistoreFeatureUsed: '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      $isShopFeatureActive: '@=service("prestashop.adapter.multistore_feature").isActive()'
+      $defaultCurrency: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      $isEcotaxEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
+      $dimensionUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
+      $weightUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+      $defaultCurrencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
+      $stockManagementEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+      $isTaxEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
+      $defaultShopLanguageId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+      $saveFormLocaleChoice: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
+      $defaultFormLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
+      $isDebug: '@=service("prestashop.adapter.environment").isDebug()'
+      $multistoreFeature: '@prestashop.adapter.feature.multistore'
+      $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      $contextLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      $contextLanguageId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      $contextCountryId: '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+      $employeeIsoCode: '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
+      $customerGroupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+      $isSingleShopContext: '@=service("prestashop.adapter.shop.context").isShopContext()'
+      $categoryDataProvider: '@prestashop.adapter.data_provider.category'
+      $ecoTaxGroupId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
+      $defaultCurrencySymbol: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
+      $router: '@router'
+      $isCombinationsUsed: '@=service("prestashop.adapter.combination_feature").isUsed()'
+      $availableLocales: "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
-      - '@PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'
+      - '@prestashop.bundle.form.data_transformer.arabic_to_latin_digit'
 
   PrestaShopBundle\Form\Admin\Type\NavigationTabType:
-    arguments:
-      - '@logger'
-      - '@=service("prestashop.adapter.environment").isDebug()'
-
   PrestaShopBundle\Form\Admin\Type\EmailType:
     arguments:
-      - '@PrestaShopBundle\Form\DataTransformer\IDNConverterDataTransformer'
+      - '@prestashop.bundle.form.data_transformer.idn_converter'
 
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
   PrestaShopBundle\Form\Admin\Category\SimpleCategory:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.data_provider.category"
 
   PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType:
-
   PrestaShopBundle\Form\Admin\Type\TranslateType:
-    arguments:
-      $saveFormLocaleChoice: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
-      $defaultFormLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
-      $defaultShopLanguageId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
 
   PrestaShopBundle\Form\Admin\Feature\ProductFeature:
     arguments:
@@ -82,12 +101,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Product\ProductShipping:
     arguments:
-      - "@translator"
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.data_provider.warehouse"
-      - "@prestashop.adapter.data_provider.carrier"
-      - "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
-      - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+      $warehouseDataProvider: "@prestashop.adapter.data_provider.warehouse"
+      $carrierDataProvider: "@prestashop.adapter.data_provider.carrier"
 
   PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice:
     arguments:
@@ -101,10 +116,6 @@ services:
       - "@prestashop.adapter.data_provider.customer"
 
   PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination:
-    arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.data_provider.currency"
-
   PrestaShopBundle\Form\Admin\Product\ProductVirtual:
   PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination:
   PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType:
@@ -118,24 +129,16 @@ services:
 
   PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk:
   PrestaShopBundle\Form\Admin\Product\ProductCategories:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.data_provider.category"
-      - "@=service('prestashop.adapter.legacy.context').getLanguages()"
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
 
   form.type.translatable.aware:
     abstract: true
-    arguments:
-      - "@translator"
-      - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType:
 
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType:
     arguments:
-      - '@prestashop.core.form.choice_provider.order_state_by_id'
-      - '@=service("prestashop.core.api.order_invoice.repository").countByOrderState(service("prestashop.adapter.shop.context").getContextListShopID())'
+      $orderStateChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
+      $orderCountsByState: '@=service("prestashop.core.api.order_invoice.repository").countByOrderState(service("prestashop.adapter.shop.context").getContextListShopID())'
 
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType:
     arguments:
@@ -144,22 +147,14 @@ services:
 
   PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType:
   PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType:
-
   PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType:
-    arguments:
-      $isCombinationsUsed: '@=service("prestashop.adapter.combination_feature").isUsed()'
-
   PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType:
   PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType:
   PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType:
   PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType:
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType:
     arguments:
-      $isMultistoreUsed: '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      $isSingleShopContext: '@=service("prestashop.adapter.shop.context").isShopContext()'
       $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
-    calls:
-      - [ 'setIsSecure', [ "@=service('request_stack').getCurrentRequest().isSecure()" ] ]
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType:
     arguments:
@@ -191,12 +186,11 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType:
     arguments:
-      $defaultCurrencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       $taxChoices: '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType:
     arguments:
-      $locales: '@=service("prestashop.adapter.legacy.context").getLanguages(false)'
+      $locales: '@=service("prestashop.adapter.legacy.context").getAvailableLanguages()'
 
   PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType:
   PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType:
@@ -267,7 +261,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType:
     arguments:
-      $isShopFeatureActive: '@=service("prestashop.adapter.multistore_feature").isActive()'
       $doesMainShopUrlExist: '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType:
@@ -284,24 +277,12 @@ services:
       - { method: setTranslator, arguments: [ '@translator' ] }
 
   PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType:
-    arguments:
-      $customerGroupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-      $multistoreFeature: '@prestashop.adapter.feature.multistore'
-
   PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType:
-    arguments:
-      $customerGroupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-      $multistoreFeature: '@prestashop.adapter.feature.multistore'
-
   PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType:
-    arguments:
-      $customerGroupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-      $multistoreFeature: '@prestashop.adapter.feature.multistore'
-
 
   PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType:
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.category_delete_mode").getChoices()'
+      $categoryDeleteModelChoices: '@=service("prestashop.core.form.choice_provider.category_delete_mode").getChoices()'
 
   PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType:
   PrestaShopBundle\Form\Admin\Type\DeltaQuantityType:
@@ -336,25 +317,16 @@ services:
       $categoryTreeChoices: '@=service("prestashop.adapter.form.choice_provider.category_tree_choice_provider").getChoices()'
 
   PrestaShopBundle\Form\Admin\Type\TranslatableType:
-    arguments:
-      $availableLocales: "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
-      $saveFormLocaleChoice: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
-      $defaultFormLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
-      $defaultShopLanguageId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
-
-  #  PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType:
-  #    parent: 'form.type.common.translatable'
 
   PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType:
     arguments:
       - "@=service('prestashop.adapter.form.choice_provider.shop_tree_choice_provider').getChoices()"
-      - '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
+      - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
 
   PrestaShopBundle\Form\Admin\Type\ShopSelectorType:
     arguments:
-      - '@prestashop.core.admin.shop.repository'
-      - "@=service('prestashop.core.admin.shop_group.repository').findActive()"
-      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $shopRepository: '@prestashop.core.admin.shop.repository'
+      $shopGroups: "@=service('prestashop.core.admin.shop_group.repository').findActive()"
 
   PrestaShopBundle\Form\Admin\Type\SearchAndResetType:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType:
@@ -376,11 +348,10 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType:
     arguments:
       $allCurrencies: '@=service("prestashop.core.form.choice_provider.currency_name_by_iso_code").getChoices()'
-      $isShopFeatureEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
 
   PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType:
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.customer_delete_method").getChoices()'
+      $customerDeleteMethodChoices: '@=service("prestashop.core.form.choice_provider.customer_delete_method").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType:
     arguments:
@@ -391,13 +362,9 @@ services:
       $themeChoices: '@=service("prestashop.core.form.choice_provider.theme").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Language\LanguageType:
-    arguments:
-      $isMultistoreFeatureActive: '@=service("prestashop.adapter.multistore_feature").isActive()'
-
   PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType:
     arguments:
-      $ecoTaxEnabled: '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_USE_ECOTAX")'
       $taxAddressTypeChoiceProvider: '@=service("prestashop.core.form.choice_provider.tax_address_type_choice_provider")'
       $taxRuleGroupChoiceProvider: '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
 
@@ -405,28 +372,21 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType:
     arguments:
-      $singleDefaultLanguageArrayToFilledArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
-      $isShopFeatureEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      $singleDefaultLanguageArrayToFilledArrayDataTransformer: '@prestashop.bundle.form.data_transformer.default_language_to_filled_array'
 
   PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType:
     arguments:
       $allCmsCategories: '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
-      $isShopFeatureEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType:
-
   PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType:
-    arguments:
-      $isMultistoreEnabled: '@=service("prestashop.adapter.multistore_feature").isActive()'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType:
     arguments:
       $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
       $tabChoices: '@=service("prestashop.core.form.choice_provider.accessible_tab").getChoices()'
       $profilesChoices: '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
-      $isMultistoreFeatureActive: '@=service("prestashop.adapter.multistore_feature").isActive()'
       $superAdminProfileId: !php/const _PS_ADMIN_PROFILE_
-      $router: '@prestashop.router'
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }
 
@@ -437,20 +397,15 @@ services:
   PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType:
     arguments:
       $allCmsCategories: '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
-      $isMultiShopEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
 
   PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType:
     arguments:
       $manufacturerChoices: '@=service("prestashop.adapter.form.choice_provider.manufacturer_name_by_id").getChoices()'
       $statesChoiceProvider: '@prestashop.adapter.form.choice_provider.country_state_by_id'
-      $contextCountryId: '@=service("prestashop.adapter.legacy.context").getContext().country.id'
-      $router: '@prestashop.router'
 
   PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType:
     arguments:
-      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      - '@=service("prestashop.adapter.shop.context").isSingleShopContext()'
-      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+      $contextShopIds: '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
   PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType:
     arguments:
@@ -471,55 +426,39 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType:
     arguments:
-      - '@prestashop.core.form.choice_provider.order_state_by_id'
+      $orderStatusChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType:
     arguments:
-      - '@prestashop.adapter.form.choice_provider.country_state_by_id'
-      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
-      - '@translator'
-      - '@=service("prestashop.adapter.multistore_feature").isActive()'
-      - '@router'
-      - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+      $statesChoiceProvider: '@prestashop.adapter.form.choice_provider.country_state_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType:
     arguments:
-      - '@translator'
-      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-      - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoicesAttributes()'
-      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
-
+      $currencyByIdChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+      $countryByIdChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+      $groupByIdChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+      $shopByIdChoices: '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
+      $currencyByIdChoicesAttributes: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoicesAttributes()'
 
   PrestaShopBundle\Form\Admin\Type\PriceReductionType:
     arguments:
-      $defaultCurrency: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
       $taxInclusionChoiceProvider: '@prestashop.core.form.choice_provider.tax_inclusion'
 
-
   PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType:
-
   PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType:
-
   PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType:
     arguments:
-      - '@prestashop.core.form.choice.provider.order_discount_type'
-      - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      $orderDiscountTypeChoiceProvider: '@prestashop.core.form.choice.provider.order_discount_type'
+      $orderInvoiceByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType:
     arguments:
       $orderInvoiceByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
-      $contextLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
   PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType:
     arguments:
       $orderInvoiceByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
-      $contextLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
   PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType:
     arguments:
@@ -528,21 +467,13 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType:
     arguments:
-      - '@translator'
-      - '@prestashop.adapter.form.choice_provider.currency_symbol_by_id'
-      - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
-      - '@prestashop.adapter.form.choice_provider.installed_payment_modules'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      $currencySymbolByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.currency_symbol_by_id'
+      $orderInvoiceChoiceProvider: '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+      $installedPaymentModulesChoiceProvider: '@prestashop.adapter.form.choice_provider.installed_payment_modules'
 
   PrestaShopBundle\Form\Admin\Type\AmountCurrencyType:
 
-
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType:
-    arguments:
-      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-    calls:
-      - { method: setTranslator, arguments: [ '@translator' ] }
 
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
@@ -551,11 +482,11 @@ services:
   PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType:
   PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType:
     arguments:
-      - '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
+      $carrierForOrderChoiceProvider: '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType:
     arguments:
-      - '@prestashop.core.form.choice_provider.address_required_fields'
+      $addressRequiredFieldsChoicesProvider: '@prestashop.core.form.choice_provider.address_required_fields'
 
   PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType:
 
@@ -585,7 +516,6 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType:
     arguments:
       $stateChoiceProvider: '@prestashop.adapter.form.choice_provider.country_state_by_id'
-      $contextCountryId: '@=service("prestashop.adapter.legacy.context").getContext().country.id'
 
   PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType:
   PrestaShopBundle\Form\Admin\Sell\Order\CancelProductType:
@@ -597,44 +527,27 @@ services:
       - '@translator'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType:
-    calls:
-      - { method: setTranslator, arguments: [ '@translator' ] }
-
   PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType:
   PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
   PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
     arguments:
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
 
-
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
-      - '@prestashop.core.form.choice_provider.product_type_choice_provider'
+      $formChoiceProvider: '@prestashop.core.form.choice_provider.product_type_choice_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\HeaderType:
-    arguments:
-      $stockManagementEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
-      $isEcotaxEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
-
   PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType:
     arguments:
-      $employeeIsoCode: '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
       $shortDescriptionMaxLength: '@=service("prestashop.adapter.legacy.configuration").get("PS_PRODUCT_SHORT_DESC_LIMIT")'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Description\ManufacturerType:
     arguments:
-      - '@translator'
-      - '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
+      $manufacturerChoiceProvider: '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType:
-    arguments:
-      $multistoreFeature: '@prestashop.adapter.feature.multistore'
-
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType:
-    arguments:
-      - "@translator"
-      - "@prestashop.adapter.data_provider.category"
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
 
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType:
     arguments:
@@ -661,19 +574,13 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType:
     arguments:
       $packStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
-      $router: '@router'
-      $employeeIsoCode: '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType:
-    arguments:
-      $stockManagementEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
-
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementType:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType:
     arguments:
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
-      $router: "@router"
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:
@@ -686,31 +593,16 @@ services:
       $additionalDeliveryTimeNoteTypesProvider: '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DimensionsType:
-    arguments:
-      $dimensionUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
-      $weightUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
-
   PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DeliveryTimeNotesType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType:
-    arguments:
-      $defaultCurrencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\RetailPriceType:
     arguments:
       $contextLocale: '@prestashop.core.localization.locale.context_locale'
-      $defaultCurrency: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       $taxRuleGroupChoicesProvider: '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
-      $isTaxEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
-      $isEcotaxEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
-      $ecoTaxGroupId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
-      $taxComputer: '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
-      $contextCountryId: '@=service("prestashop.adapter.legacy.context").getContext().country.id'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\UnitPriceType:
-    arguments:
-      $defaultCurrencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
-
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriceSummaryType:
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricesType:
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\CatalogPriceRulesType:
@@ -722,16 +614,9 @@ services:
       $attributeRepository: '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       $specificPriceCombinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
       $combinationNameBuilder: '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
-      $contextLanguageId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceImpactType:
-    arguments:
-      $defaultCurrencyIso: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
-
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ProductSpecificPricePriorityType:
-    arguments:
-      $specificPriceRepository: '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository'
-
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType:
     arguments:
       $priorityChoiceProvider: '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
@@ -742,9 +627,6 @@ services:
       $countryByIdChoiceProvider: '@prestashop.core.form.choice_provider.country_by_id'
       $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
       $shopByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
-      $defaultCurrencySymbol: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
-      $isMultiShopEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      $contextShopId: "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
 
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType:
     arguments:
@@ -756,12 +638,9 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\RedirectOptionType:
     arguments:
-      $router: '@router'
       $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
-      $employeeIsoCode: '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
       $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
-
 
   PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType:
@@ -786,7 +665,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType:
     arguments:
-      $hookDispatcher: '@prestashop.core.hook.dispatcher'
       $moduleDataProvider: '@prestashop.adapter.data_provider.module'
       $moduleRepository: '@prestashop.core.admin.module.repository'
 
@@ -794,9 +672,6 @@ services:
     arguments:
       $productUrlProvider: '@prestashop.adapter.shop.url.product_provider'
       $productPreviewUrlProvider: '@prestashop.adapter.shop.url.product_preview_provider'
-      $multistoreFeature: '@=service("prestashop.adapter.combination_feature")'
-      $router: '@router'
-      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
   form.type.sell.product.data_transformer.typeahead_redirection_target_transformer:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\TypeaheadRedirectionTargetTransformer'
@@ -815,10 +690,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType:
-    arguments:
-      $defaultCurrency: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      $multistoreFeature: '@prestashop.adapter.feature.multistore'
-      $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationFormType:
     arguments:
@@ -828,13 +699,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType:
     arguments:
-      $defaultCurrency: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      $weightUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
-      $isTaxEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
-      $isEcotaxEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
-      $ecoTaxGroupId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
       $taxComputer: '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
-      $contextCountryId: '@=service("prestashop.adapter.legacy.context").getContext().country.id'
       $contextLocale: '@prestashop.core.localization.locale.context_locale'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationImagesChoiceType:
@@ -843,14 +708,9 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationStockType:
-    arguments:
-      $stockManagementEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
-
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\LowStockThresholdType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType:
     arguments:
-      $currencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
-      $weightUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
       $productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationReferencesType:
@@ -868,12 +728,8 @@ services:
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\SearchEngines\SearchEngineType:
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType:
-    arguments:
-      $isMultistoreEnabled: '@=service("prestashop.adapter.multistore_feature").isActive()'
-
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType:
     arguments:
-      $isMultistoreEnabled: '@=service("prestashop.adapter.multistore_feature").isActive()'
       $currencyChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
@@ -936,15 +792,11 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceKeyType:
     arguments:
-      $isMultistoreFeatureUsed: '@=service("prestashop.adapter.multistore_feature").isUsed()'
       $resourceChoices: '@=service("prestashop.adapter.form.choice_provider.resources_choice_provider").getChoices()'
       $permissionChoices: '@=service("prestashop.core.form.choice_provider.permissions_choice_provider").getChoices()'
 
   PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType:
-
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
-    arguments:
-      $isShopFeatureEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:

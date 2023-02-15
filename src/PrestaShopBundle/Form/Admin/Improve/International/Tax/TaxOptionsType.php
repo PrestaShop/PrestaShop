@@ -43,7 +43,7 @@ class TaxOptionsType extends TranslatorAwareType
     /**
      * @var bool
      */
-    private $ecoTaxEnabled;
+    private $isEcotaxEnabled;
 
     /**
      * @var FormChoiceProviderInterface
@@ -62,19 +62,19 @@ class TaxOptionsType extends TranslatorAwareType
      *
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param bool $ecoTaxEnabled
+     * @param bool $isEcotaxEnabled
      * @param FormChoiceProviderInterface $taxAddressTypeChoiceProvider
      * @param FormChoiceProviderInterface $taxRuleGroupChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        $ecoTaxEnabled,
+        bool $isEcotaxEnabled,
         FormChoiceProviderInterface $taxAddressTypeChoiceProvider,
         FormChoiceProviderInterface $taxRuleGroupChoiceProvider
     ) {
         parent::__construct($translator, $locales);
-        $this->ecoTaxEnabled = $ecoTaxEnabled;
+        $this->isEcotaxEnabled = $isEcotaxEnabled;
         $this->taxAddressTypeChoiceProvider = $taxAddressTypeChoiceProvider;
         $this->taxRuleGroupChoiceProvider = $taxRuleGroupChoiceProvider;
     }
@@ -146,7 +146,7 @@ class TaxOptionsType extends TranslatorAwareType
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
                 'multistore_configuration_key' => 'PS_ECOTAX_TAX_RULES_GROUP_ID',
                 'row_attr' => [
-                    'class' => 'editEcoTaxRuleGroup' . ($this->ecoTaxEnabled ? '' : ' d-none'),
+                    'class' => 'editEcoTaxRuleGroup' . ($this->isEcotaxEnabled ? '' : ' d-none'),
                 ],
             ]);
     }

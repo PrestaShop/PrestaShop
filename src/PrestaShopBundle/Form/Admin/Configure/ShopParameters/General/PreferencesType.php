@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -44,7 +45,7 @@ class PreferencesType extends TranslatorAwareType
     /**
      * @var bool
      */
-    private $isMultistoreUsed;
+    private $isShopFeatureEnabled;
 
     /**
      * @var bool
@@ -60,35 +61,36 @@ class PreferencesType extends TranslatorAwareType
      * @var ConfigurationInterface
      */
     private $configuration;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ConfigurationInterface $configuration
-     * @param bool $isMultistoreUsed
+     * @param bool $isShopFeatureEnabled
      * @param bool $isSingleShopContext
      * @param bool $isAllShopContext
      */
     public function __construct(
+        RequestStack $requestStack,
         TranslatorInterface $translator,
         array $locales,
         ConfigurationInterface $configuration,
-        $isMultistoreUsed,
-        $isSingleShopContext,
-        $isAllShopContext
+        bool $isShopFeatureEnabled,
+        bool $isSingleShopContext,
+        bool $isAllShopContext
     ) {
         parent::__construct($translator, $locales);
 
-        $this->isMultistoreUsed = $isMultistoreUsed;
+        $this->isShopFeatureEnabled = $isShopFeatureEnabled;
         $this->isSingleShopContext = $isSingleShopContext;
         $this->isAllShopContext = $isAllShopContext;
         $this->configuration = $configuration;
+        $this->requestStack = $requestStack;
     }
-
-    /**
-     * @var bool
-     */
-    private $isSecure;
 
     /**
      * {@inheritdoc}
@@ -98,7 +100,7 @@ class PreferencesType extends TranslatorAwareType
         $configuration = $this->configuration;
         $isSslEnabled = (bool) $configuration->get('PS_SSL_ENABLED');
 
-        if ($this->isSecure) {
+        if ($this->requestStack->getCurrentRequest()->isSecure()) {
             $builder->add('enable_ssl', SwitchType::class, [
                 'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
@@ -248,16 +250,6 @@ class PreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Enabled only if the form is accessed using HTTPS protocol.
-     *
-     * @param bool $isSecure
-     */
-    public function setIsSecure($isSecure)
-    {
-        $this->isSecure = $isSecure;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -282,7 +274,7 @@ class PreferencesType extends TranslatorAwareType
      */
     protected function isContextDependantOptionEnabled()
     {
-        if (!$this->isMultistoreUsed && $this->isSingleShopContext) {
+        if (!$this->isShopFeatureEnabled && $this->isSingleShopContext) {
             return true;
         }
 
