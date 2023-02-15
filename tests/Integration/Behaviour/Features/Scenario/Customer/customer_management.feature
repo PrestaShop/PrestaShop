@@ -166,3 +166,13 @@ Feature: Customer Management
     And I attempt to edit customer "CUST-10" and I change the following properties:
       | email | customereleven@prestashop.com |
     Then I should be returned an error message 'Customer with email "customereleven@prestashop.com" already exists'
+
+  Scenario: Fail to create a customer with mismatching groups
+    When I attempt to create a customer "CUST-12" with following properties:
+      | firstName      | Mathieu                       |
+      | lastName       | Napoler                       |
+      | email          | customertwelve@prestashop.com |
+      | password       | PrestaShopForever1_!          |
+      | defaultGroupId | Visitor                       |
+      | groupIds       | [Customer]                    |
+    Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
