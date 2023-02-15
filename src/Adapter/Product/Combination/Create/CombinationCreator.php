@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupReposi
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
@@ -72,7 +72,7 @@ class CombinationCreator
     private $combinationRepository;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableMultiShopRepository;
 
@@ -95,14 +95,14 @@ class CombinationCreator
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationRepository $combinationRepository
      * @param ProductMultiShopRepository $productRepository
-     * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
+     * @param StockAvailableRepository $stockAvailableMultiShopRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
         CombinationRepository $combinationRepository,
         ProductMultiShopRepository $productRepository,
-        StockAvailableMultiShopRepository $stockAvailableMultiShopRepository,
+        StockAvailableRepository $stockAvailableMultiShopRepository,
         AttributeGroupRepository $attributeGroupRepository,
         AttributeRepository $attributeRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater

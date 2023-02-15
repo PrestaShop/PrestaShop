@@ -128,7 +128,7 @@ services:
       - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'

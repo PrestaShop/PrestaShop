@@ -26,7 +26,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
@@ -72,7 +72,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
       - '@PrestaShop\PrestaShop\Core\Stock\StockManager'
@@ -83,7 +83,7 @@ services:
       - '@PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater'
