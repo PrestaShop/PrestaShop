@@ -262,6 +262,8 @@ class AdminLoginControllerCore extends AdminController
 
                 $cookie->write();
 
+                $this->get(SessionRenewer::class)->renew();
+
                 // If there is a valid controller name submitted, redirect to it
                 if (isset($_POST['redirect']) && Validate::isControllerName($_POST['redirect'])) {
                     $url = $this->context->link->getAdminLink($_POST['redirect']);
@@ -269,8 +271,6 @@ class AdminLoginControllerCore extends AdminController
                     $tab = new Tab((int) $this->context->employee->default_tab);
                     $url = $this->context->link->getAdminLink($tab->class_name);
                 }
-
-                $this->get(SessionRenewer::class)->renew();
 
                 Hook::exec(
                     'actionAdminLoginControllerLoginAfter',
