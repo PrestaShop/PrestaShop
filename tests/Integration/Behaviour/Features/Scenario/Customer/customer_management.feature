@@ -176,3 +176,15 @@ Feature: Customer Management
       | defaultGroupId | Visitor                       |
       | groupIds       | [Customer]                    |
     Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
+
+  Scenario: Fail to set mismatching groups on a customer
+    When I create a customer "CUST-13" with following properties:
+      | firstName      | Mathieu                            |
+      | lastName       | Customer                           |
+      | email          | customerethirteen@prestashop.com   |
+      | password       | PrestaShopForever1_!               |
+      | defaultGroupId | Customer                           |
+      | groupIds       | [Customer]                         |
+    And I attempt to edit customer "CUST-13" and I change the following properties:
+      | defaultGroupId | Visitor |
+    Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
