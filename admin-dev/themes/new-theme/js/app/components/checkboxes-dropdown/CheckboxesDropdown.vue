@@ -51,8 +51,7 @@
           :key="choice.id"
         >
           <label class="dropdown-item">
-            <div
-              class="md-checkbox-container">
+            <div class="md-checkbox-container">
               <input
                 :value="choice.id"
                 :name="choice.name"

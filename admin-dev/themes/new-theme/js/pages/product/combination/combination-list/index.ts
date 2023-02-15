@@ -41,7 +41,6 @@ import CombinationsListEditor from '@pages/product/combination/combination-list/
 import {App} from 'vue';
 import RowDeleteHandler from '@pages/product/combination/combination-list/row-delete-handler';
 import {AttributeGroup} from '@pages/product/combination/types';
-import {Choice} from "@app/components/checkboxes-dropdown/types";
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
