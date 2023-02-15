@@ -97,6 +97,7 @@ services:
       - "@prestashop.adapter.data_provider.pack"
       - "@prestashop.adapter.shop.context"
       - "@prestashop.adapter.data_provider.tax"
+      - '@prestashop.adapter.legacy.configuration'
       - "@router"
       - "@prestashop.utils.float_parser"
 
