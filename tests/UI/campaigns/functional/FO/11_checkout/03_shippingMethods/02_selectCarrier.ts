@@ -178,7 +178,6 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'editCreatedAddress', baseContext);
 
       await checkoutPage.clickOnEditAddress(page);
-
       await checkoutPage.setAddress(page, addressDataInUnitedStates);
 
       const isStepCompleted = await checkoutPage.clickOnContinueButtonFromAddressStep(page);

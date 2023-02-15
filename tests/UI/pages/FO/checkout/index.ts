@@ -112,6 +112,8 @@ class Checkout extends FOBasePage {
 
   private readonly addressStepPhoneInput: string;
 
+  private readonly stateInput: string;
+
   private readonly addressStepUseSameAddressCheckbox: string;
 
   private readonly addressStepContinueButton: string;
@@ -241,6 +243,7 @@ class Checkout extends FOBasePage {
     this.addressStepCityInput = '#field-city';
     this.addressStepCountrySelect = '#field-id_country';
     this.addressStepPhoneInput = '#field-phone';
+    this.stateInput = '#field-id_state';
     this.addressStepUseSameAddressCheckbox = '#use_same_address';
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     this.addressStepSubmitButton = `${this.addressStepSection} button[type=submit]`;
@@ -526,8 +529,8 @@ class Checkout extends FOBasePage {
     await this.setValue(page, this.addressStepCityInput, address.city);
     await this.selectByVisibleText(page, this.addressStepCountrySelect, address.country);
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
-    if (await this.elementVisible(page, '#field-id_state', 1000)) {
-      await this.selectByVisibleText(page, '#field-id_state', address.state);
+    if (await this.elementVisible(page, this.stateInput, 1000)) {
+      await this.selectByVisibleText(page, this.stateInput, address.state);
     }
   }
 
