@@ -6,11 +6,6 @@ services:
     arguments:
       - '@prestashop.hook.dispatcher'
 
-  PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface: '@PrestaShop\PrestaShop\Core\Hook\HookDispatcher'
-
-  prestashop.core.hook.dispatcher:
-    alias: 'PrestaShop\PrestaShop\Core\Hook\HookDispatcher'
-
   prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider:
     class: PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider
     arguments:

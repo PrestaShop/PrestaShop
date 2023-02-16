@@ -45,7 +45,7 @@ final class Hook implements HookInterface
      * @param string $name
      * @param array $parameters
      */
-    public function __construct($name, array $parameters = [])
+    public function __construct(string $name, array $parameters = [])
     {
         $this->name = $name;
         $this->parameters = $parameters;
@@ -54,7 +54,7 @@ final class Hook implements HookInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -62,7 +62,7 @@ final class Hook implements HookInterface
     /**
      * {@inheritdoc}
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }

@@ -26,22 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
-/**
- * Interface HookInterface defines contract for hook.
- */
-interface HookInterface
+interface HookExecutorInterface
 {
-    /**
-     * Get hook name.
-     *
-     * @return string
-     */
-    public function getName(): string;
-
-    /**
-     * Get hook parameters.
-     *
-     * @return array
-     */
-    public function getParameters(): array;
+    public function exec(
+        string $hookName,
+        array $hook_args = [],
+        ?int $id_module = null,
+        bool $array_return = false,
+        bool $check_exceptions = true,
+        ?int $id_shop = null,
+        bool $chain = false
+    );
 }

@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\E
 use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand;
-use PrestaShopBundle\Service\Hook\HookEvent;
+use PrestaShopBundle\Hook\HookEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -58,11 +58,12 @@ class FeatureFlagTypeListener implements EventSubscriberInterface
 
     public function onFeatureFlagBetaSave(HookEvent $event): void
     {
-        if (isset($event->getHookParameters()['form_data']['feature_flags']['authorization_server']['enabled'])) {
+        $parameters = $event->getHook()->getParameters();
+        if (isset($parameters['form_data']['feature_flags']['authorization_server']['enabled'])) {
             $this->commandBus->handle(
                 new UpdateTabStatusByClassNameCommand(
                     'AdminAuthorizationServer',
-                    $event->getHookParameters()['form_data']['feature_flags']['authorization_server']['enabled']
+                    $parameters['form_data']['feature_flags']['authorization_server']['enabled']
                 )
             );
             $this->tabDataProvider->resetTabCache();

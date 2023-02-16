@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Hook\HookExecutorInterface:
+    class: 'PrestaShop\PrestaShop\Adapter\Hook\HookAdapter'
+
+  PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface: '@PrestaShopBundle\Hook\SymfonyEventHookDispatcher'
+
+  PrestaShopBundle\Hook\:
+    resource: "../../../../Hook/*"
+
+  prestashop.core.hook.dispatcher:
+    alias: 'PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
+    public: true
