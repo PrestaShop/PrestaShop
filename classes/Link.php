@@ -981,20 +981,31 @@ class LinkCore
      * Note: image filesystem stores product images in subdirectories of img/p/.
      *
      * @param string $name Rewrite link of the image
-     * @param string $idImage ID of product image
+     * @param string $idImage Numeric ID of product image or a name of default image like "fr-default"
      * @param string|null $type
      *
      * @return string
      */
     public function getImageLink($name, $idImage, $type = null, string $extension = 'jpg')
     {
-        $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
-        // If friendly URLs are enabled
-        if ($this->allow) {
-            $uriPath = __PS_BASE_URI__ . $idImage . ($type ? '-' . $type : '') . $theme . '/' . $name . '.' . $extension;
-        // If friendly URLs are disabled
+        $type = ($type ? '-' . $type : '');
+
+        // Default image like "fr-default"
+        if (strpos($idImage, 'default') !== false) {
+            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $idImage . $type . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+            $uriPath = _THEME_PROD_DIR_ . $idImage . $type . $theme . '.' . $extension;
+
+        // Regular image with numeric ID
         } else {
-            $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . $theme . '.' . $extension;
+            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+
+            // If friendly URLs are enabled
+            if ($this->allow) {
+                $uriPath = __PS_BASE_URI__ . $idImage . $type . $theme . '/' . $name . '.' . $extension;
+            // If friendly URLs are disabled
+            } else {
+                $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . $theme . '.' . $extension;
+            }
         }
 
         return $this->protocol_content . Tools::getMediaServer($uriPath) . $uriPath;
