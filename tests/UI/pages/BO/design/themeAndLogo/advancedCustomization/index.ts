@@ -9,23 +9,23 @@ import {Page} from 'playwright';
 class AdvancedCustomization extends themeAndLogoBasePage {
   public readonly pageTitle: string;
 
-  public readonly downloadThemeButton: string;
+  private readonly downloadThemeButton: string;
 
-  public readonly uploadChildThemeModal: string;
+  private readonly uploadChildThemeModal: string;
 
-  public readonly uploadChildThemeButton: string;
+  private readonly uploadChildThemeButton: string;
 
-  public readonly modalDialogUploadChildTheme: string;
+  private readonly modalDialogUploadChildTheme: string;
 
-  public readonly modalCloseButton: string;
+  private readonly modalCloseButton: string;
 
-  public readonly childThemeImportDropZone: string;
+  private readonly childThemeImportDropZone: string;
 
-  public readonly modalDialogUploadChildThemeSelectLink: string;
+  private readonly modalDialogUploadChildThemeSelectLink: string;
 
-  public readonly successMsgUploadChildTheme: string;
+  private readonly successMsgUploadChildTheme: string;
 
-  public readonly howToUseParentsChildThemesLink: string;
+  private readonly howToUseParentsChildThemesLink: string;
 
   /**
    * @constructs
@@ -77,7 +77,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
   async uploadTheme(page: Page, filePath: string): Promise<string> {
     await Promise.all([
       this.waitForVisibleSelector(page, this.modalDialogUploadChildThemeSelectLink),
-      this.uploadOnFileChooser(page, this.modalDialogUploadChildThemeSelectLink, filePath),
+      this.uploadOnFileChooser(page, this.modalDialogUploadChildThemeSelectLink, [filePath]),
     ]);
 
     return this.getTextContent(page, this.successMsgUploadChildTheme);

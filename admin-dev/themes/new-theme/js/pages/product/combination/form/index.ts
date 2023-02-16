@@ -26,7 +26,7 @@
 import ImageSelector from '@pages/product/combination/form/image-selector';
 import CombinationMap from '@pages/product/combination/form/combination-map';
 import CombinationFormModel from '@pages/product/combination/form/combination-form-model';
-import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
+import ProductSuppliersCollection from '@pages/product/supplier/product-suppliers-collection';
 
 const {$} = window;
 

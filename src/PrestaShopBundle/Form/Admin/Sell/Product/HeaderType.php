@@ -134,6 +134,7 @@ class HeaderType extends TranslatorAwareType
                     $this->trans('Offline', 'Admin.Global') => false,
                     $this->trans('Online', 'Admin.Global') => true,
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('initial_type', HiddenType::class)
         ;

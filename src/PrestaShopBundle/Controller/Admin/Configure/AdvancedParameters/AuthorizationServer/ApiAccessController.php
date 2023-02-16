@@ -33,6 +33,8 @@ use PrestaShopBundle\Exception\NotImplementedException;
 
 /**
  * Manages the "Configure > Advanced Parameters > Authorization Server > Api Access" page.
+ *
+ * @experimental
  */
 class ApiAccessController extends FrameworkBundleAdminController
 {

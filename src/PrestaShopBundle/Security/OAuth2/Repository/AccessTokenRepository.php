@@ -33,8 +33,10 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use PrestaShopBundle\Security\OAuth2\Entity\AccessToken;
 
-/*
+/**
  * Repository class responsible for managing PrestaShop's Authorization Server AccessToken entity
+ *
+ * @experimental
  */
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {

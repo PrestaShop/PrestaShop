@@ -36,9 +36,11 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/*
+/**
  * Class responsible for validating token
  * thanks to the PrestaShop's Authorization Server
+ *
+ * @experimental
  */
 class ResourceServer implements ResourceServerInterface
 {

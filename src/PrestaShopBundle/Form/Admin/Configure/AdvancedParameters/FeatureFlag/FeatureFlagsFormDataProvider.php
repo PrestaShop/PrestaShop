@@ -47,11 +47,6 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     protected $stability;
 
     /**
-     * @var bool
-     */
-    protected $isMultiShopUsed;
-
-    /**
      * @var CacheCleanerInterface
      */
     private $cacheCleaner;
@@ -59,18 +54,15 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     /**
      * @param EntityManagerInterface $doctrineEntityManager
      * @param string $stability
-     * @param bool $isMultiShopUsed
      * @param CacheCleanerInterface $cacheCleaner
      */
     public function __construct(
         EntityManagerInterface $doctrineEntityManager,
         string $stability,
-        bool $isMultiShopUsed,
         CacheCleanerInterface $cacheCleaner
     ) {
         $this->doctrineEntityManager = $doctrineEntityManager;
         $this->stability = $stability;
-        $this->isMultiShopUsed = $isMultiShopUsed;
         $this->cacheCleaner = $cacheCleaner;
     }
 
@@ -80,11 +72,6 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 
         $featureFlagsData = [];
         foreach ($featureFlags as $featureFlag) {
-            // We disable product v2 switch based on multishop state and feature name, someday we will need
-            // to implement a more generic feature for any feature flag
-            $isDisabled = strpos($featureFlag->getName(), '_multi_shop') !== false && !$this->isMultiShopUsed
-                || strpos($featureFlag->getName(), '_multi_shop') === false && $this->isMultiShopUsed
-            ;
             $featureFlagsData[$featureFlag->getName()] = [
                 'enabled' => $featureFlag->isEnabled(),
                 'name' => $featureFlag->getName(),
@@ -92,7 +79,9 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 'label_domain' => $featureFlag->getLabelDomain(),
                 'description' => $featureFlag->getDescriptionWording(),
                 'description_domain' => $featureFlag->getDescriptionDomain(),
-                'disabled' => $isDisabled,
+                // You can handle specific rules here to indicate if the feature flag should be editable or not, currently
+                // no more specific rule but it can evolve in the future
+                'disabled' => false,
             ];
         }
 

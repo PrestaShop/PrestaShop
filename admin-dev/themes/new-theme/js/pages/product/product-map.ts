@@ -174,7 +174,6 @@ export default {
       rowActionButtons: '.combination-row-actions button',
       footer: {
         cancel: '#cancel-combinations-edition',
-        reset: '#reset-combinations-edition',
         save: '#save-combinations-edition',
       },
     },
