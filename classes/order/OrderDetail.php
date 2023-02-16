@@ -924,7 +924,7 @@ class OrderDetailCore extends ObjectModel
                 foreach ($order_products as &$order_product) {
                     $order_product['image'] = Context::getContext()->link->getImageLink(
                         $order_product['link_rewrite'],
-                        (int) $order_product['product_id'] . '-' . (int) $order_product['id_image'],
+                        (int) $order_product['id_image'],
                         ImageType::getFormattedName('medium')
                     );
                     $order_product['link'] = Context::getContext()->link->getProductLink(
