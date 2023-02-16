@@ -39,30 +39,38 @@ class AbstractTitleHandler
      * @var TitleRepository
      */
     protected $titleRepository;
+    /**
+     * @var string
+     */
+    protected $tmpImageDir;
+    /**
+     * @var string
+     */
+    protected $genderDir;
 
     /**
      * @param TitleRepository $titleRepository
      */
-    public function __construct(TitleRepository $titleRepository)
+    public function __construct(TitleRepository $titleRepository, string $tmpImageDir, string $genderDir)
     {
         $this->titleRepository = $titleRepository;
+        $this->tmpImageDir = $tmpImageDir;
+        $this->genderDir = $genderDir;
     }
 
     /**
      * @param int $titleId
      * @param string $newImagePath
-     * @param string $imageDir
      * @param int $imageWidth
      * @param int $imageHeight
      */
     protected function uploadImage(
         int $titleId,
         string $newImagePath,
-        string $imageDir,
         int $imageWidth,
         int $imageHeight
     ): void {
-        $temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+        $temporaryImage = tempnam($this->tmpImageDir, 'PS');
         if (!$temporaryImage) {
             return;
         }
@@ -82,7 +90,7 @@ class AbstractTitleHandler
         // Copy new image
         if (!ImageManager::resize(
             $temporaryImage,
-            _PS_IMG_DIR_ . $imageDir . $titleId . '.jpg',
+            $this->genderDir . $titleId . '.jpg',
             $imageWidth,
             $imageHeight
         )) {
@@ -92,9 +100,9 @@ class AbstractTitleHandler
             );
         }
 
-        if (file_exists(_PS_GENDERS_DIR_ . $titleId . '.jpg')) {
+        if (file_exists($this->genderDir . $titleId . '.jpg')) {
             $shopId = Context::getContext()->shop->id;
-            $currentFile = _PS_TMP_IMG_DIR_ . 'lang_mini_' . $titleId . '_' . $shopId . '.jpg';
+            $currentFile = $this->tmpImageDir . 'lang_mini_' . $titleId . '_' . $shopId . '.jpg';
 
             if (file_exists($currentFile)) {
                 unlink($currentFile);

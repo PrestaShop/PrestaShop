@@ -237,5 +237,4 @@ services:
     autowire: true
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider:
-    arguments:
-      - '@prestashop.core.query_bus'
+    autowire: true

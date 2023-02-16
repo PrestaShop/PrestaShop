@@ -76,7 +76,6 @@ class AddTitleHandler extends AbstractTitleHandler implements AddTitleHandlerInt
         $this->uploadImage(
             $titleId->getValue(),
             $command->getImagePathname(),
-            'genders' . DIRECTORY_SEPARATOR,
             $command->getImageWidth(),
             $command->getImageHeight()
         );

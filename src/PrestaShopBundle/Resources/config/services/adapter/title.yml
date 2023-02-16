@@ -4,12 +4,18 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Title\CommandHandler\AddTitleHandler:
     autowire: true
+    arguments:
+      $tmpImageDir: !php/const _PS_TMP_IMG_DIR_
+      $genderDir: !php/const _PS_GENDERS_DIR_
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand'
 
   PrestaShop\PrestaShop\Adapter\Title\CommandHandler\EditTitleHandler:
     autowire: true
+    arguments:
+      $tmpImageDir: !php/const _PS_TMP_IMG_DIR_
+      $genderDir: !php/const _PS_GENDERS_DIR_
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\EditTitleCommand'
@@ -24,6 +30,9 @@ services:
   prestashop.adapter.title.command_handler.delete_title_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\DeleteTitleHandler'
     autowire: true
+    arguments:
+      $tmpImageDir: !php/const _PS_TMP_IMG_DIR_
+      $genderDir: !php/const _PS_GENDERS_DIR_
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand'
@@ -31,12 +40,18 @@ services:
   prestashop.adapter.title.command_handler.bulk_delete_title_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\BulkDeleteTitleHandler'
     autowire: true
+    arguments:
+      $tmpImageDir: !php/const _PS_TMP_IMG_DIR_
+      $genderDir: !php/const _PS_GENDERS_DIR_
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand'
 
   PrestaShop\PrestaShop\Adapter\Title\QueryHandler\GetTitleForEditingHandler:
     autowire: true
+    arguments:
+      $tmpImageDir: !php/const _PS_TMP_IMG_DIR_
+      $genderDir: !php/const _PS_GENDERS_DIR_
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing'

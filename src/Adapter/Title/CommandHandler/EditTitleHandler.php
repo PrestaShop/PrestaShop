@@ -84,7 +84,6 @@ class EditTitleHandler extends AbstractTitleHandler implements EditTitleHandlerI
         $this->uploadImage(
             (int) $title->id,
             $command->getImagePathname(),
-            'genders' . DIRECTORY_SEPARATOR,
             $command->getImageWidth(),
             $command->getImageHeight()
         );
