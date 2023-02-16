@@ -26,38 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Title\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-
-/**
- * Class GenderProvider provides genders choices.
- */
-class GenderChoiceProvider implements FormChoiceProviderInterface
+class Gender
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
-     * Get currency choices.
-     *
-     * @return array
-     */
-    public function getChoices(): array
-    {
-        return [
-            $this->translator->trans('Male', [], 'Admin.Shopparameters.Feature') => Gender::TYPE_MALE,
-            $this->translator->trans('Female', [], 'Admin.Shopparameters.Feature') => Gender::TYPE_FEMALE,
-            $this->translator->trans('Other', [], 'Admin.Shopparameters.Feature') => Gender::TYPE_OTHER,
-        ];
-    }
+    public const TYPE_MALE = 0;
+    public const TYPE_FEMALE = 1;
+    public const TYPE_OTHER = 2;
 }

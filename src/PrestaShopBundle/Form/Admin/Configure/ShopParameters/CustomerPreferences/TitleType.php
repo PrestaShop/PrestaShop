@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
-use Gender;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -59,9 +59,9 @@ class TitleType extends TranslatorAwareType
                 'expanded' => true,
                 'placeholder' => false,
                 'choices' => [
-                    $this->trans('Male', 'Admin.Shopparameters.Feature') => (int) Gender::TYPE_MALE,
-                    $this->trans('Female', 'Admin.Shopparameters.Feature') => (int) Gender::TYPE_FEMALE,
-                    $this->trans('Neutral', 'Admin.Shopparameters.Feature') => (int) Gender::TYPE_OTHER,
+                    $this->trans('Male', 'Admin.Shopparameters.Feature') => Gender::TYPE_MALE,
+                    $this->trans('Female', 'Admin.Shopparameters.Feature') => Gender::TYPE_FEMALE,
+                    $this->trans('Neutral', 'Admin.Shopparameters.Feature') => Gender::TYPE_OTHER,
                 ],
                 'required' => false,
             ])
