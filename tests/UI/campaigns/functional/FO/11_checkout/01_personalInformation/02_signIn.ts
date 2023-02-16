@@ -41,7 +41,6 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
   it('should open FO page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
-    // Go to FO and change language
     await homePage.goToFo(page);
     await homePage.changeLanguage(page, 'en');
 
@@ -64,7 +63,6 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
 
     await cartPage.clickOnProceedToCheckout(page);
 
-    // Go to checkout page
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     await expect(isCheckoutPage).to.be.true;
   });
