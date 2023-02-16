@@ -73,7 +73,13 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         $this->assertCustomerWasFound($customerId, $customer);
 
-        $this->assertCustomerWithUpdatedEmailDoesNotExist($customer, $command);
+        // If dealing with a registered customer, we need to check if the email does not exist.
+        // Two guests with the same email can co-exist, two registered customers can not.
+        // This check only runs if the email is getting changed.
+        if (!$customer->isGuest()) {
+            $this->assertCustomerWithUpdatedEmailDoesNotExist($customer, $command);
+        }
+
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
 
         $this->updateCustomerWithCommandData($customer, $command);
@@ -205,17 +211,19 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
      */
     private function assertCustomerWithUpdatedEmailDoesNotExist(Customer $customer, EditCustomerCommand $command)
     {
-        // if email is not being updated
-        // then assertion is not needed
+        // We only check this if the email is getting changed.
         if (null === $command->getEmail()) {
             return;
         }
 
+        // If the email is getting changed, but is the same as the current email, nothing to do here.
         if ($command->getEmail()->isEqualTo(new Email($customer->email))) {
             return;
         }
 
         $customerByEmail = new Customer();
+
+        // Now check if a registered customer with the same email exists, ignoring guests.
         $customerByEmail->getByEmail($command->getEmail()->getValue());
 
         if ($customerByEmail->id) {

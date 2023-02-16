@@ -219,7 +219,7 @@ class OrderConfirmationControllerCore extends FrontController
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($this->order),
             'order' => (new OrderPresenter())->present($this->order),
             'order_customer' => (new ObjectPresenter())->present($this->customer),
-            'registered_customer_exists' => Customer::customerExists($this->customer->email, false, true),
+            'registered_customer_exists' => Customer::customerExists($this->customer->email),
         ]);
         $this->setTemplate('checkout/order-confirmation');
 
