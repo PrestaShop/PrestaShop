@@ -20,6 +20,8 @@ class Cart extends FOBasePage {
 
   public readonly alertChooseDeliveryAddressWarningText: string;
 
+  public readonly noItemsInYourCartMessage: string;
+
   private readonly productItem: (number: number) => string;
 
   private readonly productName: (number: number) => string;
@@ -43,6 +45,8 @@ class Cart extends FOBasePage {
   private readonly deleteIcon: (number: number) => string;
 
   private readonly itemsNumber: string;
+
+  private readonly noItemsInYourCartSpan: string;
 
   private readonly subtotalDiscountValueSpan: string;
 
@@ -89,7 +93,8 @@ class Cart extends FOBasePage {
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
     this.cartRuleAlertMessageText = 'You cannot use this voucher';
     this.alertChooseDeliveryAddressWarningText = 'You must choose a delivery address'
-    + ' before applying this voucher to your order';
+      + ' before applying this voucher to your order';
+    this.noItemsInYourCartMessage = 'There are no more items in your cart';
 
     // Selectors for cart page
     // Shopping cart block selectors
@@ -105,6 +110,7 @@ class Cart extends FOBasePage {
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line-info.color span.value`;
     this.productImage = (number: number) => `${this.productItem(number)} span.product-image img`;
     this.deleteIcon = (number: number) => `${this.productItem(number)} .remove-from-cart`;
+    this.noItemsInYourCartSpan = 'div.cart-grid-body div.cart-overview.js-cart span.no-items';
 
     // Cart summary block selectors
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
@@ -131,6 +137,18 @@ class Cart extends FOBasePage {
     this.alertPromoCode = '#promo-code > div > div > span';
   }
 
+  /*
+ Methods
+  */
+
+  /**
+   * Get no items in your cart message
+   * @param page {Page} Browser tab
+   */
+  async getNoItemsInYourCartMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.noItemsInYourCartSpan);
+  }
+
   /**
    *
    * @param page {Page} Browser tab
@@ -149,7 +167,7 @@ class Cart extends FOBasePage {
    */
   async getProductDetail(page: Page, row: number): Promise<{
     discountPercentage: string,
-    image: string|null,
+    image: string | null,
     quantity: number,
     totalPrice: number,
     price: number,

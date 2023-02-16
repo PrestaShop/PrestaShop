@@ -19,6 +19,8 @@ class Checkout extends FOBasePage {
 
   private readonly checkoutPageBody: string;
 
+  public readonly messageIfYouSignOut: string;
+
   private readonly paymentStepSection: string;
 
   private readonly paymentOptionInput: (name: string) => string;
@@ -90,6 +92,12 @@ class Checkout extends FOBasePage {
   private readonly passwordInput: string;
 
   private readonly personalInformationContinueButton: string;
+
+  private readonly personalInformationLogoutLink: string;
+
+  private readonly personalInformationCustomerIdentity: string;
+
+  private readonly personalInformationEditLink: string;
 
   private readonly addressStepSection: string;
 
@@ -190,6 +198,7 @@ class Checkout extends FOBasePage {
     this.cartRuleAlertMessageText = 'You cannot use this voucher with this carrier';
     this.deleteAddressSuccessMessage = 'Address successfully deleted.';
     this.noPaymentNeededText = 'No payment needed for this order';
+    this.messageIfYouSignOut = 'If you sign out now, your cart will be emptied.';
 
     // Selectors
     this.successAlert = '#notifications article.alert-success';
@@ -218,6 +227,9 @@ class Checkout extends FOBasePage {
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
     this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
+    this.personalInformationLogoutLink = `${this.personalInformationStepForm} a[href*=mylogout]`;
+    this.personalInformationCustomerIdentity = `${this.personalInformationStepForm} p.identity`;
+    this.personalInformationEditLink = `${this.personalInformationStepForm} span.step-edit.text-muted`;
 
     // Addresses step selectors
     this.addressStepSection = '#checkout-addresses-step';
@@ -326,6 +338,36 @@ class Checkout extends FOBasePage {
    */
   async clickOnSignIn(page: Page): Promise<void> {
     await page.click(this.signInLink);
+  }
+
+  /**
+   * Logout customer
+   * @param page {Page} Browser tab
+   */
+  async logOutCustomer(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.personalInformationLogoutLink);
+
+    return this.isStepCompleted(page, this.personalInformationStepForm);
+  }
+
+  /**
+   * Click on edit personal information step
+   * @param page {Page} Browser tab
+   */
+  async clickOnEditPersonalInformationStep(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.personalInformationEditLink);
+  }
+
+  /**
+   * Get customer identity
+   * @param page {Page} Browser tab
+   */
+  async getCustomerIdentity(page: Page): Promise<string> {
+    return this.getTextContent(page, this.personalInformationCustomerIdentity);
+  }
+
+  async getLogoutMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, '#checkout-personal-information-step p:nth-child(3) small');
   }
 
   /**
