@@ -981,7 +981,7 @@ class LinkCore
      * Note: image filesystem stores product images in subdirectories of img/p/.
      *
      * @param string $name Rewrite link of the image
-     * @param string $idImage Numeric ID of product image or a name of default image like "fr-default"
+     * @param string|int $idImage Numeric ID of product image or a name of default image like "fr-default"
      * @param string|null $type
      *
      * @return string
@@ -989,6 +989,7 @@ class LinkCore
     public function getImageLink($name, $idImage, $type = null, string $extension = 'jpg')
     {
         $type = ($type ? '-' . $type : '');
+        $idImage = (string) $idImage;
 
         // Default image like "fr-default"
         if (strpos($idImage, 'default') !== false) {
