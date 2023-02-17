@@ -1141,20 +1141,6 @@ class ToolsCore
     /**
      * Hash password.
      *
-     * @param string $passwd String to hash
-     *
-     * @return string Hashed password
-     *
-     * @deprecated 1.7.0
-     */
-    public static function encrypt($passwd)
-    {
-        return self::hash($passwd);
-    }
-
-    /**
-     * Hash password.
-     *
      * @param string $passwd String to has
      *
      * @return string Hashed password
@@ -1164,20 +1150,6 @@ class ToolsCore
     public static function hash($passwd)
     {
         return (new Hashing())->hash($passwd, _COOKIE_KEY_);
-    }
-
-    /**
-     * Hash data string.
-     *
-     * @param string $data String to encrypt
-     *
-     * @return string Hashed IV
-     *
-     * @deprecated 1.7.0
-     */
-    public static function encryptIV($data)
-    {
-        return self::hashIV($data);
     }
 
     /**
