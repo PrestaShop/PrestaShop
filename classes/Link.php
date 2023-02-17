@@ -981,7 +981,7 @@ class LinkCore
      * Note: image filesystem stores product images in subdirectories of img/p/.
      *
      * @param string $name Rewrite link of the image
-     * @param string|int $idImage Numeric ID of product image or a name of default image like "fr-default".
+     * @param string|int $idImage numeric ID of product image or a name of default image like "fr-default"
      * @param string|null $type
      *
      * @return string
@@ -999,7 +999,7 @@ class LinkCore
         // Regular image with numeric ID
         } else {
             // We will still process the old way of requesting images in a form of productID-imageID, but notify developers
-            if (strpos($idImage, "-")) {
+            if (strpos($idImage, '-')) {
                 $idImage = explode('-', $idImage)[1];
                 if (_PS_MODE_DEV_) {
                     trigger_error(
