@@ -76,6 +76,8 @@ use Product;
  *        the initial ProductRepository and single shop methods should be removed But since this will be done
  *        in several PRs for now it's easier to separate them into two services
  *        This is why a lot of code is duplicated between the two classes but don't worry this one is only temporary
+ *
+ * @todo: left to resolve to issues with product deletion commands and then rename this to ProductRepository
  */
 class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 {

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Db;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -47,7 +47,7 @@ abstract class AbstractDeleteCategoryHandler
     protected $homeCategoryId;
 
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -58,12 +58,12 @@ abstract class AbstractDeleteCategoryHandler
 
     /**
      * @param int $homeCategoryId
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param CategoryRepository $categoryRepository
      */
     public function __construct(
         int $homeCategoryId,
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         CategoryRepository $categoryRepository
     ) {
         $this->homeCategoryId = $homeCategoryId;
@@ -180,7 +180,7 @@ abstract class AbstractDeleteCategoryHandler
         $productIdsWithoutCategories = $this->findProductIdsWithoutCategories();
 
         foreach ($productIdsWithoutCategories as $productId) {
-            $product = $this->productRepository->get($productId);
+            $product = $this->productRepository->getProductByDefaultShop($productId);
 
             if ($mode->shouldRemoveProducts()) {
                 $product->delete();
@@ -204,7 +204,7 @@ abstract class AbstractDeleteCategoryHandler
         $productIds = $this->findProductsByDefaultCategories($deletedCategoryIdsByParent);
 
         foreach ($productIds as $productId) {
-            $product = $this->productRepository->get($productId);
+            $product = $this->productRepository->getProductByDefaultShop($productId);
             $this->addProductDefaultCategory($product, (int) $product->id_category_default, $deletedCategoryIdsByParent);
         }
     }

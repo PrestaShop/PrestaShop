@@ -28,12 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles command which deletes products in bulk action
@@ -41,14 +42,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 final class BulkDeleteProductHandler extends AbstractBulkHandler implements BulkDeleteProductHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductMultiShopRepository $productRepository)
     {
         $this->productRepository = $productRepository;
     }
@@ -63,7 +64,12 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
 
     protected function handleSingleAction(ProductId $productId, $command = null)
     {
-        $this->productRepository->delete($productId);
+        //@todo: not sure about all shops constraint. Something might be confused here.
+        // Im pretty sure it used to delete product only in context shop when we don't provide shops explicitly.
+        // but in ProductController I see it used in bulkDeleteFromAllShopsAction.
+        // So this whole command might deserve renaming, or its confused with DeleteProductFromShopsCommand (which seems to be unused at all)
+        // need to double check this part before merging
+        $this->productRepository->deleteByShopConstraint($productId, ShopConstraint::allShops());
     }
 
     protected function buildBulkException(): BulkProductException

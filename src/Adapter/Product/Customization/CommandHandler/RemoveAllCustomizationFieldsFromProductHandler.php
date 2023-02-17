@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -46,7 +46,7 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
     private $customizationFieldDeleter;
 
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -57,12 +57,12 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
 
     /**
      * @param CustomizationFieldDeleter $customizationFieldDeleter
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      */
     public function __construct(
         CustomizationFieldDeleter $customizationFieldDeleter,
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
     ) {
         $this->customizationFieldDeleter = $customizationFieldDeleter;
@@ -75,7 +75,7 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
      */
     public function handle(RemoveAllCustomizationFieldsFromProductCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $product = $this->productRepository->getProductByDefaultShop($command->getProductId());
 
         $customizationFieldIds = array_map(function (array $field): CustomizationFieldId {
             return new CustomizationFieldId((int) $field['id_customization_field']);

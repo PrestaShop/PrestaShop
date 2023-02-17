@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Update;
 
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
@@ -47,7 +47,7 @@ use PrestaShopException;
 class ProductPackUpdater
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -57,11 +57,11 @@ class ProductPackUpdater
     private $productPackRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductPackRepository $productPackRepository
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductPackRepository $productPackRepository
     ) {
         $this->productRepository = $productRepository;
@@ -78,7 +78,7 @@ class ProductPackUpdater
      */
     public function setPackProducts(PackId $packId, array $productsForPacking): void
     {
-        $pack = $this->productRepository->get($packId);
+        $pack = $this->productRepository->getProductByDefaultShop($packId);
         if ($pack->product_type !== ProductType::TYPE_PACK) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_PACK_TYPE);
         }

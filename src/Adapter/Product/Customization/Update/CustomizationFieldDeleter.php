@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Customization\Update;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotBulkDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -50,7 +50,7 @@ class CustomizationFieldDeleter
     private $customizationFieldRepository;
 
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -61,11 +61,11 @@ class CustomizationFieldDeleter
 
     /**
      * @param CustomizationFieldRepository $customizationFieldRepository
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
         CustomizationFieldRepository $customizationFieldRepository,
-        ProductRepository $productRepository
+        ProductMultiShopRepository $productRepository
     ) {
         $this->customizationFieldRepository = $customizationFieldRepository;
         $this->productRepository = $productRepository;
@@ -135,7 +135,7 @@ class CustomizationFieldDeleter
     private function getProduct(int $productId): Product
     {
         if (!isset($this->productsById[$productId])) {
-            $this->productsById[$productId] = $this->productRepository->get(new ProductId($productId));
+            $this->productsById[$productId] = $this->productRepository->getProductByDefaultShop(new ProductId($productId));
         }
 
         return $this->productsById[$productId];

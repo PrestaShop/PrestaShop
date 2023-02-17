@@ -28,24 +28,29 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles @see DeleteProductCommand using legacy object model
+ *
+ * @todo: double check this command and DeleteProductFromShops. Maybe only one of them should exist?
+ *        Or maybe this one needs to be renamed if its used for all shops?
+ *        Previous behavior of this command was probably to remove product from current context shop only
  */
-final class DeleteProductHandler implements DeleteProductHandlerInterface
+class DeleteProductHandler implements DeleteProductHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductMultiShopRepository $productRepository)
     {
         $this->productRepository = $productRepository;
     }
@@ -55,6 +60,6 @@ final class DeleteProductHandler implements DeleteProductHandlerInterface
      */
     public function handle(DeleteProductCommand $command): void
     {
-        $this->productRepository->delete($command->getProductId());
+        $this->productRepository->deleteByShopConstraint($command->getProductId(), ShopConstraint::allShops());
     }
 }

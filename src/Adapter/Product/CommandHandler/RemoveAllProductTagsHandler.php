@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllProductTagsHandlerInterface;
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllProductTag
 final class RemoveAllProductTagsHandler implements RemoveAllProductTagsHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -46,11 +46,11 @@ final class RemoveAllProductTagsHandler implements RemoveAllProductTagsHandlerIn
     private $productTagUpdater;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductTagUpdater $productTagUpdater
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductTagUpdater $productTagUpdater
     ) {
         $this->productRepository = $productRepository;
@@ -62,8 +62,9 @@ final class RemoveAllProductTagsHandler implements RemoveAllProductTagsHandlerIn
      */
     public function handle(RemoveAllProductTagsCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
-
-        $this->productTagUpdater->setProductTags($product, []);
+        $this->productTagUpdater->setProductTags(
+            $this->productRepository->getProductByDefaultShop($command->getProductId()),
+            []
+        );
     }
 }

@@ -11,9 +11,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Validate\CustomizationFieldValidator'
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater:
     arguments:
@@ -37,10 +36,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand

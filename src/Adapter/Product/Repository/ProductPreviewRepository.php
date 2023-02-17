@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class ProductPreviewRepository
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -52,11 +52,11 @@ class ProductPreviewRepository
     private $productImageRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductImageRepository $productImageRepository
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductImageRepository $productImageRepository
     ) {
         $this->productRepository = $productRepository;
@@ -73,7 +73,7 @@ class ProductPreviewRepository
      */
     public function getPreview(ProductId $productId, LanguageId $languageId): ProductPreview
     {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getProductByDefaultShop($productId);
         $name = $product->name[$languageId->getValue()] ?? reset($product->name);
         $imagePath = $this->productImageRepository->getProductCoverUrl($productId);
 
