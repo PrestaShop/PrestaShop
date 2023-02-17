@@ -36,8 +36,6 @@ export type FormIframeCallbackFunction = (
   event: Event,
 ) => void;
 
-export type FormFailedToLoadCallback = () => void;
-
 export type FormIframeConfirmCallback = (
   form: HTMLFormElement,
   iframe: HTMLIFrameElement,
@@ -51,7 +49,6 @@ export type FormIframeModalParams = Omit<IframeModalParams, 'iframeUrl' | 'onLoa
   modalTitle?: string;
   onFormLoaded?: FormIframeCallbackFunction,
   formConfirmCallback?: FormIframeConfirmCallback,
-  onFormFailedToLoad?: FormFailedToLoadCallback,
 }
 export type InputFormIframeModalParams = Partial<FormIframeModalParams> & {
   formUrl: string; // formUrl is mandatory in params
@@ -74,7 +71,6 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
           params.onFormLoaded,
           params.cancelButtonSelector ?? '.cancel-btn',
           params.formSelector ?? 'form',
-          params.onFormFailedToLoad,
         );
       },
       confirmCallback: (iframe: HTMLIFrameElement, event: Event) => {
@@ -92,7 +88,6 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
     onFormLoaded: FormIframeCallbackFunction | undefined,
     cancelButtonSelector: string,
     formSelector: string,
-    onFormFailedToLoad: FormFailedToLoadCallback | undefined,
   ): void {
     if (!onFormLoaded) {
       return;
@@ -101,10 +96,6 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
     const iframeForm: HTMLFormElement | null = this.getForm(iframe, formSelector);
 
     if (!iframeForm) {
-      if (onFormFailedToLoad) {
-        // fire callback when something unexpected happens and form is not there to allow customizing modal content if needed
-        onFormFailedToLoad();
-      }
       return;
     }
 
