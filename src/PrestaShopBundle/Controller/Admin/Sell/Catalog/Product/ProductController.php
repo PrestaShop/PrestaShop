@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPosit
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
@@ -324,6 +325,13 @@ class ProductController extends FrameworkBundleAdminController
             ]);
         } catch (ShopAssociationNotFound $e) {
             return $this->renderMissingAssociation($productId);
+        } catch (ProductNotFoundException $e) {
+            $this->addFlash(
+                'warning',
+                $this->trans('The product you are trying to access doesn\'t exist', 'Admin.Catalog.Notification')
+            );
+
+            return $this->redirectToRoute('admin_product_catalog');
         }
 
         try {
