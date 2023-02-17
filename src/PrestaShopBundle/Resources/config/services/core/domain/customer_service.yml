@@ -71,6 +71,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand
 
   PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository:
+    autowire: true
+
 
   PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandlerInterface:
 

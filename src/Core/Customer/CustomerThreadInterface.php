@@ -24,27 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Customer;
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository;
-
-use PrestaShop\PrestaShop\Core\Customer\CustomerMessageInterface;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
-
-class CustomerMessageRepository extends AbstractObjectModelRepository
+interface CustomerThreadInterface
 {
-    /**
-     * @var CustomerMessageInterface
-     */
-    private $customerMessage;
-
-    public function __construct(CustomerMessageInterface $customerMessage)
-    {
-        $this->customerMessage = $customerMessage;
-    }
-
-    public function getTotalCustomerMessages($where = null): int
-    {
-        return $this->customerMessage->getTotalCustomerMessages($where);
-    }
+    public function getTotalCustomerThreads(?string $where): int;
 }

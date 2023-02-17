@@ -26,25 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Customer;
 
-use PrestaShop\PrestaShop\Core\Customer\CustomerMessageInterface;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use CustomerThread as CustomerThreadCore;
+use PrestaShop\PrestaShop\Core\Customer\CustomerThreadInterface;
 
-class CustomerMessageRepository extends AbstractObjectModelRepository
+class CustomerThread implements CustomerThreadInterface
 {
-    /**
-     * @var CustomerMessageInterface
-     */
-    private $customerMessage;
-
-    public function __construct(CustomerMessageInterface $customerMessage)
+    public function getTotalCustomerThreads(?string $where): int
     {
-        $this->customerMessage = $customerMessage;
-    }
-
-    public function getTotalCustomerMessages($where = null): int
-    {
-        return $this->customerMessage->getTotalCustomerMessages($where);
+        return CustomerThreadCore::getTotalCustomerThreads($where);
     }
 }

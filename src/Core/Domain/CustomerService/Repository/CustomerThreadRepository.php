@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository;
 
 use CustomerThread;
+use PrestaShop\PrestaShop\Core\Customer\CustomerThreadInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
@@ -39,6 +40,16 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
  */
 class CustomerThreadRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var CustomerThreadInterface
+     */
+    private $customerThread;
+
+    public function __construct(CustomerThreadInterface $customerThread)
+    {
+        $this->customerThread = $customerThread;
+    }
+
     /**
      * @throws CustomerThreadNotFoundException
      */
@@ -64,6 +75,6 @@ class CustomerThreadRepository extends AbstractObjectModelRepository
 
     public function getTotalCustomerThreads($where = null): int
     {
-        return CustomerThread::getTotalCustomerThreads($where);
+        return $this->customerThread->getTotalCustomerThreads($where);
     }
 }

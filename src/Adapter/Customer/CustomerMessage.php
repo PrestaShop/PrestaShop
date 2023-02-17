@@ -26,25 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Customer;
 
+use CustomerMessage as CustomerMessageCore;
 use PrestaShop\PrestaShop\Core\Customer\CustomerMessageInterface;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
-class CustomerMessageRepository extends AbstractObjectModelRepository
+class CustomerMessage implements CustomerMessageInterface
 {
-    /**
-     * @var CustomerMessageInterface
-     */
-    private $customerMessage;
-
-    public function __construct(CustomerMessageInterface $customerMessage)
+    public function getTotalCustomerMessages(?string $where): int
     {
-        $this->customerMessage = $customerMessage;
-    }
-
-    public function getTotalCustomerMessages($where = null): int
-    {
-        return $this->customerMessage->getTotalCustomerMessages($where);
+        return CustomerMessageCore::getTotalCustomerMessages($where);
     }
 }

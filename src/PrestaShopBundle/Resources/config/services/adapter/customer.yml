@@ -118,3 +118,11 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'
 
   PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository: ~
+
+  PrestaShop\PrestaShop\Adapter\Customer\CustomerMessage:
+
+  PrestaShop\PrestaShop\Core\Customer\CustomerMessageInterface: '@PrestaShop\PrestaShop\Adapter\Customer\CustomerMessage'
+
+  PrestaShop\PrestaShop\Adapter\Customer\CustomerThread:
+
+  PrestaShop\PrestaShop\Core\Customer\CustomerThreadInterface: '@PrestaShop\PrestaShop\Adapter\Customer\CustomerThread'
