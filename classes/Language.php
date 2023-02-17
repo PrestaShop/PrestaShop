@@ -1263,6 +1263,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
+        //Check if response is a zip file
+        if (strpos($content, "\x50\x4b\x03\x04") === false) {
+            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
+
+            return false;
+        }
+
         return false !== file_put_contents($file, $content);
     }
 
