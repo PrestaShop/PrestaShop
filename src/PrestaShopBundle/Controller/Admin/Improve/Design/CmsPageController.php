@@ -366,7 +366,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('New page category', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('New category', 'Admin.Navigation.Menu'),
             ]
         );
     }
@@ -433,7 +433,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'layoutTitle' => $this->trans(
-                    'Editing page category %name%',
+                    'Editing category %name%',
                     'Admin.Navigation.Menu',
                     [
                         '%name%' => $cmsPageCategoryForm->getData()['name'][$this->getContextLangId()],

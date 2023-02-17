@@ -665,7 +665,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Editing brand address #%id%', 'Admin.Navigation.Menu', ['%id%' => $addressId]),
+            'layoutTitle' => $this->trans('Editing brand address', 'Admin.Navigation.Menu'),
             'addressForm' => $addressForm->createView(),
             'address' => $editableAddress->getAddress(),
         ]);

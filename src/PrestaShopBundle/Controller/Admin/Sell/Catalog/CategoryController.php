@@ -335,10 +335,10 @@ class CategoryController extends FrameworkBundleAdminController
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
                     ->getUrl($categoryId, '{friendly-url}'),
                 'layoutTitle' => $this->trans(
-                    'Editing category %name%',
+                    'Editing category %category_name%',
                     'Admin.Navigation.Menu',
                     [
-                        '%name%' => $editableCategory->getName()[$this->getContextLangId()],
+                        '%category_name%' => $editableCategory->getName()[$this->getContextLangId()],
                     ]
                 ),
             ]
@@ -415,10 +415,10 @@ class CategoryController extends FrameworkBundleAdminController
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
                     ->getUrl($categoryId, '{friendly-url}'),
                 'layoutTitle' => $this->trans(
-                    'Editing category %name%',
+                    'Editing category %category_name%',
                     'Admin.Navigation.Menu',
                     [
-                        '%name%' => $editableCategory->getName()[$this->getContextLangId()],
+                        '%category_name%' => $editableCategory->getName()[$this->getContextLangId()],
                     ]
                 ),
             ]
