@@ -76,6 +76,25 @@ $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
 
+
+// To prevent using a container that is not fully compiled and cached
+// We need to wait for cache generation completion
+$symfonyCacheLockFilePath = $kernel->getCacheDir() . '/appAppKernelProdContainer.php.lock';
+$fp = fopen($symfonyCacheLockFilePath, "w");
+
+if (flock($fp, \LOCK_EX)) {
+    
+    // If we reach here, cache is fresh
+    // Or
+    // Cache was running and we waited for its completion
+    flock($fp, \LOCK_UN);
+    fclose($fp);
+
+} else {
+    fclose($fp);
+}
+
+
 try {
     require_once __DIR__.'/../autoload.php';
     $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
