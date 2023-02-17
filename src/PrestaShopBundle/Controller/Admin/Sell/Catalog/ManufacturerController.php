@@ -160,7 +160,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'manufacturerForm' => $manufacturerForm->createView(),
-            'layoutTitle' => $this->trans('New brand', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New brand', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -195,7 +195,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'layoutTitle' => $this->trans(
                 'Brand %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $viewableManufacturer->getName(),
                 ]
@@ -250,7 +250,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'logoImage' => $editableManufacturer->getLogoImage(),
             'layoutTitle' => $this->trans(
                 'Editing brand %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableManufacturer->getName(),
                 ]
@@ -611,7 +611,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/create.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New brand address', 'Admin.Orderscustomers.Feature'),
+            'layoutTitle' => $this->trans('New brand address', 'Admin.Navigation.Menu'),
             'addressForm' => $addressForm->createView(),
         ]);
     }
@@ -665,7 +665,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Editing brand address #%id%', 'Admin.Orderscustomers.Feature', ['%id%' => $addressId]),
+            'layoutTitle' => $this->trans('Editing brand address #%id%', 'Admin.Navigation.Menu', ['%id%' => $addressId]),
             'addressForm' => $addressForm->createView(),
             'address' => $editableAddress->getAddress(),
         ]);

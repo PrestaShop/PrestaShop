@@ -304,7 +304,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New employee', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New employee', 'Admin.Navigation.Menu'),
         ];
 
         return $this->render(
@@ -395,7 +395,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing employee %lastname% %firstname%',
-                'Admin.Advparameters.Feature',
+                'Admin.Navigation.Menu',
                 [
                     '%firstname%' => $editableEmployee->getFirstname()->getValue(),
                     '%lastname%' => $editableEmployee->getLastName()->getValue(),

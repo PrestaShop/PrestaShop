@@ -214,7 +214,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'catalogPriceRuleForm' => $catalogPriceRuleForm->createView(),
-            'layoutTitle' => $this->trans('New catalog rule', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New catalog rule', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -259,7 +259,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             'catalogPriceRuleName' => $editableCatalogPriceRule->getName(),
             'layoutTitle' => $this->trans(
                 'Editing catalog rule %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableCatalogPriceRule->getName(),
                 ]

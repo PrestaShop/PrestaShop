@@ -155,7 +155,7 @@ class OrderStateController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
-            'layoutTitle' => $this->trans('New status', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New status', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -206,7 +206,7 @@ class OrderStateController extends FrameworkBundleAdminController
                 }, $this->get('prestashop.adapter.legacy.context')->getLanguages()),
             'layoutTitle' => $this->trans(
                 'Editing status %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableOrderState->getLocalizedNames()[$this->getContextLangId()],
                 ]
@@ -249,7 +249,7 @@ class OrderStateController extends FrameworkBundleAdminController
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New return status', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New return status', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -293,7 +293,7 @@ class OrderStateController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing return status %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableOrderReturnState->getLocalizedNames()[$this->getContextLangId()],
                 ]

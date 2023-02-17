@@ -124,7 +124,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'orderReturnForm' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature'),
+            'layoutTitle' => $this->trans('Return Merchandise Authorization (RMA)', 'Admin.Navigation.Menu'),
         ]);
     }
 

@@ -116,7 +116,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'forwardCustomerThreadForm' => $forwardCustomerThreadForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Customer thread #%s', 'Admin.Actions', [$customerThreadId]),
+            'layoutTitle' => $this->trans('Customer thread #%s', 'Admin.Navigation.Menu', [$customerThreadId]),
         ]);
     }
 

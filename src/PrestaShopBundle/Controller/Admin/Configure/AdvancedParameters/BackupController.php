@@ -115,7 +115,7 @@ class BackupController extends FrameworkBundleAdminController
                 'url' => $backup->getUrl(),
                 'size' => $backup->getSize(),
             ],
-            'layoutTitle' => $this->trans('Downloading backup %s', 'Admin.Actions', [$downloadFileName]),
+            'layoutTitle' => $this->trans('Downloading backup %s', 'Admin.Navigation.Menu', [$downloadFileName]),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);

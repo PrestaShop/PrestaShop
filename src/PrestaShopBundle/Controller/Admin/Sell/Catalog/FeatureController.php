@@ -91,7 +91,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         if (!$this->isFeatureEnabled()) {
             return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
                 'showDisabledFeatureWarning' => true,
-                'layoutTitle' => $this->trans('New feature', 'Admin.Actions'),
+                'layoutTitle' => $this->trans('New feature', 'Admin.Navigation.Menu'),
             ]);
         }
 
@@ -115,7 +115,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
             'featureForm' => $featureForm->createView(),
-            'layoutTitle' => $this->trans('New feature', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New feature', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -284,7 +284,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
             'contextLangId' => $this->getConfiguration()->get('PS_LANG_DEFAULT'),
             'layoutTitle' => $this->trans(
                 'Editing feature %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $parameters['editableFeature']->getName()[$this->getConfiguration()->get('PS_LANG_DEFAULT')],
                 ]

@@ -112,7 +112,7 @@ class OrderMessageController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/create.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New message', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New message', 'Admin.Navigation.Menu'),
             'orderMessageForm' => $form->createView(),
             'multistoreInfoTip' => $this->trans(
                 'Note that this feature is available in all shops context only. It will be added to all your stores.',
@@ -167,7 +167,7 @@ class OrderMessageController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Editing message %s', 'Admin.Actions', [$orderMessageName]),
+            'layoutTitle' => $this->trans('Editing message %s', 'Admin.Navigation.Menu', [$orderMessageName]),
             'orderMessageForm' => $form->createView(),
         ]);
     }

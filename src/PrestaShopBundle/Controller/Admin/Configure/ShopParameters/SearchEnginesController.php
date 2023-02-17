@@ -161,7 +161,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing search engine %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableSearchEngine->getServer(),
                 ]

@@ -90,7 +90,7 @@ class CartController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/view.html.twig', [
             'cartView' => $cartView,
-            'layoutTitle' => $this->trans('Cart #%s', 'Admin.Actions', [$cartId]),
+            'layoutTitle' => $this->trans('Cart #%s', 'Admin.Navigation.Menu', [$cartId]),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartKpi' => $kpiRow,

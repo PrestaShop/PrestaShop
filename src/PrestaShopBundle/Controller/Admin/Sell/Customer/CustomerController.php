@@ -194,7 +194,7 @@ class CustomerController extends AbstractAdminController
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New customer', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New customer', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -253,7 +253,7 @@ class CustomerController extends AbstractAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing customer %name%',
-                'Admin.Orderscustomers.Feature',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => mb_substr($customerInformation->getFirstName()->getValue(), 0, 1) . '. ' . $customerInformation->getLastName()->getValue(),
                 ]
@@ -334,7 +334,7 @@ class CustomerController extends AbstractAdminController
             'privateNoteForm' => $privateNoteForm->createView(),
             'layoutTitle' => $this->trans(
                 'Customer %name%',
-                'Admin.Orderscustomers.Feature',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => mb_substr($customerInformation->getPersonalInformation()->getFirstName(), 0, 1) . '. ' . $customerInformation->getPersonalInformation()->getLastName(),
                 ]

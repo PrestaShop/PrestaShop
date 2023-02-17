@@ -232,7 +232,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsCategoryParentId' => $categoryParentId,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('New page', 'Admin.Actions'),
+                'layoutTitle' => $this->trans('New page', 'Admin.Navigation.Menu'),
             ]
         );
     }
@@ -312,7 +312,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'previewUrl' => $previewUrl,
                 'layoutTitle' => $this->trans(
                     'Editing page %name%',
-                    'Admin.Actions',
+                    'Admin.Navigation.Menu',
                     [
                         '%name%' => $editableCmsPage->getLocalizedTitle()[$this->getContextLangId()],
                     ]
@@ -366,7 +366,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'layoutTitle' => $this->trans('New page category', 'Admin.Actions'),
+                'layoutTitle' => $this->trans('New page category', 'Admin.Navigation.Menu'),
             ]
         );
     }
@@ -434,7 +434,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'layoutTitle' => $this->trans(
                     'Editing page category %name%',
-                    'Admin.Actions',
+                    'Admin.Navigation.Menu',
                     [
                         '%name%' => $cmsPageCategoryForm->getData()['name'][$this->getContextLangId()],
                     ]

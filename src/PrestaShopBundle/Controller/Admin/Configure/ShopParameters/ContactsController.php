@@ -148,7 +148,7 @@ class ContactsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'contactForm' => $contactForm->createView(),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New contact', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New contact', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -195,7 +195,7 @@ class ContactsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing contact %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $contactForm->getData()['title'][$this->getContextLangId()],
                 ]

@@ -146,7 +146,7 @@ class ProfileController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/create.html.twig', [
             'profileForm' => $form->createView(),
-            'layoutTitle' => $this->trans('New profile', 'Admin.Advparameters.Feature'),
+            'layoutTitle' => $this->trans('New profile', 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
             'multistoreInfoTip' => $this->trans(
@@ -211,7 +211,7 @@ class ProfileController extends FrameworkBundleAdminController
             'profileForm' => $form->createView(),
             'layoutTitle' => $this->trans(
                 'Editing profile %value%',
-                'Admin.Catalog.Feature',
+                'Admin.Navigation.Menu',
                 [
                     '%value%' => $editableProfile->getLocalizedNames()[$this->getContextLangId()],
                 ]

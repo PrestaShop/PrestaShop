@@ -112,7 +112,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         $layoutTitle = $this->trans('Categories', 'Admin.Navigation.Menu');
         if (!$categoryViewData['is_home_category']) {
-            $layoutTitle = $this->trans('Category %name%', 'Admin.Actions', ['%name%' => $categoryViewData['name']]);
+            $layoutTitle = $this->trans('Category %name%', 'Admin.Navigation.Menu', ['%name%' => $categoryViewData['name']]);
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/index.html.twig', [
@@ -199,7 +199,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'allowMenuThumbnailsUpload' => true,
                 'categoryForm' => $categoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
-                'layoutTitle' => $this->trans('New category', 'Admin.Actions'),
+                'layoutTitle' => $this->trans('New category', 'Admin.Navigation.Menu'),
                 'categoryUrl' => null,
             ]
         );
@@ -248,7 +248,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'allowMenuThumbnailsUpload' => true,
                 'rootCategoryForm' => $rootCategoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
-                'layoutTitle' => $this->trans('New category', 'Admin.Actions'),
+                'layoutTitle' => $this->trans('New category', 'Admin.Navigation.Menu'),
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
                     ->getUrl(0, '{friendly-url}'),
             ]
@@ -336,7 +336,7 @@ class CategoryController extends FrameworkBundleAdminController
                     ->getUrl($categoryId, '{friendly-url}'),
                 'layoutTitle' => $this->trans(
                     'Editing category %name%',
-                    'Admin.Actions',
+                    'Admin.Navigation.Menu',
                     [
                         '%name%' => $editableCategory->getName()[$this->getContextLangId()],
                     ]
@@ -416,7 +416,7 @@ class CategoryController extends FrameworkBundleAdminController
                     ->getUrl($categoryId, '{friendly-url}'),
                 'layoutTitle' => $this->trans(
                     'Editing category %name%',
-                    'Admin.Actions',
+                    'Admin.Navigation.Menu',
                     [
                         '%name%' => $editableCategory->getName()[$this->getContextLangId()],
                     ]

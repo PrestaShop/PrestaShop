@@ -244,7 +244,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
-            'layoutTitle' => $this->trans('Editing SQL request %request%', 'Admin.Actions', ['%request%' => $sqlRequestForm->getData()['name']]),
+            'layoutTitle' => $this->trans('Editing SQL request %request%', 'Admin.Navigation.Menu', ['%request%' => $sqlRequestForm->getData()['name']]),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),

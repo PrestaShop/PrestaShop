@@ -124,7 +124,7 @@ class AttachmentController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/add.html.twig', [
             'lightDisplay' => $request->query->has('liteDisplaying'),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New file', 'Admin.Catalog.Feature'),
+            'layoutTitle' => $this->trans('New file', 'Admin.Navigation.Menu'),
             'attachmentForm' => $attachmentForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -188,7 +188,7 @@ class AttachmentController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing file %value%',
-                'Admin.Catalog.Feature',
+                'Admin.Navigation.Menu',
                 ['%value%' => reset($names)]
             ),
             'attachmentForm' => $attachmentForm->createView(),

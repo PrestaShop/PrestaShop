@@ -105,7 +105,7 @@ class CountryController extends FrameworkBundleAdminController
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New country', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New country', 'Admin.Navigation.Menu'),
         ]);
     }
 

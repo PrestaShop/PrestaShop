@@ -142,7 +142,7 @@ class LanguageController extends FrameworkBundleAdminController
             'languageForm' => $languageForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('New language', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New language', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -204,7 +204,7 @@ class LanguageController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Editing language %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableLanguage->getName(),
                 ]

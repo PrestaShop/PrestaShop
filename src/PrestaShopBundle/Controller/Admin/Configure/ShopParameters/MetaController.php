@@ -140,7 +140,7 @@ class MetaController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
-            'layoutTitle' => $this->trans('New page configuration', 'Admin.Actions'),
+            'layoutTitle' => $this->trans('New page configuration', 'Admin.Navigation.Menu'),
         ]
         );
     }
@@ -178,7 +178,7 @@ class MetaController extends FrameworkBundleAdminController
             'meta_form' => $metaForm->createView(),
             'layoutTitle' => $this->trans(
                 'Editing configuration for %name%',
-                'Admin.Actions',
+                'Admin.Navigation.Menu',
                 [
                     '%name%' => $metaForm->getData()['page_name'],
                 ]

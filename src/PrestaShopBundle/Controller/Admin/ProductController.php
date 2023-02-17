@@ -250,7 +250,7 @@ class ProductController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
                 'permission_error' => $permissionError,
-                'layoutTitle' => $this->trans('Products', 'Admin.Global'),
+                'layoutTitle' => $this->trans('Products', 'Admin.Navigation.Menu'),
             ]
         ));
     }
@@ -663,7 +663,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'editable' => $this->isGranted(Permission::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
-            'layoutTitle' => $this->trans('Product', 'Admin.Global'),
+            'layoutTitle' => $this->trans('Product', 'Admin.Navigation.Menu'),
             'isCreationMode' => (int) $product->state === Product::STATE_TEMP,
         ]);
     }
