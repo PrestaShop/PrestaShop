@@ -54,7 +54,7 @@ class AddCustomer extends BOBasePage {
 
   private readonly defaultCustomerGroupSelect: string;
 
-  public readonly saveCustomerButton: string;
+  private readonly saveCustomerButton: string;
 
   /**
    * @constructs
@@ -152,15 +152,20 @@ class AddCustomer extends BOBasePage {
    * Fill form for add/edit customer and get successful message after saving
    * @param page {Page} Browser tab
    * @param customerData {CustomerData} Data to set on new customer form
+   * @param waitForNavigation {boolean} True if we need save and waitForNavigation, false if not
    * @return {Promise<string>}
    */
-  async createEditCustomer(page: Page, customerData: CustomerData): Promise<string> {
+  async createEditCustomer(page: Page, customerData: CustomerData, waitForNavigation: boolean = true): Promise<string> {
     // Fill form
     await this.fillCustomerForm(page, customerData);
 
     // Save Customer
-    await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    if (waitForNavigation) {
+      await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
+      return this.getAlertSuccessBlockParagraphContent(page);
+    }
+    await this.waitForSelectorAndClick(page, this.saveCustomerButton);
+    return '';
   }
 
   /**

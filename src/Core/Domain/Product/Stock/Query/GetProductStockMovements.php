@@ -28,10 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
-use LogicException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
@@ -64,11 +61,6 @@ class GetProductStockMovements
      */
     private $productId;
 
-    /**
-     * @throws ProductConstraintException
-     * @throws ShopException
-     * @throws LogicException
-     */
     public function __construct(
         int $productId,
         int $shopId,

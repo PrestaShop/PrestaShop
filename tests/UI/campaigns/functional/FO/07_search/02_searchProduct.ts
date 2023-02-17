@@ -63,7 +63,7 @@ describe('FO - Search Page : Search a product and validate', async () => {
     const pageTitle = await productPage.getPageTitle(page);
     await expect(pageTitle).to.contains(Products.demo_8.name);
 
-    const inputValue = await homePage.getInputValue(page, productPage.searchInput);
+    const inputValue = await homePage.getSearchValue(page);
     await expect(inputValue).is.empty;
   });
 
@@ -84,7 +84,7 @@ describe('FO - Search Page : Search a product and validate', async () => {
     const pageTitle = await searchResultsPage.getPageTitle(page);
     await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
 
-    const inputValue = await searchResultsPage.getInputValue(page, searchResultsPage.searchInput);
+    const inputValue = await searchResultsPage.getSearchValue(page);
     await expect(inputValue).is.equal(Products.demo_8.name);
   });
 });

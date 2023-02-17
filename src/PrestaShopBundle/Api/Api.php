@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Api;
 
+/**
+ * @experimental
+ */
 final class Api
 {
     public const API_BASE_PATH = '/new-api';

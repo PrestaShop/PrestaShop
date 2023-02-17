@@ -70,10 +70,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
 
       await productPage.addProductToTheCart(page);
       // getNumberFromText is used to get the notifications number in the cart
-      const notificationsNumber = await homePage.getNumberFromText(
-        page,
-        homePage.cartProductsCount,
-      );
+      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(1);
     });
 
@@ -101,7 +98,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await productPage.addProductToTheCart(page);
 
       // getNumberFromText is used to get the notifications number in the cart
-      const notificationsNumber = await homePage.getNumberFromText(page, homePage.cartProductsCount);
+      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(2);
     });
 
@@ -141,7 +138,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProductsInCart', baseContext);
 
       // getNumberFromText is used to get the products number
-      itemsNumber = await cartPage.getNumberFromText(page, cartPage.itemsNumber);
+      itemsNumber = await cartPage.getProductsNumber(page);
       await expect(itemsNumber).to.be.equal(2);
     });
 
@@ -155,7 +152,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await expect(totalPrice).to.be.above(totalATI);
 
       // getNumberFromText is used to get the new products number
-      const productsNumber = await cartPage.getNumberFromText(page, cartPage.itemsNumber);
+      const productsNumber = await cartPage.getProductsNumber(page);
       await expect(productsNumber).to.be.above(itemsNumber);
     });
 
@@ -169,7 +166,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
       await expect(totalPrice).to.be.above(totalATI);
 
       // getNumberFromText is used to get the new products number
-      const productsNumber = await cartPage.getNumberFromText(page, cartPage.itemsNumber);
+      const productsNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(productsNumber).to.be.above(itemsNumber);
     });
   });

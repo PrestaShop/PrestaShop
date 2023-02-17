@@ -22,7 +22,9 @@ GitHub contributors:
 - Alban
 - Alban DEFLANDRE
 - Alban Legout
+- Alejandro Ramos
 - Aleksander Palyan
+- Aleksandro Sansan
 - Alessandro Corbelli
 - Alex
 - Alex Even
@@ -61,22 +63,27 @@ GitHub contributors:
 - Andy Pieters
 - anegoda1995
 - Ángel Guzmán Maeso
+- Angelo Romano
 - Ansar Mallouli
 - Anthony Girard
+- Antoine Caillet
 - Antoine Damiron
 - Antoine LA
 - Antoine Mille
 - Antoine Thomas
 - Antonella Marengo
+- Antonin Clauzier
 - Antonino Di Bella
 - Antonio Intagliata
 - antoniofr
 - AntonLejon
 - Arman Hosseini
 - Armando Salvador Pérez
+- Arnaud Drieux
 - Arnaud Lemercier
 - Arnaud Schaeffer
 - Arnaud104
+- Arťom Evsin
 - Ashish Sharawat
 - Ashley Butcher
 - Atchworks
@@ -129,6 +136,7 @@ GitHub contributors:
 - Cédric Fontaine
 - Cédric Geffroy
 - Cédric Mouleyre
+- Cesar Quintini
 - cgordenne
 - cgordenne_wepika
 - Chafik
@@ -211,6 +219,7 @@ GitHub contributors:
 - Dickriven Chellemboyee
 - Dimitrios Karvounaris
 - Dinesh Badrukhiya
+- Dingedi
 - Dinis Lage
 - djbuch
 - djfm
@@ -274,6 +283,7 @@ GitHub contributors:
 - Florian Le Gars
 - Florian Lemaitre
 - Florian Nolte
+- Florine Hea
 - Flowster
 - fojtcz
 - Fourat Achour
@@ -332,6 +342,7 @@ GitHub contributors:
 - Harlock
 - Hatem Hadrich
 - helgvor-stoll
+- hendaghanmi
 - Henri Davigne
 - Hervé Hennes
 - hhennes
@@ -343,6 +354,7 @@ GitHub contributors:
 - Howard Noz
 - htrex
 - hubiktomas
+- Hugo Posnic
 - Hugues Gobet
 - Ian Fung
 - Ibrahima Sow
@@ -361,9 +373,11 @@ GitHub contributors:
 - ivancasasempere
 - J. Danse
 - Jáchym Toušek
+- Jakub Łach
 - Jan Sýkora
 - janisVincent
 - Jaume
+- Javi Domenech
 - Javier García
 - Javsmile
 - JBWModules
@@ -374,12 +388,14 @@ GitHub contributors:
 - jeanbe
 - jeckyl
 - Jérémie Broutier
+- Jeremie Legrand
 - Jérémie Tabet
 - Jeroen Dewaele
 - Jerome
 - Jérôme H
 - Jerome Herry
 - Jérôme Nadaud
+- Jérôme Weill
 - Jérôme Wohlschlegel
 - jessylenne
 - jestemradek
@@ -427,6 +443,7 @@ GitHub contributors:
 - justeen35
 - Justinas Urbanavicius
 - Kamil Szymański
+- Karel Balej
 - Karel Faille
 - Karlis Suvi
 - Kelly Karnetsky
@@ -440,6 +457,7 @@ GitHub contributors:
 - kiropowered
 - Kjeld Borch Egevang
 - Klemart3D
+- Korbinian Lechner
 - Krystian Podemski
 - Krzysztof Rosiński
 - ks129
@@ -447,6 +465,7 @@ GitHub contributors:
 - Kyary
 - Ladel
 - Lathanao
+- Laurent Rousseau
 - Laurynas Sedys
 - ldecoker
 - Léa Mendes Da Silva
@@ -490,6 +509,7 @@ GitHub contributors:
 - makk1ntosh
 - makoso
 - Manfredi Petruso
+- maniT4c
 - Manuel Jose Pulgar Anguita
 - manuelbcd
 - Marc González Majoral
@@ -508,11 +528,15 @@ GitHub contributors:
 - Marius Gudauskis
 - Mark Wienk
 - MarkC
+- Markus Staab
 - Martin Finkenflügel
 - Martin Fojtík
+- Martin Kučera
 - Marvin Sauraye
 - Marwa Chelly
+- Massimo Caroccia
 - Matěj Kmínek
+- Mateus Shirlaw
 - Mateusz Furga
 - Mateusz Nastalski
 - Mathias Reker
@@ -555,6 +579,7 @@ GitHub contributors:
 - Michael Schloh von Bennewitz
 - Michael Voříšek
 - michaesc
+- Michał Kaleta
 - Michal Špaček
 - Michel Antoine
 - Michel Courtade
@@ -584,6 +609,7 @@ GitHub contributors:
 - MustangZhong
 - nache
 - natrim
+- Naveen Srinivasan
 - neemzy
 - neoteknic
 - Nesrine Abdmouleh
@@ -612,6 +638,7 @@ GitHub contributors:
 - Olivier Le Corre
 - Olivier Monaco
 - OneDotIT
+- Òscar Casajuana
 - Óscar García
 - Oskar Andersson
 - Otto Nascarella
@@ -627,6 +654,7 @@ GitHub contributors:
 - Patrick Mettraux
 - Patrick Peters
 - Patrick Weinstein
+- Paul Coudeville
 - Paulo Baptista
 - Pavel Novitsky
 - pbirnzain
@@ -665,6 +693,7 @@ GitHub contributors:
 - Prestanesia
 - Prestaplugins
 - prestarocket
+- Prestasafe
 - Prestashark.eu
 - Prestaspirit
 - Prestaworks
@@ -730,6 +759,7 @@ GitHub contributors:
 - Romain Soulard
 - romainberger
 - Roman Gusev
+- Roman Kotyra
 - Roman Ondráček
 - Rúben Martins
 - Rudra Sarkar
@@ -787,7 +817,7 @@ GitHub contributors:
 - Simone
 - Simone Gennari
 - sjousse
-- sLorenzini
+- SLRkingRing
 - smartdatasoft
 - snamor
 - soufyan
@@ -805,6 +835,7 @@ GitHub contributors:
 - Stijn Houben
 - Stijn Stroeve
 - Stijn Vergote
+- Store Commander dev team
 - Studio Kiwik
 - Sullivan SENECHAL
 - Sumh
@@ -838,6 +869,7 @@ GitHub contributors:
 - Thomas Leguillant
 - Thomas Leviandier
 - Thomas Nabord
+- Thomas Nares
 - Thomas Roux
 - thomas-aw
 - Threef

@@ -50,7 +50,7 @@ class AddAddress extends BOBasePage {
 
   private readonly customerAddressOtherInput: string;
 
-  public readonly saveAddressButton: string;
+  private readonly saveAddressButton: string;
 
   /**
    * @constructs
@@ -125,11 +125,13 @@ class AddAddress extends BOBasePage {
       await this.waitForSelectorAndClick(page, this.searchResultState);
     }
 
-    if (waitForNavigation) {
-      // Save and return successful message
-      if (save) {
+    // Save and return successful message
+    if (save) {
+      if (waitForNavigation) {
         return this.saveAddress(page);
       }
+
+      await page.click(this.saveAddressButton);
     }
 
     // save

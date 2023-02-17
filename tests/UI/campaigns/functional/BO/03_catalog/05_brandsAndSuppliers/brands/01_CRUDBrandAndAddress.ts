@@ -158,10 +158,7 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
     it('should check existence of the associated address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddressOnCreatedBrand', baseContext);
 
-      const numberOfAddressesInGrid = await viewBrandPage.getNumberFromText(
-        page,
-        viewBrandPage.addressesGridHeader,
-      );
+      const numberOfAddressesInGrid = await viewBrandPage.getNumberOfAddressesInGrid(page);
       await expect(numberOfAddressesInGrid).to.equal(createBrandData.addresses);
 
       const textColumn = await viewBrandPage.getTextColumnFromTableAddresses(page, 1, 1);

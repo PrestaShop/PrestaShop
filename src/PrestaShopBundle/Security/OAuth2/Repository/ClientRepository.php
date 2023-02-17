@@ -35,8 +35,10 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/*
+/**
  * Repository class responsible for managing PrestaShop's Authorization Server Client entity
+ *
+ * @experimental
  */
 class ClientRepository implements ClientRepositoryInterface
 {

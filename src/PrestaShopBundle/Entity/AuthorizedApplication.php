@@ -35,6 +35,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository")
  * @ORM\Table()
  * @UniqueEntity("name")
+ *
+ * @experimental
  */
 class AuthorizedApplication
 {

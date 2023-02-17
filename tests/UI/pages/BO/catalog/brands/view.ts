@@ -12,7 +12,7 @@ class ViewBrand extends BOBasePage {
 
   private readonly addressesGrid: string;
 
-  public readonly addressesGridHeader: string;
+  private readonly addressesGridHeader: string;
 
   private readonly addressesTableBody: string;
 

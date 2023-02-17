@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
  * Class AuthorizedApplicationQueryBuilder builds search & count queries for log grid.
+ *
+ * @experimental
  */
 final class AuthorizedApplicationQueryBuilder extends AbstractDoctrineQueryBuilder
 {
