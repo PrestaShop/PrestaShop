@@ -338,7 +338,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_tax_rules_groups_create'),
-            'desc' => $this->trans('Add new tax rules group', 'Admin.International.Feature'),
+            'desc' => $this->trans('Add new tax rule', 'Admin.International.Feature'),
             'icon' => 'add_circle_outline',
         ];
 
