@@ -75,7 +75,7 @@ class BulkCombinationType extends TranslatorAwareType
             ->setRequired([
                 'product_id',
                 'country_id',
-                'shop_id'
+                'shop_id',
             ])
             ->setAllowedTypes('product_id', 'int')
             ->setAllowedTypes('country_id', 'int')

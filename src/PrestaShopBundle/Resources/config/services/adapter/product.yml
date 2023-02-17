@@ -263,13 +263,8 @@ services:
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
-      - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler:
     arguments:
