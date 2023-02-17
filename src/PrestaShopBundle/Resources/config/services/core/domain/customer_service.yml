@@ -73,7 +73,6 @@ services:
   PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository:
     autowire: true
 
-
   PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandlerInterface:
 
   PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandler:
