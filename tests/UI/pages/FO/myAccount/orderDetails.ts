@@ -203,6 +203,10 @@ class OrderDetails extends FOBasePage {
   async getInvoiceAddress(page: Page): Promise<string> {
     return this.getTextContent(page, this.invoiceAddressBox);
   }
+
+  async getBoxMessages(page: Page): Promise<string> {
+    return this.getTextContent(page, '#content div.box.messages');
+  }
 }
 
 export default new OrderDetails();
