@@ -5,7 +5,7 @@ admin_customer_threads:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::indexAction
     _legacy_controller: AdminCustomerThreads
     _legacy_link: AdminCustomerThreads
-#    _legacy_feature_flag: customer_threads
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
 
