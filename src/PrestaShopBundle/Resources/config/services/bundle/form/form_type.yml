@@ -477,6 +477,11 @@ services:
     arguments:
       $employeeChoiceProvider: '@prestashop.adapter.form.choice_provider.employee_name_by_id'
 
+  PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ContactOptionType:
+    public: false
+    autowire: true
+    autoconfigure: true
+
   PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType:
   PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType:
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType:
