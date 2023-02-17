@@ -210,10 +210,10 @@ class ProfileController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/edit.html.twig', [
             'profileForm' => $form->createView(),
             'layoutTitle' => $this->trans(
-                'Editing profile %value%',
+                'Editing %profile_name% profile',
                 'Admin.Navigation.Menu',
                 [
-                    '%value%' => $editableProfile->getLocalizedNames()[$this->getContextLangId()],
+                    '%profile_name%' => $editableProfile->getLocalizedNames()[$this->getContextLangId()],
                 ]
             ),
             'help_link' => $this->generateSidebarLink('AdminProfiles'),

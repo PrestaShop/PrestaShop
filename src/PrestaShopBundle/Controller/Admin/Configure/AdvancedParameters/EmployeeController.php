@@ -394,7 +394,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'editableEmployee' => $editableEmployee,
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
-                'Editing employee %lastname% %firstname%',
+                'Editing %lastname% %firstname%\'s profile',
                 'Admin.Navigation.Menu',
                 [
                     '%firstname%' => $editableEmployee->getFirstname()->getValue(),

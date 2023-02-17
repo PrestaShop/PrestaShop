@@ -258,7 +258,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             'catalogPriceRuleForm' => $catalogPriceRuleForm->createView(),
             'catalogPriceRuleName' => $editableCatalogPriceRule->getName(),
             'layoutTitle' => $this->trans(
-                'Editing catalog rule %name%',
+                'Editing price rule %name%',
                 'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableCatalogPriceRule->getName(),

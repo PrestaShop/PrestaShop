@@ -194,7 +194,7 @@ class ContactsController extends FrameworkBundleAdminController
             'contactForm' => $contactForm->createView(),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
-                'Editing contact %name%',
+                'Editing %name%',
                 'Admin.Navigation.Menu',
                 [
                     '%name%' => $contactForm->getData()['title'][$this->getContextLangId()],

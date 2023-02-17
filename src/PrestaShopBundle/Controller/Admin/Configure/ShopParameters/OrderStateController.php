@@ -155,7 +155,7 @@ class OrderStateController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
-            'layoutTitle' => $this->trans('New status', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New order status', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -205,7 +205,7 @@ class OrderStateController extends FrameworkBundleAdminController
                         'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
                 }, $this->get('prestashop.adapter.legacy.context')->getLanguages()),
             'layoutTitle' => $this->trans(
-                'Editing status %name%',
+                'Editing order status %name%',
                 'Admin.Navigation.Menu',
                 [
                     '%name%' => $editableOrderState->getLocalizedNames()[$this->getContextLangId()],
