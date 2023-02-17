@@ -24,47 +24,46 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
-
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
 /**
  * @experimental
  */
-interface AuthorizedApplicationRepositoryInterface
+interface AuthorizedApplicationInterface
 {
     /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
+     * @return int
      */
-    public function create(AuthorizedApplicationInterface $application): void;
+    public function getId(): int;
 
     /**
-     * @param AuthorizedApplicationInterface $application
+     * @param int $id
      *
-     * @return void
+     * @return AuthorizedApplicationInterface
      */
-    public function update(AuthorizedApplicationInterface $application): void;
+    public function setId(int $id): AuthorizedApplicationInterface;
 
     /**
-     * @param ApplicationId $applicationId
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
+     * @return string
      */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface;
+    public function getName(): string;
 
     /**
      * @param string $name
      *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
+     * @return AuthorizedApplicationInterface
      */
-    public function getByName(string $name): ?AuthorizedApplicationInterface;
+    public function setName(string $name): AuthorizedApplicationInterface;
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string;
+
+    /**
+     * @param string $description
+     *
+     * @return AuthorizedApplicationInterface
+     */
+    public function setDescription(string $description): AuthorizedApplicationInterface;
 }

@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplication
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApplicationNameException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
-use PrestaShopBundle\Entity\AuthorizedApplication;
 
 /**
  * Handles command which adds new manufacturer using legacy object model
+ *
+ * @experimental
  */
 class AddApplicationHandler implements AddApplicationHandlerInterface
 {
@@ -46,9 +48,17 @@ class AddApplicationHandler implements AddApplicationHandlerInterface
      */
     private $applicationRepository;
 
-    public function __construct(AuthorizedApplicationRepositoryInterface $applicationRepository)
-    {
+    /**
+     * @var AuthorizedApplicationFactoryInterface
+     */
+    private $authorizedApplicationFactory;
+
+    public function __construct(
+        AuthorizedApplicationRepositoryInterface $applicationRepository,
+        AuthorizedApplicationFactoryInterface $authorizedApplicationFactory
+    ) {
         $this->applicationRepository = $applicationRepository;
+        $this->authorizedApplicationFactory = $authorizedApplicationFactory;
     }
 
     /**
@@ -58,7 +68,7 @@ class AddApplicationHandler implements AddApplicationHandlerInterface
      */
     public function handle(AddApplicationCommand $command): ApplicationId
     {
-        $application = new AuthorizedApplication();
+        $application = $this->authorizedApplicationFactory->create();
         $application->setName($command->getName());
         $application->setDescription($command->getDescription());
 

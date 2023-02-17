@@ -26,45 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
+namespace PrestaShopBundle\Model\AuthorizationServer;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationFactoryInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
+use PrestaShopBundle\Entity\AuthorizedApplication;
 
 /**
  * @experimental
  */
-interface AuthorizedApplicationRepositoryInterface
+class AuthorizedApplicationFactory implements AuthorizedApplicationFactoryInterface
 {
     /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    public function create(AuthorizedApplicationInterface $application): void;
-
-    /**
-     * @param AuthorizedApplicationInterface $application
-     *
-     * @return void
-     */
-    public function update(AuthorizedApplicationInterface $application): void;
-
-    /**
-     * @param ApplicationId $applicationId
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
-     */
-    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface;
-
-    /**
-     * @param string $name
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return AuthorizedApplicationInterface|null
-     */
-    public function getByName(string $name): ?AuthorizedApplicationInterface;
+    public function create(): AuthorizedApplicationInterface
+    {
+        return new AuthorizedApplication();
+    }
 }

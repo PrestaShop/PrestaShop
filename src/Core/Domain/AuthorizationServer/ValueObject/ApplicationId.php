@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationC
 
 /**
  * Provides application id
+ *
+ * @experimental
  */
 class ApplicationId
 {

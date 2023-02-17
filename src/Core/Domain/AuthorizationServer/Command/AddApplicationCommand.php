@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command;
 
 /**
  * Creates application with provided data
+ *
+ * @experimental
  */
 class AddApplicationCommand
 {

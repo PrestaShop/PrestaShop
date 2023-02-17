@@ -29,14 +29,17 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AuthorizedApplicationRepository")
  * @ORM\Table()
  * @UniqueEntity("name")
+ *
+ * @experimental
  */
-class AuthorizedApplication
+class AuthorizedApplication implements AuthorizedApplicationInterface
 {
     /**
      * @var int
@@ -62,7 +65,7 @@ class AuthorizedApplication
     private $description;
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getId(): int
     {
@@ -70,15 +73,17 @@ class AuthorizedApplication
     }
 
     /**
-     * @param int $id
+     * {@inheritdoc}
      */
-    public function setId(int $id): void
+    public function setId(int $id): AuthorizedApplicationInterface
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -86,15 +91,17 @@ class AuthorizedApplication
     }
 
     /**
-     * @param string $name
+     * {@inheritdoc}
      */
-    public function setName(string $name): void
+    public function setName(string $name): AuthorizedApplicationInterface
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getDescription(): string
     {
@@ -102,10 +109,12 @@ class AuthorizedApplication
     }
 
     /**
-     * @param string $description
+     * {@inheritdoc}
      */
-    public function setDescription(string $description): void
+    public function setDescription(string $description): AuthorizedApplicationInterface
     {
         $this->description = $description;
+
+        return $this;
     }
 }

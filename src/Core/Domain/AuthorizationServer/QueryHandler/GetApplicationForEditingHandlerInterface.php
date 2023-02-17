@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableAp
 
 /**
  * Defines contract for GetApplicationForEditing
+ *
+ * @experimental
  */
 interface GetApplicationForEditingHandlerInterface
 {

@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 
 /**
  * Transfers application data for editing
+ *
+ * @experimental
  */
 class EditableApplication
 {

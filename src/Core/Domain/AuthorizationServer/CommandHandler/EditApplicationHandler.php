@@ -31,11 +31,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApplicationNameException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
 
 /**
  * Handles command which adds new manufacturer using legacy object model
+ *
+ * @experimental
  */
 class EditApplicationHandler implements EditApplicationHandlerInterface
 {
@@ -59,7 +61,7 @@ class EditApplicationHandler implements EditApplicationHandlerInterface
      */
     public function handle(EditApplicationCommand $command): void
     {
-        /** @var ?AuthorizedApplication $application */
+        /** @var ?AuthorizedApplicationInterface $application */
         $application = $this->applicationRepository->getById($command->getApplicationId());
 
         $application->setName($command->getName());
@@ -71,13 +73,13 @@ class EditApplicationHandler implements EditApplicationHandlerInterface
     }
 
     /**
-     * @param AuthorizedApplication $currentApplication
+     * @param AuthorizedApplicationInterface $currentApplication
      *
      * @return void
      *
      * @throws DuplicateApplicationNameException
      */
-    private function assertApplicationWithGivenNameDoesNotExist(AuthorizedApplication $currentApplication): void
+    private function assertApplicationWithGivenNameDoesNotExist(AuthorizedApplicationInterface $currentApplication): void
     {
         try {
             $name = $currentApplication->getName();
