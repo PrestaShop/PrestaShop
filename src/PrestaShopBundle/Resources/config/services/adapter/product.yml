@@ -239,9 +239,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator:
     arguments:
@@ -308,10 +307,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository:
     arguments:
@@ -461,10 +458,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller:
     tags: [ 'core.product_filler' ]
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Tools'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\DetailsFiller:
     tags: [ 'core.product_filler' ]

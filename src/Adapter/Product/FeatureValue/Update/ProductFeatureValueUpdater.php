@@ -34,7 +34,7 @@ use Doctrine\DBAL\Exception\InvalidArgumentException;
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
@@ -62,7 +62,7 @@ class ProductFeatureValueUpdater
     private $dbPrefix;
 
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -79,14 +79,14 @@ class ProductFeatureValueUpdater
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param FeatureRepository $featureRepository
      * @param FeatureValueRepository $featureValueRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         FeatureRepository $featureRepository,
         FeatureValueRepository $featureValueRepository
     ) {
