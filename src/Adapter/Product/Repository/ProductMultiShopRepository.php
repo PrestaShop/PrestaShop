@@ -29,13 +29,18 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception as ExceptionAlias;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Query\QueryBuilder;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
@@ -671,6 +676,260 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             Product::class,
             $shopId
         );
+    }
+
+    /**
+     * Gets position product position in category
+     *
+     * @param ProductId $productId
+     * @param CategoryId $categoryId
+     *
+     * @return int|null
+     */
+    public function getPositionInCategory(ProductId $productId, CategoryId $categoryId): ?int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('position')
+            ->from($this->dbPrefix . 'category_product')
+            ->where('id_product = :productId')
+            ->andWhere('id_category = :categoryId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('categoryId', $categoryId->getValue())
+        ;
+
+        $position = $qb->execute()->fetchOne();
+
+        if (!$position) {
+            return null;
+        }
+
+        return (int) $position;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     *
+     * @return array<array<string, string>>
+     *                                      e.g [
+     *                                      ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                                      ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                                      ]
+     *
+     * @throws CoreException
+     */
+    public function getRelatedProducts(ProductId $productId, LanguageId $languageId): array
+    {
+        $this->assertProductExists($productId);
+        $productIdValue = $productId->getValue();
+
+        try {
+            $accessories = Product::getAccessoriesLight($languageId->getValue(), $productIdValue);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(sprintf(
+                'Error occurred when fetching related products for product #%d',
+                $productIdValue
+            ));
+        }
+
+        return $accessories;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws ProductNotFoundException
+     */
+    public function assertProductExists(ProductId $productId): void
+    {
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
+    }
+
+    /**
+     * @param ProductId[] $productIds
+     *
+     * @throws ProductNotFoundException
+     */
+    public function assertAllProductsExists(array $productIds): void
+    {
+        //@todo: no shop association. Should it be checked here?
+        $ids = array_map(function (ProductId $productId): int {
+            return $productId->getValue();
+        }, $productIds);
+        $ids = array_unique($ids);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('COUNT(id_product) as product_count')
+            ->from($this->dbPrefix . 'product')
+            ->where('id_product IN (:productIds)')
+            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY)
+        ;
+
+        $results = $qb->execute()->fetch();
+
+        if (!$results || (int) $results['product_count'] !== count($ids)) {
+            throw new ProductNotFoundException(
+                sprintf(
+                    'Some of these products do not exist: %s',
+                    implode(',', $ids)
+                )
+            );
+        }
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    public function searchProducts(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
+    {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit);
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            ->addGroupBy('p.id_product')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param array $filters
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     *
+     * @throws Exception
+     * @throws ExceptionAlias
+     */
+    public function searchCombinations(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): array {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            $filters,
+            $limit
+        );
+        $qb
+            ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
+            ->addSelect('p.reference as product_reference')
+            ->addSelect('pa.reference as combination_reference')
+            ->addSelect('ai.id_image as combination_image_id')
+            ->leftJoin('p', $this->dbPrefix . 'product_attribute_image', 'ai', 'ai.id_product_attribute = pa.id_product_attribute')
+            ->addGroupBy('p.id_product, pa.id_product_attribute')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
+    }
+
+    public function getProductTaxRulesGroupId(ProductId $productId, ShopId $shopId): TaxRulesGroupId
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->addSelect('p_shop.id_tax_rules_group')
+            ->from($this->dbPrefix . 'product_shop', 'p_shop')
+            ->where('p_shop.id_product = :productId')
+            ->andWhere('p_shop.id_shop = :shopId')
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchOne()
+        ;
+
+        return new TaxRulesGroupId((int) $result);
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param array $filters
+     * @param int|null $limit
+     *
+     * @return QueryBuilder
+     */
+    protected function getSearchQueryBuilder(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): QueryBuilder {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->join('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ps.id_shop = :shopId')
+            ->leftJoin('p', $this->dbPrefix . 'product_lang', 'pl', 'pl.id_product = p.id_product AND pl.id_lang = :languageId')
+            ->leftJoin('p', $this->dbPrefix . 'image_shop', 'i', 'i.id_product = p.id_product AND i.id_shop = :shopId AND i.cover = 1')
+            ->leftJoin('p', $this->dbPrefix . 'product_supplier', 'psu', 'psu.id_product = p.id_product')
+            ->leftJoin('p', $this->dbPrefix . 'product_attribute', 'pa', 'pa.id_product = p.id_product')
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('languageId', $languageId->getValue())
+            ->addOrderBy('pl.name', 'ASC')
+            ->addGroupBy('p.id_product')
+        ;
+
+        $dbSearchPhrase = sprintf('"%%%s%%"', $searchPhrase);
+        $qb->where($qb->expr()->or(
+            $qb->expr()->like('pl.name', $dbSearchPhrase),
+
+            // Product references
+            $qb->expr()->like('p.isbn', $dbSearchPhrase),
+            $qb->expr()->like('p.upc', $dbSearchPhrase),
+            $qb->expr()->like('p.mpn', $dbSearchPhrase),
+            $qb->expr()->like('p.reference', $dbSearchPhrase),
+            $qb->expr()->like('p.ean13', $dbSearchPhrase),
+            $qb->expr()->like('p.supplier_reference', $dbSearchPhrase),
+
+            // Combination attributes
+            $qb->expr()->like('pa.isbn', $dbSearchPhrase),
+            $qb->expr()->like('pa.upc', $dbSearchPhrase),
+            $qb->expr()->like('pa.mpn', $dbSearchPhrase),
+            $qb->expr()->like('pa.reference', $dbSearchPhrase),
+            $qb->expr()->like('pa.ean13', $dbSearchPhrase),
+            $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
+        ));
+
+        if (!empty($filters)) {
+            foreach ($filters as $type => $filter) {
+                switch ($type) {
+                    case 'filteredTypes':
+                        $qb->andWhere('p.product_type not in(:filter)')
+                            ->setParameter('filter', implode(', ', $filter));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        if (!empty($limit)) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb;
     }
 
     private function getProductByShopGroup(ProductId $productId, ShopGroupId $shopGroupId): Product

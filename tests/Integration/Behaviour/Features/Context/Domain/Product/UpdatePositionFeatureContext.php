@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
@@ -74,10 +75,12 @@ class UpdatePositionFeatureContext extends AbstractProductFeatureContext
     public function assertPositionInformation(string $categoryReference, TableNode $tableNode): void
     {
         $products = $this->localizeByColumns($tableNode);
-        $productRepository = CommonFeatureContext::getContainer()->get(ProductRepository::class);
+        $productRepository = CommonFeatureContext::getContainer()->get(ProductMultiShopRepository::class);
         $categoryId = new CategoryId($this->getSharedStorage()->get($categoryReference));
         foreach ($products as $product) {
             $productId = new ProductId($this->getSharedStorage()->get($product['product_reference']));
+            // @todo: getPositionInCategory seems to only be used for tests, the method shouldn't exist if it is ONLY for tests,
+            //        maybe there is other way to assert position?
             Assert::assertSame((int) $product['position'], $productRepository->getPositionInCategory($productId, $categoryId));
         }
     }
