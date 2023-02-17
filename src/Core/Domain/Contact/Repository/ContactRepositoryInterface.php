@@ -28,7 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Contact\Repository;
 
 interface ContactRepositoryInterface
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getCategoriesContacts(): array;
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getContacts(): array;
 }
