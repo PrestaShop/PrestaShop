@@ -74,4 +74,21 @@
       </p>
     {% endif %}
   </div>
+   ----- NEW -----
+  <div class="card-body">
+    {% if customerCartGrid.data.records_total > 0 %}
+      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerCartGrid} %}
+    {% else %}
+      TODO
+      <div class="text-center">
+        <p class="text-muted mb-2">
+          {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+        </p> 
+        <a class="btn btn-primary" href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}">
+          <i class="material-icons">add_circle</i>
+          {{ 'Create address'|trans({}, 'Admin.Global') }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
 </div>

@@ -58,7 +58,9 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerCartFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerOrderFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -260,6 +262,8 @@ class CustomerController extends AbstractAdminController
      * @param Request $request
      * @param CustomerDiscountFilters $customerDiscountFilters
      * @param CustomerAddressFilters $customerAddressFilters
+     * @param CustomerCartFilters $customerCartFilters
+     * @param CustomerOrderFilters $customerOrderFilters
      *
      * @return Response
      */
@@ -267,7 +271,9 @@ class CustomerController extends AbstractAdminController
         $customerId,
         Request $request,
         CustomerDiscountFilters $customerDiscountFilters,
-        CustomerAddressFilters $customerAddressFilters
+        CustomerAddressFilters $customerAddressFilters,
+        CustomerCartFilters $customerCartFilters,
+        CustomerOrderFilters $customerOrderFilters
     ) {
         try {
             /** @var ViewableCustomer $customerInformation */
@@ -292,6 +298,7 @@ class CustomerController extends AbstractAdminController
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
 
+        // Discount listing
         $customerDiscountGridFactory = $this->get('prestashop.core.grid.factory.customer.discount');
         $customerDiscountFilters = new CustomerDiscountFilters([
             'filters' => [
@@ -300,6 +307,7 @@ class CustomerController extends AbstractAdminController
         ] + $customerDiscountFilters->all());
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
 
+        // Addresses listing
         $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
         $customerAddressFilters = new CustomerAddressFilters([
             'filters' => [
@@ -307,6 +315,24 @@ class CustomerController extends AbstractAdminController
             ],
         ] + $customerAddressFilters->all());
         $customerAddressGrid = $customerAddressGridFactory->getGrid($customerAddressFilters);
+
+        // Order listing
+        $customerOrderGridFactory = $this->get('prestashop.core.grid.factory.customer.order');
+        $customerOrderFilters = new CustomerOrderFilters([
+            'filters' => [
+                'id_customer' => $customerId,
+            ],
+        ] + $customerOrderFilters->all());
+        $customerOrderGrid = $customerOrderGridFactory->getGrid($customerOrderFilters);
+
+        // Cart listing
+        $customerCartGridFactory = $this->get('prestashop.core.grid.factory.customer.cart');
+        $customerCartFilters = new CustomerCartFilters([
+            'filters' => [
+                'id_customer' => $customerId,
+            ],
+        ] + $customerCartFilters->all());
+        $customerCartGrid = $customerCartGridFactory->getGrid($customerCartFilters);
 
         if ($request->query->has('conf')) {
             $this->manageLegacyFlashes($request->query->get('conf'));
@@ -318,6 +344,8 @@ class CustomerController extends AbstractAdminController
             'customerInformation' => $customerInformation,
             'customerDiscountGrid' => $this->presentGrid($customerDiscountGrid),
             'customerAddressGrid' => $this->presentGrid($customerAddressGrid),
+            'customerOrderGrid' => $this->presentGrid($customerOrderGrid),
+            'customerCartGrid' => $this->presentGrid($customerCartGrid),
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
