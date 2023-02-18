@@ -86,6 +86,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
                 o.`payment`,
                 o.`total_paid_tax_incl`,
                 "TODO" AS products,
+                o.valid AS valid,
                 osl.name AS status'
             );
 

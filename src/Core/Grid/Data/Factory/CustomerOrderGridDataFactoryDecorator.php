@@ -101,6 +101,12 @@ final class CustomerOrderGridDataFactoryDecorator implements GridDataFactoryInte
                 );
             }
 
+            if (!empty($r['status'])) {
+                $r['status'] = '<span class="badge badge-' . 
+                ($r['valid'] == 1 ? 'success' : 'danger') .
+                ' rounded">' . $r['status'] . '</span>';
+            }
+
             $modifiedRecords[] = $r;
         }
 

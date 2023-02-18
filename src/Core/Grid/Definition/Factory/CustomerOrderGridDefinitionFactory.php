@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\HtmlColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -115,7 +116,7 @@ final class CustomerOrderGridDefinitionFactory extends AbstractGridDefinitionFac
                 ])
             )
             ->add(
-                (new DataColumn('status'))
+                (new HtmlColumn('status'))
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'status',

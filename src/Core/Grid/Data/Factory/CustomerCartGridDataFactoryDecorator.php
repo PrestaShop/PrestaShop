@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use Cart;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -95,13 +96,11 @@ final class CustomerCartGridDataFactoryDecorator implements GridDataFactoryInter
         $modifiedRecord = [];
 
         foreach ($records as $r) {
-            if (!empty($r['total_paid_tax_incl'])) {
-                $r['total_paid_tax_incl'] = $this->locale->formatPrice(
-                    $r['total_paid_tax_incl'],
-                    $this->contextCurrencyIsoCode
-                );
-            }
-
+            $cart = new Cart($r['id_cart']);
+            $r['total'] = $this->locale->formatPrice(
+                $cart->getOrderTotal(true),
+                $this->contextCurrencyIsoCode
+            );
             $modifiedRecord[] = $r;
         }
 

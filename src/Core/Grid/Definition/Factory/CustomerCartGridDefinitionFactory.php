@@ -114,10 +114,11 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'carrier_name',
                 ])
             )
-            ->add((new DataColumn('total_paid_tax_incl'))
+            ->add((new DataColumn('total'))
                 ->setName($this->trans('Total (Tax incl.)', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'total_paid_tax_incl',
+                    'field' => 'total',
+                    'sortable' => false,
                 ])
             )
             ->add((new ActionColumn('actions'))
