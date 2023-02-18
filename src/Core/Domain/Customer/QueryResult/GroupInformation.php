@@ -55,7 +55,7 @@ class GroupInformation
         $groupId,
         $name,
         $isDefault = false
-    ){
+    ) {
         $this->groupId = $groupId;
         $this->name = $name;
         $this->isDefault = $isDefault;
