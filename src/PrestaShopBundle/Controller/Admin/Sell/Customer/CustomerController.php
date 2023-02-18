@@ -300,33 +300,23 @@ class CustomerController extends AbstractAdminController
 
         // Discount listing
         $customerDiscountGridFactory = $this->get('prestashop.core.grid.factory.customer.discount');
-        $customerDiscountFilters = new CustomerDiscountFilters([
-            'filters' => [
-                'id_customer' => $customerId,
-            ],
-        ] + $customerDiscountFilters->all());
+        $customerDiscountFilters->addFilter(['id_customer' => $customerId]);
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
 
         // Addresses listing
         $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
-        $customerAddressFilters = new CustomerAddressFilters([
-            'filters' => [
-                'id_customer' => $customerId,
-            ],
-        ] + $customerAddressFilters->all());
+        $customerAddressFilters->addFilter(['id_customer' => $customerId]);
         $customerAddressGrid = $customerAddressGridFactory->getGrid($customerAddressFilters);
 
         // Order listing
         $customerOrderGridFactory = $this->get('prestashop.core.grid.factory.customer.order');
-        $filters = $customerOrderFilters->getDefaults();
-        $filters['filters'] = ['id_customer' => $customerId];
-        $customerOrderGrid = $customerOrderGridFactory->getGrid(new CustomerOrderFilters($filters));
+        $customerOrderFilters->addFilter(['id_customer' => $customerId]);
+        $customerOrderGrid = $customerOrderGridFactory->getGrid($customerOrderFilters);
 
         // Cart listing
         $customerCartGridFactory = $this->get('prestashop.core.grid.factory.customer.cart');
-        $filters = $customerCartFilters->getDefaults();
-        $filters['filters'] = ['id_customer' => $customerId];
-        $customerCartGrid = $customerCartGridFactory->getGrid(new CustomerCartFilters($filters));
+        $customerCartFilters->addFilter(['id_customer' => $customerId]);
+        $customerCartGrid = $customerCartGridFactory->getGrid($customerCartFilters);
 
         if ($request->query->has('conf')) {
             $this->manageLegacyFlashes($request->query->get('conf'));
