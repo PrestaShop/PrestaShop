@@ -133,6 +133,7 @@ services:
       - '@prestashop.core.grid.data_provider.customer_cart'
       - "@prestashop.core.localization.locale.context_locale"
       - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+      - '@prestashop.core.query_bus'
 
   prestashop.core.grid.data_provider.customer_order_decorator:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerOrderGridDataFactoryDecorator'

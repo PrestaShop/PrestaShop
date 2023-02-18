@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Cart;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 
 /**
  * Class CustomerCartGridDataFactoryDecorator decorates data from customer carts doctrine data factory.
@@ -56,18 +58,26 @@ final class CustomerCartGridDataFactoryDecorator implements GridDataFactoryInter
     private $contextCurrencyIsoCode;
 
     /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
      * @param GridDataFactoryInterface $customerCartDoctrineGridDataFactory
      * @param LocaleInterface $locale
      * @param string $contextCurrencyIsoCode
+     * @param CommandBusInterface $queryBus
      */
     public function __construct(
         GridDataFactoryInterface $customerCartDoctrineGridDataFactory,
         LocaleInterface $locale,
-        $contextCurrencyIsoCode
+        $contextCurrencyIsoCode,
+        CommandBusInterface $queryBus
     ) {
         $this->customerCartDoctrineGridDataFactory = $customerCartDoctrineGridDataFactory;
         $this->locale = $locale;
         $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -96,9 +106,9 @@ final class CustomerCartGridDataFactoryDecorator implements GridDataFactoryInter
         $modifiedRecord = [];
 
         foreach ($records as $r) {
-            $cart = new Cart($r['id_cart']);
+            $cartForViewing = $this->queryBus->handle(new GetCartForViewing((int) $r['id_cart']));
             $r['total'] = $this->locale->formatPrice(
-                $cart->getOrderTotal(true),
+                $cartForViewing->getCartSummary()['total'],
                 $this->contextCurrencyIsoCode
             );
             $modifiedRecord[] = $r;
