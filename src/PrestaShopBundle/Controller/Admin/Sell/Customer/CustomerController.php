@@ -60,8 +60,8 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFac
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerCartFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\CustomerOrderFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerOrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;

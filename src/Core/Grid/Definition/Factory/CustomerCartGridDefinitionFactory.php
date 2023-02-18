@@ -94,33 +94,32 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add(
-                (new DataColumn('id_cart'))
-                    ->setName($this->trans('ID', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'id_cart',
-                    ])
+            ->add((new DataColumn('id_cart'))
+            ->setName($this->trans('ID', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'id_cart',
+            ])
             )
             ->add((new DateTimeColumn('date_add'))
-                ->setName($this->trans('Date', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'date_add',
-                    'format' => $this->contextDateFormat,
-                    'clickable' => true,
-                ])
+            ->setName($this->trans('Date', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'date_add',
+                'format' => $this->contextDateFormat,
+                'clickable' => true,
+            ])
             )
             ->add((new DataColumn('carrier_name'))
-                ->setName($this->trans('Carrier', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'carrier_name',
-                ])
+            ->setName($this->trans('Carrier', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'carrier_name',
+            ])
             )
             ->add((new DataColumn('total'))
-                ->setName($this->trans('Total (Tax incl.)', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'total',
-                    'sortable' => false,
-                ])
+            ->setName($this->trans('Total (Tax incl.)', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'total',
+                'sortable' => false,
+            ])
             )
             ->add((new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
@@ -137,7 +136,7 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
                             'use_inline_display' => true,
                             'clickable_row' => true,
                         ])
-                )
+                ),
             ])
             );
     }

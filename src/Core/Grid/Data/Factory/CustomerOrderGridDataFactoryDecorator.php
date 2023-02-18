@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
@@ -102,7 +102,7 @@ final class CustomerOrderGridDataFactoryDecorator implements GridDataFactoryInte
             }
 
             if (!empty($r['status'])) {
-                $r['status'] = '<span class="badge badge-' . 
+                $r['status'] = '<span class="badge badge-' .
                 ($r['valid'] == 1 ? 'success' : 'danger') .
                 ' rounded">' . $r['status'] . '</span>';
             }

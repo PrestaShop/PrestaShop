@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
-use Cart;
 use CartRule;
 use Category;
 use Context;
-use Currency;
 use Customer;
 use CustomerThread;
 use Db;
@@ -38,7 +36,6 @@ use Gender;
 use Group;
 use Language;
 use Link;
-use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
@@ -51,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GroupInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\LastConnectionInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\MessageInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\PersonalInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ProductsInformation;

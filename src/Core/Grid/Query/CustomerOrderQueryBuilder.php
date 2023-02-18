@@ -79,8 +79,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
-        $qb
-            ->select(
+        $qb->select(
                 'o.`id_order`,
                 o.`date_add`,
                 o.`payment`,
@@ -88,7 +87,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
                 "TODO" AS products,
                 o.valid AS valid,
                 osl.name AS status'
-            );
+        );
 
         $qb->addSelect('
             (SELECT SUM(od.`product_quantity`) 
@@ -132,7 +131,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
                 'osl',
                 'os.id_order_state = osl.id_order_state AND osl.id_lang = :context_lang_id'
             );
-        
+
         $qb->andWhere('o.id_shop IN (:context_shop_ids)')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('context_lang_id', $this->contextLangId);

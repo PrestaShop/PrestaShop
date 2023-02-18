@@ -29,13 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use Cart;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 
 /**
  * Class CustomerCartGridDataFactoryDecorator decorates data from customer carts doctrine data factory.
