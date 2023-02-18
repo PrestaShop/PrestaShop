@@ -90,11 +90,11 @@ final class CustomerCartGridDataFactoryDecorator implements GridDataFactoryInter
      *
      * @return RecordCollection
      */
-    private function applyModifications(RecordCollectionInterface $record)
+    private function applyModifications(RecordCollectionInterface $records)
     {
         $modifiedRecord = [];
 
-        foreach ($record as $r) {
+        foreach ($records as $r) {
             if (!empty($r['total_paid_tax_incl'])) {
                 $r['total_paid_tax_incl'] = $this->locale->formatPrice(
                     $r['total_paid_tax_incl'],

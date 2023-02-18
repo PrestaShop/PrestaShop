@@ -86,15 +86,14 @@ final class CustomerOrderGridDataFactoryDecorator implements GridDataFactoryInte
     }
 
     /**
-     * @param RecordCollectionInterface $record
+     * @param RecordCollectionInterface $records
      *
      * @return RecordCollection
      */
-    private function applyModifications(RecordCollectionInterface $record)
+    private function applyModifications(RecordCollectionInterface $records)
     {
-        $modifiedRecord = [];
-
-        foreach ($record as $r) {
+        $modifiedRecords = [];
+        foreach ($records as $r) {
             if (!empty($r['total_paid_tax_incl'])) {
                 $r['total_paid_tax_incl'] = $this->locale->formatPrice(
                     $r['total_paid_tax_incl'],
@@ -102,9 +101,9 @@ final class CustomerOrderGridDataFactoryDecorator implements GridDataFactoryInte
                 );
             }
 
-            $modifiedRecord[] = $r;
+            $modifiedRecords[] = $r;
         }
 
-        return new RecordCollection($modifiedRecord);
+        return new RecordCollection($modifiedRecords);
     }
 }

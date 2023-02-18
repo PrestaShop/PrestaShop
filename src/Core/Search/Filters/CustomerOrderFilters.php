@@ -47,7 +47,7 @@ final class CustomerOrderFilters extends Filters
         return [
             'limit' => 10,
             'offset' => 0,
-            'orderBy' => 'id_address',
+            'orderBy' => 'id_order',
             'sortOrder' => 'desc',
             'filters' => [],
         ];

@@ -318,21 +318,15 @@ class CustomerController extends AbstractAdminController
 
         // Order listing
         $customerOrderGridFactory = $this->get('prestashop.core.grid.factory.customer.order');
-        $customerOrderFilters = new CustomerOrderFilters([
-            'filters' => [
-                'id_customer' => $customerId,
-            ],
-        ] + $customerOrderFilters->all());
-        $customerOrderGrid = $customerOrderGridFactory->getGrid($customerOrderFilters);
+        $filters = $customerOrderFilters->getDefaults();
+        $filters['filters'] = ['id_customer' => $customerId];
+        $customerOrderGrid = $customerOrderGridFactory->getGrid(new CustomerOrderFilters($filters));
 
         // Cart listing
         $customerCartGridFactory = $this->get('prestashop.core.grid.factory.customer.cart');
-        $customerCartFilters = new CustomerCartFilters([
-            'filters' => [
-                'id_customer' => $customerId,
-            ],
-        ] + $customerCartFilters->all());
-        $customerCartGrid = $customerCartGridFactory->getGrid($customerCartFilters);
+        $filters = $customerCartFilters->getDefaults();
+        $filters['filters'] = ['id_customer' => $customerId];
+        $customerCartGrid = $customerCartGridFactory->getGrid(new CustomerCartFilters($filters));
 
         if ($request->query->has('conf')) {
             $this->manageLegacyFlashes($request->query->get('conf'));

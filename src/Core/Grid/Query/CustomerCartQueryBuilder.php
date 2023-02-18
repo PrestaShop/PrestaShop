@@ -83,7 +83,7 @@ final class CustomerCartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select(
                 'c.`id_cart`,
                 c.`date_add`,
-                "TODO" as total_paid_tax_incl'
+                "123.456" as total_paid_tax_incl'
             )
             ->addSelect('ca.`name` as carrier_name')
         ;
