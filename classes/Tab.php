@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Security\Permission;
+
 /**
  * Class TabCore.
  */
@@ -149,7 +151,7 @@ class TabCore extends ObjectModel
         }
 
         /* Right management */
-        $slug = 'ROLE_MOD_TAB_' . strtoupper(self::getClassNameById($idTab));
+        $slug = Permission::PREFIX_TAB . strtoupper(self::getClassNameById($idTab));
 
         foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
             /*
@@ -183,7 +185,7 @@ class TabCore extends ObjectModel
     public function delete()
     {
         if (parent::delete()) {
-            $slug = 'ROLE_MOD_TAB_' . strtoupper($this->class_name);
+            $slug = Permission::PREFIX_TAB . strtoupper($this->class_name);
 
             foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $slug . '_' . $action . '"');

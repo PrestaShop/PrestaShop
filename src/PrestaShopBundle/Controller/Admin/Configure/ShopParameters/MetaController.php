@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
+use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -65,7 +67,7 @@ class MetaController extends FrameworkBundleAdminController
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {
@@ -256,7 +258,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {
@@ -289,7 +291,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {
@@ -350,7 +352,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->getConfiguration()->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {
@@ -374,7 +376,7 @@ class MetaController extends FrameworkBundleAdminController
     {
         $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
 
-        $rootDir = $this->get('prestashop.adapter.legacy.configuration')->get('_PS_ROOT_DIR_');
+        $rootDir = $this->getConfiguration()->get('_PS_ROOT_DIR_');
 
         if (!$robotsTextFileGenerator->generateFile()) {
             $this->addFlash(
@@ -472,10 +474,10 @@ class MetaController extends FrameworkBundleAdminController
         }
 
         $tools = $this->get(Tools::class);
-        $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
+        $urlFileChecker = $this->get(UrlFileCheckerInterface::class);
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
-        $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
+        $helperBlockLinkProvider = $this->get(DocumentationLinkProviderInterface::class);
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(

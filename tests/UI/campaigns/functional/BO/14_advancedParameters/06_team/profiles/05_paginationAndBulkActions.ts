@@ -72,8 +72,8 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
 
   // 1 : Create 11 profiles
   describe('Create 10 profiles in BO', async () => {
-    const tests = new Array(10).fill(0, 0, 10);
-    tests.forEach((test, index) => {
+    const tests: number[] = new Array(10).fill(0, 0, 10);
+    tests.forEach((test: number, index: number) => {
       it('should go to add new profile page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewProfilePage${index}`, baseContext);
 

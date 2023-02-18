@@ -70,6 +70,7 @@ module.exports = {
     customer_thread: './js/pages/customer-thread/index',
     customer_thread_view: './js/pages/customer-thread/view',
     customer_threads: './scss/pages/customer_thread/customer_thread.scss',
+    customer_groups: './js/pages/customer-groups',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',

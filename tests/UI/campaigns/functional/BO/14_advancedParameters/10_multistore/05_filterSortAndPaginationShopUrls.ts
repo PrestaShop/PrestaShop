@@ -99,7 +99,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
 
   // 3 : Create 20 shop urls
   describe('Create 20 shop Urls', async () => {
-    Array(20).fill(0, 0, 20).forEach((test, index) => {
+    Array(20).fill(0, 0, 20).forEach((test: number, index: number) => {
       const shopUrlData: ShopData = new ShopData({
         name: `ToDelete${index + 1}Shop`,
         shopGroup: '',

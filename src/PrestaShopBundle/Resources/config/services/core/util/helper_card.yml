@@ -1,8 +1,17 @@
 services:
   _defaults:
-    public: true
+    public: false
 
   prestashop.core.util.helper_card.documentation_link_provider:
+    alias: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
+    public: true
+    deprecated: ~
+
+  PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface:
+    alias: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
+    public: true
+
+  PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider:
     class: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language ? service("prestashop.adapter.legacy.context").getContext().language.iso_code : "en-US"'

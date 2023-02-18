@@ -6,3 +6,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Shop\LogoUploader'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop'
+      - '@PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration'
+      - '@prestashop.core.admin.feature_flag.repository'
+      - !php/const _PS_IMG_DIR_

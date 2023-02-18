@@ -30,6 +30,9 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @experimental
+ */
 class ApiAccessRepository extends EntityRepository
 {
 }

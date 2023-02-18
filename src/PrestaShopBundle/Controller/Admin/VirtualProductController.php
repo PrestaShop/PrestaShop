@@ -101,7 +101,7 @@ class VirtualProductController extends FrameworkBundleAdminController
      */
     public function downloadFileAction($idProduct)
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
         $download = $this->getDoctrine()
             ->getRepository(ProductDownload::class)
             ->findOneBy([

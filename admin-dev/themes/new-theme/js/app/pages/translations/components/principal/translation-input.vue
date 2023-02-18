@@ -31,15 +31,21 @@
       v-model="getTranslated"
       :class="{ missing : isMissing }"
     />
-    <PSButton
-      class="mt-3 float-sm-right"
-      :primary="false"
-      ghost
-      @click="resetTranslation"
-    >
-      {{ trans('button_reset') }}
-    </PSButton>
-    <small class="mt-3">{{ extraInfo }}</small>
+    <div class="d-flex flex-column flex-md-row justify-content-md-between">
+      <div>
+        <small>{{ extraInfo }}</small>
+      </div>
+      <div>
+        <PSButton
+          class="mt-2"
+          :primary="false"
+          ghost
+          @click="resetTranslation"
+        >
+          {{ trans('button_reset') }}
+        </PSButton>
+      </div>
+    </div>
   </div>
 </template>
 

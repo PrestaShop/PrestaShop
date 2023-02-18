@@ -74,7 +74,7 @@ describe('BO - Customers - Customers : Export customers', async () => {
 
     numberOfCustomers = await customersPage.getNumberOfElementInGrid(page);
 
-    for (let row = 1; row <= numberOfCustomers; row++) {
+    for (let row: number = 1; row <= numberOfCustomers; row++) {
       const customerInCsvFormat = await customersPage.getCustomerInCsvFormat(page, row);
       const textExist = await files.isTextInFile(filePath, customerInCsvFormat, true);
       await expect(textExist, `${customerInCsvFormat} was not found in the file`).to.be.true;

@@ -10,7 +10,7 @@ import loginPage from '@pages/BO/login';
 import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-import productsPage from '@pages/BO/catalog/products/index';
+import productsPage from '@pages/BO/catalog/products';
 import ordersPage from '@pages/BO/orders';
 
 // Import data

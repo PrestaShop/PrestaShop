@@ -56,6 +56,7 @@ function createCustomerTest(customerData: CustomerData, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
 
       await customersPage.goToAddNewCustomerPage(page);
+
       const pageTitle = await addCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
     });
@@ -105,6 +106,7 @@ function createCustomerB2BTest(customerData: CustomerData, baseContext: string =
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
 
       await customersPage.goToAddNewCustomerPage(page);
+
       const pageTitle = await addCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
     });

@@ -1,6 +1,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
+import {MerchandiseReturns} from '@data/types/order';
 
 /**
  * Merchandise returns page, contains functions that can be used on the page
@@ -89,6 +90,20 @@ class MerchandiseReturns extends FOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get merchandise returns details
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in table
+   */
+  async getMerchandiseReturnsDetails(page: Page, row: number = 1): Promise<MerchandiseReturns> {
+    return {
+      orderReference: await this.getTextContent(page, this.tableColumn(row, 1)),
+      fileName: await this.getTextContent(page, this.tableColumn(row, 2)),
+      status: await this.getTextContent(page, this.tableColumn(row, 3)),
+      dateIssued: await this.getTextContent(page, this.tableColumn(row, 4)),
+    };
   }
 
   /**

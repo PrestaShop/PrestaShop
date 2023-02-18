@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -46,22 +45,22 @@ class UnitPriceType extends TranslatorAwareType
     private const ENABLED_GROUP = 'enabled_group';
 
     /**
-     * @var Currency
+     * @var string
      */
-    private $defaultCurrency;
+    private $defaultCurrencyIsoCode;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param Currency $defaultCurrency
+     * @param string $defaultCurrencyIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency
+        string $defaultCurrencyIsoCode
     ) {
         parent::__construct($translator, $locales);
-        $this->defaultCurrency = $defaultCurrency;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
     }
 
     /**
@@ -74,7 +73,7 @@ class UnitPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -90,7 +89,7 @@ class UnitPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax incl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),

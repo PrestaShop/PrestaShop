@@ -61,7 +61,7 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
     {args: {option: '-', attributesInProductLink: productAttributes.join('-')}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should choose the separator option '${test.args.option}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `chooseOption_${index}`, baseContext);
 

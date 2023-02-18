@@ -10,4 +10,4 @@ _api_routing:
 _new_api_routing:
   resource: .
   type: api_platform
-  prefix: /new-api
+  prefix: '%api_base_path%'

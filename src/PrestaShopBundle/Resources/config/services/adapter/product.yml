@@ -64,8 +64,7 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
@@ -296,8 +295,7 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkUpdateProductStatusHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand
@@ -392,24 +390,22 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\DeleteProductFromShopsHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
+
+  PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\BulkDeleteProductFromShopsHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
     autowire: true
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater'
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTypeHandler:
     arguments:

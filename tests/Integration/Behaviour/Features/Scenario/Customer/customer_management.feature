@@ -151,3 +151,40 @@ Feature: Customer Management
       | defaultGroupId | Guest                        |
       | groupIds       | [Guest]                      |
     And customer "CUST-7" should be soft deleted
+
+  Scenario: Edit registered customer email
+    When I create a customer "CUST-10" with following properties:
+      | firstName | Mathieu                       |
+      | lastName  | Customer                      |
+      | email     | customereten@prestashop.com   |
+      | password  | PrestaShopForever1_!          |
+    And I create a customer "CUST-11" with following properties:
+      | firstName | Mathieu                       |
+      | lastName  | Customer                      |
+      | email     | customereleven@prestashop.com |
+      | password  | PrestaShopForever1_!          |
+    And I attempt to edit customer "CUST-10" and I change the following properties:
+      | email | customereleven@prestashop.com |
+    Then I should be returned an error message 'Customer with email "customereleven@prestashop.com" already exists'
+
+  Scenario: Fail to create a customer with mismatching groups
+    When I attempt to create a customer "CUST-12" with following properties:
+      | firstName      | Mathieu                       |
+      | lastName       | Napoler                       |
+      | email          | customertwelve@prestashop.com |
+      | password       | PrestaShopForever1_!          |
+      | defaultGroupId | Visitor                       |
+      | groupIds       | [Customer]                    |
+    Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
+
+  Scenario: Fail to set mismatching groups on a customer
+    When I create a customer "CUST-13" with following properties:
+      | firstName      | Mathieu                            |
+      | lastName       | Customer                           |
+      | email          | customerethirteen@prestashop.com   |
+      | password       | PrestaShopForever1_!               |
+      | defaultGroupId | Customer                           |
+      | groupIds       | [Customer]                         |
+    And I attempt to edit customer "CUST-13" and I change the following properties:
+      | defaultGroupId | Visitor |
+    Then I should be returned an error message 'Customer default group with id "1" must be in access groups'

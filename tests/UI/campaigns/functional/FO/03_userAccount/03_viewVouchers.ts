@@ -62,7 +62,7 @@ describe('FO - Account : View vouchers', async () => {
   createAccountTest(customerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create 2 cart rules for the created customer
-  [firstCartRule, secondCartRule].forEach((cartRule, index) => {
+  [firstCartRule, secondCartRule].forEach((cartRule: CartRuleData, index: number) => {
     createCartRuleTest(cartRule, `${baseContext}_preTest_${index + 2}`);
   });
 
@@ -129,7 +129,7 @@ describe('FO - Account : View vouchers', async () => {
       {args: {column: 'minimum', row: 2, value: 'None'}},
       {args: {column: 'cumulative', row: 2, value: 'Yes'}},
       {args: {column: 'expiration_date', row: 2, value: expirationDate}},
-    ].forEach((cartRule, index) => {
+    ].forEach((cartRule, index: number) => {
       it(`should check the voucher ${cartRule.args.column} n°${cartRule.args.row}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 

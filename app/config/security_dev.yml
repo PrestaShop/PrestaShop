@@ -25,7 +25,7 @@ security:
       security: false
 
     api:
-      pattern: ^/new-api
+      pattern: '^%api_base_path%'
       stateless: true
       provider: 'oauth2'
       guard:

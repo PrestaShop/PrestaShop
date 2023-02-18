@@ -397,7 +397,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      */
-    public function assertProductImagesForAllShops(string $productReference, TableNode $table, string $shopReferences): void
+    public function assertProductImagesForShops(string $productReference, TableNode $table, string $shopReferences): void
     {
         $shopReferences = explode(',', $shopReferences);
         $shopIds = [];

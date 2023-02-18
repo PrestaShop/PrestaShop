@@ -155,7 +155,9 @@ class OrderProductQuantityUpdater
         if (0 === $newQuantity) {
             // Product deletion
             $cartComparator = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
-            $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
+            if ((int) $orderDetail->id_customization) {
+                $this->deleteProductCustomization((int) $orderDetail->id_customization);
+            }
             $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
             $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
         } else {
@@ -174,10 +176,6 @@ class OrderProductQuantityUpdater
                 $cartComparator = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
                 $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
                 $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
-            } elseif ($orderDetail->id_customization > 0) {
-                $customization = new Customization($orderDetail->id_customization);
-                $customization->quantity = $newQuantity;
-                $customization->save();
             }
         }
 
@@ -505,23 +503,15 @@ class OrderProductQuantityUpdater
     }
 
     /**
-     * @param Order $order
-     * @param OrderDetail $orderDetail
-     * @param int $oldQuantity
+     * @param int $id_customization
      *
      * @throws OrderException
      */
-    private function updateCustomizationOnProductDelete(Order $order, OrderDetail $orderDetail, int $oldQuantity): void
+    private function deleteProductCustomization(int $id_customization): void
     {
-        if (!(int) $order->getCurrentState()) {
-            throw new OrderException('Could not get a valid Order state before deletion');
-        }
-
-        if ($order->hasBeenPaid()) {
-            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_refunded` = `quantity_refunded` + ' . (int) $oldQuantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
-        }
-
-        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
+        if (!Db::getInstance()->execute(
+            'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
+            WHERE `id_customization` = ' . (int) $id_customization)) {
             throw new OrderException('Could not delete customization from database.');
         }
     }

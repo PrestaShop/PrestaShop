@@ -165,12 +165,11 @@ describe('BO - Catalog - Categories : Filter and quick edit Categories table', a
       const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);
       await expect(numberOfCategoriesAfterFilter).to.be.at.above(0);
     });
-    const tests = [
+
+    [
       {args: {action: 'disable', enabledValue: false}},
       {args: {action: 'enable', enabledValue: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} first Category`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
 

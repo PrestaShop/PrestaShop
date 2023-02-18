@@ -1,4 +1,3 @@
-# @todo: add legacy links after page is fully migrated. (including condition groups)
 admin_catalog_price_rules_index:
   path: /
   methods: [ GET ]

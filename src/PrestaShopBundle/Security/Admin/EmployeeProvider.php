@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use Access;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -47,11 +47,19 @@ class EmployeeProvider implements UserProviderInterface
      * @var CacheItemPoolInterface
      */
     private $cache;
+    /**
+     * @var EmployeePermissionProviderInterface
+     */
+    private $employeePermissionProvider;
 
-    public function __construct(LegacyContext $context, CacheItemPoolInterface $cache)
-    {
+    public function __construct(
+        LegacyContext $context,
+        CacheItemPoolInterface $cache,
+        EmployeePermissionProviderInterface $employeePermissionProvider
+    ) {
         $this->legacyContext = $context->getContext();
         $this->cache = $cache;
+        $this->employeePermissionProvider = $employeePermissionProvider;
     }
 
     /**
@@ -79,7 +87,7 @@ class EmployeeProvider implements UserProviderInterface
         ) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
-                array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
+                array_merge([self::ROLE_EMPLOYEE], $this->employeePermissionProvider->getRoles($this->legacyContext->employee->id_profile))
             );
 
             $cachedEmployee->set($employee);

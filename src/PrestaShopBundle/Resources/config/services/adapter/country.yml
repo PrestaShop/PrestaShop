@@ -14,7 +14,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryZipCodeRequirementsProvider'
     arguments:
       - '@prestashop.adapter.legacy.context'
-      - '@prestashop.core.domain.country.zip_code_format_resolver'
+      - '@PrestaShop\PrestaShop\Core\Domain\Country\ZipCodePatternResolverInterface'
 
   prestashop.adapter.country.country_required_fields_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryRequiredFieldsProvider'

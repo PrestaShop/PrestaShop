@@ -144,7 +144,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
 
       await outstandingPage.resetFilter(page);
 
-      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1) as string;
+      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1);
       await expect(outstandingId).to.be.at.least(1);
     });
 

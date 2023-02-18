@@ -221,17 +221,17 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           filePath = await orderPageTabListBlock.downloadInvoice(page);
           await expect(filePath).to.not.be.null;
 
-          const exist = await files.doesFileExist(filePath as string);
+          const exist = await files.doesFileExist(filePath);
           await expect(exist).to.be.true;
         });
 
         it('should check the product images in the PDF File', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImages${index}`, baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath as string);
+          const imageNumber = await files.getImageNumberInPDF(filePath);
           await expect(imageNumber).to.be.equal(test.args.imageNumber);
 
-          await files.deleteFile(filePath as string);
+          await files.deleteFile(filePath);
         });
       });
     });

@@ -382,7 +382,6 @@ class Statuses extends BOBasePage {
   async sortTable(page: Page, tableName: string, sortBy: string, columnID: number, sortDirection: string): Promise<void> {
     const sortColumnButton: string = `${this.sortColumnDiv(tableName, columnID)} i.icon-caret-${sortDirection}`;
 
-    console.log(sortColumnButton);
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 

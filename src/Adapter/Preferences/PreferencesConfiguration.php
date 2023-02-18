@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Preferences;
 use Cookie;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 
 /**
  * This class will provide Shop Preferences configuration.
@@ -42,17 +40,10 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    /**
-     * @var FeatureFlagRepository
-     */
-    protected $featureFlagRepository;
-
     public function __construct(
-        Configuration $configuration,
-        FeatureFlagRepository $featureFlagRepository
+        Configuration $configuration
     ) {
         $this->configuration = $configuration;
-        $this->featureFlagRepository = $featureFlagRepository;
     }
 
     /**
@@ -115,11 +106,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
         $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
-
-        // Update product page feature automatically based on PS_MULTISHOP_FEATURE_ACTIVE
-        if (!$previousMultistoreFeatureState && (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')) {
-            $this->featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
-        }
 
         return [];
     }

@@ -4,16 +4,18 @@ admin_features_index:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::indexAction
     _legacy_controller: AdminFeatures
-#    _legacy_link: AdminFeatures
-#
+    _legacy_link: AdminFeatures
+    _legacy_feature_flag: feature
+
 admin_features_add:
   path: /new
   methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::createAction
     _legacy_controller: AdminFeatures
-#    _legacy_link: AdminFeatures:addfeature
-#
+    _legacy_link: AdminFeatures:addfeature
+    _legacy_feature_flag: feature
+
 admin_features_edit:
   path: /{featureId}/edit
   methods: [ GET, POST ]

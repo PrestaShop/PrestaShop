@@ -164,7 +164,7 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
       );
       await expect(numberOfAddressesInGrid).to.equal(createBrandData.addresses);
 
-      const textColumn = await viewBrandPage.getTextColumnFromTableAddresses(page, 1, '1');
+      const textColumn = await viewBrandPage.getTextColumnFromTableAddresses(page, 1, 1);
       await expect(textColumn).to.contains(`${createBrandAddressData.firstName} ${createBrandAddressData.lastName}`);
     });
 
@@ -302,7 +302,7 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
       const numberOfAddressesInGrid = await viewBrandPage.getNumberOfAddressesInGrid(page);
       await expect(numberOfAddressesInGrid).to.equal(editBrandData.addresses);
 
-      const textColumn = await viewBrandPage.getTextColumnFromTableAddresses(page, 1, '1');
+      const textColumn = await viewBrandPage.getTextColumnFromTableAddresses(page, 1, 1);
       await expect(textColumn).to.contains(`${editBrandAddressData.firstName} ${editBrandAddressData.lastName}`);
     });
 

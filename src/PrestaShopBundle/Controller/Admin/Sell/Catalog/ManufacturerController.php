@@ -189,7 +189,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/view.html.twig', [
             'layoutTitle' => $viewableManufacturer->getName(),
             'viewableManufacturer' => $viewableManufacturer,
-            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isStockManagementEnabled' => $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -814,7 +814,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
         $urlEnding = '</a>';
 
-        if ($this->configuration->get('PS_DISPLAY_MANUFACTURERS')) {
+        if ($this->getConfiguration()->get('PS_DISPLAY_MANUFACTURERS')) {
             return $this->trans(
                 'The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
                 'Admin.Catalog.Notification',

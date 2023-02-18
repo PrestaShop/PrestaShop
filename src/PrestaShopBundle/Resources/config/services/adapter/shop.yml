@@ -22,7 +22,7 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@translator'
       - '@router'
-      - '@prestashop.core.help.documentation'
+      - '@PrestaShop\PrestaShop\Core\Help\Documentation'
 
   prestashop.adapter.shop.url.category_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider'

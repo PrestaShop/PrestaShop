@@ -55,6 +55,8 @@ const CombinationsMap = ProductMap.combinations;
 export default class CombinationsList {
   private readonly productId: number;
 
+  private readonly shopId: number;
+
   private readonly eventEmitter: EventEmitter;
 
   private readonly combinationManagerWidget: HTMLDivElement;
@@ -94,6 +96,7 @@ export default class CombinationsList {
   private productAttributeGroups: Array<AttributeGroup>;
 
   constructor(productId: number, productFormModel: ProductFormModel, shopId: number) {
+    this.shopId = shopId;
     this.productId = productId;
     this.productFormModel = productFormModel;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
@@ -181,6 +184,7 @@ export default class CombinationsList {
       CombinationsMap.combinationsGeneratorContainer,
       this.eventEmitter,
       this.productId,
+      this.shopId,
     );
     this.combinationModalApp = initCombinationModal(
       CombinationsMap.editModal,
@@ -227,7 +231,7 @@ export default class CombinationsList {
 
   private async refreshCombinationList(): Promise<void> {
     // Wait for product attributes to adapt rendering depending on their number
-    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
+    this.productAttributeGroups = await getProductAttributeGroups(this.productId, this.shopId);
 
     if (this.filtersApp) {
       this.filtersApp = initFilters(

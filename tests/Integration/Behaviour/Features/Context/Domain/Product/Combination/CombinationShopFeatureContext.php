@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationShopAssociationNotFoundException;
 
 class CombinationShopFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -46,7 +46,10 @@ class CombinationShopFeatureContext extends AbstractCombinationFeatureContext
             $caughtException = null;
             try {
                 $this->getCombinationForEditing($combinationReference, $shopId);
-            } catch (ShopAssociationNotFound $e) {
+            } catch (CombinationShopAssociationNotFoundException $e) {
+                // We catch CombinationShopAssociationNotFoundException specifically because it is thrown first if the combination association is not thrown
+                // If it is present but not the product association ProductShopAssociationNotFoundException but it only ensure product's association was removed
+                // not that all combinations associations have been correctly cleared
                 $caughtException = $e;
             }
 
@@ -68,7 +71,7 @@ class CombinationShopFeatureContext extends AbstractCombinationFeatureContext
             $caughtException = null;
             try {
                 $this->getCombinationForEditing($combinationReference, $shopId);
-            } catch (ShopAssociationNotFound $e) {
+            } catch (CombinationShopAssociationNotFoundException $e) {
                 $caughtException = $e;
             }
 

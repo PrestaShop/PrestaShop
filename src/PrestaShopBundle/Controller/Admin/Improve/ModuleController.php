@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -77,6 +77,7 @@ class ModuleController extends ModuleAbstractController
             'bulk-reset' => $this->trans('Reset', 'Admin.Actions'),
             'bulk-enable-mobile' => $this->trans('Enable Mobile', 'Admin.Modules.Feature'),
             'bulk-disable-mobile' => $this->trans('Disable Mobile', 'Admin.Modules.Feature'),
+            'bulk-delete' => $this->trans('Delete', 'Admin.Modules.Feature'),
         ];
 
         return $this->render(
@@ -171,13 +172,14 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_DISABLE:
             case ModuleAdapter::ACTION_ENABLE_MOBILE:
             case ModuleAdapter::ACTION_DISABLE_MOBILE:
-                $deniedAccess = $this->checkPermission(PageVoter::UPDATE);
+                $deniedAccess = $this->checkPermission(Permission::UPDATE);
                 break;
             case ModuleAdapter::ACTION_INSTALL:
-                $deniedAccess = $this->checkPermission(PageVoter::CREATE);
+                $deniedAccess = $this->checkPermission(Permission::CREATE);
                 break;
+            case ModuleAdapter::ACTION_DELETE:
             case ModuleAdapter::ACTION_UNINSTALL:
-                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
+                $deniedAccess = $this->checkPermission(Permission::DELETE);
                 break;
 
             default:
@@ -212,6 +214,9 @@ class ModuleController extends ModuleAbstractController
             if ($action === ModuleAdapter::ACTION_UNINSTALL) {
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
+            }
+            if ($action === ModuleAdapter::ACTION_DELETE) {
+                $response[$module]['refresh_needed'] = false;
             }
             $systemCacheClearEnabled = filter_var(
                 $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
@@ -249,7 +254,7 @@ class ModuleController extends ModuleAbstractController
                     '%module%' => $module,
                 ]
             );
-            if ($action !== 'uninstall') {
+            if ($action !== 'uninstall' && $action !== 'delete') {
                 $response[$module]['module_name'] = $module;
                 $response[$module]['is_configurable'] = (bool) $moduleInstance->attributes->get('is_configurable');
             }
@@ -302,8 +307,8 @@ class ModuleController extends ModuleAbstractController
 
         $deniedAccess = $this->checkPermissions(
             [
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
+                Permission::LEVEL_CREATE,
+                Permission::LEVEL_DELETE,
             ]
         );
         if (null !== $deniedAccess) {

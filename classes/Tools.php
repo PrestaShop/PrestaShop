@@ -111,12 +111,19 @@ class ToolsCore
      *
      * Limited to OpenSSL since 1.7.0.0
      *
+     * @deprecated Since 8.1.0
+     *
      * @param int $length Desired length of random bytes
      *
      * @return bool|string Random bytes
      */
     public static function getBytes($length)
     {
+        @trigger_error(
+            'Tools::getBytes() is deprecated since version 8.1.0.',
+            E_USER_DEPRECATED
+        );
+
         try {
             return (new OpenSSL())->getBytes($length);
         } catch (\Exception $e) {
@@ -2177,7 +2184,7 @@ class ToolsCore
         $hex = str_replace('#', '', $hex);
 
         if (Tools::strlen($hex) == 3) {
-            $hex .= $hex;
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
         }
 
         $r = hexdec(substr($hex, 0, 2));
@@ -2772,19 +2779,6 @@ FileETag none
         }
 
         return $tab;
-    }
-
-    public static function generateIndex()
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1. Use PrestaShop\Autoload\PrestashopAutoload instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
     }
 
     /**
@@ -3825,10 +3819,20 @@ exit;
     /**
      * Allows to display the category description without HTML tags and slashes.
      *
+     * @deprecated since version 8.1.0, to be removed.
+     *
      * @return string
      */
     public static function getDescriptionClean($description)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. There is no replacement',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         return strip_tags(stripslashes($description));
     }
 

@@ -97,7 +97,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.context'
       - '@prestashop.core.admin.multistore'
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
 
   form.extension.downloadable_file:
     class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
@@ -123,6 +123,6 @@ services:
   form.extension.disabling_switch_extension:
     class: 'PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension'
     arguments:
-      - '@form.event_listener.add_disabling_switch_listener'
+      - '@PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
     tags:
       - { name: form.type_extension }

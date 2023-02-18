@@ -303,7 +303,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
       - '@prestashop.adapter.shop.context'
       - '@form.factory'
-      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultiShopPreviewAccessibilityChecker'
+      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductSingleShopAssociatedAccessibilityChecker'
+      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultipleShopsAssociatedAccessibilityChecker'
     public: true
 
   prestashop.core.grid.definition.factory.product.shops:
@@ -361,3 +362,8 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: false
     autowire: true
+
+  prestashop.core.grid.definition.factory.customer_groups:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGroupsGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true

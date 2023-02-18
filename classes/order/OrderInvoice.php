@@ -242,9 +242,6 @@ class OrderInvoiceCore extends ObjectModel
             $row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
             $row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
 
-            if ($customized_datas) {
-                Product::addProductCustomizationPrice($row, $customized_datas);
-            }
             /* Stock product */
             $result_array[(int) $row['id_order_detail']] = $row;
         }
@@ -257,8 +254,6 @@ class OrderInvoiceCore extends ObjectModel
         $product['customizedDatas'] = null;
         if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']])) {
             $product['customizedDatas'] = $customized_datas[$product['product_id']][$product['product_attribute_id']];
-        } else {
-            $product['customizationQuantityTotal'] = 0;
         }
     }
 

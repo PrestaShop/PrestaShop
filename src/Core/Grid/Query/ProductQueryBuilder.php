@@ -94,7 +94,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria);
         $qb
-            ->addSelect('p.`id_product`, p.`reference`')
+            ->addSelect('p.`id_product`, p.`reference`, p.`id_shop_default`')
             ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`ecotax` AS `ecotax_tax_excluded`, ps.`id_tax_rules_group`, ps.`active`')
             ->addSelect('pl.`name`, pl.`link_rewrite`')
             ->addSelect('cl.`name` AS `category`')

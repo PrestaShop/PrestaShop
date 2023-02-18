@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -257,17 +258,33 @@ class AdminControllerCore extends Controller
     /** @var string */
     public $override_folder;
 
-    /** @var int DELETE access level */
-    public const LEVEL_DELETE = 4;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int DELETE access level
+     */
+    public const LEVEL_DELETE = Permission::LEVEL_DELETE;
 
-    /** @var int ADD access level */
-    public const LEVEL_ADD = 3;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int ADD access level
+     */
+    public const LEVEL_ADD = Permission::LEVEL_CREATE;
 
-    /** @var int EDIT access level */
-    public const LEVEL_EDIT = 2;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int EDIT access level
+     */
+    public const LEVEL_EDIT = Permission::LEVEL_UPDATE;
 
-    /** @var int VIEW access level */
-    public const LEVEL_VIEW = 1;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int VIEW access level
+     */
+    public const LEVEL_VIEW = Permission::LEVEL_READ;
 
     /**
      * Actions to execute on multiple selections.
@@ -4735,32 +4752,32 @@ class AdminControllerCore extends Controller
     {
         if (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_DELETE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_DELETE;
+            return Permission::LEVEL_DELETE;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_CREATE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_ADD;
+            return Permission::LEVEL_CREATE;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_UPDATE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_EDIT;
+            return Permission::LEVEL_UPDATE;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_READ',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_READ',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_VIEW;
+            return Permission::LEVEL_READ;
         } else {
             return 0;
         }

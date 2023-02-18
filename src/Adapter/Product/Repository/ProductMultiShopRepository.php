@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
@@ -38,12 +39,15 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductShopAssociationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
@@ -435,6 +439,18 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        // We fetch the product from its default shop, the values don't matter anyway we just need a Product instance
+        $product = $this->getProductByDefaultShop($productId);
+        $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
+        $this->deleteObjectModelFromShops($product, $shopIds, CannotDeleteProductException::class);
+    }
+
+    /**
+     * @param ProductId $productId
      *
      * @return bool
      */
@@ -450,6 +466,80 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         ;
 
         return !empty($result);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return AttributeGroupId[]
+     */
+    public function getProductAttributesGroupIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        $shopIds = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('a.id_attribute_group')
+            ->from($this->dbPrefix . 'attribute', 'a')
+            ->innerJoin(
+                'a',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'a.id_attribute = pac.id_attribute'
+            )
+            ->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute_shop',
+                'pas',
+                'pas.id_product_attribute = pac.id_product_attribute'
+            )
+            ->where('pas.id_product = :productId')
+            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+            ->groupBy('a.id_attribute_group')
+        ;
+
+        $results = $qb->execute()->fetchAll(FetchMode::COLUMN);
+
+        return array_map(static function (string $id): AttributeGroupId {
+            return new AttributeGroupId((int) $id);
+        }, $results);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return AttributeId[]
+     */
+    public function getProductAttributesIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        $shopIds = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pac.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute_shop',
+                'pas',
+                'pac.id_product_attribute = pas.id_product_attribute'
+            )
+            ->where('pas.id_product = :productId')
+            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+            ->groupBy('pac.id_attribute')
+        ;
+
+        $results = $qb->execute()->fetchAll(FetchMode::COLUMN);
+
+        return array_map(static function (string $id): AttributeId {
+            return new AttributeId((int) $id);
+        }, $results);
     }
 
     /**
@@ -590,7 +680,8 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             $productId->getValue(),
             Product::class,
             ProductNotFoundException::class,
-            $shopId
+            $shopId,
+            ProductShopAssociationNotFoundException::class
         );
 
         return $this->loadProduct($product);

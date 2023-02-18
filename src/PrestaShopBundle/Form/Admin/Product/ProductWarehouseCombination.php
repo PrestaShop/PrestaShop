@@ -32,6 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form class is responsible to generate the basic product Warehouse combinations form.
@@ -43,9 +44,9 @@ class ProductWarehouseCombination extends CommonAbstractType
     /**
      * Constructor.
      *
-     * @param object $translator
+     * @param TranslatorInterface $translator
      */
-    public function __construct($translator)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }

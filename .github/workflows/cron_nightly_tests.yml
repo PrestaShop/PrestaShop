@@ -30,13 +30,16 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.1.x
           - 8.0.x
         CAMPAIGN:
           - 'sanity'
+          - 'sanity:productV2'
           - 'regression'
           - 'functional:BO:login'
           - 'functional:BO:orders'
           - 'functional:BO:catalog'
+          - 'functional:productV2'
           - 'functional:BO:customer'
           - 'functional:BO:customer-service'
           - 'functional:BO:modules'
@@ -48,6 +51,9 @@ jobs:
           - 'functional:BO:advanced-parameters'
           - 'functional:BO:header'
           - 'functional:FO'
+        exclude:
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:productV2'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
@@ -123,6 +129,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.1.x
           - 8.0.x
 
     env:
@@ -185,6 +192,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.1.x
           - 8.0.x
 
     env:

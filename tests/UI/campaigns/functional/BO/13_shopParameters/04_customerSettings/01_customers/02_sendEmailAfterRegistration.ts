@@ -166,12 +166,10 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       await expect(numberOfCustomers).to.be.above(0);
     });
 
-    const deleteTests = [
+    [
       {args: {customerToDelete: firstCustomerToCreate}},
       {args: {customerToDelete: secondCustomerToCreate}},
-    ];
-
-    deleteTests.forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index + 1}`, baseContext);
 

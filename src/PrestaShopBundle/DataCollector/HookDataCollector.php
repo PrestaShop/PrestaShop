@@ -54,10 +54,12 @@ final class HookDataCollector extends DataCollector
         $hooks = $this->registry->getHooks();
         $calledHooks = $this->registry->getCalledHooks();
         $notCalledHooks = $this->registry->getNotCalledHooks();
+        $notRegisteredHooks = $this->registry->getNotRegisteredHooks();
         $this->data = [
             'hooks' => $this->stringifyHookArguments($hooks),
             'calledHooks' => $this->stringifyHookArguments($calledHooks),
             'notCalledHooks' => $this->stringifyHookArguments($notCalledHooks),
+            'notRegisteredHooks' => $this->stringifyHookArguments($notRegisteredHooks),
         ];
     }
 
@@ -98,6 +100,16 @@ final class HookDataCollector extends DataCollector
     public function getNotCalledHooks()
     {
         return $this->data['notCalledHooks'];
+    }
+
+    /**
+     * Return the list of every uncalled legacy hooks during oHookne request.
+     *
+     * @return array
+     */
+    public function getNotRegisteredHooks()
+    {
+        return $this->data['notRegisteredHooks'];
     }
 
     /**

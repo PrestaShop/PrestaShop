@@ -28,79 +28,71 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
+use AttributeGroup as AttributeGroupObjectModel;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShopBundle\Entity\Attribute as AttributeEntity;
-use PrestaShopBundle\Entity\AttributeGroup as AttributeGroupEntity;
-use PrestaShopBundle\Entity\AttributeGroupLang;
-use PrestaShopBundle\Entity\AttributeLang;
-use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
+use ProductAttribute as AttributeObjectModel;
 
 abstract class AbstractAttributeGroupQueryHandler
 {
+    /**
+     * @var AttributeRepository
+     */
+    protected $attributeRepository;
+
     /**
      * @var AttributeGroupRepository
      */
     protected $attributeGroupRepository;
 
-    /**
-     * @param AttributeGroupRepository $attributeGroupRepository
-     */
     public function __construct(
+        AttributeRepository $attributeRepository,
         AttributeGroupRepository $attributeGroupRepository
     ) {
+        $this->attributeRepository = $attributeRepository;
         $this->attributeGroupRepository = $attributeGroupRepository;
     }
 
     /**
-     * @param array $attributeGroupEntities
-     * @param bool $withAttributes
+     * @param array<int, AttributeGroupObjectModel> $attributeGroups
+     * @param array<int, array<int, AttributeObjectModel>> $attributes
      *
      * @return AttributeGroup[]
      */
-    protected function formatAttributeGroups(array $attributeGroupEntities, bool $withAttributes): array
-    {
-        $attributeGroups = [];
-        /** @var AttributeGroupEntity $attributeGroupEntity */
-        foreach ($attributeGroupEntities as $attributeGroupEntity) {
-            $localizedNames = $localizedPublicNames = [];
-            /** @var AttributeGroupLang $attributeGroupLang */
-            foreach ($attributeGroupEntity->getAttributeGroupLangs() as $attributeGroupLang) {
-                $localizedNames[$attributeGroupLang->getLang()->getId()] = $attributeGroupLang->getName();
-                $localizedPublicNames[$attributeGroupLang->getLang()->getId()] = $attributeGroupLang->getPublicName();
-            }
+    protected function formatAttributeGroupsList(
+        array $attributeGroups,
+        array $attributes
+    ): array {
+        $attributeGroupsResult = [];
 
-            $attributes = null;
-            if ($withAttributes) {
-                $attributes = [];
-                /** @var AttributeEntity $attributeEntity */
-                foreach ($attributeGroupEntity->getAttributes() as $attributeEntity) {
-                    $localizedAttributeNames = [];
-                    /** @var AttributeLang $attributeLang */
-                    foreach ($attributeEntity->getAttributeLangs() as $attributeLang) {
-                        $localizedAttributeNames[$attributeLang->getLang()->getId()] = $attributeLang->getName();
-                    }
-
-                    $attributes[] = new Attribute(
-                        $attributeEntity->getId(),
-                        $attributeEntity->getPosition(),
-                        $attributeEntity->getColor(),
-                        $localizedAttributeNames
+        foreach ($attributeGroups as $attributeGroupId => $attributeGroup) {
+            if (!isset($attributes[$attributeGroupId])) {
+                $attributesResult = [];
+            } else {
+                $attributesResult = [];
+                foreach ($attributes[$attributeGroupId] as $attributeId => $attribute) {
+                    $attributesResult[] = new Attribute(
+                        $attributeId,
+                        $attribute->position,
+                        $attribute->color,
+                        $attribute->name
                     );
                 }
             }
 
-            $attributeGroups[] = new AttributeGroup(
-                $attributeGroupEntity->getId(),
-                $localizedNames,
-                $localizedPublicNames,
-                $attributeGroupEntity->getGroupType(),
-                $attributeGroupEntity->getIsColorGroup(),
-                $attributeGroupEntity->getPosition(),
-                $attributes
+            $attributeGroupsResult[] = new AttributeGroup(
+                $attributeGroupId,
+                $attributeGroup->name,
+                $attributeGroup->public_name,
+                $attributeGroup->group_type,
+                $attributeGroup->is_color_group,
+                $attributeGroup->position,
+                $attributesResult
             );
         }
 
-        return $attributeGroups;
+        return $attributeGroupsResult;
     }
 }

@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDelete
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationShopAssociationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
@@ -49,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
@@ -120,7 +122,8 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             $combinationId->getValue(),
             Combination::class,
             CombinationNotFoundException::class,
-            $shopId
+            $shopId,
+            CombinationShopAssociationNotFoundException::class
         );
 
         return $combination;
@@ -192,9 +195,6 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         $this->assertCombinationExists($combinationId);
         $this->attributeRepository->assertAllAttributesExist($attributeIds);
 
-        // @todo: need to check if these doesn't exist?
-        // especially when dealing with combination which has to be only added to another shop,
-        // then we get duplicate insert error :/
         $attributesList = [];
         foreach ($attributeIds as $attributeId) {
             $attributesList[] = [
@@ -272,7 +272,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
      *
      * @return Combination
      *
-     * @throws CoreException
+     * @throws InvalidShopConstraintException
      */
     public function getByShopConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): Combination
     {
@@ -281,12 +281,22 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         }
 
         if ($shopConstraint->forAllShops()) {
-            $shopId = $this->getDefaultShopIdForCombination($combinationId);
-        } else {
-            $shopId = $shopConstraint->getShopId();
-        }
+            try {
+                return $this->get($combinationId, $this->getDefaultShopIdForCombination($combinationId));
+                // We try to fetch combination for default shop first,
+                // but in case it is not associated to default shop,
+                // then we load first found associated combination
+            } catch (CombinationShopAssociationNotFoundException $e) {
+                $associatedShopIds = $this->getAssociatedShopIds($combinationId);
+                if (empty($associatedShopIds)) {
+                    throw $e;
+                }
 
-        return $this->get($combinationId, $shopId);
+                return $this->get($combinationId, reset($associatedShopIds));
+            }
+        } else {
+            return $this->get($combinationId, $shopConstraint->getShopId());
+        }
     }
 
     /**
@@ -358,6 +368,10 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
     public function delete(CombinationId $combinationId, ShopConstraint $shopConstraint, int $errorCode = 0): void
     {
         $removedShops = $this->getShopIdsByConstraint($combinationId, $shopConstraint);
+        if (empty($removedShops)) {
+            return;
+        }
+
         $this->deleteObjectModelFromShops(
             // We get the combination any of the removed ones, it doesn't change much so the first is fine
             $this->get($combinationId, reset($removedShops)),
@@ -425,6 +439,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('productId', $productId->getValue())
             ->addOrderBy('pas.id_product_attribute', 'ASC')
+            ->addGroupBy('pas.id_product_attribute')
         ;
 
         $combinationIds = $qb->execute()->fetchAllAssociative();
@@ -541,6 +556,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->from($this->dbPrefix . 'product_attribute_shop')
             ->where('id_product_attribute = :combinationId')
             ->setParameter('combinationId', $combinationId->getValue())
+            ->addGroupBy('id_shop')
         ;
 
         return array_map(
@@ -549,6 +565,35 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             },
             $qb->execute()->fetchAll()
         );
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIdsFromGroup(CombinationId $combinationId, ShopGroupId $shopGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pas.id_shop')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->innerJoin(
+                'pas',
+                $this->dbPrefix . 'shop',
+                's',
+                's.id_shop = pas.id_shop AND s.id_shop_group = :shopGroupId'
+            )
+            ->andWhere('pas.id_product_attribute = :combinationId')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->addGroupBy('id_shop')
+        ;
+
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->execute()->fetchAllAssociative());
     }
 
     /**
@@ -570,7 +615,6 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
      * @param CombinationId $newDefaultCombinationId
      * @param ShopConstraint $shopConstraint
      *
-     * @throws InvalidShopConstraintException
      * @throws ProductNotFoundException
      */
     public function setDefaultCombination(
@@ -706,13 +750,11 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
      * @param ShopConstraint $shopConstraint
      *
      * @return ShopId[]
-     *
-     * @throws InvalidShopConstraintException
      */
     private function getShopIdsByConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): array
     {
         if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product combinations has no features related with shop group use single shop and all shops constraints');
+            return $this->getAssociatedShopIdsFromGroup($combinationId, $shopConstraint->getShopGroupId());
         }
 
         if ($shopConstraint->forAllShops()) {

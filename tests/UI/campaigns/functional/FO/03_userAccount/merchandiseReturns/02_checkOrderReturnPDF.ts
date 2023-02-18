@@ -125,14 +125,14 @@ describe('FO - Account : Check order return PDF', async () => {
     it('should get the created Order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
+      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
       await expect(orderReference).to.not.be.null;
     });
 
     it('should get the created Order date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderDate', baseContext);
 
-      orderDate = await ordersPage.getTextColumn(page, 'date_add', 1) as string;
+      orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
       orderDate = orderDate.substr(0, 10);
       await expect(orderDate).to.not.be.null;
     });
@@ -362,7 +362,6 @@ describe('FO - Account : Check order return PDF', async () => {
 
         // Click on view my shop
         page = await editMerchandiseReturnsPage.viewMyShop(page);
-
         // Change FO language
         await homePage.changeLanguage(page, 'en');
 

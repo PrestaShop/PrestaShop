@@ -122,9 +122,9 @@ describe('BO - International - Zones : Sort and pagination', async () => {
   });
 
   // 2 : Create 13 new zones
-  const creationTests = new Array(13).fill(0, 0, 13);
+  const creationTests: number[] = new Array(13).fill(0, 0, 13);
 
-  creationTests.forEach((test, index) => {
+  creationTests.forEach((test: number, index: number) => {
     describe(`Create zone n°${index + 1} in BO`, async () => {
       const createZoneData = new ZoneData({name: `todelete${index}`});
 

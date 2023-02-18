@@ -4289,5 +4289,210 @@
       <title>After address selection on checkout page</title>
       <description>This hook is displayed after the address selection in checkout step.</description>
     </hook>
+    <hook id="actionLoggerLogMessage">
+      <name>actionLoggerLogMessage</name>
+      <title>Allows to make extra action while a log is triggered</title>
+      <description>This hook allows to make an extra action while an exception is thrown and the logger logs it</description>
+    </hook>
+    <hook id="actionOrderReturnFormBuilderModifier">
+      <name>actionOrderReturnFormBuilderModifier</name>
+      <title>Modify order return identifiable object form</title>
+      <description>This hook allows to modify order return identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionProductShopsFormBuilderModifier">
+      <name>actionProductShopsFormBuilderModifier</name>
+      <title>Modify product shops identifiable object form</title>
+      <description>This hook allows to modify product shops identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionCountryFormBuilderModifier">
+      <name>actionCountryFormBuilderModifier</name>
+      <title>Modify country identifiable object form</title>
+      <description>This hook allows to modify country identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionStateFormBuilderModifier">
+      <name>actionStateFormBuilderModifier</name>
+      <title>Modify state identifiable object form</title>
+      <description>This hook allows to modify state identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionTaxRulesGroupFormBuilderModifier">
+      <name>actionTaxRulesGroupFormBuilderModifier</name>
+      <title>Modify tax rules group identifiable object form</title>
+      <description>This hook allows to modify tax rules group identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionOrderReturnFormDataProviderData">
+      <name>actionOrderReturnFormDataProviderData</name>
+      <title>Provide order return identifiable object form data for update</title>
+      <description>This hook allows to provide order return identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionProductShopsFormDataProviderData">
+      <name>actionProductShopsFormDataProviderData</name>
+      <title>Provide product shops identifiable object form data for update</title>
+      <description>This hook allows to provide product shops identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionCountryFormDataProviderData">
+      <name>actionCountryFormDataProviderData</name>
+      <title>Provide country identifiable object form data for update</title>
+      <description>This hook allows to provide country identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionStateFormDataProviderData">
+      <name>actionStateFormDataProviderData</name>
+      <title>Provide state identifiable object form data for update</title>
+      <description>This hook allows to provide state identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionTaxRulesGroupFormDataProviderData">
+      <name>actionTaxRulesGroupFormDataProviderData</name>
+      <title>Provide tax rules group identifiable object form data for update</title>
+      <description>This hook allows to provide tax rules group identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionOrderReturnFormDataProviderDefaultData">
+      <name>actionOrderReturnFormDataProviderDefaultData</name>
+      <title>Provide order return identifiable object default form data for creation</title>
+      <description>This hook allows to provide order return identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionProductShopsFormDataProviderDefaultData">
+      <name>actionProductShopsFormDataProviderDefaultData</name>
+      <title>Provide product shops identifiable object default form data for creation</title>
+      <description>This hook allows to provide product shops identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionCountryFormDataProviderDefaultData">
+      <name>actionCountryFormDataProviderDefaultData</name>
+      <title>Provide country identifiable object default form data for creation</title>
+      <description>This hook allows to provide country identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionStateFormDataProviderDefaultData">
+      <name>actionStateFormDataProviderDefaultData</name>
+      <title>Provide state identifiable object default form data for creation</title>
+      <description>This hook allows to provide state identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionTaxRulesGroupFormDataProviderDefaultData">
+      <name>actionTaxRulesGroupFormDataProviderDefaultData</name>
+      <title>Provide tax rules group identifiable object default form data for creation</title>
+      <description>This hook allows to provide tax rules group identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionBeforeUpdateOrderReturnFormHandler">
+      <name>actionBeforeUpdateOrderReturnFormHandler</name>
+      <title>Modify order return identifiable object data before updating it</title>
+      <description>This hook allows to modify order return identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateProductShopsFormHandler">
+      <name>actionBeforeUpdateProductShopsFormHandler</name>
+      <title>Modify product shops identifiable object data before updating it</title>
+      <description>This hook allows to modify product shops identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateCountryFormHandler">
+      <name>actionBeforeUpdateCountryFormHandler</name>
+      <title>Modify country identifiable object data before updating it</title>
+      <description>This hook allows to modify country identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateStateFormHandler">
+      <name>actionBeforeUpdateStateFormHandler</name>
+      <title>Modify state identifiable object data before updating it</title>
+      <description>This hook allows to modify state identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateTaxRulesGroupFormHandler">
+      <name>actionBeforeUpdateTaxRulesGroupFormHandler</name>
+      <title>Modify tax rules group identifiable object data before updating it</title>
+      <description>This hook allows to modify tax rules group identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateOrderReturnFormHandler">
+      <name>actionAfterUpdateOrderReturnFormHandler</name>
+      <title>Modify order return identifiable object data after updating it</title>
+      <description>This hook allows to modify order return identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateProductShopsFormHandler">
+      <name>actionAfterUpdateProductShopsFormHandler</name>
+      <title>Modify product shops identifiable object data after updating it</title>
+      <description>This hook allows to modify product shops identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateCountryFormHandler">
+      <name>actionAfterUpdateCountryFormHandler</name>
+      <title>Modify country identifiable object data after updating it</title>
+      <description>This hook allows to modify country identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateStateFormHandler">
+      <name>actionAfterUpdateStateFormHandler</name>
+      <title>Modify state identifiable object data after updating it</title>
+      <description>This hook allows to modify state identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateTaxRulesGroupFormHandler">
+      <name>actionAfterUpdateTaxRulesGroupFormHandler</name>
+      <title>Modify tax rules group identifiable object data after updating it</title>
+      <description>This hook allows to modify tax rules group identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionBeforeCreateOrderReturnFormHandler">
+      <name>actionBeforeCreateOrderReturnFormHandler</name>
+      <title>Modify order return identifiable object data before creating it</title>
+      <description>This hook allows to modify order return identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateProductShopsFormHandler">
+      <name>actionBeforeCreateProductShopsFormHandler</name>
+      <title>Modify product shops identifiable object data before creating it</title>
+      <description>This hook allows to modify product shops identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateCountryFormHandler">
+      <name>actionBeforeCreateCountryFormHandler</name>
+      <title>Modify country identifiable object data before creating it</title>
+      <description>This hook allows to modify country identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateStateFormHandler">
+      <name>actionBeforeCreateStateFormHandler</name>
+      <title>Modify state identifiable object data before creating it</title>
+      <description>This hook allows to modify state identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateTaxRulesGroupFormHandler">
+      <name>actionBeforeCreateTaxRulesGroupFormHandler</name>
+      <title>Modify tax rules group identifiable object data before creating it</title>
+      <description>This hook allows to modify tax rules group identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionAfterCreateOrderReturnFormHandler">
+      <name>actionAfterCreateOrderReturnFormHandler</name>
+      <title>Modify order return identifiable object data after creating it</title>
+      <description>This hook allows to modify order return identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateProductShopsFormHandler">
+      <name>actionAfterCreateProductShopsFormHandler</name>
+      <title>Modify product shops identifiable object data after creating it</title>
+      <description>This hook allows to modify product shops identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateCountryFormHandler">
+      <name>actionAfterCreateCountryFormHandler</name>
+      <title>Modify country identifiable object data after creating it</title>
+      <description>This hook allows to modify country identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateStateFormHandler">
+      <name>actionAfterCreateStateFormHandler</name>
+      <title>Modify state identifiable object data after creating it</title>
+      <description>This hook allows to modify state identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateTaxRulesGroupFormHandler">
+      <name>actionAfterCreateTaxRulesGroupFormHandler</name>
+      <title>Modify tax rules group identifiable object data after creating it</title>
+      <description>This hook allows to modify tax rules group identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionCustomerThreadGridDefinitionModifier">
+      <name>actionCustomerThreadGridDefinitionModifier</name>
+      <title>Modify customer thread grid definition</title>
+      <description>This hook allows to alter customer thread grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCustomerThreadGridQueryBuilderModifier">
+      <name>actionCustomerThreadGridQueryBuilderModifier</name>
+      <title>Modify customer thread grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for customer thread grid</description>
+    </hook>
+    <hook id="actionCustomerThreadGridDataModifier">
+      <name>actionCustomerThreadGridDataModifier</name>
+      <title>Modify customer thread grid data</title>
+      <description>This hook allows to modify customer thread grid data</description>
+    </hook>
+    <hook id="actionCustomerThreadGridFilterFormModifier">
+      <name>actionCustomerThreadGridFilterFormModifier</name>
+      <title>Modify customer thread grid filters</title>
+      <description>This hook allows to modify filters for customer thread grid</description>
+    </hook>
+    <hook id="actionCustomerThreadGridPresenterModifier">
+      <name>actionCustomerThreadGridPresenterModifier</name>
+      <title>Modify customer thread grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for customer thread grid</description>
+    </hook>
   </entities>
 </entity_hook>

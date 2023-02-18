@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 
 /**
  * @property ImageType $object
@@ -96,7 +97,7 @@ class AdminImagesControllerCore extends AdminController
         parent::init();
 
         $this->canGenerateAvif = $this->get('PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker')->isAvailable();
-        $this->isMultipleImageFormatFeatureEnabled = $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+        $this->isMultipleImageFormatFeatureEnabled = $this->get(FeatureFlagRepository::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
         $this->imageFormatConfiguration = $this->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
 
         $fields = [
@@ -732,6 +733,7 @@ class AdminImagesControllerCore extends AdminController
     {
         $errors = false;
         $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+        $imageConfiguredFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         foreach ($type as $image_type) {
             foreach ($languages as $language) {
@@ -739,14 +741,28 @@ class AdminImagesControllerCore extends AdminController
                 if (!file_exists($file)) {
                     $file = _PS_PRODUCT_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
                 }
-                if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg')) {
-                    if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
-                        $errors = true;
-                    }
 
-                    if ($generate_high_dpi_images) {
-                        if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
+                if ($this->isMultipleImageFormatFeatureEnabled) {
+                    foreach ($imageConfiguredFormats as $imageFormat) {
+                        if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat)) {
+                            if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat, (int) $image_type['width'], (int) $image_type['height'])) {
+                                $errors = true;
+                            }
+                            if ($generate_high_dpi_images && !ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat, (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
+                                $errors = true;
+                            }
+                        }
+                    }
+                } else {
+                    if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg')) {
+                        if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
                             $errors = true;
+                        }
+
+                        if ($generate_high_dpi_images) {
+                            if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
+                                $errors = true;
+                            }
                         }
                     }
                 }
@@ -936,6 +952,7 @@ class AdminImagesControllerCore extends AdminController
     {
         if ($this->isMultipleImageFormatFeatureEnabled) {
             $imageFormatsDisabled = [];
+            $imageFormatsDisabled['jpg'] = true; // jpg is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
 
             if (false === $this->canGenerateAvif) {
                 $imageFormatsDisabled['avif'] = true;

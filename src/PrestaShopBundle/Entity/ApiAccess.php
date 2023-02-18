@@ -29,14 +29,18 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\ApiAccessInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ApiAccessRepository")
  * @ORM\Table()
  * @UniqueEntity("name")
+ *
+ * @experimental
  */
-class ApiAccess
+class ApiAccess implements ApiAccessInterface
 {
     /**
      * @var int
@@ -62,7 +66,7 @@ class ApiAccess
     private $clientSecret;
 
     /**
-     * @var AuthorizedApplication
+     * @var AuthorizedApplicationInterface
      *
      * @ORM\ManyToOne(targetEntity=AuthorizedApplication::class)
      * @ORM\JoinColumn(name="id_authorized_application", referencedColumnName="id_authorized_application", nullable=false, onDelete="CASCADE")
@@ -82,7 +86,7 @@ class ApiAccess
     private $scopes = [];
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getId(): int
     {
@@ -90,15 +94,17 @@ class ApiAccess
     }
 
     /**
-     * @param int $id
+     * {@inheritdoc}
      */
-    public function setId(int $id): void
+    public function setId(int $id): ApiAccessInterface
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getClientId(): string
     {
@@ -106,15 +112,17 @@ class ApiAccess
     }
 
     /**
-     * @param string $clientId
+     * {@inheritdoc}
      */
-    public function setClientId(string $clientId): void
+    public function setClientId(string $clientId): ApiAccessInterface
     {
         $this->clientId = $clientId;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getClientSecret(): string
     {
@@ -122,31 +130,35 @@ class ApiAccess
     }
 
     /**
-     * @param mixed $clientSecret
+     * {@inheritdoc}
      */
-    public function setClientSecret($clientSecret): void
+    public function setClientSecret($clientSecret): ApiAccessInterface
     {
         $this->clientSecret = $clientSecret;
+
+        return $this;
     }
 
     /**
-     * @return AuthorizedApplication
+     * {@inheritdoc}
      */
-    public function getAuthorizedApplication(): AuthorizedApplication
+    public function getAuthorizedApplication(): AuthorizedApplicationInterface
     {
         return $this->authorizedApplication;
     }
 
     /**
-     * @param AuthorizedApplication $authorizedApplication
+     * {@inheritdoc}
      */
-    public function setAuthorizedApplication(AuthorizedApplication $authorizedApplication): void
+    public function setAuthorizedApplication(AuthorizedApplicationInterface $authorizedApplication): ApiAccessInterface
     {
         $this->authorizedApplication = $authorizedApplication;
+
+        return $this;
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isActive(): bool
     {
@@ -154,15 +166,17 @@ class ApiAccess
     }
 
     /**
-     * @param bool $active
+     * {@inheritdoc}
      */
-    public function setActive(bool $active): void
+    public function setActive(bool $active): ApiAccessInterface
     {
         $this->active = $active;
+
+        return $this;
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getScopes(): array
     {
@@ -170,10 +184,12 @@ class ApiAccess
     }
 
     /**
-     * @param array $scopes
+     * {@inheritdoc}
      */
-    public function setScopes(array $scopes): void
+    public function setScopes(array $scopes): ApiAccessInterface
     {
         $this->scopes = $scopes;
+
+        return $this;
     }
 }

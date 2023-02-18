@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
+/**
+ * @method delete(string $name) will be added in 9.0
+ */
 interface ModuleManagerInterface
 {
     /**

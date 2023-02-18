@@ -66,7 +66,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given I associate attribute group ":attributeGroupReference" with shops ":shopReferences"
+     * @Given /^I associate attribute group "(.+)" with shops "(.+)"$/
      *
      * @param string $attributeGroupReference
      * @param string $shopReferences

@@ -10,6 +10,10 @@ import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_catalogFO_filterProducts';
 
@@ -24,6 +28,9 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
   let page: Page;
   let allProductsNumber: number = 0;
 
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,40 +41,45 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Steps
-  it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+  describe('Catalog FO: Filter products from catalog', async () => {
+    // Steps
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-    await homePage.goTo(page, global.FO.URL);
+      await homePage.goTo(page, global.FO.URL);
 
-    const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+      const result = await homePage.isHomePage(page);
+      await expect(result).to.be.true;
+    });
+
+    it('should check and get the products number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+      await homePage.waitForSelectorAndClick(page, homePage.allProductLink);
+
+      allProductsNumber = await homePage.getNumberFromText(page, homePage.totalProducts);
+      await expect(allProductsNumber).to.be.above(0);
+    });
+
+    it('should filter products by the category \'Accessories\' and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
+
+      await homePage.goToCategory(page, Categories.accessories.id);
+
+      const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
+      await expect(numberOfProducts).to.be.below(allProductsNumber);
+    });
+
+    it('should filter products by the subcategory \'Stationery\' and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
+
+      await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
+
+      const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
+      await expect(numberOfProducts).to.be.below(allProductsNumber);
+    });
   });
 
-  it('should check and get the products number', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
-
-    await homePage.waitForSelectorAndClick(page, homePage.allProductLink);
-
-    allProductsNumber = await homePage.getNumberFromText(page, homePage.totalProducts);
-    await expect(allProductsNumber).to.be.above(0);
-  });
-
-  it('should filter products by the category \'Accessories\' and check result', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
-
-    await homePage.goToCategory(page, Categories.accessories.id);
-
-    const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
-    await expect(numberOfProducts).to.be.below(allProductsNumber);
-  });
-
-  it('should filter products by the subcategory \'Stationery\' and check result', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
-
-    await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
-
-    const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
-    await expect(numberOfProducts).to.be.below(allProductsNumber);
-  });
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

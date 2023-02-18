@@ -4,7 +4,8 @@ admin_customer_threads:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::indexAction
     _legacy_controller: AdminCustomerThreads
-  #  _legacy_link: AdminCustomerThreads
+    _legacy_link: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
 
@@ -37,7 +38,8 @@ admin_customer_threads_reply:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::replyAction
     _legacy_controller: AdminCustomerThreads
-  #  _legacy_link: AdminCustomerThreads
+    _legacy_link: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
 
@@ -47,7 +49,8 @@ admin_customer_threads_view_update_status:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusFromViewAction
     _legacy_controller: AdminCustomerThreads
-  #  _legacy_link: AdminCustomerThreads
+    _legacy_link: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
 
@@ -57,7 +60,8 @@ admin_customer_threads_list_update_status:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusFromListAction
     _legacy_controller: AdminCustomerThreads
-  #  _legacy_link: AdminCustomerThreads
+    _legacy_link: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
 
@@ -67,7 +71,8 @@ admin_customer_threads_forward:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::forwardAction
     _legacy_controller: AdminCustomerThreads
-    #  _legacy_link: AdminCustomerThreads
+    _legacy_link: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
 
@@ -77,7 +82,8 @@ admin_customer_threads_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::deleteAction
     _legacy_controller: AdminCustomerThreads
-    #  _legacy_link: AdminCustomerThreads
+    _legacy_link: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
 
@@ -87,4 +93,5 @@ admin_customer_threads_bulk_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::bulkDeleteAction
     _legacy_controller: AdminCustomerThreads
-    #  _legacy_link: AdminCustomerThreads
+    _legacy_link: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads

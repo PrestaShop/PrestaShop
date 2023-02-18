@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup;
 
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
@@ -36,7 +37,7 @@ use TaxRulesGroup;
 /**
  * Provides common methods for tax rules group handlers
  */
-abstract class AbstractTaxRulesGroupHandler
+abstract class AbstractTaxRulesGroupHandler extends AbstractObjectModelHandler
 {
     /**
      * Gets legacy TaxRuleGroup object

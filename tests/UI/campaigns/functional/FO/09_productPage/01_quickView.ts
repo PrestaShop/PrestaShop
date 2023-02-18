@@ -5,6 +5,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // FO
@@ -100,6 +104,9 @@ describe('FO - product page : Product quick view', async () => {
       value: 'White',
     },
   ];
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -239,7 +246,7 @@ describe('FO - product page : Product quick view', async () => {
       },
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should check share link of '${test.args.name}' from quick view modal`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${index}`, baseContext);
 
@@ -513,4 +520,7 @@ describe('FO - product page : Product quick view', async () => {
       });
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

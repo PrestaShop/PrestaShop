@@ -16,7 +16,7 @@ class Login extends FOBasePage {
 
   public readonly loginErrorText: string;
 
-  private readonly disabledAccountErrorText: string;
+  public readonly disabledAccountErrorText: string;
 
   private readonly loginForm: string;
 

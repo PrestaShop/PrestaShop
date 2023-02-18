@@ -18,7 +18,10 @@ import foProductPage from '@pages/FO/product';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
+import {
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
 import ProductData from '@data/faker/product';
@@ -113,14 +116,14 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
         await productsPage.closeSfToolBar(page);
 
-        const pageTitle: string = await productsPage.getPageTitle(page);
+        const pageTitle = await productsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(productsPage.pageTitle);
       });
 
       it('should click on \'New product\' button and check new product modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-        const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
+        const isModalVisible = await productsPage.clickOnNewProductButton(page);
         await expect(isModalVisible).to.be.true;
       });
 
@@ -129,7 +132,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
         await productsPage.selectProductType(page, newProductData.type);
 
-        const pageTitle: string = await createProductsPage.getPageTitle(page);
+        const pageTitle = await createProductsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
 
@@ -138,7 +141,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
         await productsPage.selectProductType(page, newProductData.type);
 
-        const productTypeDescription: string = await productsPage.getProductDescription(page);
+        const productTypeDescription = await productsPage.getProductDescription(page);
         await expect(productTypeDescription).to.contains(productsPage.packOfProductsDescription);
       });
 
@@ -147,7 +150,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
         await productsPage.clickOnAddNewProduct(page);
 
-        const pageTitle: string = await createProductsPage.getPageTitle(page);
+        const pageTitle = await createProductsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
     });
@@ -158,24 +161,24 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
         await createProductsPage.closeSfToolBar(page);
 
-        const createProductMessage: string = await createProductsPage.setProduct(page, newProductData);
+        const createProductMessage = await createProductsPage.setProduct(page, newProductData);
         await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
       });
 
       it('should search for the same product and check that no results found', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchSameProduct', baseContext);
 
-        const searchResult: string = await packTab.searchProduct(page, 'demo_11');
+        const searchResult = await packTab.searchProduct(page, 'demo_11');
         await expect(searchResult).to.equal('No results found for "demo_11"');
       });
 
       it('should search for a non existent product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchNonExistentProduct', baseContext);
 
-        const searchResult: string = await packTab.searchProduct(page, 'Pack mug');
+        const searchResult = await packTab.searchProduct(page, 'Pack mug');
         await expect(searchResult).to.equal('No results found for "Pack mug"');
       });
-      const tests: object = [
+      const tests = [
         {
           args:
             {
@@ -215,19 +218,19 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
             },
         },
       ];
-      tests.forEach((test, index) => {
+      tests.forEach((test, index: number) => {
         // 3 - Add product with combination
         it(`should search for a '${test.args.productType}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProductToPack${index}`, baseContext);
 
-          const searchResult: string = await packTab.searchProduct(page, test.args.product.name);
+          const searchResult = await packTab.searchProduct(page, test.args.product.name);
           await expect(searchResult).to.equal(test.args.resultOfSearch);
         });
 
         it('should check the number of product in list', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkNumberOfProductsInList${index}`, baseContext);
 
-          const numberOfProducts: number = await packTab.getNumberOfSearchedProduct(page);
+          const numberOfProducts = await packTab.getNumberOfSearchedProduct(page);
           await expect(numberOfProducts).to.equal(test.args.numberOfProducts);
         });
 
@@ -235,14 +238,14 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
           it('should choose the third combination', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'chooseThirdCombination', baseContext);
 
-            const isListOfProductVisible: boolean = await packTab.selectProductFromList(page, 3);
+            const isListOfProductVisible = await packTab.selectProductFromList(page, 3);
             await expect(isListOfProductVisible).to.be.true;
           });
         } else {
           it('should choose the searched product', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `chooseProduct${index}`, baseContext);
 
-            const isListOfProductVisible: boolean = await packTab.selectProductFromList(page);
+            const isListOfProductVisible = await packTab.selectProductFromList(page);
             await expect(isListOfProductVisible).to.be.true;
           });
         }
@@ -250,14 +253,14 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
         it('should check the number of products in the pack', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkNumberOfProductsInPack${index}`, baseContext);
 
-          const numberOfProducts: number = await packTab.getNumberOfProductsInPack(page);
+          const numberOfProducts = await packTab.getNumberOfProductsInPack(page);
           await expect(numberOfProducts).to.equal(index + 2);
         });
 
         it('should check the selected product information', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductInformationBO${index}`, baseContext);
 
-          const result: object = await packTab.getProductInPackInformation(page, index + 2);
+          const result = await packTab.getProductInPackInformation(page, index + 2);
           await Promise.all([
             await expect(result.image).to.contains(test.args.product.defaultImage),
             await expect(result.name).to.equal(test.args.productToChooseName),
@@ -276,7 +279,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       await packTab.setProductQuantity(page, 0, -1);
 
-      const errorMessage: string = await packTab.saveAndGetProductInPackErrorMessage(page, 1);
+      const errorMessage = await packTab.saveAndGetProductInPackErrorMessage(page, 1);
       await expect(errorMessage).to.equal('This value should be greater than or equal to 1.');
     });
 
@@ -285,7 +288,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       await packTab.setProductQuantity(page, 0, 'test');
 
-      const errorMessage: string = await packTab.saveAndGetProductInPackErrorMessage(page, 1);
+      const errorMessage = await packTab.saveAndGetProductInPackErrorMessage(page, 1);
       await expect(errorMessage).to.equal('This value should be of type numeric.');
     });
 
@@ -294,21 +297,21 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       await packTab.setProductQuantity(page, 0, 15);
 
-      const updateProductMessage: string = await createProductsPage.saveProduct(page);
+      const updateProductMessage = await createProductsPage.saveProduct(page);
       await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should try delete the customized product then cancel', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelDeleteProduct', baseContext);
 
-      const isModalVisible: boolean = await packTab.deleteProduct(page, 1, false);
+      const isModalVisible = await packTab.deleteProduct(page, 1, false);
       await expect(isModalVisible).to.be.true;
     });
 
     it('should delete the customized product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomizedProduct', baseContext);
 
-      const firstProductInList: string = await packTab.deleteProduct(page, 1, true);
+      const firstProductInList = await packTab.deleteProduct(page, 1, true);
       await expect(firstProductInList).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
@@ -317,14 +320,14 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       await packTab.editPackOfProducts(page, editPackData);
 
-      const updateProductMessage: string = await createProductsPage.saveProduct(page);
+      const updateProductMessage = await createProductsPage.saveProduct(page);
       await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should check the recent stock movement', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStockMovement', baseContext);
 
-      const result: object = await packTab.getStockMovement(page, 1);
+      const result = await packTab.getStockMovement(page, 1);
       await Promise.all([
         await expect(result.dateTime).to.contains(todayDate),
         await expect(result.employee).to.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`),
@@ -339,16 +342,16 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       await createProductsPage.setProductStatus(page, true);
 
-      const updateProductMessage: string = await createProductsPage.saveProduct(page);
+      const updateProductMessage = await createProductsPage.saveProduct(page);
       await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductHeaderDetails', baseContext);
 
-      const taxValue: number = await basicHelper.percentage(pricingData.price, 20);
+      const taxValue = await basicHelper.percentage(pricingData.price, 20);
 
-      const productHeaderSummary: object = await createProductsPage.getProductHeaderSummary(page);
+      const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
         expect(productHeaderSummary.priceTaxExc).to.equal(`€${(pricingData.price.toFixed(2))} tax excl.`),
         expect(productHeaderSummary.priceTaxIncl).to.equal(
@@ -369,16 +372,16 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllProductInformation', baseContext);
 
-      const taxValue: number = await basicHelper.percentage(pricingData.price, 20);
+      const taxValue = await basicHelper.percentage(pricingData.price, 20);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price.toFixed(2)).to.equal((pricingData.price + taxValue).toFixed(2)),
@@ -387,16 +390,16 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       ]);
     });
 
-    const tests: object = [
+    const tests = [
       {args: {product: Products.demo_11, quantity: 15}},
       {args: {product: Products.demo_18, quantity: 1}},
       {args: {product: Products.demo_14, quantity: 1}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductInPack${index}`, baseContext);
 
-        const result: object = await foProductPage.getProductInPackList(page, index + 2);
+        const result = await foProductPage.getProductInPackList(page, index + 2);
         await Promise.all([
           await expect(result.image).to.contains(test.args.product.coverImage),
           await expect(result.name).to.equal(test.args.product.name),
@@ -415,14 +418,14 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
+      const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should edit the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
-      const createProductMessage: string = await createProductsPage.setProduct(page, editProductData);
+      const createProductMessage = await createProductsPage.setProduct(page, editProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
@@ -437,16 +440,16 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle: string = await foProductPage.getPageTitle(page);
+      const pageTitle = await foProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(editProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const taxValue: number = await basicHelper.percentage(editProductData.price, 10);
+      const taxValue = await basicHelper.percentage(editProductData.price, 10);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
@@ -455,17 +458,17 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       ]);
     });
 
-    const tests: object = [
+    const tests = [
       {args: {product: Products.demo_11, quantity: 15}},
       {args: {product: Products.demo_18, quantity: 1}},
       {args: {product: Products.demo_19, quantity: 20}},
       {args: {product: Products.demo_14, quantity: 1}},
     ];
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should check the product '${test.args.product.name}' in the pack`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkEditProductInPack${index}`, baseContext);
 
-        const result: object = await foProductPage.getProductInPackList(page, index + 2);
+        const result = await foProductPage.getProductInPackList(page, index + 2);
         await Promise.all([
           await expect(result.image).to.contains(test.args.product.coverImage),
           await expect(result.name).to.equal(test.args.product.name),
@@ -484,18 +487,18 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
+      const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const createProductMessage: string = await createProductsPage.deleteProduct(page);
+      const createProductMessage = await createProductsPage.deleteProduct(page);
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
 
-  // Post-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

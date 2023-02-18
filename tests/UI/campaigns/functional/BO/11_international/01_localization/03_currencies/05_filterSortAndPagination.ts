@@ -156,7 +156,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
             filterValue: Currencies.all.enabled ? '1' : '0',
           },
       },
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -285,7 +285,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
 
   // 4 : Delete currencies created
   describe('Delete currencies', async () => {
-    currencies.forEach((currency, index) => {
+    currencies.forEach((currency: CurrencyData, index: number) => {
       it(`should filter list by currency name '${currency.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 

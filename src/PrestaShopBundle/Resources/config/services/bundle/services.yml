@@ -62,6 +62,8 @@ services:
     arguments:
       - '@request_stack'
       - !tagged core.legacy.hook.subscriber
+      - '@prestashop.hooks_registry'
+      - '@=service("prestashop.adapter.environment").isDebug()'
 
   prestashop.hook.finder:
     class: PrestaShopBundle\Service\Hook\HookFinder

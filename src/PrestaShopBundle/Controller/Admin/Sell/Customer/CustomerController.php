@@ -914,10 +914,10 @@ class CustomerController extends AbstractAdminController
                 'This customer does not exist.',
                 'Admin.Orderscustomers.Notification'
             ),
-            DuplicateCustomerEmailException::class => sprintf(
-                '%s %s',
-                $this->trans('An account already exists for this email address:', 'Admin.Orderscustomers.Notification'),
-                $e instanceof DuplicateCustomerEmailException ? $e->getEmail()->getValue() : ''
+            DuplicateCustomerEmailException::class => $this->trans(
+                'You can\'t update the email to "%s", because a registered customer with this email already exists.',
+                'Admin.Orderscustomers.Notification',
+                [$e instanceof DuplicateCustomerEmailException ? $e->getEmail()->getValue() : '']
             ),
             CustomerDefaultGroupAccessException::class => $this->trans(
                 'A default customer group must be selected in group box.',

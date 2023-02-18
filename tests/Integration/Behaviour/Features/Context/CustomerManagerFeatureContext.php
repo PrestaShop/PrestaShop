@@ -175,6 +175,23 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When /^I attempt to edit customer "(.+)" and I change the following properties:$/
+     */
+    public function attemptToEditCustomerUsingCommand(string $customerReference, TableNode $table): void
+    {
+        try {
+            $this->editCustomerUsingCommand($customerReference, $table);
+            throw new NoExceptionAlthoughExpectedException();
+        } catch (\Exception $e) {
+            if ($e instanceof NoExceptionAlthoughExpectedException) {
+                throw $e;
+            }
+
+            $this->latestResult = $e;
+        }
+    }
+
+    /**
      * @When /^I transform guest "(.+)" into a customer$/
      */
     public function transformGuestIntoACustomer($customerReference)

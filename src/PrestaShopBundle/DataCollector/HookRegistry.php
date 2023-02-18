@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 final class HookRegistry
 {
     public const HOOK_NOT_CALLED = 'notCalled';
+    public const HOOK_NOT_REGISTERED = 'notRegistered';
     public const HOOK_CALLED = 'called';
 
     /**
@@ -43,7 +44,7 @@ final class HookRegistry
     private $currentHook = null;
 
     /**
-     * @var array the list of hooks data
+     * @var array<string, array<string, array{args: array, name:string, location: string, modules: array}>> the list of hooks data
      */
     private $hooks;
 
@@ -52,6 +53,7 @@ final class HookRegistry
         $this->hooks = [
             self::HOOK_CALLED => [],
             self::HOOK_NOT_CALLED => [],
+            self::HOOK_NOT_REGISTERED => [],
         ];
     }
 
@@ -78,6 +80,14 @@ final class HookRegistry
     public function hookWasCalled()
     {
         $this->currentHook['status'] = self::HOOK_CALLED;
+    }
+
+    /**
+     * Notify the registry that the selected hook have been called.
+     */
+    public function hookWasNotRegistered()
+    {
+        $this->currentHook['status'] = self::HOOK_NOT_REGISTERED;
     }
 
     /**
@@ -122,7 +132,7 @@ final class HookRegistry
      */
     public function getCalledHooks()
     {
-        return $this->hooks['called'];
+        return $this->hooks[self::HOOK_CALLED];
     }
 
     /**
@@ -130,7 +140,15 @@ final class HookRegistry
      */
     public function getNotCalledHooks()
     {
-        return $this->hooks['notCalled'];
+        return $this->hooks[self::HOOK_NOT_CALLED];
+    }
+
+    /**
+     * @return array the list of unregistered hooks
+     */
+    public function getNotRegisteredHooks()
+    {
+        return $this->hooks[self::HOOK_NOT_REGISTERED];
     }
 
     /**
@@ -138,7 +156,7 @@ final class HookRegistry
      */
     public function getHooks()
     {
-        return $this->hooks['called'] + $this->hooks['notCalled'];
+        return $this->hooks[self::HOOK_CALLED] + $this->hooks[self::HOOK_NOT_CALLED] + $this->hooks[self::HOOK_NOT_REGISTERED];
     }
 
     /**

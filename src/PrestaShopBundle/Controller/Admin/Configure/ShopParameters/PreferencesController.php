@@ -88,7 +88,7 @@ class PreferencesController extends FrameworkBundleAdminController
                 $this->getCommandBus()->handle(
                     new UpdateTabStatusByClassNameCommand(
                         'AdminShopGroup',
-                        $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')
+                        $this->getConfiguration()->get('PS_MULTISHOP_FEATURE_ACTIVE')
                     )
                 );
 
@@ -120,7 +120,7 @@ class PreferencesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminPreferences'),
             'requireFilterStatus' => false,
             'generalForm' => $form->createView(),
-            'isSslEnabled' => $this->configuration->get('PS_SSL_ENABLED'),
+            'isSslEnabled' => $this->getConfiguration()->get('PS_SSL_ENABLED'),
             'sslUri' => $sslUri,
         ]);
     }

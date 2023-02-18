@@ -73,7 +73,13 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         $this->assertCustomerWasFound($customerId, $customer);
 
-        $this->assertCustomerWithUpdatedEmailDoesNotExist($customer, $command);
+        // If dealing with a registered customer, we need to check if the email does not exist.
+        // Two guests with the same email can co-exist, two registered customers can not.
+        // This check only runs if the email is getting changed.
+        if (!$customer->isGuest()) {
+            $this->assertCustomerWithUpdatedEmailDoesNotExist($customer, $command);
+        }
+
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
 
         $this->updateCustomerWithCommandData($customer, $command);
@@ -205,17 +211,19 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
      */
     private function assertCustomerWithUpdatedEmailDoesNotExist(Customer $customer, EditCustomerCommand $command)
     {
-        // if email is not being updated
-        // then assertion is not needed
+        // We only check this if the email is getting changed.
         if (null === $command->getEmail()) {
             return;
         }
 
+        // If the email is getting changed, but is the same as the current email, nothing to do here.
         if ($command->getEmail()->isEqualTo(new Email($customer->email))) {
             return;
         }
 
         $customerByEmail = new Customer();
+
+        // Now check if a registered customer with the same email exists, ignoring guests.
         $customerByEmail->getByEmail($command->getEmail()->getValue());
 
         if ($customerByEmail->id) {
@@ -229,16 +237,17 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
      */
     private function assertCustomerCanAccessDefaultGroup(Customer $customer, EditCustomerCommand $command)
     {
-        // if neither default group
-        // nor group ids are being edited
-        // then no need to assert
-        if (null === $command->getDefaultGroupId()
-            || null === $command->getGroupIds()
-        ) {
+        // If nothing is updated on groups, nothing to do here
+        if (null === $command->getDefaultGroupId() && null === $command->getGroupIds()) {
             return;
         }
 
-        if (!in_array($command->getDefaultGroupId(), $command->getGroupIds())) {
+        // Arrange data to compare, we will use customer's original data if not provided in the command
+        $groupIds = ($command->getGroupIds() === null ? $customer->getGroups() : $command->getGroupIds());
+        $defaultGroupId = ($command->getDefaultGroupId() === null ? $customer->id_default_group : $command->getDefaultGroupId());
+
+        // Check if the default group is in the list of checked groups
+        if (!in_array($defaultGroupId, $groupIds)) {
             throw new CustomerDefaultGroupAccessException(sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId()));
         }
     }

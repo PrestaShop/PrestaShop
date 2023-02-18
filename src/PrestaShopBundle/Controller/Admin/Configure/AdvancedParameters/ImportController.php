@@ -29,11 +29,11 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnavailableImportFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -130,9 +130,9 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         if (!in_array($this->authorizationLevel($legacyController), [
-            PageVoter::LEVEL_CREATE,
-            PageVoter::LEVEL_UPDATE,
-            PageVoter::LEVEL_DELETE,
+            Permission::LEVEL_CREATE,
+            Permission::LEVEL_UPDATE,
+            Permission::LEVEL_DELETE,
         ])) {
             return $this->json([
                 'error' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
@@ -350,9 +350,9 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         if (!in_array($this->authorizationLevel($legacyController), [
-            PageVoter::LEVEL_CREATE,
-            PageVoter::LEVEL_UPDATE,
-            PageVoter::LEVEL_DELETE,
+            Permission::LEVEL_CREATE,
+            Permission::LEVEL_UPDATE,
+            Permission::LEVEL_DELETE,
         ])) {
             $this->addFlash(
                 'error',

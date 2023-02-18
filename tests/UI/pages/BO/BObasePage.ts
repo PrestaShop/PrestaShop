@@ -15,7 +15,7 @@ export default class BOBasePage extends CommonPage {
 
   public successfulDeleteMessage: string;
 
-  public readonly successfulMultiDeleteMessage: string;
+  public successfulMultiDeleteMessage: string;
 
   public readonly accessDeniedMessage: string;
 
@@ -51,7 +51,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly navbarSearchInput: string;
 
-  private readonly helpButton: string;
+  protected readonly helpButton: string;
 
   private readonly menuMobileButton: string;
 
@@ -199,7 +199,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly logsLink: string;
 
-  private readonly featureFlagLink: string;
+  public readonly featureFlagLink: string;
 
   private readonly securityLink: string;
 
@@ -219,6 +219,8 @@ export default class BOBasePage extends CommonPage {
 
   protected alertBlock: string;
 
+  public alertBlockCloseButton: string;
+
   protected readonly alertSuccessBlock: string;
 
   private readonly alertDangerBlock: string;
@@ -233,15 +235,15 @@ export default class BOBasePage extends CommonPage {
 
   private readonly confirmationModal: string;
 
-  private readonly modalDialog: string;
+  protected readonly modalDialog: string;
 
-  private readonly modalDialogYesButton: string;
+  protected readonly modalDialogYesButton: string;
 
   private readonly sfToolbarMainContentDiv: string;
 
   private readonly sfCloseToolbarLink: string;
 
-  private readonly rightSidebar: string;
+  protected readonly rightSidebar: string;
 
   private readonly helpDocumentURL: string;
 
@@ -543,6 +545,7 @@ export default class BOBasePage extends CommonPage {
 
     // Alert Text
     this.alertBlock = 'div.alert';
+    this.alertBlockCloseButton = `${this.alertBlock} button[aria-label='Close']`;
     this.alertSuccessBlock = `${this.alertBlock}.alert-success`;
     this.alertDangerBlock = `${this.alertBlock}.alert-danger`;
     this.alertInfoBlock = `${this.alertBlock}.alert-info`;

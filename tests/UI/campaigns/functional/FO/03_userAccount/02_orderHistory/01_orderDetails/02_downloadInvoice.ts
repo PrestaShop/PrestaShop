@@ -38,7 +38,7 @@ Scenario:
 - Go to FO and check the invoice for the first order
 - Check that no invoice is visible for the second order
  */
-describe('FO - Account - Order details : download invoice', async () => {
+describe('FO - Account - Order details : Download invoice', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let fileName: string;
@@ -109,7 +109,7 @@ describe('FO - Account - Order details : download invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
       // Get invoice file name
-      fileName = await orderPageTabListBlock.getFileName(page) as string;
+      fileName = await orderPageTabListBlock.getFileName(page);
       await expect(fileName).not.null;
     });
   });
