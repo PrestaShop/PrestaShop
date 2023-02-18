@@ -104,33 +104,20 @@ class StockManager implements StockInterface
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
 
         $updatePhysicalQuantityQuery = '
-            UPDATE {_DB_PREFIX_}stock_available sa
-                JOIN {_DB_PREFIX_}shop s ON sa.id_shop = s.id_shop {ID_SHOP_ASSOCIATION_CLAUSE}
-                JOIN {_DB_PREFIX_}order_detail od ON sa.id_product = od.product_id {ID_PRODUCT_ASSOCIATION_CLAUSE} {ID_ORDER_ASSOCIATION_CLAUSE}
-            SET
-                sa.physical_quantity = sa.quantity + sa.reserved_quantity';
+            UPDATE {table_prefix}stock_available sa
+            SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
+            WHERE sa.id_shop = ' . (int) $shopId . '
+        ';
 
-        $updatePhysicalQuantityQuery = str_replace('{_DB_PREFIX_}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
-
-        $id_shop_association_clause = '';
-        if ($shopId) {
-            $id_shop_association_clause = ' AND s.id_shop = ' . $shopId;
-        }
-        $updatePhysicalQuantityQuery = str_replace('{ID_SHOP_ASSOCIATION_CLAUSE}', $id_shop_association_clause, $updatePhysicalQuantityQuery);
-
-        $id_product_association_clause = '';
         if ($idProduct) {
-            $id_product_association_clause = ' AND sa.id_product = ' . $idProduct;
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
         }
-        $updatePhysicalQuantityQuery = str_replace('{ID_PRODUCT_ASSOCIATION_CLAUSE}', $id_product_association_clause, $updatePhysicalQuantityQuery);
 
-        $id_order_association_clause = '';
         if ($idOrder) {
-            $id_order_association_clause = ' AND od.id_order = ' . $idOrder;
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = ' . (int) $idOrder . ')';
         }
-        $updatePhysicalQuantityQuery = str_replace('{ID_ORDER_ASSOCIATION_CLAUSE}', $id_order_association_clause, $updatePhysicalQuantityQuery);
 
-        $updatePhysicalQuantityQuery = str_replace('{_DB_PREFIX_}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
+        $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
 
         return Db::getInstance()->execute($updatePhysicalQuantityQuery);
     }
@@ -147,68 +134,43 @@ class StockManager implements StockInterface
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
         $updateReservedQuantityQuery = '
-            UPDATE {_DB_PREFIX_}stock_available sa
-                JOIN {_DB_PREFIX_}shop s ON (
-                    s.id_shop = sa.id_shop {ID_SHOP_ASSOCIATION_CLAUSE}
-                )
-                JOIN {_DB_PREFIX_}order_detail od ON (
-                    od.product_id = sa.id_product AND od.product_attribute_id = sa.id_product_attribute {ID_PRODUCT_ASSOCIATION_CLAUSE}
-                )
-                JOIN {_DB_PREFIX_}orders o ON (
-                    o.id_order = od.id_order {ID_ORDER_ASSOCIATION_CLAUSE}
-                )
+            UPDATE {table_prefix}stock_available sa
             SET sa.reserved_quantity = (
-                    SELECT
-                        SUM(
-                            od.product_quantity - od.product_quantity_refunded
-                        )
-                    FROM {_DB_PREFIX_}orders o
-                        JOIN {_DB_PREFIX_}shop s ON s.id_shop = o.id_shop {ID_SHOP_ASSOCIATION_CLAUSE}
-                        JOIN {_DB_PREFIX_}order_detail od ON (
-                            od.id_order = o.id_order {ID_ORDER_ASSOCIATION_CLAUSE}
-                        )
-                        JOIN {_DB_PREFIX_}order_state os ON (
-                            os.id_order_state = o.current_state AND os.shipped != 1
-                        )
-                    WHERE (
-                            o.valid = 1
-                            OR (
-                                os.id_order_state != :error_state AND
-                                os.id_order_state != :cancellation_state
-                            )
-                        )
-                        AND sa.id_product = od.product_id
-                        AND sa.id_product_attribute = od.product_attribute_id
-                        {ID_PRODUCT_ASSOCIATION_CLAUSE}
-                    GROUP BY
-                        od.product_id,
-                        od.product_attribute_id
-                )
+                SELECT SUM(od.product_quantity - od.product_quantity_refunded)
+                FROM {table_prefix}orders o
+                INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
+                INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
+                WHERE o.id_shop = :shop_id AND
+                os.shipped != 1 AND (
+                    o.valid = 1 OR (
+                        os.id_order_state != :error_state AND
+                        os.id_order_state != :cancellation_state
+                    )
+                ) AND sa.id_product = od.product_id AND
+                sa.id_product_attribute = od.product_attribute_id
+                GROUP BY od.product_id, od.product_attribute_id
+            )
+            WHERE sa.id_shop = :shop_id
         ';
 
-        $updateReservedQuantityQuery = str_replace('{_DB_PREFIX_}', _DB_PREFIX_, $updateReservedQuantityQuery);
+        $strParams = [
+            '{table_prefix}' => _DB_PREFIX_,
+            ':shop_id' => (int) $shopId,
+            ':error_state' => (int) $errorState,
+            ':cancellation_state' => (int) $cancellationState,
+        ];
 
-        $id_shop_association_clause = '';
-        if ($shopId) {
-            $id_shop_association_clause = ' AND s.id_shop = ' . $shopId;
-        }
-        $updateReservedQuantityQuery = str_replace('{ID_SHOP_ASSOCIATION_CLAUSE}', $id_shop_association_clause, $updateReservedQuantityQuery);
-
-        $id_product_association_clause = '';
         if ($idProduct) {
-            $id_product_association_clause = ' AND sa.id_product = ' . $idProduct;
+            $updateReservedQuantityQuery .= ' AND sa.id_product = :product_id';
+            $strParams[':product_id'] = (int) $idProduct;
         }
-        $updateReservedQuantityQuery = str_replace('{ID_PRODUCT_ASSOCIATION_CLAUSE}', $id_product_association_clause, $updateReservedQuantityQuery);
 
-        $id_order_association_clause = '';
         if ($idOrder) {
-            $id_order_association_clause = ' AND od.id_order = ' . $idOrder;
+            $updateReservedQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = :order_id)';
+            $strParams[':order_id'] = (int) $idOrder;
         }
-        $updateReservedQuantityQuery = str_replace('{ID_ORDER_ASSOCIATION_CLAUSE}', $id_order_association_clause, $updateReservedQuantityQuery);
 
-        $updateReservedQuantityQuery = str_replace(':error_state', $errorState, $updateReservedQuantityQuery);
-
-        $updateReservedQuantityQuery = str_replace(':cancellation_state', $cancellationState, $updateReservedQuantityQuery);
+        $updateReservedQuantityQuery = strtr($updateReservedQuantityQuery, $strParams);
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
     }
