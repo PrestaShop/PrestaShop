@@ -22,16 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
-{% set validOrdersCount = customerInformation.ordersInformation.validOrders|length %}
-{% set invalidOrdersCount = customerInformation.ordersInformation.invalidOrders|length %}
-{% set ordersCount = validOrdersCount + invalidOrdersCount %}
-
 <div class="card customer-orders-card">
   <h3 class="card-header">
     <i class="material-icons">shopping_basket</i>
     {{ 'Orders'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ ordersCount }}</span>
+    <span class="badge badge-primary rounded">{{ customerOrderGrid.data.records_total }}</span>
 
     <a href="{{ path('admin_orders_create') }}" class="tooltip-link float-right" 
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
@@ -39,19 +34,19 @@
     </a>
   </h3>
   <div class="card-body">
-    {% if ordersCount > 0 %}
+    {% if customerOrderGrid.data.records_total > 0 %}
       <div class="card">
         <div class="card-body">
           <div class="row">
             <div class="col">
               {{ 'Valid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              <span class="badge badge-success rounded">{{ validOrdersCount }}</span>
+              <span class="badge badge-success rounded">{{ customerInformation.ordersInformation.validOrders|length }}</span>
               {% set totalAmount = '<span id="total-order-amount">'~customerInformation.ordersInformation.totalSpent~'</span>' %}
               {{ 'for a total amount of %s'|trans({}, 'Admin.Orderscustomers.Feature')|format(totalAmount)|raw }}
             </div>
             <div class="col">
               {{ 'Invalid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              <span class="badge badge-danger rounded">{{ invalidOrdersCount }}</span>
+              <span class="badge badge-danger rounded">{{ customerInformation.ordersInformation.invalidOrders|length }}</span>
             </div>
           </div>
         </div>

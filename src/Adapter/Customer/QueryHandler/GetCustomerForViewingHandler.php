@@ -248,40 +248,22 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     {
         $validOrders = [];
         $invalidOrders = [];
-
-        // Get orders for this customer
-        $orders = Order::getCustomerOrders($customer->id, true);
         $ordersTotal = 0;
 
+        // Get fast order information
+        $sql = '
+        SELECT o.id_order, o.valid, o.total_paid_tax_incl, o.conversion_rate FROM `' . _DB_PREFIX_ . 'orders` o
+        WHERE o.`id_customer` = ' . (int) $customer->id .
+        Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
+        GROUP BY o.`id_order`';
+        $orders = Db::getInstance()->executeS($sql);
+
         foreach ($orders as $order) {
-            $order['total_paid_tax_incl_not_formated'] = $order['total_paid_tax_incl'];
-            $order['total_paid_tax_incl'] = $this->locale->formatPrice(
-                $order['total_paid_tax_incl'],
-                Currency::getIsoCodeById((int) $order['id_currency'])
-            );
-
-            if (!isset($order['order_state'])) {
-                $order['order_state'] = $this->translator->trans(
-                    'There is no status defined for this order.',
-                    [],
-                    'Admin.Orderscustomers.Notification'
-                );
-            }
-
-            $customerOrderInformation = new OrderInformation(
-                (int) $order['id_order'],
-                Tools::displayDate($order['date_add']),
-                $order['payment'],
-                $order['order_state'],
-                (int) $order['nb_products'],
-                $order['total_paid_tax_incl']
-            );
-
             if ($order['valid']) {
-                $validOrders[] = $customerOrderInformation;
-                $ordersTotal += $order['total_paid_tax_incl_not_formated'] / $order['conversion_rate'];
+                $validOrders[] = $order;
+                $ordersTotal += $order['total_paid_tax_incl'] / $order['conversion_rate'];
             } else {
-                $invalidOrders[] = $customerOrderInformation;
+                $invalidOrders[] = $order;
             }
         }
 
