@@ -48,7 +48,7 @@ final class CustomerCartFilters extends Filters
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_cart',
-            'sortOrder' => 'asc',
+            'sortOrder' => 'DESC',
             'filters' => [],
         ];
     }

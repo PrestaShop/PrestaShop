@@ -48,7 +48,7 @@ final class CustomerOrderFilters extends Filters
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_order',
-            'sortOrder' => 'desc',
+            'sortOrder' => 'DESC',
             'filters' => [],
         ];
     }

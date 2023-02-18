@@ -123,10 +123,10 @@ final class CustomerOrderGridDefinitionFactory extends AbstractGridDefinitionFac
                     ])
             )
             ->add(
-                (new DataColumn('products'))
+                (new DataColumn('nb_products'))
                     ->setName($this->trans('Products', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'products',
+                        'field' => 'nb_products',
                     ])
             )
             ->add((new DataColumn('total_paid_tax_incl'))

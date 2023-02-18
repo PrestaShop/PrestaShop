@@ -90,6 +90,11 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
                 osl.name AS status'
             );
 
+        $qb->addSelect('
+            (SELECT SUM(od.`product_quantity`) 
+            FROM `' . $this->dbPrefix . 'order_detail` od 
+            WHERE od.`id_order` = o.`id_order`) nb_products');
+
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)
