@@ -514,11 +514,11 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         $customerGroups = [];
 
         foreach ($groups as $groupId) {
-            $group = new Group($groupId);
-
+            $group = new Group($groupId);        
             $customerGroups[] = new GroupInformation(
                 (int) $group->id,
-                $group->name[$this->contextLangId]
+                $group->name[$this->contextLangId],
+                (int) $group->id === (int) $customer->id_default_group
             );
         }
 

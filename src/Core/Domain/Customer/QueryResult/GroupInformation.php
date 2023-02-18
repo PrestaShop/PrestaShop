@@ -42,13 +42,23 @@ class GroupInformation
     private $name;
 
     /**
+     * @var bool
+     */
+    private $isDefault;
+
+    /**
      * @param int $groupId
      * @param string $name
+     * @param bool $isDefault
      */
-    public function __construct($groupId, $name)
-    {
+    public function __construct(
+        $groupId,
+        $name,
+        $isDefault = false
+    ){
         $this->groupId = $groupId;
         $this->name = $name;
+        $this->isDefault = $isDefault;
     }
 
     /**
@@ -65,5 +75,13 @@ class GroupInformation
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault()
+    {
+        return $this->isDefault;
     }
 }
