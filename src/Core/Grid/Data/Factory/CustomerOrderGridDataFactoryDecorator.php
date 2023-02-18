@@ -107,6 +107,10 @@ final class CustomerOrderGridDataFactoryDecorator implements GridDataFactoryInte
                 ' rounded">' . $r['status'] . '</span>';
             }
 
+            if (empty($r['nb_products'])) {
+                $r['nb_products'] = '0';
+            }
+
             $modifiedRecords[] = $r;
         }
 

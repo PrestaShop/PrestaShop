@@ -49,6 +49,8 @@ class ViewableCustomer
     private $ordersInformation;
 
     /**
+     * @deprecated Since 9.0.0 for performance reasons and returns only empty array. Use CustomerCart grid.
+     *
      * @var CartInformation[]
      */
     private $cartsInformation;
@@ -160,6 +162,8 @@ class ViewableCustomer
     }
 
     /**
+     * @deprecated Since 9.0.0 for performance reasons and returns only empty array. Use CustomerCart grid.
+     *
      * @return CartInformation[]
      */
     public function getCartsInformation()

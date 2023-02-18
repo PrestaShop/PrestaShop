@@ -293,32 +293,15 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     }
 
     /**
+     * @deprecated Since 9.0.0 for performance reasons and returns only empty array. Use CustomerCart grid.
+     *
      * @param Customer $customer
      *
      * @return CartInformation[]
      */
     private function getCustomerCarts(Customer $customer)
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT c.id_cart, c.date_add, ca.name as carrier_name, c.id_currency, cu.iso_code as currency_iso_code
-        FROM ' . _DB_PREFIX_ . 'cart c
-        LEFT JOIN ' . _DB_PREFIX_ . 'carrier ca ON ca.id_carrier = c.id_carrier
-        LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON cu.id_currency = c.id_currency
-        WHERE c.`id_customer` = ' . (int) $customer->id . '
-        ORDER BY c.`date_add` DESC');
-
-        $customerCarts = [];
-        foreach ($result as $row) {
-            $cart = new Cart((int) $row['id_cart']);
-            $customerCarts[] = new CartInformation(
-                sprintf('%06d', $row['id_cart']),
-                Tools::displayDate($row['date_add'], true),
-                $this->locale->formatPrice($cart->getOrderTotal(true), $row['currency_iso_code']),
-                $row['carrier_name']
-            );
-        }
-
-        return $customerCarts;
+        return [];
     }
 
     /**

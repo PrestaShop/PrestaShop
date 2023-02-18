@@ -106,6 +106,7 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
                 ->setOptions([
                     'field' => 'date_add',
                     'format' => $this->contextDateFormat,
+                    'clickable' => true,
                 ])
             )
             ->add((new DataColumn('carrier_name'))
