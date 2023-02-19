@@ -43,33 +43,17 @@ final class CustomerCartQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
-     * @var int[]
-     */
-    private $contextShopIds;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $contextLangId
-     * @param array $contextShopIds
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        int $contextLangId,
-        array $contextShopIds
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->contextLangId = $contextLangId;
-        $this->contextShopIds = $contextShopIds;
     }
 
     /**

@@ -50,11 +50,6 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
     /**
      * @var string
      */
-    private $backUrl;
-
-    /**
-     * @var string
-     */
     private $contextDateFormat;
 
     /**
@@ -68,7 +63,6 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
         $contextDateFormat
     ) {
         parent::__construct($hookDispatcher);
-        $this->backUrl = $currentRequest ? $currentRequest->getUri() : '';
         $this->contextDateFormat = $contextDateFormat;
     }
 
@@ -125,18 +119,17 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                ->add(
-                    (new LinkRowAction('view'))
-                        ->setName($this->trans('View', [], 'Admin.Actions'))
-                        ->setIcon('zoom_in')
-                        ->setOptions([
-                            'route' => 'admin_carts_view',
-                            'route_param_name' => 'cartId',
-                            'route_param_field' => 'id_cart',
-                            'use_inline_display' => true,
-                            'clickable_row' => true,
-                        ])
-                ),
+                    ->add((new LinkRowAction('view'))
+                    ->setName($this->trans('View', [], 'Admin.Actions'))
+                    ->setIcon('zoom_in')
+                    ->setOptions([
+                        'route' => 'admin_carts_view',
+                        'route_param_name' => 'cartId',
+                        'route_param_field' => 'id_cart',
+                        'use_inline_display' => true,
+                        'clickable_row' => true,
+                    ])
+                    ),
             ])
             );
     }

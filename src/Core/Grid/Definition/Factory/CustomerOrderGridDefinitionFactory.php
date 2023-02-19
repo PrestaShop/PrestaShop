@@ -51,11 +51,6 @@ final class CustomerOrderGridDefinitionFactory extends AbstractGridDefinitionFac
     /**
      * @var string
      */
-    private $backUrl;
-
-    /**
-     * @var string
-     */
     private $contextDateFormat;
 
     /**
@@ -69,7 +64,6 @@ final class CustomerOrderGridDefinitionFactory extends AbstractGridDefinitionFac
         $contextDateFormat
     ) {
         parent::__construct($hookDispatcher);
-        $this->backUrl = $currentRequest ? $currentRequest->getUri() : '';
         $this->contextDateFormat = $contextDateFormat;
     }
 

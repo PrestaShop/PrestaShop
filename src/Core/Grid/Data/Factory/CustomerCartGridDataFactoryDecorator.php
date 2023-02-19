@@ -96,7 +96,7 @@ final class CustomerCartGridDataFactoryDecorator implements GridDataFactoryInter
     }
 
     /**
-     * @param RecordCollectionInterface $record
+     * @param RecordCollectionInterface $records
      *
      * @return RecordCollection
      */
