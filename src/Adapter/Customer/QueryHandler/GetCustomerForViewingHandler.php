@@ -271,7 +271,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     }
 
     /**
-     * @deprecated Since 9.0.0 for performance reasons and returns only empty array. Use CustomerCart grid.
+     * @deprecated Since 9.0.0 for performance reasons and returns only empty array.
      *
      * @param Customer $customer
      *

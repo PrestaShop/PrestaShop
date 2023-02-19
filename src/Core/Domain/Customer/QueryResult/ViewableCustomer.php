@@ -49,7 +49,7 @@ class ViewableCustomer
     private $ordersInformation;
 
     /**
-     * @deprecated Since 9.0.0 for performance reasons and returns only empty array. Use CustomerCart grid.
+     * @deprecated Since 9.0.0 for performance reasons and returns only empty array.
      *
      * @var CartInformation[]
      */
@@ -162,7 +162,7 @@ class ViewableCustomer
     }
 
     /**
-     * @deprecated Since 9.0.0 for performance reasons and returns only empty array. Use CustomerCart grid.
+     * @deprecated Since 9.0.0 for performance reasons and returns only empty array.
      *
      * @return CartInformation[]
      */
