@@ -131,14 +131,14 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $this->getGeneralInformation($customer),
             $this->getPersonalInformation($customer),
             $this->getCustomerOrders($customer),
-            $this->getCustomerCarts($customer),
+            [],
             $this->getCustomerProducts($customer),
             $this->getCustomerMessages($customer),
-            $this->getCustomerDiscounts($customer),
+            [],
             $this->getLastEmailsSentToCustomer($customer),
             $this->getLastCustomerConnections($customer),
             $this->getCustomerGroups($customer),
-            $this->getCustomerAddresses($customer)
+            []
         );
     }
 
@@ -271,18 +271,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     }
 
     /**
-     * @deprecated Since 9.0.0 for performance reasons and returns only empty array.
-     *
-     * @param Customer $customer
-     *
-     * @return CartInformation[]
-     */
-    private function getCustomerCarts(Customer $customer)
-    {
-        return [];
-    }
-
-    /**
      * @param Customer $customer
      *
      * @return ProductsInformation
@@ -387,32 +375,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     /**
      * @param Customer $customer
      *
-     * @return DiscountInformation[]
-     */
-    private function getCustomerDiscounts(Customer $customer)
-    {
-        $discounts = CartRule::getAllCustomerCartRules($customer->id);
-
-        $customerDiscounts = [];
-
-        foreach ($discounts as $discount) {
-            $availableQuantity = $discount['quantity'] > 0 ? (int) $discount['quantity_for_user'] : 0;
-
-            $customerDiscounts[] = new DiscountInformation(
-                (int) $discount['id_cart_rule'],
-                $discount['code'],
-                $discount['name'],
-                (bool) $discount['active'],
-                $availableQuantity
-            );
-        }
-
-        return $customerDiscounts;
-    }
-
-    /**
-     * @param Customer $customer
-     *
      * @return SentEmailInformation[]
      */
     private function getLastEmailsSentToCustomer(Customer $customer)
@@ -484,40 +446,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         }
 
         return $customerGroups;
-    }
-
-    /**
-     * @param Customer $customer
-     *
-     * @return AddressInformation[]
-     */
-    private function getCustomerAddresses(Customer $customer)
-    {
-        $addresses = $customer->getAddresses($this->contextLangId);
-        $customerAddresses = [];
-
-        foreach ($addresses as $address) {
-            $company = $address['company'] ?: '--';
-            $fullAddress = sprintf(
-                '%s %s %s %s',
-                $address['address1'],
-                $address['address2'] ?: '',
-                $address['postcode'],
-                $address['city']
-            );
-
-            $customerAddresses[] = new AddressInformation(
-                (int) $address['id_address'],
-                $company,
-                sprintf('%s %s', $address['firstname'], $address['lastname']),
-                $fullAddress,
-                $address['country'],
-                (string) $address['phone'],
-                (string) $address['phone_mobile']
-            );
-        }
-
-        return $customerAddresses;
     }
 
     /**

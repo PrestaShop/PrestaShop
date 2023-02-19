@@ -66,6 +66,8 @@ class ViewableCustomer
     private $messagesInformation;
 
     /**
+     * @deprecated Since 9.0.0, returns only empty array.
+     *
      * @var DiscountInformation[]
      */
     private $discountsInformation;
@@ -86,6 +88,8 @@ class ViewableCustomer
     private $groupsInformation;
 
     /**
+     * @deprecated Since 9.0.0, returns only empty array.
+     *
      * @var AddressInformation[]
      */
     private $addressesInformation;
@@ -114,14 +118,14 @@ class ViewableCustomer
         GeneralInformation $generalInformation,
         PersonalInformation $personalInformation,
         OrdersInformation $ordersInformation,
-        array $cartsInformation,
+        array $cartsInformation = [],
         ProductsInformation $productsInformation,
         array $messagesInformation,
-        array $discountsInformation,
+        array $discountsInformation = [],
         array $sentEmailsInformation,
         array $lastConnectionsInformation,
         array $groupsInformation,
-        array $addressesInformation
+        array $addressesInformation = []
     ) {
         $this->customerId = $customerId;
         $this->personalInformation = $personalInformation;
@@ -188,6 +192,8 @@ class ViewableCustomer
     }
 
     /**
+     * @deprecated Since 9.0.0, returns only empty array.
+     *
      * @return DiscountInformation[]
      */
     public function getDiscountsInformation()
@@ -220,6 +226,8 @@ class ViewableCustomer
     }
 
     /**
+     * @deprecated Since 9.0.0, returns only empty array.
+     *
      * @return AddressInformation[]
      */
     public function getAddressesInformation()
