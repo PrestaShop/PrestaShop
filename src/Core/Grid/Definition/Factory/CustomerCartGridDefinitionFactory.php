@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class CustomerCartGridDefinitionFactory defines customer's cart grid structure.
@@ -54,12 +53,10 @@ final class CustomerCartGridDefinitionFactory extends AbstractGridDefinitionFact
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param Request $currentRequest
      * @param string $contextDateFormat
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        ?Request $currentRequest,
         $contextDateFormat
     ) {
         parent::__construct($hookDispatcher);
