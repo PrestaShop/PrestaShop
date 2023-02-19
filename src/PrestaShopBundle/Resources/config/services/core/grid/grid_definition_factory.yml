@@ -90,7 +90,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerCartGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
-      - '@=service("request_stack").getCurrentRequest()'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
@@ -98,7 +97,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerOrderGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
-      - '@=service("request_stack").getCurrentRequest()'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
