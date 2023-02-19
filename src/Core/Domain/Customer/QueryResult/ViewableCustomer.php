@@ -118,14 +118,14 @@ class ViewableCustomer
         GeneralInformation $generalInformation,
         PersonalInformation $personalInformation,
         OrdersInformation $ordersInformation,
-        array $cartsInformation = [],
+        array $cartsInformation,
         ProductsInformation $productsInformation,
         array $messagesInformation,
-        array $discountsInformation = [],
+        array $discountsInformation,
         array $sentEmailsInformation,
         array $lastConnectionsInformation,
         array $groupsInformation,
-        array $addressesInformation = []
+        array $addressesInformation
     ) {
         $this->customerId = $customerId;
         $this->personalInformation = $personalInformation;
