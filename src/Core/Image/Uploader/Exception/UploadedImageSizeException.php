@@ -42,7 +42,7 @@ class UploadedImageSizeException extends ImageUploadException
      * @param int $code
      * @param Throwable|null $previous
      *
-     * @return static
+     * @return self
      */
     public static function build(
         int $allowedSizeBytes,

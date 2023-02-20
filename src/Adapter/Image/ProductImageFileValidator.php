@@ -28,10 +28,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use ImageManager;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
 
 class ProductImageFileValidator extends ImageValidator
@@ -54,22 +53,22 @@ class ProductImageFileValidator extends ImageValidator
     /**
      * @param string $filePath
      *
-     * @throws ImageUploadException
-     * @throws UploadedImageConstraintException
+     * @throws UploadedImageSizeException
      */
     public function assertFileUploadLimits(string $filePath): void
     {
-        $size = filesize($filePath);
-        $maxUploadSize = $this->maxUploadSize;
-        $maxImageUploadQuota = (int) $this->uploadQuotaConfiguration->getConfiguration()['max_size_product_image'] * self::MEGABYTE_IN_BYTES;
+        $size = new DecimalNumber((string) filesize($filePath));
+        $maxUploadSizeBytes = new DecimalNumber((string) $this->maxUploadSize);
+        $maxUploadQuotaMegaBytes = new DecimalNumber((string) $this->uploadQuotaConfiguration->getConfiguration()['max_size_product_image']);
+        $maxUploadQuotaBytes = $maxUploadQuotaMegaBytes->times(new DecimalNumber((string) self::MEGABYTE_IN_BYTES));
 
-        if ($maxImageUploadQuota < $maxUploadSize) {
+        if ($maxUploadQuotaBytes->isLowerThan($maxUploadSizeBytes)) {
             // if upload limit which is set in BO settings is less than php.ini upload limit, then we check according to that value
-            $maxUploadSize = $maxImageUploadQuota;
+            $maxUploadSizeBytes = $maxUploadQuotaBytes;
         }
 
-        if ($maxUploadSize > 0 && $size > $maxUploadSize) {
-            throw UploadedImageSizeException::build($maxUploadSize);
+        if ($maxUploadSizeBytes->isGreaterThanZero() && $size->isGreaterThan($maxUploadSizeBytes)) {
+            throw UploadedImageSizeException::build((int) (string) $maxUploadSizeBytes);
         }
 
         if (!ImageManager::checkImageMemoryLimit($filePath)) {

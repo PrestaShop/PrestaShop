@@ -68,17 +68,18 @@ class ProductImageFileValidatorTest extends TestCase
         yield [$appIconPath, 100, 100];
         // when value from quota configuration is lower, then it should be checked instead of php.ini config value
         yield [$appIconPath, 5000000, 100];
-        // when value from quota php.ini configuration is lower, then quota config value should be ignored
+        // when value from php.ini configuration is lower, then quota config value should be ignored
         yield [$appIconPath, 100, 5000000];
     }
 
-    private function mockQuotaConfiguration(int $maxSize): DataConfigurationInterface
+    private function mockQuotaConfiguration(int $maxSizeInBytes): DataConfigurationInterface
     {
         $configuration = $this->createMock(DataConfigurationInterface::class);
         $configuration
             ->method('getConfiguration')
             ->willReturn([
-                'max_size_product_image' => $maxSize,
+                // set size in megabytes
+                'max_size_product_image' => $maxSizeInBytes / 1000000,
             ]);
 
         return $configuration;
