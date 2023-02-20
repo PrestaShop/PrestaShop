@@ -45,7 +45,6 @@ Feature: Customer Management
       | firstName | Mathieu                     |
       | lastName  | Napoler                     |
       | email     | naapoler.dev@prestashop.com |
-      | password  | PrestaShopForever1_!        |
       | isGuest   | true                        |
     And I query customer "CUST-3" I should get a Customer with properties:
       | firstName      | Mathieu                     |
@@ -167,7 +166,23 @@ Feature: Customer Management
       | groupIds       | [Guest]                      |
     And customer "CUST-7" should be soft deleted
 
-  Scenario: Edit registered customer email
+  Scenario: Edit guest customer email, even if a registered customer with the same email exists
+    When I create a customer "CUST-8" with following properties:
+      | firstName      | Mathieu                     |
+      | lastName       | Guest                       |
+      | email          | guest@prestashop.com        |
+      | isGuest        | true                        |
+    And I create a customer "CUST-9" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customer                    |
+      | email     | customernine@prestashop.com |
+      | password  | PrestaShopForever1_!        |
+    And I edit customer "CUST-8" and I change the following properties:
+      | email | customernine@prestashop.com |
+    Then I query customer "CUST-8" I should get a Customer with properties:
+      | email | customernine@prestashop.com |
+
+  Scenario: Attempt to edit registered customer email, while another customer with this email exists
     When I create a customer "CUST-10" with following properties:
       | firstName | Mathieu                       |
       | lastName  | Customer                      |
