@@ -56,7 +56,7 @@ class AmountImmutableTest extends TestCase
         $this->assertEquals(4.6, $amount1->getTaxIncluded());
         $this->assertEquals(7.2, $amount1->getTaxExcluded());
 
-        $this->assertTrue($this->assertEqualsWithEpsilon(6.9, $amount2->getTaxIncluded()));
+        $this->assertEqualsWithEpsilon(6.9, $amount2->getTaxIncluded());
         $this->assertEquals(10.7, $amount2->getTaxExcluded());
     }
 
