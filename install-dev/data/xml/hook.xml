@@ -3644,6 +3644,11 @@
       <title>Additional search panel</title>
       <description>This hook allows to add an additional search panel for external providers in PrestaShop back office</description>
     </hook>
+    <hook id="actionCartGetPackageShippingCost">
+      <name>actionCartGetPackageShippingCost</name>
+      <title>After getting package shipping cost value</title>
+      <description>This hook is called in order to allow to modify package shipping cost</description>
+    </hook>
     <hook id="actionCreateProductFormBuilderModifier">
       <name>actionCreateProductFormBuilderModifier</name>
       <title>Modify create product identifiable object form</title>
