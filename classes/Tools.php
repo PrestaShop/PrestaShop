@@ -107,31 +107,6 @@ class ToolsCore
     }
 
     /**
-     * Random bytes generator.
-     *
-     * Limited to OpenSSL since 1.7.0.0
-     *
-     * @deprecated Since 8.1.0
-     *
-     * @param int $length Desired length of random bytes
-     *
-     * @return bool|string Random bytes
-     */
-    public static function getBytes($length)
-    {
-        @trigger_error(
-            'Tools::getBytes() is deprecated since version 8.1.0.',
-            E_USER_DEPRECATED
-        );
-
-        try {
-            return (new OpenSSL())->getBytes($length);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
      * Replace text within a portion of a string.
      *
      * Replaces a string matching a search, (optionally) string from a certain position
@@ -197,21 +172,6 @@ class ToolsCore
 
         header('Location: ' . $url);
         exit;
-    }
-
-    /**
-     * Redirect URLs already containing PS_BASE_URI.
-     *
-     * Warning: uses exit
-     *
-     * @param string $url Desired URL
-     *
-     * @deprecated since PrestaShop 8.0.0
-     */
-    public static function redirectLink($url)
-    {
-        Tools::displayAsDeprecated('Use Tools::redirect() instead');
-        static::redirect($url);
     }
 
     /**
@@ -1338,30 +1298,6 @@ class ToolsCore
     }
 
     /**
-     * Return the friendly url from the provided string.
-     *
-     * @deprecated since 8.1
-     *
-     * @param string $str
-     * @param bool $utf8_decode (deprecated)
-     *
-     * @return string
-     */
-    public static function link_rewrite($str, $utf8_decode = null)
-    {
-        @trigger_error(
-            'This function is deprecated, use Tools::str2url($str) instead.',
-            E_USER_DEPRECATED
-        );
-
-        if ($utf8_decode !== null) {
-            Tools::displayParameterAsDeprecated('utf8_decode');
-        }
-
-        return Tools::str2url($str);
-    }
-
-    /**
      * Return a friendly url made from the provided string
      * If the mbstring library is available, the output is the same as the js function of the same name.
      *
@@ -2223,13 +2159,6 @@ class ToolsCore
         }
 
         return false;
-    }
-
-    public static function replaceByAbsoluteURL($matches)
-    {
-        Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
-
-        return Media::replaceByAbsoluteURL($matches);
     }
 
     protected static $_cache_nb_media_servers = null;
@@ -3647,30 +3576,6 @@ exit;
     }
 
     /**
-     * Delete unicode class from regular expression patterns.
-     *
-     * @deprecated Since 8.0.0 and will be removed in the next major.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     *
-     * @throws Exception
-     */
-    public static function cleanNonUnicodeSupport($pattern)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.0.0. Its use is not required.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return $pattern;
-    }
-
-    /**
      * Returns an array containing information about
      * HTTP file upload variable ($_FILES).
      *
@@ -3816,26 +3721,6 @@ exit;
         return self::$_user_browser;
     }
 
-    /**
-     * Allows to display the category description without HTML tags and slashes.
-     *
-     * @deprecated since version 8.1.0, to be removed.
-     *
-     * @return string
-     */
-    public static function getDescriptionClean($description)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. There is no replacement',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return strip_tags(stripslashes($description));
-    }
-
     public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
         static $use_html_purifier = null;
@@ -3963,21 +3848,6 @@ exit;
             ++$position;
         }
         unset($row);
-    }
-
-    /**
-     * Replaces elements from passed arrays into the first array recursively.
-     *
-     * @param array $base the array in which elements are replaced
-     * @param array $replacements the array from which elements will be extracted
-     *
-     * @deprecated since version 8.0.0, to be removed.
-     */
-    public static function arrayReplaceRecursive($base, $replacements)
-    {
-        Tools::displayAsDeprecated('Use PHP\'s array_replace_recursive() instead');
-
-        return array_replace_recursive($base, $replacements);
     }
 
     /**
