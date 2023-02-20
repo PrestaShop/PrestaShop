@@ -175,7 +175,9 @@ class Stocks extends BOBasePage {
    */
   async getTotalNumberOfProducts(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.searchButton, 2000);
-    await this.waitForHiddenSelector(page, this.productListLoading);
+    if (await this.elementVisible(page, this.productListLoading, 1000)) {
+      await this.waitForHiddenSelector(page, this.productListLoading);
+    }
     // If pagination that return number of products in this page
     const pagesLength = await this.getProductsPagesLength(page);
 
