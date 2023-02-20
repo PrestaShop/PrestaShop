@@ -62,7 +62,10 @@ export default {
    * @returns {Promise<boolean>}
    */
   async isTextInPDF(filePath: string, text: string): Promise<boolean> {
-    const pdf = await getDocument(filePath).promise;
+    const pdf = await getDocument({
+      url: filePath,
+      standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
+    }).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
 
@@ -81,7 +84,10 @@ export default {
    * @return {Promise<number>}
    */
   async getImageNumberInPDF(filePath: string): Promise<number> {
-    const pdf = await getDocument(filePath).promise;
+    const pdf = await getDocument({
+      url: filePath,
+      standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
+    }).promise;
     const nbrPages = pdf.numPages;
     let imageNumber = 0;
 

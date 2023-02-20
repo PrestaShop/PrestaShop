@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Api\Resource;
 
 /**
  * DTO used to get necessary informations when request the API about hook status
+ *
+ * @experimental
  */
 class HookStatus
 {

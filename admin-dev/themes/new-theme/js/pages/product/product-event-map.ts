@@ -50,6 +50,7 @@ export default {
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
     listRendered: 'combinationsListRendered',
+    errorListRendered: 'combinationsErrorListRendered',
     buildCombinationRow: 'buildCombinationRow',
     bulkUpdateFinished: 'combinationsBulkUpdateFinished',
     bulkDeleteFinished: 'combinationsBulkDeleteFinished',

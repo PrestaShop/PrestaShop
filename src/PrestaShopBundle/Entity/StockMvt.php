@@ -98,7 +98,7 @@ class StockMvt
     /**
      * @var int
      *
-     * @ORM\Column(name="physical_quantity", type="integer", nullable=false)
+     * @ORM\Column(name="physical_quantity", type="integer", nullable=false, options={"unsigned":true})
      */
     private $physicalQuantity;
 

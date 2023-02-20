@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe4ca210cfe1f9933390d0ec70b956df",
+    "content-hash": "b283900c6887089a6bf04fcb7e2c2eea",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5348,16 +5348,16 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "2.0.6",
+            "version": "2.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "27e166c1f9520dfeffb1e243af5e54cf0c05b7e7"
+                "reference": "cfba3331bf183d84cea77ef5ae3584f5c6f72d44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/27e166c1f9520dfeffb1e243af5e54cf0c05b7e7",
-                "reference": "27e166c1f9520dfeffb1e243af5e54cf0c05b7e7",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/cfba3331bf183d84cea77ef5ae3584f5c6f72d44",
+                "reference": "cfba3331bf183d84cea77ef5ae3584f5c6f72d44",
                 "shasum": ""
             },
             "require-dev": {
@@ -5381,9 +5381,9 @@
             ],
             "description": "Classic theme for PrestaShop 1.7",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/2.0.6"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2022-10-25T14:37:52+00:00"
+            "time": "2023-02-02T08:31:40+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -6725,16 +6725,16 @@
         },
         {
             "name": "prestashop/ps_featuredproducts",
-            "version": "v2.1.3",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_featuredproducts.git",
-                "reference": "d320d1cd780f2b1ddede7a0f5819e66a13a6a2b8"
+                "reference": "4f546c142af54779a341c05e021577060d156c4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_featuredproducts/zipball/d320d1cd780f2b1ddede7a0f5819e66a13a6a2b8",
-                "reference": "d320d1cd780f2b1ddede7a0f5819e66a13a6a2b8",
+                "url": "https://api.github.com/repos/PrestaShop/ps_featuredproducts/zipball/4f546c142af54779a341c05e021577060d156c4b",
+                "reference": "4f546c142af54779a341c05e021577060d156c4b",
                 "shasum": ""
             },
             "require": {
@@ -6763,9 +6763,9 @@
             "description": "PrestaShop - Featured products",
             "homepage": "https://github.com/PrestaShop/ps_featuredproducts",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.3"
+                "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.4"
             },
-            "time": "2023-01-16T14:00:42+00:00"
+            "time": "2023-02-07T12:59:26+00:00"
         },
         {
             "name": "prestashop/ps_googleanalytics",

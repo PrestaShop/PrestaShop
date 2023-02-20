@@ -530,7 +530,7 @@ class CombinationController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             return $this->json(
-                ['errors' => [$this->getFallbackErrorMessage(get_class($e), $e->getCode(), $e->getMessage())]],
+                ['errors' => [$this->getErrorMessageForException($e, $this->getErrorMessages($e))]],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

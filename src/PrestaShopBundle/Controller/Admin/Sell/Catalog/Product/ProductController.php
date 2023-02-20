@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPosit
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -441,6 +442,10 @@ class ProductController extends FrameworkBundleAdminController
             ]);
         } catch (ShopAssociationNotFound $e) {
             return $this->renderMissingAssociation($productId);
+        } catch (ProductNotFoundException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_products_v2_index');
         }
 
         try {
@@ -1415,6 +1420,10 @@ class ProductController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            ProductNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 

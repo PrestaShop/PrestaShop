@@ -1329,9 +1329,14 @@
 
 {% block delta_quantity_widget %}
   {% set quantity = value.quantity|default(form.quantity.vars.value) %}
-  {% set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': quantity}) %}
+  {# If initial quantity has not been computed we use value which may be containing a placeholder useful for collection rendering #}
+  {% if initialQuantity is null %}
+    {% set initialQuantity = quantity %}
+  {% endif %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': initialQuantity}) %}
   <div {{ block('widget_container_attributes') }}>
-    {{ form_widget(form.quantity, {value: quantity}) }}
+    {{ form_widget(form.initial_quantity, {value: initialQuantity}) }}
+    {{ form_widget(form.quantity, {initialQuantity: initialQuantity, deltaQuantity: deltaQuantity, value: quantity}) }}
     {{ form_row(form.delta) }}
   </div>
 {% endblock %}
@@ -1340,11 +1345,12 @@
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-quantity')|trim}) -%}
   <div {{ block('widget_container_attributes') }}>
     {{- block('form_widget_simple') -}}
-    <span class="initial-quantity">{{ value }}</span>
-    <span class="quantity-update">
+    <span class="initial-quantity">{{ initialQuantity }}</span>
+    <span class="quantity-update{% if deltaQuantity != 0 %} quantity-modified{% endif %}">
       <i class="material-icons">trending_flat</i>
       <span class="new-quantity">{{ value }}</span>
     </span>
+    {{ form_errors(form) }}
   </div>
 {% endblock %}
 

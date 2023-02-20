@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameComm
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @experimental
+ */
 class FeatureFlagTypeListener implements EventSubscriberInterface
 {
     /** @var CommandBusInterface */

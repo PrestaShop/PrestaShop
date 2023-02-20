@@ -50,7 +50,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     const numResults = await homePage.countAutocompleteSearchResult(page, searchValue);
     await expect(numResults).equal(numSearchResults);
 
-    const inputValue = await homePage.getInputValue(page, homePage.searchInput);
+    const inputValue = await homePage.getSearchValue(page);
     await expect(inputValue).equal(searchValue);
   });
 
@@ -83,7 +83,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
       const numResults = await homePage.countAutocompleteSearchResult(page, search.searchValue);
       await expect(numResults).equal(search.numResults);
 
-      const inputValue = await homePage.getInputValue(page, homePage.searchInput);
+      const inputValue = await homePage.getSearchValue(page);
       await expect(inputValue).equal(search.searchValue);
 
       await homePage.closeAutocompleteSearch(page);

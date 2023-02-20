@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -37,6 +38,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StockMovementType extends TranslatorAwareType
 {
@@ -52,7 +54,7 @@ class StockMovementType extends TranslatorAwareType
             ])
             ->add('type', HiddenType::class)
             // Quantity field depends on the data, then it's added via form event
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
                 $data = $event->getData();
                 $form = $event->getForm();
 
@@ -62,10 +64,12 @@ class StockMovementType extends TranslatorAwareType
 
                 // For orders, we display the kind of movements instead of the data range
                 if ($type === StockMovement::ORDERS_TYPE) {
-                    $dateData = $increasedQuantity ?
-                        $this->trans('Returned products', 'Admin.Catalog.Feature') :
+                    $label = ProductType::TYPE_VIRTUAL === $options['product_type'] ?
+                        $this->trans('Sold products', 'Admin.Catalog.Feature') :
                         $this->trans('Shipped products', 'Admin.Catalog.Feature')
                     ;
+
+                    $dateData = $increasedQuantity ? $this->trans('Returned products', 'Admin.Catalog.Feature') : $label;
                     $event->setData(array_merge($event->getData(), [
                         'date' => $dateData,
                     ]));
@@ -94,5 +98,15 @@ class StockMovementType extends TranslatorAwareType
                 $type
             )
         );
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setRequired(['product_type'])
+            ->setAllowedTypes('product_type', 'string')
+        ;
     }
 }
