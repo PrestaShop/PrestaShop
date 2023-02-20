@@ -101,4 +101,9 @@ class HookManager
             }
         }
     }
+
+    public function disableHooksForModule(int $moduleId): void
+    {
+        Hook::disableHooksForModule($moduleId);
+    }
 }
