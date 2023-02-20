@@ -27,7 +27,7 @@ Feature: Customer Management
     When I query customer "CUST-1" I should get a Customer with properties:
       | firstName | Jean |
 
-  Scenario: Fail to create a duplicate customer
+  Scenario: Fail to create a duplicate registered customer, if registered customer with that email exists
     When I create a customer "CUST-2" with following properties:
       | firstName | Mathieu                     |
       | lastName  | Napoler                     |
@@ -38,7 +38,22 @@ Feature: Customer Management
       | lastName  | Napoler                     |
       | email     | naapoler.dev@prestashop.com |
       | password  | PrestaShopForever1_!        |
-    Then I should be returned an error message 'Customer with email "naapoler.dev@prestashop.com" already exists'
+    Then I should be returned an error message 'Registered customer with email "naapoler.dev@prestashop.com" already exists'
+
+  Scenario: Ability to create a guest customer, even if registered customer with that email exists
+    When I create a customer "CUST-3" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Napoler                     |
+      | email     | naapoler.dev@prestashop.com |
+      | password  | PrestaShopForever1_!        |
+      | isGuest   | true                        |
+    And I query customer "CUST-3" I should get a Customer with properties:
+      | firstName      | Mathieu                     |
+      | lastName       | Napoler                     |
+      | email          | naapoler.dev@prestashop.com |
+      | guest          | true                        |
+      | defaultGroupId | Guest                       |
+      | groupIds       | [Guest]                     |
 
   Scenario: Create a complete customer and edit it
     When I create a customer "CUST-4" with following properties:
