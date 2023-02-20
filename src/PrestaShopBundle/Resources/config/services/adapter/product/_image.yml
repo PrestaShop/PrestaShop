@@ -6,7 +6,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
+      - '@PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
@@ -16,7 +16,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
+      - '@PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand

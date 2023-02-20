@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
+use PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
@@ -46,7 +46,7 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
     private $productImageUploader;
 
     /**
-     * @var ImageValidator
+     * @var ProductImageFileValidator
      */
     private $imageValidator;
 
@@ -58,12 +58,12 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
     /**
      * @param ProductImageUploader $productImageUploader
      * @param ProductImageMultiShopRepository $productImageMultiShopRepository
-     * @param ImageValidator $imageValidator
+     * @param ProductImageFileValidator $imageValidator
      */
     public function __construct(
         ProductImageUploader $productImageUploader,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
-        ImageValidator $imageValidator
+        ProductImageFileValidator $imageValidator
     ) {
         $this->productImageUploader = $productImageUploader;
         $this->imageValidator = $imageValidator;

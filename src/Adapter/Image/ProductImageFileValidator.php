@@ -23,34 +23,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use ImageManager;
-use ImageManagerCore;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
 
-/**
- * Responsible for validating image before upload
- */
-class ImageValidator
+class ProductImageFileValidator extends ImageValidator
 {
-    /**
-     * @var int
-     */
-    protected $maxUploadSize;
+    private const MEGABYTE_IN_BYTES = 1000000;
 
     /**
-     * @param int $maxUploadSize
+     * @var DataConfigurationInterface
      */
-    public function __construct(int $maxUploadSize)
-    {
-        $this->maxUploadSize = $maxUploadSize;
+    private $uploadQuotaConfiguration;
+
+    public function __construct(
+        int $maxUploadSize,
+        DataConfigurationInterface $uploadQuotaConfiguration
+    ) {
+        parent::__construct($maxUploadSize);
+        $this->uploadQuotaConfiguration = $uploadQuotaConfiguration;
     }
 
     /**
@@ -62,36 +60,20 @@ class ImageValidator
     public function assertFileUploadLimits(string $filePath): void
     {
         $size = filesize($filePath);
+        $maxUploadSize = $this->maxUploadSize;
+        $maxImageUploadQuota = (int) $this->uploadQuotaConfiguration->getConfiguration()['max_size_product_image'] * self::MEGABYTE_IN_BYTES;
 
-        if ($this->maxUploadSize > 0 && $size > $this->maxUploadSize) {
-            throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $this->maxUploadSize, $size), UploadedImageConstraintException::EXCEEDED_SIZE);
+        if ($maxImageUploadQuota < $maxUploadSize) {
+            // if upload limit which is set in BO settings is less than php.ini upload limit, then we check according to that value
+            $maxUploadSize = $maxImageUploadQuota;
+        }
+
+        if ($maxUploadSize > 0 && $size > $maxUploadSize) {
+            throw UploadedImageSizeException::build($maxUploadSize);
         }
 
         if (!ImageManager::checkImageMemoryLimit($filePath)) {
             throw new MemoryLimitException('Cannot upload image due to memory restrictions');
-        }
-    }
-
-    /**
-     * @param string $filePath
-     * @param array $allowedMimeTypes
-     *
-     * @throws ImageUploadException
-     * @throws UploadedImageConstraintException
-     */
-    public function assertIsValidImageType(string $filePath, array $allowedMimeTypes = null): void
-    {
-        if (!$allowedMimeTypes) {
-            $allowedMimeTypes = ImageManagerCore::MIME_TYPE_SUPPORTED;
-        }
-
-        if (!is_file($filePath)) {
-            throw new ImageFileNotFoundException(sprintf('Image file "%s" not found', $filePath));
-        }
-
-        $mime = mime_content_type($filePath);
-        if (!ImageManager::isRealImage($filePath, $mime, $allowedMimeTypes)) {
-            throw new UploadedImageConstraintException(sprintf('Image type "%s" is not allowed, allowed types are: %s', $mime, implode(',', $allowedMimeTypes)), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
     }
 }
