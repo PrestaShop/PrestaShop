@@ -65,7 +65,7 @@ class OrderMessageController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Order Messages', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Order messages', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'href' => $this->generateUrl('admin_order_messages_create'),

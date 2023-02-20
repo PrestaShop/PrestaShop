@@ -92,7 +92,7 @@ class SqlManagerController extends FrameworkBundleAdminController
                     'icon' => 'add_circle_outline',
                 ],
             ],
-            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('SQL manager', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),

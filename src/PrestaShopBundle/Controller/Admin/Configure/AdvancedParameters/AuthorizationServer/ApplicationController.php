@@ -61,7 +61,7 @@ class ApplicationController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig', [
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
-            'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Authorization server management', 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

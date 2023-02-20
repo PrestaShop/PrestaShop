@@ -24,18 +24,6 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% form_theme importThemeForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-{% set layoutHeaderToolbarBtn = {
-  'add': {
-    'href': path('admin_themes_import'),
-    'desc': 'Add new theme'|trans({}, 'Admin.Design.Feature'),
-    'icon': 'add_circle_outline'
-  },
-  'export': {
-    'href': path('admin_themes_export_current'),
-    'desc': 'Export current theme'|trans({}, 'Admin.Design.Feature'),
-    'icon': 'cloud_download'
-  }
-} %}
 
 {% block content %}
 

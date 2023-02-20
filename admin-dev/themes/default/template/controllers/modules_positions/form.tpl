@@ -32,7 +32,7 @@
 	<div class="panel">
 		<h3>
 			<i class="icon-paste"></i>
-			{l s='Transplant a module' d='Admin.Design.Feature'}
+			{l s='Hook a module' d='Admin.Design.Feature'}
 		</h3>
 		<div class="form-group">
 			<label class="control-label col-lg-3 required"> {l s='Module' d='Admin.Global'}</label>
@@ -93,6 +93,10 @@
 			</div>
 		</div>
 		<div class="panel-footer">
+			<button type="button" class="btn btn-default" onclick="window.history.back();">
+				<i class="process-icon-cancel text-danger"></i>
+				{l s='Cancel' d='Admin.Actions'}
+			</button>
 			{if $edit_graft}
 				<input type="hidden" name="id_module" value="{$id_module}" />
 				<input type="hidden" name="id_hook" value="{$id_hook}" />
