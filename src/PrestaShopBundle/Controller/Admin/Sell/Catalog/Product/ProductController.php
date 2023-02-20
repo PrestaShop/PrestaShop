@@ -1229,7 +1229,7 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         // do not show create button if user has no permissions for it
-        if (!$this->isGranted('create', $securitySubject)) {
+        if (!$this->isGranted(PageVoter::CREATE, $securitySubject)) {
             return $toolbarButtons;
         }
 
