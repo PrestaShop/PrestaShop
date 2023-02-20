@@ -335,8 +335,9 @@ class ProductsBlock extends ViewOrderBasePage {
 
     await page.click(this.modalConfirmNewPriceSubmitButton);
 
-    await this.waitForVisibleSelector(page, this.orderProductsLoading);
-    await this.waitForHiddenSelector(page, this.orderProductsLoading);
+    if (await this.elementVisible(page, this.orderProductsLoading, 1000)) {
+      await this.waitForHiddenSelector(page, this.orderProductsLoading);
+    }
 
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(row));
   }

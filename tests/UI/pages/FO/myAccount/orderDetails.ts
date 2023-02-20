@@ -44,6 +44,8 @@ class OrderDetails extends FOBasePage {
 
   private readonly submitMessageButton: string;
 
+  private readonly boxMessagesBlock: string;
+
   private readonly deliveryAddressBox: string;
 
   private readonly invoiceAddressBox: string;
@@ -83,6 +85,7 @@ class OrderDetails extends FOBasePage {
     this.productIdSelect = '[name=id_product]';
     this.messageTextarea = '[name=msgText]';
     this.submitMessageButton = '[name=submitMessage]';
+    this.boxMessagesBlock = '#content div.box.messages';
 
     // Order addresses block
     this.deliveryAddressBox = '#delivery-address';
@@ -204,8 +207,13 @@ class OrderDetails extends FOBasePage {
     return this.getTextContent(page, this.invoiceAddressBox);
   }
 
+  /**
+   * Get box messages
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   async getBoxMessages(page: Page): Promise<string> {
-    return this.getTextContent(page, '#content div.box.messages');
+    return this.getTextContent(page, this.boxMessagesBlock);
   }
 }
 

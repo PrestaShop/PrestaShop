@@ -79,7 +79,7 @@ jobs:
           URL_FO: 'http://localhost:8001/'
           SMTP_SERVER: '172.17.0.1'
           TAKE_SCREENSHOT_AFTER_FAIL: true
-          TEST_PATH: 'f*/BO/02*/01*/view*/02*'
+          TEST_PATH: 'f*/BO/02*/01*/view*/12*'
         run: npm run test:specific
       # Rename and upload report as artifact
       - name: Create screenshot folder name
