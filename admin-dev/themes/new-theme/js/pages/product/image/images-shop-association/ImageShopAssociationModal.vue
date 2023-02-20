@@ -40,6 +40,7 @@
 
   interface ImagesShopAssociationProps {
     productId: number;
+    shopId: number;
   }
   const props = defineProps<ImagesShopAssociationProps>();
 
@@ -106,7 +107,7 @@
   const updateImages = async (shopImages: any[]): Promise<void> => {
     // Reformat data for product images
     const newProductImages: ProductImage[] = [];
-    const images = await getProductImages(props.productId);
+    const images = await getProductImages(props.productId, props.shopId);
     images.forEach((productImage: any) => {
       const shopAssociations = shopImages.map((productShopImage: any) => {
         let isAssociated = false;

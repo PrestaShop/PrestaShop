@@ -27,7 +27,7 @@ import {createI18n} from 'vue-i18n';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import ImageShopAssociationModal from './ImageShopAssociationModal.vue';
 
-export default function initImagesShopAssociation(buttonContainerSelector: string): App | null {
+export default function initImagesShopAssociation(buttonContainerSelector: string, shopId: number): App | null {
   const container = document.querySelector<HTMLElement>(buttonContainerSelector);
 
   if (!container) {
@@ -48,6 +48,7 @@ export default function initImagesShopAssociation(buttonContainerSelector: strin
     template: '<image-shop-association-modal :productId=productId />',
     i18n,
     productId,
+    shopId,
   }).use(i18n);
 
   vueApp.mount(buttonContainerSelector);

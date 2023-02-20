@@ -658,6 +658,21 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         return $this->getProductByShopId($productId, $defaultShopId);
     }
 
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function assertProductIsAssociatedToShop(ProductId $productId, ShopId $shopId): void
+    {
+        $this->checkShopAssociation(
+            $productId->getValue(),
+            Product::class,
+            $shopId
+        );
+    }
+
     private function getProductByShopGroup(ProductId $productId, ShopGroupId $shopGroupId): Product
     {
         $groupDefaultShopId = $this->getProductDefaultShopIdForGroup($productId, $shopGroupId);

@@ -96,7 +96,7 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
     private function removeImages(ProductId $productId, array $shopIds): void
     {
         foreach ($shopIds as $shopId) {
-            $imageIds = $this->productImageMultiShopRepository->getImagesIds($productId, ShopConstraint::shop($shopId->getValue()));
+            $imageIds = $this->productImageMultiShopRepository->getImageIds($productId, ShopConstraint::shop($shopId->getValue()));
             foreach ($imageIds as $imageId) {
                 $this->productImageMultiShopRepository->deleteFromShops($imageId, [$shopId]);
             }

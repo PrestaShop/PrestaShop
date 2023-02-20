@@ -108,7 +108,7 @@ class BulkDeleteProductFromShopsHandler extends AbstractBulkHandler implements B
      */
     private function removeImages(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        $imageIds = $this->productImageMultiShopRepository->getImagesIds($productId, $shopConstraint);
+        $imageIds = $this->productImageMultiShopRepository->getImageIds($productId, $shopConstraint);
         foreach ($imageIds as $imageId) {
             $this->productImageMultiShopRepository->deleteByShopConstraint($imageId, $shopConstraint);
         }

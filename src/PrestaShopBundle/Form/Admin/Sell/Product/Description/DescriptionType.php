@@ -83,7 +83,9 @@ class DescriptionType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $productId = (int) $options['product_id'];
+        $productId = $options['product_id'];
+        $shopId = $options['shop_id'];
+
         if ($this->shortDescriptionMaxLength > 0) {
             $shortDescriptionLimit = $this->shortDescriptionMaxLength;
         } else {
@@ -93,6 +95,7 @@ class DescriptionType extends TranslatorAwareType
         $builder
             ->add('images', ImageDropzoneType::class, [
                 'product_id' => $productId,
+                'shop_id' => $shopId,
                 'update_form_type' => ProductImageType::class,
             ])
             ->add('description_short', TranslatableType::class, [
@@ -167,8 +170,10 @@ class DescriptionType extends TranslatorAwareType
             ])
             ->setRequired([
                 'product_id',
+                'shop_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
         ;
     }
 }

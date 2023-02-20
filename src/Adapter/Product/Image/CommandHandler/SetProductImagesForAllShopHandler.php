@@ -174,13 +174,11 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
      */
     private function shopIdsToInt(array $shopIds): array
     {
-        $shopIdsAssociatedToImage = array_map(
+        return array_map(
             function (ShopId $shopId): int {
                 return $shopId->getValue();
             },
             $shopIds
         );
-
-        return $shopIdsAssociatedToImage;
     }
 }

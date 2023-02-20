@@ -24,20 +24,11 @@ Feature: Set product images for all shops from Back Office (BO)
     And I copy product product1 from shop shop1 to shop shop2
     And I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
     And I copy product product1 from shop shop2 to shop shop3
-    Then product "product1" should have following images for shop "shop1":
-      | image reference |  position | shops               |
-      | image1          |  1        | shop1, shop2, shop3 |
-      | image2          |  2        | shop1, shop2, shop3 |
-    And product "product1" should have following images for shop "shop2":
-      | image reference |  position | shops               |
-      | image1          |  1        | shop1, shop2, shop3 |
-      | image2          |  2        | shop1, shop2, shop3 |
-      | image3          |  3        | shop2, shop3        |
-    And product "product1" should have following images for shop "shop3":
-      | image reference |  position | shops               |
-      | image1          |  1        | shop1, shop2, shop3 |
-      | image2          |  2        | shop1, shop2, shop3 |
-      | image3          |  3        | shop2, shop3        |
+    Then product "product1" should have following images for shop "shop1,shop2,shop3":
+      | image reference | position | shops               |
+      | image1          | 1        | shop1, shop2, shop3 |
+      | image2          | 2        | shop1, shop2, shop3 |
+      | image3          | 3        | shop2, shop3        |
     And following image types should be applicable to products:
       | reference     | name           | width | height |
       | cartDefault   | cart_default   | 125   | 125    |
@@ -48,41 +39,26 @@ Feature: Set product images for all shops from Back Office (BO)
 
   Scenario: I remove an image from a shop and I associate it to another at the same time
     When I apply the following matrix of images for product "product1":
-      | imageReference        | shopReferences      |
-      | image1                | shop1, shop2, shop3 |
-      | image2                | shop1, shop2, shop3 |
-      | image3                | shop1, shop2        |
-    Then product "product1" should have following images for shop "shop1":
-      | image reference |  position |
-      | image1          |  1        |
-      | image2          |  2        |
-      | image3          |  3        |
-    And product "product1" should have following images for shop "shop2":
-      | image reference |  position |
-      | image1          |  1        |
-      | image2          |  2        |
-      | image3          |  3        |
-    And product "product1" should have following images for shop "shop3":
-      | image reference |  position |
-      | image1          |  1        |
-      | image2          |  2        |
+      | imageReference | shopReferences      |
+      | image1         | shop1, shop2, shop3 |
+      | image2         | shop1, shop2, shop3 |
+      | image3         | shop1, shop2        |
+    Then product "product1" should have following images for shops "shop1, shop2, shop3":
+      | image reference | position | shops               |
+      | image1          | 1        | shop1, shop2, shop3 |
+      | image2          | 2        | shop1, shop2, shop3 |
+      | image3          | 3        | shop1, shop2        |
 
   Scenario: Remove an image for all shops  should remove the image physically and recalculate position
     When I apply the following matrix of images for product "product1":
-      | imageReference        | shopReferences       |
-      | image1                | shop1, shop2, shop3 |
-      | image3                | shop2, shop3 |
-    Then product "product1" should have following images for shop "shop1":
-      | image reference |  position |
-      | image1          | 1         |
-    And product "product1" should have following images for shop "shop2":
-      | image reference |  position |
-      | image1          | 1         |
-      | image3          | 2         |
-    And product "product1" should have following images for shop "shop3":
-      | image reference |  position |
-      | image1          | 1         |
-      | image3          | 2         |
+      | imageReference | shopReferences      |
+      | image1         | shop1, shop2, shop3 |
+      | image3         | shop2, shop3        |
+    Then product "product1" should have following images for shop "shop1, shop2, shop3":
+      | image reference | position | shops               |
+      | image1          | 1        | shop1, shop2, shop3 |
+      | image3          | 2        | shop2,shop3         |
+
     And following types for image "image2" should be removed:
       | name           |
       | cart_default   |
@@ -93,7 +69,7 @@ Feature: Set product images for all shops from Back Office (BO)
 
   Scenario: Remove an image which is a cover should raise an error
     When I apply the following matrix of images for product "product1":
-      | imageReference        | shopReferences      |
-      | image2                | shop1, shop2, shop3 |
-      | image3                | shop2, shop3        |
+      | imageReference | shopReferences      |
+      | image2         | shop1, shop2, shop3 |
+      | image3         | shop2, shop3        |
     Then I should get an error that you cannot remove an image which is a cover
