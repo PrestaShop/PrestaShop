@@ -337,6 +337,8 @@ class CartCore extends ObjectModel
             WHERE  `id_cart` = ' . (int) $this->id . '
                 AND `id_address_delivery` = ' . (int) $id_address;
         Db::getInstance()->execute($sql);
+
+        Hook::exec('actionUpdateCartAddress', ['cart' => $this, 'oldAddressId' => (int) $id_address, 'newAddressId' => (int) $id_address_new]);
     }
 
     /**
@@ -363,6 +365,8 @@ class CartCore extends ObjectModel
             WHERE  `id_cart` = ' . (int) $this->id . '
                 AND `id_address_delivery` = ' . $currentAddressId;
         Db::getInstance()->execute($sql);
+
+        Hook::exec('actionUpdateCartAddress', ['cart' => $this, 'oldAddressId' => $currentAddressId, 'newAddressId' => $newAddressId]);
     }
 
     /**
