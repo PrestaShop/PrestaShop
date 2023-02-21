@@ -20,19 +20,19 @@ trait ExtendedTestCaseMethodsTrait
     public function assertEqualsWithEpsilon($expected, $actual, $message = '')
     {
         if (!is_array($expected)) {
-            $expectedArray[] = $expected;
+            $expectedArray[]['a'] = $expected; // we recreate the structure of the array as in Tools::spreadAmount()
         } else {
             $expectedArray = $expected;
         }
 
         if (!is_array($actual)) {
-            $actualArray[] = $actual;
+            $actualArray[]['a'] = $actual; // we recreate the structure of the array as in Tools::spreadAmount()
         } else {
             $actualArray = $actual;
         }
 
         foreach ($expectedArray as $key => $item) {
-            $this->compareWithEpsilon($item, $actualArray[$key]);
+            $this->compareWithEpsilon($item['a'], $actualArray[$key]['a']);
         }
     }
 }
