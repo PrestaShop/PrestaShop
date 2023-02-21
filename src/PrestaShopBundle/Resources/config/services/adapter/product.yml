@@ -231,8 +231,6 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator:
     autowire: true
     public: false
-    arguments:
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_LANG_DEFAULT")'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository:
     autowire: true

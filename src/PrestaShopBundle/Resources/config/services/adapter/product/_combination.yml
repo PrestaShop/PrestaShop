@@ -26,21 +26,7 @@ services:
     autowire: true
     public: false
     arguments:
-<<<<<<< HEAD
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
-      - '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
-=======
       $contextLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
->>>>>>> a69506ee8b ( rename ProductMultiShopRepository  to ProductRepository and autowire where possible)
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
