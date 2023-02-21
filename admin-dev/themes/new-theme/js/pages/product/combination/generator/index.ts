@@ -47,6 +47,7 @@ export default function initCombinationGenerator(
     i18n,
     productId,
     shopId,
+    isMultiStoreActive: Boolean(container.dataset.isMultiStoreActive),
     eventEmitter,
   }).use(i18n);
 
