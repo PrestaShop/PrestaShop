@@ -386,9 +386,6 @@
   <configuration id="PS_OS_COD_VALIDATION" name="PS_OS_COD_VALIDATION">
     <value>13</value>
   </configuration>
-  <configuration id="PS_LEGACY_IMAGES" name="PS_LEGACY_IMAGES">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_IMAGE_QUALITY" name="PS_IMAGE_QUALITY">
     <value>jpg</value>
   </configuration>

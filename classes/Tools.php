@@ -2385,14 +2385,6 @@ class ToolsCore
                 if ($rewrite_settings) {
                     // Compatibility with the old image filesystem
                     fwrite($write_fd, "# Images\n");
-                    if (Configuration::get('PS_LEGACY_IMAGES')) {
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+\-[a-z0-9]+\-[-\w]*)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([\d]+(?:\-[\d]+){1,2})/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
-                    }
 
                     // Rewrite product images < 10 millions
                     $path_components = [];
