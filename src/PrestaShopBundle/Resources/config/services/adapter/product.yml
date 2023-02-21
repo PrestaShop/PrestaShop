@@ -325,10 +325,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
