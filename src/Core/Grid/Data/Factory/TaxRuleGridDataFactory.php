@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\TaxRule\TaxRuleSettings;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use TaxRule;
 
 /**
  * Class TaxRuleGridDataFactory gets data for TaxRule grid.
@@ -88,13 +88,13 @@ class TaxRuleGridDataFactory implements GridDataFactoryInterface
     {
         foreach ($records as $i => $record) {
             switch ($record['behavior']) {
-                case TaxRule::BEHAVIOR_TAX_ONLY:
+                case TaxRuleSettings::BEHAVIOR_TAX_ONLY:
                     $records[$i]['behavior'] = $this->translator->trans('This tax only', [], 'Admin.International.Feature');
                     break;
-                case TaxRule::BEHAVIOR_COMBINE:
+                case TaxRuleSettings::BEHAVIOR_COMBINE:
                     $records[$i]['behavior'] = $this->translator->trans('Combine', [], 'Admin.International.Feature');
                     break;
-                case TaxRule::BEHAVIOR_ONE_AFTER_ANOTHER:
+                case TaxRuleSettings::BEHAVIOR_ONE_AFTER_ANOTHER:
                     $records[$i]['behavior'] = $this->translator->trans('One after another', [], 'Admin.International.Feature');
                     break;
             }
