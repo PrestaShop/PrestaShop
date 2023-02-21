@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -1260,71 +1259,6 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_product_catalog');
-    }
-
-    /**
-     * @deprecated since 1.7.5.0, to be removed in 1.8 rely on CommonController::renderFieldAction
-     *
-     * @throws \OutOfBoundsException
-     * @throws \LogicException
-     * @throws \PrestaShopException
-     */
-    public function renderFieldAction($productId, $step, $fieldName)
-    {
-        @trigger_error(
-            'This function is deprecated, use CommonController::renderFieldAction instead.',
-            E_USER_DEPRECATED
-        );
-
-        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($productId);
-        $modelMapper = new AdminModelAdapter(
-            $product,
-            $this->get('prestashop.adapter.legacy.context'),
-            $this->get(AdminProductWrapper::class),
-            $this->get(Tools::class),
-            $productAdapter,
-            $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
-            $this->get('prestashop.adapter.data_provider.feature'),
-            $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax'),
-            $this->get('router')
-        );
-        $form = $this->createFormBuilder($modelMapper->getFormData($product));
-        switch ($step) {
-            case 'step1':
-                $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
-
-                break;
-            case 'step2':
-                $form->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice');
-
-                break;
-            case 'step3':
-                $form->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity');
-
-                break;
-            case 'step4':
-                $form->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping');
-
-                break;
-            case 'step5':
-                $form->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo');
-
-                break;
-            case 'step6':
-                $form->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
-
-                break;
-            case 'default':
-        }
-
-        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
-            'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
-            'formId' => $step . '_' . $fieldName . '_rendered',
-        ]);
     }
 
     /**

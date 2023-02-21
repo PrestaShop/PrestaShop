@@ -113,7 +113,7 @@ if (!defined('_THEME_NAME_')) {
         define('_THEME_NAME_', getenv('PS_THEME_NAME'));
     } else {
         /**
-         * @deprecated since 1.7.5.x to be removed in 1.8.x
+         * @deprecated since 1.7.5.x to be removed in 9.x
          * Rely on "PS_THEME_NAME" environment variable value
          */
         $dirThemes = dirname(__DIR__).'/themes/';
