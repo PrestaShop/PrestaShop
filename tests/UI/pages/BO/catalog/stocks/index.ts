@@ -202,7 +202,10 @@ class Stocks extends BOBasePage {
    */
   async getNumberOfProductsFromList(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.searchButton, 2000);
-    await this.waitForHiddenSelector(page, this.productListLoading);
+    if (await this.elementVisible(page, this.productListLoading, 1000)) {
+      await this.waitForHiddenSelector(page, this.productListLoading);
+    }
+
     return (await page.$$(this.productRows)).length;
   }
 
@@ -222,11 +225,10 @@ class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async paginateTo(page: Page, pageNumber: number = 1): Promise<void> {
-    await Promise.all([
-      page.click(this.paginationListItemLink(pageNumber)),
-      this.waitForVisibleSelector(page, this.productListLoading),
-    ]);
-    await this.waitForHiddenSelector(page, this.productListLoading);
+    await page.click(this.paginationListItemLink(pageNumber));
+    if (await this.elementVisible(page, this.productListLoading, 1000)) {
+      await this.waitForHiddenSelector(page, this.productListLoading);
+    }
   }
 
   /**
@@ -254,13 +256,10 @@ class Stocks extends BOBasePage {
    */
   async simpleFilter(page: Page, value: string): Promise<void> {
     await page.type(this.searchInput, value);
-
-    await Promise.all([
-      page.click(this.searchButton),
-      this.waitForVisibleSelector(page, this.productListLoading, 10000),
-    ]);
-
-    await this.waitForHiddenSelector(page, this.productListLoading);
+    await page.click(this.searchButton);
+    if (await this.elementVisible(page, this.productListLoading, 1000)) {
+      await this.waitForHiddenSelector(page, this.productListLoading);
+    }
   }
 
   /**

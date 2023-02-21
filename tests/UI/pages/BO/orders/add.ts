@@ -1023,9 +1023,9 @@ class AddOrder extends BOBasePage {
    */
   async setDeliveryOption(page: Page, deliveryOptionName: string, isFreeShipping: boolean = false): Promise<string> {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), (el: HTMLElement) => el.click());
+    await page.waitForTimeout(1000);
+    await this.setFreeShipping(page, isFreeShipping);
     if (isFreeShipping) {
-      await this.setFreeShipping(page, isFreeShipping);
       await this.waitForVisibleSelector(page, this.vouchersTable);
     }
     await page.waitForTimeout(1000);
