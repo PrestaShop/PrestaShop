@@ -2969,7 +2969,6 @@ class CartCore extends ObjectModel
             $total_price += ($cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] && isset($real_best_price)) ? $real_best_price : 0;
             $total_price += (!$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] && isset($real_best_price_wt)) ? $real_best_price_wt : 0;
             if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
-                && in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
                 && $cart_rule['minimum_amount'] <= $total_price) {
                 $cr = new CartRule((int) $cart_rule['id_cart_rule']);
                 if (Validate::isLoadedObject($cr) &&
@@ -3412,8 +3411,13 @@ class CartCore extends ObjectModel
                 continue;
             }
 
-            $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
-            $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
+            if ($delivery_option_list[$id_address][$key]['is_free'] == true){
+                $_total_shipping['with_tax'] = 0;
+                $_total_shipping['without_tax'] = 0;
+            }else{
+                $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
+                $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
+            }
         }
 
         return ($use_tax) ? $_total_shipping['with_tax'] : $_total_shipping['without_tax'];
