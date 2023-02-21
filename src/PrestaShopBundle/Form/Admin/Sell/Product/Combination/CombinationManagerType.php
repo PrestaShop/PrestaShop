@@ -52,9 +52,6 @@ class CombinationManagerType extends TranslatorAwareType
      */
     private $multiStoreFeature;
 
-    /**
-     * @param FeatureInterface $multiStoreFeature
-     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
