@@ -934,7 +934,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getinvoiceAddressDetails(page: Page): Promise<string> {
+  async getInvoiceAddressDetails(page: Page): Promise<string> {
     await page.waitForTimeout(2000);
 
     return this.getTextContent(page, this.invoiceAddressDetails);
@@ -949,7 +949,7 @@ class AddOrder extends BOBasePage {
   async chooseInvoiceAddress(page: Page, invoiceAddress: string): Promise<string> {
     await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
 
-    return this.getinvoiceAddressDetails(page);
+    return this.getInvoiceAddressDetails(page);
   }
 
   /**
