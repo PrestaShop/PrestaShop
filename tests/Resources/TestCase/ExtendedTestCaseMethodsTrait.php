@@ -10,7 +10,8 @@ trait ExtendedTestCaseMethodsTrait
     {
         $success = false;
 
-        if (abs($expected - $actual) < 0.0000000001) {
+        // see https://github.com/sebastianbergmann/phpunit/issues/4966#issuecomment-1367081755
+        if (abs($expected - $actual) < 10 ** -ini_get('precision')) {
             $success = true;
         }
 
