@@ -146,7 +146,7 @@ class ProductTypeUpdater
             $product,
             $updatedProperties,
             ShopConstraint::shop($this->productRepository->getProductDefaultShopId($productId)->getValue()),
-            CannotUpdateProductException::FAILED_UPDATE_TYPE,
+            CannotUpdateProductException::FAILED_UPDATE_TYPE
         );
 
         if ($resetProductStock) {
