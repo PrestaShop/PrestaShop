@@ -6,7 +6,7 @@ use PHPUnit\Framework\Assert;
 
 trait ExtendedTestCaseMethodsTrait
 {
-    private function compareWithEpsilon($expected, $actual)
+    private function compareWithEpsilon($expected, $actual, $message)
     {
         $success = false;
 
@@ -15,7 +15,7 @@ trait ExtendedTestCaseMethodsTrait
             $success = true;
         }
 
-        Assert::assertTrue($success);
+        Assert::assertTrue($success, $message);
     }
 
     public function assertEqualsWithEpsilon($expected, $actual, $message = '')
@@ -33,7 +33,7 @@ trait ExtendedTestCaseMethodsTrait
         }
 
         foreach ($expectedArray as $key => $item) {
-            $this->compareWithEpsilon($item['a'], $actualArray[$key]['a']);
+            $this->compareWithEpsilon($item['a'], $actualArray[$key]['a'], $message);
         }
     }
 }
