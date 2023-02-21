@@ -36,9 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * Handles @see DeleteProductCommand using legacy object model
  *
- * @todo: double check this command and DeleteProductFromShops. Maybe only one of them should exist?
- *        Or maybe this one needs to be renamed if its used for all shops?
- *        Previous behavior of this command was probably to remove product from current context shop only
+ * @todo: this command along with BulkDeleteProductCommand needs to be refactored to fully support shop constraint.
+ *        Then the DeleteFromShopsCommand should be refactored to a SetProductShopsCommand.
  */
 class DeleteProductHandler implements DeleteProductHandlerInterface
 {

@@ -64,11 +64,6 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
 
     protected function handleSingleAction(ProductId $productId, $command = null)
     {
-        //@todo: not sure about all shops constraint. Something might be confused here.
-        // Im pretty sure it used to delete product only in context shop when we don't provide shops explicitly.
-        // but in ProductController I see it used in bulkDeleteFromAllShopsAction.
-        // So this whole command might deserve renaming, or its confused with DeleteProductFromShopsCommand (which seems to be unused at all)
-        // need to double check this part before merging
         $this->productRepository->deleteByShopConstraint($productId, ShopConstraint::allShops());
     }
 
