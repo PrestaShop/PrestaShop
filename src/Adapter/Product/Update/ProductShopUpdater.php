@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpd
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
@@ -63,7 +63,7 @@ class ProductShopUpdater
     private $productRepository;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableRepository;
 
@@ -109,7 +109,7 @@ class ProductShopUpdater
 
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        StockAvailableMultiShopRepository $stockAvailableRepository,
+        StockAvailableRepository $stockAvailableRepository,
         ShopRepository $shopRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
         ProductStockUpdater $productStockUpdater,

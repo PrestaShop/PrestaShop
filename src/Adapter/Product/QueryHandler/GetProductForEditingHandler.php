@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShop
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
@@ -94,7 +94,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $categoryRepository;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableRepository;
 
@@ -152,7 +152,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      * @param NumberExtractor $numberExtractor
      * @param ProductMultiShopRepository $productRepository
      * @param CategoryRepository $categoryRepository
-     * @param StockAvailableMultiShopRepository $stockAvailableRepository
+     * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      * @param ProductImageMultiShopRepository $productImageMultiShopRepository
      * @param AttachmentRepository $attachmentRepository
@@ -168,7 +168,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         NumberExtractor $numberExtractor,
         ProductMultiShopRepository $productRepository,
         CategoryRepository $categoryRepository,
-        StockAvailableMultiShopRepository $stockAvailableRepository,
+        StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
         AttachmentRepository $attachmentRepository,
