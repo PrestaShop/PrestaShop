@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\HookManager;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -61,7 +61,7 @@ class ProductStockUpdater
     private $stockManager;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -87,7 +87,7 @@ class ProductStockUpdater
 
     public function __construct(
         StockManager $stockManager,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         MovementReasonRepository $movementReasonRepository,
         ShopConfigurationInterface $configuration,

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Db;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -47,7 +47,7 @@ abstract class AbstractDeleteCategoryHandler
     protected $homeCategoryId;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -58,12 +58,12 @@ abstract class AbstractDeleteCategoryHandler
 
     /**
      * @param int $homeCategoryId
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
      */
     public function __construct(
         int $homeCategoryId,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         CategoryRepository $categoryRepository
     ) {
         $this->homeCategoryId = $homeCategoryId;

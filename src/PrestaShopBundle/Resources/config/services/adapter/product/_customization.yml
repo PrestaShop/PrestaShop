@@ -15,10 +15,8 @@ services:
     public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandler:
     arguments:

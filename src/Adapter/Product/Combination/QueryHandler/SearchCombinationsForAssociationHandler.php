@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\SearchCombinationsForAssociationHandlerInterface;
@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBu
 class SearchCombinationsForAssociationHandler implements SearchCombinationsForAssociationHandlerInterface
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -63,13 +63,13 @@ class SearchCombinationsForAssociationHandler implements SearchCombinationsForAs
     protected $combinationNameBuilder;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param AttributeRepository $attributeRepository
      * @param ProductImagePathFactory $productImagePathFactory
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         AttributeRepository $attributeRepository,
         ProductImagePathFactory $productImagePathFactory,
         CombinationNameBuilderInterface $combinationNameBuilder

@@ -32,7 +32,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -67,9 +67,9 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     private $dbPrefix;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
-    private $productMultiShopRepository;
+    private $productRepository;
 
     /**
      * @var ProductImageValidator
@@ -79,12 +79,12 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductMultiShopRepository $productMultiShopRepository,
+        ProductRepository $productRepository,
         ProductImageValidator $productImageValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->productMultiShopRepository = $productMultiShopRepository;
+        $this->productRepository = $productRepository;
         $this->productImageValidator = $productImageValidator;
     }
 
@@ -100,7 +100,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         }
 
         if ($shopConstraint->getShopId()) {
-            $this->productMultiShopRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
+            $this->productRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
         }
 
         return array_map(
@@ -150,7 +150,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
                     ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
                 ;
             } else {
-                $this->productMultiShopRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
+                $this->productRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
                 $qb->andWhere('img_shop.id_shop = :shopId')
                     ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
                 ;
@@ -264,7 +264,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         $image->id_product = $productIdValue;
         $image->cover = null;
 
-        $shopIds = $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint);
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
         $this->addObjectModelToShops($image, $shopIds, CannotAddProductImageException::class);
 
         $this->updateMissingCovers($productId);
@@ -362,7 +362,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             $productImagesByShop[$shopId][] = new ShopImageAssociation((int) $result['id_image'], (int) $result['cover'] === 1);
         }
 
-        foreach ($this->productMultiShopRepository->getAssociatedShopIds($productId) as $shopId) {
+        foreach ($this->productRepository->getAssociatedShopIds($productId) as $shopId) {
             if (isset($productImagesByShop[$shopId->getValue()])) {
                 continue;
             }

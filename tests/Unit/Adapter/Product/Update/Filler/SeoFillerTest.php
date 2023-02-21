@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -215,11 +215,11 @@ class SeoFillerTest extends ProductFillerTestCase
     /**
      * @param bool $redirectProductExists
      *
-     * @return ProductMultiShopRepository
+     * @return ProductRepository
      */
-    private function mockProductRepository(bool $redirectProductExists): ProductMultiShopRepository
+    private function mockProductRepository(bool $redirectProductExists): ProductRepository
     {
-        $mock = $this->createMock(ProductMultiShopRepository::class);
+        $mock = $this->createMock(ProductRepository::class);
         if (!$redirectProductExists) {
             $mock->method('assertProductExists')
                 ->willThrowException(new ProductNotFoundException())

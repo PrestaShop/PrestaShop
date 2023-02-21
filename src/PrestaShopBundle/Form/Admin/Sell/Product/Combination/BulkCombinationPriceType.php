@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -59,7 +59,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
     private $weightUnit;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -73,7 +73,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
         array $locales,
         string $currencyIsoCode,
         string $weightUnit,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         TaxComputer $taxComputer
     ) {
         parent::__construct($translator, $locales);

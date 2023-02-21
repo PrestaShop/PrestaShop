@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierConstraintException;
@@ -45,7 +45,7 @@ use ProductSupplier;
 class ProductSupplierValidator extends AbstractObjectModelValidator
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -60,12 +60,12 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
     private $currencyRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param SupplierRepository $supplierProvider
      * @param CurrencyRepository $currencyRepository
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         SupplierRepository $supplierProvider,
         CurrencyRepository $currencyRepository
     ) {

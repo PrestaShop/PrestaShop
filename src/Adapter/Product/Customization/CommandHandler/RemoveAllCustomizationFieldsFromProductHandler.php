@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -46,7 +46,7 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
     private $customizationFieldDeleter;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -57,12 +57,12 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
 
     /**
      * @param CustomizationFieldDeleter $customizationFieldDeleter
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      */
     public function __construct(
         CustomizationFieldDeleter $customizationFieldDeleter,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
     ) {
         $this->customizationFieldDeleter = $customizationFieldDeleter;

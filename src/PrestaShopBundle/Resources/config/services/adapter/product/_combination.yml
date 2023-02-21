@@ -23,7 +23,10 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler:
+    autowire: true
+    public: false
     arguments:
+<<<<<<< HEAD
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
@@ -35,6 +38,9 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
+=======
+      $contextLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+>>>>>>> a69506ee8b ( rename ProductMultiShopRepository  to ProductRepository and autowire where possible)
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
@@ -60,12 +66,11 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator: ~
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository:
+    autowire: true
+    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator'
-      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
@@ -76,25 +81,16 @@ services:
       - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator:
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
-      - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUpdater:
     arguments:

@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
@@ -84,7 +84,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $numberExtractor;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -150,7 +150,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
     /**
      * @param NumberExtractor $numberExtractor
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
@@ -166,7 +166,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,

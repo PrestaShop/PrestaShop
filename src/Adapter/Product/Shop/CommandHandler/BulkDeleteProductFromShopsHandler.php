@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AbstractBulkHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductFromShopsException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand;
@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class BulkDeleteProductFromShopsHandler extends AbstractBulkHandler implements BulkDeleteProductFromShopsHandlerInterface
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -60,10 +60,10 @@ class BulkDeleteProductFromShopsHandler extends AbstractBulkHandler implements B
     private $productImageMultiShopRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         CombinationRepository $combinationMultiShopRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository
     ) {

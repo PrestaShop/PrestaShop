@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update;
 
 use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -46,7 +46,7 @@ use ProductDownload as VirtualProductFile;
 class VirtualProductUpdater
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -61,12 +61,12 @@ class VirtualProductUpdater
     private $virtualProductFileRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param VirtualProductFileUploader $virtualProductFileUploader
      * @param VirtualProductFileRepository $virtualProductFileRepository
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         VirtualProductFileUploader $virtualProductFileUploader,
         VirtualProductFileRepository $virtualProductFileRepository
     ) {

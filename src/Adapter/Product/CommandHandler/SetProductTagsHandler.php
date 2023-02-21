@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTagsHandlerInterface;
@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTagsHa
 final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -49,11 +49,11 @@ final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
     private $productTagUpdater;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param ProductTagUpdater $productTagUpdater
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         ProductTagUpdater $productTagUpdater
     ) {
         $this->productRepository = $productRepository;

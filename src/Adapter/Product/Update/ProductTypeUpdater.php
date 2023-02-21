@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class ProductTypeUpdater
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -74,14 +74,14 @@ class ProductTypeUpdater
     private $productPackRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param ProductPackUpdater $productPackUpdater
      * @param CombinationDeleter $combinationDeleter
      * @param VirtualProductUpdater $virtualProductUpdater
      * @param ProductStockUpdater $productStockUpdater
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         ProductPackUpdater $productPackUpdater,
         CombinationDeleter $combinationDeleter,
         VirtualProductUpdater $virtualProductUpdater,

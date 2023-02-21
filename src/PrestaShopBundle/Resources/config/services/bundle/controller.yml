@@ -142,5 +142,6 @@ services:
       multistoreFeature: "@prestashop.adapter.multistore_feature"
       multistoreContext: "@prestashop.adapter.shop.context"
       entityManager: "@doctrine.orm.entity_manager"
+      productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     tags:
       - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }

@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Customization\Update;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotBulkDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -50,7 +50,7 @@ class CustomizationFieldDeleter
     private $customizationFieldRepository;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -61,11 +61,11 @@ class CustomizationFieldDeleter
 
     /**
      * @param CustomizationFieldRepository $customizationFieldRepository
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         CustomizationFieldRepository $customizationFieldRepository,
-        ProductMultiShopRepository $productRepository
+        ProductRepository $productRepository
     ) {
         $this->customizationFieldRepository = $customizationFieldRepository;
         $this->productRepository = $productRepository;

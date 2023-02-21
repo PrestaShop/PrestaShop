@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Update;
 
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
@@ -47,7 +47,7 @@ use PrestaShopException;
 class ProductPackUpdater
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -57,11 +57,11 @@ class ProductPackUpdater
     private $productPackRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param ProductPackRepository $productPackRepository
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         ProductPackRepository $productPackRepository
     ) {
         $this->productRepository = $productRepository;

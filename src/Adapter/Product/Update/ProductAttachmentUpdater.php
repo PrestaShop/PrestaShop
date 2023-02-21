@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -43,7 +43,7 @@ use PrestaShopException;
 class ProductAttachmentUpdater
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -53,11 +53,11 @@ class ProductAttachmentUpdater
     private $attachmentRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param AttachmentRepository $attachmentRepository
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         AttachmentRepository $attachmentRepository
     ) {
         $this->productRepository = $productRepository;

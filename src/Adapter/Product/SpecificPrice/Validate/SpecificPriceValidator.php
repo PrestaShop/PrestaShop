@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -99,7 +99,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $customerRepository;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -116,7 +116,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      * @param CountryRepository $countryRepository
      * @param GroupRepository $groupRepository
      * @param CustomerRepository $customerRepository
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param NumberExtractor $numberExtractor
      */
     public function __construct(
@@ -127,7 +127,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         CountryRepository $countryRepository,
         GroupRepository $groupRepository,
         CustomerRepository $customerRepository,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         NumberExtractor $numberExtractor
     ) {
         $this->shopGroupRepository = $shopGroupRepository;

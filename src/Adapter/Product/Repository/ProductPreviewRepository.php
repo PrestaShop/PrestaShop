@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class ProductPreviewRepository
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -52,11 +52,11 @@ class ProductPreviewRepository
     private $productImageRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param ProductImageRepository $productImageRepository
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         ProductImageRepository $productImageRepository
     ) {
         $this->productRepository = $productRepository;
