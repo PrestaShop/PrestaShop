@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 /**
  * Provides default filters for tax rule grid.
  */
-final class TaxRulesFilters extends Filters
+final class TaxRuleFilters extends Filters
 {
     /**
      * @var string

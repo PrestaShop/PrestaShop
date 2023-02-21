@@ -112,45 +112,35 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters): QueryBuilder
     {
-        $qb = $this->connection->createQueryBuilder();
-
-        $qb
-            ->from($this->dbPrefix . 'tax_rule', 'tr');
-
-        $qb->leftJoin(
-            'tr',
-            $this->dbPrefix . 'country',
-            'c',
-            'tr.`id_country` = c.`id_country`'
-        );
-
-        $qb->leftJoin(
-            'tr',
-            $this->dbPrefix . 'country_lang',
-            'cl',
-            'tr.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang '
-        );
-
-        $qb->leftJoin(
-            'tr',
-            $this->dbPrefix . 'state',
-            's',
-            'tr.`id_country` = s.`id_country` AND tr.`id_state` = s.`id_state`'
-        );
-
-        $qb->leftJoin(
-            'tr',
-            $this->dbPrefix . 'tax',
-            't',
-            'tr.`id_tax` = t.`id_tax`'
-        );
-
-        $qb->andWhere('tr.`id_tax_rules_group` = :idTaxRulesGroup');
-
-        $qb
+        return $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'tax_rule', 'tr')
+            ->leftJoin(
+                'tr',
+                $this->dbPrefix . 'country',
+                'c',
+                'tr.`id_country` = c.`id_country`'
+            )
+            ->leftJoin(
+                'tr',
+                $this->dbPrefix . 'country_lang',
+                'cl',
+                'tr.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang '
+            )
+            ->leftJoin(
+                'tr',
+                $this->dbPrefix . 'state',
+                's',
+                'tr.`id_country` = s.`id_country` AND tr.`id_state` = s.`id_state`'
+            )
+            ->leftJoin(
+                'tr',
+                $this->dbPrefix . 'tax',
+                't',
+                'tr.`id_tax` = t.`id_tax`'
+            )
+            ->andWhere('tr.`id_tax_rules_group` = :idTaxRulesGroup')
             ->setParameter('idLang', $this->employeeIdLang)
             ->setParameter('idTaxRulesGroup', $filters['taxRulesGroupId']);
-
-        return $qb;
     }
 }

@@ -470,4 +470,4 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
-    public: true
+    public: false

@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEdi
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\TaxRuleFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -123,11 +123,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param int $taxRulesGroupId
-     * @param TaxRulesFilters $filters
+     * @param TaxRuleFilters $filters
      *
      * @return Response
      */
-    public function editAction(Request $request, int $taxRulesGroupId, TaxRulesFilters $filters): Response
+    public function editAction(Request $request, int $taxRulesGroupId, TaxRuleFilters $filters): Response
     {
         $taxRulesGroupForm = null;
 

@@ -370,5 +370,5 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRuleGridDefinitionFactory:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    public: true
+    public: false
     autowire: true
