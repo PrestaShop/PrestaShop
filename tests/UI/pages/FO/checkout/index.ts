@@ -716,6 +716,7 @@ class Checkout extends FOBasePage {
   async chooseShippingMethodAndAddComment(page: Page, shippingMethodID: number, comment: string = ''): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethodID));
     await this.setValue(page, this.deliveryMessage, comment);
+
     return this.goToPaymentStep(page);
   }
 
@@ -727,7 +728,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<void>}
    */
   async chooseShippingMethodWithoutValidation(page: Page, shippingMethodID: number, comment: string = ''): Promise<void> {
-    await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethodID));
+    await this.clickAndWaitForNavigation(page, this.deliveryOptionLabel(shippingMethodID));
     await this.setValue(page, this.deliveryMessage, comment);
   }
 
