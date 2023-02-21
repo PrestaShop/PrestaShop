@@ -42,10 +42,10 @@ _search_engines:
   resource: "search_engines.yml"
   prefix: /search-engines/
 
-_title:
-  resource: "title.yml"
-  prefix: /title/
-
 _search_preferences:
   resource: "search_preferences.yml"
   prefix: /search/
+
+_title:
+  resource: "titles.yml"
+  prefix: /titles/
