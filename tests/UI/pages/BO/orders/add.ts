@@ -138,7 +138,7 @@ class AddOrder extends BOBasePage {
 
   private readonly cartRuleErrorText: string;
 
-  private readonly addVoucherBUtton: string;
+  private readonly addVoucherButton: string;
 
   private readonly vouchersTable: string;
 
@@ -160,7 +160,7 @@ class AddOrder extends BOBasePage {
 
   private readonly invoiceAddressSelect: string;
 
-  private readonly invoiceAddressdetails: string;
+  private readonly invoiceAddressDetails: string;
 
   private readonly invoiceAddressEditButton: string;
 
@@ -306,7 +306,7 @@ class AddOrder extends BOBasePage {
     this.searchCartRuleResultBox = '#search-cart-rules-result-box';
     this.searchCartRuleResultFound = '#cart-rules-search-block li.js-found-cart-rule.found-cart-rule';
     this.cartRuleErrorText = '#js-cart-rule-error-text';
-    this.addVoucherBUtton = '#js-add-cart-rule-btn';
+    this.addVoucherButton = '#js-add-cart-rule-btn';
     this.vouchersTable = '#cart-rules-table';
     this.vouchersTableBody = `${this.vouchersTable} tbody`;
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
@@ -320,7 +320,7 @@ class AddOrder extends BOBasePage {
     this.deliveryAddressDetails = '#delivery-address-details';
     this.deliveryAddressEditButton = '#js-delivery-address-edit-btn';
     this.invoiceAddressSelect = '#invoice-address-select';
-    this.invoiceAddressdetails = '#invoice-address-details';
+    this.invoiceAddressDetails = '#invoice-address-details';
     this.invoiceAddressEditButton = '#js-invoice-address-edit-btn';
 
     // Shipping form selectors
@@ -840,7 +840,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async clickOnAddVoucherButton(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.addVoucherBUtton);
+    await this.waitForSelectorAndClick(page, this.addVoucherButton);
     await this.waitForVisibleSelector(page, this.iframe);
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -934,10 +934,10 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getInvoiceAddressDetails(page: Page): Promise<string> {
+  async getinvoiceAddressDetails(page: Page): Promise<string> {
     await page.waitForTimeout(2000);
 
-    return this.getTextContent(page, this.invoiceAddressdetails);
+    return this.getTextContent(page, this.invoiceAddressDetails);
   }
 
   /**
@@ -949,7 +949,7 @@ class AddOrder extends BOBasePage {
   async chooseInvoiceAddress(page: Page, invoiceAddress: string): Promise<string> {
     await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
 
-    return this.getInvoiceAddressDetails(page);
+    return this.getinvoiceAddressDetails(page);
   }
 
   /**
@@ -1025,6 +1025,7 @@ class AddOrder extends BOBasePage {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
     await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), (el: HTMLElement) => el.click());
     if (isFreeShipping) {
+      await this.setFreeShipping(page, isFreeShipping);
       await this.waitForVisibleSelector(page, this.vouchersTable);
     }
     await page.waitForTimeout(1000);
@@ -1059,7 +1060,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setFreeShipping(page: Page, isEnabled: boolean): Promise<void> {
-    await this.setChecked(page, this.freeShippingToggleInput(isEnabled ? 1 : 0), isEnabled);
+    await page.$eval(this.freeShippingToggleInput(isEnabled ? 1 : 0), (el: HTMLElement) => el.click());
   }
 
   /**
