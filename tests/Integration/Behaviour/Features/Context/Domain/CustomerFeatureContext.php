@@ -157,16 +157,15 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
             throw new Exception('Password must be provided, if creating a registered customer');
         }
 
-        // Process data and apply fallbacks
-        $password = $data['password'];
-        $defaultGroupId = $data['defaultGroupId'] ?? $defaultGroups->getCustomersGroup()->getId();
-        $groupIds = $data['groupIds'] ?? [$defaultGroups->getCustomersGroup()->getId()];
-
         // Apply minor differences for guests
         if (!empty($data['isGuest'])) {
             $password = (new PasswordGenerator(new OpenSSL()))->generatePassword(16, 'RANDOM');
             $defaultGroupId = $defaultGroups->getGuestsGroup()->getId();
             $groupIds = [$defaultGroups->getGuestsGroup()->getId()];
+        } else {
+            $password = $data['password'];
+            $defaultGroupId = $data['defaultGroupId'] ?? $defaultGroups->getCustomersGroup()->getId();
+            $groupIds = $data['groupIds'] ?? [$defaultGroups->getCustomersGroup()->getId()];
         }
 
         $command = new AddCustomerCommand(
