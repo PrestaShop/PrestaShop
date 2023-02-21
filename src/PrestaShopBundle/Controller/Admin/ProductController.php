@@ -67,7 +67,6 @@ use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterf
 use PrestaShopBundle\Service\Hook\HookFinder;
 use Product;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
@@ -106,7 +105,6 @@ class ProductController extends FrameworkBundleAdminController
      * URL example: /product/catalog/40/20/id_product/asc
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
-     * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      *
      * @param Request $request
      * @param int $limit The size of the listing
@@ -114,7 +112,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      *
-     * @return array|Template|RedirectResponse|Response
+     * @return Response
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
@@ -226,7 +224,7 @@ class ProductController extends FrameworkBundleAdminController
         $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
 
         // Template vars injection
-        return array_merge(
+        return $this->render('@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig', array_merge(
             $cleanFilterParameters,
             [
                 'limit' => $limit,
@@ -254,15 +252,13 @@ class ProductController extends FrameworkBundleAdminController
                 'permission_error' => $permissionError,
                 'layoutTitle' => $this->trans('Products', 'Admin.Global'),
             ]
-        );
+        ));
     }
 
     /**
      * Get only the list of products to display on the main Admin Product page.
      * The full page that shows products list will subcall this action (from catalogAction).
      * URL example: /product/list/html/40/20/id_product/asc.
-     *
-     * @Template("@PrestaShop/Admin/Product/CatalogPage/Lists/list.html.twig")
      *
      * @param Request $request
      * @param int $limit The size of the listing
@@ -271,7 +267,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $sortOrder To order product list
      * @param string $view full|quicknav To change default template used to render the content
      *
-     * @return array|Template|Response
+     * @return Response
      */
     public function listAction(
         Request $request,
@@ -280,7 +276,7 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'asc',
         $view = 'full'
-    ) {
+    ): Response {
         if (!$this->isGranted(Permission::READ, self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
@@ -366,7 +362,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
-        return $vars;
+        return $this->render('@PrestaShop/Admin/Product/CatalogPage/Lists/list.html.twig', $vars);
     }
 
     /**
@@ -437,16 +433,14 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Product form.
      *
-     * @Template("@PrestaShop/Admin/Product/ProductPage/product.html.twig")
-     *
      * @param int $id The product ID
      * @param Request $request
      *
-     * @return array|Response Template vars
+     * @return Response Template vars
      *
      * @throws \LogicException
      */
-    public function formAction($id, Request $request)
+    public function formAction($id, Request $request): Response
     {
         if ($this->shouldRedirectToV2()) {
             return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $id]);
@@ -644,7 +638,7 @@ class ProductController extends FrameworkBundleAdminController
             ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
             ->present();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Product/ProductPage/product.html.twig', [
             'form' => $form->createView(),
             'formCombinations' => $formBulkCombinations->createView(),
             'categories' => $this->get('prestashop.adapter.data_provider.category')->getCategoriesWithBreadCrumb(),
@@ -671,7 +665,7 @@ class ProductController extends FrameworkBundleAdminController
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
             'isCreationMode' => (int) $product->state === Product::STATE_TEMP,
-        ];
+        ]);
     }
 
     /**

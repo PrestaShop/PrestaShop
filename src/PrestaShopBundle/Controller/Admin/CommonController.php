@@ -39,7 +39,6 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use ReflectionClass;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,8 +98,6 @@ class CommonController extends FrameworkBundleAdminController
      * {% render controller('PrestaShopBundle\\Controller\\Admin\\CommonController::paginationAction',
      *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters}) %}
      *
-     * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
-     *
      * @param Request $request
      * @param int $limit
      * @param int $offset
@@ -108,9 +105,9 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $view full|quicknav To change default template used to render the content
      * @param string $prefix Indicates the params prefix (eg: ?limit=10&offset=20 -> ?scope[limit]=10&scope[offset]=20)
      *
-     * @return array|Response
+     * @return Response
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $prefix = '')
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $prefix = ''): Response
     {
         $offsetParam = empty($prefix) ? 'offset' : sprintf('%s[offset]', $prefix);
         $limitParam = empty($prefix) ? 'limit' : sprintf('%s[limit]', $prefix);
@@ -196,7 +193,7 @@ class CommonController extends FrameworkBundleAdminController
             return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
 
-        return $vars;
+        return $this->render('@PrestaShop/Admin/Common/pagination.html.twig', $vars);
     }
 
     /**
