@@ -109,7 +109,15 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @var ProductRepository
      */
-    public $productRepository;
+    private $productRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
 
     /**
      * Shows products listing.
