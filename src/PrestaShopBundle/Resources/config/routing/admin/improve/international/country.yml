@@ -47,7 +47,7 @@ admin_countries_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::deleteAction'
     _legacy_controller: AdminCountries
-#    _legacy_link: AdminCountries:deleteCountry
+    _legacy_link: AdminCountries:deleteCountry
     _legacy_parameters:
       id_country: countryId
   requirements:

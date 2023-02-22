@@ -29,16 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
-use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\DeleteCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 
 /**
- * Handles creation of country and address format for it
+ * Handles country deletion
  */
-class DeleteCountryHandler extends AbstractCountryHandler implements DeleteCountryHandlerInterface
+class DeleteCountryHandler implements DeleteCountryHandlerInterface
 {
     /**
      * {@inheritdoc}

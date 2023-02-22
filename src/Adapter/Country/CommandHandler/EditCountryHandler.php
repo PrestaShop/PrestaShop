@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
 
 /**
- * Handles creation of country and address format for it
+ * Handles update of country and address format
  */
 class EditCountryHandler implements EditCountryHandlerInterface
 {
