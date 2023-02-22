@@ -51,7 +51,7 @@ class LegacyLinkLinterCommand extends Command
     /**
      * The _legacy_link configuration is not relevant for these routes, no need to apply the linter on them
      */
-    const ROUTE_WHITE_LIST = [
+    private const ROUTE_WHITE_LIST = [
         'admin_common_notifications_ack',
         'admin_common_pagination',
         'admin_common_sidebar',
