@@ -9,11 +9,13 @@ import {Page} from 'playwright';
 class FeatureFlag extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly newProductPageSwitchButton: (toggle: number) => string;
+  public readonly featureFlagProductPageV2: string;
 
-  private readonly submitButton: string;
+  public readonly featureFlagMultipleImageFormats: string;
 
-  private readonly submitStableButton: string;
+  private readonly featureFlagSwitchButton: (status: string, feature: string, toggle: number) => string;
+
+  private readonly submitButton: (status: string) => string;
 
   private readonly alertSuccess: string;
 
@@ -31,36 +33,51 @@ class FeatureFlag extends BOBasePage {
     this.pageTitle = `New & Experimental Features • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateMessage = 'Update successful';
 
+    // Feature Flag
+    this.featureFlagProductPageV2 = 'product_page_v2';
+    this.featureFlagMultipleImageFormats = 'multiple_image_format';
+
     // Selectors
-    this.newProductPageSwitchButton = (toggle: number) => `#feature_flag_stable_feature_flags_product_page_v2_enabled_${toggle}`;
-    this.submitButton = '#feature_flag_beta_submit';
-    this.submitStableButton = '#feature_flag_stable_submit';
+    this.featureFlagSwitchButton = (status: string, feature: string, toggle: number) => `#feature_flag_${
+      status}_feature_flags_${feature}_enabled_${toggle}`;
+    this.submitButton = (status: string) => `#feature_flag_${status}_submit`;
     this.alertSuccess = 'div.alert.alert-success[role="alert"]';
     this.modalSubmitFeatureFlag = '#modal-confirm-submit-feature-flag';
     this.enableExperimentalfeatureButton = `${this.modalSubmitFeatureFlag} button.btn-confirm-submit`;
   }
 
-  /*
-  Methods
-   */
-
   /**
-   * Enable/Disable new product page
+   * Enable/Disable feature flag
    * @param page {Page} Browser tab
+   * @param featureFlag {string}
    * @param toEnable {boolean} True if we need to enable new product page
-   * @param isStable {boolean} False if we need to confirm a beta feature flag
    * @returns {Promise<string>}
    */
-  async setNewProductPage(page: Page, toEnable: boolean = true, isStable: boolean = true): Promise<string> {
-    const isChecked = await this.isChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
+  async setFeatureFlag(page: Page, featureFlag: string, toEnable: boolean = true): Promise<string> {
+    let isStable: boolean;
+
+    switch (featureFlag) {
+      case this.featureFlagMultipleImageFormats:
+        isStable = false;
+        break;
+      case this.featureFlagProductPageV2:
+        isStable = true;
+        break;
+      default:
+        throw new Error(`The feature flag ${featureFlag} is not defined`);
+    }
+
+    const selector: string = this.featureFlagSwitchButton(isStable ? 'stable' : 'beta', featureFlag, toEnable ? 1 : 0);
+
+    const isChecked = await this.isChecked(page, selector);
 
     if (isChecked) {
       // Return the successful message to simulate all went good (no need to change the value here)
       return this.successfulUpdateMessage;
     }
 
-    await this.setChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
-    await this.waitForSelectorAndClick(page, this.submitStableButton);
+    await this.setChecked(page, selector);
+    await this.waitForSelectorAndClick(page, this.submitButton(isStable ? 'stable' : 'beta'));
     // The confirmation modal is only displayed for experimental/beta feature flags
     if (toEnable && !isStable) {
       await this.waitForVisibleSelector(page, this.modalSubmitFeatureFlag);

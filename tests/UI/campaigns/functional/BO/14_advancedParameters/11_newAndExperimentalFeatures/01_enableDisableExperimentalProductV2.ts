@@ -69,7 +69,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
       it('should enable New product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'enableNewProductPage', baseContext);
 
-        const successMessage = await featureFlagPage.setNewProductPage(page, true);
+        const successMessage = await featureFlagPage.setFeatureFlag(page, featureFlagPage.featureFlagProductPageV2, true);
         await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
       });
 
@@ -125,7 +125,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
       it('should disable New product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'disableNewProductPage', baseContext);
 
-        const successMessage = await featureFlagPage.setNewProductPage(page, false);
+        const successMessage = await featureFlagPage.setFeatureFlag(page, featureFlagPage.featureFlagProductPageV2, false);
         await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
       });
 
