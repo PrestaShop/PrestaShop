@@ -17,6 +17,14 @@ import {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_productPage_quickView_addToCart';
 
+/*
+Scenario:
+- Go to FO and add first product to cart by quick view
+- Check product details in the cart modal
+- Proceed to checkout and check product details in the cart
+- Go to home page and search a customized product
+- Check that add to cart button is disabled
+ */
 describe('FO - Product page - Quick view : Add to cart', async () => {
   let browserContext: BrowserContext;
   let page: Page;
