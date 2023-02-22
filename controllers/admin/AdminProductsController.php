@@ -2879,28 +2879,39 @@ class AdminProductsControllerCore extends AdminController
 
                     $sfContainer = SymfonyContainer::getInstance();
                     $isMultipleImageFormatFeatureEnabled = $sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
-                    $imageFormatsList = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
+                    if ($isMultipleImageFormatFeatureEnabled) {
+                        $imageFormatsList = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
+                    } else {
+                        $imageFormatsList = ['jpg'];
+                    }
                     foreach ($imagesTypes as $imageType) {
-                        if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                            $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
-
-                            continue;
-                        }
-
-                        if ($generate_hight_dpi_images) {
-                            if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
+                        foreach ($imageFormatsList as $imageFormat) {
+                            $forceFormat = ($imageFormat !== 'jpg');
+                            if (!ImageManager::resize(
+                                $file['save_path'],
+                                $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, 
+                                $imageType['width'],
+                                $imageType['height'],
+                                $imageFormat,
+                                $forceFormat
+                            )) {
                                 $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
 
                                 continue;
                             }
-                        }
 
-                        if ($isMultipleImageFormatFeatureEnabled) {
-                            foreach ($imageFormatsList as $imageFormat) {
-                                ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, $imageType['width'], $imageType['height'], $imageFormat);
+                            if ($generate_hight_dpi_images) {
+                                if (!ImageManager::resize(
+                                    $file['save_path'],
+                                    $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format,
+                                    (int) $imageType['width'] * 2,
+                                    (int) $imageType['height'] * 2,
+                                    $imageFormat,
+                                    $forceFormat
+                                )) {
+                                    $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
 
-                                if ($generate_hight_dpi_images) {
-                                    ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $imageFormat);
+                                    continue;
                                 }
                             }
                         }
