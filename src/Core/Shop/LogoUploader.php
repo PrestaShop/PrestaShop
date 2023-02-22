@@ -149,17 +149,26 @@ class LogoUploader
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                $isMultipleImageFeatureEnabled = $this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
                 if (ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
                     if (!copy($tmpName, $this->imageDirection . $logoName)) {
                         throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                     }
-                } elseif (!$isMultipleImageFeatureEnabled && !ImageManager::resize($tmpName, $this->imageDirection . $logoName)) {
-                    throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 } else {
-                    foreach ($this->imageFormatConfiguration->getGenerationFormats() as $imageFormat) {
-                        $logoName = $this->getLogoName($logoPrefix, '.' . $imageFormat);
-                        if (!ImageManager::resize($tmpName, $this->imageDirection . $logoName, null, null, $imageFormat, true)) {
+                    if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+                        $imageFormatsList = $this->imageFormatConfiguration->getGenerationFormats();
+                    } else {
+                        $imageFormatsList = ['jpg'];
+                    }
+                    foreach ($imageFormatsList as $imageFormat) {
+                        $forceFormat = ($imageFormat !== 'jpg');
+                        if (!ImageManager::resize(
+                            $tmpName,
+                            $this->imageDirection . $this->getLogoName($logoPrefix, '.' . $imageFormat),
+                            null,
+                            null,
+                            $imageFormat,
+                            $forceFormat
+                        )) {
                             throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                         }
                     }
