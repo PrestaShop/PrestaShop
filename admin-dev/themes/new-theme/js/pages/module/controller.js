@@ -41,7 +41,7 @@ class AdminModuleController {
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
-    this.DEFAULT_MAX_PER_CATEGORIES = 6;
+    this.DEFAULT_MAX_PER_CATEGORIES = 99999;
     this.DISPLAY_GRID = 'grid';
     this.DISPLAY_LIST = 'list';
     this.CATEGORY_RECENTLY_USED = 'recently-used';
@@ -68,9 +68,6 @@ class AdminModuleController {
     this.modulesList = [];
 
     this.moduleShortList = '.module-short-list';
-    // See more & See less selector
-    this.seeMoreSelector = '.see-more';
-    this.seeLessSelector = '.see-less';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemGridSelector = '.module-item-grid';
@@ -149,7 +146,6 @@ class AdminModuleController {
     this.initFilterStatusDropdown();
     this.fetchModulesList();
     this.getNotificationsCount();
-    this.initializeSeeMore();
   }
 
   initFilterStatusDropdown() {
@@ -450,9 +446,6 @@ class AdminModuleController {
       }
 
       container.show();
-      container
-        .find(`${self.seeMoreSelector}, ${self.seeLessSelector}`)
-        .toggle(nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES);
     });
   }
 
@@ -1170,30 +1163,6 @@ class AdminModuleController {
     $(`#module-sort-${switchTo}`).addClass('module-sort-active');
     this.currentDisplay = switchTo;
     this.updateModuleVisibility();
-  }
-
-  initializeSeeMore() {
-    const self = this;
-
-    $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = true;
-      $(this).addClass('d-none');
-      $(this)
-        .closest(self.moduleShortList)
-        .find(self.seeLessSelector)
-        .removeClass('d-none');
-      self.updateModuleVisibility();
-    });
-
-    $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = false;
-      $(this).addClass('d-none');
-      $(this)
-        .closest(self.moduleShortList)
-        .find(self.seeMoreSelector)
-        .removeClass('d-none');
-      self.updateModuleVisibility();
-    });
   }
 
   updateTotalResults() {
