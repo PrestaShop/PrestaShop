@@ -10,6 +10,7 @@ import checkoutPage from '@pages/FO/checkout';
 
 // Import data
 import Customers from '@data/demo/customers';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -21,12 +22,15 @@ Scenario:
 - Open FO page
 - Add first product to the cart
 - Proceed to checkout and validate the cart
+- Enter an invalid credentials
 - Login by default customer
 - Logout
  */
 describe('FO - Checkout - Personal information : Sign in', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  const credentialsData: CustomerData = new CustomerData();
 
   // before and after functions
   before(async function () {
@@ -67,10 +71,20 @@ describe('FO - Checkout - Personal information : Sign in', async () => {
     await expect(isCheckoutPage).to.be.true;
   });
 
-  it('should sign in with customer credentials', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
+  it('should enter an invalid credentials', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
     await checkoutPage.clickOnSignIn(page);
+
+    const isCustomerConnected = await checkoutPage.customerLogin(page, credentialsData);
+    await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+
+    const loginError = await checkoutPage.getLoginError(page);
+    await expect(loginError).to.contains(checkoutPage.authenticationErrorMessage);
+  });
+
+  it('should sign in with customer credentials', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'signIn', baseContext);
 
     const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
