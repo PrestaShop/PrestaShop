@@ -384,13 +384,12 @@ class CustomerType extends TranslatorAwareType
             ;
         }
 
-        // A listener that will make password field not required, if we want to create a guest
+        // We add a listener that will make password field not required, if we want to create a guest
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
             $formData = $event->getData();
 
-            // If is_guest was provided and it's Yes, we change the field to NOT required
-            // and remove the validation constraints
+            // If is_guest was provided and it's yes, we make the field optional (removing the constraints)
             if (isset($formData['is_guest']) && $formData['is_guest'] == 1) {
                 $form->add($this->formCloner->cloneForm($form->get('password'), [
                     'required' => false,

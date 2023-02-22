@@ -115,12 +115,12 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             return (int) $groupId;
         }, $data['group_ids']);
         $isEnabled = (bool) $data['is_enabled'];
-        
+
         /*
          * If a guest is created, we will alter the data a bit.
          * The data should already come correct from the form, but we can't trust the JS.
-         * 
-         * Difference between a customer and a guest is not big:
+         *
+         * Difference between a customer and a guest:
          * - Password is randomly generated.
          * - He is always enabled.
          * - His default group is the default GUEST group and he should belong to this group.
@@ -148,6 +148,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             (bool) $data['is_guest']
         );
 
+        // Optional data processed only if B2B mode is enabled
         if ($this->isB2bFeatureEnabled) {
             $command
                 ->setCompanyName((string) $data['company_name'])

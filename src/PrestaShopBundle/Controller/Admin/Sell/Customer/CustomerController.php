@@ -161,11 +161,12 @@ class CustomerController extends AbstractAdminController
         }
 
         $this->addGroupSelectionToRequest($request);
-        $customerFormOptions = [
-            'show_guest_field' => $this->get('prestashop.adapter.legacy.configuration')->get('PS_GUEST_CHECKOUT_ENABLED') == 1 ? true : false,
-        ];
-        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
-            ->getForm([], $customerFormOptions);
+        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm(
+            [],
+            [
+                'show_guest_field' => (bool) $this->get('prestashop.adapter.legacy.configuration')->get('PS_GUEST_CHECKOUT_ENABLED'),
+            ]
+        );
         $customerForm->handleRequest($request);
 
         $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
