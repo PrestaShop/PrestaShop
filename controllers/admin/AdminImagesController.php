@@ -100,6 +100,78 @@ class AdminImagesControllerCore extends AdminController
         $this->isMultipleImageFormatFeatureEnabled = $this->get(FeatureFlagRepository::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
         $this->imageFormatConfiguration = $this->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
 
+        $formFields = [];
+
+        if ($this->isMultipleImageFormatFeatureEnabled) {
+
+            $imageFormatsDisabled = [];
+            $imageFormatsDisabled['jpg'] = true; // jpg is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
+            if (false === $this->canGenerateAvif) {
+                $imageFormatsDisabled['avif'] = true;
+            }
+            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
+
+            $fields = [
+                'PS_IMAGE_FORMAT' => [
+                    'title' => $this->trans('Image formats to generate', [], 'Admin.Design.Feature'),
+                    'show' => true,
+                    'required' => true,
+                    'skip_clean_html' => true,
+                    'type' => 'checkbox',
+                    'multiple' => true,
+                    'choices' => [
+                        'jpg' => $this->trans('Base JPEG/PNG', [], 'Admin.Design.Feature'),
+                        'webp' => $this->trans('WebP', [], 'Admin.Design.Feature'),
+                        'avif' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
+                    ],
+                    'value_multiple' => [
+                        'jpg' => in_array('jpg', $configuredImageFormats),
+                        'webp' => in_array('webp', $configuredImageFormats),
+                        'avif' => in_array('avif', $configuredImageFormats),
+                    ],
+                    'disabled' => $imageFormatsDisabled,
+                ],
+                'PS_IMAGE_QUALITY' => [
+                    'title' => $this->trans('Base format', [], 'Admin.Design.Feature'),
+                    'show' => true,
+                    'required' => true,
+                    'type' => 'radio',
+                    'choices' => [
+                        'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
+                        'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
+                        'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
+                    ],
+                ],
+                'PS_AVIF_QUALITY' => [
+                    'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
+                    'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
+                    'validation' => 'isUnsignedId',
+                    'required' => $this->canGenerateAvif,
+                    'cast' => 'intval',
+                    'type' => 'text',
+                    'disabled' => !$this->canGenerateAvif,
+                ],
+            ];
+        } else {
+            $fields = [
+                'PS_IMAGE_QUALITY' => [
+                    'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
+                    'show' => true,
+                    'required' => true,
+                    'type' => 'radio',
+                    'choices' => [
+                        'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
+                        'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
+                        'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
+                        'webp' => $this->trans('Use WebP only if the base image is in WebP format.', [], 'Admin.Design.Feature'),
+                        'webp_all' => $this->trans('Use WebP for all images.', [], 'Admin.Design.Feature'),
+                    ],
+                ],
+            ];
+        }
+        $formFields = array_merge($formFields, $fields);
+
+        // Basic fields for both OLD and new format
         $fields = [
             'PS_JPEG_QUALITY' => [
                 'title' => $this->trans('JPEG compression', [], 'Admin.Design.Feature'),
@@ -196,24 +268,7 @@ class AdminImagesControllerCore extends AdminController
                 'visibility' => Shop::CONTEXT_ALL,
             ],
         ];
-
-        if ($this->isMultipleImageFormatFeatureEnabled) {
-            $avifQualityField = [
-                'PS_AVIF_QUALITY' => [
-                    'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedId',
-                    'required' => $this->canGenerateAvif,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                    'disabled' => !$this->canGenerateAvif,
-                ],
-            ];
-
-            $fields = array_merge($avifQualityField, $fields);
-        }
-
-        $fields = $this->getImageFormatForm($fields);
+        $formFields = array_merge($formFields, $fields);
 
         $this->fields_options = [
             'images' => [
@@ -223,7 +278,7 @@ class AdminImagesControllerCore extends AdminController
                 'bottom' => '',
                 'description' => $this->trans('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.', [], 'Admin.Design.Help') . '
 					<br /><br />' . $this->trans('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".', [], 'Admin.Design.Help'),
-                'fields' => $fields,
+                'fields' => $formFields,
                 'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
             ],
         ];
@@ -946,59 +1001,5 @@ class AdminImagesControllerCore extends AdminController
         }
 
         return parent::processDelete();
-    }
-
-    private function getImageFormatForm(array $fields): array
-    {
-        if ($this->isMultipleImageFormatFeatureEnabled) {
-            $imageFormatsDisabled = [];
-            $imageFormatsDisabled['jpg'] = true; // jpg is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
-
-            if (false === $this->canGenerateAvif) {
-                $imageFormatsDisabled['avif'] = true;
-            }
-            $key = 'PS_IMAGE_FORMAT';
-            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
-            $value = [
-                'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
-                'show' => true,
-                'required' => true,
-                'skip_clean_html' => true,
-                'type' => 'checkbox',
-                'multiple' => true,
-                'choices' => [
-                    'jpg' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
-                    'png' => $this->trans('PNG', [], 'Admin.Design.Feature'),
-                    'webp' => $this->trans('WebP', [], 'Admin.Design.Feature'),
-                    'avif' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
-                ],
-                'value_multiple' => [
-                    'jpg' => in_array('jpg', $configuredImageFormats),
-                    'png' => in_array('png', $configuredImageFormats),
-                    'webp' => in_array('webp', $configuredImageFormats),
-                    'avif' => in_array('avif', $configuredImageFormats),
-                ],
-                'disabled' => $imageFormatsDisabled,
-            ];
-
-            return [$key => $value] + $fields;
-        }
-
-        $key = 'PS_IMAGE_QUALITY';
-        $value = [
-            'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
-            'show' => true,
-            'required' => true,
-            'type' => 'radio',
-            'choices' => [
-                'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
-                'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
-                'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
-                'webp' => $this->trans('Use WebP only if the base image is in WebP format.', [], 'Admin.Design.Feature'),
-                'webp_all' => $this->trans('Use WebP for all images.', [], 'Admin.Design.Feature'),
-            ],
-        ];
-
-        return [$key => $value] + $fields;
     }
 }
