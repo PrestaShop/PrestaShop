@@ -2889,7 +2889,7 @@ class AdminProductsControllerCore extends AdminController
                             $forceFormat = ($imageFormat !== 'jpg');
                             if (!ImageManager::resize(
                                 $file['save_path'],
-                                $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, 
+                                $new_path . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, 
                                 $imageType['width'],
                                 $imageType['height'],
                                 $imageFormat,
@@ -2903,7 +2903,7 @@ class AdminProductsControllerCore extends AdminController
                             if ($generate_hight_dpi_images) {
                                 if (!ImageManager::resize(
                                     $file['save_path'],
-                                    $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format,
+                                    $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
                                     (int) $imageType['width'] * 2,
                                     (int) $imageType['height'] * 2,
                                     $imageFormat,
