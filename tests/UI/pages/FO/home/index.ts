@@ -492,6 +492,7 @@ class Home extends FOBasePage {
   /**
    * Is add to cart button disabled
    * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
    */
   async isAddToCartButtonDisabled(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.addToCartButton}[disabled]`, 1000);

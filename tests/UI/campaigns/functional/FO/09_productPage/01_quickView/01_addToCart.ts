@@ -4,6 +4,8 @@ import testContext from '@utils/testContext';
 
 // Import pages
 import homePage from '@pages/FO/home';
+import cartPage from '@pages/FO/cart';
+import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
 import Products from '@data/demo/products';
@@ -12,8 +14,6 @@ import {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import cartPage from '@pages/FO/cart';
-import searchResultsPage from '@pages/FO/searchResults';
 
 const baseContext: string = 'functional_FO_productPage_quickView_addToCart';
 
