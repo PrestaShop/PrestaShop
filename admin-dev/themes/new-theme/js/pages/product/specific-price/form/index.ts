@@ -95,6 +95,15 @@ $(() => {
   );
 
   new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
+    extraQueryParams: () => {
+      const shopIdSelect = <HTMLSelectElement> document.querySelector(
+        `${SpecificPriceMap.formContainer} ${SpecificPriceMap.shopIdSelect}`,
+      );
+
+      return {
+        shopId: Number(shopIdSelect.value) ?? null,
+      };
+    },
     responseTransformer: (response: any) => {
       if (!response || response.customers.length === 0) {
         return [];

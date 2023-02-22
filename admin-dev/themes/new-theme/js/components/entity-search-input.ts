@@ -40,16 +40,13 @@ export interface EntitySearchInputOptions extends OptionsObject {
   prototypeIndex: string,
   prototypeMapping: OptionsObject,
   identifierField: string;
-
   allowDelete: boolean,
   dataLimit: number,
   minLength: number,
   remoteUrl: string,
   filterSelected: boolean,
   filteredIdentities: Array<string>,
-
   removeModal: ModalOptions,
-
   searchInputSelector: string,
   entitiesContainerSelector: string,
   listContainerSelector: string,
@@ -57,11 +54,10 @@ export interface EntitySearchInputOptions extends OptionsObject {
   entityDeleteSelector: string,
   emptyStateSelector: string,
   queryWildcard: string,
-
   onRemovedContent: RemoveFunction | undefined,
   onSelectedContent: SelectFunction | undefined,
-
   suggestionTemplate: SuggestionFunction | undefined,
+  extraQueryParams?: () => Record<string, string>,
 }
 export interface ModalOptions extends OptionsObject {
   id: string;
@@ -213,6 +209,7 @@ export default class EntitySearchInput {
 
       // Template function
       suggestionTemplate: undefined,
+      extraQueryParams: undefined,
     };
 
     Object.keys(defaultOptions).forEach((optionName) => {
@@ -337,8 +334,24 @@ export default class EntitySearchInput {
       },
       remote: {
         url: this.options.remoteUrl,
+        replace: (query: string, searchPhrase: string) => {
+          // need to replace wildcard manually, because here we are overriding the default replace function
+          const url = query.replace(this.options.queryWildcard, searchPhrase);
+
+          if (!isUndefined(this.options.extraQueryParams)) {
+            // this allows appending extra parameters to the query, such as shopId
+            const extraParams = this.options.extraQueryParams();
+            const encodedExtraParams = Object
+              .keys(extraParams)
+              .map((key: string) => `${key}=${encodeURIComponent(extraParams[key])}`)
+              .join('&');
+
+            return `${url}&${encodedExtraParams}`;
+          }
+
+          return url;
+        },
         cache: false,
-        wildcard: this.options.queryWildcard,
         transform: (response: any) => {
           if (!response) {
             return [];

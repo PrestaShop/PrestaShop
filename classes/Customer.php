@@ -25,6 +25,8 @@
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /***
  * Class CustomerCore
@@ -859,18 +861,31 @@ class CustomerCore extends ObjectModel
      *
      * @param string $query Searched string
      * @param int|null $limit Limit query results
+     * @param ShopConstraint|null $shopConstraint provide specific shop constraint or else it will use context shops for search
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Corresponding customers
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function searchByName($query, $limit = null)
+    public static function searchByName($query, $limit = null, ?ShopConstraint $shopConstraint = null)
     {
         $sql = 'SELECT c.*,
                 GROUP_CONCAT(cg.id_group SEPARATOR \',\') AS group_ids
                 FROM `' . _DB_PREFIX_ . 'customer` c
                 LEFT JOIN `' . _DB_PREFIX_ . 'customer_group` cg ON c.id_customer = cg.id_customer
                 WHERE 1';
+
+        if ($shopConstraint) {
+            if ($shopConstraint->getShopGroupId()) {
+                throw new InvalidShopConstraintException('Shop group constraint is not supported');
+            }
+
+            if ($shopConstraint->getShopId()) {
+                // filter by shop_id if its not all shops constraint
+                $sql .= sprintf(' AND c.id_shop = %d', $shopConstraint->getShopId()->getValue());
+            }
+        }
+
         $search_items = explode(' ', $query);
         $research_fields = ['c.id_customer', 'c.firstname', 'c.lastname', 'c.email'];
         if (Configuration::get('PS_B2B_ENABLE')) {
@@ -888,7 +903,10 @@ class CustomerCore extends ObjectModel
             $sql .= ' AND (' . implode(' OR ', $likes) . ') ';
         }
 
-        $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+        if (!$shopConstraint) {
+            // this is for backwards compatibility, it uses shop context if specific shopConstraint is not provided
+            $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+        }
 
         $sql .= ' GROUP BY c.id_customer ';
 
