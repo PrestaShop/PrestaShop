@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +22,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+declare(strict_types=1);
 
-{% block content %}
-  {{ include('@PrestaShop/Admin/Improve/International/TaxRulesGroup/Blocks/form.html.twig', {'taxRulesGroupForm': taxRulesGroupForm}) }}
+namespace PrestaShop\PrestaShop\Core\Domain\TaxRule;
 
-  {% block tax_rules_list_panel %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxRuleGrid} %}
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/tax_rules.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+class TaxRuleSettings
+{
+    public const BEHAVIOR_TAX_ONLY = 0;
+    public const BEHAVIOR_COMBINE = 1;
+    public const BEHAVIOR_ONE_AFTER_ANOTHER = 2;
+}

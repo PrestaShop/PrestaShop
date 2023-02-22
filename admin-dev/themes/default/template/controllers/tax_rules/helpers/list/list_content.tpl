@@ -87,11 +87,11 @@
 					{$tr.$key}
 				{elseif isset($tr.$key)}
 					{if $key == 'behavior'}
-						{if $tr.$key == 0}
+						{if $tr.$key == constant('PrestaShop\PrestaShop\Core\Domain\TaxRule\TaxRuleSettings::BEHAVIOR_TAX_ONLY')}
 							{l s='This tax only' d='Admin.International.Feature'}
-						{elseif $tr.$key == 1}
+						{elseif $tr.$key == constant('PrestaShop\PrestaShop\Core\Domain\TaxRule\TaxRuleSettings::BEHAVIOR_COMBINE')}
 							{l s='Combine' d='Admin.International.Feature'}
-						{elseif $tr.$key == 2}
+						{elseif $tr.$key == constant('PrestaShop\PrestaShop\Core\Domain\TaxRule\TaxRuleSettings::BEHAVIOR_ONE_AFTER_ANOTHER')}
 							{l s='One after another' d='Admin.International.Feature'}
 						{/if}
 					{elseif $key == 'rate'}
