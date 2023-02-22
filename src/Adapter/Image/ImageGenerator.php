@@ -101,17 +101,26 @@ class ImageGenerator
             throw new ImageUploadException(sprintf('File "%s" does not exist', $filePath));
         }
 
+        /*
+         * Let's resolve which formats we will use for image generation.
+         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+         * 
+         * In case of .jpg images, the actual format inside is decided by ImageManager.
+         */
         if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-            $imageFormatsList = $this->imageFormatConfiguration->getGenerationFormats();
+            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
         } else {
-            $imageFormatsList = ['jpg'];
+            $configuredImageFormats = ['jpg'];
         }
 
+        // Should we generate high DPI images?
         $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         $result = true;
 
-        foreach ($imageFormatsList as $imageFormat) {
+        foreach ($configuredImageFormats as $imageFormat) {
+            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+            // For webp and avif extensions, we want it to follow our command and ignore the original format.
             $forceFormat = ($imageFormat !== 'jpg');
             if (!ImageManager::resize(
                 $filePath,

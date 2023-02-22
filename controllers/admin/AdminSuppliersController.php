@@ -433,6 +433,8 @@ class AdminSuppliersControllerCore extends AdminController
     protected function afterImageUpload()
     {
         $return = true;
+
+        // Should we generate high DPI images?
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         /* Generate image with differents size */

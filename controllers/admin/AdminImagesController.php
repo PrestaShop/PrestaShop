@@ -659,11 +659,16 @@ class AdminImagesControllerCore extends AdminController
         // Should we generate high DPI images?
         $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        // What formats should we generate?
+        /*
+         * Let's resolve which formats we will use for image generation.
+         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+         * 
+         * In case of .jpg images, the actual format inside is decided by ImageManager.
+         */
         if ($this->isMultipleImageFormatFeatureEnabled) {
-            $imageConfiguredFormats = $this->imageFormatConfiguration->getGenerationFormats();
+            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
         } else {
-            $imageConfiguredFormats = ['jpg'];
+            $configuredImageFormats = ['jpg'];
         }
 
         if (!$productsImages) {
@@ -681,7 +686,9 @@ class AdminImagesControllerCore extends AdminController
                             $image = str_replace('.', '_thumb.', $image);
                         }
 
-                        foreach ($imageConfiguredFormats as $imageFormat) {
+                        foreach ($configuredImageFormats as $imageFormat) {
+                            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                            // For webp and avif extensions, we want it to follow our command and ignore the original format.
                             $forceFormat = ($imageFormat !== 'jpg');
                             // If thumbnail does not exist
                             if (!file_exists($newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '.' . $imageFormat)) {
@@ -727,7 +734,9 @@ class AdminImagesControllerCore extends AdminController
                 $existing_img = $dir . $imageObj->getExistingImgPath() . '.jpg';
                 if (file_exists($existing_img) && filesize($existing_img)) {
                     foreach ($type as $imageType) {
-                        foreach ($imageConfiguredFormats as $imageFormat) {
+                        foreach ($configuredImageFormats as $imageFormat) {
+                            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                            // For webp and avif extensions, we want it to follow our command and ignore the original format.
                             $forceFormat = ($imageFormat !== 'jpg');
                             if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $imageFormat)) {
                                 if (!ImageManager::resize(
@@ -806,11 +815,16 @@ class AdminImagesControllerCore extends AdminController
         // Should we generate high DPI images?
         $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        // What formats should we generate?
+        /*
+         * Let's resolve which formats we will use for image generation.
+         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+         * 
+         * In case of .jpg images, the actual format inside is decided by ImageManager.
+         */
         if ($this->isMultipleImageFormatFeatureEnabled) {
-            $imageConfiguredFormats = $this->imageFormatConfiguration->getGenerationFormats();
+            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
         } else {
-            $imageConfiguredFormats = ['jpg'];
+            $configuredImageFormats = ['jpg'];
         }
 
         foreach ($type as $image_type) {
@@ -819,7 +833,9 @@ class AdminImagesControllerCore extends AdminController
                 if (!file_exists($file)) {
                     $file = _PS_PRODUCT_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
                 }
-                foreach ($imageConfiguredFormats as $imageFormat) {
+                foreach ($configuredImageFormats as $imageFormat) {
+                    // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                    // For webp and avif extensions, we want it to follow our command and ignore the original format.
                     $forceFormat = ($imageFormat !== 'jpg');
                     if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat)) {
                         if (!ImageManager::resize(

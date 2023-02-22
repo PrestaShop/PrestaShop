@@ -189,10 +189,13 @@ class ImageRetriever
             $id_image . '.jpg',
         ]);
 
-        // In legacy image system, image extension is always JPG and there could be JPG, PNG or webp image inside
-        // The format is decided by ImageManager
+        /*
+         * Let's resolve which formats we will use for image generation.
+         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+         * 
+         * In case of .jpg images, the actual format inside is decided by ImageManager.
+         */
         if ($this->isMultipleImageFormatFeatureActive) {
-            // Get image format list that we will use in case of new image system
             $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
         } else {
             $configuredImageFormats = ['jpg'];
@@ -293,8 +296,8 @@ class ImageRetriever
             $fileName,
         ]);
 
-        // For JPG files, we let the decision on what is inside to PS_IMAGE_QUALITY settings.
-        // For other formats, we always force it regardless of what is in the original file.
+        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+        // For webp and avif extensions, we want it to follow our command and ignore the original format.
         $forceFormat = ($imageFormat !== 'jpg');
 
         // Check if the thumbnail exists and generate it if needed

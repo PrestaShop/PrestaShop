@@ -2875,17 +2875,27 @@ class AdminProductsControllerCore extends AdminController
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
+
+                    // Should we generate high DPI images?
                     $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-                    $sfContainer = SymfonyContainer::getInstance();
-                    $isMultipleImageFormatFeatureEnabled = $sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
-                    if ($isMultipleImageFormatFeatureEnabled) {
-                        $imageFormatsList = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
+                    $sfContainer = SymfonyContainer::getInstance();    
+
+                    /*
+                    * Let's resolve which formats we will use for image generation.
+                    * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+                    * 
+                    * In case of .jpg images, the actual format inside is decided by ImageManager.
+                    */
+                    if ($sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+                        $configuredImageFormats = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
                     } else {
-                        $imageFormatsList = ['jpg'];
+                        $configuredImageFormats = ['jpg'];
                     }
                     foreach ($imagesTypes as $imageType) {
-                        foreach ($imageFormatsList as $imageFormat) {
+                        foreach ($configuredImageFormats as $imageFormat) {
+                            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                            // For webp and avif extensions, we want it to follow our command and ignore the original format.
                             $forceFormat = ($imageFormat !== 'jpg');
                             if (!ImageManager::resize(
                                 $file['save_path'],
