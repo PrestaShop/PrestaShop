@@ -189,8 +189,14 @@ class ImageRetriever
             $id_image . '.jpg',
         ]);
 
-        // Get image format list that we will use in case of new image system
-        $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
+        // In legacy image system, image extension is always JPG and there could be JPG, PNG or webp image inside
+        // The format is decided by ImageManager
+        if ($this->isMultipleImageFormatFeatureActive) {
+            // Get image format list that we will use in case of new image system
+            $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
+        } else {
+            $configuredImageFormats = ['jpg'];
+        }
 
         // Primary (fake) image name is object rewrite, fallbacks are name and ID
         if (!empty($object->link_rewrite)) {
@@ -206,42 +212,23 @@ class ImageRetriever
         foreach ($image_types as $image_type) {
             $sources = [];
 
-            // In legacy image system, image extension is always JPG and there could be JPG, PNG or webp image inside
-            // The format is decided by ImageManager
-            if (!$this->isMultipleImageFormatFeatureActive) {
-                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
+            foreach ($configuredImageFormats as $imageFormat) {
+                // Generate the thumbnail and optionally a high DPI version
+                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
+                if ($generateHighDpiImages) {
+                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
+                }
 
-                // Get URL of the thumbnail
+                // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
                 if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
-                    $sources['jpg'] = $this->link->$getImageURL($id_image, $image_type['name'], 'jpg');
+                    $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
                 // Products, categories and stores pass both rewrite and ID
                 } else {
-                    $sources['jpg'] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], 'jpg');
-                }
-
-                if ($generateHighDpiImages) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
-                }
-                // In new image system, we generate each format with it's proper extension
-            } else {
-                foreach ($configuredImageFormats as $imageFormat) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
-
-                    // Manufacturer and supplier use only IDs
-                    if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
-                        $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
-                    // Products, categories and stores pass both rewrite and ID
-                    } else {
-                        $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
-                    }
-
-                    if ($generateHighDpiImages) {
-                        $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
-                    }
+                    $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
                 }
             }
-
+            
             // Let's resolve the base image URL we will use
             if (isset($sources['jpg'])) {
                 $baseUrl = $sources['jpg'];
