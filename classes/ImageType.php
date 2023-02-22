@@ -127,7 +127,7 @@ class ImageTypeCore extends ObjectModel
     }
 
     /**
-     * Check if type already is already registered in database.
+     * Check if type is already registered in database.
      *
      * @param string $typeName Name
      *
