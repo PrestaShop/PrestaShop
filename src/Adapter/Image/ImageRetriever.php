@@ -273,17 +273,17 @@ class ImageRetriever
      * @param string $imageFolderPath
      * @param int $idImage
      * @param array $imageTypeData
-     * @param string $ext
+     * @param string $imageFormat
      * @param bool $hdpi
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $ext, bool $hdpi = false)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
     {
-        $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $ext);
+        $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
 
         if ($hdpi) {
-            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $ext);
+            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $imageFormat);
             $imageTypeData['width'] *= 2;
             $imageTypeData['height'] *= 2;
         }
@@ -293,14 +293,19 @@ class ImageRetriever
             $fileName,
         ]);
 
+        // For JPG files, we let the decision on what is inside to PS_IMAGE_QUALITY settings.
+        // For other formats, we always force it regardless of what is in the original file.
+        $forceFormat = ($imageFormat !== 'jpg');
+
+        // Check if the thumbnail exists and generate it if needed
         if (!file_exists($resizedImagePath)) {
             ImageManager::resize(
                 $originalImagePath,
                 $resizedImagePath,
                 (int) $imageTypeData['width'],
                 (int) $imageTypeData['height'],
-                $ext,
-                true
+                $imageFormat,
+                $forceFormat
             );
         }
     }

@@ -130,6 +130,7 @@ class AdminImagesControllerCore extends AdminController
                         'avif' => in_array('avif', $configuredImageFormats),
                     ],
                     'disabled' => $imageFormatsDisabled,
+                    'desc' => $this->trans('Choose which image formats you want to be generated. Base image will always have .jpg extension, other formats will have .webp or .avif.', [], 'Admin.Design.Help'),
                 ],
                 'PS_IMAGE_QUALITY' => [
                     'title' => $this->trans('Base format', [], 'Admin.Design.Feature'),
@@ -137,9 +138,9 @@ class AdminImagesControllerCore extends AdminController
                     'required' => true,
                     'type' => 'radio',
                     'choices' => [
-                        'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
-                        'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
-                        'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
+                        'jpg' => $this->trans('Use JPEG', [], 'Admin.Design.Feature'),
+                        'png' => $this->trans('Use PNG only if the base image is in PNG format', [], 'Admin.Design.Feature'),
+                        'png_all' => $this->trans('Use PNG', [], 'Admin.Design.Feature'),
                     ],
                 ],
                 'PS_AVIF_QUALITY' => [
