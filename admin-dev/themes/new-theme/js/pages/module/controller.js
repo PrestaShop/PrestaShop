@@ -42,17 +42,15 @@ class AdminModuleController {
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
     this.DEFAULT_MAX_PER_CATEGORIES = 99999;
-    this.DISPLAY_GRID = 'grid';
     this.DISPLAY_LIST = 'list';
     this.CATEGORY_RECENTLY_USED = 'recently-used';
 
     this.currentCategoryDisplay = {};
-    this.currentDisplay = '';
+    this.currentDisplay = this.DISPLAY_LIST;
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
     this.currentRefCategory = null;
     this.currentRefStatus = null;
-    this.currentSorting = null;
     this.pstaggerInput = null;
     this.lastBulkAction = null;
     this.isUploadStarted = false;
@@ -70,16 +68,12 @@ class AdminModuleController {
     this.moduleShortList = '.module-short-list';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
-    this.moduleItemGridSelector = '.module-item-grid';
     this.moduleItemListSelector = '.module-item-list';
     this.categorySelectorLabelSelector = '.module-category-selector-label';
     this.categorySelector = '.module-category-selector';
     this.categoryItemSelector = '.module-category-menu';
     this.categoryResetBtnSelector = '.module-category-reset';
     this.moduleInstallBtnSelector = 'input.module-install-btn';
-    this.moduleSortingDropdownSelector = '.module-sorting-author select';
-    this.categoryGridSelector = '#modules-categories-grid';
-    this.categoryGridItemSelector = '.module-category-item';
 
     // Upgrade All selectors
     this.upgradeAllSource = '.module_action_menu_upgrade_all';
@@ -93,20 +87,12 @@ class AdminModuleController {
     this.bulkActionDropDownSelector = '.module-bulk-actions';
     this.bulkItemSelector = '.module-bulk-menu';
     this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list input';
-    this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid input';
     this.checkedBulkActionListSelector = `${this.bulkActionCheckboxListSelector}:checked`;
-    this.checkedBulkActionGridSelector = `${this.bulkActionCheckboxGridSelector}:checked`;
     this.bulkActionCheckboxSelector = '#module-modal-bulk-checkbox';
     this.bulkConfirmModalSelector = '#module-modal-bulk-confirm';
     this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
     this.bulkConfirmModalListSelector = '#module-modal-bulk-confirm-list';
     this.bulkConfirmModalAckBtnSelector = '#module-modal-confirm-bulk-ack';
-
-    // Placeholders
-    this.placeholderGlobalSelector = '.module-placeholders-wrapper';
-    this.placeholderFailureGlobalSelector = '.module-placeholders-failure';
-    this.placeholderFailureMsgSelector = '.module-placeholders-failure-msg';
-    this.placeholderFailureRetryBtnSelector = '#module-placeholders-failure-retry';
 
     // Module's statuses selectors
     this.statusSelectorLabelSelector = '.module-status-selector-label';
@@ -130,19 +116,14 @@ class AdminModuleController {
     this.moduleImportFailureMsgDetailsSelector = '.module-import-failure-details';
     this.moduleImportConfirmSelector = '.module-import-confirm';
 
-    this.initSortingDropdown();
     this.initBOEventRegistering();
-    this.initCurrentDisplay();
-    this.initSortingDisplaySwitch();
     this.initBulkDropdown();
     this.initSearchBlock();
     this.initCategorySelect();
-    this.initCategoriesGrid();
     this.initActionButtons();
     this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
-    this.initPlaceholderMechanism();
     this.initFilterStatusDropdown();
     this.fetchModulesList();
     this.getNotificationsCount();
@@ -172,10 +153,10 @@ class AdminModuleController {
     const self = this;
     const body = $('body');
 
-    body.on('click', self.getBulkCheckboxesSelector(), () => {
+    body.on('click', this.bulkActionCheckboxListSelector, () => {
       const selector = $(self.bulkActionDropDownSelector);
 
-      if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
+      if ($(this.checkedBulkActionListSelector).length > 0) {
         selector.closest('.module-top-menu-item').removeClass('disabled');
       } else {
         selector.closest('.module-top-menu-item').addClass('disabled');
@@ -183,7 +164,7 @@ class AdminModuleController {
     });
 
     body.on('click', self.bulkItemSelector, function initializeBodyChange() {
-      if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
+      if ($(this.checkedBulkActionListSelector).length === 0) {
         $.growl.warning({
           message: window.translate_javascripts['Bulk Action - One module minimum'],
         });
@@ -250,7 +231,7 @@ class AdminModuleController {
           active: parseInt(moduleElement.data('active'), 10),
           installed: moduleElement.data('installed') === 1,
           access: moduleElement.data('last-access'),
-          display: moduleElement.hasClass('module-item-list') ? this.DISPLAY_LIST : this.DISPLAY_GRID,
+          display: this.DISPLAY_LIST,
           container: module.container,
         };
 
@@ -264,77 +245,9 @@ class AdminModuleController {
   onModuleDisabled(event) {
     const self = this;
     self.updateModuleStatus(event);
-    self.getModuleItemSelector();
-
     $('.modules-list').each(() => {
       self.updateModuleVisibility();
     });
-  }
-
-  initPlaceholderMechanism() {
-    const self = this;
-
-    if ($(self.placeholderGlobalSelector).length) {
-      self.ajaxLoadPage();
-    }
-
-    // Retry loading mechanism
-    $('body').on('click', self.placeholderFailureRetryBtnSelector, () => {
-      $(self.placeholderFailureGlobalSelector).fadeOut();
-      $(self.placeholderGlobalSelector).fadeIn();
-      self.ajaxLoadPage();
-    });
-  }
-
-  ajaxLoadPage() {
-    const self = this;
-
-    $.ajax({
-      method: 'GET',
-      url: window.moduleURLs.catalogRefresh,
-    })
-      .done((response) => {
-        if (response.status === true) {
-          if (typeof response.domElements === 'undefined') response.domElements = null;
-          if (typeof response.msg === 'undefined') response.msg = null;
-
-          const stylesheet = document.styleSheets[0];
-          const stylesheetRule = '{display: none}';
-          const moduleGlobalSelector = '.modules-list';
-          const moduleSortingSelector = '.module-sorting-menu';
-          const requiredSelectorCombination = `${moduleGlobalSelector},${moduleSortingSelector}`;
-
-          if (stylesheet.insertRule) {
-            stylesheet.insertRule(requiredSelectorCombination + stylesheetRule, stylesheet.cssRules.length);
-          } else if (stylesheet.addRule) {
-            stylesheet.addRule(requiredSelectorCombination, stylesheetRule, -1);
-          }
-
-          $(self.placeholderGlobalSelector).fadeOut(800, () => {
-            $.each(response.domElements, (index, element) => {
-              $(element.selector).append(element.content);
-            });
-            $(moduleGlobalSelector)
-              .fadeIn(800)
-              .css('display', 'flex');
-            $(moduleSortingSelector).fadeIn(800);
-            $('[data-toggle="popover"]').popover();
-            self.initCurrentDisplay();
-            self.fetchModulesList();
-          });
-        } else {
-          $(self.placeholderGlobalSelector).fadeOut(800, () => {
-            $(self.placeholderFailureMsgSelector).text(response.msg);
-            $(self.placeholderFailureGlobalSelector).fadeIn(800);
-          });
-        }
-      })
-      .fail((response) => {
-        $(self.placeholderGlobalSelector).fadeOut(800, () => {
-          $(self.placeholderFailureMsgSelector).text(response.statusText);
-          $(self.placeholderFailureGlobalSelector).fadeIn(800);
-        });
-      });
   }
 
   fetchModulesList() {
@@ -364,7 +277,7 @@ class AdminModuleController {
           active: parseInt($this.data('active'), 10),
           installed: $this.data('installed') === 1,
           access: $this.data('last-access'),
-          display: $this.hasClass('module-item-list') ? self.DISPLAY_LIST : self.DISPLAY_GRID,
+          display: self.DISPLAY_LIST,
           container,
         });
 
@@ -375,56 +288,6 @@ class AdminModuleController {
     });
 
     self.updateModuleVisibility();
-    $('body').trigger('moduleCatalogLoaded');
-  }
-
-  /**
-   * Prepare sorting
-   *
-   */
-  updateModuleSorting() {
-    const self = this;
-
-    if (!self.currentSorting) {
-      return;
-    }
-
-    // Modules sorting
-    let order = 'asc';
-    let key = self.currentSorting;
-    const splittedKey = key.split('-');
-
-    if (splittedKey.length > 1) {
-      key = splittedKey[0];
-      if (splittedKey[1] === 'desc') {
-        order = 'desc';
-      }
-    }
-
-    const currentCompare = (a, b) => {
-      let aData = a[key];
-      let bData = b[key];
-
-      if (key === 'access') {
-        aData = new Date(aData).getTime();
-        bData = new Date(bData).getTime();
-        aData = Number.isNaN(aData) ? 0 : aData;
-        bData = Number.isNaN(bData) ? 0 : bData;
-        if (aData === bData) {
-          return b.name.localeCompare(a.name);
-        }
-      }
-
-      if (aData < bData) return -1;
-      if (aData > bData) return 1;
-
-      return 0;
-    };
-
-    self.modulesList.sort(currentCompare);
-    if (order === 'desc') {
-      self.modulesList.reverse();
-    }
   }
 
   updateModuleContainerDisplay() {
@@ -452,8 +315,7 @@ class AdminModuleController {
   updateModuleVisibility() {
     const self = this;
 
-    self.updateModuleSorting();
-
+    // Remove recently used and modules list if we are on the modules page and no read more modal is opened
     if (self.isModulesPage() && !self.isReadMoreModalOpened()) {
       $(self.recentlyUsedSelector)
         .find('.module-item')
@@ -539,6 +401,7 @@ class AdminModuleController {
             self.currentCategoryDisplay[moduleCategory] = false;
           }
 
+          // Initialize the current category display and counter if they don't exist
           if (!counter[moduleCategory]) {
             counter[moduleCategory] = 0;
           }
@@ -566,7 +429,6 @@ class AdminModuleController {
     }
 
     self.updateModuleContainerDisplay();
-
     self.updateTotalResults();
   }
 
@@ -586,8 +448,8 @@ class AdminModuleController {
   }
 
   buildBulkActionModuleList() {
-    const checkBoxesSelector = this.getBulkCheckboxesCheckedSelector();
-    const moduleItemSelector = this.getModuleItemSelector();
+    const checkBoxesSelector = this.checkedBulkActionListSelector;
+    const moduleItemSelector = this.moduleItemListSelector;
     let alreadyDoneFlag = 0;
     let htmlGenerated = '';
     let currentElement;
@@ -791,22 +653,6 @@ class AdminModuleController {
     });
   }
 
-  getBulkCheckboxesSelector() {
-    return this.currentDisplay === this.DISPLAY_GRID
-      ? this.bulkActionCheckboxGridSelector
-      : this.bulkActionCheckboxListSelector;
-  }
-
-  getBulkCheckboxesCheckedSelector() {
-    return this.currentDisplay === this.DISPLAY_GRID
-      ? this.checkedBulkActionGridSelector
-      : this.checkedBulkActionListSelector;
-  }
-
-  getModuleItemSelector() {
-    return this.currentDisplay === this.DISPLAY_GRID ? this.moduleItemGridSelector : this.moduleItemListSelector;
-  }
-
   /**
    * Get the module notifications count and displays it as a badge on the notification tab
    * @return void
@@ -828,60 +674,6 @@ class AdminModuleController {
       if (destinationTabs[destinationKey].length !== 0) {
         destinationTabs[destinationKey].find('.notification-counter').text(badge[destinationKey]);
       }
-    });
-  }
-
-  initCategoriesGrid() {
-    const self = this;
-
-    $('body').on('click', this.categoryGridItemSelector, function initilaizeGridBodyClick(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      const refCategory = $(this).data('category-ref');
-
-      // In case we have some tags we need to reset it !
-      if (self.currentTagsList.length) {
-        self.pstaggerInput.resetTags(false);
-        self.currentTagsList = [];
-      }
-      const menuCategoryToTrigger = $(`${self.categoryItemSelector}[data-category-ref="${refCategory}"]`);
-
-      if (!menuCategoryToTrigger.length) {
-        console.warn(`No category with ref (${refCategory}) seems to exist!`);
-        return false;
-      }
-
-      // Hide current category grid
-      if (self.isCategoryGridDisplayed === true) {
-        $(self.categoryGridSelector).fadeOut();
-        self.isCategoryGridDisplayed = false;
-      }
-
-      // Trigger click on right category
-      $(`${self.categoryItemSelector}[data-category-ref="${refCategory}"]`).click();
-      return true;
-    });
-  }
-
-  initCurrentDisplay() {
-    this.currentDisplay = this.currentDisplay === '' ? this.DISPLAY_LIST : this.DISPLAY_GRID;
-  }
-
-  initSortingDropdown() {
-    const self = this;
-
-    self.currentSorting = $(this.moduleSortingDropdownSelector)
-      .find(':checked')
-      .attr('value');
-    if (!self.currentSorting) {
-      self.currentSorting = 'access-desc';
-    }
-
-    $('body').on('change', self.moduleSortingDropdownSelector, function initializeBodySortingChange() {
-      self.currentSorting = $(this)
-        .find(':checked')
-        .attr('value');
-      self.updateModuleVisibility();
     });
   }
 
@@ -912,7 +704,7 @@ class AdminModuleController {
     }
 
     // Loop over all checked bulk checkboxes
-    const bulkActionSelectedSelector = this.getBulkCheckboxesCheckedSelector();
+    const bulkActionSelectedSelector = this.checkedBulkActionListSelector;
     const bulkModuleAction = bulkActionToUrl[requestedBulkAction];
 
     if ($(bulkActionSelectedSelector).length <= 0) {
@@ -1136,35 +928,6 @@ class AdminModuleController {
     });
   }
 
-  /**
-   * Initialize display switching between List or Grid
-   */
-  initSortingDisplaySwitch() {
-    const self = this;
-
-    $('body').on('click', '.module-sort-switch', function switchSort() {
-      const switchTo = $(this).data('switch');
-      const isAlreadyDisplayed = $(this).hasClass('active-display');
-
-      if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
-        self.switchSortingDisplayTo(switchTo);
-        self.currentDisplay = switchTo;
-      }
-    });
-  }
-
-  switchSortingDisplayTo(switchTo) {
-    if (switchTo !== this.DISPLAY_GRID && switchTo !== this.DISPLAY_LIST) {
-      console.error(`Can't switch to undefined display property "${switchTo}"`);
-      return;
-    }
-
-    $('.module-sort-switch').removeClass('module-sort-active');
-    $(`#module-sort-${switchTo}`).addClass('module-sort-active');
-    this.currentDisplay = switchTo;
-    this.updateModuleVisibility();
-  }
-
   updateTotalResults() {
     const self = this;
     const replaceFirstWordBy = (element, value) => {
@@ -1191,9 +954,7 @@ class AdminModuleController {
       replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
       // eslint-disable-next-line
-      const selectorToToggle =
-        self.currentDisplay === self.DISPLAY_LIST ? this.addonItemListSelector : this.addonItemGridSelector;
-      $(selectorToToggle).toggle(modulesCount !== this.modulesList.length / 2);
+      $(this.addonItemListSelector).toggle(modulesCount !== this.modulesList.length / 2);
     }
   }
 

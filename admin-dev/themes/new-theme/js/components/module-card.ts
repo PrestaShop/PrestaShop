@@ -74,8 +74,6 @@ export default class ModuleCard {
 
   moduleItemListSelector: string;
 
-  moduleItemGridSelector: string;
-
   moduleItemActionsSelector: string;
 
   moduleActionModalDisableLinkSelector: string;
@@ -99,7 +97,6 @@ export default class ModuleCard {
     this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
     this.moduleActionMenuDeleteLinkSelector = 'button.module_action_menu_delete';
     this.moduleItemListSelector = '.module-item-list';
-    this.moduleItemGridSelector = '.module-item-grid';
     this.moduleItemActionsSelector = '.module-actions';
 
     /* Selectors only for modal buttons */
@@ -328,14 +325,6 @@ export default class ModuleCard {
     );
   }
 
-  getModuleItemSelector(): string {
-    if ($(this.moduleItemListSelector).length) {
-      return this.moduleItemListSelector;
-    }
-
-    return this.moduleItemGridSelector;
-  }
-
   confirmAction(action: string, element: string): boolean {
     const modal = $(
       ComponentsMap.confirmModal($(element).data('confirm_modal')),
@@ -433,7 +422,7 @@ export default class ModuleCard {
           return;
         }
 
-        const alteredSelector = self.getModuleItemSelector().replace('.', '');
+        const alteredSelector = this.moduleItemListSelector.replace('.', '');
         let mainElement = null;
 
         if (action === 'uninstall') {
