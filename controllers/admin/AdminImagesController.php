@@ -103,7 +103,6 @@ class AdminImagesControllerCore extends AdminController
         $formFields = [];
 
         if ($this->isMultipleImageFormatFeatureEnabled) {
-
             $imageFormatsDisabled = [];
             $imageFormatsDisabled['jpg'] = true; // jpg is mandatory, see https://github.com/PrestaShop/PrestaShop/issues/30944
             if (false === $this->canGenerateAvif) {

@@ -24,8 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-
 /**
  * Class ImageManagerCore.
  *
@@ -253,7 +251,7 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
-        // If the filetype is not forced and we are requesting a JPG file, we must 
+        // If the filetype is not forced and we are requesting a JPG file, we must
         // adjust the format inside according to PS_IMAGE_QUALITY in some cases.
         if (!$forceType && $destinationFileType === 'jpg') {
             if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
