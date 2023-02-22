@@ -228,7 +228,7 @@ class ImageRetriever
                     $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
                 }
             }
-            
+
             // Let's resolve the base image URL we will use
             if (isset($sources['jpg'])) {
                 $baseUrl = $sources['jpg'];
