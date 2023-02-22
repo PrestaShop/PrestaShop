@@ -31,8 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Handles creation of country and address format for it
@@ -53,18 +51,6 @@ class EditCountryHandler implements EditCountryHandlerInterface
      * {@inheritdoc}
      */
     public function handle(EditCountryCommand $command): void
-    {
-        $this->updateCountry($command);
-    }
-
-    /**
-     * @param EditCountryCommand $command
-     *
-     * @return void
-     *
-     * @throws CannotEditCountryException
-     */
-    private function updateCountry(EditCountryCommand $command): void
     {
         $country = $this->countryRepository->get($command->getCountryId());
 
@@ -115,14 +101,6 @@ class EditCountryHandler implements EditCountryHandlerInterface
             $country->id_zone = $command->getZoneId();
         }
 
-        try {
-            $this->countryRepository->update($country);
-        } catch (CoreException $e) {
-            throw new CannotEditCountryException(
-                'An unexpected error occurred when updating country',
-                CannotEditCountryException::UNKNOWN_EXCEPTION,
-                $e
-            );
-        }
+        $this->countryRepository->update($country);
     }
 }

@@ -181,7 +181,6 @@ class CountryController extends FrameworkBundleAdminController
      */
     protected function getErrorMessages(Exception $e): array
     {
-        //todo add error messages
         return [
             CountryNotFoundException::class => $this->trans(
                 'This country does not exist',
