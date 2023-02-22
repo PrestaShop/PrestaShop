@@ -41,16 +41,14 @@ class AdminModuleController {
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
-    this.DEFAULT_MAX_PER_CATEGORIES = 99999;
     this.DISPLAY_LIST = 'list';
     this.CATEGORY_RECENTLY_USED = 'recently-used';
 
-    this.currentCategoryDisplay = {};
     this.currentDisplay = this.DISPLAY_LIST;
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
-    this.currentRefCategory = null;
-    this.currentRefStatus = null;
+    this.currentCategoryFilter = null;
+    this.currentModuleStatusFilter = null;
     this.pstaggerInput = null;
     this.lastBulkAction = null;
     this.isUploadStarted = false;
@@ -134,7 +132,7 @@ class AdminModuleController {
     const body = $('body');
     body.on('click', self.statusItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefStatus = parseInt($(this).data('status-ref'), 10);
+      self.currentModuleStatusFilter = parseInt($(this).data('status-ref'), 10);
       // Change dropdown label to set it to the current status' displayname
       $(self.statusSelectorLabelSelector).text($(this).text());
       $(self.statusResetBtnSelector).show();
@@ -144,7 +142,7 @@ class AdminModuleController {
     body.on('click', self.statusResetBtnSelector, function () {
       $(self.statusSelectorLabelSelector).text($(this).text());
       $(this).hide();
-      self.currentRefStatus = null;
+      self.currentModuleStatusFilter = null;
       self.updateModuleVisibility();
     });
   }
@@ -298,8 +296,8 @@ class AdminModuleController {
       const nbModulesInContainer = container.find('.module-item').length;
 
       if (
-        (self.currentRefCategory && self.currentRefCategory !== String(container.find('.modules-list').data('name')))
-        || (self.currentRefStatus !== null && nbModulesInContainer === 0)
+        (self.currentCategoryFilter && self.currentCategoryFilter !== String(container.find('.modules-list').data('name')))
+        || (self.currentModuleStatusFilter !== null && nbModulesInContainer === 0)
         || (nbModulesInContainer === 0
           && String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED)
         || (self.currentTagsList.length > 0 && nbModulesInContainer === 0)
@@ -331,7 +329,6 @@ class AdminModuleController {
     let moduleCategory;
     let tagExists;
     let newValue;
-    let defaultMax;
 
     const paramsUrl = (new URL(document.location)).searchParams;
     const findModule = paramsUrl.get('find');
@@ -344,7 +341,7 @@ class AdminModuleController {
     }
 
     const modulesListLength = self.modulesList.length;
-    const counter = {};
+    let counter = 0;
     const checkTag = (index, value) => {
       newValue = value.toLowerCase();
       tagExists
@@ -356,74 +353,58 @@ class AdminModuleController {
 
     for (let i = 0; i < modulesListLength; i += 1) {
       currentModule = self.modulesList[i];
+      isVisible = true;
 
-      if (currentModule.display === self.currentDisplay) {
-        isVisible = true;
+      // Check if we are displaying normal categories or the recently used list
+      moduleCategory = self.currentCategoryFilter === self.CATEGORY_RECENTLY_USED
+        ? self.CATEGORY_RECENTLY_USED
+        : currentModule.categories;
 
-        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED
-          ? self.CATEGORY_RECENTLY_USED
-          : currentModule.categories;
+      // If category filter is set, we display only modules matching the current category
+      if (self.currentCategoryFilter !== null) {
+        isVisible &= moduleCategory === self.currentCategoryFilter;
+      }
 
-        // Check for same category
-        if (self.currentRefCategory !== null) {
-          isVisible &= moduleCategory === self.currentRefCategory;
-        }
+      // Check if the module status filter is enabled and hide modules that
+      // don't match it.
+      if (self.currentModuleStatusFilter !== null) {
+        isVisible &= (
+          (
+            currentModule.active === self.currentModuleStatusFilter
+              && currentModule.installed === true
+          )
+            || (
+              currentModule.installed === false
+                && self.currentModuleStatusFilter === 2
+            ) || (
+            currentModule.installed === true
+                && self.currentModuleStatusFilter === 3
+          )
+        );
+      }
 
-        // Check for same status
-        if (self.currentRefStatus !== null) {
-          isVisible &= (
-            (
-              currentModule.active === self.currentRefStatus
-                && currentModule.installed === true
-            )
-              || (
-                currentModule.installed === false
-                  && self.currentRefStatus === 2
-              ) || (
-              currentModule.installed === true
-                  && self.currentRefStatus === 3
-            )
-          );
-        }
+      // Check for tag list
+      if (self.currentTagsList.length) {
+        tagExists = false;
+        $.each(self.currentTagsList, checkTag);
+        isVisible &= tagExists;
+      }
 
-        // Check for tag list
-        if (self.currentTagsList.length) {
-          tagExists = false;
-          $.each(self.currentTagsList, checkTag);
-          isVisible &= tagExists;
-        }
+      // If we are not searching for a module, we need to manage module
+      // visibility within categories. If it's the recently used category, 
+      // we will hide the module if we already reached the max limit.
+      if (!self.currentTagsList.length && moduleCategory === self.CATEGORY_RECENTLY_USED &&
+        counter >= self.DEFAULT_MAX_RECENTLY_USED) {
+        isVisible = false;
+      }
 
-        /**
-         * If list display without search we must display only the first 5 modules
-         */
-        if (self.currentDisplay === self.DISPLAY_LIST && !self.currentTagsList.length) {
-          if (self.currentCategoryDisplay[moduleCategory] === undefined) {
-            self.currentCategoryDisplay[moduleCategory] = false;
-          }
-
-          // Initialize the current category display and counter if they don't exist
-          if (!counter[moduleCategory]) {
-            counter[moduleCategory] = 0;
-          }
-
-          defaultMax = moduleCategory === self.CATEGORY_RECENTLY_USED
-            ? self.DEFAULT_MAX_RECENTLY_USED
-            : self.DEFAULT_MAX_PER_CATEGORIES;
-
-          if (counter[moduleCategory] >= defaultMax && isVisible) {
-            isVisible &= self.currentCategoryDisplay[moduleCategory];
-          }
-        }
-
-        // If visible, display (Thx captain obvious)
-        if (isVisible) {
-          counter[moduleCategory] += 1;
-
-          if (self.currentRefCategory === self.CATEGORY_RECENTLY_USED) {
-            $(self.recentlyUsedSelector).append(currentModule.domObject);
-          } else {
-            currentModule.container.append(currentModule.domObject);
-          }
+      // If visible, display (Thx captain obvious)
+      if (isVisible) {
+        counter += 1;
+        if (self.currentCategoryFilter === self.CATEGORY_RECENTLY_USED) {
+          $(self.recentlyUsedSelector).append(currentModule.domObject);
+        } else {
+          currentModule.container.append(currentModule.domObject);
         }
       }
     }
@@ -890,8 +871,8 @@ class AdminModuleController {
     const body = $('body');
     body.on('click', self.categoryItemSelector, function initializeCategorySelectClick() {
       // Get data from li DOM input
-      self.currentRefCategory = $(this).data('category-ref');
-      self.currentRefCategory = self.currentRefCategory ? String(self.currentRefCategory).toLowerCase() : null;
+      self.currentCategoryFilter = $(this).data('category-ref');
+      self.currentCategoryFilter = self.currentCategoryFilter ? String(self.currentCategoryFilter).toLowerCase() : null;
       // Change dropdown label to set it to the current category's displayname
       $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
       $(self.categoryResetBtnSelector).show();
@@ -906,7 +887,7 @@ class AdminModuleController {
 
       $(self.categorySelectorLabelSelector).text(originalText);
       $(this).hide();
-      self.currentRefCategory = null;
+      self.currentCategoryFilter = null;
       self.updateModuleVisibility();
     });
   }
