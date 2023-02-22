@@ -662,7 +662,7 @@ class AdminImagesControllerCore extends AdminController
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
-         * 
+         *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
         if ($this->isMultipleImageFormatFeatureEnabled) {
@@ -697,11 +697,11 @@ class AdminImagesControllerCore extends AdminController
                                     $this->errors[] = $this->trans('Source file does not exist or is empty (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                 } else {
                                     if (!ImageManager::resize(
-                                        $dir . $image, 
-                                        $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, 
-                                        (int) $imageType['width'], 
-                                        (int) $imageType['height'], 
-                                        $imageFormat, 
+                                        $dir . $image,
+                                        $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
+                                        (int) $imageType['width'],
+                                        (int) $imageType['height'],
+                                        $imageFormat,
                                         $forceFormat
                                         )) {
                                         $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
@@ -711,8 +711,8 @@ class AdminImagesControllerCore extends AdminController
                                         $dir . $image,
                                         $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
                                         (int) $imageType['width'] * 2,
-                                        (int) $imageType['height'] * 2, 
-                                        $imageFormat, 
+                                        (int) $imageType['height'] * 2,
+                                        $imageFormat,
                                         $forceFormat
                                     )) {
                                         $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
@@ -744,7 +744,7 @@ class AdminImagesControllerCore extends AdminController
                                     $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
                                     (int) $imageType['width'],
                                     (int) $imageType['height'],
-                                    $imageFormat, 
+                                    $imageFormat,
                                     $forceFormat
                                 )) {
                                     $this->errors[] = $this->trans(
@@ -764,7 +764,7 @@ class AdminImagesControllerCore extends AdminController
                                             $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
                                             (int) $imageType['width'] * 2,
                                             (int) $imageType['height'] * 2,
-                                            $imageFormat, 
+                                            $imageFormat,
                                             $forceFormat
                                         )) {
                                         $this->errors[] = $this->trans(
@@ -818,7 +818,7 @@ class AdminImagesControllerCore extends AdminController
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
-         * 
+         *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
         if ($this->isMultipleImageFormatFeatureEnabled) {
@@ -841,19 +841,19 @@ class AdminImagesControllerCore extends AdminController
                         if (!ImageManager::resize(
                             $file,
                             $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat,
-                            (int) $image_type['width'], 
-                            (int) $image_type['height'], 
-                            $imageFormat, 
+                            (int) $image_type['width'],
+                            (int) $image_type['height'],
+                            $imageFormat,
                             $forceFormat
                         )) {
                             $errors = true;
                         }
                         if ($generate_high_dpi_images && !ImageManager::resize(
-                            $file, 
-                            $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat, 
-                            (int) $image_type['width'] * 2, 
-                            (int) $image_type['height'] * 2, 
-                            $imageFormat, 
+                            $file,
+                            $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat,
+                            (int) $image_type['width'] * 2,
+                            (int) $image_type['height'] * 2,
+                            $imageFormat,
                             $forceFormat
                         )) {
                             $errors = true;

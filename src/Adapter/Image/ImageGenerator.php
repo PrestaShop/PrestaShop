@@ -104,7 +104,7 @@ class ImageGenerator
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
-         * 
+         *
          * In case of .jpg images, the actual format inside is decided by ImageManager.
          */
         if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
