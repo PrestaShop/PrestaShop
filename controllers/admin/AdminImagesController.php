@@ -700,17 +700,15 @@ class AdminImagesControllerCore extends AdminController
                                         $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                     }
 
-                                    if ($generate_high_dpi_images) {
-                                        if (!ImageManager::resize(
-                                            $dir . $image,
-                                            $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                            (int) $imageType['width'] * 2,
-                                            (int) $imageType['height'] * 2, 
-                                            $imageFormat, 
-                                            $forceFormat
-                                        )) {
-                                            $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
-                                        }
+                                    if ($generate_high_dpi_images && !ImageManager::resize(
+                                        $dir . $image,
+                                        $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
+                                        (int) $imageType['width'] * 2,
+                                        (int) $imageType['height'] * 2, 
+                                        $imageFormat, 
+                                        $forceFormat
+                                    )) {
+                                        $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                     }
                                 }
                             }
