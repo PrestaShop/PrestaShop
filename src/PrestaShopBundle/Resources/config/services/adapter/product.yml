@@ -234,7 +234,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository:
     autowire: true
-    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'

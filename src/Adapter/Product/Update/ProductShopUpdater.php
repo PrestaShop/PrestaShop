@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockPro
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;

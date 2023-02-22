@@ -107,6 +107,11 @@ class ProductController extends FrameworkBundleAdminController
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
 
     /**
+     * @var ProductRepository
+     */
+    public $productRepository;
+
+    /**
      * Shows products listing.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
@@ -308,9 +313,7 @@ class ProductController extends FrameworkBundleAdminController
         ));
 
         if (null === $shopId) {
-            /** @var ProductRepository $productRepository */
-            $productRepository = $this->get(ProductRepository::class);
-            $shopId = $productRepository->getProductDefaultShopId(new ProductId($productId))->getValue();
+            $shopId = $this->productRepository->getProductDefaultShopId(new ProductId($productId))->getValue();
         }
 
         /** @var ProductPreviewProvider $previewUrlProvider */
@@ -531,9 +534,7 @@ class ProductController extends FrameworkBundleAdminController
     public function deleteFromShopGroupAction(int $productId, int $shopGroupId): Response
     {
         try {
-            /** @var ProductRepository $productRepository */
-            $productRepository = $this->get(ProductRepository::class);
-            $productShopIds = $productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
+            $productShopIds = $this->productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
             $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
                 return $shopId->getValue();
             }, $productShopIds)));
@@ -1474,7 +1475,7 @@ class ProductController extends FrameworkBundleAdminController
             'productId' => $productId,
             'productShopIds' => array_map(static function (ShopId $shopId) {
                 return $shopId->getValue();
-            }, $this->get(ProductRepository::class)->getAssociatedShopIds(new ProductId($productId))),
+            }, $this->productRepository->getAssociatedShopIds(new ProductId($productId))),
         ]);
     }
 
