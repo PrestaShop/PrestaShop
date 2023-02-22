@@ -56,7 +56,7 @@ class LegacyLinkLinterCommand extends Command
         'admin_common_pagination',
         'admin_common_sidebar',
         'admin_common_reset_search',
-        'admin_common_reset_search_by_filter_id'
+        'admin_common_reset_search_by_filter_id',
     ];
 
     public function __construct(LegacyLinkLinter $legacyLinkLinter, AdminRouteProvider $adminRouteProvider)
