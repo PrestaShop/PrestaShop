@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCom
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -54,7 +53,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
@@ -496,12 +494,12 @@ class ProductController extends FrameworkBundleAdminController
     public function deleteAction(int $productId): Response
     {
         try {
-            $this->getCommandBus()->handle(new DeleteProductCommand($productId));
+            $this->getCommandBus()->handle(new DeleteProductCommand($productId, ShopConstraint::allShops()));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
-        } catch (ProductException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -519,12 +517,12 @@ class ProductController extends FrameworkBundleAdminController
     public function deleteFromShopAction(int $productId, int $shopId): Response
     {
         try {
-            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, [$shopId]));
+            $this->getCommandBus()->handle(new DeleteProductCommand($productId, ShopConstraint::shop($shopId)));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
-        } catch (ProductException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -542,10 +540,7 @@ class ProductController extends FrameworkBundleAdminController
     public function deleteFromShopGroupAction(int $productId, int $shopGroupId): Response
     {
         try {
-            $productShopIds = $this->productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
-            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
-                return $shopId->getValue();
-            }, $productShopIds)));
+            $this->getCommandBus()->handle(new DeleteProductCommand($productId, ShopConstraint::shopGroup($shopGroupId)));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
@@ -643,7 +638,7 @@ class ProductController extends FrameworkBundleAdminController
             $command = new UpdateProductCommand($productId, $shopConstraint);
             $command->setActive(!$productForEditing->isActive());
             $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
+        } catch (Exception $e) {
             return $this->json([
                 'status' => false,
                 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
@@ -742,7 +737,7 @@ class ProductController extends FrameworkBundleAdminController
                 )
             );
             $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-        } catch (CannotUpdateProductPositionException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_products_v2_index');
@@ -768,8 +763,9 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand(
-                $this->getProductIdsFromRequest($request))
-            );
+                $this->getProductIdsFromRequest($request),
+                ShopConstraint::allShops()
+            ));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
@@ -1183,7 +1179,7 @@ class ProductController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful duplication', 'Admin.Notifications.Success')
             );
-        } catch (ProductException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_products_v2_index');
@@ -1200,7 +1196,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    private function bulkDeleteByShopConstraint(Request $request, ShopConstraint $shopConstraint): Response
+    private function bulkDeleteByShopConstraint(Request $request, ShopConstraint $shopConstraint): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductFromShopsCommand(
@@ -1211,7 +1207,7 @@ class ProductController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
-        } catch (ProductException $e) {
+        } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
                 return $this->jsonBulkErrors($e);
             } else {
@@ -1290,7 +1286,7 @@ class ProductController extends FrameworkBundleAdminController
             $command->setActive($isEnabled);
             $this->getCommandBus()->handle($command);
             $this->addFlash('success', $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'));
-        } catch (ProductException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
