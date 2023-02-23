@@ -20,6 +20,10 @@ class Checkout extends FOBasePage {
 
   private readonly checkoutPageBody: string;
 
+  public readonly messageIfYouSignOut: string;
+
+  public readonly authenticationErrorMessage: string;
+
   private readonly paymentStepSection: string;
 
   private readonly paymentOptionInput: (name: string) => string;
@@ -91,6 +95,16 @@ class Checkout extends FOBasePage {
   private readonly passwordInput: string;
 
   private readonly personalInformationContinueButton: string;
+
+  private readonly logoutMessage: string;
+
+  private readonly personalInformationLogoutLink: string;
+
+  private readonly personalInformationCustomerIdentity: string;
+
+  private readonly personalInformationEditLink: string;
+
+  private readonly loginErrorMessage: string;
 
   private readonly addressStepSection: string;
 
@@ -203,6 +217,8 @@ class Checkout extends FOBasePage {
     this.cartRuleAlertMessageText = 'You cannot use this voucher with this carrier';
     this.deleteAddressSuccessMessage = 'Address successfully deleted.';
     this.noPaymentNeededText = 'No payment needed for this order';
+    this.messageIfYouSignOut = 'If you sign out now, your cart will be emptied.';
+    this.authenticationErrorMessage = 'Authentication failed.';
 
     // Selectors
     this.successAlert = '#notifications article.alert-success';
@@ -231,6 +247,11 @@ class Checkout extends FOBasePage {
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
     this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
+    this.logoutMessage = `${this.personalInformationStepForm} p:nth-child(3) small`;
+    this.personalInformationLogoutLink = `${this.personalInformationStepForm} a[href*=mylogout]`;
+    this.personalInformationCustomerIdentity = `${this.personalInformationStepForm} p.identity`;
+    this.personalInformationEditLink = `${this.personalInformationStepForm} span.step-edit.text-muted`;
+    this.loginErrorMessage = `${this.checkoutLoginForm} li.alert-danger`;
 
     // Addresses step selectors
     this.addressStepSection = '#checkout-addresses-step';
@@ -348,6 +369,44 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Logout customer
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async logOutCustomer(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.personalInformationLogoutLink);
+
+    return this.isStepCompleted(page, this.personalInformationStepForm);
+  }
+
+  /**
+   * Click on edit personal information step
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async clickOnEditPersonalInformationStep(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.personalInformationEditLink);
+  }
+
+  /**
+   * Get customer identity
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getCustomerIdentity(page: Page): Promise<string> {
+    return this.getTextContent(page, this.personalInformationCustomerIdentity);
+  }
+
+  /**
+   * Get logout message
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getLogoutMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.logoutMessage);
+  }
+
+  /**
    * Login in FO
    * @param page {Page} Browser tab
    * @param customer {object} Customer's information (email and password)
@@ -360,6 +419,15 @@ class Checkout extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.personalInformationContinueButton);
 
     return this.isStepCompleted(page, this.personalInformationStepForm);
+  }
+
+  /**
+   * Get login error message
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getLoginError(page: Page): Promise<string> {
+    return this.getTextContent(page, this.loginErrorMessage);
   }
 
   /**
