@@ -15,6 +15,8 @@ import type {Page} from 'playwright';
 class Home extends FOBasePage {
   public readonly pageTitle: string;
 
+  public readonly successAddToCartMessage: string;
+
   private readonly carouselSliderId: string;
 
   private readonly carouselControlDirectionLink: (direction: string) => string;
@@ -103,6 +105,8 @@ class Home extends FOBasePage {
 
   private readonly addToCartButton: string;
 
+  private readonly blockCartLabel: string;
+
   private readonly blockCartModalDiv: string;
 
   private readonly blockCartModalCloseButton: string;
@@ -143,6 +147,7 @@ class Home extends FOBasePage {
     super();
 
     this.pageTitle = global.INSTALL.SHOP_NAME;
+    this.successAddToCartMessage = 'Product successfully added to your shopping cart';
 
     // Selectors of slider
     this.carouselSliderId = '#carousel';
@@ -199,6 +204,7 @@ class Home extends FOBasePage {
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
+    this.blockCartLabel = '#myModalLabel';
     this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.close`;
     this.cartModalProductNameBlock = `${this.blockCartModalDiv} .product-name`;
     this.cartModalProductPriceBlock = `${this.blockCartModalDiv} .product-price`;
@@ -470,15 +476,26 @@ class Home extends FOBasePage {
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products
    * @param quantityWanted {number} Quantity to order
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async addProductToCartByQuickView(page: Page, id: number, quantityWanted: number = 1): Promise<void> {
+  async addProductToCartByQuickView(page: Page, id: number, quantityWanted: number = 1): Promise<string> {
     await this.quickViewProduct(page, id);
     await this.setValue(page, this.quickViewQuantityWantedInput, quantityWanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
     ]);
+
+    return this.getTextContent(page, this.blockCartLabel);
+  }
+
+  /**
+   * Is add to cart button disabled
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAddToCartButtonDisabled(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.addToCartButton}[disabled]`, 1000);
   }
 
   /**
