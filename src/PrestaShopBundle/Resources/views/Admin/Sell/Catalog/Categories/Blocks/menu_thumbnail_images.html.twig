@@ -24,14 +24,14 @@
  *#}
 
 {% block category_menu_thumbnails %}
-  {% if menuThumbnailImages is defined and menuThumbnailImages is not empty %}
+  {% if preview_images is defined and preview_images is not empty %}
     <div>
-      {% for menuThumbnail in menuThumbnailImages %}
+      {% for menuThumbnail in preview_images %}
         <figure class="figure">
           <img src="{{ menuThumbnail.path }}" class="figure-img img-fluid img-thumbnail">
           <figcaption class="figure-caption">
             <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
-                    data-form-submit-url="{{ path('admin_categories_delete_menu_thumbnail', {'categoryId': editableCategory.id.value, 'menuThumbnailId': menuThumbnail.id}) }}"
+                    data-form-submit-url="{{ path('admin_categories_delete_menu_thumbnail', {'categoryId': category_id, 'menuThumbnailId': menuThumbnail.id}) }}"
                     data-form-csrf-token="{{ csrf_token('delete-menu-thumbnail') }}"
             >
               <i class="material-icons">

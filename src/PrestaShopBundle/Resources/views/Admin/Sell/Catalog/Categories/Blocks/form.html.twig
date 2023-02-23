@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme categoryForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme categoryForm '@PrestaShop/Admin/Sell/Catalog/Categories/FormTheme/category.html.twig' %}
 
 {% block category_form_block %}
 {{ form_start(categoryForm, {'attr': {'data-id': categoryId|default(0)}}) }}
@@ -41,48 +41,9 @@
       {% endif %}
       {{ form_row(categoryForm.description) }}
       {{ form_row(categoryForm.additional_description) }}
-
-      <div class="form-group row">
-        {{ form_label(categoryForm.cover_image) }}
-        <div class="col-sm">
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig' %}
-
-          {{ form_widget(categoryForm.cover_image) }}
-        </div>
-      </div>
-
-      <div class="form-group row">
-        {{ form_label(categoryForm.thumbnail_image) }}
-        <div class="col-sm">
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
-
-          {{ form_widget(categoryForm.thumbnail_image) }}
-        </div>
-      </div>
-
-
-      <div class="form-group row">
-        {{ form_label(categoryForm.menu_thumbnail_images) }}
-        <div class="col-sm">
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/menu_thumbnail_images.html.twig' %}
-
-          {% if allowMenuThumbnailsUpload %}
-            {{ form_widget(categoryForm.menu_thumbnail_images) }}
-          {% else %}
-            <div class="d-none">
-              {{ form_widget(categoryForm.menu_thumbnail_images) }}
-            </div>
-
-            <div class="alert alert-warning" role="alert">
-              <p class="alert-text">
-                {{ 'You have reached the limit (%s) of files to upload, please remove files to continue uploading'|trans({'%s': maxMenuThumbnails}, 'Admin.Catalog.Notification') }}
-              </p>
-            </div>
-          {% endif %}
-        </div>
-      </div>
-
-      {{ renderhook('displayBackOfficeCategory') }}
+      {{ form_row(categoryForm.cover_image) }}
+      {{ form_row(categoryForm.thumbnail_image) }}
+      {{ form_row(categoryForm.menu_thumbnail_images) }}
 
       {% if categoryUrl is not null %}
         {% block category_tool_serp %}

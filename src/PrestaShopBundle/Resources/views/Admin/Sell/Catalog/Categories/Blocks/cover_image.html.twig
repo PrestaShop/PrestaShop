@@ -24,13 +24,13 @@
  *#}
 
 {% block category_cover_image %}
-  {% if coverImage is defined and coverImage is not null %}
+  {% if preview_image is defined and preview_image is not null %}
     <div>
       <form action="">
         <figure class="figure">
-          <img src="{{ coverImage.path }}" class="figure-img img-fluid img-thumbnail">
+          <img src="{{ preview_image.path }}" class="figure-img img-fluid img-thumbnail">
           <figcaption class="figure-caption">
-            <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ coverImage.size }}</p>
+            <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ preview_image.size }}</p>
             <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
                     data-form-submit-url="{{ path('admin_categories_delete_cover_image', {'categoryId': app.request.get('categoryId')}) }}"
                     data-form-csrf-token="{{ csrf_token('delete-cover-image') }}"

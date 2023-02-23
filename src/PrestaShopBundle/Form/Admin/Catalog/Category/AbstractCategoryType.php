@@ -26,12 +26,20 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Type\CategoryCoverImageType;
+use PrestaShopBundle\Form\Admin\Type\CategoryImageType;
+use PrestaShopBundle\Form\Admin\Type\CategoryMenuThumbnailsType;
+use PrestaShopBundle\Form\Admin\Type\CategoryThumbnailType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -76,6 +84,11 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var TacticianCommandBusAdapter
+     */
+    private $queryBus;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
@@ -89,7 +102,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
         ConfigurationInterface $configuration,
-        Router $router
+        Router $router,
+        TacticianCommandBusAdapter $queryBus
     ) {
         parent::__construct($translator, $locales);
 
@@ -97,6 +111,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         $this->multiStoreFeature = $multiStoreFeature;
         $this->configuration = $configuration;
         $this->router = $router;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -104,12 +119,18 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $coverImage = $thumbnailImage = $menuThumbnailImages = $categoryId = null;
         $disableMenuThumbnailsUpload = false;
         if (isset($options['id_category'])) {
-            $disableMenuThumbnailsUpload = $options['disable_menu_thumbnails_upload'];
+            $categoryId = (int) $options['id_category'];
+            $editableCategory = $this->queryBus->handle(new GetCategoryForEditing((int) $options['id_category']));
+            $coverImage = $editableCategory->getCoverImage();
+            $thumbnailImage = $editableCategory->getThumbnailImage();
+            $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+            $disableMenuThumbnailsUpload = !$editableCategory->canContainMoreMenuThumbnails();
         }
         $genericCharactersHint = $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::CATALOG_CHARS]);
-
+        /* @var EditableCategory $editableCategory */
         $builder
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
@@ -178,22 +199,26 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ),
                 'required' => false,
             ])
-            ->add('cover_image', FileType::class, [
+            ->add('cover_image', CategoryCoverImageType::class, [
                 'label' => $this->trans('Category cover image', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('This is the cover image for your category: it will be displayed on the category\'s page. The description will appear in its top-left corner.', 'Admin.Catalog.Help'),
                 'required' => false,
+                'preview_image' => $coverImage,
             ])
-            ->add('thumbnail_image', FileType::class, [
+            ->add('thumbnail_image', CategoryThumbnailType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('It will display a thumbnail on the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
                 'required' => false,
+                'preview_image' => $thumbnailImage,
             ])
-            ->add('menu_thumbnail_images', FileType::class, [
+            ->add('menu_thumbnail_images', CategoryMenuThumbnailsType::class, [
                 'label' => $this->trans('Menu thumbnails', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('It will display a thumbnail representing the category in the menu, if the theme allows it.', 'Admin.Catalog.Help'),
                 'multiple' => true,
                 'required' => false,
+                'preview_images' => $menuThumbnailImages,
                 'disabled' => $disableMenuThumbnailsUpload,
+                'category_id' => $categoryId
             ])
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Global'),

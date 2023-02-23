@@ -303,7 +303,6 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryFormOptions = [
             'id_category' => (int) $categoryId,
             'subcategories' => $editableCategory->getSubCategories(),
-            'disable_menu_thumbnails_upload' => !$editableCategory->canContainMoreMenuThumbnails(),
         ];
 
         try {
@@ -392,12 +391,9 @@ class CategoryController extends FrameworkBundleAdminController
 
         $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
         $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
-        $categoryFormOptions = [
-            'disable_menu_thumbnails_upload' => !$editableCategory->canContainMoreMenuThumbnails(),
-        ];
 
         try {
-            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
+            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId, []);
         } catch (Exception $exception) {
             $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
@@ -427,7 +423,6 @@ class CategoryController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'categoryId' => $categoryId,
-                'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
                 'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                 'contextLangId' => $this->getContextLangId(),
                 'editRootCategoryForm' => $rootCategoryForm->createView(),
@@ -463,7 +458,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function deleteCoverImageAction(Request $request, $categoryId)
     {
-        if (!$this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
+        if (!$this->isCsrfTokenValid('delete-cover_image', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
                 'uri' => $this->generateUrl('admin_categories_edit', [
                     'categoryId' => $categoryId,

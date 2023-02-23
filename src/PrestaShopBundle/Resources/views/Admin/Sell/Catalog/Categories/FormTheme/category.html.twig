@@ -1,0 +1,29 @@
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block category_cover_image_widget %}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig' %}
+  {{ block('file_widget') }}
+{% endblock category_cover_image_widget %}
+
+{% block category_thumbnail_widget %}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
+  {{ block('file_widget') }}
+{% endblock category_thumbnail_widget %}
+
+{% block category_menu_thumbnails_widget %}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/menu_thumbnail_images.html.twig' %}
+  {% if attr.disabled|default(false) %}
+    <div class="d-none">
+      {{ block('file_widget') }}
+    </div>
+
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">
+        {{ 'You have reached the limit (%s) of files to upload, please remove files to continue uploading'|trans({'%s': maxMenuThumbnails}, 'Admin.Catalog.Notification') }}
+      </p>
+    </div>
+  {% else %}
+    {{ block('file_widget') }}
+  {% endif %}
+{% endblock category_menu_thumbnails_widget %}
+
