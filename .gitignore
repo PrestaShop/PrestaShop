@@ -2,6 +2,7 @@
 
 /.htaccess
 /.htpasswd
+/.env
 *.log
 npm-debug.log.*
 .sass-cache/
