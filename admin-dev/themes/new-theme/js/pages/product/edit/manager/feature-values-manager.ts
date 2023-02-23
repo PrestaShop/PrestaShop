@@ -127,6 +127,12 @@ export default class FeatureValuesManager {
       $featureValueSelector.val('');
       $customFeatureIdInput.val('');
 
+      if (!idFeature) {
+        $featureValueSelector.prop('disabled', true);
+
+        return;
+      }
+
       $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
         .then((featureValuesData) => {
           $featureValueSelector.prop('disabled', featureValuesData.length === 0);

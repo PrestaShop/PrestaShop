@@ -33,6 +33,8 @@ use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This listener dynamically updates the choices allowed in the feature value selector,
@@ -51,15 +53,23 @@ class FeatureValueListener implements EventSubscriberInterface
     private $formCloner;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider
      * @param FormCloner $formCloner
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        TranslatorInterface $translator
     ) {
         $this->featureValuesChoiceProvider = $featureValuesChoiceProvider;
         $this->formCloner = $formCloner;
+        $this->translator = $translator;
     }
 
     /**
@@ -82,6 +92,10 @@ class FeatureValueListener implements EventSubscriberInterface
         $data = $event->getData();
 
         if (empty($data['feature_id'])) {
+            // make sure feature_value_id form is disabled in case it was rendered after error of not selecting feature_id
+            $newFeatureValueForm = $this->formCloner->cloneForm($form->get('feature_value_id'), ['disabled' => true]);
+            $form->add($newFeatureValueForm);
+
             return;
         }
 
@@ -90,14 +104,22 @@ class FeatureValueListener implements EventSubscriberInterface
         }, false);
 
         $featureValues = $this->featureValuesChoiceProvider->getChoices(['feature_id' => (int) $data['feature_id'], 'custom' => $hasCustomValue]);
-        $newFeatureValueForm = $this->formCloner->cloneForm($form->get('feature_value_id'), [
+        $options = [
             'choices' => $featureValues,
+            'placeholder' => $this->translator->trans('Choose a value', [], 'Admin.Catalog.Feature'),
             'attr' => [
                 'disabled' => $hasCustomValue || empty($featureValues),
                 'data-toggle' => 'select2',
                 'class' => 'feature-value-selector',
             ],
-        ]);
+            'constraints' => [],
+        ];
+        if (!$hasCustomValue) {
+            $options['constraints'][] = new NotBlank([
+                'message' => $this->translator->trans('Choose a value or provide a customized one', [], 'Admin.Catalog.Feature'),
+            ]);
+        }
+        $newFeatureValueForm = $this->formCloner->cloneForm($form->get('feature_value_id'), $options);
         $form->add($newFeatureValueForm);
     }
 }

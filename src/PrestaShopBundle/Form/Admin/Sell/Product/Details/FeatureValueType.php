@@ -37,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeatureValueType extends TranslatorAwareType
@@ -71,13 +72,19 @@ class FeatureValueType extends TranslatorAwareType
 
         $builder
             ->add('feature_id', ChoiceType::class, [
+                'empty_data' => null,
                 'choices' => $features,
                 'required' => false,
-                'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
+                'placeholder' => $this->trans('Choose a feature', 'Admin.Catalog.Feature'),
                 'label' => $this->trans('Feature', 'Admin.Catalog.Feature'),
                 'attr' => [
                     'data-toggle' => 'select2',
                     'class' => 'feature-selector',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('Choose a feature', 'Admin.Catalog.Feature'),
+                    ]),
                 ],
             ])
             ->add('feature_value_id', ChoiceType::class, [
@@ -85,6 +92,7 @@ class FeatureValueType extends TranslatorAwareType
                 'empty_data' => null,
                 'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
                 'label' => $this->trans('Pre-defined value', 'Admin.Catalog.Feature'),
+                'invalid_message' => $this->trans('Choose a value or provide a customized one', 'Admin.Catalog.Feature'),
                 'attr' => [
                     'disabled' => true,
                     'data-toggle' => 'select2',
