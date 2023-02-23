@@ -39,6 +39,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Tests\Integration\PrestaShopBundle\Form\FormListenerTestCase;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeatureValueListenerTest extends FormListenerTestCase
 {
@@ -75,18 +78,20 @@ class FeatureValueListenerTest extends FormListenerTestCase
      * @param array|null $choices
      * @param bool $disabled
      */
-    public function testUpdateFeatureValuesOptions(array $formData, ?array $expectedFilters, ?array $choices, bool $disabled): void
+    public function testUpdateFeatureValuesOptions(array $formData, ?array $expectedFilters, ?array $choices, array $constraints, bool $disabled): void
     {
         $providerMock = $this->createChoiceProviderMock($choices, $expectedFilters);
-        $listener = new FeatureValueListener($providerMock, $this->formCloner);
+        $listener = new FeatureValueListener($providerMock, $this->formCloner, $this->mockTranslator());
 
         $form = $this->createForm(SimpleFeaturesFormTest::class);
         $this->assertFormChoices($form, []);
+        $this->assertFormConstraints($form, []);
 
         $eventMock = $this->createEventMock($formData, $form);
         $listener->updateFeatureValuesOptions($eventMock);
 
         $this->assertFormChoices($form, $choices);
+        $this->assertFormConstraints($form, $constraints);
         // Use cases where no filters present return early so attributes are not changed
         if (null !== $expectedFilters) {
             $this->assertFormAttributes($form, $disabled);
@@ -95,6 +100,10 @@ class FeatureValueListenerTest extends FormListenerTestCase
 
     public function getTestValues(): Generator
     {
+        $notBlankConstraint = new NotBlank([
+            'message' => 'Choose a value or provide a customized one',
+        ]);
+
         yield [
             // $formData
             [
@@ -110,6 +119,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'Cotton' => 51,
                 'Ceramic' => 69,
             ],
+            [$notBlankConstraint],
             // $disabled
             false,
         ];
@@ -130,6 +140,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'Cotton' => 51,
                 'Ceramic' => 69,
             ],
+            [$notBlankConstraint],
             false,
         ];
 
@@ -150,6 +161,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'Cotton' => 51,
                 'Ceramic' => 69,
             ],
+            [],
             true,
         ];
 
@@ -162,17 +174,18 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'feature_id' => 42,
                 'custom' => false,
             ],
-            [
-            ],
+            [],
+            [$notBlankConstraint],
             true,
         ];
 
-        // When data input has no feature_id the listener returns early
+        // When data input has no feature_id the listener returns early, but still disables feature value
         yield [
             [],
             null,
             [],
-            false,
+            [],
+            true,
         ];
 
         yield [
@@ -181,7 +194,8 @@ class FeatureValueListenerTest extends FormListenerTestCase
             ],
             null,
             [],
-            false,
+            [],
+            true,
         ];
 
         yield [
@@ -190,7 +204,8 @@ class FeatureValueListenerTest extends FormListenerTestCase
             ],
             null,
             [],
-            false,
+            [],
+            true,
         ];
 
         yield [
@@ -199,7 +214,8 @@ class FeatureValueListenerTest extends FormListenerTestCase
             ],
             null,
             [],
-            false,
+            [],
+            true,
         ];
 
         yield [
@@ -208,7 +224,8 @@ class FeatureValueListenerTest extends FormListenerTestCase
             ],
             null,
             [],
-            false,
+            [],
+            true,
         ];
     }
 
@@ -240,6 +257,18 @@ class FeatureValueListenerTest extends FormListenerTestCase
     }
 
     /**
+     * @param FormInterface $form
+     * @param Constraint[] $expectedConstraints
+     */
+    private function assertFormConstraints(FormInterface $form, array $expectedConstraints): void
+    {
+        $featureValueField = $form->get('feature_value_id');
+        $constraints = $featureValueField->getConfig()->getOption('constraints');
+
+        $this->assertEquals($expectedConstraints, $constraints);
+    }
+
+    /**
      * @param array $choices
      * @param array|null $expectedFilters
      *
@@ -259,6 +288,14 @@ class FeatureValueListenerTest extends FormListenerTestCase
         }
 
         return $providerMock;
+    }
+
+    private function mockTranslator(): TranslatorInterface
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnArgument(0);
+
+        return $translator;
     }
 }
 
