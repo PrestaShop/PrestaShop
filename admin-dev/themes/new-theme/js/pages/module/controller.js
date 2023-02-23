@@ -296,8 +296,8 @@ class AdminModuleController {
       const nbModulesInContainer = container.find('.module-item').length;
 
       if (
-        (self.currentCategoryFilter &&
-          self.currentCategoryFilter !== String(container.find('.modules-list').data('name')))
+        (self.currentCategoryFilter
+          && self.currentCategoryFilter !== String(container.find('.modules-list').data('name')))
         || (self.currentModuleStatusFilter !== null && nbModulesInContainer === 0)
         || (nbModulesInContainer === 0
           && String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED)
