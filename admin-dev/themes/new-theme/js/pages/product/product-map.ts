@@ -205,8 +205,9 @@ export default {
     bulkFixedQuantitySwitchName: 'bulk_combination[stock][disabling_switch_fixed_quantity]',
   },
   virtualProduct: {
-    container: '.virtual-product-file-container',
-    fileContentContainer: '.virtual-product-file-content',
+    fileContentContainer: '.virtual-product-file-container .virtual-product-file-content',
+    fileUploadInput: '#product_stock_virtual_product_file_file',
+    filenameInput: '#product_stock_virtual_product_file_name',
   },
   dropzone: {
     configuration: {
