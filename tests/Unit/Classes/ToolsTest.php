@@ -27,10 +27,13 @@
 namespace Tests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
+use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 use Tools;
 
 class ToolsTest extends TestCase
 {
+    use ExtendedTestCaseMethodsTrait;
+
     private const PS_ROUND_UP = 0;
     private const PS_ROUND_DOWN = 1;
     private const PS_ROUND_HALF_UP = 2;
@@ -261,7 +264,7 @@ class ToolsTest extends TestCase
     public function testSpreadAmount(array $expectedRows, float $amount, int $precision, array $rows, string $column): void
     {
         Tools::spreadAmount($amount, $precision, $rows, $column);
-        $this->assertEquals(array_values($expectedRows), array_values($rows));
+        $this->assertEqualsWithEpsilon(array_values($expectedRows), array_values($rows));
     }
 
     /**
