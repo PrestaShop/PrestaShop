@@ -29,9 +29,12 @@ namespace Tests\Unit\Classes\Tax;
 use PHPUnit\Framework\TestCase;
 use Tax;
 use TaxCalculator;
+use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 
 class TaxCalculatorCoreTest extends TestCase
 {
+    use ExtendedTestCaseMethodsTrait;
+
     public function testGetTotalRateOK()
     {
         $tax = new Tax();
@@ -61,6 +64,6 @@ class TaxCalculatorCoreTest extends TestCase
 
         $totalRate = $tax_calculator->getTotalRate();
 
-        $this->assertEquals(27.233, $totalRate);
+        $this->assertEqualsWithEpsilon(27.233, $totalRate);
     }
 }
