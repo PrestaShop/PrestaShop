@@ -296,7 +296,8 @@ class AdminModuleController {
       const nbModulesInContainer = container.find('.module-item').length;
 
       if (
-        (self.currentCategoryFilter && self.currentCategoryFilter !== String(container.find('.modules-list').data('name')))
+        (self.currentCategoryFilter &&
+          self.currentCategoryFilter !== String(container.find('.modules-list').data('name')))
         || (self.currentModuleStatusFilter !== null && nbModulesInContainer === 0)
         || (nbModulesInContainer === 0
           && String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED)
@@ -391,10 +392,10 @@ class AdminModuleController {
       }
 
       // If we are not searching for a module, we need to manage module
-      // visibility within categories. If it's the recently used category, 
+      // visibility within categories. If it's the recently used category,
       // we will hide the module if we already reached the max limit.
-      if (!self.currentTagsList.length && moduleCategory === self.CATEGORY_RECENTLY_USED &&
-        counter >= self.DEFAULT_MAX_RECENTLY_USED) {
+      if (!self.currentTagsList.length && moduleCategory === self.CATEGORY_RECENTLY_USED
+        && counter >= self.DEFAULT_MAX_RECENTLY_USED) {
         isVisible = false;
       }
 
@@ -910,7 +911,6 @@ class AdminModuleController {
   }
 
   updateTotalResults() {
-    const self = this;
     const replaceFirstWordBy = (element, value) => {
       const explodedText = element.text().split(' ');
       explodedText[0] = value;

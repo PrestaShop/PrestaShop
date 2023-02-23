@@ -361,7 +361,6 @@ export default class ModuleCard {
     disableCacheClear: string | boolean = false,
     callback = () => true,
   ): boolean {
-    const self = this;
     let jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
     const spinnerObj = $(
