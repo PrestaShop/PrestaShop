@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShop\PrestaShop\Core\Shop\Url\CategoryProvider;
+use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 use PrestaShopBundle\Service\Routing\Router;
 
 /**
@@ -59,7 +59,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $groupDataProvider;
 
     /**
-     * @var CategoryProvider
+     * @var UrlProviderInterface
      */
     private $categoryProvider;
 
@@ -73,7 +73,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      * @param int $contextShopId
      * @param int $contextShopRootCategoryId
      * @param GroupDataProvider $groupDataProvider
-     * @param CategoryProvider $categoryProvider
+     * @param UrlProviderInterface $categoryProvider
      * @param Router $router
      */
     public function __construct(

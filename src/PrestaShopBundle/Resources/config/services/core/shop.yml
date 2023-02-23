@@ -9,8 +9,3 @@ services:
       - '@PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration'
       - '@prestashop.core.admin.feature_flag.repository'
       - !php/const _PS_IMG_DIR_
-
-  prestashop.core.shop.url.category_provider:
-    class: 'PrestaShop\PrestaShop\Core\Shop\Url\CategoryProvider'
-    arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().link"
