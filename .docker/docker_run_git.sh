@@ -30,9 +30,12 @@ fi
 # From now, stop at error
 set -e
 
-if [ $PS_DEV_MODE -ne 1 ]; then
+if [ $PS_DEV_MODE -eq 0 ]; then
   echo "\n* Disabling DEV mode ...";
-  sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
+  sed -i "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
+else
+  echo "\n* Enabling DEV mode ...";
+  sed -i "s/define('_PS_MODE_DEV_', false);/define('_PS_MODE_DEV_',\ true);/g" /var/www/html/config/defines.inc.php
 fi
 
 if [ ! -f ./config/settings.inc.php ]; then
