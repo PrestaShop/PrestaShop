@@ -60,7 +60,7 @@ class RelatedProductsUpdater
      */
     public function setRelatedProducts(ProductId $productId, array $relatedProductIds): void
     {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getProductByDefaultShop($productId);
 
         if (empty($relatedProductIds)) {
             $this->deleteRelatedProducts($product);

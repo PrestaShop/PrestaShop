@@ -18,10 +18,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader'
-      - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Validate\VirtualProductFileValidator: ~
 

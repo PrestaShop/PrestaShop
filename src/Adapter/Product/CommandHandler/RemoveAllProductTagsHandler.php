@@ -62,8 +62,9 @@ final class RemoveAllProductTagsHandler implements RemoveAllProductTagsHandlerIn
      */
     public function handle(RemoveAllProductTagsCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
-
-        $this->productTagUpdater->setProductTags($product, []);
+        $this->productTagUpdater->setProductTags(
+            $this->productRepository->getProductByDefaultShop($command->getProductId()),
+            []
+        );
     }
 }

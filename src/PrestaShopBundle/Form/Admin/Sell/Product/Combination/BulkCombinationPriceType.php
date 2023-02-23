@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -171,21 +172,29 @@ class BulkCombinationPriceType extends TranslatorAwareType
             'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
         ]);
 
-        $resolver->setRequired('product_id');
-        $resolver->setRequired('country_id');
+        $resolver
+            ->setRequired([
+                'product_id',
+                'country_id',
+                'shop_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('country_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
+        ;
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['attr'] += [
-            'data-rate' => (float) (string) $this->getRate($options['product_id'], $options['country_id']) / 100,
+            'data-rate' => (float) (string) $this->getRate($options['product_id'], $options['country_id'], $options['shop_id']) / 100,
         ];
     }
 
-    private function getRate(int $productId, int $countryId): DecimalNumber
+    private function getRate(int $productId, int $countryId, int $shopId): DecimalNumber
     {
         return $this->taxComputer->getTaxRate(
-            $this->productRepository->getProductTaxRulesGroupId(new ProductId($productId)),
+            $this->productRepository->getProductTaxRulesGroupId(new ProductId($productId), new ShopId($shopId)),
             new CountryId($countryId)
         );
     }

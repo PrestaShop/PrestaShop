@@ -1657,14 +1657,12 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType:
     parent: 'form.type.translatable.aware'
-    arguments:
-      - '@prestashop.core.admin.url_generator'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
-      - '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
-      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+    autowire: true
     public: false
+    arguments:
+      $urlGenerator: '@prestashop.core.admin.url_generator'
+      $specificPriceCombinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
+      $contextLanguageId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
     tags:
       - { name: form.type }
 
@@ -1981,15 +1979,13 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.combination.bulk_combination_price_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType'
+  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType:
     parent: 'form.type.translatable.aware'
-    public: true
+    autowire: true
+    public: false
     arguments:
-      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
-      - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
+      $currencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
+      $weightUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
     tags:
       - { name: form.type }
 

@@ -81,9 +81,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForAssociationHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
@@ -107,7 +106,7 @@ services:
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_USE_ECOTAX")'
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_ECOTAX_TAX_RULES_GROUP_ID")'
       - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductShopsGridDataFactoryDecorator:
     parent: PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator
@@ -124,37 +123,24 @@ services:
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_STOCK_MANAGEMENT")'
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler:
+    autowire: true
+    public: false
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_COUNTRY_DEFAULT")'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
-      - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Configuration'
-      - '@PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
+      $countryId: '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_COUNTRY_DEFAULT")'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Tools'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductTagsHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
@@ -169,9 +155,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductTagsHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
@@ -190,16 +175,15 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetCarriersHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSupplierOptionsHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
@@ -241,48 +225,33 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator:
-    arguments:
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_LANG_DEFAULT")'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator'
-      - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
-
-  PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository:
     autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
-      - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
@@ -315,10 +284,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository:
     arguments:
@@ -327,16 +294,14 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater:
+    autowire: true
+    public: false
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_CURRENCY_DEFAULT")'
+      $defaultCurrencyId: '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_CURRENCY_DEFAULT")'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetRelatedProductsHandler:
     arguments:
@@ -346,10 +311,8 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
@@ -420,28 +383,25 @@ services:
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_SEARCH_INDEXATION")'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater:
     autowire: true
     public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler:
+    autowire: true
+    public: false
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater'
+      $productUpdatablePropertyFiller: '@PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockAvailableHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand
@@ -468,10 +428,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller:
     tags: [ 'core.product_filler' ]
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Tools'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\DetailsFiller:
     tags: [ 'core.product_filler' ]

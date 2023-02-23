@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
@@ -105,6 +105,19 @@ class ProductController extends FrameworkBundleAdminController
      * Used to validate connected user authorizations.
      */
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
 
     /**
      * Shows products listing.
@@ -308,9 +321,7 @@ class ProductController extends FrameworkBundleAdminController
         ));
 
         if (null === $shopId) {
-            /** @var ProductMultiShopRepository $productRepository */
-            $productRepository = $this->get(ProductMultiShopRepository::class);
-            $shopId = $productRepository->getProductDefaultShopId(new ProductId($productId))->getValue();
+            $shopId = $this->productRepository->getProductDefaultShopId(new ProductId($productId))->getValue();
         }
 
         /** @var ProductPreviewProvider $previewUrlProvider */
@@ -531,9 +542,7 @@ class ProductController extends FrameworkBundleAdminController
     public function deleteFromShopGroupAction(int $productId, int $shopGroupId): Response
     {
         try {
-            /** @var ProductMultiShopRepository $productRepository */
-            $productRepository = $this->get(ProductMultiShopRepository::class);
-            $productShopIds = $productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
+            $productShopIds = $this->productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
             $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
                 return $shopId->getValue();
             }, $productShopIds)));
@@ -1474,7 +1483,7 @@ class ProductController extends FrameworkBundleAdminController
             'productId' => $productId,
             'productShopIds' => array_map(static function (ShopId $shopId) {
                 return $shopId->getValue();
-            }, $this->get(ProductMultiShopRepository::class)->getAssociatedShopIds(new ProductId($productId))),
+            }, $this->productRepository->getAssociatedShopIds(new ProductId($productId))),
         ]);
     }
 

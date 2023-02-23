@@ -78,7 +78,7 @@ class ProductPackUpdater
      */
     public function setPackProducts(PackId $packId, array $productsForPacking): void
     {
-        $pack = $this->productRepository->get($packId);
+        $pack = $this->productRepository->getProductByDefaultShop($packId);
         if ($pack->product_type !== ProductType::TYPE_PACK) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_PACK_TYPE);
         }

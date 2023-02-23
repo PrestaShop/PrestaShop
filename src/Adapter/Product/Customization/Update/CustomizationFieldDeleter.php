@@ -135,7 +135,7 @@ class CustomizationFieldDeleter
     private function getProduct(int $productId): Product
     {
         if (!isset($this->productsById[$productId])) {
-            $this->productsById[$productId] = $this->productRepository->get(new ProductId($productId));
+            $this->productsById[$productId] = $this->productRepository->getProductByDefaultShop(new ProductId($productId));
         }
 
         return $this->productsById[$productId];

@@ -39,11 +39,5 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Stock\StockManager'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
-      - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
-      - '@PrestaShop\PrestaShop\Adapter\HookManager'
-      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
+    autowire: true
+    public: false

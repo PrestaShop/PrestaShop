@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -56,19 +56,19 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     private $productImageUrlFactory;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
     /**
      * @param ProductImageMultiShopRepository $productImageRepository
      * @param ProductImagePathFactory $productImageUrlFactory
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         ProductImageMultiShopRepository $productImageRepository,
         ProductImagePathFactory $productImageUrlFactory,
-        ProductMultiShopRepository $productRepository
+        ProductRepository $productRepository
     ) {
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;

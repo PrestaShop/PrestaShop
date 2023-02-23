@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -62,7 +62,7 @@ class CombinationCreator
     private $combinationGenerator;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -94,14 +94,14 @@ class CombinationCreator
     /**
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationRepository $combinationRepository
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableMultiShopRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
         CombinationRepository $combinationRepository,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableMultiShopRepository,
         AttributeGroupRepository $attributeGroupRepository,
         AttributeRepository $attributeRepository,

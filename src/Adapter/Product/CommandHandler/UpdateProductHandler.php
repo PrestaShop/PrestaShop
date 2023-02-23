@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
@@ -45,7 +45,7 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
     private $productUpdatablePropertyFiller;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -56,12 +56,12 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
 
     /**
      * @param ProductFillerInterface $productUpdatablePropertyFiller
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
         ProductFillerInterface $productUpdatablePropertyFiller,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->productUpdatablePropertyFiller = $productUpdatablePropertyFiller;
