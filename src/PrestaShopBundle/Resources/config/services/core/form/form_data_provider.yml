@@ -46,7 +46,7 @@ services:
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.getCategory()'
       - '@prestashop.adapter.group.group_data_provider'
-      - '@prestashop.adapter.shop.url.category_provider'
+      - '@prestashop.core.shop.url.category_provider'
       - '@prestashop.router'
 
   prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider:
