@@ -24,7 +24,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import type MailDev from 'maildev';
 
-const baseContext: string = 'functional_FO_checkout_personalInformation_signIn';
+const baseContext: string = 'functional_FO_checkout_personalInformation_passwordReminder';
 
 /*
 Pre-condition:
@@ -110,7 +110,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
     });
 
     it('should click on sign in then on \'Forgot your password?\' link ', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForgetPasswordLink', baseContext);
 
       await checkoutPage.clickOnSignIn(page);
       await checkoutPage.goToPasswordReminderPage(page);
