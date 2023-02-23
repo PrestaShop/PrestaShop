@@ -26,13 +26,12 @@
 import Router from '@components/router';
 
 const router = new Router();
-const {$} = window;
 
 export interface QuantityResult {
   quantity: number,
 }
 
-export const getProductQuantity = async (productId: number, shopId: number): Promise<QuantityResult> => $.get(
+export const getProductQuantity = async (productId: number, shopId: number): Promise<Response> => fetch(
   router.generate('admin_products_v2_quantity', {
     productId,
     shopId,

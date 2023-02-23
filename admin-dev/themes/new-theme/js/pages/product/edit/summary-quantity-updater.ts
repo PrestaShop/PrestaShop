@@ -46,14 +46,15 @@ export default class SummaryQuantityUpdater {
     this.eventEmitter.on(ProductEventMap.combinations.refreshPage, () => this.refreshQuantity());
   }
 
-  refreshQuantity(): void {
-    getProductQuantity(this.productId, this.shopId).then((response: QuantityResult) => {
-      const totalQuantityElement = this.getTotalQuantityElement();
-      const quantity = Number(response.quantity);
-      totalQuantityElement.textContent = String(quantity);
+  async refreshQuantity(): Promise<void> {
+    const response = await getProductQuantity(this.productId, this.shopId);
+    const quantityResult = <QuantityResult> await response.json();
+    const totalQuantityElement = this.getTotalQuantityElement();
+    const quantity = Number(quantityResult.quantity);
 
-      this.refreshAppearance(quantity);
-    });
+    totalQuantityElement.textContent = String(quantity);
+
+    this.refreshAppearance(quantity);
   }
 
   /**
