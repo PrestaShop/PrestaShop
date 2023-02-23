@@ -836,7 +836,13 @@
 
 {% block material_multiple_choice_table_widget %}
   {% apply spaceless %}
+    <p>
+      <small class="form-text">
+        {{ block('form_help') }}
+      </small>
+    </p>
     <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
+    <div class="choice-table table-responsive">
       <table class="table">
         <thead>
         <tr>

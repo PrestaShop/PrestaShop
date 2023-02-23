@@ -219,7 +219,54 @@ services:
     arguments:
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_iso_code").getChoices()'
 
-  PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType:
+  form.type.payment.module_preferences_parent:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleRestrictionsParentType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+          - '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
+
+  form.type.payment.module_carrier_restriction:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCarrierRestrictionsType'
+      parent: 'form.type.payment.module_preferences_parent'
+      public: true
+      arguments:
+          - '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
+      tags:
+          - { name: form.type }
+
+  form.type.payment.module_country_restriction:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCountryRestrictionsType'
+      parent: 'form.type.payment.module_preferences_parent'
+      public: true
+      arguments:
+          - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+          - '@prestashop.adapter.data_provider.country'
+      tags:
+          - { name: form.type }
+
+  form.type.payment.module_currency_restriction:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCurrencyRestrictionsType'
+      parent: 'form.type.payment.module_preferences_parent'
+      public: true
+      arguments:
+          - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+      tags:
+          - { name: form.type }
+
+  form.type.payment.module_group_restriction:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType'
+      parent: 'form.type.payment.module_preferences_parent'
+      public: true
+      arguments:
+          - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+      tags:
+          - { name: form.type }
+
+  form.type.payment.module_currency_restriction:
+    class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+    parent: 'form.type.translatable.aware'
+    public: true
     arguments:
       $paymentModules: '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'

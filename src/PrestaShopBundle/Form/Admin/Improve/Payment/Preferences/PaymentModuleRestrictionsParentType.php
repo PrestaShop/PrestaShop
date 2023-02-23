@@ -24,43 +24,55 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class PaymentPreferencesFormDataProvider is responsible for handling "Improve > Payment > Preferences" form data.
+ * Class PaymentModuleRestrictionsParentType defines is parent for all restriction forms in Payment Preferences
  */
-final class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
+class PaymentModuleRestrictionsParentType extends TranslatorAwareType
 {
     /**
-     * @var DataConfigurationInterface
+     * @var array
      */
-    private $PaymentModuleConfiguration;
+    protected $paymentModules;
 
     /**
-     * @param DataConfigurationInterface $PaymentModuleConfiguration
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param array $paymentModules
      */
     public function __construct(
-        DataConfigurationInterface $PaymentModuleConfiguration
+        TranslatorInterface $translator,
+        array $locales,
+        array $paymentModules
     ) {
-        $this->PaymentModuleConfiguration = $PaymentModuleConfiguration;
+        parent::__construct($translator, $locales);
+
+        $this->paymentModules = $this->sortPaymentModules($paymentModules);
     }
 
     /**
-     * {@inheritdoc}
+     * Sort payment modules by display name.
+     *
+     * @param array $paymentModules
+     *
+     * @return array
      */
-    public function getData()
+    protected function sortPaymentModules(array $paymentModules): array
     {
-        return $this->PaymentModuleConfiguration->getConfiguration();
-    }
+        $sortingBy = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        return $this->PaymentModuleConfiguration->updateConfiguration($data);
+        foreach ($paymentModules as $key => $paymentModule) {
+            $sortingBy[$key] = $paymentModule->get('displayName');
+        }
+
+        array_multisort($sortingBy, SORT_ASC, $paymentModules);
+
+        return $paymentModules;
     }
 }
