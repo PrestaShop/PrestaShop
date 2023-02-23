@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme orderStateForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block order_state_form %}
   {{ form_start(orderStateForm) }}
@@ -36,55 +36,7 @@
         <div class="form-wrapper">
           {{ form_errors(orderStateForm) }}
 
-          {{ ps.form_group_row(orderStateForm.name, {}, {
-            'label': 'Status name'|trans({}, 'Admin.Shopparameters.Feature'),
-            'help': 'Order status (e.g. \'Pending\').'|trans({}, 'Admin.Shopparameters.Help')
-                    ~ ' '
-                    ~ 'Invalid characters: numbers and'|trans({}, 'Admin.Shopparameters.Help')
-                    ~ ' !<>,;?=+()@#"{}_$%:'
-          }) }}
-
-          {{ ps.form_group_row(orderStateForm.color, {}, {
-            'label': 'Color'|trans({}, 'Admin.Shopparameters.Feature'),
-            'help': 'Status will be highlighted in this color. HTML colors only.'|trans({}, 'Admin.Shopparameters.Help') ~ ' "lightblue", "#CC6600")'
-          }) }}
-
-          {{ ps.form_group_row(orderStateForm.loggable, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.invoice, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.hidden, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.send_email, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.pdf_invoice, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.pdf_delivery, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.shipped, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.paid, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.delivery, {}, {'label': ''}) }}
-
-          {{ ps.form_group_row(orderStateForm.template, {
-              'options_extra': {
-                'data-preview': templatesPreviewUrl
-              },
-              'button': {
-                'label': 'Preview'|trans({}, 'Admin.Actions'),
-                'icon': 'visibility',
-                'class': 'btn btn-primary',
-                'id': 'order_state_template_preview'
-              }
-            },
-            {
-              'label': 'Email template'|trans({}, 'Admin.Shopparameters.Feature'),
-              'hint': 'Status will be highlighted in this color. HTML colors only.'|trans({}, 'Admin.Shopparameters.Help') ~ ' "lightblue", "#CC6600")',
-              'class': 'order_state_template_select'
-            }) }}
-
-          {% block order_state_form_reset %}
+          {% block order_state_form_rest %}
             {{ form_rest(orderStateForm) }}
           {% endblock %}
         </div>

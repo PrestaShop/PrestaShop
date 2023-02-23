@@ -364,6 +364,7 @@
     <div class="input-group colorpicker">
       <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
+    {{- block('form_help') -}}
   {% endapply %}
 {% endblock color_picker_widget %}
 
