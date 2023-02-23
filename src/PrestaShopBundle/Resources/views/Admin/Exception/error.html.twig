@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends '::base.html.twig' %}
+{% extends '@PrestaShop/base.html.twig' %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
@@ -38,8 +38,8 @@
     <div class="mt-5">
       <div class="card">
         <div class="card-body text-center">
-          <img class="img-responsive" 
-               src="{{ asset('themes/new-theme/img/error/500.svg') }}" 
+          <img class="img-responsive"
+               src="{{ asset('themes/new-theme/img/error/500.svg') }}"
                alt="{{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}">
 
           <div class="mt-3">
