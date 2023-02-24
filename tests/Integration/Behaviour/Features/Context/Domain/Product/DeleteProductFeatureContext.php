@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
@@ -121,7 +120,7 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteProductFromShopsCommand(
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand(
                 $productIds,
                 $shopConstraint
             ));

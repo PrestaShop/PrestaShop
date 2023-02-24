@@ -29,12 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles command which deletes products in bulk action
@@ -47,11 +50,27 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
     private $productRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @var ProductImageMultiShopRepository
      */
-    public function __construct(ProductRepository $productRepository)
-    {
+    private $productImageRepository;
+
+    /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
+     */
+    public function __construct(
+        ProductRepository $productRepository,
+        ProductImageMultiShopRepository $productImageRepository,
+        CombinationRepository $combinationRepository
+    ) {
         $this->productRepository = $productRepository;
+        $this->productImageRepository = $productImageRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -78,11 +97,33 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
                     var_export($command, true)
                 ));
         }
-        $this->productRepository->deleteByShopConstraint($productId, $command->getShopConstraint());
+
+        $shopConstraint = $command->getShopConstraint();
+
+        $this->removeImages($productId, $shopConstraint);
+        $this->removeCombinations($productId, $shopConstraint);
+        $this->productRepository->deleteByShopConstraint($productId, $shopConstraint);
     }
 
     protected function buildBulkException(): BulkProductException
     {
         return new CannotBulkDeleteProductException();
+    }
+
+    private function removeImages(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        $imageIds = $this->productImageRepository->getImageIds($productId, $shopConstraint);
+        foreach ($imageIds as $imageId) {
+            $this->productImageRepository->deleteByShopConstraint($imageId, $shopConstraint);
+        }
+    }
+
+    private function removeCombinations(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        if (!$this->productRepository->hasCombinations($productId)) {
+            return;
+        }
+
+        $this->combinationRepository->deleteByProductId($productId, $shopConstraint);
     }
 }
