@@ -853,12 +853,24 @@ services:
       $weightUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
       $productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
 
+<<<<<<< HEAD
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationReferencesType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationImagesType:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType:
     arguments:
       $themeCatalog: "@prestashop.core.mail_template.theme_catalog"
+=======
+  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType:
+    parent: 'form.type.translatable.aware'
+    autowire: true
+    public: false
+    arguments:
+      $currencyIsoCode: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
+      $weightUnit: "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+    tags:
+      - { name: form.type }
+>>>>>>> 8.1.x
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates\OrderReturnStateType:
   PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType:

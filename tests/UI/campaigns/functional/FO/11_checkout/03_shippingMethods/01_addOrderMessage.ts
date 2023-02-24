@@ -6,12 +6,17 @@ import testContext from '@utils/testContext';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import homePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import loginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import myAccountPage from '@pages/FO/myAccount';
+import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
 import Carriers from '@data/demo/carriers';
 import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -26,6 +31,8 @@ Scenario:
 - Go to payment step
 - Click on edit shipping methods and check the message
 - Choose the other carrier and check the message
+- Choose a payment method and confirm the order
+- Go to order details page and check the message
  */
 
 describe('FO - Checkout - Shipping methods : Add order message', async () => {
@@ -35,6 +42,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     + 'Nullam sapien sem, ornare ac, nonummy non, lobortis a, enim. Nunc tincidunt ante vitae massa. Duis ante orci, '
     + 'molestie vitae, vehicula venenatis, tincidunt ac, pede. Nulla accumsan, elit sit123456789&é"'
     + '"\'(-è_çà)=+°&~#\\{[|`\\^@]}^$ù*!:;,?./§%µ¤²';
+  const editMessage: string = 'Test message';
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,16 +71,16 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
 
     await homePage.goToLoginPage(page);
 
-    const pageTitle = await foLoginPage.getPageTitle(page);
-    await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    const pageTitle = await loginPage.getPageTitle(page);
+    await expect(pageTitle, 'Fail to open FO login page').to.contains(loginPage.pageTitle);
   });
 
   it('should sign in with customer credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-    await foLoginPage.customerLogin(page, Customers.johnDoe);
+    await loginPage.customerLogin(page, Customers.johnDoe);
 
-    const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+    const isCustomerConnected = await loginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
 
@@ -80,7 +88,7 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
     // Go to home page
-    await foLoginPage.goToHomePage(page);
+    await loginPage.goToHomePage(page);
     // Go to the first product page
     await homePage.goToProductPage(page, 1);
     // Add the product to the cart
@@ -121,19 +129,41 @@ describe('FO - Checkout - Shipping methods : Add order message', async () => {
     await expect(orderMessage).to.equal(message);
   });
 
-  it(`should choose the other carrier '${Carriers.default.name}' and check the order message`, async function () {
+  it(`should choose the other carrier '${Carriers.default.name}' and edit the order message`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseAnotherCarrier', baseContext);
 
-    await checkoutPage.chooseShippingMethod(page, Carriers.default.id);
-
-    const orderMessage = await checkoutPage.getOrderMessage(page);
-    await expect(orderMessage).to.equal(message);
-  });
-
-  it('should click on continue button and check the payment step', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinue', baseContext);
+    await checkoutPage.chooseShippingMethodWithoutValidation(page, Carriers.default.id, editMessage);
 
     const isPaymentStep = await checkoutPage.goToPaymentStep(page);
     await expect(isPaymentStep).to.be.true;
+  });
+
+  it('should choose a payment method and validate the order', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
+
+    await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+
+    // Check the confirmation message
+    const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+    await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+  });
+
+  it('should go to order history and details page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
+
+    await homePage.goToMyAccountPage(page);
+    await myAccountPage.goToHistoryAndDetailsPage(page);
+
+    const pageHeaderTitle = await orderHistoryPage.getPageTitle(page);
+    await expect(pageHeaderTitle).to.equal(orderHistoryPage.pageTitle);
+  });
+
+  it('Go to order details abd check the messages box', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetailsPage', baseContext);
+
+    await orderHistoryPage.goToDetailsPage(page);
+
+    const orderMessage = await orderDetailsPage.getBoxMessages(page);
+    await expect(orderMessage).to.contain(editMessage);
   });
 });

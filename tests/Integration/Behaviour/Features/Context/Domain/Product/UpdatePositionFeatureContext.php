@@ -78,6 +78,8 @@ class UpdatePositionFeatureContext extends AbstractProductFeatureContext
         $categoryId = new CategoryId($this->getSharedStorage()->get($categoryReference));
         foreach ($products as $product) {
             $productId = new ProductId($this->getSharedStorage()->get($product['product_reference']));
+            // @todo: getPositionInCategory seems to only be used for tests, the method shouldn't exist if it is ONLY for tests,
+            //        maybe there is other way to assert position?
             Assert::assertSame((int) $product['position'], $productRepository->getPositionInCategory($productId, $categoryId));
         }
     }

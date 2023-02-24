@@ -105,7 +105,6 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops        |
       | image1          | 1        | shop3, shop4 |
       | image2          | 2        | shop3, shop4 |
-    And product "standardProduct" should have no images for shops "shop1,shop2"
     And product productWithCombinations is not associated to shop shop1
     And product productWithCombinations is not associated to shop shop2
     And product productWithCombinations is associated to shop shop3
@@ -136,7 +135,6 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops        |
       | image1          | 1        | shop1, shop2 |
       | image2          | 2        | shop1, shop2 |
-    And product "standardProduct" should have no images for shops "shop3,shop4"
     And product productWithCombinations is associated to shop shop1
     And product productWithCombinations is associated to shop shop2
     And product productWithCombinations is not associated to shop shop3
@@ -167,7 +165,6 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop3, shop4 |
       | image2          | 2        | shop1, shop3, shop4 |
-    And product "standardProduct" should have no images for shops "shop2"
     And product productWithCombinations is associated to shop shop1
     And product productWithCombinations is not associated to shop shop2
     And product productWithCombinations is associated to shop shop3
@@ -197,7 +194,6 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop2, shop4 |
       | image2          | 2        | shop1, shop2, shop4 |
-    And product "standardProduct" should have no images for shops "shop3"
     And product productWithCombinations is associated to shop shop1
     And product productWithCombinations is associated to shop shop2
     And product productWithCombinations is not associated to shop shop3
@@ -217,7 +213,6 @@ Feature: Copy product from shop to shop.
       | standardProduct         |
       | productWithCombinations |
     And product "standardProduct" should not exist anymore
-    And product "standardProduct" should have no images for shops "shop1,shop2,shop3,shop4"
     And product "productWithCombinations" should not exist anymore
     And product productWithCombinations should have no combinations for shops "shop1,shop2,shop3,shop4"
     And combinations "product1LWhite,product1LBlack,product1LBlue" should not exist anymore

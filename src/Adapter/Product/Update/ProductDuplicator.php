@@ -36,7 +36,7 @@ use Image;
 use Language;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -66,7 +66,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ProductDuplicator extends AbstractMultiShopObjectModelRepository
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -111,7 +111,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     private $specificPriceRepository;
 
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
         StringModifierInterface $stringModifier,

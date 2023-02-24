@@ -33,7 +33,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
@@ -82,7 +82,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
     private $attributeRepository;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -91,14 +91,14 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
      * @param string $dbPrefix
      * @param CombinationValidator $combinationValidator
      * @param AttributeRepository $attributeRepository
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         CombinationValidator $combinationValidator,
         AttributeRepository $attributeRepository,
-        ProductMultiShopRepository $productRepository
+        ProductRepository $productRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;

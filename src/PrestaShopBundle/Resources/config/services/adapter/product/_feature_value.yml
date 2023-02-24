@@ -24,9 +24,7 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues
 
   PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update\ProductFeatureValueUpdater:
+    autowire: true
     arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'

@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -61,9 +61,9 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     protected $shopRepository;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
-    protected $productMultiShopRepository;
+    protected $productRepository;
 
     /**
      * @var GridDataFactoryInterface
@@ -135,7 +135,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         bool $isEcotaxEnabled,
         int $ecoTaxGroupId,
         ShopRepository $shopRepository,
-        ProductMultiShopRepository $productMultiShopRepository
+        ProductRepository $productRepository
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -152,7 +152,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         $this->isEcotaxEnabled = $isEcotaxEnabled;
         $this->ecoTaxGroupId = $ecoTaxGroupId;
         $this->shopRepository = $shopRepository;
-        $this->productMultiShopRepository = $productMultiShopRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -247,7 +247,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         foreach ($products as $i => $product) {
             // Transform list of IDs into list of names
             if ($searchCriteria->getShopConstraint()->forAllShops() || null !== $searchCriteria->getShopConstraint()->getShopGroupId()) {
-                $shopIds = $this->productMultiShopRepository->getAssociatedShopIds(new ProductId((int) $product['id_product']));
+                $shopIds = $this->productRepository->getAssociatedShopIds(new ProductId((int) $product['id_product']));
                 $products[$i]['associated_shops_ids'] = array_map(static function (ShopId $shopId) {
                     return $shopId->getValue();
                 }, $shopIds);

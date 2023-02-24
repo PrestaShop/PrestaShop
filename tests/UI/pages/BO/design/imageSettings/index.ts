@@ -10,6 +10,8 @@ import type {Page} from 'playwright';
 class ImageSettings extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly messageThumbnailsRegenerated: string;
+
   private readonly newImageTypeLink: string;
 
   private readonly gridForm: string;
@@ -58,6 +60,8 @@ class ImageSettings extends BOBasePage {
 
   private readonly deleteModalButtonYes: string;
 
+  private readonly deleteModalCheckboxDeleteLinkedImages: string;
+
   private readonly bulkActionBlock: string;
 
   private readonly bulkActionMenuButton: string;
@@ -80,6 +84,14 @@ class ImageSettings extends BOBasePage {
 
   private readonly paginationNextLink: string;
 
+  private readonly formRegenerateThumbnails: string;
+
+  private readonly submitRegenerateThumbnails: string;
+
+  private readonly modalRegenerateThumbnails: string;
+
+  private readonly modalSubmitRegenerateThumbnails: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on image settings page
@@ -88,6 +100,7 @@ class ImageSettings extends BOBasePage {
     super();
 
     this.pageTitle = 'Image Settings • ';
+    this.messageThumbnailsRegenerated = 'The thumbnails were successfully regenerated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -133,6 +146,7 @@ class ImageSettings extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '.btn-confirm-delete-images-type';
+    this.deleteModalCheckboxDeleteLinkedImages = '#modalConfirmDeleteType #delete_linked_images';
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -148,6 +162,11 @@ class ImageSettings extends BOBasePage {
     this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    this.formRegenerateThumbnails = '#display_regenerate_form';
+    this.submitRegenerateThumbnails = `${this.formRegenerateThumbnails} button[type="submit"]`;
+    this.modalRegenerateThumbnails = '#modalRegenerateThumbnails';
+    this.modalSubmitRegenerateThumbnails = `${this.modalRegenerateThumbnails} .btn-regenerate-thumbnails`;
   }
 
   /* Header methods */
@@ -277,15 +296,19 @@ class ImageSettings extends BOBasePage {
    * Delete image type from row
    * @param page {Page} Browser tab
    * @param row {number} Row on table
+   * @param deleteLinkedImages {boolean} Delete the images linked to this image setting
    * @return {Promise<string>}
    */
-  async deleteImageType(page: Page, row: number): Promise<string> {
+  async deleteImageType(page: Page, row: number, deleteLinkedImages: boolean = false): Promise<string> {
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
     await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Check/Uncheck the option "Delete the images linked to this image setting"
+    await this.setChecked(page, this.deleteModalCheckboxDeleteLinkedImages, deleteLinkedImages);
 
     // Confirm delete action
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
@@ -406,6 +429,23 @@ class ImageSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Regenerate Thumbnails
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async regenerateThumbnails(page: Page): Promise<string> {
+    // Click on Submit
+    await page.click(this.submitRegenerateThumbnails);
+
+    // Modal & Submit
+    await this.waitForVisibleSelector(page, this.modalSubmitRegenerateThumbnails);
+    await page.click(this.modalSubmitRegenerateThumbnails);
+
+    // Return successful message
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

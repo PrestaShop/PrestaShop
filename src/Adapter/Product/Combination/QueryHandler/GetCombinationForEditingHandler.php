@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -73,7 +73,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $combinationNameBuilder;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableRepository;
 
@@ -83,7 +83,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $attributeRepository;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -120,9 +120,9 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     /**
      * @param CombinationRepository $combinationRepository
      * @param CombinationNameBuilderInterface $combinationNameBuilder
-     * @param StockAvailableMultiShopRepository $stockAvailableRepository
+     * @param StockAvailableRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param ProductImageRepository $productImageRepository
      * @param NumberExtractor $numberExtractor
      * @param TaxComputer $taxComputer
@@ -133,9 +133,9 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     public function __construct(
         CombinationRepository $combinationRepository,
         CombinationNameBuilderInterface $combinationNameBuilder,
-        StockAvailableMultiShopRepository $stockAvailableRepository,
+        StockAvailableRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         ProductImageRepository $productImageRepository,
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,

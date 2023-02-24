@@ -34,7 +34,7 @@ class SupplierControllerCore extends ProductListingFrontController
      */
     public $php_self = 'supplier';
 
-    /** @var Supplier */
+    /** @var Supplier|null */
     protected $supplier;
     protected $label;
 
@@ -228,7 +228,7 @@ class SupplierControllerCore extends ProductListingFrontController
             'url' => $this->context->link->getPageLink('supplier', true),
         ];
 
-        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
+        if (!empty($this->supplier)) {
             $breadcrumb['links'][] = [
                 'title' => $this->supplier->name,
                 'url' => $this->context->link->getSupplierLink($this->supplier),
@@ -242,8 +242,10 @@ class SupplierControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['supplier-id-' . $this->supplier->id] = true;
-        $page['body_classes']['supplier-' . $this->supplier->name] = true;
+        if (!empty($this->supplier)) {
+            $page['body_classes']['supplier-id-' . $this->supplier->id] = true;
+            $page['body_classes']['supplier-' . $this->supplier->name] = true;
+        }
 
         return $page;
     }
