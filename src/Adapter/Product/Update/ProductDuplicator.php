@@ -150,7 +150,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $newProduct = $this->duplicateProduct($productId, $shopConstraint);
         $newProductId = (int) $newProduct->id;
 
-        $this->duplicateRelations($oldProductId, $newProductId);
+        $this->duplicateRelations($oldProductId, $newProductId, $shopConstraint);
 
         if ($newProduct->hasAttributes()) {
             $this->updateDefaultAttribute($newProductId, $oldProductId);
@@ -180,11 +180,10 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     private function duplicateProduct(ProductId $sourceProductId, ShopConstraint $shopConstraint): Product
     {
         $sourceDefaultShopId = $this->productRepository->getProductDefaultShopId($sourceProductId);
+        $shopIds = $this->getShopIdsByConstraint($sourceProductId, $shopConstraint);
         if ($shopConstraint->getShopId()) {
-            $shopIds = [$shopConstraint->getShopId()];
             $targetDefaultShopId = $shopConstraint->getShopId();
         } elseif ($shopConstraint->getShopGroupId()) {
-            $shopIds = $this->productRepository->getAssociatedShopIdsFromGroup($sourceProductId, $shopConstraint->getShopGroupId());
             // If source default shop is in the group use it as new default, if not use the first shop from group
             $targetDefaultShopId = null;
             foreach ($shopIds as $groupShopId) {
@@ -196,7 +195,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $targetDefaultShopId = reset($shopIds);
             }
         } else {
-            $shopIds = $this->productRepository->getAssociatedShopIds($sourceProductId);
             $targetDefaultShopId = $sourceDefaultShopId;
         }
 
@@ -225,6 +223,23 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         }
 
         return $duplicatedProduct;
+    }
+
+    /**
+     * @param ProductId $sourceProductId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     */
+    private function getShopIdsByConstraint(ProductId $sourceProductId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopId()) {
+            return [$shopConstraint->getShopId()];
+        } elseif ($shopConstraint->getShopGroupId()) {
+            return $this->productRepository->getAssociatedShopIdsFromGroup($sourceProductId, $shopConstraint->getShopGroupId());
+        }
+
+        return $this->productRepository->getAssociatedShopIds($sourceProductId);
     }
 
     /**
@@ -274,12 +289,17 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      *
      * @param int $oldProductId
      * @param int $newProductId
+     * @param ShopConstraint $shopConstraint
      *
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateRelations(int $oldProductId, int $newProductId): void
+    private function duplicateRelations(int $oldProductId, int $newProductId, ShopConstraint $shopConstraint): void
     {
+        $shopIds = array_map(static function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint(new ProductId($oldProductId), $shopConstraint));
+
         $this->duplicateCategories($oldProductId, $newProductId);
         $combinationMatching = $this->duplicateCombinations($oldProductId, $newProductId);
         $this->duplicateSuppliers($oldProductId, $newProductId, $combinationMatching);
@@ -293,7 +313,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationMatching);
-        $this->duplicateCarriers($oldProductId, $newProductId);
+        $this->duplicateCarriers($oldProductId, $newProductId, $shopIds);
         $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
     }
 
@@ -581,16 +601,18 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     /**
      * @param int $oldProductId
      * @param int $newProductId
+     * @param int[] $shopIds
      *
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateCarriers(int $oldProductId, int $newProductId): void
+    private function duplicateCarriers(int $oldProductId, int $newProductId, array $shopIds): void
     {
-        /* @see Product::duplicateCarriers() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateCarriers'],
-            [$oldProductId, $newProductId],
+        $this->duplicateProductTableForShops(
+            'product_carrier',
+            $oldProductId,
+            $newProductId,
+            $shopIds,
             CannotDuplicateProductException::FAILED_DUPLICATE_CARRIERS
         );
     }
@@ -696,6 +718,31 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * Fetch all rows related to a product on a specific table for a set of shop IDs and duplicate it by replacing only the column id_product.
+     *
+     * @param string $table
+     * @param int $oldProductId
+     * @param int $newProductId
+     * @param int[] $shopIds
+     * @param int $errorCode
+     *
+     * @throws InvalidArgumentException
+     * @throws CannotDuplicateProductException
+     */
+    private function duplicateProductTableForShops(string $table, int $oldProductId, int $newProductId, array $shopIds, int $errorCode): void
+    {
+        $oldRows = $this->getRows($table, [
+            'id_product' => $oldProductId,
+            'id_shop' => $shopIds,
+        ], $errorCode);
+        if (empty($oldRows)) {
+            return;
+        }
+        $newRows = $this->replaceInRows($oldRows, ['id_product' => $newProductId]);
+        $this->bulkInsert($table, $newRows, $errorCode);
+    }
+
+    /**
      * Bulk insert some row values, all row must be formatted with the exact same keys and in the same order
      * so that the defined column match the values for each row.
      *
@@ -758,7 +805,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      * @param string $table
      * @param array $criteria
      * @param int $errorCode
-     * @param array<string, string> $orderBy
+     * @param array<string, string|array<string|int>> $orderBy
      *
      * @return array
      */
@@ -771,10 +818,18 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         ;
 
         foreach ($criteria as $column => $value) {
-            $qb
-                ->andWhere("$column = :$column")
-                ->setParameter(":$column", $value)
-            ;
+            if (is_array($value)) {
+                $arrayType = is_int(reset($value)) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY;
+                $qb
+                    ->andWhere("$column IN (:$column)")
+                    ->setParameter(":$column", $value, $arrayType)
+                ;
+            } else {
+                $qb
+                    ->andWhere("$column = :$column")
+                    ->setParameter(":$column", $value)
+                ;
+            }
         }
 
         foreach ($orderBy as $orderKey => $orderWay) {

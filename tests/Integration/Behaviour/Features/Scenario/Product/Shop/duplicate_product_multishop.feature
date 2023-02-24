@@ -619,16 +619,40 @@ Feature: Copy product from shop to shop.
       | men          | Men     | false      |
       | clothes      | Clothes | true       |
     # Duplicate on one shop group
-    When I duplicate product productWithCategories to a productWithCategoriesCopyShop for shop group default_shop_group
-    Then product productWithCategoriesCopyShop should be assigned to following categories for shops "shop1,shop2":
+    When I duplicate product productWithCategories to a productWithCategoriesCopyShopGroup for shop group test_second_shop_group
+    Then product productWithCategoriesCopyShopGroup should be assigned to following categories for shops "shop3,shop4":
       | id reference | name    | is default |
       | home         | Home    | false      |
       | men          | Men     | false      |
       | clothes      | Clothes | true       |
     # Duplicate on all shops
-    When I duplicate product productWithCategories to a productWithCategoriesCopyShop for all shops
-    Then product productWithCategoriesCopyShop should be assigned to following categories for shops "shop1,shop2,shop3,shop4":
+    When I duplicate product productWithCategories to a productWithCategoriesCopyAllShops for all shops
+    Then product productWithCategoriesCopyAllShops should be assigned to following categories for shops "shop1,shop2,shop3,shop4":
       | id reference | name    | is default |
       | home         | Home    | false      |
       | men          | Men     | false      |
       | clothes      | Clothes | true       |
+
+  Scenario: I duplicate a product its carriers are copied
+    Given I add product "productWithCarriers" to shop shop1 with following information:
+      | name[en-US] | smart sunglasses   |
+      | name[fr-FR] | lunettes de soleil |
+      | type        | standard           |
+    And I assign product productWithCarriers with following carriers:
+      | carrier1 |
+      | carrier2 |
+    And I copy product productWithCarriers from shop shop1 to shop shop2
+    And I copy product productWithCarriers from shop shop1 to shop shop3
+    And I copy product productWithCarriers from shop shop1 to shop shop4
+    # Copy to one shop
+    When I duplicate product productWithCarriers to a productWithCarriersCopyShop for shop shop1
+    And product "productWithCarriersCopyShop" should have following shipping information for shop "shop1":
+      | carriers                                | [carrier1,carrier2] |
+    # Copy to one shop group
+    When I duplicate product productWithCarriers to a productWithCarriersCopyShopGroup for shop group test_second_shop_group
+    And product "productWithCarriersCopyShopGroup" should have following shipping information for shops "shop3,shop4":
+      | carriers                                | [carrier1,carrier2] |
+    # Copy to all shops
+    When I duplicate product productWithCarriers to a productWithCarriersCopyAllShops for all shops
+    And product "productWithCarriersCopyAllShops" should have following shipping information for shops "shop1,shop2,shop3,shop4":
+      | carriers                                | [carrier1,carrier2] |
