@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b283900c6887089a6bf04fcb7e2c2eea",
+    "content-hash": "aeb04342fc7a4bc0fde56a58e932450f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5246,16 +5246,16 @@
         },
         {
             "name": "prestashop/blockwishlist",
-            "version": "v2.1.2",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockwishlist.git",
-                "reference": "5d84188d2c37f8df66438eaae643bd192781c208"
+                "reference": "d42091134c5b7060e195fa9d60dda63396c06d64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/5d84188d2c37f8df66438eaae643bd192781c208",
-                "reference": "5d84188d2c37f8df66438eaae643bd192781c208",
+                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/d42091134c5b7060e195fa9d60dda63396c06d64",
+                "reference": "d42091134c5b7060e195fa9d60dda63396c06d64",
                 "shasum": ""
             },
             "require-dev": {
@@ -5285,9 +5285,9 @@
             "description": "PrestaShop module blockwishlist",
             "homepage": "https://github.com/PrestaShop/blockwishlist",
             "support": {
-                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.2"
+                "source": "https://github.com/PrestaShop/blockwishlist/tree/v3.0.0"
             },
-            "time": "2022-08-01T14:47:51+00:00"
+            "time": "2023-02-23T10:22:22+00:00"
         },
         {
             "name": "prestashop/circuit-breaker",
@@ -6901,20 +6901,20 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v5.0.5",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "f27df3c4b7035557544bb3d8366024c6b175b2c8"
+                "reference": "ba7cb838d899e6fd3ccd6c478447e02f228501a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/f27df3c4b7035557544bb3d8366024c6b175b2c8",
-                "reference": "f27df3c4b7035557544bb3d8366024c6b175b2c8",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/ba7cb838d899e6fd3ccd6c478447e02f228501a6",
+                "reference": "ba7cb838d899e6fd3ccd6c478447e02f228501a6",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=7.2"
             },
             "require-dev": {
                 "prestashop/php-dev-tools": "^3.4"
@@ -6942,9 +6942,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v5.0.5"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v6.0.0"
             },
-            "time": "2022-09-02T15:51:11+00:00"
+            "time": "2023-02-23T15:54:59+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
