@@ -65,7 +65,7 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following stock information for shops :shopReferences:
+     * @Then product :productReference should have following stock information for shop(s) :shopReferences:
      */
     public function assertStockInformationForShops(
         string $productReference,
@@ -149,7 +149,7 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then combination :combinationReference last stock movements for shop :shopReferences should be:
+     * @Then combination :combinationReference last stock movements for shop(s) :shopReferences should be:
      */
     public function assertCombinationLastStockMovementsForSpecificShop(
         string $combinationReference,

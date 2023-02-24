@@ -208,7 +208,7 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     }
 
     /**
-     * @Then combination :combinationReference should have following stock details for shops :shopReferences:
+     * @Then combination :combinationReference should have following stock details for shop(s) :shopReferences:
      *
      * @param string $combinationReference
      * @param CombinationStock $expectedStock

@@ -140,7 +140,82 @@ Feature: Duplicate product from Back Office (BO).
       | carriers                                | []                   |
     And productWithFields and productWithFieldsCopy have different values
 
-  #@todo: assert stock info
+  Scenario: I duplicate a product its stock is copied
+    When I add product "productWithStock" with following information:
+      | name[en-US] | smart sunglasses   |
+      | name[fr-FR] | lunettes de soleil |
+      | type        | standard           |
+    When I update product "productWithStock" stock with following information:
+      | delta_quantity | 51  |
+      | location       | dtc |
+    And I update product "productWithStock" stock with following information:
+      | delta_quantity | -9 |
+    Then product "productWithStock" should have following stock information:
+      | quantity | 42  |
+      | location | dtc |
+    And product "productWithStock" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -9             |
+      | Puff Daddy | 51             |
+    And product "productWithStock" last stock movement decreased by 9
+    When I duplicate product productWithStock to a productWithStockCopy
+    Then product "productWithStockCopy" should have following stock information:
+      | quantity | 42  |
+      | location | dtc |
+    And product "productWithStockCopy" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 42             |
+
+  Scenario: I duplicate a product with combinations their stock are copied
+    When I add product "productWithCombinationAndStock" with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I generate combinations for product productWithCombinationAndStock using following attributes:
+      | Color | [Red,Blue] |
+    Then product "productWithCombinationAndStock" should have following combinations:
+      | id reference                | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationsBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    And I update combination "productWithCombinationsRed" stock with following details:
+      | delta quantity | 100         |
+      | location       | Storage nr1 |
+    And I update combination "productWithCombinationsRed" stock with following details:
+      | delta quantity | -40 |
+    And I update combination "productWithCombinationsBlue" stock with following details:
+      | delta quantity | 50          |
+      | location       | Storage nr1 |
+    And I update combination "productWithCombinationsBlue" stock with following details:
+      | delta quantity | 20          |
+      | location       | Storage nr2 |
+    When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopy
+    Then product "productWithCombinationAndStockCopy" should have following combinations:
+      | id reference                    | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopy  | Color - Red      |           | [Color:Red]  | 0               | 60       | true       |
+      | productWithCombinationsBlueCopy | Color - Blue     |           | [Color:Blue] | 0               | 70       | false      |
+    And productWithCombinationsRed and productWithCombinationsRedCopy have different values
+    And productWithCombinationsBlue and productWithCombinationsBlueCopy have different values
+    And combination "productWithCombinationsRedCopy" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 60          |
+      | location                   | Storage nr1 |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             |             |
+    And combination "productWithCombinationsRedCopy" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 60             |
+    And combination "productWithCombinationsBlueCopy" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 70          |
+      | location                   | Storage nr2 |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             |             |
+    And combination "productWithCombinationsBlueCopy" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 70             |
 
   Scenario: I duplicate a product all its categories are correctly copied
     Given category "home" in default language named "Home" exists

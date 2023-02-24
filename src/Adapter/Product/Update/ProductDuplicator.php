@@ -36,15 +36,24 @@ use Image;
 use Language;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -107,6 +116,21 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private $specificPriceRepository;
 
+    /**
+     * @var StockAvailableRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
+     * @var ProductStockUpdater
+     */
+    private $productStockUpdater;
+
+    /**
+     * @var CombinationStockUpdater
+     */
+    private $combinationStockUpdater;
+
     public function __construct(
         ProductRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
@@ -116,7 +140,10 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         string $dbPrefix,
         CombinationRepository $combinationRepository,
         ProductSupplierRepository $productSupplierRepository,
-        SpecificPriceRepository $specificPriceRepository
+        SpecificPriceRepository $specificPriceRepository,
+        StockAvailableRepository $stockAvailableRepository,
+        ProductStockUpdater $productStockUpdater,
+        CombinationStockUpdater $combinationStockUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
@@ -127,6 +154,9 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->combinationRepository = $combinationRepository;
         $this->productSupplierRepository = $productSupplierRepository;
         $this->specificPriceRepository = $specificPriceRepository;
+        $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->productStockUpdater = $productStockUpdater;
+        $this->combinationStockUpdater = $combinationStockUpdater;
     }
 
     /**
@@ -150,7 +180,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $newProduct = $this->duplicateProduct($productId, $shopConstraint);
         $newProductId = (int) $newProduct->id;
 
-        $this->duplicateRelations($oldProductId, $newProductId, $shopConstraint);
+        $this->duplicateRelations($oldProductId, $newProductId, $shopConstraint, $newProduct->getProductType());
 
         if ($newProduct->hasAttributes()) {
             $this->updateDefaultAttribute($newProductId, $oldProductId);
@@ -294,14 +324,14 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateRelations(int $oldProductId, int $newProductId, ShopConstraint $shopConstraint): void
+    private function duplicateRelations(int $oldProductId, int $newProductId, ShopConstraint $shopConstraint, string $productType): void
     {
         $shopIds = array_map(static function (ShopId $shopId) {
             return $shopId->getValue();
         }, $this->getShopIdsByConstraint(new ProductId($oldProductId), $shopConstraint));
 
         $this->duplicateCategories($oldProductId, $newProductId);
-        $combinationMatching = $this->duplicateCombinations($oldProductId, $newProductId);
+        $combinationMatching = $this->duplicateCombinations($oldProductId, $newProductId, $shopIds);
         $this->duplicateSuppliers($oldProductId, $newProductId, $combinationMatching);
         $this->duplicateGroupReduction($oldProductId, $newProductId);
         $this->duplicateRelatedProducts($oldProductId, $newProductId);
@@ -315,6 +345,81 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicateImages($oldProductId, $newProductId, $combinationMatching);
         $this->duplicateCarriers($oldProductId, $newProductId, $shopIds);
         $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
+        $this->duplicateStock($oldProductId, $newProductId, $shopIds, $productType, $combinationMatching);
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     * @param int[] $shopIds
+     * @param string $productType
+     * @param array $combinationMatching
+     */
+    private function duplicateStock(int $oldProductId, int $newProductId, array $shopIds, string $productType, array $combinationMatching): void
+    {
+        $targetProductId = new ProductId($newProductId);
+        foreach ($shopIds as $shopId) {
+            $targetShopId = new ShopId($shopId);
+            try {
+                $this->stockAvailableRepository->getForProduct($targetProductId, $targetShopId);
+            } catch (StockAvailableNotFoundException $e) {
+                // We create the new StockAvailable for this product and shop, it will then be updated via stock modification
+                $this->stockAvailableRepository->createStockAvailable($targetProductId, $targetShopId);
+            }
+
+            $sourceStock = $this->stockAvailableRepository->getForProduct(new ProductId($oldProductId), $targetShopId);
+            $outOfStock = new OutOfStockType((int) $sourceStock->out_of_stock);
+
+            $stockModification = StockModification::buildFixedQuantity((int) $sourceStock->quantity);
+            $stockProperties = new ProductStockProperties(
+                null,
+                $stockModification,
+                $outOfStock,
+                null,
+                $sourceStock->location
+            );
+            $this->productStockUpdater->update($targetProductId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
+
+            if ($productType === ProductType::TYPE_COMBINATIONS) {
+                $this->duplicateCombinationsStock($oldProductId, $newProductId, $targetShopId, $combinationMatching);
+            }
+        }
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     * @param ShopId $targetShopId
+     * @param array<int, int> $combinationMatching
+     */
+    private function duplicateCombinationsStock(int $oldProductId, int $newProductId, ShopId $targetShopId, array $combinationMatching): void
+    {
+        $targetProductId = new ProductId($newProductId);
+        $sourceCombinations = $this->combinationRepository->getCombinationIds(
+            new ProductId($oldProductId),
+            ShopConstraint::shop($targetShopId->getValue())
+        );
+        $targetConstraint = ShopConstraint::shop($targetShopId->getValue());
+
+        foreach ($sourceCombinations as $oldCombinationId) {
+            $newCombinationId = new CombinationId($combinationMatching[$oldCombinationId->getValue()]);
+            try {
+                $this->stockAvailableRepository->getForCombination($newCombinationId, $targetShopId);
+            } catch (StockAvailableNotFoundException $e) {
+                $this->stockAvailableRepository->createStockAvailable($targetProductId, $targetShopId, $newCombinationId);
+            }
+
+            // Get the source stock
+            $sourceStock = $this->stockAvailableRepository->getForCombination($oldCombinationId, $targetShopId);
+
+            $stockModification = StockModification::buildFixedQuantity((int) $sourceStock->quantity);
+            $stockProperties = new CombinationStockProperties(
+                $stockModification,
+                null,
+                $sourceStock->location
+            );
+            $this->combinationStockUpdater->update($newCombinationId, $stockProperties, $targetConstraint);
+        }
     }
 
     /**
@@ -363,17 +468,21 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     /**
      * @param int $oldProductId
      * @param int $newProductId
+     * @param int[] $shopIds
      *
      * @return array<int, int> Combination matching (key is the old ID, value is the new one)
      *
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateCombinations(int $oldProductId, int $newProductId): array
+    private function duplicateCombinations(int $oldProductId, int $newProductId, array $shopIds): array
     {
         $oldCombinationsShop = $this->getRows(
             'product_attribute_shop',
-            ['id_product' => $oldProductId],
+            [
+                'id_product' => $oldProductId,
+                'id_shop' => $shopIds,
+            ],
             CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS,
             [
                 'id_product_attribute' => 'ASC',
@@ -406,12 +515,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             } else {
                 // Combination already created to another shop, now we focus on duplicating the data for every other shop
                 $newCombinationId = $combinationMatching[$oldCombinationId];
-                $oldCombinationShop = $this->getRows(
-                    'product_attribute_shop',
-                    ['id_product_attribute' => $oldCombinationId],
-                    CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
-                );
-                $newCombinationShop = $this->replaceInRows($oldCombinationShop, ['id_product_attribute' => $newCombinationId, 'id_product' => $newProductId]);
+                $newCombinationShop = $this->replaceInRows([$oldCombination], ['id_product_attribute' => $newCombinationId, 'id_product' => $newProductId]);
                 $this->bulkInsert('product_attribute_shop', $newCombinationShop, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
             }
         }
@@ -763,7 +867,11 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 throw new InvalidArgumentException('The provided data has different keys in some rows');
             }
 
-            $bulkInsertSql .= '(' . implode(',', $rowValue) . ')';
+            $bulkInsertSql .= '(' . implode(',', array_map(static function ($columnValue): string {
+                // We stringify values to avoid SQL syntax error, the float and integers will correctly casted in the DB anyway
+                // however string values and date time need to be quoted
+                return "'$columnValue'";
+            }, $rowValue)) . ')';
             if ($i < count($rowValues) - 1) {
                 $bulkInsertSql .= ',';
             } else {

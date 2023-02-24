@@ -29,6 +29,7 @@ Feature: Copy product from shop to shop.
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
+    And Shop group test_second_shop_group shares its stock
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
@@ -644,15 +645,467 @@ Feature: Copy product from shop to shop.
     And I copy product productWithCarriers from shop shop1 to shop shop2
     And I copy product productWithCarriers from shop shop1 to shop shop3
     And I copy product productWithCarriers from shop shop1 to shop shop4
-    # Copy to one shop
+    # Duplicate to one shop
     When I duplicate product productWithCarriers to a productWithCarriersCopyShop for shop shop1
     And product "productWithCarriersCopyShop" should have following shipping information for shop "shop1":
-      | carriers                                | [carrier1,carrier2] |
-    # Copy to one shop group
+      | carriers | [carrier1,carrier2] |
+    # Duplicate to one shop group
     When I duplicate product productWithCarriers to a productWithCarriersCopyShopGroup for shop group test_second_shop_group
     And product "productWithCarriersCopyShopGroup" should have following shipping information for shops "shop3,shop4":
-      | carriers                                | [carrier1,carrier2] |
-    # Copy to all shops
+      | carriers | [carrier1,carrier2] |
+    # Duplicate to all shops
     When I duplicate product productWithCarriers to a productWithCarriersCopyAllShops for all shops
     And product "productWithCarriersCopyAllShops" should have following shipping information for shops "shop1,shop2,shop3,shop4":
-      | carriers                                | [carrier1,carrier2] |
+      | carriers | [carrier1,carrier2] |
+
+  Scenario: I duplicate a product its stock is copied
+    When I add product "productWithStock" to shop shop1 with following information:
+      | name[en-US] | smart sunglasses   |
+      | name[fr-FR] | lunettes de soleil |
+      | type        | standard           |
+    And I copy product productWithStock from shop shop1 to shop shop2
+    And I copy product productWithStock from shop shop1 to shop shop3
+    And I copy product productWithStock from shop shop1 to shop shop4
+    When I update product "productWithStock" stock for shop shop1 with following information:
+      | delta_quantity | 10     |
+      | location       | shelf1 |
+    And I update product "productWithStock" stock for shop shop1 with following information:
+      | delta_quantity | -9 |
+    And I update product "productWithStock" stock for shop shop2 with following information:
+      | delta_quantity | 12     |
+      | location       | shelf2 |
+    And I update product "productWithStock" stock for shop shop2 with following information:
+      | delta_quantity | -10 |
+    # Shop3 and shop4 share the same stock
+    And I update product "productWithStock" stock for shop shop3 with following information:
+      | delta_quantity | 15           |
+      | location       | shared shelf |
+    And I update product "productWithStock" stock for shop shop4 with following information:
+      | delta_quantity | -12 |
+    # Check initial quantity for each shop
+    Then product "productWithStock" should have following stock information for shop shop1:
+      | quantity | 1      |
+      | location | shelf1 |
+    And product "productWithStock" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -9             |
+      | Puff Daddy | 10             |
+    And product "productWithStock" should have following stock information for shop shop2:
+      | quantity | 2      |
+      | location | shelf2 |
+    And product "productWithStock" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -10            |
+      | Puff Daddy | 12             |
+    And product "productWithStock" should have following stock information for shops "shop3,shop4":
+      | quantity | 3            |
+      | location | shared shelf |
+    And product "productWithStock" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -12            |
+      | Puff Daddy | 15             |
+    # Duplicate to one shop
+    When I duplicate product productWithStock to a productWithStockCopy1 for shop shop1
+    Then product "productWithStockCopy1" should have following stock information for shop shop1:
+      | quantity | 1      |
+      | location | shelf1 |
+    And product "productWithStockCopy1" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+    # Duplicate to shop group
+    When I duplicate product productWithStock to a productWithStockCopyShopGroup1 for shop group default_shop_group
+    Then product "productWithStockCopyShopGroup1" should have following stock information for shop shop1:
+      | quantity | 1      |
+      | location | shelf1 |
+    And product "productWithStockCopyShopGroup1" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+    And product "productWithStockCopyShopGroup1" should have following stock information for shop shop2:
+      | quantity | 2      |
+      | location | shelf2 |
+    And product "productWithStockCopyShopGroup1" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 2              |
+    # Duplicate to shop group sharing stock, check that the stock are correctly shared by modifying it
+    When I duplicate product productWithStock to a productWithStockCopyShopGroup2 for shop group test_second_shop_group
+    Then product "productWithStockCopyShopGroup2" should have following stock information for shops "shop3,shop4":
+      | quantity | 3            |
+      | location | shared shelf |
+    And product "productWithStockCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 3              |
+    When I update product "productWithStockCopyShopGroup2" stock for shop shop4 with following information:
+      | delta_quantity | 39 |
+    Then product "productWithStockCopyShopGroup2" should have following stock information for shops "shop3,shop4":
+      | quantity | 42           |
+      | location | shared shelf |
+    And product "productWithStockCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 39             |
+      | Puff Daddy | 3              |
+    # Duplicate for all shops
+    When I duplicate product productWithStock to a productWithStockCopyAllShops for all shops
+    Then product "productWithStockCopyAllShops" should have following stock information for shop shop1:
+      | quantity | 1      |
+      | location | shelf1 |
+    And product "productWithStockCopyAllShops" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+    And product "productWithStockCopyAllShops" should have following stock information for shop shop2:
+      | quantity | 2      |
+      | location | shelf2 |
+    And product "productWithStockCopyAllShops" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 2              |
+    And product "productWithStockCopyAllShops" should have following stock information for shops "shop3,shop4":
+      | quantity | 3            |
+      | location | shared shelf |
+    And product "productWithStockCopyAllShops" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 3              |
+
+  Scenario: I duplicate a product with combinations their stock are copied
+    When I add product "productWithCombinationAndStock" with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I generate combinations for product productWithCombinationAndStock using following attributes:
+      | Color | [Red,Blue] |
+    Then product "productWithCombinationAndStock" should have following combinations:
+      | id reference                | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationsBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    And I copy product productWithCombinationAndStock from shop shop1 to shop shop2
+    And I copy product productWithCombinationAndStock from shop shop1 to shop shop3
+    And I copy product productWithCombinationAndStock from shop shop1 to shop shop4
+    # Update stock for shop1
+    And I update combination "productWithCombinationsRed" stock for shop shop1 with following details:
+      | delta quantity | 10        |
+      | location       | redshelf1 |
+    And I update combination "productWithCombinationsRed" stock for shop shop1 with following details:
+      | delta quantity | -9 |
+    And I update combination "productWithCombinationsBlue" stock for shop shop1 with following details:
+      | delta quantity | 20         |
+      | location       | blueshelf1 |
+    And I update combination "productWithCombinationsBlue" stock for shop shop1 with following details:
+      | delta quantity | -9 |
+    # Update stock for shop2
+    And I update combination "productWithCombinationsRed" stock for shop shop2 with following details:
+      | delta quantity | 12        |
+      | location       | redshelf2 |
+    And I update combination "productWithCombinationsRed" stock for shop shop2 with following details:
+      | delta quantity | -10 |
+    And I update combination "productWithCombinationsBlue" stock for shop shop2 with following details:
+      | delta quantity | 22         |
+      | location       | blueshelf2 |
+    And I update combination "productWithCombinationsBlue" stock for shop shop2 with following details:
+      | delta quantity | -10 |
+    # Update stock for shop3 and shop4
+    And I update combination "productWithCombinationsRed" stock for shop shop3 with following details:
+      | delta quantity | 15        |
+      | location       | redshelf3 |
+    And I update combination "productWithCombinationsRed" stock for shop shop4 with following details:
+      | delta quantity | -12 |
+    And I update combination "productWithCombinationsBlue" stock for shop shop3 with following details:
+      | delta quantity | 25         |
+      | location       | blueshelf4 |
+    And I update combination "productWithCombinationsBlue" stock for shop shop4 with following details:
+      | delta quantity | -12 |
+    # Check initial stock before duplicating for shop1
+    Then combination "productWithCombinationsRed" should have following stock details for shop shop1:
+      | combination stock detail   | value     |
+      | quantity                   | 1         |
+      | location                   | redshelf1 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRed" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -9             |
+      | Puff Daddy | 10             |
+    And combination "productWithCombinationsBlue" should have following stock details for shop shop1:
+      | combination stock detail   | value      |
+      | quantity                   | 11         |
+      | location                   | blueshelf1 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlue" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -9             |
+      | Puff Daddy | 20             |
+    # Check initial stock before duplicating for shop2
+    Then combination "productWithCombinationsRed" should have following stock details for shop shop2:
+      | combination stock detail   | value     |
+      | quantity                   | 2         |
+      | location                   | redshelf2 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRed" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -10            |
+      | Puff Daddy | 12             |
+    And combination "productWithCombinationsBlue" should have following stock details for shop shop2:
+      | combination stock detail   | value      |
+      | quantity                   | 12         |
+      | location                   | blueshelf2 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlue" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -10            |
+      | Puff Daddy | 22             |
+    # Check initial stock before duplicating for shop3 and shop4
+    Then combination "productWithCombinationsRed" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value     |
+      | quantity                   | 3         |
+      | location                   | redshelf3 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRed" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -12            |
+      | Puff Daddy | 15             |
+    And combination "productWithCombinationsBlue" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value      |
+      | quantity                   | 13         |
+      | location                   | blueshelf4 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlue" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -12            |
+      | Puff Daddy | 25             |
+    # Duplicate to one shop
+    When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopy1 for shop shop1
+    Then product "productWithCombinationAndStockCopy1" should have the following combinations for shop shop1:
+      | id reference                     | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopy1  | Color - Red      |           | [Color:Red]  | 0               | 1        | true       |
+      | productWithCombinationsBlueCopy1 | Color - Blue     |           | [Color:Blue] | 0               | 11       | false      |
+    And product "productWithCombinationAndStockCopy1" should have no combinations for shops "shop2"
+    And product "productWithCombinationAndStockCopy1" should have no combinations for shops "shop3"
+    And product "productWithCombinationAndStockCopy1" should have no combinations for shops "shop4"
+    And productWithCombinationsRed and productWithCombinationsRedCopy1 have different values
+    And productWithCombinationsBlue and productWithCombinationsBlueCopy1 have different values
+    And combination "productWithCombinationsRedCopy1" should have following stock details for shop shop1:
+      | combination stock detail   | value     |
+      | quantity                   | 1         |
+      | location                   | redshelf1 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRedCopy1" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+    And combination "productWithCombinationsBlueCopy1" should have following stock details for shop shop1:
+      | combination stock detail   | value      |
+      | quantity                   | 11         |
+      | location                   | blueshelf1 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopy1" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 11             |
+    # Duplicate to shop group
+    When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopyShopGroup1 for shop group default_shop_group
+    Then product "productWithCombinationAndStockCopyShopGroup1" should have the following combinations for shop shop1:
+      | id reference                              | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopyShopGroup1  | Color - Red      |           | [Color:Red]  | 0               | 1        | true       |
+      | productWithCombinationsBlueCopyShopGroup1 | Color - Blue     |           | [Color:Blue] | 0               | 11       | false      |
+    And product "productWithCombinationAndStockCopyShopGroup1" should have the following combinations for shop shop2:
+      | combination reference                     | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopyShopGroup1  | Color - Red      |           | [Color:Red]  | 0               | 2        | true       |
+      | productWithCombinationsBlueCopyShopGroup1 | Color - Blue     |           | [Color:Blue] | 0               | 12       | false      |
+    And product "productWithCombinationAndStockCopyShopGroup1" should have no combinations for shops "shop3"
+    And product "productWithCombinationAndStockCopyShopGroup1" should have no combinations for shops "shop4"
+    And productWithCombinationsRed and productWithCombinationsRedCopyShopGroup1 have different values
+    And productWithCombinationsBlue and productWithCombinationsBlueCopyShopGroup1 have different values
+    ## Check values for shop1
+    And combination "productWithCombinationsRedCopyShopGroup1" should have following stock details for shop shop1:
+      | combination stock detail   | value     |
+      | quantity                   | 1         |
+      | location                   | redshelf1 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRedCopyShopGroup1" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+    And combination "productWithCombinationsBlueCopyShopGroup1" should have following stock details for shop shop1:
+      | combination stock detail   | value      |
+      | quantity                   | 11         |
+      | location                   | blueshelf1 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopyShopGroup1" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 11             |
+    ## Check values for shop2
+    And combination "productWithCombinationsRedCopyShopGroup1" should have following stock details for shop shop2:
+      | combination stock detail   | value     |
+      | quantity                   | 2         |
+      | location                   | redshelf2 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRedCopyShopGroup1" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 2              |
+    And combination "productWithCombinationsBlueCopyShopGroup1" should have following stock details for shop shop2:
+      | combination stock detail   | value      |
+      | quantity                   | 12         |
+      | location                   | blueshelf2 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopyShopGroup1" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 12             |
+    # Duplicate to shop group sharing stock, check that the stock are correctly shared by modifying it
+    When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopyShopGroup2 for shop group test_second_shop_group
+    Then product "productWithCombinationAndStockCopyShopGroup2" should have the following combinations for shops "shop3,shop4":
+      | id reference                              | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopyShopGroup2  | Color - Red      |           | [Color:Red]  | 0               | 3        | true       |
+      | productWithCombinationsBlueCopyShopGroup2 | Color - Blue     |           | [Color:Blue] | 0               | 13       | false      |
+    And product "productWithCombinationAndStockCopyShopGroup2" should have no combinations for shops "shop1"
+    And product "productWithCombinationAndStockCopyShopGroup2" should have no combinations for shops "shop2"
+    And productWithCombinationsRed and productWithCombinationsRedCopyShopGroup2 have different values
+    And productWithCombinationsBlue and productWithCombinationsBlueCopyShopGroup2 have different values
+    ## Check values for shop3 and shop4
+    Then combination "productWithCombinationsRedCopyShopGroup2" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value     |
+      | quantity                   | 3         |
+      | location                   | redshelf3 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRedCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 3              |
+    And combination "productWithCombinationsBlueCopyShopGroup2" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value      |
+      | quantity                   | 13         |
+      | location                   | blueshelf4 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 13             |
+    ## Check that stock are shared on both shops
+    When I update combination "productWithCombinationsBlueCopyShopGroup2" stock for shop shop4 with following details:
+      | delta quantity | 10 |
+    Then combination "productWithCombinationsBlueCopyShopGroup2" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value      |
+      | quantity                   | 23         |
+      | location                   | blueshelf4 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 10             |
+      | Puff Daddy | 13             |
+    # Duplicate for all shops
+    When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopyAllShops for all shops
+    Then product "productWithCombinationAndStockCopyAllShops" should have the following combinations for shop shop1:
+      | id reference                            | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopyAllShops  | Color - Red      |           | [Color:Red]  | 0               | 1        | true       |
+      | productWithCombinationsBlueCopyAllShops | Color - Blue     |           | [Color:Blue] | 0               | 11       | false      |
+    And product "productWithCombinationAndStockCopyAllShops" should have the following combinations for shop shop2:
+      | combination reference                   | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopyAllShops  | Color - Red      |           | [Color:Red]  | 0               | 2        | true       |
+      | productWithCombinationsBlueCopyAllShops | Color - Blue     |           | [Color:Blue] | 0               | 12       | false      |
+    And product "productWithCombinationAndStockCopyAllShops" should have the following combinations for shops "shop3,shop4":
+      | combination reference                   | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopyAllShops  | Color - Red      |           | [Color:Red]  | 0               | 3        | true       |
+      | productWithCombinationsBlueCopyAllShops | Color - Blue     |           | [Color:Blue] | 0               | 13       | false      |
+    ## Check values for shop1
+    And combination "productWithCombinationsRedCopyAllShops" should have following stock details for shop shop1:
+      | combination stock detail   | value     |
+      | quantity                   | 1         |
+      | location                   | redshelf1 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRedCopyAllShops" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+    And combination "productWithCombinationsBlueCopyAllShops" should have following stock details for shop shop1:
+      | combination stock detail   | value      |
+      | quantity                   | 11         |
+      | location                   | blueshelf1 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopyAllShops" last stock movements for shop shop1 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 11             |
+    ## Check values for shop2
+    And combination "productWithCombinationsRedCopyAllShops" should have following stock details for shop shop2:
+      | combination stock detail   | value     |
+      | quantity                   | 2         |
+      | location                   | redshelf2 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRedCopyAllShops" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 2              |
+    And combination "productWithCombinationsBlueCopyAllShops" should have following stock details for shop shop2:
+      | combination stock detail   | value      |
+      | quantity                   | 12         |
+      | location                   | blueshelf2 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopyAllShops" last stock movements for shop shop2 should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 12             |
+    ## Check values for shop3 and shop4
+    And combination "productWithCombinationsRedCopyAllShops" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value     |
+      | quantity                   | 3         |
+      | location                   | redshelf3 |
+      | minimal quantity           | 1         |
+      | low stock threshold        | 0         |
+      | low stock alert is enabled | false     |
+      | available date             |           |
+    And combination "productWithCombinationsRedCopyAllShops" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 3              |
+    And combination "productWithCombinationsBlueCopyAllShops" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value      |
+      | quantity                   | 13         |
+      | location                   | blueshelf4 |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             |            |
+    And combination "productWithCombinationsBlueCopyAllShops" last stock movements for shops "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 13             |
