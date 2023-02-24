@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupSettings;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -71,9 +72,9 @@ class AttributeGroupType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributeTypes = [
-            $this->trans('Drop-down list', 'Admin.Global') => 'select',
-            $this->trans('Radio buttons', 'Admin.Global') => 'radio',
-            $this->trans('Color or texture', 'Admin.Catalog.Feature') => 'color',
+            $this->trans('Drop-down list', 'Admin.Global') => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_SELECT,
+            $this->trans('Radio buttons', 'Admin.Global') => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_RADIO,
+            $this->trans('Color or texture', 'Admin.Catalog.Feature') => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_COLOR,
         ];
 
         $builder->add('name', TranslatableType::class, [

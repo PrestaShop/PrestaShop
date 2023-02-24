@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
@@ -109,7 +110,6 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             SharedStorage::getStorage()->clear($reference);
         }
     }
-
 
     /**
      * @Then attribute group :reference :field should be :value
@@ -524,7 +524,9 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      * @param string $nameInDefaultLanguage
      * @param string $publicNameInDefaultLanguage
      * @param string $type
+     *
      * @return AttributeGroupId
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException
      */
     private function createAttributeGroupUsingCommand(string $nameInDefaultLanguage, string $publicNameInDefaultLanguage, string $type): AttributeGroupId
@@ -540,19 +542,21 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @param int $attributeGroupId
      * @param string $nameInDefaultLanguage
      * @param string $publicNameInDefaultLanguage
      * @param string $type
+     *
      * @return AttributeGroupId
-     * @throws \PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException
+     *
+     * @throws AttributeGroupConstraintException
      */
     private function editAttributeGroupUsingCommand(
         int $attributeGroupId,
         string $nameInDefaultLanguage,
         string $publicNameInDefaultLanguage,
         string $type
-    ): AttributeGroupId
-    {
+    ): AttributeGroupId {
         $command = new EditAttributeGroupCommand(
             $attributeGroupId,
             [$this->defaultLangId => $nameInDefaultLanguage],
