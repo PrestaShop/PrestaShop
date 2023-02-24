@@ -288,6 +288,11 @@ parameters:
             message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
             disallowIn:
                 - src/Core/*
+        -
+            class: 'Sensio\Bundle\FrameworkExtraBundle\Configuration\Template'
+            message: 'The @template annotation is deprecated and will be removed in future versions. We should not add any usages of it. '
+            disallowIn:
+                - src/PrestaShopBundle/*
   disallowedMethodCalls:
         -
             method: 'PrestaShopBundle\Form\Admin\Type\CommonAbstractType::getConfiguration()'

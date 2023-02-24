@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,22 +51,21 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Display hooks positions.
      *
-     * @Template("@PrestaShop/Admin/Improve/Design/positions.html.twig")
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied.")
      *
      * @param Request $request
      *
-     * @return array<string, mixed>
+     * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
         if (!$isSingleShopContext) {
-            return [
+            return $this->render('@PrestaShop/Admin/Improve/Design/positions.html.twig', [
                 'isSingleShopContext' => $isSingleShopContext,
-            ];
+            ]);
         }
 
         $moduleAdapter = $this->get('prestashop.adapter.legacy.module');
@@ -127,7 +125,7 @@ class PositionsController extends FrameworkBundleAdminController
         }
         $saveUrl = $legacyContextService->getAdminLink('AdminModulesPositions', true, $saveUrlParams);
 
-        return [
+        return $this->render('@PrestaShop/Admin/Improve/Design/positions.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'save' => [
                     'class' => 'btn-primary transplant-module-button',
@@ -145,7 +143,7 @@ class PositionsController extends FrameworkBundleAdminController
             'hooks' => $hooks,
             'modules' => $modules,
             'isSingleShopContext' => $isSingleShopContext,
-        ];
+        ]);
     }
 
     /**
