@@ -435,7 +435,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType:
     public: true
     arguments:
-      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      $isMultistoreEnabled: '@=service("prestashop.adapter.multistore_feature").isActive()'
     tags:
       - { name: form.type }
 
