@@ -223,7 +223,7 @@
       <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
         <source>Modules</source>
         <target>Modules</target>
-        <note>Line: 140
+        <note>Line: 141
 Comment: subtab</note>
       </trans-unit>
       <trans-unit id="423e555c5ec3885f2bb5d9d2d6627f63">
@@ -354,32 +354,37 @@ Comment: subtab</note>
       <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
         <source>Zones</source>
         <target>Zones</target>
-        <note>Line: 133</note>
+        <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="58366edba8b92e2955f237fe5897dad5">
         <source>Modules Catalog</source>
         <target>Modules Catalog</target>
-        <note>Line: 134</note>
+        <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="5f265dfcb9ab68a1258ec25393ffb886">
         <source>Module Manager</source>
         <target>Module Manager</target>
-        <note>Line: 135</note>
+        <note>Line: 136</note>
       </trans-unit>
       <trans-unit id="997320bab8342395326fd0a109068200">
         <source><![CDATA[New & Experimental Features]]></source>
         <target><![CDATA[New & Experimental Features]]></target>
-        <note>Line: 136</note>
+        <note>Line: 137</note>
       </trans-unit>
       <trans-unit id="9ac41b6a577daadd588f0fcde0071e8b">
         <source>Updates</source>
         <target>Updates</target>
-        <note>Line: 141</note>
+        <note>Line: 142</note>
       </trans-unit>
       <trans-unit id="df583ae7ba964fd4806b55904da81813">
         <source>Alerts</source>
         <target>Alerts</target>
-        <note>Line: 142</note>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="f5b090e9af1ede7279218ad4b7dcca91">
+        <source>Authorization Server</source>
+        <target>Authorization Server</target>
+        <note>Line: 133</note>
       </trans-unit>
     </body>
   </file>
@@ -389,6 +394,15 @@ Comment: subtab</note>
         <source>Files</source>
         <target>Files</target>
         <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/AuthorizedApplicationGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="90854a1066286ca37c7757a35ea96f5d">
+        <source>List of applications</source>
+        <target>List of applications</target>
+        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -559,7 +573,7 @@ Comment: subtab</note>
       <trans-unit id="8d4ae51b8b5831db49a6dcde1b83e175">
         <source>Tax Rules</source>
         <target>Tax Rules</target>
-        <note>Line: 67</note>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -578,6 +592,15 @@ Comment: subtab</note>
         <source>Administration</source>
         <target>Administration</target>
         <note>Line: 68</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AuthorizationServer/ApplicationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9456409336f81ac68e55e23d73471a11">
+        <source>Authorization Server Management</source>
+        <target>Authorization Server Management</target>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
@@ -622,7 +645,7 @@ Comment: subtab</note>
       <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
         <source>Customers</source>
         <target>Customers</target>
-        <note>Line: 98</note>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -658,7 +681,7 @@ Comment: subtab</note>
       <trans-unit id="9312b7e2a7e98ff341ddb219397c0d9c">
         <source>Email Theme</source>
         <target>Email Theme</target>
-        <note>Line: 83</note>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -712,7 +735,7 @@ Comment: subtab</note>
       <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
         <source>Preferences</source>
         <target>Preferences</target>
-        <note>Line: 161</note>
+        <note>Line: 177</note>
       </trans-unit>
     </body>
   </file>

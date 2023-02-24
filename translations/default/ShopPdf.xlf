@@ -5,7 +5,7 @@
       <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
         <source>: </source>
         <target>:</target>
-        <note>Line: 1206</note>
+        <note>Line: 1209</note>
       </trans-unit>
     </body>
   </file>
@@ -14,7 +14,7 @@
       <trans-unit id="065ab3a28ca4f16f55f103adc7d0226f">
         <source>Delivery</source>
         <target>Delivery</target>
-        <note>Line: 82</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -23,12 +23,12 @@
       <trans-unit id="466eadd40b3c10580e3ab4e8061161ce">
         <source>Invoice</source>
         <target>Invoice</target>
-        <note>Line: 89</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="a271cee71f5c411446db4f90676dbc96">
         <source>%taxrate%%space%%</source>
         <target>%taxrate%%space%%</target>
-        <note>Line: 201</note>
+        <note>Line: 203</note>
       </trans-unit>
     </body>
   </file>
@@ -46,7 +46,7 @@
       <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
         <source>Credit slip</source>
         <target>Credit slip</target>
-        <note>Line: 86</note>
+        <note>Line: 88</note>
       </trans-unit>
     </body>
   </file>

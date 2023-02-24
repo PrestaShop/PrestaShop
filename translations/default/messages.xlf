@@ -37,7 +37,7 @@
       <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
         <source>Discount name</source>
         <target>Discount name</target>
-        <note>Line: 203</note>
+        <note>Line: 209</note>
       </trans-unit>
     </body>
   </file>
@@ -769,227 +769,227 @@
       <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
         <source>Sunday</source>
         <target>Sunday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
         <source>Monday</source>
         <target>Monday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
         <source>Tuesday</source>
         <target>Tuesday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="796c163589f295373e171842f37265d5">
         <source>Wednesday</source>
         <target>Wednesday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="78ae6f0cd191d25147e252dc54768238">
         <source>Thursday</source>
         <target>Thursday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
         <source>Friday</source>
         <target>Friday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
         <source>Saturday</source>
         <target>Saturday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="ef6572e4cd58bb39a3f4e82fc64fe9f0">
         <source>Sun</source>
         <target>Sun</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="fd29458ae58ac32a2d8734ed90ad51ec">
         <source>Mon</source>
         <target>Mon</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="2ddecde85408faf230652444db78cb72">
         <source>Tue</source>
         <target>Tue</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="510c292b1686eb070d9e90a575f74106">
         <source>Wed</source>
         <target>Wed</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="ed5e8353dfc585f4c6b3a55d1a9fc01d">
         <source>Thu</source>
         <target>Thu</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="ac616f844b9a5ea5a827bf7fb99b1ad5">
         <source>Fri</source>
         <target>Fri</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="13c7d2d737f81f7bf89aed9fbcd0ad55">
         <source>Sat</source>
         <target>Sat</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="f72c915d8f575a5c0999b5f37b6d99b7">
         <source>Su</source>
         <target>Su</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="c08df9bb5fb44242a6291b1eee5d09ad">
         <source>Mo</source>
         <target>Mo</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="080502c4fa636ac639bf42b6d2ba01d7">
         <source>Tu</source>
         <target>Tu</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="485c47a81eb6e3998ec05aca48eda184">
         <source>We</source>
         <target>We</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="eeeb9a8eb45dd351d9ec0eb4acce66ce">
         <source>Th</source>
         <target>Th</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="fa717ba17306cd76900510df8ac8013e">
         <source>Fr</source>
         <target>Fr</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="e55bb1ae59b6a64858a85a2f48c53036">
         <source>Sa</source>
         <target>Sa</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="86f5978d9b80124f509bdb71786e929e">
         <source>January</source>
         <target>January</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="659e59f062c75f81259d22786d6c44aa">
         <source>February</source>
         <target>February</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="fa3e5edac607a88d8fd7ecb9d6d67424">
         <source>March</source>
         <target>March</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="3fcf026bbfffb63fb24b8de9d0446949">
         <source>April</source>
         <target>April</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="195fbb57ffe7449796d23466085ce6d8">
         <source>May</source>
         <target>May</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="688937ccaf2a2b0c45a1c9bbba09698d">
         <source>June</source>
         <target>June</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="1b539f6f34e8503c97f6d3421346b63c">
         <source>July</source>
         <target>July</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="41ba70891fb6f39327d8ccb9b1dafb84">
         <source>August</source>
         <target>August</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="cc5d90569e1c8313c2b1c2aab1401174">
         <source>September</source>
         <target>September</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="eca60ae8611369fe28a02e2ab8c5d12e">
         <source>October</source>
         <target>October</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="7e823b37564da492ca1629b4732289a8">
         <source>November</source>
         <target>November</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="82331503174acbae012b2004f6431fa5">
         <source>December</source>
         <target>December</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="e68564f23e0e939acea76dc3d2bc01bf">
         <source>Jan</source>
         <target>Jan</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="ea171d540ccd5f0669171ef06d3cd848">
         <source>Feb</source>
         <target>Feb</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="7ce6b2286a5396e614b8484105d277e0">
         <source>Mar</source>
         <target>Mar</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="6d7215c4b3bc4716d026ac46c6d9ae64">
         <source>Apr</source>
         <target>Apr</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="e7f8f5c51fe3a6d48a79c6ede9112b7a">
         <source>May </source>
         <target>May </target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="eb4b40c1221dad5b23fe7ef84d292be1">
         <source>Jun</source>
         <target>Jun</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="a2866cd6efaa65c92278d4771a9eaec7">
         <source>Jul</source>
         <target>Jul</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="22f1a4667604b8557c9b209c201b4bc6">
         <source>Aug</source>
         <target>Aug</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="f04aa7019c490474fa3ce16e93501b57">
         <source>Sep</source>
         <target>Sep</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="594be08882c8e9d5efb9eeb62f303744">
         <source>Oct</source>
         <target>Oct</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="343e6957be77c6247aa2b8d0deb68bd6">
         <source>Nov</source>
         <target>Nov</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="d207b4e0bce42a8f1555ce3a05e287f6">
         <source>Dec</source>
         <target>Dec</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>
@@ -1142,12 +1142,12 @@
       <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
         <source>Reset</source>
         <target>Reset</target>
-        <note>Line: 412</note>
+        <note>Line: 417</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 353</note>
+        <note>Line: 358</note>
       </trans-unit>
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
@@ -1172,12 +1172,12 @@
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
         <target>Shop group</target>
-        <note>Line: 320</note>
+        <note>Line: 325</note>
       </trans-unit>
       <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
         <source>To</source>
         <target>To</target>
-        <note>Line: 360</note>
+        <note>Line: 365</note>
       </trans-unit>
     </body>
   </file>
@@ -1201,12 +1201,12 @@
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>Line: 220</note>
+        <note>Line: 224</note>
       </trans-unit>
       <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
         <source>You can't change the value of this configuration field in the context of this shop.</source>
         <target>You can't change the value of this configuration field in the context of this shop.</target>
-        <note>Line: 331</note>
+        <note>Line: 335</note>
       </trans-unit>
     </body>
   </file>
@@ -1409,97 +1409,97 @@
       <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
         <source>List</source>
         <target>List</target>
-        <note>Line: 652</note>
+        <note>Line: 654</note>
       </trans-unit>
       <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
         <source>View details</source>
         <target>View details</target>
-        <note>Line: 658</note>
+        <note>Line: 660</note>
       </trans-unit>
       <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
         <source>Options</source>
         <target>Options</target>
-        <note>Line: 663</note>
+        <note>Line: 665</note>
       </trans-unit>
       <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
         <source>Generator</source>
         <target>Generator</target>
-        <note>Line: 668</note>
+        <note>Line: 670</note>
       </trans-unit>
       <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
         <source>%s: %s</source>
         <target>%s: %s</target>
-        <note>Line: 762</note>
+        <note>Line: 764</note>
       </trans-unit>
       <trans-unit id="921d54865f8169b84c90d4335c256494">
         <source>filter by %s</source>
         <target>filter by %s</target>
-        <note>Line: 769</note>
+        <note>Line: 771</note>
       </trans-unit>
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>Line: 4016</note>
+        <note>Line: 4055</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>Line: 1212</note>
+        <note>Line: 1214</note>
       </trans-unit>
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>Line: 1321</note>
+        <note>Line: 1323</note>
       </trans-unit>
       <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
         <source>Do you really want to uninstall this module?</source>
         <target>Do you really want to uninstall this module?</target>
-        <note>Line: 4327</note>
+        <note>Line: 4366</note>
       </trans-unit>
       <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
         <source>Disable this module</source>
         <target>Disable this module</target>
-        <note>Line: 4329</note>
+        <note>Line: 4368</note>
       </trans-unit>
       <trans-unit id="668c99c1164d5348f99c0878770b53a8">
         <source>Enable this module for all shops</source>
         <target>Enable this module for all shops</target>
-        <note>Line: 4330</note>
+        <note>Line: 4369</note>
       </trans-unit>
       <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
         <source>Disable on mobiles</source>
         <target>Disable on mobiles</target>
-        <note>Line: 4333</note>
+        <note>Line: 4372</note>
       </trans-unit>
       <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
         <source>Disable on tablets</source>
         <target>Disable on tablets</target>
-        <note>Line: 4334</note>
+        <note>Line: 4373</note>
       </trans-unit>
       <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
         <source>Disable on computers</source>
         <target>Disable on computers</target>
-        <note>Line: 4335</note>
+        <note>Line: 4374</note>
       </trans-unit>
       <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
         <source>Display on mobiles</source>
         <target>Display on mobiles</target>
-        <note>Line: 4336</note>
+        <note>Line: 4375</note>
       </trans-unit>
       <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
         <source>Display on tablets</source>
         <target>Display on tablets</target>
-        <note>Line: 4337</note>
+        <note>Line: 4376</note>
       </trans-unit>
       <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
         <source>Display on computers</source>
         <target>Display on computers</target>
-        <note>Line: 4338</note>
+        <note>Line: 4377</note>
       </trans-unit>
       <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
         <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
         <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
-        <note>Line: 4345</note>
+        <note>Line: 4384</note>
       </trans-unit>
     </body>
   </file>
@@ -1697,6 +1697,34 @@
         <source>Add another word or two. Uncommon words are better.</source>
         <target>Add another word or two. Uncommon words are better.</target>
         <note>Line: 290</note>
+      </trans-unit>
+      <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
+        <source>Sequences like "abc" or "6543" are easy to guess</source>
+        <target>Sequences like "abc" or "6543" are easy to guess</target>
+        <note>Line: 264</note>
+      </trans-unit>
+      <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
+        <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
+        <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
+        <note>Line: 289</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_googleanalytics/classes/Form/ConfigurationForm.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ce1ca86258cc276aac9c35c705c01a4c">
+        <source>Settings for Google Analytics 4 updated successfully</source>
+        <target>Settings for Google Analytics 4 updated successfully</target>
+        <note>Line: 246</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2871afea416378d2772937c4d67d6c2c">
+        <source>Generate password</source>
+        <target>Generate password</target>
+        <note>Line: 122</note>
       </trans-unit>
     </body>
   </file>

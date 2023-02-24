@@ -10,7 +10,7 @@
       <trans-unit id="258606ef5a3ed5cd7e39da08435adec0">
         <source>Regenerate thumbnails</source>
         <target>Regenerate thumbnails</target>
-        <note>Line: 127</note>
+        <note>Line: 132</note>
       </trans-unit>
       <trans-unit id="79750ba11832a44ccf92e15eb0e84ae4">
         <source>Select an image</source>
@@ -107,37 +107,37 @@
       <trans-unit id="cc350a9d1eabece4f9299f7bb51c3a9c">
         <source>Images generation options</source>
         <target>Images generation options</target>
-        <note>Line: 84</note>
+        <note>Line: 220</note>
       </trans-unit>
       <trans-unit id="d0efb46cfd8b126482192a343e2142b4">
         <source>Image format</source>
         <target>Image format</target>
-        <note>Line: 92</note>
+        <note>Line: 989</note>
       </trans-unit>
       <trans-unit id="92deb9e729da3800aca668de3491f0c8">
         <source>Use JPEG.</source>
         <target>Use JPEG.</target>
-        <note>Line: 97</note>
+        <note>Line: 994</note>
       </trans-unit>
       <trans-unit id="6178649941eae11401f8bd95d32ad690">
         <source>Use PNG only if the base image is in PNG format.</source>
         <target>Use PNG only if the base image is in PNG format.</target>
-        <note>Line: 98</note>
+        <note>Line: 995</note>
       </trans-unit>
       <trans-unit id="d40849d8da6fe69b751ebaa13595b34d">
         <source>Use PNG for all images.</source>
         <target>Use PNG for all images.</target>
-        <note>Line: 99</note>
+        <note>Line: 996</note>
       </trans-unit>
       <trans-unit id="11c6a44dc07bc78786c8e597caaae38d">
         <source>Use WebP only if the base image is in WebP format.</source>
         <target>Use WebP only if the base image is in WebP format.</target>
-        <note>Line: 100</note>
+        <note>Line: 997</note>
       </trans-unit>
       <trans-unit id="8da7333b05a750dc4a46cb829e9a5761">
         <source>Use WebP for all images.</source>
         <target>Use WebP for all images.</target>
-        <note>Line: 101</note>
+        <note>Line: 998</note>
       </trans-unit>
       <trans-unit id="5a259e0a584d2d8f7de738689c91cb20">
         <source>JPEG compression</source>
@@ -182,7 +182,7 @@
       <trans-unit id="d399848208da8b80a306af0fd62bb03f">
         <source>pixels</source>
         <target>pixels</target>
-        <note>Line: 243</note>
+        <note>Line: 271</note>
       </trans-unit>
       <trans-unit id="5891a406596216c63f7a1f8f7c6a81a8">
         <source>Product picture height</source>
@@ -197,22 +197,57 @@
       <trans-unit id="b08ea6a4f29e76c9d843856917642409">
         <source>Use the legacy image filesystem</source>
         <target>Use the legacy image filesystem</target>
-        <note>Line: 205</note>
+        <note>Line: 233</note>
       </trans-unit>
       <trans-unit id="2dd1148046499f9c2422ce1045a4accf">
         <source>Image type</source>
         <target>Image type</target>
-        <note>Line: 217</note>
+        <note>Line: 245</note>
       </trans-unit>
       <trans-unit id="404dede45594c16ad5592b1091cc7ba8">
         <source>Name for the image type</source>
         <target>Name for the image type</target>
-        <note>Line: 223</note>
+        <note>Line: 251</note>
       </trans-unit>
       <trans-unit id="d1e9d1892046943ae96e613646fc0381">
         <source>Add new image type</source>
         <target>Add new image type</target>
-        <note>Line: 729</note>
+        <note>Line: 869</note>
+      </trans-unit>
+      <trans-unit id="a1aa13d5cd0cb601eb4f5618161896f9">
+        <source>AVIF compression</source>
+        <target>AVIF compression</target>
+        <note>Line: 203</note>
+      </trans-unit>
+      <trans-unit id="b2326c3a3498ee50c8120fbaede6eeed">
+        <source>Regenerate</source>
+        <target>Regenerate</target>
+        <note>Line: 400</note>
+      </trans-unit>
+      <trans-unit id="f38877714ac2d3683e27fbfa947946e7">
+        <source>Are you sure you want to delete this image setting?</source>
+        <target>Are you sure you want to delete this image setting?</target>
+        <note>Line: 410</note>
+      </trans-unit>
+      <trans-unit id="907e06a16862d82ca6907a28a68d0ad6">
+        <source>JPEG</source>
+        <target>JPEG</target>
+        <note>Line: 970</note>
+      </trans-unit>
+      <trans-unit id="55505ba281b015ec31f03ccb151b2a34">
+        <source>PNG</source>
+        <target>PNG</target>
+        <note>Line: 971</note>
+      </trans-unit>
+      <trans-unit id="73534899ad5e9f6695ba178ba4b3effc">
+        <source>WebP</source>
+        <target>WebP</target>
+        <note>Line: 972</note>
+      </trans-unit>
+      <trans-unit id="35825f52ac558b8590c66431d1aa9c93">
+        <source>AVIF</source>
+        <target>AVIF</target>
+        <note>Line: 973</note>
       </trans-unit>
     </body>
   </file>
@@ -245,7 +280,7 @@
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
         <target>Pages</target>
-        <note>Line: 541</note>
+        <note>Line: 568</note>
       </trans-unit>
     </body>
   </file>
@@ -263,12 +298,12 @@
       <trans-unit id="cca370c1880917b42e0ca0f484afb715">
         <source>Preview Theme %s</source>
         <target>Preview Theme %s</target>
-        <note>Line: 248</note>
+        <note>Line: 246</note>
       </trans-unit>
       <trans-unit id="7accead9f41b1968f1957961177b1ed7">
         <source>Test email %template%</source>
         <target>Test email %template%</target>
-        <note>Line: 318</note>
+        <note>Line: 316</note>
       </trans-unit>
     </body>
   </file>

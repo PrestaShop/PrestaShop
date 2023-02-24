@@ -5,7 +5,7 @@
       <trans-unit id="44aa13304026bb46ad79f4151f16634a">
         <source>(waiting for validation)</source>
         <target>(waiting for validation)</target>
-        <note>Line: 668</note>
+        <note>Line: 669</note>
       </trans-unit>
     </body>
   </file>
@@ -244,6 +244,16 @@
         <source>Message from a customer</source>
         <target>Message from a customer</target>
         <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="71a5b9e9365900296d640e466fe6205d">
+        <source>You have received a new message.</source>
+        <target>You have received a new message.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="b913dabf84a2fbeb711e6873210228b7">
+        <source>Order reference:</source>
+        <target>Order reference:</target>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -1118,7 +1128,7 @@
       <trans-unit id="4fa1b6a18af39df2372766b93c513f85">
         <source>Recycled packaging:</source>
         <target>Recycled packaging:</target>
-        <note>Line: 307</note>
+        <note>Line: 309</note>
       </trans-unit>
     </body>
   </file>

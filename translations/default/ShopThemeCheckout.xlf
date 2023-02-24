@@ -29,7 +29,7 @@
       <trans-unit id="61f1667518c8516a8a4fe18686a4e6fc">
         <source>Personal Information</source>
         <target>Personal Information</target>
-        <note>Line: 100</note>
+        <note>Line: 106</note>
       </trans-unit>
     </body>
   </file>
@@ -61,7 +61,7 @@
       <trans-unit id="0bf3928d84fde940f6feafac75062280">
         <source>My Address</source>
         <target>My Address</target>
-        <note>Line: 161</note>
+        <note>Line: 164</note>
       </trans-unit>
     </body>
   </file>
@@ -98,7 +98,7 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 295</note>
+        <note>Line: 297</note>
       </trans-unit>
     </body>
   </file>
@@ -185,7 +185,7 @@
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
-        <note>Line: 249</note>
+        <note>Line: 254</note>
       </trans-unit>
     </body>
   </file>

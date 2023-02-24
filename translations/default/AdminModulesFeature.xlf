@@ -158,7 +158,12 @@ Comment: Set the modules categories</note>
       <trans-unit id="e699cbe9208f8353248889781f83d636">
         <source>Module manager</source>
         <target>Module manager</target>
-        <note>Line: 88</note>
+        <note>Line: 89</note>
+      </trans-unit>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>
