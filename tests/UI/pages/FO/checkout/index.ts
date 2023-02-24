@@ -7,6 +7,7 @@ import CustomerData from '@data/faker/customer';
 import CarrierData from '@data/faker/carrier';
 
 import type {Page} from 'playwright';
+import {ProductDetails} from "@data/types/product";
 
 /**
  * Checkout page, contains functions that can be used on the page
@@ -356,6 +357,54 @@ class Checkout extends FOBasePage {
    */
   async isStepCompleted(page: Page, stepSelector: string): Promise<boolean> {
     return this.elementVisible(page, `${stepSelector}.-complete`, 1000);
+  }
+
+  /**
+   * Click on show details link
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnShowDetailsLink(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, '#js-checkout-summary div.cart-summary-products.js-cart-summary-products a.js-show-details');
+
+    return this.elementVisible(page, '#js-checkout-summary div.cart-summary-products.js-cart-summary-products a.js-show-details[aria-expanded=true]', 1000);
+  }
+
+  async closeShowDetailsLink(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, '#js-checkout-summary div.cart-summary-products.js-cart-summary-products a.js-show-details[aria-expanded=true]');
+    await page.waitForTimeout(5000);
+
+    return this.elementVisible(page, '#js-checkout-summary div.cart-summary-products.js-cart-summary-products a.js-show-details.collapsed[aria-expanded=false]');
+  }
+
+  async getProductDetails(page: Page, productRow: number): Promise<ProductDetails> {
+    return {
+      image: await this.getAttributeContent(page, `#cart-summary-product-list ul li:nth-child(${productRow}) div.media-left a img`, 'src'),
+      name: await this.getTextContent(page, `#cart-summary-product-list ul li:nth-child(${productRow}) div.media-body span.product-name`),
+      quantity: await this.getNumberFromText(page, `#cart-summary-product-list ul li:nth-child(${productRow}) div.media-body span.product-quantity`),
+      price: await this.getPriceFromText(page, `#cart-summary-product-list ul li:nth-child(${productRow}) div.media-body span.product-price.float-xs-right`),
+    };
+  }
+
+  async getProductAttributes(page: Page, productRow: number): Promise<string> {
+    return this.getTextContent(page, `#cart-summary-product-list ul li:nth-child(${productRow}) div.media-body div.product-line-info`);
+  }
+
+  async clickOnProductImage(page: Page, productRow: number): Promise<void> {
+    return this.clickAndWaitForNavigation(page, `#cart-summary-product-list ul li:nth-child(${productRow}) div.media-left a img`);
+  }
+
+  async clickOnProductName(page: Page, productRow: number): Promise<Page> {
+    return this.openLinkWithTargetBlank(page, `#cart-summary-product-list ul li:nth-child(${productRow}) div.media-body span.product-name`);
+  }
+
+  /**
+   * Get items number
+   * @param page {Page} Browser tab
+   * @returns {Promise<string}
+   */
+  async getItemsNumber(page: Page): Promise<string> {
+    return this.getTextContent(page, '#js-checkout-summary div.cart-summary-products.js-cart-summary-products p:nth-child(1)');
   }
 
   // Methods for personal information step
