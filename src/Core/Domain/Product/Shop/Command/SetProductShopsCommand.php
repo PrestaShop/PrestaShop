@@ -23,43 +23,68 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\CopyProductToShopHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
-/**
- * Handles @see CopyProductToShopCommand using dedicated service
- */
-class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
+class SetProductShopsCommand
 {
     /**
-     * @var ProductShopUpdater
+     * @var ProductId
      */
-    private $productShopUpdater;
+    private $productId;
 
     /**
-     * @param ProductShopUpdater $productShopUpdater
+     * @var ShopId
+     */
+    private $sourceShopId;
+
+    /**
+     * @var ShopId[]
+     */
+    private $shopIds;
+
+    /**
+     * @param int $productId
+     * @param int $sourceShopId
+     * @param int[] $shopIds
      */
     public function __construct(
-        ProductShopUpdater $productShopUpdater
+        int $productId,
+        int $sourceShopId,
+        array $shopIds
     ) {
-        $this->productShopUpdater = $productShopUpdater;
+        $this->productId = new ProductId($productId);
+        $this->sourceShopId = new ShopId($sourceShopId);
+        $this->shopIds = array_map(static function (int $shopId): ShopId {
+            return new ShopId($shopId);
+        }, $shopIds);
     }
 
     /**
-     * {@inheritDoc}
+     * @return ProductId
      */
-    public function handle(CopyProductToShopCommand $command): void
+    public function getProductId(): ProductId
     {
-        $this->productShopUpdater->copyToShop(
-            $command->getProductId(),
-            $command->getSourceShopId(),
-            $command->getTargetShopId()
-        );
+        return $this->productId;
+    }
+
+    /**
+     * @return ShopId
+     */
+    public function getSourceShopId(): ShopId
+    {
+        return $this->sourceShopId;
+    }
+
+    /**
+     * @return ShopId[]
+     */
+    public function getShopIds(): array
+    {
+        return $this->shopIds;
     }
 }

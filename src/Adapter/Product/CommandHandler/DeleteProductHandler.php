@@ -28,14 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles @see DeleteProductCommand using legacy object model
@@ -48,28 +44,16 @@ class DeleteProductHandler implements DeleteProductHandlerInterface
     private $productRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductDeleter
      */
-    private $productImageRepository;
+    private $productDeleter;
 
-    /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
-     * @param ProductRepository $productRepository
-     * @param ProductImageMultiShopRepository $productImageRepository
-     * @param CombinationRepository $combinationRepository
-     */
     public function __construct(
         ProductRepository $productRepository,
-        ProductImageMultiShopRepository $productImageRepository,
-        CombinationRepository $combinationRepository
+        ProductDeleter $productDeleter
     ) {
         $this->productRepository = $productRepository;
-        $this->productImageRepository = $productImageRepository;
-        $this->combinationRepository = $combinationRepository;
+        $this->productDeleter = $productDeleter;
     }
 
     /**
@@ -78,39 +62,10 @@ class DeleteProductHandler implements DeleteProductHandlerInterface
     public function handle(DeleteProductCommand $command): void
     {
         $productId = $command->getProductId();
-        $shopConstraint = $command->getShopConstraint();
 
-        $this->removeImages(
+        $this->productDeleter->deleteFromShops(
             $productId,
-            $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint)
+            $this->productRepository->getShopIdsByConstraint($productId, $command->getShopConstraint())
         );
-        $this->removeCombinations($productId, $shopConstraint);
-        $this->productRepository->deleteByShopConstraint($productId, $shopConstraint);
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param ShopId[] $shopIds
-     */
-    private function removeImages(ProductId $productId, array $shopIds): void
-    {
-        foreach ($shopIds as $shopId) {
-            $imageIds = $this->productImageRepository->getImageIds($productId, ShopConstraint::shop($shopId->getValue()));
-            foreach ($imageIds as $imageId) {
-                $this->productImageRepository->deleteFromShops($imageId, [$shopId]);
-            }
-        }
-    }
-
-    private function removeCombinations(ProductId $productId, ShopConstraint $shopConstraint): void
-    {
-        if (!$this->productRepository->hasCombinations($productId)) {
-            return;
-        }
-
-        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
-        foreach ($shopIds as $shopId) {
-            $this->combinationRepository->deleteByProductId($productId, ShopConstraint::shop($shopId->getValue()));
-        }
     }
 }

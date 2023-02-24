@@ -29,10 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
-use PrestaShopBundle\Entity\Repository\ShopRepository;
-use PrestaShopBundle\Entity\Shop;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 
 class ProductShopsFormDataHandler implements FormDataHandlerInterface
 {
@@ -42,20 +39,12 @@ class ProductShopsFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
-     * @var ShopRepository
-     */
-    private $shopRepository;
-
-    /**
      * @param CommandBusInterface $bus
-     * @param ShopRepository $shopRepository
      */
     public function __construct(
-        CommandBusInterface $bus,
-        ShopRepository $shopRepository
+        CommandBusInterface $bus
     ) {
         $this->bus = $bus;
-        $this->shopRepository = $shopRepository;
     }
 
     /**
@@ -71,42 +60,10 @@ class ProductShopsFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $productId = (int) $id;
-        $allShops = $this->shopRepository->findAll();
-
-        $sourceShopId = (int) $data['source_shop_id'];
-        $selectedShops = $data['selected_shops'];
-        $initialShops = array_map(static function (string $shopId): int {
-            return (int) $shopId;
-        }, $data['initial_shops']);
-
-        $shopsToRemove = [];
-        $shopsToCopy = [];
-
-        /** @var Shop $shop */
-        foreach ($allShops as $shop) {
-            if (in_array($shop->getId(), $initialShops) && !in_array($shop->getId(), $selectedShops)) {
-                $shopsToRemove[] = $shop->getId();
-            } elseif (!in_array($shop->getId(), $initialShops) && in_array($shop->getId(), $selectedShops)) {
-                $shopsToCopy[] = $shop->getId();
-            }
-        }
-
-        // Remove non associated shops
-        if (!empty($shopsToRemove)) {
-            $this->bus->handle(new DeleteProductFromShopsCommand(
-                $productId,
-                $shopsToRemove
-            ));
-        }
-
-        // Copy data from source targets
-        foreach ($shopsToCopy as $targetShop) {
-            $this->bus->handle(new CopyProductToShopCommand(
-                $productId,
-                $sourceShopId,
-                (int) $targetShop
-            ));
-        }
+        $this->bus->handle(new SetProductShopsCommand(
+            (int) $id,
+            (int) $data['source_shop_id'],
+            $data['selected_shops']
+        ));
     }
 }

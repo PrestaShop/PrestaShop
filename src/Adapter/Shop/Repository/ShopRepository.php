@@ -75,6 +75,23 @@ class ShopRepository extends AbstractObjectModelRepository
         return $shop;
     }
 
+    /**
+     * @return ShopId[]
+     */
+    public function getAllIds(): array
+    {
+        $results = $this->connection->createQueryBuilder()
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'shop')
+            ->execute()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map(static function (string $shopId): ShopId {
+            return new ShopId((int) $shopId);
+        }, $results);
+    }
+
     public function getShopName(ShopId $shopId): string
     {
         $result = $this
