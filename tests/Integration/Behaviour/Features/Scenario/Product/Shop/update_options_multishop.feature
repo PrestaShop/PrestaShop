@@ -41,7 +41,9 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" should have following options for shops "shop1,shop2":
       | product option      | value        |
       | visibility          | catalog      |

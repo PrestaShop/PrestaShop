@@ -38,13 +38,17 @@ Feature: Add product to pack from Back Office (BO)
       | name[en-US] | weird sunglasses box |
       | type        | pack                 |
     And product "productPack1" type should be pack
-    And I copy product productPack1 from shop shop1 to shop shop2
+    And I set following shops for product "productPack1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     And I add product "product2" to shop shop1 with following information:
       | name[en-US] | shady sunglasses |
       | type        | standard         |
-    And I copy product product2 from shop shop1 to shop shop2
+    And I set following shops for product "product2":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     And I update product "product2" with following values:
-      | reference | ref1              |
+      | reference | ref1 |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -59,16 +63,22 @@ Feature: Add product to pack from Back Office (BO)
       | name[en-US] | street photos |
       | type        | pack          |
     And product "productPack2" type should be pack
-    And I copy product productPack2 from shop shop1 to shop shop2
+    And I set following shops for product "productPack2":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     And I add product "product3" to shop shop1 with following information:
       | name[en-US] | summerstreet |
       | type        | virtual      |
-    And I copy product product3 from shop shop1 to shop shop2
+    And I set following shops for product "product3":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     And I add new image "image3" named "logo.jpg" to product "product3"
     And I add product "product4" to shop shop1 with following information:
       | name[en-US] | winterstreet |
       | type        | virtual      |
-    And I copy product product4 from shop shop1 to shop shop2
+    And I set following shops for product "product4":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     And I add new image "image4" named "logo.jpg" to product "product4"
     And product "product3" type should be virtual
     And product "product4" type should be virtual
@@ -78,27 +88,29 @@ Feature: Add product to pack from Back Office (BO)
       | product4 | 20       |
     Then product "productPack2" type should be pack
     And pack "productPack2" should contain products with following details for shops shop1,shop2:
-      | product  | combination | name             | quantity | image url                            |
-      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}.jpg |
-      | product4 |             | winterstreet     | 20       | http://myshop.com/img/p/{image4}.jpg |
+      | product  | combination | name         | quantity | image url                            |
+      | product3 |             | summerstreet | 3        | http://myshop.com/img/p/{image3}.jpg |
+      | product4 |             | winterstreet | 20       | http://myshop.com/img/p/{image4}.jpg |
 
   Scenario: I update pack by removing one of the products
     Given pack "productPack2" should contain products with following details for shops shop1,shop2:
-      | product  | combination | name             | quantity | image url                            |
-      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}.jpg |
-      | product4 |             | winterstreet     | 20       | http://myshop.com/img/p/{image4}.jpg |
+      | product  | combination | name         | quantity | image url                            |
+      | product3 |             | summerstreet | 3        | http://myshop.com/img/p/{image3}.jpg |
+      | product4 |             | winterstreet | 20       | http://myshop.com/img/p/{image4}.jpg |
     When I update pack "productPack2" with following product quantities:
       | product  | quantity |
       | product3 | 3        |
     And pack "productPack2" should contain products with following details for shops shop1,shop2:
-      | product  | combination | name             | quantity | image url                            |
-      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}.jpg |
+      | product  | combination | name         | quantity | image url                            |
+      | product3 |             | summerstreet | 3        | http://myshop.com/img/p/{image3}.jpg |
 
   Scenario: I add virtual and standard product to the same pack
     Given I add product productPack4 to shop shop1 with following information:
       | name[en-US] | mixed pack |
       | type        | pack       |
-    And I copy product productPack4 from shop shop1 to shop shop2
+    And I set following shops for product "productPack4":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Given product "product2" type should be standard
     And product "product3" type should be virtual
     When I update pack productPack4 with following product quantities:
@@ -125,7 +137,9 @@ Feature: Add product to pack from Back Office (BO)
     Given I add product "productSkirt1" to shop shop1 with following information:
       | name[en-US] | regular skirt |
       | type        | combinations  |
-    And I copy product productSkirt1 from shop shop1 to shop shop2
+    And I set following shops for product "productSkirt1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     When I generate combinations in shop "shop1" for product productSkirt1 using following attributes:
       | Size  | [S,M]         |
       | Color | [White,Black] |
@@ -245,71 +259,73 @@ Feature: Add product to pack from Back Office (BO)
     When I delete product product2 from shops "shop1"
     # Product2 is fully removed
     Then pack productPack4 should contain products with following details for shops shop1,shop2:
-      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | product       | name                                   | combination         | quantity | image url                                 | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg | Ref: productSkirtRef       |
     When I delete combination productSkirt1MWhite from shops "shop2"
     # productSkirt1MWhite is still in shop1
     Then pack productPack4 should contain products with following details for shops shop1,shop2:
-      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | product       | name                                   | combination         | quantity | image url                                 | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg | Ref: productSkirtRef       |
     When I delete combination productSkirt1MWhite from shops "shop1"
     # productSkirt1MWhite is fully removed
     Then pack productPack4 should contain products with following details for shops shop1,shop2:
-      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | product       | name                                   | combination         | quantity | image url                                 | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg | Ref: productSkirtRef       |
 
-    Scenario: I can add product to a pack regardless of their common shops (or uncommon), the name depends on the shop though
-      Given I add product "productPack5" to shop shop2 with following information:
-        | name[en-US] | weird sunglasses box |
-        | type        | pack                 |
-      And product "productPack5" type should be pack for shop shop2
-      And I add product "product5" to shop shop1 with following information:
-        | name[en-US] | work sunglasses |
-        | type        | standard        |
-      And I add product "product6" to shop shop3 with following information:
-        | name[en-US] | personal sunglasses |
-        | type        | standard            |
-      And I add product "product7" to shop shop4 with following information:
-        | name[en-US] | casual sunglasses |
-        | type        | standard          |
-      And I copy product product7 from shop shop4 to shop shop2
-      Given I update pack productPack5 with following product quantities:
-        | product  | quantity |
-        | product5 | 10       |
-        | product6 | 11       |
-        | product7 | 15       |
-      Then pack "productPack5" should contain products with following details for shops "shop1,shop2,shop4":
-        | product  | combination | name                | quantity | image url                                              | reference |
-        | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-      Given I update product "product7" for shop "shop2" with following values:
-        | name[en-US]              | casual sunglasses 2 |
-      And I update product "product7" for shop "shop4" with following values:
-        | name[en-US]              | casual sunglasses 4 |
-      Then product "product7" localized "name" for shops "shop4" should be:
-        | locale | value               |
-        | en-US  | casual sunglasses 4 |
-      Then product "product7" localized "name" for shops "shop2" should be:
-        | locale | value               |
-        | en-US  | casual sunglasses 2 |
-      Then pack "productPack5" should contain products with following details for shops "shop1":
-        | product  | combination | name                | quantity | image url                                              | reference |
-        | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-      Then pack "productPack5" should contain products with following details for shops "shop2":
-        | product  | combination | name                | quantity | image url                                              | reference |
-        | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product7 |             | casual sunglasses 2 | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-      Then pack "productPack5" should contain products with following details for shops "shop4":
-        | product  | combination | name                | quantity | image url                                              | reference |
-        | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-        | product7 |             | casual sunglasses 4 | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+  Scenario: I can add product to a pack regardless of their common shops (or uncommon), the name depends on the shop though
+    Given I add product "productPack5" to shop shop2 with following information:
+      | name[en-US] | weird sunglasses box |
+      | type        | pack                 |
+    And product "productPack5" type should be pack for shop shop2
+    And I add product "product5" to shop shop1 with following information:
+      | name[en-US] | work sunglasses |
+      | type        | standard        |
+    And I add product "product6" to shop shop3 with following information:
+      | name[en-US] | personal sunglasses |
+      | type        | standard            |
+    And I add product "product7" to shop shop4 with following information:
+      | name[en-US] | casual sunglasses |
+      | type        | standard          |
+    And I set following shops for product "product7":
+      | source shop | shop4 |
+      | shops       | shop2 |
+    Given I update pack productPack5 with following product quantities:
+      | product  | quantity |
+      | product5 | 10       |
+      | product6 | 11       |
+      | product7 | 15       |
+    Then pack "productPack5" should contain products with following details for shops "shop1,shop2,shop4":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+    Given I update product "product7" for shop "shop2" with following values:
+      | name[en-US] | casual sunglasses 2 |
+    And I update product "product7" for shop "shop4" with following values:
+      | name[en-US] | casual sunglasses 4 |
+    Then product "product7" localized "name" for shops "shop4" should be:
+      | locale | value               |
+      | en-US  | casual sunglasses 4 |
+    Then product "product7" localized "name" for shops "shop2" should be:
+      | locale | value               |
+      | en-US  | casual sunglasses 2 |
+    Then pack "productPack5" should contain products with following details for shops "shop1":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+    Then pack "productPack5" should contain products with following details for shops "shop2":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses 2 | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+    Then pack "productPack5" should contain products with following details for shops "shop4":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses 4 | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |

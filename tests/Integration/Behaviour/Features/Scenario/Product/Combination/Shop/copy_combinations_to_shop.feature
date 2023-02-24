@@ -49,7 +49,9 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
   Scenario: I copy product from a shop to another the combinations are associated to the other shop along with the default
     Given product "product1" should have no combinations for shops "shop2"
     And product "product1" should not have a default combination for shop "shop2"
-    When I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" should have the following combinations for shops "shop1,shop2":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
@@ -107,7 +109,9 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
     And combination "product1SWhite" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
       | Puff Daddy | 10             |
-    When I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then combination "product1SWhite" should have following details for shops "shop1,shop2":
       | combination detail         | value             |
       | ean13                      | 978020137962      |

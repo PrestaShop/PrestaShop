@@ -44,9 +44,9 @@ Feature: Copy product from shop to shop.
       | delta_quantity | 51 |
     And I add new image "image1" named "app_icon.png" to product "standardProduct" for shop "shop2"
     And I add new image "image2" named "some_image.jpg" to product "standardProduct" for shop "shop2"
-    And I copy product standardProduct from shop shop2 to shop shop1
-    And I copy product standardProduct from shop shop2 to shop shop3
-    And I copy product standardProduct from shop shop2 to shop shop4
+    When I set following shops for product "standardProduct":
+      | source shop | shop2             |
+      | shops       | shop1,shop3,shop4 |
     And product standardProduct is associated to shop shop1
     And product standardProduct is associated to shop shop2
     And product standardProduct is associated to shop shop3
@@ -64,9 +64,9 @@ Feature: Copy product from shop to shop.
     And I generate combinations in shop "shop3" for product productWithCombinations using following attributes:
       | Size  | [L]                |
       | Color | [White,Black,Blue] |
-    And I copy product productWithCombinations from shop shop3 to shop shop1
-    And I copy product productWithCombinations from shop shop3 to shop shop2
-    And I copy product productWithCombinations from shop shop3 to shop shop4
+    And I set following shops for product "productWithCombinations":
+      | source shop | shop3             |
+      | shops       | shop1,shop2,shop4 |
     And product productWithCombinations is associated to shop shop1
     And product productWithCombinations is associated to shop shop2
     And product productWithCombinations is associated to shop shop3

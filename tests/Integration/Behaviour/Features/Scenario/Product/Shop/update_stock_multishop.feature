@@ -36,7 +36,9 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | out_of_stock_type | available |
       | delta_quantity    | 42        |
       | location          | dtc       |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" should have following stock information for shops "shop1,shop2":
       | pack_stock_type     | pack_only  |
       | out_of_stock_type   | available  |
@@ -345,7 +347,9 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | delta_quantity | 42 |
     And product "productCombinations" should have following stock information:
       | quantity | 42 |
-    And I copy product productCombinations from shop shop1 to shop shop2
+    And I set following shops for product "productCombinations":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "productCombinations" should have following stock information for shops "shop1,shop2":
       | quantity | 42 |
     When I update product "productCombinations" stock for shop shop2 with following information:
@@ -388,7 +392,9 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | out_of_stock_type | available |
       | quantity          | 42        |
       | location          | dtc       |
-    When I copy product product1 from shop shop1 to shop shop3
+    When I set following shops for product "product1":
+      | source shop | shop1             |
+      | shops       | shop1,shop2,shop3 |
     Then product "product1" should have following stock information for shops "shop1,shop2,shop3":
       | out_of_stock_type | available |
       | quantity          | 42        |
@@ -415,7 +421,9 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | Puff Daddy | 42             |
     And product product1 is not associated to shop shop4
     # When the stock is copied for shop4 it impacts shop3 as well since they share the same StockAvailable
-    When I copy product product1 from shop shop1 to shop shop4
+    When I set following shops for product "product1":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     Then product "product1" should have following stock information for shops "shop1,shop2,shop3,shop4":
       | out_of_stock_type | available |
       | quantity          | 42        |

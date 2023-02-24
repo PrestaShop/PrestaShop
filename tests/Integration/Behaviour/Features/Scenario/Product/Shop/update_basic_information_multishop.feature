@@ -25,7 +25,9 @@ Feature: Update product basic information from Back Office (BO)
       | name[en-US]              | magic staff              |
       | description[en-US]       | such a super magic staff |
       | description_short[en-US] | super magic staff        |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" localized "name" for shops "shop1,shop2" should be:
       | locale | value       |
       | en-US  | magic staff |

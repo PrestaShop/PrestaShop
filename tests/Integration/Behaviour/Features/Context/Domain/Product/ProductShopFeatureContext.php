@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductShopAssociationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
@@ -95,22 +97,31 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I copy product :productReference from shop :shopSourceReference to shop :shopTargetReference
+     * @When I set following shops for product ":productReference":
      *
      * @param string $productReference
-     * @param string $shopSourceReference
-     * @param string $shopTargetReference
+     * @param TableNode $tableNode
      */
-    public function copyProductToShop(string $productReference, string $shopSourceReference, string $shopTargetReference): void
+    public function setProductShops(string $productReference, TableNode $tableNode): void
     {
-        $productId = $this->getSharedStorage()->get($productReference);
-        $shopSourceId = $this->getSharedStorage()->get($shopSourceReference);
-        $shopTargetId = $this->getSharedStorage()->get($shopTargetReference);
+        $data = $tableNode->getRowsHash();
 
-        $this->getCommandBus()->handle(new CopyProductToShopCommand(
-            $productId,
-            $shopSourceId,
-            $shopTargetId
-        ));
+        try {
+            $this->getCommandBus()->handle(new SetProductShopsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $this->getSharedStorage()->get($data['source shop']),
+                $this->referencesToIds($data['shops'])
+            ));
+        } catch (InvalidProductShopAssociationException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get error that I cannot unassociate product from all shops
+     */
+    public function assertLastExceptionIsInvalidProductShopAssociation(): void
+    {
+        $this->assertLastErrorIs(InvalidProductShopAssociationException::class);
     }
 }

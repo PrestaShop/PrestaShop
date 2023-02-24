@@ -23,7 +23,9 @@ Feature: Set product images for all shops from Back Office (BO)
       | name[en-US] | bottle of beer |
       | type        | standard       |
     And product "product1" type should be standard
-    And I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product product1 is associated to shop shop1
     And product product1 is associated to shop shop2
     When I update product product1 with following customization fields for shop shop1:

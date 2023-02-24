@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DeleteProductFeatureContext extends AbstractProductFeatureContext
@@ -64,19 +63,15 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      */
     public function deleteProductFromShops(string $reference, string $shopReferences): void
     {
-        $shopReferences = explode(',', $shopReferences);
-        $shopIds = [];
-        foreach ($shopReferences as $shopReference) {
-            $shopIds[] = $this->getSharedStorage()->get(trim($shopReference));
-        }
-
-        try {
-            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand(
-                $this->getSharedStorage()->get($reference),
-                $shopIds
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            try {
+                $this->getCommandBus()->handle(new DeleteProductCommand(
+                    $this->getSharedStorage()->get($reference),
+                    ShopConstraint::shop($shopId)
+                ));
+            } catch (ProductException $e) {
+                $this->setLastException($e);
+            }
         }
     }
 

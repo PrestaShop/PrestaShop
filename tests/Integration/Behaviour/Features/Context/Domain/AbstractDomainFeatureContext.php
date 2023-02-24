@@ -77,6 +77,10 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function referencesToIds(string $references): array
     {
+        if (empty($references)) {
+            return [];
+        }
+
         $ids = [];
         foreach (explode(',', $references) as $reference) {
             $reference = trim($reference);

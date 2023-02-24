@@ -28,7 +28,9 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | wholesale_price    | 70              |
       | unit_price         | 10              |
       | unity              | bag of ten      |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product product1 should have following prices information for shops "shop1,shop2":
       | price              | 100.99          |
       | price_tax_included | 105.0296        |

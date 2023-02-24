@@ -63,7 +63,9 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[en-US] | product out of stock        |
       | delivery time out of stock notes[fr-FR] | produit en rupture de stock |
       | carriers                                | [carrier1,carrier2]         |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product product1 should have following shipping information for shops "shop1,shop2":
       | width                                   | 10.5                        |
       | height                                  | 6                           |

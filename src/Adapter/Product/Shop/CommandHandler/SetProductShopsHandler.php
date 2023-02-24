@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\SetProductShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -75,15 +77,29 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
         $productId = $command->getProductId();
         $sourceShopId = $command->getSourceShopId();
         $selectedShopIds = $command->getShopIds();
+
+        if (empty($selectedShopIds)) {
+            throw new InvalidProductShopAssociationException(
+                sprintf(
+                    'Empty shop association provided. Use %s command to delete product instead',
+                    DeleteProductCommand::class
+                )
+            );
+        }
+
         $allShopIds = $this->shopRepository->getAllIds();
         $initialShopIds = $this->productRepository->getAssociatedShopIds($productId);
 
-        $this->assertSourceShopIsValid($sourceShopId, $initialShopIds);
+        $this->assertSourceShopIsAlreadyAssociated($sourceShopId, $initialShopIds);
 
         $shopsToRemove = [];
         $shopsToCopy = [];
 
         foreach ($allShopIds as $shopId) {
+            if ($sourceShopId->getValue() === $shopId->getValue()) {
+                // source shop is already associated and we don't allow to unassociate it
+                continue;
+            }
             if ($this->shopInArray($shopId, $initialShopIds) && !$this->shopInArray($shopId, $selectedShopIds)) {
                 $shopsToRemove[] = $shopId;
             } elseif (!$this->shopInArray($shopId, $initialShopIds) && $this->shopInArray($shopId, $selectedShopIds)) {
@@ -110,7 +126,7 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
      * @param ShopId $sourceShopId
      * @param ShopId[] $initialShopIds
      */
-    private function assertSourceShopIsValid(ShopId $sourceShopId, array $initialShopIds): void
+    private function assertSourceShopIsAlreadyAssociated(ShopId $sourceShopId, array $initialShopIds): void
     {
         if ($this->shopInArray($sourceShopId, $initialShopIds)) {
             return;

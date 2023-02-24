@@ -26,7 +26,9 @@ Feature: Update product SEO options from Back Office (BO)
       | link_rewrite[en-US]     | magic-staff                  |
       | redirect_type           | 404                          |
       | redirect_target         |                              |
-    And I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" localized "meta_title" for shops "shop1,shop2" should be:
       | locale | value                  |
       | en-US  | magic staff meta title |
