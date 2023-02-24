@@ -62,16 +62,8 @@ services:
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository:
     public: true

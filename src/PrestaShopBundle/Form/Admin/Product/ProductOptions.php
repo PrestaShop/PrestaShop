@@ -197,7 +197,7 @@ class ProductOptions extends CommonAbstractType
             ])
             ->add('condition', FormType\ChoiceType::class, [
                 'choices' => [
-                    $this->translator->trans('New', [], 'Shop.Theme.Catalog') => 'new',
+                    $this->translator->trans('New', [], 'Admin.Global') => 'new',
                     $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => 'used',
                     $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => 'refurbished',
                 ],

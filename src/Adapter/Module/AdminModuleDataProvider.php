@@ -232,10 +232,14 @@ class AdminModuleDataProvider implements ModuleInterface
                     ]);
                     continue;
                 }
-                $urls[$action] = $this->router->generate('admin_module_manage_action', [
+                $parameters = [
                     'action' => $action,
                     'module_name' => $moduleAttributes->get('name'),
-                ]);
+                ];
+                if ($action === 'upgrade' && $moduleAttributes->get('download_url') !== null) {
+                    $parameters['source'] = $moduleAttributes->get('download_url');
+                }
+                $urls[$action] = $this->router->generate('admin_module_manage_action', $parameters);
             }
 
             // Let's filter the actions depending on conditions the module is in

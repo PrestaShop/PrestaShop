@@ -8,9 +8,8 @@ services:
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\SetPackProductsHandler:
     arguments:

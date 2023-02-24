@@ -78,21 +78,40 @@
     </p>
 
     <div
-      class="md-checkbox dropzone-window-checkbox"
-      v-if="selectedFile !== null"
-      :data-toggle="showCoverTooltip"
-      :data-original-title="$t('window.cantDisableCover')"
+      class="dropzone-window-checkbox"
+      v-if="selectedFile !== null && selectedFile.isAssociatedToCurrentShop"
     >
-      <label>
-        <input
-          type="checkbox"
-          :disabled="isCover"
-          :checked="isCover"
-          @change.prevent.stop="coverChanged"
-        >
-        <i class="md-checkbox-control" />
-        {{ $t('window.useAsCover') }}
-      </label>
+      <div
+        class="md-checkbox"
+        :data-toggle="showCoverTooltip"
+        :data-original-title="$t('window.cantDisableCover')"
+      >
+        <label>
+          <input
+            id="is-cover-checkbox"
+            type="checkbox"
+            :disabled="isCover"
+            :checked="isCover"
+            @change.prevent.stop="coverChanged"
+          >
+          <i class="md-checkbox-control" />
+          {{ $t('window.useAsCover') }}
+        </label>
+      </div>
+      <div
+        class="md-checkbox"
+        v-if="isMultiStoreActive && (isCover || coverData)"
+      >
+        <label>
+          <input
+            id="apply-to-all-stores-checkbox"
+            type="checkbox"
+            @change="applyToAllStoresChanged"
+          >
+          <i class="md-checkbox-control" />
+          {{ $t('window.applyToAllStores') }}
+        </label>
+      </div>
     </div>
 
     <input
@@ -158,7 +177,7 @@
       <button
         type="button"
         class="btn btn-primary save-image-settings"
-        @click="$emit('saveSelectedFile', captionValue, coverData)"
+        @click="$emit('saveSelectedFile', captionValue, coverData, this.getShopIdForFileSaving)"
       >
         <span v-if="!loading">
           {{ $t('window.saveImage') }}
@@ -177,7 +196,7 @@
 <script lang="ts">
   import {PSDropzoneFile} from '@pages/product/image/dropzone/Dropzone.vue';
   import ProductMap from '@pages/product/product-map';
-  import {PropType, defineComponent} from 'vue';
+  import {defineComponent, PropType} from 'vue';
 
   const DropzoneMap = ProductMap.dropzone;
 
@@ -196,6 +215,10 @@
         type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
+      isMultiStoreActive: {
+        type: Boolean,
+        required: true,
+      },
       selectedLocale: {
         type: Object,
         default: () => {},
@@ -204,11 +227,20 @@
         type: Boolean,
         default: false,
       },
+      shopId: {
+        type: null,
+        required: true,
+      },
     },
-    data(): {captionValue: KeyStringRecord, coverData: boolean | string} {
+    data(): {
+      captionValue: KeyStringRecord,
+      coverData: boolean | string,
+      applyToAllStores: boolean,
+    } {
       return {
         captionValue: {},
         coverData: false,
+        applyToAllStores: false,
       };
     },
     watch: {
@@ -243,6 +275,13 @@
 
         return false;
       },
+      getShopIdForFileSaving(): number | null {
+        if (!this.selectedFile || !this.selectedFile.isAssociatedToCurrentShop || this.applyToAllStores) {
+          return null;
+        }
+
+        return this.shopId;
+      },
     },
     mounted() {
       window.prestaShopUiKit.initToolTips();
@@ -275,6 +314,12 @@
       coverChanged(event: Event): void {
         if ((<HTMLInputElement> event.target)?.value) {
           this.coverData = (<HTMLInputElement> event.target).value;
+          this.applyToAllStores = false;
+        }
+      },
+      applyToAllStoresChanged(event: Event): void {
+        if ((<HTMLInputElement> event.target)?.value) {
+          this.applyToAllStores = true;
         }
       },
       prevent(event: Event): void {

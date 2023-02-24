@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
@@ -47,7 +47,7 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
     private $productStockUpdater;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -58,12 +58,12 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
 
     /**
      * @param ProductStockUpdater $productStockUpdater
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param CombinationRepository $combinationRepository
      */
     public function __construct(
         ProductStockUpdater $productStockUpdater,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         CombinationRepository $combinationRepository
     ) {
         $this->productStockUpdater = $productStockUpdater;

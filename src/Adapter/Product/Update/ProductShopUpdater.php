@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockPro
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
@@ -58,12 +58,12 @@ use Product;
 class ProductShopUpdater
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableRepository;
 
@@ -108,8 +108,8 @@ class ProductShopUpdater
     private $categoryRepository;
 
     public function __construct(
-        ProductMultiShopRepository $productRepository,
-        StockAvailableMultiShopRepository $stockAvailableRepository,
+        ProductRepository $productRepository,
+        StockAvailableRepository $stockAvailableRepository,
         ShopRepository $shopRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
         ProductStockUpdater $productStockUpdater,
@@ -266,7 +266,7 @@ class ProductShopUpdater
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         $targetImageIds = array_map(static function (ImageId $imageId): int {
             return $imageId->getValue();
-        }, $this->productImageMultiShopRepository->getImagesIds($productId, ShopConstraint::shop($targetShopId->getValue())));
+        }, $this->productImageMultiShopRepository->getImageIds($productId, ShopConstraint::shop($targetShopId->getValue())));
 
         foreach ($imagesFromSourceShop as $image) {
             // skip image if it is already associated with the target shop

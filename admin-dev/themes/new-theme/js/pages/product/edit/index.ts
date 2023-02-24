@@ -132,7 +132,7 @@ $(() => {
 
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);
-  initImagesShopAssociation(ProductMap.manageShopImagesButtonContainer);
+  initImagesShopAssociation(ProductMap.manageShopImagesButtonContainer, shopId);
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();

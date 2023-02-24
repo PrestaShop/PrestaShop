@@ -71,8 +71,8 @@
       <title>Main wrapper section (bottom)</title>
       <description>This hook displays new elements in the bottom of the main wrapper</description>
     </hook>
-    <hook id="dipslayContactContent">
-      <name>dipslayContactContent</name>
+    <hook id="displayContactContent">
+      <name>displayContactContent</name>
       <title>Content wrapper section of the contact page</title>
       <description>This hook displays new elements in the content wrapper of the contact page</description>
     </hook>

@@ -104,7 +104,7 @@ class VirtualProductUpdater
      */
     public function addFile(ProductId $productId, string $filePath, VirtualProductFile $virtualProductFile): VirtualProductFileId
     {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getProductByDefaultShop($productId);
         if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
         }
@@ -144,7 +144,7 @@ class VirtualProductUpdater
      */
     public function deleteFileForProduct(ProductId $productId): void
     {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getProductByDefaultShop($productId);
         if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
         }

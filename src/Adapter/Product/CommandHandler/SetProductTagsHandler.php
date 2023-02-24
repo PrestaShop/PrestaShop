@@ -65,7 +65,7 @@ final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
      */
     public function handle(SetProductTagsCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $product = $this->productRepository->getProductByDefaultShop($command->getProductId());
         $this->productTagUpdater->setProductTags($product, $command->getLocalizedTagsList());
     }
 }

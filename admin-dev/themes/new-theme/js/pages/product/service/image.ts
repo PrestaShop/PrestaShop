@@ -30,16 +30,16 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getProductImages = async (productId: number): Promise<JQuery.jqXHR<any>> => {
-  const imagesUrl = router.generate('admin_products_v2_get_images', {
+export const getProductImages = async (productId: number, shopId: number): Promise<JQuery.jqXHR<any>> => {
+  const imagesUrl = router.generate('admin_products_v2_images_for_shop', {
     productId,
+    shopId,
   });
 
   return $.get(imagesUrl);
 };
 
 export const getProductShopImages = async (productId: number): Promise<Response> => fetch(router.generate('admin_products_v2_product_shop_images', {productId}));
-
 export const updateProductShopImages = async (productId: number, imageAssociations: any): Promise<Response> => {
   const formData = new FormData();
   formData.append('image_associations', JSON.stringify(imageAssociations));
@@ -53,7 +53,12 @@ export const updateProductShopImages = async (productId: number, imageAssociatio
   );
 };
 
-export const saveImageInformations = async (selectedFile: Record<string, any>, token: string, formName: string): Promise<JQuery.jqXHR<any>> => {
+export const saveImageInformations = async (
+  selectedFile: Record<string, any>,
+  token: string,
+  formName: string,
+  shopId: number|null,
+): Promise<JQuery.jqXHR<any>> => {
   const saveUrl = router.generate('admin_products_v2_update_image', {
     productImageId: selectedFile.image_id,
   });
@@ -64,6 +69,8 @@ export const saveImageInformations = async (selectedFile: Record<string, any>, t
     data[`${formName}[legend][${langId}]`] = selectedFile.legends[langId];
   });
   data[`${formName}[_token]`] = token;
+  data[`${formName}[shop_id]`] = shopId || 0;
+  data[`${formName}[apply_to_all_stores]`] = selectedFile.applyToAllStores;
 
   return $.ajax(saveUrl, {
     method: 'PATCH',
@@ -89,7 +96,13 @@ export const replaceImage = async (selectedFile: Record<string, any>, newFile: B
   });
 };
 
-export const saveImagePosition = async (productImageId: number, newPosition: number, formName: string, token: string): Promise<JQuery.jqXHR<any>> => {
+export const saveImagePosition = async (
+  productImageId: number,
+  newPosition: number,
+  formName: string,
+  token: string,
+  shopId: number|null,
+): Promise<JQuery.jqXHR<any>> => {
   const sortUrl = router.generate('admin_products_v2_update_image', {
     productImageId,
   });
@@ -97,6 +110,7 @@ export const saveImagePosition = async (productImageId: number, newPosition: num
   const data: Record<string, any> = {};
   data[`${formName}[position]`] = newPosition;
   data[`${formName}[_token]`] = token;
+  data[`${formName}[shop_id]`] = shopId || 0;
 
   return $.ajax(sortUrl, {
     method: 'PATCH',
