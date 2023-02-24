@@ -39,7 +39,7 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer self-update --latest
+          composer self-update --stable
           composer install --prefer-dist
 
       - name: Execute script for updating modules
