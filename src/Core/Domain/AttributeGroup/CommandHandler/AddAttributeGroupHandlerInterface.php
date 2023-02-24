@@ -37,7 +37,7 @@ interface AddAttributeGroupHandlerInterface
     /**
      * @param AddAttributeGroupCommand $command
      *
-     * @return void id of the created attribute group
+     * @return AttributeGroupId
      */
     public function handle(AddAttributeGroupCommand $command): AttributeGroupId;
 }

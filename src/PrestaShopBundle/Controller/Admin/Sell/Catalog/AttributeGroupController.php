@@ -124,7 +124,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *
      * @param int $attributeGroupId
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function editAction(Request $request, int $attributeGroupId): Response
     {
