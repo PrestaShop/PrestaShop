@@ -149,7 +149,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
         $filteredManufacturer = Hook::exec(
             'filterManufacturerContent',
-            ['filtered_content' => $manufacturerVar['description']],
+            ['object' => $manufacturerVar],
             $id_module = null,
             $array_return = false,
             $check_exceptions = true,
@@ -157,8 +157,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
             $id_shop = null,
             $chain = true
         );
-        if (!empty($filteredManufacturer)) {
-            $manufacturerVar['description'] = $filteredManufacturer;
+        if (!empty($filteredManufacturer['object'])) {
+            $manufacturerVar = $filteredManufacturer['object'];
         }
 
         $this->context->smarty->assign([
@@ -177,7 +177,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             foreach ($manufacturersVar as $k => $manufacturer) {
                 $filteredManufacturer = Hook::exec(
                     'filterManufacturerContent',
-                    ['filtered_content' => $manufacturer['text']],
+                    ['object' => $manufacturer],
                     $id_module = null,
                     $array_return = false,
                     $check_exceptions = true,
@@ -185,8 +185,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
                     $id_shop = null,
                     $chain = true
                 );
-                if (!empty($filteredManufacturer)) {
-                    $manufacturersVar[$k]['text'] = $filteredManufacturer;
+                if (!empty($filteredManufacturer['object'])) {
+                    $manufacturersVar[$k] = $filteredManufacturer['object'];
                 }
             }
         }
