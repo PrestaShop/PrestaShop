@@ -53,7 +53,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $separationEnabled = $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PAYMENT_PREFERENCES_FORM_SEPARATION);
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $paymentModulesListProvider = $this->get('prestashop.adapter.module.payment_module_provider');
@@ -66,84 +65,26 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
         }
 
-        /*
-         * @todo separation will always be enabled in next major version after 8.1 so this code will need to be changed accordingly
-         */
-        if ($separationEnabled) {
-            $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
-            if ($isSingleShopContext) {
-                $carrierRestrictionsView = $this->getPaymentCarrierRestrictionsFormHandler()->getForm()->createView();
-                $countryRestrictionsView = $this->getPaymentCountryRestrictionsFormHandler()->getForm()->createView();
-                $currencyRestrictionsView = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm()->createView();
-                $groupRestrictionsView = $this->getPaymentGroupRestrictionsFormHandler()->getForm()->createView();
-                $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
-            }
-
-            return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/separated_payment_preferences.html.twig', [
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($legacyController),
-                'paymentCurrencyRestrictionsForm' => $currencyRestrictionsView,
-                'paymentCountryRestrictionsForm' => $countryRestrictionsView,
-                'paymentGroupRestrictionsForm' => $groupRestrictionsView,
-                'paymentCarrierRestrictionsForm' => $carrierRestrictionsView,
-                'isSingleShopContext' => $isSingleShopContext,
-                'paymentModulesCount' => $paymentModulesCount,
-            ]);
-        }
-
-        $paymentPreferencesForm = null;
+        $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
         if ($isSingleShopContext) {
-            $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
+            $carrierRestrictionsView = $this->getPaymentCarrierRestrictionsFormHandler()->getForm()->createView();
+            $countryRestrictionsView = $this->getPaymentCountryRestrictionsFormHandler()->getForm()->createView();
+            $currencyRestrictionsView = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm()->createView();
+            $groupRestrictionsView = $this->getPaymentGroupRestrictionsFormHandler()->getForm()->createView();
+            $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/Zpayment_preferences.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'paymentPreferencesForm' => $paymentPreferencesForm,
+            'paymentCurrencyRestrictionsForm' => $currencyRestrictionsView,
+            'paymentCountryRestrictionsForm' => $countryRestrictionsView,
+            'paymentGroupRestrictionsForm' => $groupRestrictionsView,
+            'paymentCarrierRestrictionsForm' => $carrierRestrictionsView,
             'isSingleShopContext' => $isSingleShopContext,
             'paymentModulesCount' => $paymentModulesCount,
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
         ]);
-    }
-
-    /**
-     * @deprecated since 8.1.0 and will be removed in next major version. Use following separate actions instead:
-     * @see processPaymentCarrierRestrictionsFormAction
-     * @see processPaymentCountryRestrictionsFormAction
-     * @see processPaymentCurrencyRestrictionsFormAction
-     * @see processPaymentGroupRestrictionsFormAction
-     * Process payment modules preferences form
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="Access denied.",
-     *     redirectRoute="admin_payment_preferences"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processFormAction(Request $request)
-    {
-        $paymentPreferencesFormHandler = $this->getPaymentPreferencesFormHandler();
-
-        $paymentPreferencesForm = $paymentPreferencesFormHandler->getForm();
-        $paymentPreferencesForm->handleRequest($request);
-
-        if ($paymentPreferencesForm->isSubmitted()) {
-            $paymentPreferences = $paymentPreferencesForm->getData();
-
-            $errors = $paymentPreferencesFormHandler->save($paymentPreferences);
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_payment_preferences');
-            }
-
-            $this->flashErrors($errors);
-        }
-
-        return $this->redirectToRoute('admin_payment_preferences');
     }
 
     /**

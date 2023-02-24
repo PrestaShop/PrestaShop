@@ -25,6 +25,5 @@
     <feature_flag id="customer_threads" name="customer_threads" label_wording="Customer threads" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated customer threads page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="order_state" name="order_state" label_wording="Order states" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated order states page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="feature" name="feature" label_wording="Features" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated features page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
-    <feature_flag id="payment_preferences_form_separation" name="payment_preferences_form_separation" label_wording="Payment preferences form separation" label_domain="Admin.Advparameters.Feature" description_wording="Payment preferences is separated into 4 forms in the same page, looks the same but upon clicking save, only the form over the save button is saved." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
   </entities>
 </entity_feature_flag>

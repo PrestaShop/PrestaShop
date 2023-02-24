@@ -44,8 +44,5 @@ class FeatureFlagSettings
     public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
 
     public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-
     public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
-
-    public const FEATURE_FLAG_PAYMENT_PREFERENCES_FORM_SEPARATION = 'payment_preferences_form_separation';
 }
