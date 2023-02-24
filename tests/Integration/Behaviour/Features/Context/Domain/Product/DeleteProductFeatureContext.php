@@ -43,15 +43,9 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $reference
      */
-    public function deleteProduct(string $reference): void
+    public function deleteProductForDefaultShop(string $reference): void
     {
-        try {
-            $this->getCommandBus()->handle(new DeleteProductCommand(
-                $this->getSharedStorage()->get($reference)
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+        $this->deleteProduct($reference, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
     /**
@@ -59,18 +53,9 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param TableNode $productsList
      */
-    public function bulkDeleteProducts(TableNode $productsList): void
+    public function bulkDeleteProductsForDefaultShop(TableNode $productsList): void
     {
-        $productIds = [];
-        foreach ($productsList->getColumnsHash() as $productInfo) {
-            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
-        }
-
-        try {
-            $this->getCommandBus()->handle(new BulkDeleteProductCommand($productIds));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+        $this->bulkDeleteProducts($productsList, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
     /**
@@ -140,6 +125,32 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
                 $productIds,
                 $shopConstraint
             ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function deleteProduct(string $reference, ShopConstraint $shopConstraint): void
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductCommand(
+                $this->getSharedStorage()->get($reference),
+                $shopConstraint
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function bulkDeleteProducts(TableNode $productsList, ShopConstraint $shopConstraint): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand($productIds, $shopConstraint));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }

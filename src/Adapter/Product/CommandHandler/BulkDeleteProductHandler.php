@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
@@ -58,17 +59,25 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
      */
     public function handle(BulkDeleteProductCommand $command): void
     {
-        $this->handleBulkAction($command->getProductIds());
+        $this->handleBulkAction($command->getProductIds(), $command);
     }
 
     /**
      * @param ProductId $productId
-     * @param BulkDeleteProductCommand $command
+     * @param BulkDeleteProductCommand|null $command
      *
      * @return void
      */
     protected function handleSingleAction(ProductId $productId, $command = null): void
     {
+        if (!($command instanceof BulkDeleteProductCommand)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Expected argument $command of type "%s". Got "%s"',
+                    BulkDeleteProductCommand::class,
+                    var_export($command, true)
+                ));
+        }
         $this->productRepository->deleteByShopConstraint($productId, $command->getShopConstraint());
     }
 
