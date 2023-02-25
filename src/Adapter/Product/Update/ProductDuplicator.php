@@ -575,12 +575,60 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private function duplicateFeatures(int $oldProductId, int $newProductId): void
     {
-        /* @see Product::duplicateFeatures() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateFeatures'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES
-        );
+        $oldProductFeatures = $this->getRows('feature_product', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+
+        // Custom values need to be copied and assigned to new products
+        $featureValuesIds = array_map(static function (array $oldProductFeature) {
+            return (int) $oldProductFeature['id_feature_value'];
+        }, $oldProductFeatures);
+        $customFeatureValues = $this->getRows('feature_value', ['id_feature_value' => $featureValuesIds, 'custom' => 1], CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+        $customValuesMapping = [];
+        if (!empty($customFeatureValues)) {
+            $lastFeatureValueId = (int) $this->connection->createQueryBuilder()
+                ->from($this->dbPrefix . 'feature_value')
+                ->select('id_feature_value')
+                ->addOrderBy('id_feature_value', 'DESC')
+                ->execute()
+                ->fetchOne()
+            ;
+
+            $newCustomFeatureValues = [];
+            $newCustomFeatureValuesLang = [];
+            foreach ($customFeatureValues as $customFeatureValue) {
+                $newCustomFeatureValueId = ++$lastFeatureValueId;
+                $oldCustomFeatureValueId = (int) $customFeatureValue['id_feature_value'];
+                $customValuesMapping[$oldCustomFeatureValueId] = $newCustomFeatureValueId;
+                $newCustomFeatureValues[] = array_merge($customFeatureValue, [
+                    'id_feature_value' => $newCustomFeatureValueId,
+                ]);
+
+                $langData = $this->getRows('feature_value_lang', ['id_feature_value' => $oldCustomFeatureValueId], CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+                $langData = $this->replaceInRows($langData, ['id_feature_value' => $newCustomFeatureValueId]);
+                $newCustomFeatureValuesLang = array_merge($newCustomFeatureValuesLang, $langData);
+            }
+            $this->bulkInsert('feature_value', $newCustomFeatureValues, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+            $this->bulkInsert('feature_value_lang', $newCustomFeatureValuesLang, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+        }
+
+        // Now we can duplicate relations (and replace custom ones with newly copied feature values)
+        $newProductFeatures = [];
+        foreach ($oldProductFeatures as $oldProductFeature) {
+            $oldCustomFeatureValueId = (int) $oldProductFeature['id_feature_value'];
+            if (!isset($customValuesMapping[$oldCustomFeatureValueId])) {
+                $newProductFeatures[] = [
+                    'id_product' => $newProductId,
+                    'id_feature' => $oldProductFeature['id_feature'],
+                    'id_feature_value' => $oldProductFeature['id_feature_value'],
+                ];
+            } else {
+                $newProductFeatures[] = [
+                    'id_product' => $newProductId,
+                    'id_feature' => $oldProductFeature['id_feature'],
+                    'id_feature_value' => $customValuesMapping[$oldCustomFeatureValueId],
+                ];
+            }
+        }
+        $this->bulkInsert('feature_product', $newProductFeatures, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
     }
 
     /**

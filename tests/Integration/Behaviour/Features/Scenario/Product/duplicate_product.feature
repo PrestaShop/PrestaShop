@@ -542,3 +542,36 @@ Feature: Duplicate product from Back Office (BO).
       | expiration date      |                 |
     And virtualProduct and virtualProductCopy have different values
     And file1 and file1Copy have different values
+
+  Scenario: I duplicate product features
+    Given I create product feature "element" with specified properties:
+      | name | Nature Element |
+    And I create feature value "fire" for feature "element" with following properties:
+      | value[en-US] | Fire |
+      | value[fr-FR] | Feu  |
+    And I create product feature "emotion" with specified properties:
+      | name | Emotion |
+    And I create feature value "anger" for feature "emotion" with following properties:
+      | value[en-US] | Anger  |
+      | value[fr-FR] | Colère |
+    # Now create the product with both regular features and custom ones
+    Given I add product "darkMagicBook" with following information:
+      | name[en-US] | Dark Magic Book |
+      | type        | standard        |
+    And I set to product "darkMagicBook" the following feature values:
+      | feature | feature_value | custom_values                 | custom_reference |
+      | element | fire          |                               |                  |
+      | emotion | anger         |                               |                  |
+      | element |               | en-US:Darkness;fr-FR:Ténèbres | darkness         |
+    Then product "darkMagicBook" should have following feature values:
+      | feature | feature_value | custom_values                 |
+      | element | fire          |                               |
+      | emotion | anger         |                               |
+      | element | darkness      | en-US:Darkness;fr-FR:Ténèbres |
+    When I duplicate product darkMagicBook to a darkMagicBookCopy
+    Then product "darkMagicBookCopy" should have following feature values:
+      | feature | feature_value | new_feature_value | custom_values                 |
+      | element | fire          |                   |                               |
+      | emotion | anger         |                   |                               |
+      | element |               | darknessCopy      | en-US:Darkness;fr-FR:Ténèbres |
+    And darkness and darknessCopy have different values
