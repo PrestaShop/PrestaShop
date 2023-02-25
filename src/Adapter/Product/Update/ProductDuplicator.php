@@ -624,16 +624,39 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      * @param int $newProductId
      *
      * @throws CannotDuplicateProductException
-     * @throws CoreException
      */
     private function duplicateCustomizationFields(int $oldProductId, int $newProductId): void
     {
-        /* @see Product::duplicateCustomizationFields() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateCustomizationFields'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_CUSTOMIZATION_FIELDS
-        );
+        $oldCustomizationFields = $this->getRows('customization_field', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_CUSTOMIZATION_FIELDS);
+        $lastCustomizationFieldId = (int) $this->connection->createQueryBuilder()
+            ->from($this->dbPrefix . 'customization_field')
+            ->select('id_customization_field')
+            ->addOrderBy('id_customization_field', 'DESC')
+            ->execute()
+            ->fetchOne()
+        ;
+
+        $newCustomizationFields = [];
+        $newCustomizationFieldsLang = [];
+        foreach ($oldCustomizationFields as $oldCustomizationField) {
+            $oldCustomizationFieldId = (int) $oldCustomizationField['id_customization_field'];
+            $newCustomizationFieldId = ++$lastCustomizationFieldId;
+
+            $newCustomizationFields[] = array_merge($oldCustomizationField, [
+                'id_product' => $newProductId,
+                'id_customization_field' => $newCustomizationFieldId,
+            ]);
+
+            $oldCustomizationFieldsLang = $this->getRows('customization_field_lang', ['id_customization_field' => $oldCustomizationFieldId], CannotDuplicateProductException::FAILED_DUPLICATE_CUSTOMIZATION_FIELDS);
+            foreach ($oldCustomizationFieldsLang as $oldCustomizationFieldLang) {
+                $newCustomizationFieldsLang[] = array_merge($oldCustomizationFieldLang, [
+                    'id_customization_field' => $newCustomizationFieldId,
+                ]);
+            }
+        }
+
+        $this->bulkInsert('customization_field', $newCustomizationFields, CannotDuplicateProductException::FAILED_DUPLICATE_CUSTOMIZATION_FIELDS);
+        $this->bulkInsert('customization_field_lang', $newCustomizationFieldsLang, CannotDuplicateProductException::FAILED_DUPLICATE_CUSTOMIZATION_FIELDS);
     }
 
     /**

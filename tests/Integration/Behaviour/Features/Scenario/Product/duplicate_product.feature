@@ -294,13 +294,22 @@ Feature: Duplicate product from Back Office (BO).
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
     And I update product productWithCustomizations with following customization fields:
-      | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
-      | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
+      | reference    | type | name[en-US]                 | name[fr-FR]                         | is required |
+      | customField1 | text | text on top of left lense   | texte en haut de la lentille gauche | true        |
+      | customField2 | file | image on top of right lense | image en haut de la lentille droite | false       |
+    Then product productWithCustomizations should have following customization fields:
+      | reference    | type | name[en-US]                 | name[fr-FR]                         | is required |
+      | customField1 | text | text on top of left lense   | texte en haut de la lentille gauche | true        |
+      | customField2 | file | image on top of right lense | image en haut de la lentille droite | false       |
     When I duplicate product productWithCustomizations to a productWithCustomizationsCopy
-    And product productWithCustomizationsCopy should have identical customization fields to productWithCustomizations
-    And product productWithCustomizationsCopy should have 1 customizable text field
-    And product productWithCustomizationsCopy should have 0 customizable file fields
-    # assert new customization values and check that new ID as created
+    Then product productWithCustomizationsCopy should have 1 customizable text field
+    And product productWithCustomizationsCopy should have 1 customizable file field
+    And product productWithCustomizationsCopy should have following customization fields:
+      | new reference    | type | name[en-US]                 | name[fr-FR]                         | is required |
+      | customField1Copy | text | text on top of left lense   | texte en haut de la lentille gauche | true        |
+      | customField2Copy | file | image on top of right lense | image en haut de la lentille droite | false       |
+    And customField1 and customField1Copy have different values
+    And customField2 and customField2Copy have different values
 
   Scenario: I duplicate a product its attachments are copied
     Given I add product "productWithAttachments" with following information:

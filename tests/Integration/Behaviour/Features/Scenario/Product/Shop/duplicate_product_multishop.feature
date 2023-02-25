@@ -1109,3 +1109,70 @@ Feature: Copy product from shop to shop.
     And combination "productWithCombinationsBlueCopyAllShops" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
       | Puff Daddy | 13             |
+
+  Scenario: I duplicate a product with customization, the fields are copied along with their multishop translations
+    Given I add product "productWithCustomizationFields" to shop "shop1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    And I copy product productWithCustomizationFields from shop shop1 to shop shop2
+    And I copy product productWithCustomizationFields from shop shop1 to shop shop3
+    And I copy product productWithCustomizationFields from shop shop1 to shop shop4
+    And I update product productWithCustomizationFields with following customization fields for shop shop1:
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop1 | champ1 shop1 | true        |
+      | customField2 | file | field2 shop1 | champ2 shop1 | false       |
+    And I update product productWithCustomizationFields with following customization fields for shop shop2:
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop2 | champ1 shop2 | true        |
+      | customField2 | file | field2 shop2 | champ2 shop2 | false       |
+    And I update product productWithCustomizationFields with following customization fields for shop shop3:
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop3 | champ1 shop3 | true        |
+      | customField2 | file | field2 shop3 | champ2 shop3 | false       |
+    And I update product productWithCustomizationFields with following customization fields for shop shop4:
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop4 | champ1 shop4 | true        |
+      | customField2 | file | field2 shop4 | champ2 shop4 | false       |
+    # The customizability is always the same for all shops since they share the same fields
+    Then product "productWithCustomizationFields" should require customization for shops "shop1,shop2,shop3,shop4"
+    And product productWithCustomizationFields should have 1 customizable text field for shops "shop1,shop2,shop3,shop4"
+    And product productWithCustomizationFields should have 1 customizable file field for shops "shop1,shop2,shop3,shop4"
+    And product productWithCustomizationFields should have following customization fields for shop "shop1":
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop1 | champ1 shop1 | true        |
+      | customField2 | file | field2 shop1 | champ2 shop1 | false       |
+    And product productWithCustomizationFields should have following customization fields for shop "shop2":
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop2 | champ1 shop2 | true        |
+      | customField2 | file | field2 shop2 | champ2 shop2 | false       |
+    And product productWithCustomizationFields should have following customization fields for shop "shop3":
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop3 | champ1 shop3 | true        |
+      | customField2 | file | field2 shop3 | champ2 shop3 | false       |
+    And product productWithCustomizationFields should have following customization fields for shop "shop4":
+      | reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1 | text | field1 shop4 | champ1 shop4 | true        |
+      | customField2 | file | field2 shop4 | champ2 shop4 | false       |
+    # Copy for all shops
+    When I duplicate product productWithCustomizationFields to a productWithCustomizationFieldsCopyAllShops for all shops
+    Then product "productWithCustomizationFieldsCopyAllShops" should require customization for shops "shop1,shop2,shop3,shop4"
+    And product productWithCustomizationFieldsCopyAllShops should have 1 customizable text field for shops "shop1,shop2,shop3,shop4"
+    And product productWithCustomizationFieldsCopyAllShops should have 1 customizable file field for shops "shop1,shop2,shop3,shop4"
+    And product productWithCustomizationFieldsCopyAllShops should have following customization fields for shop "shop1":
+      | new reference    | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1Copy | text | field1 shop1 | champ1 shop1 | true        |
+      | customField2Copy | file | field2 shop1 | champ2 shop1 | false       |
+    And product productWithCustomizationFieldsCopyAllShops should have following customization fields for shop "shop2":
+      | reference        | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1Copy | text | field1 shop2 | champ1 shop2 | true        |
+      | customField2Copy | file | field2 shop2 | champ2 shop2 | false       |
+    And product productWithCustomizationFieldsCopyAllShops should have following customization fields for shop "shop3":
+      | reference        | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1Copy | text | field1 shop3 | champ1 shop3 | true        |
+      | customField2Copy | file | field2 shop3 | champ2 shop3 | false       |
+    And product productWithCustomizationFieldsCopyAllShops should have following customization fields for shop "shop4":
+      | reference        | type | name[en-US]  | name[fr-FR]  | is required |
+      | customField1Copy | text | field1 shop4 | champ1 shop4 | true        |
+      | customField2Copy | file | field2 shop4 | champ2 shop4 | false       |
+    And customField1 and customField1Copy have different values
+    And customField2 and customField2Copy have different values
