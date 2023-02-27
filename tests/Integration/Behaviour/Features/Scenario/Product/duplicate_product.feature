@@ -540,6 +540,7 @@ Feature: Duplicate product from Back Office (BO).
       | access days          | 0               |
       | download times limit | 0               |
       | expiration date      |                 |
+    And file "file1Copy" for product "product1" should exist in system
     And virtualProduct and virtualProductCopy have different values
     And file1 and file1Copy have different values
 
