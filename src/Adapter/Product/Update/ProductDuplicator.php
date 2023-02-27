@@ -34,7 +34,6 @@ use Doctrine\DBAL\Exception;
 use GroupReduction;
 use Image;
 use Language;
-use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
@@ -340,7 +339,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
-        $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationMatching);
         $this->duplicateCarriers($oldProductId, $newProductId, $shopIds);
@@ -659,12 +657,9 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private function duplicatePackedProducts(int $oldProductId, int $newProductId): void
     {
-        /* @see Pack::duplicate() */
-        $this->duplicateRelation(
-            [Pack::class, 'duplicate'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_PACKED_PRODUCTS
-        );
+        $oldPackContent = $this->getRows('pack', ['id_product_pack' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_PACKED_PRODUCTS);
+        $newPackContent = $this->replaceInRows($oldPackContent, ['id_product_pack' => $newProductId]);
+        $this->bulkInsert('pack', $newPackContent, CannotDuplicateProductException::FAILED_DUPLICATE_PACKED_PRODUCTS);
     }
 
     /**
@@ -718,23 +713,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $oldProductId,
             $newProductId,
             CannotDuplicateProductException::FAILED_DUPLICATE_TAGS
-        );
-    }
-
-    /**
-     * @param int $oldProductId
-     * @param int $newProductId
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CoreException
-     */
-    private function duplicateTaxes(int $oldProductId, int $newProductId): void
-    {
-        /* @see Product::duplicateTaxes() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateTaxes'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_TAXES
         );
     }
 
