@@ -160,17 +160,24 @@ abstract class AbstractImageUploader
         $width = $imageType['width'];
         $height = $imageType['height'];
 
-        if (Configuration::get('PS_HIGHT_DPI')) {
-            $ext = '2x.jpg';
-            $width *= 2;
-            $height *= 2;
-        }
-
-        return ImageManager::resize(
+        if (!ImageManager::resize(
             $imageDir . $id . '.jpg',
             $imageDir . $id . '-' . stripslashes($imageType['name']) . $ext,
             (int) $width,
             (int) $height
-        );
+        )) {
+            return false;
+        }
+
+        if ((bool) Configuration::get('PS_HIGHT_DPI') && !ImageManager::resize(
+            $imageDir . $id . '.jpg',
+            $imageDir . $id . '-' . stripslashes($imageType['name']) . '2x' . $ext,
+            (int) $width * 2,
+            (int) $height * 2
+        )) {
+            return false;
+        }
+
+        return true;
     }
 }
