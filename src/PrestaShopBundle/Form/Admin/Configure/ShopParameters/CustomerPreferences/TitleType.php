@@ -47,7 +47,7 @@ class TitleType extends TranslatorAwareType
         $builder
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans(
-                    'Social title',
+                    'Title',
                     'Admin.Global'
                 ),
             ])
