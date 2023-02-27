@@ -39,9 +39,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Tests\Integration\PrestaShopBundle\Form\FormListenerTestCase;
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeatureValueListenerTest extends FormListenerTestCase
 {
@@ -73,55 +70,51 @@ class FeatureValueListenerTest extends FormListenerTestCase
     /**
      * @dataProvider getTestValues
      *
-     * @param array $formData
-     * @param array|null $expectedFilters
-     * @param array|null $choices
-     * @param bool $disabled
+     * @param array<string, mixed> $formData
+     * @param array<string, int> $choices
+     * @param array<string, mixed> $expectedOptions
      */
-    public function testUpdateFeatureValuesOptions(array $formData, ?array $expectedFilters, ?array $choices, array $constraints, bool $disabled): void
-    {
-        $providerMock = $this->createChoiceProviderMock($choices, $expectedFilters);
-        $listener = new FeatureValueListener($providerMock, $this->formCloner, $this->mockTranslator());
+    public function testUpdateFeatureValuesOptions(
+        array $formData,
+        ?array $choices,
+        array $expectedOptions
+    ): void {
+        $providerMock = $this->createChoiceProviderMock($formData, $choices);
+        $listener = new FeatureValueListener($providerMock, $this->formCloner);
 
         $form = $this->createForm(SimpleFeaturesFormTest::class);
-        $this->assertFormChoices($form, []);
-        $this->assertFormConstraints($form, []);
 
         $eventMock = $this->createEventMock($formData, $form);
         $listener->updateFeatureValuesOptions($eventMock);
 
-        $this->assertFormChoices($form, $choices);
-        $this->assertFormConstraints($form, $constraints);
-        // Use cases where no filters present return early so attributes are not changed
-        if (null !== $expectedFilters) {
-            $this->assertFormAttributes($form, $disabled);
-        }
+        $this->assertFeatureValueOptions($form, $expectedOptions);
     }
 
     public function getTestValues(): Generator
     {
-        $notBlankConstraint = new NotBlank([
-            'message' => 'Choose a value or provide a customized one',
-        ]);
-
         yield [
-            // $formData
+            // formData
             [
                 'feature_id' => 42,
             ],
-            // $expectedFilters
-            [
-                'feature_id' => 42,
-                'custom' => false,
-            ],
-            // $choices
+            // choices for choice provider mock
             [
                 'Cotton' => 51,
                 'Ceramic' => 69,
             ],
-            [$notBlankConstraint],
-            // $disabled
-            false,
+            // expected options for feature_value form
+            [
+                'disabled' => false,
+                'choices' => [
+                    'Cotton' => 51,
+                    'Ceramic' => 69,
+                ],
+                'attr' => [
+                    'disabled' => false,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
         yield [
@@ -133,18 +126,24 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 ],
             ],
             [
-                'feature_id' => 42,
-                'custom' => false,
-            ],
-            [
                 'Cotton' => 51,
                 'Ceramic' => 69,
             ],
-            [$notBlankConstraint],
-            false,
+            [
+                'disabled' => false,
+                'choices' => [
+                    'Cotton' => 51,
+                    'Ceramic' => 69,
+                ],
+                'attr' => [
+                    'disabled' => false,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
-        // When custom value is present field is disabled
+        // When custom value is present field is disabled and choice provider is called
         yield [
             [
                 'feature_id' => 42,
@@ -154,38 +153,54 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 ],
             ],
             [
-                'feature_id' => 42,
-                'custom' => true,
-            ],
-            [
                 'Cotton' => 51,
                 'Ceramic' => 69,
             ],
-            [],
-            true,
+            [
+                'disabled' => true,
+                'choices' => [
+                    'Cotton' => 51,
+                    'Ceramic' => 69,
+                ],
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
         // When no choices returned field is disabled
         yield [
             [
                 'feature_id' => 42,
-            ],
-            [
-                'feature_id' => 42,
                 'custom' => false,
             ],
             [],
-            [$notBlankConstraint],
-            true,
+            [
+                'disabled' => true,
+                'choices' => [],
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
-        // When data input has no feature_id the listener returns early, but still disables feature value
+        // When data has no feature_id, the listener returns early without calling choice provider, but still disables feature value
         yield [
             [],
             null,
-            [],
-            [],
-            true,
+            [
+                'disabled' => true,
+                'choices' => [],
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
         yield [
@@ -193,9 +208,15 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'feature_id' => null,
             ],
             null,
-            [],
-            [],
-            true,
+            [
+                'disabled' => true,
+                'choices' => [],
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
         yield [
@@ -203,9 +224,15 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'feature_id' => '',
             ],
             null,
-            [],
-            [],
-            true,
+            [
+                'disabled' => true,
+                'choices' => [],
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
         yield [
@@ -213,9 +240,15 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'feature_id' => 0,
             ],
             null,
-            [],
-            [],
-            true,
+            [
+                'disabled' => true,
+                'choices' => [],
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
 
         yield [
@@ -223,79 +256,56 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 'feature_id' => '0',
             ],
             null,
-            [],
-            [],
-            true,
+            [
+                'disabled' => true,
+                'choices' => [],
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ],
         ];
     }
 
     /**
      * @param FormInterface $form
-     * @param bool $disabled
+     * @param array<string, mixed> $expectedOptions
      */
-    private function assertFormAttributes(FormInterface $form, bool $disabled): void
+    private function assertFeatureValueOptions(FormInterface $form, array $expectedOptions): void
     {
-        $expectedAttr = [
-            'disabled' => $disabled,
-            'data-toggle' => 'select2',
-            'class' => 'feature-value-selector',
-        ];
-        $featureValueField = $form->get('feature_value_id');
-        $fieldAttributes = $featureValueField->getConfig()->getOption('attr');
-        $this->assertSame($expectedAttr, $fieldAttributes);
+        // we only assert options that we expect to change,
+        // it is too complicated to assert whole array with so many default values which are not expected to change
+        $featureValueFieldConfig = $form->get('feature_value_id')->getConfig();
+
+        $this->assertSame($expectedOptions['attr'], $featureValueFieldConfig->getOption('attr'));
+        $this->assertSame($expectedOptions['disabled'], $featureValueFieldConfig->getOption('disabled'));
+        $this->assertSame($expectedOptions['choices'], $featureValueFieldConfig->getOption('choices'));
     }
 
     /**
-     * @param FormInterface $form
-     * @param array $choices
-     */
-    private function assertFormChoices(FormInterface $form, array $choices): void
-    {
-        $featureValueField = $form->get('feature_value_id');
-        $fieldChoices = $featureValueField->getConfig()->getOption('choices');
-        $this->assertSame($choices, $fieldChoices);
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param Constraint[] $expectedConstraints
-     */
-    private function assertFormConstraints(FormInterface $form, array $expectedConstraints): void
-    {
-        $featureValueField = $form->get('feature_value_id');
-        $constraints = $featureValueField->getConfig()->getOption('constraints');
-
-        $this->assertEquals($expectedConstraints, $constraints);
-    }
-
-    /**
-     * @param array $choices
-     * @param array|null $expectedFilters
+     * @param array<string, int> $choices
      *
      * @return MockObject|ConfigurableFormChoiceProviderInterface
      */
-    private function createChoiceProviderMock(array $choices, ?array $expectedFilters)
+    private function createChoiceProviderMock(array $formData, ?array $choices)
     {
         $providerMock = $this->getMockBuilder(ConfigurableFormChoiceProviderInterface::class)
             ->getMock();
 
-        if (null === $expectedFilters) {
+        if (null === $choices) {
             $providerMock->expects($this->never())->method('getChoices');
         } else {
+            $hasCustomValue = array_reduce($formData['custom_value'] ?? [], function (bool $hasPresentValue, ?string $customValue) {
+                return $hasPresentValue || !empty($customValue);
+            }, false);
+
             $providerMock->expects($this->once())->method('getChoices')
-                ->with($this->equalTo($expectedFilters))
+                ->with($this->equalTo(['feature_id' => (int) $formData['feature_id'], 'custom' => $hasCustomValue]))
                 ->willReturn($choices);
         }
 
         return $providerMock;
-    }
-
-    private function mockTranslator(): TranslatorInterface
-    {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('trans')->willReturnArgument(0);
-
-        return $translator;
     }
 }
 
@@ -303,6 +313,14 @@ class SimpleFeaturesFormTest extends CommonAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('feature_value_id', ChoiceType::class);
+        $builder->add('feature_value_id', ChoiceType::class, [
+            // these are the default options which should change after listener is called
+            'disabled' => true,
+            'attr' => [
+                'disabled' => true,
+                'data-toggle' => 'select2',
+                'class' => 'feature-value-selector',
+            ],
+        ]);
     }
 }
