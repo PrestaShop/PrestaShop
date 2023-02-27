@@ -52,6 +52,8 @@ class Checkout extends FOBasePage {
 
   private readonly personalInformationStepForm: string;
 
+  private readonly forgetPasswordLink: string;
+
   private readonly activeLink: string;
 
   private readonly checkoutSignInLink: string;
@@ -243,6 +245,7 @@ class Checkout extends FOBasePage {
     this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
     // Sign in selectors
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
+    this.forgetPasswordLink = '#login-form div.forgot-password a[href*=password-recovery]';
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
@@ -377,6 +380,15 @@ class Checkout extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.personalInformationLogoutLink);
 
     return this.isStepCompleted(page, this.personalInformationStepForm);
+  }
+
+  /**
+   * Go to password reminder page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToPasswordReminderPage(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.forgetPasswordLink);
   }
 
   /**
