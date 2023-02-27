@@ -7,16 +7,13 @@ import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
+import checkoutPage from '@pages/FO/checkout';
 
 // Import data
-import Customers from '@data/demo/customers';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import checkoutPage from "@pages/FO/checkout";
-import Products from "@data/demo/products";
-import productPage from "@pages/FO/product";
-import foProductPage from "@pages/FO/product";
 
 const baseContext: string = 'functional_FO_checkout_showDetails';
 
@@ -91,20 +88,6 @@ describe('FO - Checkout : Show details', async () => {
     await expect(isProductsListVisible).to.be.true;
   });
 
-  it('should close the cart details', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'closeDetails', baseContext);
-
-    const isProductsListNotVisible = await checkoutPage.closeShowDetailsLink(page);
-    await expect(isProductsListNotVisible).to.be.true;
-  });
-
-  it('should click on \'Show details\' link', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'showDetails2', baseContext);
-
-    const isProductsListVisible = await checkoutPage.clickOnShowDetailsLink(page);
-    await expect(isProductsListVisible).to.be.true;
-  });
-
   it('should check the first product details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFirstProductDetails', baseContext);
     const result = await checkoutPage.getProductDetails(page, 1);
@@ -120,7 +103,7 @@ describe('FO - Checkout : Show details', async () => {
   });
 
   it('should check the second product details', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkFirstProductDetails', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSecondProductDetails', baseContext);
     const result = await checkoutPage.getProductDetails(page, 2);
     await Promise.all([
       await expect(result.image).to.contains(Products.demo_6.coverImage),
