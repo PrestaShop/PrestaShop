@@ -19,7 +19,12 @@ const baseContext: string = 'functional_FO_checkout_showDetails';
 
 /*
 Scenario:
-
+- Add first and third product to cart
+- Go to checkout page
+- Click on show details
+- Show all details
+- Click on the product image
+- Click on the product name
  */
 
 describe('FO - Checkout : Show details', async () => {
