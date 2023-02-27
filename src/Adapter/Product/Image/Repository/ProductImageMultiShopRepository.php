@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Image;
+use ImageType;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
@@ -49,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use PrestaShopException;
 
 /**
  * todo: merge this repository with ProductImageRepository
@@ -270,6 +272,34 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         $this->updateMissingCovers($productId);
 
         return $image;
+    }
+
+    /**
+     * Duplicate an image and associates it to another product, the same shop association are kept based on
+     * specified shop constraint.
+     *
+     * @param ImageId $sourceImageId
+     * @param ProductId $newProductId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return Image
+     *
+     * @throws CoreException
+     */
+    public function duplicate(ImageId $sourceImageId, ProductId $newProductId, ShopConstraint $shopConstraint): Image
+    {
+        $associatedShopIds = $this->getAssociatedShopIdsByShopConstraint($sourceImageId, $shopConstraint);
+        $sourceImage = $this->getImageById($sourceImageId);
+        $newImage = clone $sourceImage;
+        unset($newImage->id, $newImage->id_image);
+        $newImage->id_product = $newProductId->getValue();
+        $newImage->cover = null;
+
+        $this->addObjectModelToShops($newImage, $associatedShopIds, CannotAddProductImageException::class);
+
+        $this->updateMissingCovers($newProductId);
+
+        return $newImage;
     }
 
     /**
@@ -505,5 +535,38 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         );
 
         return $image;
+    }
+
+    /**
+     * @return ImageType[]
+     */
+    public function getProductImageTypes(): array
+    {
+        try {
+            $results = ImageType::getImagesTypes('products');
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when trying to get product image types');
+        }
+
+        if (!$results) {
+            return [];
+        }
+
+        $imageTypes = [];
+        foreach ($results as $result) {
+            $imageType = new ImageType();
+            $imageType->id = (int) $result['id_image_type'];
+            $imageType->name = $result['name'];
+            $imageType->width = (int) $result['width'];
+            $imageType->height = (int) $result['height'];
+            $imageType->products = (bool) $result['products'];
+            $imageType->categories = (bool) $result['categories'];
+            $imageType->manufacturers = (bool) $result['manufacturers'];
+            $imageType->suppliers = (bool) $result['suppliers'];
+            $imageType->stores = (bool) $result['stores'];
+            $imageTypes[] = $imageType;
+        }
+
+        return $imageTypes;
     }
 }

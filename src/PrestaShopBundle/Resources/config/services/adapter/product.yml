@@ -369,6 +369,7 @@ services:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
+      $productImageSystemPathFactory: '@prestashop.adapter.product.image.product_image_filesystem_path_factory'
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTypeHandler:
     arguments:

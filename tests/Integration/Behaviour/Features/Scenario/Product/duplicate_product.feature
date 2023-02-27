@@ -17,6 +17,7 @@ Feature: Duplicate product from Back Office (BO).
     And attribute group "Color" named "Color" in en language exists
     And attribute "Red" named "Red" in en language exists
     And attribute "Blue" named "Blue" in en language exists
+    And attribute "Pink" named "Pink" in en language exists
     And shop "shop1" with name "test_shop" exists
     And single shop shop1 context is loaded
 
@@ -578,3 +579,81 @@ Feature: Duplicate product from Back Office (BO).
       | emotion | anger         |                   |                               |
       | element |               | darknessCopy      | en-US:Darkness;fr-FR:Ténèbres |
     And darkness and darknessCopy have different values
+
+  Scenario: I duplicate a product with images they are correctly duplicated and associated
+    When I add product "productWithCombinationAndImages" with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I add new image "image1" named "app_icon.png" to product "productWithCombinationAndImages"
+    And I add new image "image2" named "logo.jpg" to product "productWithCombinationAndImages"
+    And I add new image "image3" named "app_icon.png" to product "productWithCombinationAndImages"
+    And I add new image "image4" named "logo.jpg" to product "productWithCombinationAndImages"
+    And product "productWithCombinationAndImages" should have following images:
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |               |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+    And images "[image1, image2, image3, image4]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    When I generate combinations for product productWithCombinationAndImages using following attributes:
+      | Color | [Red,Blue,Pink] |
+    Then product "productWithCombinationAndImages" should have following combinations:
+      | id reference                        | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationAndImagesRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationAndImagesBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+      | productWithCombinationAndImagesPink | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      |
+    And combination "productWithCombinationAndImagesRed" should have no images
+    And combination "productWithCombinationAndImagesRed" should have the following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
+    When I associate "[image2]" to combination "productWithCombinationAndImagesBlue"
+    Then combination "productWithCombinationAndImagesBlue" should have following images "[image2]"
+    And combination "productWithCombinationAndImagesBlue" should have the following cover "http://myshop.com/img/p/{image2}-cart_default.jpg"
+    When I associate "[image3, image4]" to combination "productWithCombinationAndImagesPink"
+    Then combination "productWithCombinationAndImagesPink" should have following images "[image3, image4]"
+    And combination "productWithCombinationAndImagesPink" should have the following cover "http://myshop.com/img/p/{image3}-cart_default.jpg"
+    And product "productWithCombinationAndImages" should have following combinations:
+      | id reference                        | combination name | reference | attributes   | impact on price | quantity | is default | image url                                          |
+      | productWithCombinationAndImagesRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | productWithCombinationAndImagesBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | productWithCombinationAndImagesPink | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      | http://myshop.com/img/p/{image3}-small_default.jpg |
+    # Now duplicate the product check the images are correctly duplicated and combination associations as well
+    When I duplicate product productWithCombinationAndImages to a productWithCombinationAndImagesCopy
+    And product "productWithCombinationAndImagesCopy" should have following images:
+      | new image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                                | thumbnail url                                          |
+      | image1Copy          | true     |               |               | 1        | http://myshop.com/img/p/{image1Copy}.jpg | http://myshop.com/img/p/{image1Copy}-small_default.jpg |
+      | image2Copy          | false    |               |               | 2        | http://myshop.com/img/p/{image2Copy}.jpg | http://myshop.com/img/p/{image2Copy}-small_default.jpg |
+      | image3Copy          | false    |               |               | 3        | http://myshop.com/img/p/{image3Copy}.jpg | http://myshop.com/img/p/{image3Copy}-small_default.jpg |
+      | image4Copy          | false    |               |               | 4        | http://myshop.com/img/p/{image4Copy}.jpg | http://myshop.com/img/p/{image4Copy}-small_default.jpg |
+    And image1 and image1Copy have different values
+    And image2 and image2Copy have different values
+    And image3 and image3Copy have different values
+    And image4 and image4Copy have different values
+    And images "[image1Copy, image2Copy, image3Copy, image4Copy]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    # Check combinations associations
+    And product "productWithCombinationAndImagesCopy" should have following combinations:
+      | id reference                            | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationAndImagesRedCopy  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationAndImagesBlueCopy | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+      | productWithCombinationAndImagesPinkCopy | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      |
+    And combination "productWithCombinationAndImagesRedCopy" should have no images
+    And combination "productWithCombinationAndImagesRedCopy" should have the following cover "http://myshop.com/img/p/{image1Copy}-cart_default.jpg"
+    And combination "productWithCombinationAndImagesBlueCopy" should have following images "[image2Copy]"
+    And combination "productWithCombinationAndImagesBlueCopy" should have the following cover "http://myshop.com/img/p/{image2Copy}-cart_default.jpg"
+    Then combination "productWithCombinationAndImagesPinkCopy" should have following images "[image3Copy, image4Copy]"
+    And combination "productWithCombinationAndImagesPinkCopy" should have the following cover "http://myshop.com/img/p/{image3Copy}-cart_default.jpg"
+    And product "productWithCombinationAndImagesCopy" should have following combinations:
+      | combination id                          | combination name | reference | attributes   | impact on price | quantity | is default | image url                                              |
+      | productWithCombinationAndImagesRedCopy  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       | http://myshop.com/img/p/{image1Copy}-small_default.jpg |
+      | productWithCombinationAndImagesBlueCopy | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      | http://myshop.com/img/p/{image2Copy}-small_default.jpg |
+      | productWithCombinationAndImagesPinkCopy | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      | http://myshop.com/img/p/{image3Copy}-small_default.jpg |

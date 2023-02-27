@@ -31,12 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use Combination;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use GroupReduction;
-use Image;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
@@ -131,6 +132,16 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private $combinationStockUpdater;
 
+    /**
+     * @var ProductImageMultiShopRepository
+     */
+    private $productImageRepository;
+
+    /**
+     * @var ProductImagePathFactory
+     */
+    private $productImageSystemPathFactory;
+
     public function __construct(
         ProductRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
@@ -143,7 +154,9 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         SpecificPriceRepository $specificPriceRepository,
         StockAvailableRepository $stockAvailableRepository,
         ProductStockUpdater $productStockUpdater,
-        CombinationStockUpdater $combinationStockUpdater
+        CombinationStockUpdater $combinationStockUpdater,
+        ProductImageMultiShopRepository $productImageRepository,
+        ProductImagePathFactory $productImageSystemPathFactory
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
@@ -157,6 +170,8 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->productStockUpdater = $productStockUpdater;
         $this->combinationStockUpdater = $combinationStockUpdater;
+        $this->productImageRepository = $productImageRepository;
+        $this->productImageSystemPathFactory = $productImageSystemPathFactory;
     }
 
     /**
@@ -341,7 +356,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
         $this->duplicateVirtualProductFiles($oldProductId, $newProductId);
-        $this->duplicateImages($oldProductId, $newProductId, $combinationMatching);
+        $this->duplicateImages($oldProductId, $newProductId, $combinationMatching, $shopConstraint);
         $this->duplicateCarriers($oldProductId, $newProductId, $shopIds);
         $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
         $this->duplicateStock($oldProductId, $newProductId, $shopIds, $productType, $combinationMatching);
@@ -531,12 +546,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private function duplicateGroupReduction(int $oldProductId, int $newProductId): void
     {
-        /* @see GroupReduction::duplicateReduction() */
-        $this->duplicateRelation(
-            [GroupReduction::class, 'duplicateReduction'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_GROUP_REDUCTION
-        );
+        $this->duplicateProductTable('product_group_reduction_cache', $oldProductId, $newProductId, CannotDuplicateProductException::FAILED_DUPLICATE_GROUP_REDUCTION);
     }
 
     /**
@@ -745,19 +755,42 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     /**
      * @param int $oldProductId
      * @param int $newProductId
-     * @param array $combinationImages
+     * @param array $combinationMatching
+     * @param ShopConstraint $shopConstraint
      *
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateImages(int $oldProductId, int $newProductId, array $combinationImages): void
+    private function duplicateImages(int $oldProductId, int $newProductId, array $combinationMatching, ShopConstraint $shopConstraint): void
     {
-        /* @see Image::duplicateProductImages() */
-        $this->duplicateRelation(
-            [Image::class, 'duplicateProductImages'],
-            [$oldProductId, $newProductId, $combinationImages],
-            CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES
-        );
+        $oldImages = $this->getRows('image', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES);
+
+        $imagesMapping = [];
+        foreach ($oldImages as $oldImage) {
+            $oldImageId = new ImageId((int) $oldImage['id_image']);
+            $newImage = $this->productImageRepository->duplicate($oldImageId, new ProductId($newProductId), $shopConstraint);
+            $newImageId = new ImageId((int) $newImage->id);
+            $imageTypes = $this->productImageRepository->getProductImageTypes();
+
+            // Copy the generated images instead of generating them is more performant
+            foreach ($imageTypes as $imageType) {
+                copy(
+                    $this->productImageSystemPathFactory->getPathByType($oldImageId, $imageType->name),
+                    $this->productImageSystemPathFactory->getPathByType($newImageId, $imageType->name)
+                );
+            }
+            $imagesMapping[$oldImageId->getValue()] = $newImageId->getValue();
+        }
+
+        $oldCombinationImages = $this->getRows('product_attribute_image', ['id_image' => array_keys($imagesMapping)], CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES);
+        $newCombinationImages = [];
+        foreach ($oldCombinationImages as $oldCombinationImage) {
+            $newCombinationImages[] = [
+                'id_image' => $imagesMapping[(int) $oldCombinationImage['id_image']],
+                'id_product_attribute' => $combinationMatching[(int) $oldCombinationImage['id_product_attribute']],
+            ];
+        }
+        $this->bulkInsert('product_attribute_image', $newCombinationImages, CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES);
     }
 
     /**
@@ -813,43 +846,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 0,
                 $e
             );
-        }
-    }
-
-    /**
-     * Wraps product relations duplication in try-catch
-     *
-     * @param array $staticCallback
-     * @param array $arguments
-     * @param int $errorCode
-     *
-     * @return array|null result of callback. If result is array then its returned, else null is returned
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CoreException
-     */
-    private function duplicateRelation(array $staticCallback, array $arguments, int $errorCode): ?array
-    {
-        try {
-            $result = call_user_func($staticCallback, ...$arguments);
-
-            if (is_array($result)) {
-                return $result;
-            }
-
-            if (!$result) {
-                throw new CannotDuplicateProductException(
-                    sprintf('Cannot duplicate product. [%s] failed', implode('::', $staticCallback)),
-                    $errorCode
-                );
-            }
-
-            return null;
-        } catch (PrestaShopException $e) {
-            throw new CoreException(sprintf(
-                'Error occured when trying to duplicate product. Method [%s]',
-                implode('::', $staticCallback)
-            ));
         }
     }
 
@@ -1001,7 +997,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $rows = $qb->execute()->fetchAllAssociative();
         } catch (Exception $e) {
             throw new CannotDuplicateProductException(
-                sprintf('Cannot select rows from table %s', $table),
+                sprintf('Cannot select rows from table %s', $this->dbPrefix . $table),
                 $errorCode
             );
         }
