@@ -143,6 +143,7 @@ module.exports = {
     rtl: './scss/rtl.scss',
     themes: './js/pages/themes',
     title: './js/pages/title',
+    title_form: './js/pages/title/form',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',

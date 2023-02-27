@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +21,10 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+import TranslatableInput from '@components/translatable-input';
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Title/Blocks/form.html.twig' %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/title_form.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  new TranslatableInput();
+});
