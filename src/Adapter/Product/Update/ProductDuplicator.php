@@ -62,6 +62,7 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShopException;
 use Product;
+use ProductDownload as VirtualProductFile;
 use Shop;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -339,7 +340,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
-        $this->duplicateDownloads($oldProductId, $newProductId);
+        $this->duplicateVirtualProductFiles($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationMatching);
         $this->duplicateCarriers($oldProductId, $newProductId, $shopIds);
         $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
@@ -723,14 +724,22 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateDownloads(int $oldProductId, int $newProductId): void
+    private function duplicateVirtualProductFiles(int $oldProductId, int $newProductId): void
     {
-        /* @see Product::duplicateDownload() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateDownload'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_DOWNLOADS
-        );
+        $oldVirtualProductFiles = $this->getRows('product_download', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_DOWNLOADS);
+
+        $newVirtualProductFiles = [];
+        foreach ($oldVirtualProductFiles as $oldVirtualProductFile) {
+            $newFilename = VirtualProductFile::getNewFilename();
+            copy(_PS_DOWNLOAD_DIR_ . $oldVirtualProductFile['filename'], _PS_DOWNLOAD_DIR_ . $newFilename);
+            $newVirtualProductFiles[] = array_merge($oldVirtualProductFile, [
+                'id_product_download' => null,
+                'id_product' => $newProductId,
+                'filename' => $newFilename,
+                'date_add' => date('Y-m-d H:i:s'),
+            ]);
+        }
+        $this->bulkInsert('product_download', $newVirtualProductFiles, CannotDuplicateProductException::FAILED_DUPLICATE_DOWNLOADS);
     }
 
     /**

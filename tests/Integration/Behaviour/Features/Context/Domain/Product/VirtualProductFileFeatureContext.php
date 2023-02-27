@@ -198,8 +198,8 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Given file ":fileReference" for product ":productReference" exists in system
-     * @Given file ":fileReference" for product ":productReference" should exist in system
+     * @Given file :fileReference for product :productReference exists in system
+     * @Given file :fileReference for product :productReference should exist in system
      *
      * @param string $productReference
      * @param string $fileReference
@@ -279,6 +279,10 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         }
         $this->getSharedStorage()->set($fileReference, $actualFile->getId());
         $this->assertVirtualFile($actualFile, $dataTable);
+
+        // Set path for new reference used in other assertions
+        $reference = $this->buildSystemFileReference($productReference, $fileReference);
+        $this->getSharedStorage()->set($reference, _PS_DOWNLOAD_DIR_ . $actualFile->getFileName());
     }
 
     private function assertVirtualFile(VirtualProductFileForEditing $actualFile, TableNode $dataTable): void

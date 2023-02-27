@@ -540,9 +540,11 @@ Feature: Duplicate product from Back Office (BO).
       | access days          | 0               |
       | download times limit | 0               |
       | expiration date      |                 |
-    And file "file1Copy" for product "product1" should exist in system
+    And file file1Copy for product virtualProductCopy should exist in system
     And virtualProduct and virtualProductCopy have different values
     And file1 and file1Copy have different values
+    And file file1 for product virtualProduct should have same file as app_icon.png
+    And file file1Copy for product virtualProductCopy should have same file as app_icon.png
 
   Scenario: I duplicate product features
     Given I create product feature "element" with specified properties:
