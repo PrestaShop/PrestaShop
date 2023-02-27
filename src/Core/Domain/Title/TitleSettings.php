@@ -24,12 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Title;
 
 final class TitleSettings
 {
     /**
-     * Profile name max length as defined in the ObjectModel
+     * Default Image Height, by defaut, in pixels
      */
-    public const NAME_MAX_LENGTH = 32;
+    public const DEFAULT_IMAGE_HEIGHT = 16;
+
+    /**
+     * Default Image Width, by defaut, in pixels
+     */
+    public const DEFAULT_IMAGE_WIDTH = 16;
 }

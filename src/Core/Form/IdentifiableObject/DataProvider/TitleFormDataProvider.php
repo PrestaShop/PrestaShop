@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Title\QueryResult\EditableTitle;
+use PrestaShop\PrestaShop\Core\Domain\Title\TitleSettings;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 
 /**
@@ -63,6 +64,8 @@ class TitleFormDataProvider implements FormDataProviderInterface
             'id' => $id,
             'name' => $result->getLocalizedNames(),
             'genderType' => $result->getGenderType(),
+            'img_height' => TitleSettings::DEFAULT_IMAGE_HEIGHT,
+            'img_width' => TitleSettings::DEFAULT_IMAGE_WIDTH,
         ];
     }
 
@@ -74,8 +77,8 @@ class TitleFormDataProvider implements FormDataProviderInterface
         return [
             'name' => [],
             'genderType' => Gender::TYPE_MALE,
-            'img_width' => 16,
-            'img_height' => 16,
+            'img_height' => TitleSettings::DEFAULT_IMAGE_HEIGHT,
+            'img_width' => TitleSettings::DEFAULT_IMAGE_WIDTH,
         ];
     }
 }
