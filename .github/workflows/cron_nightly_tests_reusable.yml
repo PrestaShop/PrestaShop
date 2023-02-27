@@ -3,10 +3,11 @@
 name: Nightly tests and report
 
 on:
-  workflow_run:
-    workflows: [ 'Nightly Build' ]
-    types:
-      - requested
+  workflow_call:
+    inputs:
+      BRANCH:
+        required: true
+        type: string
 
 env:
   GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}  # GCP project id
@@ -29,9 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - develop
-          - 8.1.x
-          - 8.0.x
+          - ${{ inputs.BRANCH }}
         CAMPAIGN:
           - 'sanity'
           - 'sanity:productV2'
@@ -93,7 +92,6 @@ jobs:
         run: npm install
 
       - name: Run tests
-        continue-on-error: true
         working-directory: ${{ env.TESTS_DIR }}
         env:
           URL_FO: 'http://localhost:8001/'
@@ -119,7 +117,6 @@ jobs:
   # Second job: Merge Mochawesome reports and upload them on GCP
   merge-upload-reports:
     name: Combine all reports and upload them
-    if: ${{ always() }}
     needs:
       - test
     runs-on: ubuntu-latest
@@ -128,9 +125,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - develop
-          - 8.1.x
-          - 8.0.x
+          - ${{ inputs.BRANCH }}
 
     env:
       GH_BRANCH: ${{ matrix.branch }}  # Branch to test
@@ -182,7 +177,6 @@ jobs:
     permissions:
       contents: none
     name: Push reports to nightly.prestashop.com
-    if: ${{ always() }}
     needs:
       - merge-upload-reports
     runs-on: ubuntu-latest
@@ -191,9 +185,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - develop
-          - 8.1.x
-          - 8.0.x
+          - ${{ inputs.BRANCH }}
 
     env:
       GH_BRANCH: ${{ matrix.branch }}
