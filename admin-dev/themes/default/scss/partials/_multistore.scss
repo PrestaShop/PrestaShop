@@ -175,7 +175,17 @@
 
 @at-root .adminshop .bootstrap {
   .table-responsive-row {
+    display: flex;
+    flex-direction: column;
     overflow: auto;
+
+    /* stylelint-disable */
+    .dropdown-menu {
+      position: fixed !important;
+      top: auto !important;
+      margin-right: 36px;
+    }
+    /* stylelint-enable */
 
     table {
       max-width: 100%;
