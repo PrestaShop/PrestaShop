@@ -47,9 +47,11 @@ export default class CreateProductModal {
   private init(): void {
     document.querySelectorAll<HTMLElement>(ProductMap.create.newProductButton).forEach((button: HTMLElement) => {
       button.addEventListener('click', (event: MouseEvent) => {
-        event.preventDefault();
-        const formUrl = `${button.getAttribute('href')}&liteDisplaying=1`;
-        this.openCreationModal(formUrl);
+        if (button.getAttribute('target') !== '_blank') {
+          event.preventDefault();
+          const formUrl = `${button.getAttribute('href')}&liteDisplaying=1`;
+          this.openCreationModal(formUrl);
+        }
       });
     });
   }
