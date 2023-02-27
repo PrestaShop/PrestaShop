@@ -24,14 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 
 /**
- * Is thrown when country constraint is violated
+ * Defines a contract for EditCountryHandler
  */
-class CountryConstraintException extends CountryException
+interface EditCountryHandlerInterface
 {
-    public const INVALID_ID = 10;
-
-    public const INVALID_ZIP_CODE = 20;
+    public function handle(EditCountryCommand $command): void;
 }

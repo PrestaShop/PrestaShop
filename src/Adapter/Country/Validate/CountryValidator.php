@@ -26,24 +26,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Country;
+namespace PrestaShop\PrestaShop\Adapter\Country\Validate;
 
 use Country;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShopException;
 
 /**
- * Abstract country handler
+ * Validates Country properties using legacy object model
  */
-class AbstractCountryHandler
+class CountryValidator extends AbstractObjectModelValidator
 {
-    /**
-     * @param Country $country
-     *
-     * @throws CountryConstraintException
-     * @throws PrestaShopException
-     */
-    protected function validateCountryFields(Country $country): void
+    public function validate(Country $country)
     {
         if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
             throw new CountryConstraintException('Country contains invalid field values');

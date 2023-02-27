@@ -1,12 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
+ * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,26 +16,29 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
-
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
-use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
-use Tools;
 
 /**
- * Adds new zone with provided data.
+ * Stores editable country data
  */
-class AddCountryCommand
+class CountryForEditing
 {
+    /**
+     * @var CountryId
+     */
+    private $countryId;
+
     /**
      * @var string[]
      */
@@ -58,9 +60,9 @@ class AddCountryCommand
     private $defaultCurrency;
 
     /**
-     * @var ZoneId
+     * @var int
      */
-    private $zoneId;
+    private $zone;
 
     /**
      * @var bool
@@ -102,12 +104,29 @@ class AddCountryCommand
      */
     private $shopAssociation;
 
+    /**
+     * @param CountryId $countryId
+     * @param string[] $localisedNames
+     * @param string $isoCode
+     * @param int $callPrefix
+     * @param int $defaultCurrency
+     * @param int $zone
+     * @param bool $needZipCode
+     * @param ?string $zipCodeFormat
+     * @param string $addressFormat
+     * @param bool $enabled
+     * @param bool $containsStates
+     * @param bool $needIdNumber
+     * @param bool $displayTaxLabel
+     * @param int[] $shopAssociation
+     */
     public function __construct(
-        array $localizedNames,
+        CountryId $countryId,
+        array $localisedNames,
         string $isoCode,
         int $callPrefix,
         int $defaultCurrency,
-        int $zoneId,
+        int $zone,
         bool $needZipCode,
         ?string $zipCodeFormat,
         string $addressFormat,
@@ -117,11 +136,12 @@ class AddCountryCommand
         bool $displayTaxLabel,
         array $shopAssociation
     ) {
-        $this->localizedNames = $localizedNames;
-        $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
+        $this->countryId = $countryId;
+        $this->localizedNames = $localisedNames;
+        $this->isoCode = $isoCode;
         $this->callPrefix = $callPrefix;
         $this->defaultCurrency = $defaultCurrency;
-        $this->zoneId = new ZoneId($zoneId);
+        $this->zone = $zone;
         $this->needZipCode = $needZipCode;
         $this->zipCodeFormat = $zipCodeFormat ? new CountryZipCodeFormat($zipCodeFormat) : null;
         $this->addressFormat = $addressFormat;
@@ -133,6 +153,14 @@ class AddCountryCommand
     }
 
     /**
+     * @return CountryId
+     */
+    public function getCountryId(): CountryId
+    {
+        return $this->countryId;
+    }
+
+    /**
      * @return string[]
      */
     public function getLocalizedNames(): array
@@ -140,57 +168,90 @@ class AddCountryCommand
         return $this->localizedNames;
     }
 
-    public function getIsoCode()
+    /**
+     * @return string
+     */
+    public function getIsoCode(): string
     {
         return $this->isoCode;
     }
 
+    /**
+     * @return int
+     */
     public function getCallPrefix(): int
     {
         return $this->callPrefix;
     }
 
+    /**
+     * @return int
+     */
     public function getDefaultCurrency(): int
     {
         return $this->defaultCurrency;
     }
 
-    public function getZoneId(): ZoneId
+    /**
+     * @return int
+     */
+    public function getZone(): int
     {
-        return $this->zoneId;
+        return $this->zone;
     }
 
-    public function needZipCode(): bool
+    /**
+     * @return bool
+     */
+    public function isNeedZipCode(): bool
     {
         return $this->needZipCode;
     }
 
+    /**
+     * @return ?CountryZipCodeFormat
+     */
     public function getZipCodeFormat(): ?CountryZipCodeFormat
     {
         return $this->zipCodeFormat;
     }
 
+    /**
+     * @return string
+     */
     public function getAddressFormat(): string
     {
         return $this->addressFormat;
     }
 
+    /**
+     * @return bool
+     */
     public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
-    public function containsStates(): bool
+    /**
+     * @return bool
+     */
+    public function isContainsStates(): bool
     {
         return $this->containsStates;
     }
 
-    public function needIdNumber(): bool
+    /**
+     * @return bool
+     */
+    public function isNeedIdNumber(): bool
     {
         return $this->needIdNumber;
     }
 
-    public function displayTaxLabel(): bool
+    /**
+     * @return bool
+     */
+    public function isDisplayTaxLabel(): bool
     {
         return $this->displayTaxLabel;
     }

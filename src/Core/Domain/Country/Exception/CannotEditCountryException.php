@@ -24,14 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * Is thrown when country constraint is violated
+ * Is thrown when adding new country fails
  */
-class CountryConstraintException extends CountryException
+class CannotEditCountryException extends CountryException
 {
-    public const INVALID_ID = 10;
+    public const FAILED_TO_UPDATE_COUNTRY = 10;
 
-    public const INVALID_ZIP_CODE = 20;
+    public const UNKNOWN_EXCEPTION = 20;
 }

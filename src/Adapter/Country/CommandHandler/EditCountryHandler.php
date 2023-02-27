@@ -28,16 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
-use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
 
 /**
  * Handles creation of country and address format for it
  */
-class AddCountryHandler implements AddCountryHandlerInterface
+class EditCountryHandler implements EditCountryHandlerInterface
 {
     /**
      * @var CountryRepository
@@ -52,19 +50,44 @@ class AddCountryHandler implements AddCountryHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(AddCountryCommand $command): CountryId
+    public function handle(EditCountryCommand $command): void
     {
-        $country = new Country();
+        $country = $this->countryRepository->get($command->getCountryId());
 
-        $country->name = $command->getLocalizedNames();
-        $country->iso_code = $command->getIsoCode();
-        $country->call_prefix = $command->getCallPrefix();
-        $country->need_zip_code = $command->needZipCode();
-        $country->active = $command->isEnabled();
-        $country->need_identification_number = $command->needIdNumber();
-        $country->display_tax_label = $command->displayTaxLabel();
-        $country->id_shop_list = $command->getShopAssociation();
-        $country->contains_states = $command->containsStates();
+        if (null !== $command->getLocalizedNames()) {
+            $country->name = $command->getLocalizedNames();
+        }
+        if (null !== $command->getIsoCode()) {
+            $country->iso_code = $command->getIsoCode();
+        }
+
+        if (null !== $command->getCallPrefix()) {
+            $country->call_prefix = $command->getCallPrefix();
+        }
+
+        if (null !== $command->needZipCode()) {
+            $country->need_zip_code = $command->needZipCode();
+        }
+
+        if (null !== $command->isEnabled()) {
+            $country->active = $command->isEnabled();
+        }
+
+        if (null !== $command->needIdNumber()) {
+            $country->need_identification_number = $command->needIdNumber();
+        }
+
+        if (null !== $command->displayTaxLabel()) {
+            $country->display_tax_label = $command->displayTaxLabel();
+        }
+
+        if (null !== $command->getShopAssociation()) {
+            $country->id_shop_list = $command->getShopAssociation();
+        }
+
+        if (null !== $command->containsStates()) {
+            $country->contains_states = $command->containsStates();
+        }
 
         if (null !== $command->getZipCodeFormat()) {
             $country->zip_code_format = $command->getZipCodeFormat()->getValue();
@@ -75,11 +98,9 @@ class AddCountryHandler implements AddCountryHandlerInterface
         }
 
         if (null !== $command->getZoneId()) {
-            $country->id_zone = $command->getZoneId()->getValue();
+            $country->id_zone = $command->getZoneId();
         }
 
-        $this->countryRepository->add($country);
-
-        return new CountryId((int) $country->id);
+        $this->countryRepository->update($country);
     }
 }

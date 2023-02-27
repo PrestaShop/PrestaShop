@@ -439,6 +439,7 @@ default:
             contexts:
                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                - Tests\Integration\Behaviour\Features\Context\Domain\CountryFeatureContext
+               - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         product:
             paths:
                 - "%paths.base%/Features/Scenario/Product"
