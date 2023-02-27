@@ -2572,19 +2572,16 @@ class AdminControllerCore extends Controller
         $helper->simple_header = $this->list_simple_header;
         $helper->bulk_actions = $this->bulk_actions;
         $helper->currentIndex = self::$currentIndex;
-        // @phpstan-ignore-next-line
         if ($helper->className === null) {
             $helper->className = $this->className;
         }
         $helper->table = $this->table;
-        // @phpstan-ignore-next-line
         if ($helper->name_controller === null) {
             $helper->name_controller = Tools::getValue('controller');
         }
         $helper->orderBy = $this->_orderBy;
         $helper->orderWay = $this->_orderWay;
         $helper->listTotal = $this->_listTotal;
-        // @phpstan-ignore-next-line
         if ($helper->shopLink === null) {
             $helper->shopLink = $this->shopLink;
         }
@@ -2600,17 +2597,14 @@ class AdminControllerCore extends Controller
         $helper->ajax_params = isset($this->ajax_params) ? $this->ajax_params : null;
         // @phpstan-ignore-next-line
         $helper->default_form_language = $this->default_form_language;
-        // @phpstan-ignore-next-line
         if ($helper->allow_employee_form_lang === null) {
             $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
         }
-        // @phpstan-ignore-next-line
         if ($helper->multiple_fieldsets === null) {
             $helper->multiple_fieldsets = $this->multiple_fieldsets;
         }
         $helper->row_hover = $this->row_hover;
         $helper->position_identifier = $this->position_identifier;
-        // @phpstan-ignore-next-line
         if ($helper->position_group_identifier === null) {
             $helper->position_group_identifier = $this->position_group_identifier;
         }
