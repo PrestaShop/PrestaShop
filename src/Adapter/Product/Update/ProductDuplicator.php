@@ -788,12 +788,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private function duplicateAttachmentAssociation(int $oldProductId, int $newProductId): void
     {
-        /* @see Product::duplicateAttachmentAssociation() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateAttachmentAssociation'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_ATTACHMENT_ASSOCIATION
-        );
+        $this->duplicateProductTable('product_attachment', $oldProductId, $newProductId, CannotDuplicateProductException::FAILED_DUPLICATE_ATTACHMENT_ASSOCIATION);
     }
 
     /**
