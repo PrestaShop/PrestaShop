@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
 use ZxcvbnPhp\Zxcvbn;
 
@@ -76,6 +77,15 @@ class ValidateCore
     {
         // Check if the value is empty
         if (empty($email)) {
+            return false;
+        }
+
+        $validator = Validation::createValidator();
+        $errors = $validator->validate($email, new Email([
+            'mode' => 'loose',
+        ]));
+
+        if (count($errors) > 0) {
             return false;
         }
 

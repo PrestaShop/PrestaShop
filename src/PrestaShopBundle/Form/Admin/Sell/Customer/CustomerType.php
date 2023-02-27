@@ -197,7 +197,7 @@ class CustomerType extends TranslatorAwareType
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
                             'Admin.Notifications.Error',
-                            ['%limit%' => LastName::MAX_LENGTH]
+                            ['%limit%' => DomainEmail::MAX_LENGTH]
                         ),
                     ]),
                     new Email([
