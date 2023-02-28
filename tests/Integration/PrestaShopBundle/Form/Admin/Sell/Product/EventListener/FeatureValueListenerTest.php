@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
+namespace Tests\Integration\PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
 use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -38,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Tests\Integration\PrestaShopBundle\Form\FormListenerTestCase;
 
 class FeatureValueListenerTest extends FormListenerTestCase
 {

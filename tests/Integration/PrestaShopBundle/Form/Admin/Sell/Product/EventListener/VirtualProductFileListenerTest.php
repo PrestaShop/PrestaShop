@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
+namespace Tests\Integration\PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener;
@@ -40,6 +40,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Tests\Integration\PrestaShopBundle\Form\FormListenerTestCase;
 
 class VirtualProductFileListenerTest extends FormListenerTestCase
 {

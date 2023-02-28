@@ -56,8 +56,7 @@ class VirtualProductFileListener implements EventSubscriberInterface
     }
 
     /**
-     * Adjusts form constraints depending on what action is being done regarding virtual product file,
-     * so that we don't invalidate form when there is no intention to upload/update a file (a.k.a. the field has_file is falsy)
+     * Remove form constraints if there is no virtual file added, to avoid invalidating the form for nothing
      *
      * @param FormEvent $event
      */
@@ -66,7 +65,6 @@ class VirtualProductFileListener implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        // Remove file & name constraints if there is no virtual file added, to avoid invalidating the form for nothing
         $isAddingFile = !empty($data['has_file']) && empty($data['virtual_product_file_id']);
         $isUpdatingFile = !empty($data['has_file']) && !empty($data['virtual_product_file_id']) && empty($data['file']);
 
