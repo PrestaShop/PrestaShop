@@ -73,12 +73,11 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         $attributeGroupViewDataProvider = $this->get('prestashop.adapter.product.attribute_group.attribute_group_view_data_provider');
-        
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attribute/index.html.twig', [
             'attributeGrid' => $this->presentGrid($attributeGrid),
             'attributeGroupId' => $attributeGroupId,
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Attribute TODO', 'Admin.Navigation.Menu'),
             'layoutTitle' => $this->trans(
                 'Attribute %name%',
                 'Admin.Navigation.Menu',
