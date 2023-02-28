@@ -450,12 +450,12 @@
       <trans-unit id="4d8adffdc001189e0202c01ac529a3a9">
         <source>Regular price</source>
         <target>Regular price</target>
-        <note>Line: 84</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
         <source>Price</source>
         <target>Price</target>
-        <note>Line: 94</note>
+        <note>Line: 102</note>
       </trans-unit>
     </body>
   </file>

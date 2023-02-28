@@ -279,12 +279,12 @@
       <trans-unit id="4c4cfffa1e5022b41e4871b27ede1f25">
         <source>%productName% product quantity field</source>
         <target>%productName% product quantity field</target>
-        <note>Line: 139</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
         <source>Gift</source>
         <target>Gift</target>
-        <note>Line: 147</note>
+        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -591,6 +591,11 @@
         <source>Expiration date</source>
         <target>Expiration date</target>
         <note>Line: 88</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
