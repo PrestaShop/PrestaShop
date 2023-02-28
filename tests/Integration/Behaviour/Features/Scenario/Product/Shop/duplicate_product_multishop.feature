@@ -4,6 +4,7 @@
 @restore-shops-after-feature
 @restore-languages-after-feature
 @restore-taxes-after-feature
+@reset-downloads-after-feature
 @reset-img-after-feature
 @clear-cache-after-feature
 @product-multishop
@@ -1176,3 +1177,105 @@ Feature: Copy product from shop to shop.
       | customField2Copy | file | field2 shop4 | champ2 shop4 | false       |
     And customField1 and customField1Copy have different values
     And customField2 and customField2Copy have different values
+
+  Scenario: I duplicate a product with images they are correctly duplicated and associated to appropriate shops
+    When I add product "productWithImages" to shop shop1 with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I add new image "image1" named "app_icon.png" to product "productWithImages" for shop "shop1"
+    And I add new image "image2" named "logo.jpg" to product "productWithImages" for shop "shop1"
+    And I copy product productWithImages from shop shop1 to shop shop2
+    And I add new image "image3" named "app_icon.png" to product "productWithImages" for shop "shop2"
+    And I copy product productWithImages from shop shop2 to shop shop3
+    And product "productWithImages" should have following images for shop "shop1,shop2,shop3":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops               |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2, shop3 |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1, shop2, shop3 |
+      | image3          | false    |               |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg | shop2, shop3        |
+    And images "[image1, image2, image3]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    And image "image1" should have same file as "app_icon.png"
+    And image "image2" should have same file as "logo.jpg"
+    And image "image3" should have same file as "app_icon.png"
+    # Copy to one shop
+    When I duplicate product productWithImages to a productWithImagesCopyShop1 for shop shop1
+    Then product "productWithImagesCopyShop1" should have following images for shop "shop1":
+      | new image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                                     | thumbnail url                                               | shops |
+      | image1CopyShop1     | true     |               |               | 1        | http://myshop.com/img/p/{image1CopyShop1}.jpg | http://myshop.com/img/p/{image1CopyShop1}-small_default.jpg | shop1 |
+      | image2CopyShop1     | false    |               |               | 2        | http://myshop.com/img/p/{image2CopyShop1}.jpg | http://myshop.com/img/p/{image2CopyShop1}-small_default.jpg | shop1 |
+    And images "[image1CopyShop1, image2CopyShop1]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    And image1 and image1CopyShop1 have different values
+    And image2 and image2CopyShop1 have different values
+    And image "image1CopyShop1" should have same file as "app_icon.png"
+    And image "image2CopyShop1" should have same file as "logo.jpg"
+    # Copy to default shop group
+    When I duplicate product productWithImages to a productWithImagesCopyShopGroup1 for shop group default_shop_group
+    Then product "productWithImagesCopyShopGroup1" should have following images for shop "shop1,shop2":
+      | new image reference  | is cover | legend[en-US] | legend[fr-FR] | position | image url                                          | thumbnail url                                                    | shops        |
+      | image1CopyShopGroup1 | true     |               |               | 1        | http://myshop.com/img/p/{image1CopyShopGroup1}.jpg | http://myshop.com/img/p/{image1CopyShopGroup1}-small_default.jpg | shop1, shop2 |
+      | image2CopyShopGroup1 | false    |               |               | 2        | http://myshop.com/img/p/{image2CopyShopGroup1}.jpg | http://myshop.com/img/p/{image2CopyShopGroup1}-small_default.jpg | shop1, shop2 |
+      | image3CopyShopGroup1 | false    |               |               | 3        | http://myshop.com/img/p/{image3CopyShopGroup1}.jpg | http://myshop.com/img/p/{image3CopyShopGroup1}-small_default.jpg | shop2        |
+    And images "[image1CopyShopGroup1, image2CopyShopGroup1, image3CopyShopGroup1]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    And image1 and image1CopyShopGroup1 have different values
+    And image2 and image2CopyShopGroup1 have different values
+    And image3 and image3CopyShopGroup1 have different values
+    And image "image1CopyShopGroup1" should have same file as "app_icon.png"
+    And image "image2CopyShopGroup1" should have same file as "logo.jpg"
+    And image "image3CopyShopGroup1" should have same file as "app_icon.png"
+    # Copy to second shop group
+    When I duplicate product productWithImages to a productWithImagesCopyShopGroup2 for shop group test_second_shop_group
+    Then product "productWithImagesCopyShopGroup2" should have following images for shop "shop3":
+      | new image reference  | is cover | legend[en-US] | legend[fr-FR] | position | image url                                          | thumbnail url                                                    | shops |
+      | image1CopyShopGroup2 | true     |               |               | 1        | http://myshop.com/img/p/{image1CopyShopGroup2}.jpg | http://myshop.com/img/p/{image1CopyShopGroup2}-small_default.jpg | shop3 |
+      | image2CopyShopGroup2 | false    |               |               | 2        | http://myshop.com/img/p/{image2CopyShopGroup2}.jpg | http://myshop.com/img/p/{image2CopyShopGroup2}-small_default.jpg | shop3 |
+      | image3CopyShopGroup2 | false    |               |               | 3        | http://myshop.com/img/p/{image3CopyShopGroup2}.jpg | http://myshop.com/img/p/{image3CopyShopGroup2}-small_default.jpg | shop3 |
+    And images "[image1CopyShopGroup2, image2CopyShopGroup2, image3CopyShopGroup2]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    And image1 and image1CopyShopGroup2 have different values
+    And image2 and image2CopyShopGroup2 have different values
+    And image3 and image3CopyShopGroup2 have different values
+    And image "image1CopyShopGroup2" should have same file as "app_icon.png"
+    And image "image2CopyShopGroup2" should have same file as "logo.jpg"
+    And image "image3CopyShopGroup2" should have same file as "app_icon.png"
+    # Copy to all shops
+    When I duplicate product productWithImages to a productWithImagesCopyAllShops for all shops
+    And product "productWithImagesCopyAllShops" should have following images for shop "shop1,shop2,shop3":
+      | new image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                                        | thumbnail url                                                  | shops               |
+      | image1CopyAllShops  | true     |               |               | 1        | http://myshop.com/img/p/{image1CopyAllShops}.jpg | http://myshop.com/img/p/{image1CopyAllShops}-small_default.jpg | shop1, shop2, shop3 |
+      | image2CopyAllShops  | false    |               |               | 2        | http://myshop.com/img/p/{image2CopyAllShops}.jpg | http://myshop.com/img/p/{image2CopyAllShops}-small_default.jpg | shop1, shop2, shop3 |
+      | image3CopyAllShops  | false    |               |               | 3        | http://myshop.com/img/p/{image3CopyAllShops}.jpg | http://myshop.com/img/p/{image3CopyAllShops}-small_default.jpg | shop2, shop3        |
+    And images "[image1CopyAllShops, image2CopyAllShops, image3CopyAllShops]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    And image1 and image1CopyAllShops have different values
+    And image2 and image2CopyAllShops have different values
+    And image3 and image3CopyAllShops have different values
+    And image "image1CopyAllShops" should have same file as "app_icon.png"
+    And image "image2CopyAllShops" should have same file as "logo.jpg"
+    And image "image3CopyAllShops" should have same file as "app_icon.png"

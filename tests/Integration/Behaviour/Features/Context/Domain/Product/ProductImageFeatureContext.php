@@ -610,7 +610,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         // Set new references if defined (used for duplication tests) and update reference for following assertion loop
         foreach ($dataRows as $index => $dataRow) {
-            if (isset($dataRow['new image reference']) && !$this->getSharedStorage()->exists($dataRow['new image reference'])) {
+            if (isset($dataRow['new image reference'])) {
                 $actualImage = $images[$index];
                 $this->getSharedStorage()->set($dataRow['new image reference'], $actualImage->getImageId());
                 $dataRows[$index]['image reference'] = $dataRow['new image reference'];

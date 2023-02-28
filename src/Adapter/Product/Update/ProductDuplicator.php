@@ -65,6 +65,7 @@ use PrestaShopException;
 use Product;
 use ProductDownload as VirtualProductFile;
 use Shop;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -766,19 +767,39 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $oldImages = $this->getRows('image', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES);
 
         $imagesMapping = [];
+        $fs = new Filesystem();
         foreach ($oldImages as $oldImage) {
             $oldImageId = new ImageId((int) $oldImage['id_image']);
             $newImage = $this->productImageRepository->duplicate($oldImageId, new ProductId($newProductId), $shopConstraint);
+            if (null === $newImage) {
+                continue;
+            }
+
             $newImageId = new ImageId((int) $newImage->id);
             $imageTypes = $this->productImageRepository->getProductImageTypes();
 
             // Copy the generated images instead of generating them is more performant
             foreach ($imageTypes as $imageType) {
-                copy(
+                $fs->copy(
                     $this->productImageSystemPathFactory->getPathByType($oldImageId, $imageType->name),
                     $this->productImageSystemPathFactory->getPathByType($newImageId, $imageType->name)
                 );
             }
+
+            // Also copy original
+            $oldOriginalPath = $this->productImageSystemPathFactory->getPath($oldImageId);
+            $newOriginalPath = $this->productImageSystemPathFactory->getPath($newImageId);
+            $fs->copy(
+                $oldOriginalPath,
+                $newOriginalPath
+            );
+
+            // And fileType
+            $fs->copy(
+                dirname($oldOriginalPath) . '/fileType',
+                dirname($newOriginalPath) . '/fileType'
+            );
+
             $imagesMapping[$oldImageId->getValue()] = $newImageId->getValue();
         }
 

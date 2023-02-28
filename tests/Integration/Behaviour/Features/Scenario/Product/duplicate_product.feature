@@ -1,9 +1,11 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product
 @restore-products-before-feature
 @restore-languages-after-feature
-@duplicate-product
+@restore-taxes-after-feature
 @reset-downloads-after-feature
+@reset-img-after-feature
 @clear-cache-after-feature
+@duplicate-product
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
 
@@ -601,6 +603,10 @@ Feature: Duplicate product from Back Office (BO).
       | large_default  | 800   | 800    |
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
+    And image "image1" should have same file as "app_icon.png"
+    And image "image2" should have same file as "logo.jpg"
+    And image "image3" should have same file as "app_icon.png"
+    And image "image4" should have same file as "logo.jpg"
     When I generate combinations for product productWithCombinationAndImages using following attributes:
       | Color | [Red,Blue,Pink] |
     Then product "productWithCombinationAndImages" should have following combinations:
@@ -633,6 +639,10 @@ Feature: Duplicate product from Back Office (BO).
     And image2 and image2Copy have different values
     And image3 and image3Copy have different values
     And image4 and image4Copy have different values
+    And image image1Copy should have same file as "app_icon.png"
+    And image image2Copy should have same file as "logo.jpg"
+    And image image3Copy should have same file as "app_icon.png"
+    And image image4Copy should have same file as "logo.jpg"
     And images "[image1Copy, image2Copy, image3Copy, image4Copy]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |

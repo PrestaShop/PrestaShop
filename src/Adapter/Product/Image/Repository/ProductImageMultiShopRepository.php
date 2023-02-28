@@ -276,19 +276,24 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
     /**
      * Duplicate an image and associates it to another product, the same shop association are kept based on
-     * specified shop constraint.
+     * specified shop constraint. Unles the image is associated to no shops matching the shop constraint, in
+     * which case no duplication is done and null is returned.
      *
      * @param ImageId $sourceImageId
      * @param ProductId $newProductId
      * @param ShopConstraint $shopConstraint
      *
-     * @return Image
+     * @return Image|null
      *
      * @throws CoreException
      */
-    public function duplicate(ImageId $sourceImageId, ProductId $newProductId, ShopConstraint $shopConstraint): Image
+    public function duplicate(ImageId $sourceImageId, ProductId $newProductId, ShopConstraint $shopConstraint): ?Image
     {
         $associatedShopIds = $this->getAssociatedShopIdsByShopConstraint($sourceImageId, $shopConstraint);
+        if (empty($associatedShopIds)) {
+            return null;
+        }
+
         $sourceImage = $this->getImageById($sourceImageId);
         $newImage = clone $sourceImage;
         unset($newImage->id, $newImage->id_image);
