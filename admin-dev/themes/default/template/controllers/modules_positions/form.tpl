@@ -48,7 +48,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Transplant to' d='Admin.Design.Feature'}</label>
+			<label class="control-label col-lg-3 required"> {l s='Hook to' d='Admin.Design.Feature'}</label>
 			<div class="col-lg-9">
 				<select name="id_hook"{if !$hooks|@count} disabled="disabled"{/if}>
 					{if !$hooks|@count}

@@ -73,7 +73,7 @@ final class SearchEngineGridDefinitionFactory extends AbstractFilterableGridDefi
      */
     protected function getName(): string
     {
-        return $this->trans('Search Engines', [], 'Admin.Navigation.Menu');
+        return $this->trans('Search engines', [], 'Admin.Navigation.Menu');
     }
 
     /**

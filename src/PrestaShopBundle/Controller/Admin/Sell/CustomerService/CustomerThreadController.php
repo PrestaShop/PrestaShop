@@ -73,6 +73,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Customer service', 'Admin.Navigation.Menu'),
         ]);
     }
 

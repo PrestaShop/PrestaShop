@@ -60,7 +60,7 @@ class TaxRuleGridDefinitionFactory extends AbstractFilterableGridDefinitionFacto
      */
     protected function getName()
     {
-        return $this->trans('Tax Rules', [], 'Admin.Navigation.Menu');
+        return $this->trans('Tax rules', [], 'Admin.Navigation.Menu');
     }
 
     /**
