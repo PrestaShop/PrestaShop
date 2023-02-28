@@ -83,7 +83,6 @@ class ModuleController extends ModuleAbstractController
         return $this->render(
             '@PrestaShop/Admin/Module/manage.html.twig',
             [
-                'maxModulesDisplayed' => self::MAX_MODULES_DISPLAYED,
                 'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),

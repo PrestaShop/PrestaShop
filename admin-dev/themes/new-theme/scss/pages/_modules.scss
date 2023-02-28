@@ -313,12 +313,6 @@
   }
 }
 
-@media (min-width: 1300px) and (max-width: 1550px) {
-  .module-item-grid {
-    width: 33.333333%;
-  }
-}
-
 /**
  * Addons Module Cast (List view);
  **/
@@ -405,46 +399,8 @@
   }
 }
 
-.module-sorting-menu {
-  margin-bottom: 30px;
-}
-
-.module-sorting {
-  margin-left: 35px;
-
-  .select2-selection {
-    min-width: 175px;
-    @include border-radius(0);
-
-    .select2-selection__arrow {
-      b {
-        display: none;
-      }
-
-      &::before {
-        position: relative;
-        right: 20px;
-        font-family: "Material Icons", Arial, Helvetica, sans-serif;
-        font-size: 1.5rem;
-        color: $gray-medium;
-        content: "\E313";
-      }
-    }
-  }
-}
-
-.module-sorting i {
-  margin-left: 10px;
-  font-size: 26px;
-  cursor: pointer;
-}
-
 .module-sort-active {
   color: #a6b9c0 !important;
-}
-
-.module-sort-switch {
-  color: #c7d6db;
 }
 
 .module-search-result-title {
@@ -531,35 +487,6 @@
     margin-top: 1rem;
     margin-bottom: 0;
   }
-}
-
-/**
- * Module Categories Grid
- */
-
-#modules-categories-grid {
-  display: none;
-}
-
-.module-category-item {
-  display: table;
-  padding-bottom: 10px;
-  cursor: pointer;
-}
-
-.module-category-item-wrapper {
-  display: table-cell;
-  height: 247px;
-  max-height: 247px;
-  padding: 20px;
-  margin-bottom: 10px;
-  font-size: 15px;
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  background: $white;
-  box-shadow: 0 1px 0 #c7d6db;
-  -webkit-touch-callout: none;
 }
 
 /**
@@ -983,44 +910,3 @@ form#importDropzone {
   }
 }
 /* stylelint-enable declaration-no-important */
-
-@include media-breakpoint-down(xs) {
-  .module-catalog-page {
-    #search-input-group {
-      margin-bottom: 0.75rem;
-    }
-
-    .module-sorting-search-wording {
-      display: flex;
-      align-items: flex-start;
-      margin-top: 0.75rem;
-
-      .help-box {
-        margin-top: 0.15rem;
-      }
-
-      .module-search-result-title {
-        font-size: 1rem;
-        font-weight: 600;
-      }
-    }
-
-    .module-sorting {
-      width: 100%;
-      margin-left: 0;
-    }
-
-    .module-stars,
-    .module-price {
-      bottom: 60px;
-    }
-
-    .module-actions {
-      padding: 0 1rem;
-    }
-
-    .module-item-wrapper-grid {
-      padding: 1rem;
-    }
-  }
-}
