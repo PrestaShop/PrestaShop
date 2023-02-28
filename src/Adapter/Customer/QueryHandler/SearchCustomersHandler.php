@@ -76,7 +76,11 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                 continue;
             }
 
-            $customersResult = Customer::searchByName($searchPhrase, $limit);
+            $customersResult = Customer::searchByName(
+                $searchPhrase,
+                $limit,
+                $query->getShopConstraint()
+            );
             if (!is_array($customersResult)) {
                 continue;
             }
