@@ -23,40 +23,38 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class HintTextExtension extends every form type with additional hint text options.
- */
-class HintTextExtension extends AbstractTypeExtension
+class DownloadFileExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
-                'hint' => null,
+                'download_url' => null,
             ])
-            ->setAllowedTypes('hint', ['null', 'string'])
+            ->setAllowedTypes('download_url', ['null', 'string'])
         ;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
-        $view->vars['hint'] = isset($options['hint']) ? $options['hint'] : null;
+        $view->vars['download_url'] = $options['download_url'];
     }
 
     /**
@@ -64,6 +62,6 @@ class HintTextExtension extends AbstractTypeExtension
      */
     public static function getExtendedTypes(): iterable
     {
-        return [FormType::class];
+        return [FileType::class];
     }
 }

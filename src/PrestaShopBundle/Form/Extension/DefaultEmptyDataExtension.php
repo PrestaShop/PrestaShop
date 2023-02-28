@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use stdClass;

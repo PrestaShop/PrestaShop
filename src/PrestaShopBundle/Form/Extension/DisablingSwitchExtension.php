@@ -25,10 +25,10 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Closure;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,12 +57,12 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     public const SWITCH_STATE_ON_DISABLE_OPTION = 'switch_state_on_disable';
 
     /**
-     * @var EventSubscriberInterface
+     * @var AddDisablingSwitchListener
      */
     private $addDisablingSwitchListener;
 
     public function __construct(
-        EventSubscriberInterface $addDisablingSwitchListener
+        AddDisablingSwitchListener $addDisablingSwitchListener
     ) {
         $this->addDisablingSwitchListener = $addDisablingSwitchListener;
     }
@@ -100,7 +100,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     {
         $switchableParent = $this->getSwitchableParent($form);
         if ($switchableParent) {
-            $disablingFieldName = DisablingSwitchExtension::FIELD_PREFIX . $switchableParent->getName();
+            $disablingFieldName = self::FIELD_PREFIX . $switchableParent->getName();
             $parent = $switchableParent->getParent();
             if ($parent->has($disablingFieldName)) {
                 $shouldBeDisabled = $this->shouldFormBeDisabled($switchableParent, $switchableParent->getData());

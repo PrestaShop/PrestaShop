@@ -24,30 +24,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Adds the "external_link" option to all Form Types.
+ * Adds the "row_attr" option to all Form Types.
  *
- * You can use it together with the UI kit form theme to add external links:
+ * You can use it together with the UI kit form theme to add classes to your from rows:
  *
  * ```
- * 'external_link' => [
- *   'link' => 'foo bar',
- *   'text' => 'foo bar',
+ * 'row_attr' => [
+ *   'class' => 'foo bar',
  * ],
  * ```
  */
-class ExternalLinkExtension extends AbstractTypeExtension
+class RowAttributesExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
@@ -56,18 +52,9 @@ class ExternalLinkExtension extends AbstractTypeExtension
     {
         $resolver
             ->setDefaults([
-                'external_link' => null,
+                'row_attr' => null,
             ])
-            ->setAllowedTypes('external_link', ['null', 'array'])
-            ->setNormalizer('external_link', function (Options $options, $value) {
-                if (null === $value) {
-                    return null;
-                }
-
-                $resolver = $this->getExternalLinkResolver();
-
-                return $resolver->resolve($value);
-            })
+            ->setAllowedTypes('row_attr', ['null', 'array'])
         ;
     }
 
@@ -76,9 +63,7 @@ class ExternalLinkExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (!empty($options['external_link'])) {
-            $view->vars['external_link'] = $options['external_link'];
-        }
+        $view->vars['row_attr'] = $options['row_attr'] ?? [];
     }
 
     /**
@@ -87,29 +72,5 @@ class ExternalLinkExtension extends AbstractTypeExtension
     public static function getExtendedTypes(): iterable
     {
         return [FormType::class];
-    }
-
-    /**
-     * @return OptionsResolver
-     */
-    private function getExternalLinkResolver(): OptionsResolver
-    {
-        $externalLinkResolver = new OptionsResolver();
-        $externalLinkResolver
-            ->setRequired(['href', 'text'])
-            ->setDefaults([
-                'attr' => [],
-                'align' => 'left',
-                'position' => 'append',
-            ])
-            ->setAllowedTypes('href', 'string')
-            ->setAllowedTypes('text', 'string')
-            ->setAllowedTypes('align', 'string')
-            ->setAllowedTypes('position', 'string')
-            ->setAllowedTypes('attr', ['null', 'array'])
-            ->setAllowedValues('position', ['append', 'prepend'])
-        ;
-
-        return $externalLinkResolver;
     }
 }

@@ -26,35 +26,50 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DownloadFileExtension extends AbstractTypeExtension
+/**
+ * Adds the "columns_number" option to all Form Types.
+ *
+ * You can use it together with the UI kit form theme to adapt the display of a form group into columns,
+ * the form theme will add a class that affects the display into flex container with fixed size for sub elements.
+ *
+ * ```
+ * 'columns_number' => 4,
+ * ```
+ */
+class ColumnsNumberExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults([
-                'download_url' => null,
+                'columns_number' => null,
+                'column_breaker' => false,
             ])
-            ->setAllowedTypes('download_url', ['null', 'string'])
+            ->setAllowedTypes('columns_number', ['null', 'int'])
+            ->setAllowedTypes('column_breaker', ['bool'])
         ;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options): void
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['download_url'] = $options['download_url'];
+        if (!empty($options['columns_number'])) {
+            $view->vars['columns_number'] = $options['columns_number'];
+        }
+        $view->vars['column_breaker'] = $options['column_breaker'];
     }
 
     /**
@@ -62,6 +77,6 @@ class DownloadFileExtension extends AbstractTypeExtension
      */
     public static function getExtendedTypes(): iterable
     {
-        return [FileType::class];
+        return [FormType::class];
     }
 }

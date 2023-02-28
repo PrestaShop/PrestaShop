@@ -26,19 +26,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Extension;
+namespace PrestaShopBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Adds a unit suffix to form type.
+ * Adds the "alert_message" option to all Form Types.
+ *
+ * You can use it together with the UI kit form theme to add alter message to your field
  */
-class UnitTypeExtension extends AbstractTypeExtension
+class AlertExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
@@ -46,10 +47,17 @@ class UnitTypeExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefined('unit')
-            ->setDefault('prepend_unit', false)
-            ->setAllowedTypes('unit', 'string')
-            ->setAllowedTypes('prepend_unit', 'bool')
+            ->setDefaults([
+                'alert_message' => null,
+                'alert_type' => 'info',
+                'alert_position' => 'append',
+                'alert_title' => null,
+            ])
+            ->setAllowedTypes('alert_message', ['null', 'string', 'array'])
+            ->setAllowedTypes('alert_title', ['string', 'null'])
+            ->setAllowedTypes('alert_type', ['string'])
+            ->setAllowedTypes('alert_position', ['string'])
+            ->setAllowedValues('alert_position', ['append', 'prepend'])
         ;
     }
 
@@ -58,9 +66,14 @@ class UnitTypeExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (isset($options['unit'])) {
-            $view->vars['unit'] = $options['unit'];
-            $view->vars['prepend_unit'] = $options['prepend_unit'];
+        if (!empty($options['alert_message'])) {
+            $view->vars['alert_message'] = is_string($options['alert_message']) ? [$options['alert_message']] : $options['alert_message'];
+            $view->vars['alert_type'] = $options['alert_type'];
+            $view->vars['alert_position'] = $options['alert_position'];
+
+            if (is_string($options['alert_title'])) {
+                $view->vars['alert_title'] = $options['alert_title'];
+            }
         }
     }
 
@@ -69,6 +82,6 @@ class UnitTypeExtension extends AbstractTypeExtension
      */
     public static function getExtendedTypes(): iterable
     {
-        return [IntegerType::class, NumberType::class];
+        return [FormType::class];
     }
 }
