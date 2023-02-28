@@ -32,15 +32,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductF
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\File;
@@ -49,7 +46,7 @@ use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class VirtualProductFileType extends TranslatorAwareType implements EventSubscriberInterface
+class VirtualProductFileType extends TranslatorAwareType
 {
     /**
      * @var int
@@ -62,9 +59,9 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
     private $router;
 
     /**
-     * @var FormCloner
+     * @var EventSubscriberInterface
      */
-    private $formCloner;
+    private $virtualProductFileListener;
 
     /**
      * @param TranslatorInterface $translator
@@ -76,22 +73,12 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
         array $locales,
         int $maxFileSizeInMegabytes,
         RouterInterface $router,
-        FormCloner $formCloner
+        EventSubscriberInterface $virtualProductFileListener
     ) {
         parent::__construct($translator, $locales);
         $this->maxFileSizeInMegabytes = $maxFileSizeInMegabytes;
         $this->router = $router;
-        $this->formCloner = $formCloner;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            FormEvents::PRE_SUBMIT => 'adaptSelf',
-        ];
+        $this->virtualProductFileListener = $virtualProductFileListener;
     }
 
     /**
@@ -188,39 +175,7 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
         ;
 
         // The form type acts as its own listener to dynamize some field options
-        $builder->addEventSubscriber($this);
-    }
-
-    /**
-     * @param FormEvent $event
-     */
-    public function adaptSelf(FormEvent $event): void
-    {
-        $form = $event->getForm();
-        $data = $event->getData();
-
-        // Remove file & name constraints if there is no virtual file added, to avoid invalidating the form for nothing
-        $isUpdatingFile = !empty($data['has_file']) && !empty($data['virtual_product_file_id']) && null === $data['file'];
-        $isAddingFile = !empty($data['has_file']) && empty($data['virtual_product_file_id']);
-
-        if ($isAddingFile) {
-            // when new file is being added we leave all constraints unchanged
-            return;
-        }
-
-        if ($isUpdatingFile) {
-            // when existing file is being updated we do not require uploading a file (remove file NotBlank constraints),
-            // but leave constraints for other updatable fields
-            $form->add($this->formCloner->cloneForm($form->get('file'), ['constraints' => []]));
-
-            return;
-        }
-
-        // when existing file is being deleted or file is not being added (has_file is falsy) we remove all constraints
-        $form->add($this->formCloner->cloneForm($form->get('file'), ['constraints' => []]));
-        $form->add($this->formCloner->cloneForm($form->get('name'), ['constraints' => []]));
-        $form->add($this->formCloner->cloneForm($form->get('access_days_limit'), ['constraints' => []]));
-        $form->add($this->formCloner->cloneForm($form->get('download_times_limit'), ['constraints' => []]));
+        $builder->addEventSubscriber($this->virtualProductFileListener);
     }
 
     /**
