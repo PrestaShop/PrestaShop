@@ -195,7 +195,7 @@ Feature: Customer Management
       | password  | PrestaShopForever1_!          |
     And I attempt to edit customer "CUST-10" and I change the following properties:
       | email | customereleven@prestashop.com |
-    Then I should be returned an error message 'Customer with email "customereleven@prestashop.com" already exists'
+    Then I should be returned an error message 'Registered customer with email "customereleven@prestashop.com" already exists'
 
   Scenario: Fail to create a customer with mismatching groups
     When I attempt to create a customer "CUST-12" with following properties:
