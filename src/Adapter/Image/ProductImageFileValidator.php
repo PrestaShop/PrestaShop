@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeExcepti
 
 class ProductImageFileValidator extends ImageValidator
 {
-    private const MEGABYTE_IN_BYTES = 1000000;
+    private const MEGABYTE_IN_BYTES = 1048576;
 
     /**
      * @var DataConfigurationInterface
@@ -43,10 +43,10 @@ class ProductImageFileValidator extends ImageValidator
     private $uploadQuotaConfiguration;
 
     public function __construct(
-        int $maxUploadSize,
+        int $maxUploadSizeInBytes,
         DataConfigurationInterface $uploadQuotaConfiguration
     ) {
-        parent::__construct($maxUploadSize);
+        parent::__construct($maxUploadSizeInBytes);
         $this->uploadQuotaConfiguration = $uploadQuotaConfiguration;
     }
 

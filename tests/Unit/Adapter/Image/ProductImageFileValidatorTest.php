@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
 use Tests\Resources\DummyFileUploader;
+use Throwable;
 
 class ProductImageFileValidatorTest extends TestCase
 {
@@ -57,6 +58,48 @@ class ProductImageFileValidatorTest extends TestCase
         $this->expectException(UploadedImageSizeException::class);
 
         $imageValidator->assertFileUploadLimits($filePath);
+    }
+
+    /**
+     * @dataProvider getValidMaxUploadSizesForFile
+     *
+     * @param string $filePath
+     * @param int $maxPhpIniUploadSize
+     * @param int $maxUploadQuotaSize
+     */
+    public function testItValidatesImageFileSuccessfully(
+        string $filePath,
+        int $maxPhpIniUploadSize,
+        int $maxUploadQuotaSize
+    ): void {
+        $imageValidator = new ProductImageFileValidator(
+            $maxPhpIniUploadSize,
+            $this->mockQuotaConfiguration($maxUploadQuotaSize)
+        );
+
+        $exception = null;
+
+        try {
+            $imageValidator->assertFileUploadLimits($filePath);
+        } catch (Throwable $e) {
+            $exception = $e;
+        }
+
+        // assert that no exception was thrown, so that phpunit doesn't complain about missing assertions
+        $this->assertNull($exception);
+    }
+
+    public function getValidMaxUploadSizesForFile(): iterable
+    {
+        // logo size is 2.76kb
+        $logoPath = DummyFileUploader::getDummyFilesPath() . 'logo.jpg';
+        // app_icon size is 19.19kb
+        $appIconPath = DummyFileUploader::getDummyFilesPath() . 'app_icon.png';
+
+        yield [$logoPath, 2770, 2770];
+        yield [$logoPath, 2770, 3100];
+        yield [$appIconPath, 20000, 20000];
+        yield [$appIconPath, 21000, 20000];
     }
 
     public function getInvalidMaxUploadSizesForFile(): iterable
