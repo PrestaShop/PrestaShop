@@ -200,16 +200,27 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
         $data = $event->getData();
 
         // Remove file & name constraints if there is no virtual file added, to avoid invalidating the form for nothing
-        if (empty($data['has_file'])) {
-            $newFileField = $this->formCloner->cloneForm($form->get('file'), [
-                'constraints' => [],
-            ]);
-            $newNameField = $this->formCloner->cloneForm($form->get('name'), [
-                'constraints' => [],
-            ]);
-            $form->add($newFileField);
-            $form->add($newNameField);
+        $isUpdatingFile = !empty($data['has_file']) && !empty($data['virtual_product_file_id']) && null === $data['file'];
+        $isAddingFile = !empty($data['has_file']) && empty($data['virtual_product_file_id']);
+
+        if ($isAddingFile) {
+            // when new file is being added we leave all constraints unchanged
+            return;
         }
+
+        if ($isUpdatingFile) {
+            // when existing file is being updated we do not require uploading a file (remove file NotBlank constraints),
+            // but leave constraints for other updatable fields
+            $form->add($this->formCloner->cloneForm($form->get('file'), ['constraints' => []]));
+
+            return;
+        }
+
+        // when existing file is being deleted or file is not being added (has_file is falsy) we remove all constraints
+        $form->add($this->formCloner->cloneForm($form->get('file'), ['constraints' => []]));
+        $form->add($this->formCloner->cloneForm($form->get('name'), ['constraints' => []]));
+        $form->add($this->formCloner->cloneForm($form->get('access_days_limit'), ['constraints' => []]));
+        $form->add($this->formCloner->cloneForm($form->get('download_times_limit'), ['constraints' => []]));
     }
 
     /**
