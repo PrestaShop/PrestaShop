@@ -79,6 +79,7 @@ class EmailController extends FrameworkBundleAdminController
             'emailLogsGrid' => $presentedEmailLogsGrid ?? null,
             'isEmailLogsEnabled' => $isEmailLogsEnabled,
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('E-mail', 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }

@@ -72,6 +72,7 @@ class CartRuleController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartRuleGrid' => $this->presentGrid($cartRuleGrid),
+            'layoutTitle' => $this->trans('Cart rules', 'Admin.Navigation.Menu'),
         ]);
     }
 

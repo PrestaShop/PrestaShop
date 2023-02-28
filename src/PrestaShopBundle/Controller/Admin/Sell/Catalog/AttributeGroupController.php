@@ -70,6 +70,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'showcaseCardName' => ShowcaseCard::ATTRIBUTES_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'layoutTitle' => $this->trans('Attributes', 'Admin.Navigation.Menu'),
         ]);
     }
 
