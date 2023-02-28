@@ -32,7 +32,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /** @var string */
     public $php_self = 'manufacturer';
 
-    /** @var Manufacturer */
+    /** @var Manufacturer|null */
     protected $manufacturer;
     protected $label;
 
@@ -225,7 +225,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             'url' => $this->context->link->getPageLink('manufacturer', true),
         ];
 
-        if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
+        if (!empty($this->manufacturer)) {
             $breadcrumb['links'][] = [
                 'title' => $this->manufacturer->name,
                 'url' => $this->context->link->getManufacturerLink($this->manufacturer),
@@ -239,8 +239,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['manufacturer-id-' . $this->manufacturer->id] = true;
-        $page['body_classes']['manufacturer-' . $this->manufacturer->name] = true;
+        if (!empty($this->manufacturer)) {
+            $page['body_classes']['manufacturer-id-' . $this->manufacturer->id] = true;
+            $page['body_classes']['manufacturer-' . $this->manufacturer->name] = true;
+        }
 
         return $page;
     }

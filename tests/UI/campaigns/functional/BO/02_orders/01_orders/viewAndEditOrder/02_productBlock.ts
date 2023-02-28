@@ -798,7 +798,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
         const result = await orderPageProductsBlock.getProductDetails(page, 1);
         await Promise.all([
-          expect(result.basePrice, 'Base price was not updated').to.equal(25),
+          expect(result.basePrice, 'Base price was not updated').to.equal(newPrice),
           expect(result.total, 'Total price was not updated').to.equal(newPrice * newQuantity),
         ]);
       });

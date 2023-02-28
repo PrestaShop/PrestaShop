@@ -134,9 +134,6 @@ class AddAddress extends BOBasePage {
       await page.click(this.saveAddressButton);
     }
 
-    // save
-    await this.waitForSelectorAndClick(page, this.saveAddressButton);
-
     return null;
   }
 

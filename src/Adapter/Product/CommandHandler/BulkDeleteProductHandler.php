@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHa
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles command which deletes products in bulk action
@@ -63,7 +64,7 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
 
     protected function handleSingleAction(ProductId $productId, $command = null)
     {
-        $this->productRepository->delete($productId);
+        $this->productRepository->deleteByShopConstraint($productId, ShopConstraint::allShops());
     }
 
     protected function buildBulkException(): BulkProductException

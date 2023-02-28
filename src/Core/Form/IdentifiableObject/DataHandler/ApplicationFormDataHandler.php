@@ -61,7 +61,7 @@ final class ApplicationFormDataHandler implements FormDataHandlerInterface
         /** @var ApplicationId $applicationId */
         $applicationId = $this->bus->handle(new AddApplicationCommand(
             $data['name'],
-            (string) $data['description'],
+            (string) $data['description']
         ));
 
         return $applicationId->getValue();

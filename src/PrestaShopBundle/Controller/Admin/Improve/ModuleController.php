@@ -194,6 +194,7 @@ class ModuleController extends ModuleAbstractController
         }
 
         $module = $request->get('module_name');
+        $source = $request->query->get('source');
         $moduleManager = $this->container->get('prestashop.module.manager');
         $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
@@ -210,6 +211,9 @@ class ModuleController extends ModuleAbstractController
 
         try {
             $args = [$module];
+            if ($source !== null) {
+                $args[] = $source;
+            }
             if ($action === ModuleAdapter::ACTION_UNINSTALL) {
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));

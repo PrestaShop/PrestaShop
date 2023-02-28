@@ -79,7 +79,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         $command = new AddProductImageCommand(
             (int) ($data['product_id'] ?? 0),
             $uploadedFile->getPathname(),
-            $this->getShopConstraint()
+            null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId)
         );
 
         /** @var ImageId $imageId */
@@ -93,7 +93,13 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new UpdateProductImageCommand((int) $id, $this->getShopConstraint());
+        if ($data['shop_id']) {
+            $shopConstraint = ShopConstraint::shop((int) $data['shop_id']);
+        } else {
+            $shopConstraint = ShopConstraint::allShops();
+        }
+
+        $command = new UpdateProductImageCommand((int) $id, $shopConstraint);
 
         if (isset($data['is_cover'])) {
             $command->setIsCover($data['is_cover']);
@@ -113,10 +119,5 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         }
 
         $this->bus->handle($command);
-    }
-
-    private function getShopConstraint(): ShopConstraint
-    {
-        return null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
     }
 }

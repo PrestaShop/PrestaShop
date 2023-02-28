@@ -80,6 +80,8 @@
       :locales="locales"
       :selected-locale="selectedLocale"
       :loading="buttonLoading"
+      :is-multi-store-active="isMultiStoreActive"
+      :shop-id="shopId"
     />
 
     <modal
@@ -160,6 +162,8 @@
     image_id: string;
     is_cover: boolean;
     legends: Record<string, string>;
+    shop_ids: number[];
+    isAssociatedToCurrentShop: boolean;
   }
   /* eslint-enable camelcase */
 
@@ -213,6 +217,14 @@
     props: {
       productId: {
         type: Number,
+        required: true,
+      },
+      shopId: {
+        type: Number,
+        required: true,
+      },
+      isMultiStoreActive: {
+        type: Boolean,
         required: true,
       },
       locales: {
@@ -272,7 +284,7 @@
        */
       async initProductImages(): Promise<void> {
         try {
-          const images = await getProductImages(this.productId);
+          const images = await getProductImages(this.productId, this.shopId);
 
           this.loading = false;
           this.initDropZone();
@@ -330,9 +342,27 @@
         });
 
         this.dropzone.on(DropzoneEvents.addedFile, (file: PSDropzoneFile) => {
+          // Be aware the file type is not always a PSDropzoneFile.
+          // this event is called multiple times and the file type may differ:
+          // 1. when file is being uploaded it is some sort of native File type
+          // 2. when its being loaded from api it is the PSDropzoneFile type
+
           file.previewElement.dataset.id = file.image_id;
 
-          if (file.is_cover) {
+          // check if image is associated with current shop.
+          // If shop_ids is missing, it means the image is being uploaded, therefore it is not PSDropzoneFile type,
+          // so it will be associated to the shop by default
+          if (!file.shop_ids) {
+            file.shop_ids = [this.shopId];
+          }
+
+          file.isAssociatedToCurrentShop = file.shop_ids.includes(this.shopId);
+
+          if (!file.isAssociatedToCurrentShop) {
+            file.previewElement.classList.add('not-associated');
+            file.previewElement.dataset.toggle = 'pstooltip';
+            file.previewElement.dataset.originalTitle = this.$t('window.notAssociatedToShop');
+          } else if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
           }
 
@@ -365,6 +395,7 @@
           file.legends = response.legends;
           // Update dataset so that it can be selected later
           file.previewElement.dataset.id = file.image_id;
+          file.isAssociatedToCurrentShop = response.shop_ids.includes(this.shopId);
 
           if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
@@ -457,7 +488,11 @@
       /**
        * Save selected file
        */
-      async saveSelectedFile(captionValue: Record<string, any>, isCover: boolean): Promise<void> {
+      async saveSelectedFile(
+        captionValue: Record<string, any>,
+        isCover: boolean,
+        shopId: number|null,
+      ): Promise<void> {
         if (!this.selectedFiles.length) {
           return;
         }
@@ -467,7 +502,6 @@
         const selectedFile = this.selectedFiles[0];
 
         selectedFile.is_cover = isCover;
-
         selectedFile.legends = captionValue;
 
         try {
@@ -475,6 +509,7 @@
             selectedFile,
             this.token,
             this.formName,
+            shopId,
           );
 
           const savedImageElement = <HTMLElement> document.querySelector(
@@ -544,12 +579,15 @@
         }
       },
       async updateImagePosition(productImageId: number, newPosition: number): Promise<void> {
+        const image = this.files.filter((file) => Number(file.image_id) === productImageId)[0];
+
         try {
           await saveImagePosition(
             productImageId,
             newPosition,
             this.formName,
             this.token,
+            image.isAssociatedToCurrentShop ? this.shopId : null,
           );
         } catch (error: any) {
           this.sortableContainer?.sortable('cancel');
@@ -710,6 +748,11 @@
           background: $primary;
         }
       }
+    }
+
+    .dz-preview.not-associated {
+      filter: grayscale(0.8);
+      opacity: 0.6;
     }
   }
 }

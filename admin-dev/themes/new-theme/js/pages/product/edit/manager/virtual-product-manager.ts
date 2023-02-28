@@ -25,19 +25,13 @@
 
 import ProductMap from '@pages/product/product-map';
 
-const {$} = window;
+const VirtualProductMap = ProductMap.virtualProduct;
 
 export default class VirtualProductManager {
   productFormModel: Record<string, any>;
 
-  $virtualProductContainer: JQuery;
-
-  $fileContentContainer: JQuery;
-
   constructor(productFormModel: Record<string, any>) {
     this.productFormModel = productFormModel;
-    this.$virtualProductContainer = $(ProductMap.virtualProduct.container);
-    this.$fileContentContainer = $(ProductMap.virtualProduct.fileContentContainer);
 
     this.init();
   }
@@ -48,32 +42,32 @@ export default class VirtualProductManager {
   private init(): void {
     this.productFormModel.watch('stock.hasVirtualProductFile', () => this.toggleContentVisibility());
     this.toggleContentVisibility();
+    this.listenFileUpload();
   }
 
+  /**
+   * Shows/hides file form content depending if "Has file" switch is on or off.
+   */
   private toggleContentVisibility(): void {
-    const hasVirtualFile = Number(this.productFormModel.getProduct().stock.hasVirtualProductFile) === 1;
-    const hasErrors = this.$virtualProductContainer
-      .find(ProductMap.invalidField)
-      .length !== 0;
-
-    if (hasVirtualFile || hasErrors) {
-      this.showContent();
-    } else {
-      this.hideContent();
-    }
+    document.querySelector(VirtualProductMap.fileContentContainer)?.classList.toggle(
+      'd-none',
+      Number(this.productFormModel.getProduct().stock.hasVirtualProductFile) !== 1,
+    );
   }
 
   /**
-   * @private
+   * Prefills file display name input with filename value on upload
    */
-  private hideContent(): void {
-    this.$fileContentContainer.addClass('d-none');
-  }
+  private listenFileUpload(): void {
+    const fileUploadInput = <HTMLInputElement> document.querySelector(VirtualProductMap.fileUploadInput);
+    fileUploadInput.addEventListener('change', (e: Event) => {
+      const fileInput = <HTMLInputElement> e.currentTarget;
+      const selectedFile = <File|null> fileInput?.files?.[0];
 
-  /**
-   * @private
-   */
-  private showContent(): void {
-    this.$fileContentContainer.removeClass('d-none');
+      if (selectedFile) {
+        const filenameInput = <HTMLInputElement> document.querySelector(VirtualProductMap.filenameInput);
+        filenameInput.value = selectedFile.name;
+      }
+    });
   }
 }

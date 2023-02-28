@@ -11,6 +11,22 @@ services:
     tags:
       - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
 
+  PrestaShopBundle\Controller\:
+    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
+    exclude:
+      - "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
+      - "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product"
+    public: true
+    tags:
+      - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
+
+  PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\:
+    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/*"
+    autoconfigure: true
+    autowire: true
+    tags:
+      - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
+
   prestashop.core.api.controller:
     alias: PrestaShopBundle\Controller\Api\ApiController
 
@@ -142,5 +158,6 @@ services:
       multistoreFeature: "@prestashop.adapter.multistore_feature"
       multistoreContext: "@prestashop.adapter.shop.context"
       entityManager: "@doctrine.orm.entity_manager"
+      productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     tags:
       - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }

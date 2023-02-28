@@ -251,7 +251,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getProductsNumber(page: Page) : Promise<number> {
+  getProductsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.productsCountSpan);
   }
 
@@ -305,10 +305,10 @@ class ProductsBlock extends ViewOrderBasePage {
       page.click(this.UpdateProductButton),
       this.waitForHiddenSelector(page, this.editProductPriceInput),
     ]);
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.orderProductsLoading),
-      this.waitForHiddenSelector(page, this.orderProductsLoading),
-    ]);
+
+    if (await this.elementVisible(page, this.orderProductsLoading, 1000)) {
+      await this.waitForHiddenSelector(page, this.orderProductsLoading);
+    }
     await this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row));
   }
 
@@ -335,8 +335,9 @@ class ProductsBlock extends ViewOrderBasePage {
 
     await page.click(this.modalConfirmNewPriceSubmitButton);
 
-    await this.waitForVisibleSelector(page, this.orderProductsLoading);
-    await this.waitForHiddenSelector(page, this.orderProductsLoading);
+    if (await this.elementVisible(page, this.orderProductsLoading, 1000)) {
+      await this.waitForHiddenSelector(page, this.orderProductsLoading);
+    }
 
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(row));
   }
@@ -347,7 +348,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param row {number} Product row on table
    * @returns {Promise<string|null>}
    */
-  async deleteProduct(page: Page, row: number): Promise<string|null> {
+  async deleteProduct(page: Page, row: number): Promise<string | null> {
     await this.dialogListener(page);
     if (await this.elementVisible(page, this.growlMessageBlock)) {
       await this.closeGrowlMessage(page);
@@ -461,7 +462,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param createNewInvoice {boolean} True if we need to create new invoice
    * @returns {Promise<string|null>}
    */
-  async addProductToCart(page: Page, quantity: number = 1, createNewInvoice: boolean = false): Promise<string|null> {
+  async addProductToCart(page: Page, quantity: number = 1, createNewInvoice: boolean = false): Promise<string | null> {
     await this.closeGrowlMessage(page);
     if (quantity !== 1) {
       await this.addQuantity(page, quantity);
