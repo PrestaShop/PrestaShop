@@ -11,6 +11,7 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 import addFeaturePage from '@pages/BO/catalog/features/addFeature';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
+import editFeaturePage from '@pages/BO/catalog/features/editFeature';
 import addValuePage from '@pages/BO/catalog/features/addValue';
 
 // Import data
@@ -22,13 +23,23 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_CRUDFeaturesAndValues';
 
+/*
+Scenario:
+- Create feature
+- View feature
+- Create 2 values
+- Edit value
+- Edit feature
+- Delete value
+- Delete feature
+ */
 describe('BO - Catalog - Attributes & Features : CRUD features and values', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfFeatures: number = 0;
   const numberOfValues: number = 0;
   const createFeatureData: FeatureData = new FeatureData({name: 'Texture'});
-  // const editFeatureData: FeatureData = new FeatureData({name: 'Texture', metaTitle: 'Feature texture'});
+  const editFeatureData: FeatureData = new FeatureData({name: 'Texture', metaTitle: 'Feature texture'});
   const createFeatureValueData: FeatureValueData = new FeatureValueData({
     featureName: createFeatureData.name,
     value: 'Smooth',
@@ -181,8 +192,9 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     });
   });
 
-  /*describe('Update feature', async () => {
-    it('should click on \'Back to the list\' button', async function () {
+  // @todo https://github.com/PrestaShop/PrestaShop/issues/31572
+  describe('Update feature', async () => {
+    it.skip('should click on \'Back to the list\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToTheList', baseContext);
 
       await viewFeaturePage.clickOnBackToTheListButton(page);
@@ -191,7 +203,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await expect(pageTitle).to.contains(featuresPage.pageTitle);
     });
 
-    it('should filter list of features by the created feature', async function () {
+    it.skip('should filter list of features by the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterFeature2', baseContext);
 
       await featuresPage.filterTable(page, 'b!name', createFeatureData.name);
@@ -200,7 +212,7 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       await expect(textColumn).to.contains(createFeatureData.name);
     });
 
-    it('should edit the created feature', async function () {
+    it.skip('should edit the created feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editFeature', baseContext);
 
       await featuresPage.clickOnEditFeature(page, 1);
@@ -208,17 +220,17 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
       const textResult = await editFeaturePage.editFeature(page, editFeatureData);
       await expect(textResult).to.contains(editFeaturePage.successfulCreationMessage);
     });
-  });*/
+  });
 
   describe('Delete value', async () => {
-    /* it('should view feature', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'viewFeature2', baseContext);
+    it.skip('should view feature', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewFeature2', baseContext);
 
-       await featuresPage.viewFeature(page, 1);
+      await featuresPage.viewFeature(page, 1);
 
-       const pageTitle = await viewFeaturePage.getPageTitle(page);
-       await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${createFeatureData.name}`);
-     });*/
+      const pageTitle = await viewFeaturePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(`${viewFeaturePage.pageTitle} ${createFeatureData.name}`);
+    });
 
     it('should delete the second value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteValue', baseContext);
