@@ -26,11 +26,10 @@
 
 declare(strict_types=1);
 
-namespace Integration\PrestaShopBundle\Form\EventListener;
+namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener;
 use Symfony\Component\Form\FormEvents;
-use Tests\Integration\PrestaShopBundle\Form\EventListener\FormListenerTestCase;
 use Tests\Integration\PrestaShopBundle\Form\TestCombinationFormType;
 
 class CombinationListenerTest extends FormListenerTestCase
