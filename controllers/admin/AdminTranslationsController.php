@@ -208,7 +208,7 @@ class AdminTranslationsControllerCore extends AdminController
         $arrayStreamContext = @stream_context_create(['http' => ['method' => 'GET', 'timeout' => 8]]);
 
         if ($langPacks = Tools::file_get_contents($this->link_lang_pack, false, $arrayStreamContext)) {
-            if ($langPacks != '' && $langPacks = json_decode($langPacks, true)) {
+            if ($langPacks = json_decode($langPacks, true)) {
                 foreach ($langPacks as $locale => $langName) {
                     $langDetails = Language::getJsonLanguageDetails($locale);
                     if (!Language::isInstalledByLocale($locale)) {
