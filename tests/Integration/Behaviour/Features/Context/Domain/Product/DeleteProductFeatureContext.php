@@ -76,6 +76,30 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I delete product ":productReference" from shop group ":shopGroupReference"
+     *
+     * @param string $productReference
+     * @param string $shopGroupReference
+     */
+    public function deleteProductFromShopGroup(string $productReference, string $shopGroupReference): void
+    {
+        $this->deleteProduct(
+            $productReference,
+            ShopConstraint::shopGroup($this->getSharedStorage()->get($shopGroupReference))
+        );
+    }
+
+    /**
+     * @When I delete product ":productReference" from all shops
+     *
+     * @param string $productReference
+     */
+    public function deleteProductFromAllShops(string $productReference): void
+    {
+        $this->deleteProduct($productReference, ShopConstraint::allShops());
+    }
+
+    /**
      * @When I bulk delete following products from shop :shopReference:
      *
      * @param TableNode $productsList
