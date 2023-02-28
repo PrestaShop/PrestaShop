@@ -8,14 +8,29 @@ on:
       BRANCH:
         required: true
         type: string
-
-env:
-  GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}  # GCP project id
-  GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}  # GCP service key
-  NODE_VERSION: '14'  # Node version on this workflow (For all jobs)
-  API_NIGHTLY_IMPORT_HOOK: 'https://api-nightly.prestashop.com/hook/reports/import'  # Nightly hook to import report
-  NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}  # Nightly token to validate the import
-  TESTS_DIR: 'tests/UI'  # Where UI tests are
+      GC_PROJECT_ID:
+        description: 'GCP Project ID'
+        required: true
+        type: string
+      GC_SERVICE_KEY:
+        description: 'GCP Service Key'
+        required: true
+        type: string
+      NODE_VERSION:
+        description: 'Node Version'
+        default: '14'
+        required: false
+      API_NIGHTLY_IMPORT_HOOK:
+        description: 'Nightly hook to import report'
+        default: 'https://api-nightly.prestashop.com/hook/reports/import'
+        required: false
+      API_NIGHTLY_IMPORT_TOKEN:
+        description: 'Nightly token to validate the import'
+        required: true
+      TESTS_DIR:
+        description: 'Where UI tests are'
+        default: 'tests/UI'
+        required: false
 
 permissions:
   contents: read
@@ -85,14 +100,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ inputs.NODE_VERSION }}
 
       - name: Install dependencies
-        working-directory: ${{ env.TESTS_DIR }}
+        working-directory: ${{ inputs.TESTS_DIR }}
         run: npm install
 
+      # Run tests (if error, we continue for uploading report)
       - name: Run tests
-        working-directory: ${{ env.TESTS_DIR }}
+        continue-on-error: true
+        working-directory: ${{ inputs.TESTS_DIR }}
         env:
           URL_FO: 'http://localhost:8001/'
           SMTP_SERVER: '172.17.0.1'
@@ -100,7 +117,7 @@ jobs:
 
       # Rename and upload report as artifact
       - name: Rename file reports
-        working-directory: ${{ env.TESTS_DIR }}
+        working-directory: ${{ inputs.TESTS_DIR }}
         env:
           REPORTS_DIR_PATH: ${{ github.workspace }}/${{ env.REPORTS_DIR }}
         run: |
@@ -115,8 +132,10 @@ jobs:
           path: ${{ env.REPORTS_DIR }}
 
   # Second job: Merge Mochawesome reports and upload them on GCP
+  ## Always executed even if tests are in error
   merge-upload-reports:
     name: Combine all reports and upload them
+    if: ${{ always() }}
     needs:
       - test
     runs-on: ubuntu-latest
@@ -147,7 +166,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ inputs.NODE_VERSION }}
 
       - name: Install dependencies
         working-directory: ${{ env.TESTS_DIR }}
@@ -166,8 +185,8 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v0
         name: Setup Cloud Sdk
         with:
-          service_account_key: ${{ env.GC_SERVICE_KEY }}
-          project_id: ${{ env.GC_PROJECT_ID }}
+          service_account_key: ${{ inputs.GC_SERVICE_KEY }}
+          project_id: ${{ inputs.GC_PROJECT_ID }}
 
       - name: Upload to Google Cloud Storage (GCS)
         run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports
@@ -194,4 +213,4 @@ jobs:
       - name: Push reports
         run: |
           REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}"
-          curl -v "${{ env.API_NIGHTLY_IMPORT_HOOK }}?token=${{ env.NIGHTLY_TOKEN }}&filename=${REPORT_NAME}.json"
+          curl -v "${{ inputs.API_NIGHTLY_IMPORT_HOOK }}?token=${{ inputs.API_NIGHTLY_IMPORT_TOKEN }}&filename=${REPORT_NAME}.json"
