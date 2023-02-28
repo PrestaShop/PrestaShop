@@ -226,7 +226,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     private function duplicateProduct(ProductId $sourceProductId, ShopConstraint $shopConstraint): Product
     {
         $sourceDefaultShopId = $this->productRepository->getProductDefaultShopId($sourceProductId);
-        $shopIds = $this->getShopIdsByConstraint($sourceProductId, $shopConstraint);
+        $shopIds = $this->productRepository->getShopIdsByConstraint($sourceProductId, $shopConstraint);
         if ($shopConstraint->getShopId()) {
             $targetDefaultShopId = $shopConstraint->getShopId();
         } elseif ($shopConstraint->getShopGroupId()) {
@@ -269,23 +269,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         }
 
         return $duplicatedProduct;
-    }
-
-    /**
-     * @param ProductId $sourceProductId
-     * @param ShopConstraint $shopConstraint
-     *
-     * @return ShopId[]
-     */
-    private function getShopIdsByConstraint(ProductId $sourceProductId, ShopConstraint $shopConstraint): array
-    {
-        if ($shopConstraint->getShopId()) {
-            return [$shopConstraint->getShopId()];
-        } elseif ($shopConstraint->getShopGroupId()) {
-            return $this->productRepository->getAssociatedShopIdsFromGroup($sourceProductId, $shopConstraint->getShopGroupId());
-        }
-
-        return $this->productRepository->getAssociatedShopIds($sourceProductId);
     }
 
     /**
@@ -344,7 +327,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     {
         $shopIds = array_map(static function (ShopId $shopId) {
             return $shopId->getValue();
-        }, $this->getShopIdsByConstraint(new ProductId($oldProductId), $shopConstraint));
+        }, $this->productRepository->getShopIdsByConstraint(new ProductId($oldProductId), $shopConstraint));
 
         $this->duplicateCategories($oldProductId, $newProductId);
         $combinationMatching = $this->duplicateCombinations($oldProductId, $newProductId, $shopIds);
@@ -795,10 +778,13 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             );
 
             // And fileType
-            $fs->copy(
-                dirname($oldOriginalPath) . '/fileType',
-                dirname($newOriginalPath) . '/fileType'
-            );
+            $originalFileTypePath = dirname($oldOriginalPath) . '/fileType';
+            if (file_exists($originalFileTypePath)) {
+                $fs->copy(
+                    $originalFileTypePath,
+                    dirname($newOriginalPath) . '/fileType'
+                );
+            }
 
             $imagesMapping[$oldImageId->getValue()] = $newImageId->getValue();
         }
