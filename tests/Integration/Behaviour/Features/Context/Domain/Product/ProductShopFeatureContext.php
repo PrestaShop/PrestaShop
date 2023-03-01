@@ -40,43 +40,43 @@ use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 class ProductShopFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @Then product :productReference is not associated to shop :shopReference
+     * @Then product :productReference is not associated to shop(s) :shopReferences
      *
      * @param string $productReference
-     * @param string $shopReference
+     * @param string $shopReferences
      */
-    public function checkNoShopAssociation(string $productReference, string $shopReference): void
+    public function checkNoShopAssociation(string $productReference, string $shopReferences): void
     {
-        $shopId = $this->getSharedStorage()->get($shopReference);
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $caughtException = null;
+            try {
+                $this->getProductForEditing($productReference, $shopId);
+            } catch (ProductShopAssociationNotFoundException $e) {
+                $caughtException = $e;
+            }
 
-        $caughtException = null;
-        try {
-            $this->getProductForEditing($productReference, $shopId);
-        } catch (ProductShopAssociationNotFoundException $e) {
-            $caughtException = $e;
+            Assert::assertNotNull($caughtException);
         }
-
-        Assert::assertNotNull($caughtException);
     }
 
     /**
-     * @Then product :productReference is associated to shop :shopReference
+     * @Then product :productReference is associated to shop(s) :shopReferences
      *
      * @param string $productReference
-     * @param string $shopReference
+     * @param string $shopReferences
      */
-    public function checkShopAssociation(string $productReference, string $shopReference): void
+    public function checkShopAssociation(string $productReference, string $shopReferences): void
     {
-        $shopId = $this->getSharedStorage()->get($shopReference);
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $caughtException = null;
+            try {
+                $this->getProductForEditing($productReference, $shopId);
+            } catch (ProductShopAssociationNotFoundException $e) {
+                $caughtException = $e;
+            }
 
-        $caughtException = null;
-        try {
-            $this->getProductForEditing($productReference, $shopId);
-        } catch (ProductShopAssociationNotFoundException $e) {
-            $caughtException = $e;
+            Assert::assertNull($caughtException);
         }
-
-        Assert::assertNull($caughtException);
     }
 
     /**

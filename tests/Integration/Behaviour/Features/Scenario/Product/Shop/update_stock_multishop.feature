@@ -60,8 +60,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | employee   | delta_quantity |
       | Puff Daddy | 42             |
     And product "product1" last stock movement increased by 42
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product stock for specific shop (not default one)
     When I update product "product1" for shop shop2 with following values:
@@ -118,8 +117,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | employee   | delta_quantity |
       | Puff Daddy | 42             |
     And product "product1" last stock movement for shop "shop1" increased by 42
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product stock for all associated shop (quantity not handled)
     When I update product "product1" for all shops with following values:
@@ -149,8 +147,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | locale | value       |
       | en-US  | too slow... |
       | fr-FR  |             |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update some fields for single shop and after for all shops (quantity not handled)
     When I update product "product1" for shop shop2 with following values:
@@ -200,8 +197,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | locale | value    |
       | en-US  | it is on |
       | fr-FR  |          |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update some fields for all shops and after for single shop (quantity not handled)
     When I update product "product1" for all shops with following values:
@@ -247,8 +243,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | locale | value    |
       | en-US  | it is on |
       | fr-FR  |          |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I can update stock quantity independently for each shop
     When I update product "product1" stock for shop shop2 with following information:

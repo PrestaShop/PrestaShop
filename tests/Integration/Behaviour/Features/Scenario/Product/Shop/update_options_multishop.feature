@@ -104,8 +104,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | new           |
       | show_condition      | true          |
       | manufacturer        | graphicCorner |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product search indexation related values in different shops
     Given product "product1" should not be indexed for shops "shop1,shop2"

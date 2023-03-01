@@ -36,9 +36,7 @@ Feature: Copy product from shop to shop.
       | type        | standard    |
     Then product createdProduct is associated to shop shop2
     And default shop for product createdProduct is shop2
-    And product createdProduct is not associated to shop shop1
-    And product createdProduct is not associated to shop shop3
-    And product createdProduct is not associated to shop shop4
+    And product createdProduct is not associated to shops "shop1,shop3,shop4"
     # Assert stock has correctly been created for the appropriate shop
     Then product "createdProduct" should have following stock information for shops "shop2":
       | pack_stock_type     | default |
@@ -75,15 +73,12 @@ Feature: Copy product from shop to shop.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
-    And product productWithPrices is not associated to shop shop2
-    And product productWithPrices is not associated to shop shop3
-    And product productWithPrices is not associated to shop shop4
+    And product productWithPrices is not associated to shops "shop2,shop3,shop4"
     # Associate another shop which was not associated yet
     When I set following shops for product "productWithPrices":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
-    Then product productWithPrices is associated to shop shop2
-    And product productWithPrices is associated to shop shop1
+    Then product productWithPrices is associated to shops "shop1,shop2"
     And default shop for product productWithPrices is shop1
     And product productWithPrices should have following prices information for shops "shop1,shop2":
       | price              | 100.99          |
@@ -95,8 +90,7 @@ Feature: Copy product from shop to shop.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
-    And product productWithPrices is not associated to shop shop3
-    And product productWithPrices is not associated to shop shop4
+    And product productWithPrices is not associated to shops "shop3,shop4"
     # Now modify the values but this time the shop is already associated
     When I update product "productWithPrices" for shop "shop1" with following values:
       | on_sale | false |
@@ -108,14 +102,12 @@ Feature: Copy product from shop to shop.
     When I set following shops for product "productWithPrices":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
-    Then product productWithPrices is associated to shop shop1
-    Then product productWithPrices is associated to shop shop2
+    Then product productWithPrices is associated to shops "shop1,shop2"
     And product productWithPrices should have following prices information for shops "shop1":
       | on_sale | false |
     And product productWithPrices should have following prices information for shops "shop2":
       | on_sale | true |
-    And product productWithPrices is not associated to shop shop3
-    And product productWithPrices is not associated to shop shop4
+    And product productWithPrices is not associated to shops "shop3,shop4"
 
   Scenario: Basic information is copied when I set new shop association for product
     # By default the product is created for default shop
@@ -137,15 +129,12 @@ Feature: Copy product from shop to shop.
     And product "productWithBasic" localized "description_short" should be:
       | locale | value           |
       | en-US  | Just a nice mug |
-    And product productWithBasic is not associated to shop shop2
-    And product productWithBasic is not associated to shop shop3
-    And product productWithBasic is not associated to shop shop4
+    And product productWithBasic is not associated to shops "shop2,shop3,shop4"
     # Associate another shop which was not associated yet
     When I set following shops for product "productWithBasic":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
-    Then product productWithBasic is associated to shop shop2
-    And product productWithBasic is associated to shop shop1
+    Then product productWithBasic is associated to shops "shop1,shop2"
     And default shop for product productWithBasic is shop1
     Then product "productWithBasic" localized "name" for shops "shop1,shop2" should be:
       | locale | value              |
@@ -156,8 +145,7 @@ Feature: Copy product from shop to shop.
     And product "productWithBasic" localized "description_short" for shops "shop1,shop2" should be:
       | locale | value           |
       | en-US  | Just a nice mug |
-    And product productWithBasic is not associated to shop shop3
-    And product productWithBasic is not associated to shop shop4
+    And product productWithBasic is not associated to shops "shop3,shop4"
 
   Scenario: I associate a pack to another shop, the product associated are in sync
     Given I add product "productPack" to shop shop1 with following information:
@@ -228,15 +216,12 @@ Feature: Copy product from shop to shop.
       | locale | value        |
       | en-US  | too late bro |
       | fr-FR  |              |
-    And product productWithStock is not associated to shop shop2
-    And product productWithStock is not associated to shop shop3
-    And product productWithStock is not associated to shop shop4
+    And product productWithStock is not associated to shops "shop2,shop3,shop4"
     # I assign product to another shop which was not associated yet
     When I set following shops for product "productWithStock":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
-    Then product productWithStock is associated to shop shop2
-    And product productWithStock is associated to shop shop1
+    Then product productWithStock is associated to shops "shop1,shop2"
     And default shop for product productWithStock is shop1
     Then product "productWithStock" should have following stock information for shops "shop1,shop2":
       | pack_stock_type     | pack_only  |
@@ -255,8 +240,7 @@ Feature: Copy product from shop to shop.
       | locale | value        |
       | en-US  | too late bro |
       | fr-FR  |              |
-    And product productWithStock is not associated to shop shop3
-    And product productWithStock is not associated to shop shop4
+    And product productWithStock is not associated to shops "shop3,shop4"
 
   Scenario: Customization fields are copied when I set new shop association for product
     When I add product "customizable_product" with following information:
@@ -343,9 +327,7 @@ Feature: Copy product from shop to shop.
       | name[en-US] | photo of super mug1 |
     And I update product "productToDelete" for shop "shop3" with following values:
       | name[en-US] | photo of super mug3 |
-    Then product productToDelete is associated to shop shop1
-    And product productToDelete is associated to shop shop2
-    And product productToDelete is associated to shop shop3
+    Then product productToDelete is associated to shops "shop1,shop2,shop3"
     And product productToDelete is not associated to shop shop4
     And default shop for product productToDelete is shop2
     And product "productToDelete" localized "name" for shops "shop1" should be:
@@ -411,10 +393,8 @@ Feature: Copy product from shop to shop.
     When I set following shops for product "productToDelete":
       | source shop | shop1       |
       | shops       | shop1,shop3 |
-    Then product productToDelete is associated to shop shop1
-    And product productToDelete is associated to shop shop3
-    And product productToDelete is not associated to shop shop2
-    And product productToDelete is not associated to shop shop4
+    Then product productToDelete is associated to shops "shop1,shop3"
+    And product productToDelete is not associated to shops "shop2,shop4"
     And default shop for product productToDelete is shop1
     # Check that values are still present for other shops and that they were not altered
     And product "productToDelete" localized "name" for shops "shop1" should be:
@@ -484,20 +464,17 @@ Feature: Copy product from shop to shop.
     When I set following shops for product "product":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
-    And product "product" is associated to shop "shop1"
-    And product "product" is associated to shop "shop2"
+    And product "product" is associated to shops "shop1,shop2"
     When I set following shops for product "product":
       | source shop | shop1 |
       | shops       |       |
     Then I should get error that I cannot unassociate product from all shops
-    And product "product" is associated to shop "shop1"
-    And product "product" is associated to shop "shop2"
+    And product "product" is associated to shops "shop1,shop2"
     # check that source shop always stays associated
     When I set following shops for product "product":
       | source shop | shop1 |
       | shops       | shop2 |
-    And product "product" is associated to shop "shop1"
-    And product "product" is associated to shop "shop2"
+    And product "product" is associated to shops "shop1,shop2"
 
   Scenario: Product combinations are copied/deleted when product is being copied/deleted to/from shop.
     Given I add product "product1" with following information:
@@ -565,6 +542,6 @@ Feature: Copy product from shop to shop.
     Given I add product "product2" to shop "shop2" with following information:
       | name[en-US] | magic staff2 |
       | type        | standard     |
-    Given product "product2" is not associated to shop shop3
+    And product "product2" is not associated to shop shop3
     When I try to get product "product2" images for shop "shop3"
     Then I should get error that shop association was not found

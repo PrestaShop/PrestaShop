@@ -26,8 +26,7 @@ Feature: Set product images for all shops from Back Office (BO)
     When I set following shops for product "product1":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
-    Then product product1 is associated to shop shop1
-    And product product1 is associated to shop shop2
+    Then product product1 is associated to shops "shop1,shop2"
     When I update product product1 with following customization fields for shop shop1:
       | reference    | type | name[en-US] | is required |
       | customField1 | text | front-text  | true        |

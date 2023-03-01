@@ -41,8 +41,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product prices for a specific shop
     When I update product "product1" for shop shop2 with following values:
@@ -73,8 +72,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product prices for all associated shop
     When I update product "product1" for all shops with following values:
@@ -95,8 +93,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 20                |
       | unity              | bag of twenty     |
       | unit_price_ratio   | 10.0495           |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update some fields for single shop and right after for all shops
     Given product product1 should have following prices information for shops "shop1,shop2":
@@ -109,8 +106,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
     # Important to test unity because it was always overridden in all shops mode (because of a bug in
     # Product::getFieldsShops that did not handle partial update correctly)
     When I update product "product1" for shop shop2 with following values:
@@ -150,8 +146,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update price and unit price for all shops and right after for single shop
     Given product product1 should have following prices information for shops "shop1,shop2":
@@ -164,8 +159,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 10              |
       | unity              | bag of ten      |
       | unit_price_ratio   | 10.099          |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
     # First change unit price for one shop
     When I update product "product1" for shop shop2 with following values:
       | unit_price         | 20              |
@@ -213,8 +207,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 20              |
       | unity              | bag of twenty   |
       | unit_price_ratio   | 4.50            |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
     # Now update prices for first shop (default shop) only this one is affected
     When I update product "product1" for shop shop1 with following values:
       | price              | 108             |
@@ -240,8 +233,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 20              |
       | unity              | bag of twenty   |
       | unit_price_ratio   | 4.50            |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
     # Now update unit price for second shop only this one is affected
     When I update product "product1" for shop shop2 with following values:
       | price              | 60              |
@@ -265,8 +257,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 20              |
       | unity              | bag of twenty   |
       | unit_price_ratio   | 3.00            |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
     # Finally update unit price for all, each shop is updated appropriately
     When I update product "product1" for all shops with following values:
       | unit_price         | 50              |
@@ -290,5 +281,4 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | unit_price         | 50              |
       | unity              | bag of twenty   |
       | unit_price_ratio   | 1.20            |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"

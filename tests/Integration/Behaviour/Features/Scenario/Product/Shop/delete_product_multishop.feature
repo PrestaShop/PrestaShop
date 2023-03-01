@@ -47,10 +47,7 @@ Feature: Delete product when multishop feature is enabled
     When I set following shops for product "standardProduct":
       | source shop | shop2             |
       | shops       | shop1,shop3,shop4 |
-    And product standardProduct is associated to shop shop1
-    And product standardProduct is associated to shop shop2
-    And product standardProduct is associated to shop shop3
-    And product standardProduct is associated to shop shop4
+    And product standardProduct is associated to shops "shop1,shop2,shop3,shop4"
     And product "standardProduct" should have following stock information for shops "shop1,shop2,shop3,shop4":
       | quantity | 51 |
     And product "standardProduct" should have following images for shops "shop1,shop2,shop3,shop4":
@@ -67,10 +64,7 @@ Feature: Delete product when multishop feature is enabled
     And I set following shops for product "productWithCombinations":
       | source shop | shop3             |
       | shops       | shop1,shop2,shop4 |
-    And product productWithCombinations is associated to shop shop1
-    And product productWithCombinations is associated to shop shop2
-    And product productWithCombinations is associated to shop shop3
-    And product productWithCombinations is associated to shop shop4
+    And product productWithCombinations is associated to shops "shop1,shop2,shop3,shop4"
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop3,shop4":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -92,10 +86,8 @@ Feature: Delete product when multishop feature is enabled
   Scenario: I can delete product from shop group
     # delete from first shop group
     When I delete product "standardProduct" from shop group "default_shop_group"
-    Then product standardProduct is not associated to shop shop1
-    And product standardProduct is not associated to shop shop2
-    And product standardProduct is associated to shop shop3
-    And product standardProduct is associated to shop shop4
+    Then product standardProduct is not associated to shops "shop1,shop2"
+    And product standardProduct is associated to shops "shop3,shop4"
     And default shop for product standardProduct is shop3
     And product "standardProduct" should have following stock information for shops "shop3,shop4":
       | quantity | 51 |
@@ -105,10 +97,8 @@ Feature: Delete product when multishop feature is enabled
       | image2          | 2        | shop3, shop4 |
     # delete from second shop group
     When I delete product "productWithCombinations" from shop group "test_second_shop_group"
-    Then product productWithCombinations is associated to shop shop1
-    And product productWithCombinations is associated to shop shop2
-    And product productWithCombinations is not associated to shop shop3
-    And product productWithCombinations is not associated to shop shop4
+    Then product productWithCombinations is associated to shops "shop1,shop2"
+    And product productWithCombinations is not associated to shops "shop3,shop4"
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -116,16 +106,13 @@ Feature: Delete product when multishop feature is enabled
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
     And product productWithCombinations should have no combinations for shops "shop3,shop4"
-    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3"
-    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop4"
+    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shops "shop3,shop4"
 
   Scenario: I can delete product from specific shop
     # delete from shop2
     When I delete product "standardProduct" from shops "shop2"
-    Then product standardProduct is associated to shop shop1
     And product standardProduct is not associated to shop shop2
-    And product standardProduct is associated to shop shop3
-    And product standardProduct is associated to shop shop4
+    Then product standardProduct is associated to shops "shop1,shop3,shop4"
     And default shop for product standardProduct is shop1
     And product "standardProduct" should have following stock information for shops "shop1,shop3,shop4":
       | quantity | 51 |
@@ -135,10 +122,8 @@ Feature: Delete product when multishop feature is enabled
       | image2          | 2        | shop1, shop3, shop4 |
     # delete from shop3
     When I delete product "productWithCombinations" from shops "shop3"
-    Then product productWithCombinations is associated to shop shop1
-    And product productWithCombinations is associated to shop shop2
     And product productWithCombinations is not associated to shop shop3
-    And product productWithCombinations is associated to shop shop4
+    Then product productWithCombinations is associated to shops "shop1,shop2,shop4"
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop4":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
