@@ -21,16 +21,14 @@ on:
         default: 'tests/UI'
         required: false
     secrets:
+      ## GCP Project ID
       GC_PROJECT_ID:
-        description: 'GCP Project ID'
         required: true
-        type: string
+      ## GCP Service Key
       GC_SERVICE_KEY:
-        description: 'GCP Service Key'
         required: true
-        type: string
+      ## Nightly token to validate the import
       API_NIGHTLY_IMPORT_TOKEN:
-        description: 'Nightly token to validate the import'
         required: true
 
 permissions:
