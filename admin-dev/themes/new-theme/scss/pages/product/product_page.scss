@@ -20,10 +20,21 @@
 
 $product-page-padding-bottom: 80px !default;
 
+// Adapt footer padding to be correctly displayed with Symfony debug bar (both when hidden and/or shown)
 .developer-mode {
-  .product-page {
-    .product-footer {
-      padding-bottom: calc($grid-gutter-width / 2 + 2.25rem);
+  &.debug-toolbar-hidden {
+    .product-page {
+      .product-footer {
+        padding-right: 2.25rem;
+      }
+    }
+  }
+
+  &.debug-toolbar-shown {
+    .product-page {
+      .product-footer {
+        padding-bottom: calc($grid-gutter-width / 2 + 2.25rem);
+      }
     }
   }
 }
