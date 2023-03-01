@@ -8,14 +8,6 @@ on:
       BRANCH:
         required: true
         type: string
-      GC_PROJECT_ID:
-        description: 'GCP Project ID'
-        required: true
-        type: string
-      GC_SERVICE_KEY:
-        description: 'GCP Service Key'
-        required: true
-        type: string
       NODE_VERSION:
         description: 'Node Version'
         default: '14'
@@ -24,13 +16,22 @@ on:
         description: 'Nightly hook to import report'
         default: 'https://api-nightly.prestashop.com/hook/reports/import'
         required: false
-      API_NIGHTLY_IMPORT_TOKEN:
-        description: 'Nightly token to validate the import'
-        required: true
       TESTS_DIR:
         description: 'Where UI tests are'
         default: 'tests/UI'
         required: false
+    secrets:
+      GC_PROJECT_ID:
+        description: 'GCP Project ID'
+        required: true
+        type: string
+      GC_SERVICE_KEY:
+        description: 'GCP Service Key'
+        required: true
+        type: string
+      API_NIGHTLY_IMPORT_TOKEN:
+        description: 'Nightly token to validate the import'
+        required: true
 
 permissions:
   contents: read
@@ -185,8 +186,8 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v0
         name: Setup Cloud Sdk
         with:
-          service_account_key: ${{ inputs.GC_SERVICE_KEY }}
-          project_id: ${{ inputs.GC_PROJECT_ID }}
+          service_account_key: ${{ secrets.GC_SERVICE_KEY }}
+          project_id: ${{ secrets.GC_PROJECT_ID }}
 
       - name: Upload to Google Cloud Storage (GCS)
         run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports
@@ -213,4 +214,4 @@ jobs:
       - name: Push reports
         run: |
           REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}"
-          curl -v "${{ inputs.API_NIGHTLY_IMPORT_HOOK }}?token=${{ inputs.API_NIGHTLY_IMPORT_TOKEN }}&filename=${REPORT_NAME}.json"
+          curl -v "${{ inputs.API_NIGHTLY_IMPORT_HOOK }}?token=${{ secrets.API_NIGHTLY_IMPORT_TOKEN }}&filename=${REPORT_NAME}.json"
