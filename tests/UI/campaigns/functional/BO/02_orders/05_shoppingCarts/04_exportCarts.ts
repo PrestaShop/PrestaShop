@@ -13,17 +13,17 @@ import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_orders_orders_exportCarts';
+const baseContext: string = 'functional_BO_orders_shoppingCarts_exportCarts';
 
 /*
 Scenario:
-- Go to orders > shopping cart page
+- Go to orders > shopping carts page
 - Change pagination number to 300
-- Export shopping cart
+- Export shopping carts
 - Check that all data in shopping carts table exit in the csv file
 - Go back to default pagination number
  */
-describe('BO - Orders : Export carts', async () => {
+describe('BO - Orders - Shopping carts: Export carts', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let filePath: string;
