@@ -63,7 +63,7 @@ describe('BO - Orders : Export carts', async () => {
   });
 
   it('should export carts to a csv file', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'exportOrders', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'exportCarts', baseContext);
 
     filePath = await shoppingCartsPage.exportDataToCsv(page);
 
@@ -72,7 +72,7 @@ describe('BO - Orders : Export carts', async () => {
   });
 
   it('should check existence of carts data in csv file', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkAllOrdersInCsvFile', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAllCartsInCsvFile', baseContext);
 
     // Get number of orders
     const numberOfOrders = await shoppingCartsPage.getNumberOfElementInGrid(page);
