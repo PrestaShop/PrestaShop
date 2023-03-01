@@ -197,6 +197,7 @@ class FooterType extends TranslatorAwareType
             ->add('cancel', IconButtonType::class, [
                 'label' => $this->trans('Cancel', 'Admin.Actions'),
                 'type' => 'link',
+                'icon' => 'cancel',
                 'attr' => [
                     'href' => $editUrl,
                     'class' => 'btn-secondary cancel-button',
