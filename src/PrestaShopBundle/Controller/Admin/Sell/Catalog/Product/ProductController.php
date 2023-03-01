@@ -761,10 +761,7 @@ class ProductController extends FrameworkBundleAdminController
     public function bulkDeleteFromAllShopsAction(Request $request): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new BulkDeleteProductCommand(
-                $this->getProductIdsFromRequest($request),
-                ShopConstraint::allShops()
-            ));
+            $this->bulkDeleteByShopConstraint($request, ShopConstraint::allShops());
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
