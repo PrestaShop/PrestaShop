@@ -1510,7 +1510,7 @@
   }) -%}
   <div {{ block('widget_attributes') }}>
     {% for group, buttons in button_groups %}
-      <div class="btn-group group-{{ group }}">
+      <div class="{% if use_button_groups %}btn-group {% endif %}group-{{ group }}">
         {# Render inline actions #}
         {% set inlineButtonsLimit = form.vars.inline_buttons_limit %}
         {% for action in form.children %}
