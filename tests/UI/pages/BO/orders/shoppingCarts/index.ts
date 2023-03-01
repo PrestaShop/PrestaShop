@@ -1,4 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
+import date from '@utils/date';
+import {ShoppingCartDetails} from '@data/types/shoppingCart';
 
 import type {Page} from 'playwright';
 
@@ -9,6 +11,8 @@ import type {Page} from 'playwright';
  */
 class ShoppingCarts extends BOBasePage {
   public readonly pageTitle: string;
+
+  private readonly exportLink: string;
 
   private readonly gridForm: string;
 
@@ -94,6 +98,9 @@ class ShoppingCarts extends BOBasePage {
     this.pageTitle = 'Shopping Carts •';
     this.alertSuccessBlockParagraph = '.alert-success';
 
+    // Selectors
+    this.exportLink = '#desc-cart-export';
+
     // Form selectors
     this.gridForm = '#form-cart';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
@@ -149,6 +156,56 @@ class ShoppingCarts extends BOBasePage {
   }
 
   /* Filter methods */
+
+  /**
+   * Click on lint to export carts to a csv file
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async exportDataToCsv(page: Page): Promise<string | null> {
+    return this.clickAndWaitForDownload(page, this.exportLink);
+  }
+
+  /**
+   * Get all row information from shopping carts table
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {Promise<{ShoppingCartDetails}>}
+   */
+  async getCartFromTable(page: Page, row: number): Promise<ShoppingCartDetails> {
+    return {
+      id_cart: parseFloat(await this.getTextColumn(page, row, 'id_cart')),
+      status: await this.getTextColumn(page, row, 'status'),
+      lastname: await this.getTextColumn(page, row, 'c!lastname'),
+      total: await this.getTextColumn(page, row, 'total'),
+      carrier: await this.getTextColumn(page, row, 'ca!name'),
+      date: await this.getTextColumn(page, row, 'date'),
+      online: await this.getTextColumn(page, row, 'id_guest'),
+    };
+  }
+
+  /**
+   * Get shopping cart from table in csv format
+   * @param page {Page} Browser tab
+   * @param row {number} Shopping cart row on table
+   * @returns {Promise<string>}
+   */
+  async getCartInCsvFormat(page: Page, row: number): Promise<string> {
+    const cart = await this.getCartFromTable(page, row);
+
+    const cartDate = date.setDateFormat('yyyy-mm-dd', cart.date);
+    const lastName = cart.lastname !== '--' ? `"${cart.lastname}"` : '';
+    const status = cart.status !== 'Abandoned cart' ? cart.status : `"${cart.status}"`;
+    const carrier = cart.carrier !== '--' ? `"${cart.carrier}"` : '';
+
+    return `${cart.id_cart};`
+      + `${status};`
+      + `${lastName};`
+      + `${cart.total};`
+      + `${carrier};`
+      + `"${cartDate}";`
+      + `${cart.online === 'No' ? 0 : 1}`;
+  }
 
   /**
    * Get Number of shopping carts
