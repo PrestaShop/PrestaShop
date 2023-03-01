@@ -136,9 +136,9 @@ class CustomerType extends TranslatorAwareType
         if ($options['show_guest_field'] === true) {
             $builder
                 ->add('is_guest', SwitchType::class, [
-                    'label' => $this->trans('Register as guest', 'Admin.Global'),
+                    'label' => $this->trans('Guest account', 'Admin.Global'),
                     'help' => $this->trans(
-                        'Adds a one-time guest customer with no password.',
+                        'Quick customers with no password, who don\'t have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.',
                         'Admin.Orderscustomers.Help'
                     ),
                     'required' => false,
