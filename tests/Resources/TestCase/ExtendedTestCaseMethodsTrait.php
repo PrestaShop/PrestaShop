@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-
 namespace Tests\Resources\TestCase;
 
 use PHPUnit\Framework\Assert;
