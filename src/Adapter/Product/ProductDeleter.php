@@ -77,6 +77,19 @@ class ProductDeleter
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+
+        $this->removeImages($productId, $shopIds);
+        $this->removeCombinations($productId, $shopIds);
+        $this->productRepository->deleteFromShops($productId, $shopIds);
+    }
+
+    /**
+     * @param ProductId $productId
      * @param ShopId[] $shopIds
      */
     private function removeImages(ProductId $productId, array $shopIds): void

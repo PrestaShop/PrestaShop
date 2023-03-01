@@ -28,14 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Handles command which deletes products in bulk action
@@ -43,20 +42,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 final class BulkDeleteProductHandler extends AbstractBulkHandler implements BulkDeleteProductHandlerInterface
 {
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
      * @var ProductDeleter
      */
     private $productDeleter;
 
     public function __construct(
-        ProductRepository $productRepository,
         ProductDeleter $productDeleter
     ) {
-        $this->productRepository = $productRepository;
         $this->productDeleter = $productDeleter;
     }
 
@@ -85,9 +77,9 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
                 ));
         }
 
-        $this->productDeleter->deleteFromShops(
+        $this->productDeleter->deleteByShopConstraint(
             $productId,
-            $this->productRepository->getShopIdsByConstraint($productId, $command->getShopConstraint())
+            $command->getShopConstraint()
         );
     }
 
