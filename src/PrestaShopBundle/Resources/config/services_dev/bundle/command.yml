@@ -1,7 +1,9 @@
 services:
   _defaults:
     public: true
-
+    bind:
+      $oldLicenses: '%old_licenses%'
+      $licenseFolderToBrowse: '%license_folder_to_browse%'
   PrestaShopBundle\Command\AppendConfigurationFileHooksListCommand:
     arguments:
       - '%kernel.environment%'
@@ -66,5 +68,12 @@ services:
       - 'console.command'
 
   PrestaShopBundle\Command\UpdateLicensesCommand:
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\AddLicensesCommand:
+    public: false
+    autowire: true
+    autoconfigure: true
     tags:
       - 'console.command'
