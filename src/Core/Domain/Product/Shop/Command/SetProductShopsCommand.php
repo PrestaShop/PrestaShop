@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
@@ -48,20 +50,18 @@ class SetProductShopsCommand
     private $shopIds;
 
     /**
-     * @param int $productId
-     * @param int $sourceShopId
-     * @param int[] $shopIds
+     * @param int $productId the product for which the new shop association is being set
+     * @param int $sourceShopId the source shop from which product is copied when it is being added to a new shop
+     * @param int[] $shopIds ids of shops representing new product-shop association
      */
     public function __construct(
         int $productId,
         int $sourceShopId,
         array $shopIds
     ) {
+        $this->setShopIds($shopIds);
         $this->productId = new ProductId($productId);
         $this->sourceShopId = new ShopId($sourceShopId);
-        $this->shopIds = array_map(static function (int $shopId): ShopId {
-            return new ShopId($shopId);
-        }, $shopIds);
     }
 
     /**
@@ -86,5 +86,24 @@ class SetProductShopsCommand
     public function getShopIds(): array
     {
         return $this->shopIds;
+    }
+
+    /**
+     * @param int[] $shopIds
+     */
+    private function setShopIds(array $shopIds): void
+    {
+        if (empty($shopIds)) {
+            throw new InvalidProductShopAssociationException(
+                sprintf(
+                    'Empty shop association provided. Use %s command to delete product instead',
+                    DeleteProductCommand::class
+                )
+            );
+        }
+
+        $this->shopIds = array_map(static function (int $shopId): ShopId {
+            return new ShopId($shopId);
+        }, $shopIds);
     }
 }

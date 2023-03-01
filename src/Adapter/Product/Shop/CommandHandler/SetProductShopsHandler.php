@@ -31,8 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\SetProductShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -71,22 +69,12 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
         $productId = $command->getProductId();
         $sourceShopId = $command->getSourceShopId();
         $selectedShopIds = $command->getShopIds();
-
-        if (empty($selectedShopIds)) {
-            throw new InvalidProductShopAssociationException(
-                sprintf(
-                    'Empty shop association provided. Use %s command to delete product instead',
-                    DeleteProductCommand::class
-                )
-            );
-        }
-
         $initialShopIds = $this->productRepository->getAssociatedShopIds($productId);
 
         $this->assertSourceShopIsAlreadyAssociated($sourceShopId, $initialShopIds);
 
-        $shopsToCopy = $this->findRecurringShops($selectedShopIds, $initialShopIds, $sourceShopId);
-        $shopsToRemove = $this->findRecurringShops($initialShopIds, $selectedShopIds, $sourceShopId);
+        $shopsToCopy = $this->findDifferentShopIds($selectedShopIds, $initialShopIds, $sourceShopId);
+        $shopsToRemove = $this->findDifferentShopIds($initialShopIds, $selectedShopIds, $sourceShopId);
 
         // Remove non associated shops
         $this->productDeleter->deleteFromShops($productId, $shopsToRemove);
@@ -118,8 +106,8 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
     }
 
     /**
-     * Returns shop ids from $searchableShopIds array that are present in $shopIds array.
-     * The $shopToIgnore id is ignored and not returned even if it exists in both arrays.
+     * Returns ids from $searchableShopIds array that are not present in $shopIds array.
+     * The $shopToIgnore id is ignored and is never returned
      *
      * @param ShopId[] $searchableShopIds
      * @param ShopId[] $shopIds
@@ -127,9 +115,9 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
      *
      * @return ShopId[]
      */
-    private function findRecurringShops(array $searchableShopIds, array $shopIds, ShopId $shopToIgnore): array
+    private function findDifferentShopIds(array $searchableShopIds, array $shopIds, ShopId $shopToIgnore): array
     {
-        $recurringShops = [];
+        $differentShopIds = [];
         foreach ($searchableShopIds as $searchableShopId) {
             if (
                 $searchableShopId->getValue() === $shopToIgnore->getValue() ||
@@ -138,10 +126,10 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
                 continue;
             }
 
-            $recurringShops[] = $searchableShopId;
+            $differentShopIds[] = $searchableShopId;
         }
 
-        return $recurringShops;
+        return $differentShopIds;
     }
 
     /**
