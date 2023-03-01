@@ -24,6 +24,52 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.0.2 - (2023-03-01)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #30957: Redirect to product list with warning message instead of raising an exception when we try to access a product which doesn't exist (by @lartist)
+    - #31514: Fix sorting attribute do not works (by @mflasquin)
+    - #31667: Catch PrestaShopException to validate sql-requests properly in PHP 8.X (by @boherm)
+    - #31654: Fix addslashes not working (by @mflasquin)
+    - #31603: Fix generating of preload.tpl (by @kpodemski)
+    - #30962: Module from theme with tab using SF routing fails after enabling the theme (by @jolelievre)
+    - #29358: Fix price formatting in MoneyType (by @zuk3975)
+    - #29647: BO - Import files - Do not show generated csv files from import/csvfromexcel folder in history of uploaded files (by @mflasquin)
+    - #30415: Fix applying special char on translations (by @mflasquin)
+    - #29488: Module translations no longer take translations from another lang if its default one. (by @margud)
+    - #29837: Avoid possibility to create product with combinations when combinations feature is disabled (by @mflasquin)
+    - #30818: Fix access for read only permissions (by @dingedi)
+    - #30745: Load default language if employee id lang does not exist (by @mflasquin)
+- Front Office:
+  - Bug fix:
+    - #31152: Always use id_country from request if provided (by @atomiix)
+    - #31148: Change domain to fix translation issue (by @atomiix)
+    - #30992: Fix customer isLogged property in FO (by @Hlavtox)
+- Core:
+  - Improvement:
+    - #31707: Update composer.lock for modules contactform and ps_contactinfo (by @matthieu-rolland)
+    - #31574: Lock theme classic version to 2.0.8 (by @matthieu-rolland)
+    - #31575: Add missing licence  (by @matthieu-rolland)
+    - #30676: Upgraded classic theme and ps_contactinfo module (by @nicosomb)
+  - Bug fix:
+    - #31503: Filter empty values for modulesFromHooks (by @sowbiba)
+    - #31137: Disable module's hook before upgrading it (by @atomiix)
+    - #31241: Improved session availability test (by @Hlavtox)
+    - #31006: Fix conversion of hex color codes (by @lmeyer1)
+    - #30834: Fix SQL error introduced by da10f001 (by @lmeyer1)
+- Web Services:
+  - Bug fix:
+    - #31023: Backport #30309 : Fix broken result in webservices for 8.0.x (by @boubkerbribri)
+    - #30993: Fix issue #26568 about customer blank schema (by @ceer)
+- Tests:
+  - Bug fix:
+    - #29751: Fixed testsuite with sebastian/comparator release (by @nicosomb)
+  - Refactoring:
+    - #31389: Functional tests - Add scripts to run each test less than 30 minutes (by @nesrineabdmouleh)
+
+####################################
 #   v8.0.1 - (2022-12-27)
 ####################################
 

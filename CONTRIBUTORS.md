@@ -35,6 +35,7 @@ GitHub contributors:
 - Alexandre Alouit
 - Alexandre Bru
 - Alexandre Debusschere
+- Alexandre Hellin
 - Alexandre Segura
 - alexdee2007
 - AlexEven
@@ -63,6 +64,7 @@ GitHub contributors:
 - Ángel Guzmán Maeso
 - Ansar Mallouli
 - Anthony Girard
+- Antoine Caillet
 - Antoine Damiron
 - Antoine LA
 - Antoine Mille
@@ -109,6 +111,7 @@ GitHub contributors:
 - BigZ
 - BluTiGeS
 - BMS-fenaille
+- boherm
 - Boubker Bribri
 - Brais Pato
 - brouillon
@@ -211,6 +214,7 @@ GitHub contributors:
 - Dickriven Chellemboyee
 - Dimitrios Karvounaris
 - Dinesh Badrukhiya
+- Dingedi
 - Dinis Lage
 - djbuch
 - djfm
@@ -445,6 +449,7 @@ GitHub contributors:
 - ks129
 - ksaandev
 - Kyary
+- Léa Delin
 - Ladel
 - Lathanao
 - Laurynas Sedys
