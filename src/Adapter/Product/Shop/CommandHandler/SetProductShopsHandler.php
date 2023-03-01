@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
-use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\SetProductShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -54,7 +53,6 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
     private $productShopUpdater;
 
     public function __construct(
-        ShopRepository $shopRepository,
         ProductRepository $productRepository,
         ProductDeleter $productDeleter,
         ProductShopUpdater $productShopUpdater
