@@ -421,10 +421,15 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      * @param ProductId $productId
      * @param ShopId[] $shopIds
      *
+     * @throws CannotDeleteProductException
      * @throws ShopAssociationNotFound
      */
     public function deleteFromShops(ProductId $productId, array $shopIds): void
     {
+        if (empty($shopIds)) {
+            return;
+        }
+
         foreach ($shopIds as $shopId) {
             $this->checkShopAssociation($productId->getValue(), Product::class, $shopId);
         }

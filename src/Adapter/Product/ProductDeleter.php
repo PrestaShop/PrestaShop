@@ -67,6 +67,10 @@ class ProductDeleter
      */
     public function deleteFromShops(ProductId $productId, array $shopIds): void
     {
+        if (empty($shopIds)) {
+            return;
+        }
+
         $this->removeImages(
             $productId,
             $shopIds

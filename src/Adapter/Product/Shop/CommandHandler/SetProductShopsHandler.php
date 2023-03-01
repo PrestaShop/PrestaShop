@@ -41,11 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 class SetProductShopsHandler implements SetProductShopsHandlerInterface
 {
     /**
-     * @var ShopRepository
-     */
-    private $shopRepository;
-
-    /**
      * @var ProductRepository
      */
     private $productRepository;
@@ -66,7 +61,6 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
         ProductDeleter $productDeleter,
         ProductShopUpdater $productShopUpdater
     ) {
-        $this->shopRepository = $shopRepository;
         $this->productRepository = $productRepository;
         $this->productDeleter = $productDeleter;
         $this->productShopUpdater = $productShopUpdater;
@@ -87,30 +81,15 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
             );
         }
 
-        $allShopIds = $this->shopRepository->getAllIds();
         $initialShopIds = $this->productRepository->getAssociatedShopIds($productId);
 
         $this->assertSourceShopIsAlreadyAssociated($sourceShopId, $initialShopIds);
 
-        $shopsToRemove = [];
-        $shopsToCopy = [];
-
-        foreach ($allShopIds as $shopId) {
-            if ($sourceShopId->getValue() === $shopId->getValue()) {
-                // source shop is already associated and we don't allow to unassociate it
-                continue;
-            }
-            if ($this->shopInArray($shopId, $initialShopIds) && !$this->shopInArray($shopId, $selectedShopIds)) {
-                $shopsToRemove[] = $shopId;
-            } elseif (!$this->shopInArray($shopId, $initialShopIds) && $this->shopInArray($shopId, $selectedShopIds)) {
-                $shopsToCopy[] = $shopId;
-            }
-        }
+        $shopsToCopy = $this->findRecurringShops($selectedShopIds, $initialShopIds, $sourceShopId);
+        $shopsToRemove = $this->findRecurringShops($initialShopIds, $selectedShopIds, $sourceShopId);
 
         // Remove non associated shops
-        if (!empty($shopsToRemove)) {
-            $this->productDeleter->deleteFromShops($productId, $shopsToRemove);
-        }
+        $this->productDeleter->deleteFromShops($productId, $shopsToRemove);
 
         // Copy data from source targets
         foreach ($shopsToCopy as $targetShopId) {
@@ -133,9 +112,36 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
         }
 
         throw new ShopException(sprintf(
-            'Source shopId must be one of current product shops. Got %d',
+            'Source shopId must be one of current product shops. Could not find %d in the associated shops',
             $sourceShopId->getValue()
         ));
+    }
+
+    /**
+     * Returns shop ids from $searchableShopIds array that are present in $shopIds array.
+     * The $shopToIgnore id is ignored and not returned even if it exists in both arrays.
+     *
+     * @param ShopId[] $searchableShopIds
+     * @param ShopId[] $shopIds
+     * @param ShopId $shopToIgnore
+     *
+     * @return ShopId[]
+     */
+    private function findRecurringShops(array $searchableShopIds, array $shopIds, ShopId $shopToIgnore): array
+    {
+        $recurringShops = [];
+        foreach ($searchableShopIds as $searchableShopId) {
+            if (
+                $searchableShopId->getValue() === $shopToIgnore->getValue() ||
+                $this->shopInArray($searchableShopId, $shopIds)
+            ) {
+                continue;
+            }
+
+            $recurringShops[] = $searchableShopId;
+        }
+
+        return $recurringShops;
     }
 
     /**
