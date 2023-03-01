@@ -99,7 +99,7 @@ class FooterType extends TranslatorAwareType
     {
         $productId = $options['product_id'];
 
-        $deleteUrl = $this->router->generate('admin_products_v2_delete', [
+        $deleteUrl = $this->router->generate('admin_products_v2_delete_from_all_shops', [
             'productId' => $productId,
         ]);
         $duplicateUrl = $this->router->generate('admin_products_v2_duplicate_shop', [

@@ -490,7 +490,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function deleteAction(int $productId): Response
+    public function deleteFromAllShopsAction(int $productId): Response
     {
         try {
             $this->getCommandBus()->handle(new DeleteProductCommand($productId, ShopConstraint::allShops()));
