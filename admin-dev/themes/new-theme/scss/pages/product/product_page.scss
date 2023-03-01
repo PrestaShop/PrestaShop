@@ -427,6 +427,21 @@ $product-page-padding-bottom: 80px !default;
         padding-top: 0.25rem;
       }
     }
+
+    // Force disabled buttons to be correctly displayed as such
+    a.btn.disabled,
+    button.btn.disabled,
+    .dropdown-menu > .dropdown-item a.btn.disabled,
+    .dropdown-menu > .dropdown-item button.btn.disabled {
+      color: #b3c7cd;
+      pointer-events: auto;
+      cursor: not-allowed;
+      background-color: transparent;
+
+      .material-icons {
+        color: #b3c7cd;
+      }
+    }
   }
 
   .help-box {

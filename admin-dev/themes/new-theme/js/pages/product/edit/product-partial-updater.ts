@@ -231,32 +231,52 @@ export default class ProductPartialUpdater {
     const updatedData = this.getUpdatedFormData();
 
     if (this.listEditionMode) {
-      this.$productFormSubmitButton.prop('disabled', true);
-      this.$productFormCancelButton.addClass('disabled');
-      this.$productFormGoToCatalogButton.addClass('disabled');
-      this.$productFormPreviewButton.addClass('disabled');
-      this.$productFormDuplicateButton.addClass('disabled');
-      this.$productFormNewProductButton.addClass('disabled');
+      this.toggleButtonsState([
+        this.$productFormSubmitButton,
+        this.$productFormCancelButton,
+        this.$productFormGoToCatalogButton,
+        this.$productFormPreviewButton,
+        this.$productFormDuplicateButton,
+        this.$productFormNewProductButton,
+        this.$productTypePreview,
+      ], false);
+      // Disable type button permanently
       this.$productTypePreview.off('click');
-      this.$productTypePreview.addClass('disabled');
+      this.$productTypePreview.addClass('disabled').prop('disabled', true);
     } else if (updatedData === null) {
-      this.$productFormSubmitButton.prop('disabled', true);
-      this.$productFormCancelButton.addClass('disabled');
-      this.$productFormGoToCatalogButton.removeClass('disabled');
-      this.$productFormPreviewButton.removeClass('disabled');
-      this.$productFormDuplicateButton.removeClass('disabled');
-      this.$productFormNewProductButton.removeClass('disabled');
-      this.$productTypePreview.removeClass('disabled');
+      this.toggleButtonsState([
+        this.$productFormSubmitButton,
+        this.$productFormCancelButton,
+      ], false);
+      this.toggleButtonsState([
+        this.$productFormGoToCatalogButton,
+        this.$productFormPreviewButton,
+        this.$productFormDuplicateButton,
+        this.$productFormNewProductButton,
+        this.$productTypePreview,
+      ], true);
     } else {
-      this.$productFormSubmitButton.prop('disabled', false);
-      this.$productFormCancelButton.removeClass('disabled');
-      this.$productFormGoToCatalogButton.addClass('disabled');
-      this.$productFormPreviewButton.addClass('disabled');
-      this.$productFormDuplicateButton.addClass('disabled');
-      this.$productFormNewProductButton.addClass('disabled');
+      this.toggleButtonsState([
+        this.$productFormSubmitButton,
+        this.$productFormCancelButton,
+      ], true);
+      this.toggleButtonsState([
+        this.$productFormGoToCatalogButton,
+        this.$productFormPreviewButton,
+        this.$productFormDuplicateButton,
+        this.$productFormNewProductButton,
+      ], false);
+      // Disable type button permanently
       this.$productTypePreview.off('click');
-      this.$productTypePreview.addClass('disabled');
+      this.$productTypePreview.addClass('disabled').prop('disabled', true);
     }
+  }
+
+  private toggleButtonsState(buttons: JQuery[], enabled: boolean): void {
+    buttons.forEach(($button: JQuery) => {
+      $button.prop('disabled', !enabled);
+      $button.toggleClass('disabled', !enabled);
+    });
   }
 
   /**
