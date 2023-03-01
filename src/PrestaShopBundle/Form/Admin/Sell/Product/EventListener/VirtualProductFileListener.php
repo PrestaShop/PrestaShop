@@ -66,14 +66,14 @@ class VirtualProductFileListener implements EventSubscriberInterface
         $data = $event->getData();
 
         $isAddingFile = !empty($data['has_file']) && empty($data['virtual_product_file_id']);
-        $isUpdatingFile = !empty($data['has_file']) && !empty($data['virtual_product_file_id']) && empty($data['file']);
+        $onlyUpdatingFileSettings = !empty($data['has_file']) && !empty($data['virtual_product_file_id']) && empty($data['file']);
 
         if ($isAddingFile) {
             // when new file is being added we leave all constraints unchanged
             return;
         }
 
-        if ($isUpdatingFile) {
+        if ($onlyUpdatingFileSettings) {
             // when existing file is being updated we do not require uploading a file (remove file NotBlank constraints),
             // but leave constraints for other updatable fields
             $form->add($this->formCloner->cloneForm($form->get('file'), ['constraints' => []]));
