@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Repository;
 
+use Group as CustomerGroup;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotAddGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -48,5 +50,18 @@ class GroupRepository extends AbstractObjectModelRepository
             'group',
             GroupNotFoundException::class
         );
+    }
+
+    public function create(array $localizedNames, float $reduction, int $priceDisplayMethod, bool $showPrices): CustomerGroup
+    {
+        $customerGroup = new CustomerGroup();
+        $customerGroup->name = $localizedNames;
+        $customerGroup->reduction = (string) $reduction;
+        $customerGroup->price_display_method = $priceDisplayMethod;
+        $customerGroup->show_prices = $showPrices;
+
+        $this->addObjectModel($customerGroup, CannotAddGroupException::class);
+
+        return $customerGroup;
     }
 }

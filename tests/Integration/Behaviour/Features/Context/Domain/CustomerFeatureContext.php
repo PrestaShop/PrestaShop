@@ -126,7 +126,7 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I create customer "(.+)" with following details:$/
+     * @When /^I create customer group "(.+)" with following details:$/
      *
      * @param string $customerReference
      * @param TableNode $table
