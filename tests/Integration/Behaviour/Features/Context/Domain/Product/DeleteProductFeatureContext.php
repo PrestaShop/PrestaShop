@@ -41,7 +41,7 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $reference
      */
-    public function deleteProductForDefaultShop(string $reference): void
+    public function deleteProductFromDefaultShop(string $reference): void
     {
         $this->deleteProduct($reference, ShopConstraint::shop($this->getDefaultShopId()));
     }
@@ -51,7 +51,7 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param TableNode $productsList
      */
-    public function bulkDeleteProductsForDefaultShop(TableNode $productsList): void
+    public function bulkDeleteProductsFromDefaultShop(TableNode $productsList): void
     {
         $this->bulkDeleteProducts($productsList, ShopConstraint::shop($this->getDefaultShopId()));
     }
