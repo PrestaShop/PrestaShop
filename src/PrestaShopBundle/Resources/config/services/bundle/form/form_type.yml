@@ -1872,10 +1872,13 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.combination.combination_manager_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationManagerType'
-    parent: 'form.type.translatable.aware'
-    public: true
+  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationManagerType:
+    public: false
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
+      $multiStoreFeature: '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
     tags:
       - { name: form.type }
 
