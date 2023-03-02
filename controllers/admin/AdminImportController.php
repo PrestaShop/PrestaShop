@@ -1637,7 +1637,7 @@ class AdminImportControllerCore extends AdminController
 
         if (!$product->id && empty($info['name'])) {
             $this->errors[] = sprintf(
-                $this->trans('Product with reference %1$s (ID: %2$s) cannot be saved: product name is missing', [], 'Admin.Advparameters.Notification'),
+                $this->trans('Product with reference %1$s (ID: %2$s) could not be saved because the product name is missing.', [], 'Admin.Advparameters.Notification'),
                 (!empty($info['reference'])) ? Tools::htmlentitiesUTF8($info['reference']) : 'null',
                 !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
             );
