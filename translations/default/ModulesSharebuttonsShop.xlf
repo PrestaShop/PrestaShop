@@ -5,17 +5,17 @@
       <trans-unit id="5a95a425f74314a96f13a2f136992178">
         <source>Share</source>
         <target>Share</target>
-        <note>Line: 200</note>
+        <note>Line: 201</note>
       </trans-unit>
       <trans-unit id="3746d4aa96f19672260a424d76729dd1">
         <source>Tweet</source>
         <target>Tweet</target>
-        <note>Line: 208</note>
+        <note>Line: 209</note>
       </trans-unit>
       <trans-unit id="86709a608bd914b28221164e6680ebf7">
         <source>Pinterest</source>
         <target>Pinterest</target>
-        <note>Line: 216</note>
+        <note>Line: 217</note>
       </trans-unit>
     </body>
   </file>
