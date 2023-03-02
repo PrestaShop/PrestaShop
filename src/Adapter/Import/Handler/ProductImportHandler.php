@@ -120,12 +120,12 @@ final class ProductImportHandler extends AbstractImportHandler
         ImportDataFormatter $dataFormatter,
         array $allShopIds,
         array $contextShopIds,
-                            $currentContextShopId,
-                            $isMultistoreEnabled,
-                            $contextLanguageId,
+        $currentContextShopId,
+        $isMultistoreEnabled,
+        $contextLanguageId,
         TranslatorInterface $translator,
         LoggerInterface $logger,
-                            $employeeId,
+        $employeeId,
         Database $legacyDatabase,
         CacheClearerInterface $cacheClearer,
         Connection $connection,
@@ -380,7 +380,7 @@ final class ProductImportHandler extends AbstractImportHandler
     private function fetchProductId(
         DataRowInterface $dataRow,
         array $entityFields,
-                         $fetchByReference
+        $fetchByReference
     ) {
         $productId = $this->fetchDataValueByKey($dataRow, $entityFields, 'id');
 
@@ -947,12 +947,12 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveSpecificPrice(
         Product $product,
-                $reductionPrice,
-                $reductionPercent,
-                $reductionFrom,
-                $reductionTo,
-                $validateOnly,
-                $productName
+        $reductionPrice,
+        $reductionPercent,
+        $reductionFrom,
+        $reductionTo,
+        $validateOnly,
+        $productName
     ) {
         $reductionPercent = (float) $reductionPercent;
         $reductionPrice = (float) $reductionPrice;
@@ -1222,11 +1222,10 @@ final class ProductImportHandler extends AbstractImportHandler
                         $custom,
                         ($action == 'add')
                     );
-                    if($featureValueId) {
+                    if ($featureValueId) {
                         if ($action == 'delete') {
                             Product::deleteFeatureProductImport($product->id, $featureId, $featureValueId);
-                        }
-                        else {
+                        } else {
                             Product::addFeatureProductImport($product->id, $featureId, $featureValueId);
                         }
                     }
@@ -1332,7 +1331,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         'Admin.Advparameters.Notification'
                     )
                 );
-                /* @phpstan-ignore-next-line Data of properties `advanced_stock_management` & `depends_on_stock` comes from database */
+            /* @phpstan-ignore-next-line Data of properties `advanced_stock_management` & `depends_on_stock` comes from database */
             } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                 $this->warning(
                     $this->translator->trans(
