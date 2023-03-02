@@ -37,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class ChangePasswordType is responsible for defining "change password" form type.
@@ -53,9 +54,10 @@ class ChangePasswordType extends AbstractType
     /**
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ConfigurationInterface $configuration, TranslatorInterface $translator)
     {
         $this->configuration = $configuration;
+        $this->translator = $translator;
     }
 
     /**

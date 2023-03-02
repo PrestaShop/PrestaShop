@@ -39,6 +39,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class MetaType is responsible for providing form fields for Shop parameters -> Traffic & Seo ->
@@ -69,10 +70,12 @@ class MetaType extends AbstractType
      */
     public function __construct(
         array $defaultPageChoices,
-        array $modulePageChoices
+        array $modulePageChoices,
+        TranslatorInterface $translator
     ) {
         $this->defaultPageChoices = $defaultPageChoices;
         $this->modulePageChoices = $modulePageChoices;
+        $this->translator = $translator;
     }
 
     /**

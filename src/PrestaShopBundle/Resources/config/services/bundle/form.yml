@@ -26,3 +26,15 @@ services:
   PrestaShopBundle\Form\FormBuilderModifier:
   PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler:
   PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationFormFactory:
+
+  # Should be keeped for bc until it is deprecated.
+  # legacy parent module still used
+  # cannot be autowired because it is abstract
+  form.type.translatable.aware:
+    abstract: true
+    arguments:
+      - "@translator"
+      - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+
+  form.type.common_type:
+    abstract: true
