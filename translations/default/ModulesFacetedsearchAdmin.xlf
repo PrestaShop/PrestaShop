@@ -471,6 +471,11 @@
   </file>
   <file original="modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="28034a200e932f22b324a4dda1bb9f64">
+        <source><![CDATA[Invalid characters: <>;=#{}_]]></source>
+        <target><![CDATA[Invalid characters: <>;=#{}_]]></target>
+        <note>Line: 21</note>
+      </trans-unit>
       <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
         <source>URL</source>
         <target>URL</target>
@@ -490,11 +495,6 @@
   </file>
   <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="28034a200e932f22b324a4dda1bb9f64">
-        <source><![CDATA[Invalid characters: <>;=#{}_]]></source>
-        <target><![CDATA[Invalid characters: <>;=#{}_]]></target>
-        <note>Line: 21</note>
-      </trans-unit>
       <trans-unit id="0bcff42b5aed2b0e4501ed178e4f2510">
         <source>Indexable</source>
         <target>Indexable</target>

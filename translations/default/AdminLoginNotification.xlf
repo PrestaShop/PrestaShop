@@ -112,9 +112,9 @@ Comment: password (twice)</note>
         <target>The confirmation is empty: please fill in the password confirmation as well.</target>
         <note>Line: 410</note>
       </trans-unit>
-      <trans-unit id="aa5244bee1e322b66e46ba2be4a46388">
-        <source>The confirmation password doesn't match. Please double check both passwords.</source>
-        <target>The confirmation password doesn't match. Please double check both passwords.</target>
+      <trans-unit id="b0ad621a246d9c2118751d0b763e5853">
+        <source>The confirmation password doesn't match. Please double-check both passwords.</source>
+        <target>The confirmation password doesn't match. Please double-check both passwords.</target>
         <note>Line: 412</note>
       </trans-unit>
       <trans-unit id="56f5aa17fc3a9c5d9827bb148f072cd2">
