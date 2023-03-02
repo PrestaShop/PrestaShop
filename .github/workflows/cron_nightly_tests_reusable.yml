@@ -10,16 +10,19 @@ on:
         type: string
       NODE_VERSION:
         description: 'Node Version'
-        default: '14'
         required: false
+        type: string
+        default: '14'
       API_NIGHTLY_IMPORT_HOOK:
         description: 'Nightly hook to import report'
-        default: 'https://api-nightly.prestashop.com/hook/reports/import'
         required: false
+        type: string
+        default: 'https://api-nightly.prestashop.com/hook/reports/import'
       TESTS_DIR:
         description: 'Where UI tests are'
-        default: 'tests/UI'
         required: false
+        type: string
+        default: 'tests/UI'
     secrets:
       ## GCP Project ID
       GC_PROJECT_ID:
