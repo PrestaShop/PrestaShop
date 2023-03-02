@@ -148,6 +148,7 @@ class ManufacturerLazyArray extends AbstractLazyArray
      */
     public function getNbProducts()
     {
+        /* @phpstan-ignore-next-line */
         if (!isset($this->manufacturer['nb_products']) || $this->manufacturer['nb_products'] === null) {
             $this->manufacturer['nb_products'] = count(
                 (new Manufacturer($this->manufacturer['id'], $this->language->getId()))
