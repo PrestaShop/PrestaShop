@@ -33,7 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -88,7 +88,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $productRepository;
 
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     private $productImageRepository;
 
@@ -123,7 +123,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param StockAvailableRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
      * @param ProductRepository $productRepository
-     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
      * @param NumberExtractor $numberExtractor
      * @param TaxComputer $taxComputer
      * @param int $contextLanguageId
@@ -136,7 +136,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         StockAvailableRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
         ProductRepository $productRepository,
-        ProductImageRepository $productImageRepository,
+        ProductImageMultiShopRepository $productImageRepository,
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,
         int $contextLanguageId,
@@ -161,7 +161,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      */
     public function handle(GetCombinationForEditing $query): CombinationForEditing
     {
-        $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $query->getShopConstraint());
+        $shopConstraint = $query->getShopConstraint();
+        $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $shopConstraint);
         $productId = new ProductId((int) $combination->id_product);
         $product = $this->productRepository->getByShopConstraint($productId, $query->getShopConstraint());
         $images = $this->getImages($combination);
@@ -174,7 +175,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getPrices($combination, $product),
             $this->getStock($combination),
             $images,
-            $this->getCoverUrl($images, $productId),
+            $this->getCoverUrl($images, $productId, $shopConstraint),
             (bool) $combination->default_on
         );
     }
@@ -320,13 +321,13 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      *
      * @return string
      */
-    private function getCoverUrl(array $imageIds, ProductId $productId): string
+    private function getCoverUrl(array $imageIds, ProductId $productId, ShopConstraint $shopConstraint): string
     {
         if (!empty($imageIds)) {
             return $this->productImageUrlFactory->getPathByType(new ImageId((int) $imageIds[0]), ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
         }
 
-        $productImageIds = $this->productImageRepository->getImagesIds($productId);
+        $productImageIds = $this->productImageRepository->getImageIds($productId, $shopConstraint);
         if (!empty($productImageIds)) {
             return $this->productImageUrlFactory->getPathByType($productImageIds[0], ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
         }

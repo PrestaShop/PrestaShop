@@ -32,8 +32,11 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Image;
 use ImageType;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -53,7 +56,6 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository
 use PrestaShopException;
 
 /**
- * todo: merge this repository with ProductImageRepository
  * Provides access to product Image data source with shop context
  */
 class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelRepository
@@ -78,16 +80,30 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      */
     private $productImageValidator;
 
+    /**
+     * @var ProductImagePathFactory
+     */
+    private $productImagePathFactory;
+
+    /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductRepository $productRepository,
-        ProductImageValidator $productImageValidator
+        ProductImageValidator $productImageValidator,
+        ProductImagePathFactory $productImagePathFactory,
+        CombinationRepository $combinationRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productRepository = $productRepository;
         $this->productImageValidator = $productImageValidator;
+        $this->productImagePathFactory = $productImagePathFactory;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -162,6 +178,137 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         return array_map(static function (string $id): ImageId {
             return new ImageId((int) $id);
         }, $qb->execute()->fetchAll(FetchMode::COLUMN));
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ImageId|null
+     */
+    public function getDefaultImageId(ProductId $productId, ShopId $shopId): ?ImageId
+    {
+        $coverId = $this->findCoverId($productId, $shopId);
+        if ($coverId) {
+            return $coverId;
+        }
+
+        $imagesIds = $this->getImageIds($productId, ShopConstraint::shop($shopId->getValue()));
+
+        return !empty($imagesIds) ? reset($imagesIds) : null;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @todo: I don't think retrieving conver url (through the factory) needs to be in repository.
+     *        path factory should probably be used outside
+     *
+     * @return string
+     *
+     * @throws CoreException
+     */
+    public function getProductCoverUrl(ProductId $productId, ShopId $shopId): string
+    {
+        $imageId = $this->getDefaultImageId($productId, $shopId);
+
+        return $imageId ?
+            $this->productImagePathFactory->getPath($imageId) :
+            $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return string
+     *
+     * @throws CoreException
+     */
+    public function getCombinationCoverUrl(CombinationId $combinationId, ShopId $shopId): string
+    {
+        $imageId = $this->getPreviewCombinationProduct($combinationId);
+        if ($imageId) {
+            return $this->productImagePathFactory->getPath($imageId);
+        }
+        $productId = $this->combinationRepository->getProductId($combinationId);
+
+        return $this->getProductCoverUrl($productId, $shopId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return ImageId|null
+     */
+    public function findCoverId(ProductId $productId, ShopId $shopId): ?ImageId
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->addSelect('i.id_image')
+            ->from($this->dbPrefix . 'image_shop', 'i')
+            ->andWhere('i.id_product = :productId')
+            ->andWhere('i.cover = 1')
+            ->andWhere('i.id_shop = :shopId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+        $result = $qb->execute()->fetchAssociative();
+
+        if (empty($result['id_image'])) {
+            return null;
+        }
+
+        return new ImageId((int) $result['id_image']);
+    }
+
+    /**
+     * Retrieves a list of image ids ordered by position for each provided combination id
+     *
+     * @param CombinationId[] $combinationIds
+     *
+     * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
+     */
+    public function getImageIdsForCombinations(array $combinationIds): array
+    {
+        if (empty($combinationIds)) {
+            return [];
+        }
+
+        $combinationIds = array_map(function (CombinationId $id): int {
+            return $id->getValue();
+        }, $combinationIds);
+
+        //@todo: multishop not handled
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pai.id_product_attribute, pai.id_image')
+            ->from($this->dbPrefix . 'product_attribute_image', 'pai')
+            ->leftJoin(
+                'pai',
+                $this->dbPrefix . 'image', 'i',
+                'i.id_image = pai.id_image'
+            )
+            ->andWhere($qb->expr()->in('pai.id_product_attribute', ':combinationIds'))
+            ->andWhere('pai.id_image != 0')
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            ->orderBy('i.position', 'asc')
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (empty($results)) {
+            return [];
+        }
+
+        // Temporary ImageId pool to avoid creating duplicates
+        $imageIds = [];
+        $imagesIdsByCombinationIds = [];
+        foreach ($results as $result) {
+            $id = (int) $result['id_image'];
+            if (!isset($imageIds[$id])) {
+                $imageIds[$id] = new ImageId($id);
+            }
+            $imagesIdsByCombinationIds[(int) $result['id_product_attribute']][] = $imageIds[$id];
+        }
+
+        return $imagesIdsByCombinationIds;
     }
 
     /**
@@ -573,5 +720,23 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         }
 
         return $imageTypes;
+    }
+
+    protected function getPreviewCombinationProduct(CombinationId $combinationId): ?ImageId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pai.id_image')
+            ->from($this->dbPrefix . 'product_attribute_image', 'pai')
+            ->leftJoin('pai', $this->dbPrefix . 'image', 'i', 'i.id_image = pai.id_image')
+            ->where('pai.id_product_attribute = :productAttribute')
+            ->orderBy('i.cover', 'DESC')
+            ->setMaxResults(1)
+            ->setParameter('productAttribute', $combinationId->getValue());
+        $data = $qb->execute()->fetchOne();
+        if ($data > 0) {
+            return new ImageId((int) $data);
+        }
+
+        return null;
     }
 }

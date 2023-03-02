@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 class GetProductImageHandler implements GetProductImageHandlerInterface
 {
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     private $productImageRepository;
 
@@ -53,15 +53,23 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
     private $productImageUrlFactory;
 
     /**
-     * @param ProductImageRepository $productImageRepository
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
+     * @param ProductImageMultiShopRepository $productImageRepository
      * @param ProductImagePathFactory $productImageUrlFactory
+     * @param int $contextShopId
      */
     public function __construct(
-        ProductImageRepository $productImageRepository,
-        ProductImagePathFactory $productImageUrlFactory
+        ProductImageMultiShopRepository $productImageRepository,
+        ProductImagePathFactory $productImageUrlFactory,
+        int $contextShopId
     ) {
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -69,7 +77,11 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
      */
     public function handle(GetProductImage $query): ProductImage
     {
-        $image = $this->productImageRepository->get($query->getImageId());
+        //@todo: need to introduce shopConstraint into query instead of relying on context shop id
+        $image = $this->productImageRepository->get(
+            $query->getImageId(),
+            new ShopId($this->contextShopId)
+        );
 
         return $this->formatImage(
             $image,

@@ -32,7 +32,7 @@ use Image;
 use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -69,7 +69,7 @@ class ProductImageUploader extends AbstractImageUploader
     private $hookDispatcher;
 
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     private $productImageRepository;
 
@@ -83,14 +83,14 @@ class ProductImageUploader extends AbstractImageUploader
      * @param int $contextShopId
      * @param ImageGenerator $imageGenerator
      * @param HookDispatcherInterface $hookDispatcher
-     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
      */
     public function __construct(
         ProductImagePathFactory $productImagePathFactory,
         int $contextShopId,
         ImageGenerator $imageGenerator,
         HookDispatcherInterface $hookDispatcher,
-        ProductImageRepository $productImageRepository
+        ProductImageMultiShopRepository $productImageRepository
     ) {
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;

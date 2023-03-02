@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
@@ -47,17 +47,17 @@ class ProductPreviewRepository
     private $productRepository;
 
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     private $productImageRepository;
 
     /**
      * @param ProductRepository $productRepository
-     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
      */
     public function __construct(
         ProductRepository $productRepository,
-        ProductImageRepository $productImageRepository
+        ProductImageMultiShopRepository $productImageRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productImageRepository = $productImageRepository;
@@ -73,14 +73,13 @@ class ProductPreviewRepository
      */
     public function getPreview(ProductId $productId, LanguageId $languageId): ProductPreview
     {
-        $product = $this->productRepository->getProductByDefaultShop($productId);
-        $name = $product->name[$languageId->getValue()] ?? reset($product->name);
-        $imagePath = $this->productImageRepository->getProductCoverUrl($productId);
+        $shopId = $this->productRepository->getProductDefaultShopId($productId);
+        $product = $this->productRepository->get($productId, $shopId);
 
         return new ProductPreview(
             $productId->getValue(),
-            $name,
-            $imagePath
+            $product->name[$languageId->getValue()] ?? reset($product->name),
+            $this->productImageRepository->getProductCoverUrl($productId, $shopId)
         );
     }
 }

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -67,7 +67,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     protected $languageId;
 
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     protected $productImageRepository;
 
@@ -81,14 +81,14 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
      * @param ProductPackRepository $productPackRepository
      * @param AttributeRepository $attributeRepository
      * @param CombinationNameBuilder $combinationNameBuilder
-     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
      */
     public function __construct(
         int $defaultLangId,
         ProductPackRepository $productPackRepository,
         AttributeRepository $attributeRepository,
         CombinationNameBuilder $combinationNameBuilder,
-        ProductImageRepository $productImageRepository,
+        ProductImageMultiShopRepository $productImageRepository,
         TranslatorInterface $translator
     ) {
         $this->productRepository = $productPackRepository;
@@ -104,6 +104,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
      */
     public function handle(GetPackedProducts $query): array
     {
+        $shopConstraint = $query->getShopConstraint();
         $packedItems = $this->productRepository->getPackedProducts(
             $query->getPackId(),
             $query->getLanguageId(),
@@ -127,11 +128,13 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
             $combinationId = (int) $packedItem['id_product_attribute_item'];
             if ($combinationId === NoCombinationId::NO_COMBINATION_ID) {
                 $coverUrl = $this->productImageRepository->getProductCoverUrl(
-                    new ProductId((int) $packedItem['id_product_item'])
+                    new ProductId((int) $packedItem['id_product_item']),
+                    $shopConstraint->getShopId()
                 );
             } else {
                 $coverUrl = $this->productImageRepository->getCombinationCoverUrl(
-                    new CombinationId($combinationId)
+                    new CombinationId($combinationId),
+                    $shopConstraint->getShopId()
                 );
             }
             $name = $packedItem['name'];

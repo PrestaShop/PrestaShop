@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAs
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -564,6 +565,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     {
         $pathName = DummyFileUploader::upload($fileName);
 
+        /** @var ImageId $imageId */
         $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
             $this->getSharedStorage()->get($productReference),
             $pathName,
@@ -572,16 +574,12 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         $this->getSharedStorage()->set($imageReference, $imageId->getValue());
 
-        // Save uploaded file MD5 for future checks
         if ($this->getSharedStorage()->exists($fileName)) {
             return;
         }
 
-        /** @var ProductImage $productImage */
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
-
-        $imagePath = $this->getImagePath($productImage->getImageId());
-        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
+        // Save uploaded file MD5 for future checks
+        $this->getSharedStorage()->set($fileName, md5_file( $this->getImagePath($imageId->getValue())));
     }
 
     /**

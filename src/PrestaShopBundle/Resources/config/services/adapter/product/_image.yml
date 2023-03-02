@@ -3,10 +3,8 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\AddProductImageHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator'
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
@@ -50,22 +48,15 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImageHandler:
+    autowire: true
+    public: false
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
+      $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator: ~
-
-  PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository:
     autowire: true
@@ -97,9 +88,8 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader:
+    autowire: true
+    public: false
     arguments:
-      - '@prestashop.adapter.product.image.product_image_filesystem_path_factory'
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageGenerator'
-      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
+      $productImagePathFactory: '@prestashop.adapter.product.image.product_image_filesystem_path_factory'
+      $contextShopId: "@=service('prestashop.adapter.legacy.context').getContext().shop.id"

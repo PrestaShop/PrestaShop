@@ -32,7 +32,7 @@ use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
@@ -61,7 +61,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
     private $attributeRepository;
 
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     private $productImageRepository;
 
@@ -78,14 +78,14 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
     /**
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
-     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
      * @param ProductImagePathFactory $productImagePathFactory
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      */
     public function __construct(
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
         AttributeRepository $attributeRepository,
-        ProductImageRepository $productImageRepository,
+        ProductImageMultiShopRepository $productImageRepository,
         ProductImagePathFactory $productImagePathFactory,
         CombinationNameBuilderInterface $combinationNameBuilder
     ) {
@@ -136,8 +136,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
             $query->getLanguageId()
         );
 
-        $productImageIds = $this->productImageRepository->getImagesIds($query->getProductId());
-        $imageIdsByCombinationIds = $this->productImageRepository->getImagesIdsForCombinations($combinationIds);
+        $productImageIds = $this->productImageRepository->getImageIds($query->getProductId(), $query->getShopConstraint());
+        $imageIdsByCombinationIds = $this->productImageRepository->getImageIdsForCombinations($combinationIds);
 
         return $this->formatEditableCombinationsForListing(
             $combinations,

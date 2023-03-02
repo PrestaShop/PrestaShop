@@ -75,11 +75,12 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
      */
     public function handle(AddProductImageCommand $command): ImageId
     {
-        $this->imageValidator->assertFileUploadLimits($command->getFilePath());
-        $this->imageValidator->assertIsValidImageType($command->getFilePath());
+        $filePath = $command->getFilePath();
+        $this->imageValidator->assertFileUploadLimits($filePath);
+        $this->imageValidator->assertIsValidImageType($filePath);
 
         $image = $this->productImageMultiShopRepository->create($command->getProductId(), $command->getShopConstraint());
-        $this->productImageUploader->upload($image, $command->getFilePath());
+        $this->productImageUploader->upload($image, $filePath);
 
         return new ImageId((int) $image->id);
     }
