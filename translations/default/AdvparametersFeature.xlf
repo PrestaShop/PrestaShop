@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2fa165ecfa7ca3d29d17c598c7b267fc">
+        <source>Disable all non-built-in modules?</source>
+        <target>Disable all non-built-in modules?</target>
+        <note>Line: 111</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

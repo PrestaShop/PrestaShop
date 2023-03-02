@@ -5,7 +5,7 @@
       <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
         <source>: </source>
         <target>:</target>
-        <note>Line: 1206</note>
+        <note>Line: 1209</note>
       </trans-unit>
     </body>
   </file>
@@ -14,7 +14,7 @@
       <trans-unit id="065ab3a28ca4f16f55f103adc7d0226f">
         <source>Delivery</source>
         <target>Delivery</target>
-        <note>Line: 82</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -23,12 +23,12 @@
       <trans-unit id="466eadd40b3c10580e3ab4e8061161ce">
         <source>Invoice</source>
         <target>Invoice</target>
-        <note>Line: 89</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="a271cee71f5c411446db4f90676dbc96">
         <source>%taxrate%%space%%</source>
         <target>%taxrate%%space%%</target>
-        <note>Line: 201</note>
+        <note>Line: 203</note>
       </trans-unit>
     </body>
   </file>
@@ -46,7 +46,7 @@
       <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
         <source>Credit slip</source>
         <target>Credit slip</target>
-        <note>Line: 86</note>
+        <note>Line: 88</note>
       </trans-unit>
     </body>
   </file>
@@ -71,6 +71,16 @@
   </file>
   <file original="pdf/delivery-slip.addresses-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2f2f0f119a907c6c67a3c6fcde0193ab">
+        <source>Delivery Address</source>
+        <target>Delivery Address</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="28a59051cd90053f87bacd5f1ffbc0b8">
+        <source>Billing Address</source>
+        <target>Billing Address</target>
+        <note>Line: 35</note>
+      </trans-unit>
       <trans-unit id="e2f324b87eac820c81e4d4a1105dcddf">
         <source><![CDATA[Billing & Delivery Address]]></source>
         <target><![CDATA[Billing & Delivery Address]]></target>
@@ -80,11 +90,6 @@
   </file>
   <file original="pdf/delivery-slip.payment-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="707436a5aa13b82a4d777f64c717a625">
-        <source>Payment Method</source>
-        <target>Payment Method</target>
-        <note>Line: 27</note>
-      </trans-unit>
       <trans-unit id="e40007b408ac5f66d2c2e6c54f787c99">
         <source>No payment</source>
         <target>No payment</target>
@@ -92,45 +97,46 @@
       </trans-unit>
     </body>
   </file>
-  <file original="pdf/delivery-slip.product-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="pdf/delivery-slip.summary-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="deb10517653c255364175796ace3553f">
-        <source>Product</source>
-        <target>Product</target>
+      <trans-unit id="1e860e56970a81a1ba3e1fcb7fccc846">
+        <source>Order Reference</source>
+        <target>Order Reference</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="559e7ca805230fc80e3644f87bb3994d">
+        <source>Order date</source>
+        <target>Order date</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
+        <source>Carrier</source>
+        <target>Carrier</target>
         <note>Line: 30</note>
-      </trans-unit>
-      <trans-unit id="1ac6ee29e9e68fb71bad91c1d34348cc">
-        <source>%s:</source>
-        <target>%s:</target>
-        <note>Line: 84</note>
-      </trans-unit>
-      <trans-unit id="1be15dd275084ad2cae8f2aaa604c110">
-        <source>image(s):</source>
-        <target>image(s):</target>
-        <note>Line: 95</note>
       </trans-unit>
     </body>
   </file>
   <file original="pdf/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="59aac4eb50a8249cbc9c12240c6a0a14">
+        <source>For more assistance, contact Support:</source>
+        <target>For more assistance, contact Support:</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="baf85890915b2793aac2b3282f0ea175">
+        <source>Tel: %s</source>
+        <target>Tel: %s</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="38b35526b23761f26b29a19af18df6e5">
+        <source>Fax: %s</source>
+        <target>Fax: %s</target>
+        <note>Line: 41</note>
+      </trans-unit>
       <trans-unit id="ff5db4935fb0fbf583796b50f05e25bc">
         <source>An electronic version of this invoice is available in your account. To access it, log in to our website using your e-mail address and password (which you created when placing your first order).</source>
         <target>An electronic version of this invoice is available in your account. To access it, log in to our website using your e-mail address and password (which you created when placing your first order).</target>
         <note>Line: 29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="pdf/invoice.addresses-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2f2f0f119a907c6c67a3c6fcde0193ab">
-        <source>Delivery Address</source>
-        <target>Delivery Address</target>
-        <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="28a59051cd90053f87bacd5f1ffbc0b8">
-        <source>Billing Address</source>
-        <target>Billing Address</target>
-        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -143,8 +149,57 @@
       </trans-unit>
     </body>
   </file>
+  <file original="pdf/invoice.payment-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="707436a5aa13b82a4d777f64c717a625">
+        <source>Payment Method</source>
+        <target>Payment Method</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="pdf/invoice.product-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
+        <source>Tax Rate</source>
+        <target>Tax Rate</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="03ab340b3f99e03cff9e84314ead38c0">
+        <source>Qty</source>
+        <target>Qty</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="1ac6ee29e9e68fb71bad91c1d34348cc">
+        <source>%s:</source>
+        <target>%s:</target>
+        <note>Line: 125</note>
+      </trans-unit>
+      <trans-unit id="1be15dd275084ad2cae8f2aaa604c110">
+        <source>image(s):</source>
+        <target>image(s):</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
+        <source>Base price</source>
+        <target>Base price</target>
+        <note>Line: 40</note>
+      </trans-unit>
       <trans-unit id="9fec2102dd0b5b29d6cdf9d5614fabf7">
         <source>(Tax excl.)</source>
         <target>(Tax excl.)</target>
@@ -167,15 +222,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="pdf/invoice.shipping-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
-        <source>Carrier</source>
-        <target>Carrier</target>
-        <note>Line: 27</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="pdf/invoice.summary-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4e065ba1bec1d62b2d5450256612fa96">
@@ -192,25 +238,15 @@
   </file>
   <file original="pdf/invoice.tax-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b602e0d0c6a72053d0a5be60cb2f8126">
-        <source>Total Tax</source>
-        <target>Total Tax</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
-        <source>Tax Rate</source>
-        <target>Tax Rate</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
-        <source>Base price</source>
-        <target>Base price</target>
-        <note>Line: 39</note>
-      </trans-unit>
       <trans-unit id="baf5d10866a7a240830dcf34f29d2d11">
         <source>No taxes</source>
         <target>No taxes</target>
         <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="b602e0d0c6a72053d0a5be60cb2f8126">
+        <source>Total Tax</source>
+        <target>Total Tax</target>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="8a2d7d9c237b2af40f2659aa76f0bd84">
         <source>Exempt of VAT according to section 259B of the General Tax Code.</source>
@@ -246,11 +282,6 @@
   </file>
   <file original="pdf/invoice.total-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Line: 97</note>
-      </trans-unit>
       <trans-unit id="b0f79042ac83c64f3ccc42268c8ade26">
         <source>Total Products</source>
         <target>Total Products</target>
@@ -319,16 +350,6 @@
   </file>
   <file original="pdf/order-return.product-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
-        <source>Reference</source>
-        <target>Reference</target>
-        <note>Line: 30</note>
-      </trans-unit>
-      <trans-unit id="03ab340b3f99e03cff9e84314ead38c0">
-        <source>Qty</source>
-        <target>Qty</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="adcf8d924285bef43f517d8f6c040e97">
         <source>Items to be returned</source>
         <target>Items to be returned</target>
@@ -406,16 +427,6 @@
   </file>
   <file original="pdf/order-slip.summary-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1e860e56970a81a1ba3e1fcb7fccc846">
-        <source>Order Reference</source>
-        <target>Order Reference</target>
-        <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="559e7ca805230fc80e3644f87bb3994d">
-        <source>Order date</source>
-        <target>Order date</target>
-        <note>Line: 28</note>
-      </trans-unit>
       <trans-unit id="c462960a6bd53db34f778d0562703ad3">
         <source>VAT Number</source>
         <target>VAT Number</target>
@@ -459,25 +470,6 @@
         <source>Total (Tax Incl.)</source>
         <target>Total (Tax Incl.)</target>
         <note>Line: 103</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="pdf/supply-order-footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="59aac4eb50a8249cbc9c12240c6a0a14">
-        <source>For more assistance, contact Support:</source>
-        <target>For more assistance, contact Support:</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="baf85890915b2793aac2b3282f0ea175">
-        <source>Tel: %s</source>
-        <target>Tel: %s</target>
-        <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="38b35526b23761f26b29a19af18df6e5">
-        <source>Fax: %s</source>
-        <target>Fax: %s</target>
-        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>

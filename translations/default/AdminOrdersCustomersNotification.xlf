@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/MerchandiseReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dc30c095a6e57c3146babe8f9088984f">
+        <source>An error occurred while trying to update merchandise return.</source>
+        <target>An error occurred while trying to update merchandise return.</target>
+        <note>Line: 155</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -168,11 +168,6 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="a1cfe7cbeafd513db812282da3f01704">
         <source>Remove product from wishlist</source>
         <target>Remove product from wishlist</target>
@@ -202,6 +197,11 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 23</note>
+      </trans-unit>
       <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
         <source>Sign in</source>
         <target>Sign in</target>

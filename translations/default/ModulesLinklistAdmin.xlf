@@ -5,12 +5,12 @@
       <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
         <source>Link List</source>
         <target>Link List</target>
-        <note>Line: 97</note>
+        <note>Line: 99</note>
       </trans-unit>
       <trans-unit id="9ede56949facc87ba81f56a749d952c3">
         <source>Give more visibility to your content/static pages (CMS, external pages, or else), where you want and when you want, to make your visitors feel like shopping on your store.</source>
         <target>Give more visibility to your content/static pages (CMS, external pages, or else), where you want and when you want, to make your visitors feel like shopping on your store.</target>
-        <note>Line: 98</note>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -25,11 +25,6 @@
   </file>
   <file original="modules/ps_linklist/src/Core/Grid/Definition/Factory/LinkBlockDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
-        <source>Name of the block</source>
-        <target>Name of the block</target>
-        <note>Line: 95</note>
-      </trans-unit>
       <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
         <source>ID</source>
         <target>ID</target>
@@ -53,6 +48,11 @@
   </file>
   <file original="modules/ps_linklist/src/Form/Type/LinkBlockType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
+        <source>Name of the block</source>
+        <target>Name of the block</target>
+        <note>Line: 114</note>
+      </trans-unit>
       <trans-unit id="220b3899aa8f180e5e2f3238c7d873d3">
         <source>Name of the block cannot be longer than %limit% characters</source>
         <target>Name of the block cannot be longer than %limit% characters</target>

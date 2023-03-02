@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8db1a271fe13009695e73ffdd600a624">
+        <source>Manage images</source>
+        <target>Manage images</target>
+        <note>Line: 73</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
