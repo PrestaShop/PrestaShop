@@ -29,7 +29,7 @@
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
-        <note>Line: 316</note>
+        <note>Line: 317</note>
       </trans-unit>
     </body>
   </file>
@@ -122,6 +122,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
+        <source>This name already exists.</source>
+        <target>This name already exists.</target>
+        <note>Line: 630</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="832e8c53e8d05c52c824912c28933917">
@@ -189,15 +198,6 @@
         <source>Cannot adapt theme to RTL languages.</source>
         <target>Cannot adapt theme to RTL languages.</target>
         <note>Line: 558</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportDataConfigurationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
-        <source>This name already exists.</source>
-        <target>This name already exists.</target>
-        <note>Line: 144</note>
       </trans-unit>
     </body>
   </file>

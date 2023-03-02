@@ -12,36 +12,6 @@
         <target>View my shop</target>
         <note>Line: 272</note>
       </trans-unit>
-      <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
-        <source>Welcome back %name%</source>
-        <target>Welcome back %name%</target>
-        <note>Line: 368</note>
-      </trans-unit>
-      <trans-unit id="3d8de6fcc09baf73f7175fe59f278ced">
-        <source>Your profile</source>
-        <target>Your profile</target>
-        <note>Line: 369</note>
-      </trans-unit>
-      <trans-unit id="c87aacf5673fada1108c9f809d354311">
-        <source>Sign out</source>
-        <target>Sign out</target>
-        <note>Line: 384</note>
-      </trans-unit>
-      <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
-        <source>Quick Access</source>
-        <target>Quick Access</target>
-        <note>Line: 132</note>
-      </trans-unit>
-      <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
-        <source>Please name this shortcut:</source>
-        <target>Please name this shortcut:</target>
-        <note>Line: 178</note>
-      </trans-unit>
-      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
-        <source>Customers</source>
-        <target>Customers</target>
-        <note>Line: 301</note>
-      </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
@@ -76,6 +46,36 @@
         <source>Read this message</source>
         <target>Read this message</target>
         <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
+        <source>Quick Access</source>
+        <target>Quick Access</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
+        <source>Please name this shortcut:</source>
+        <target>Please name this shortcut:</target>
+        <note>Line: 178</note>
+      </trans-unit>
+      <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
+        <source>Welcome back %name%</source>
+        <target>Welcome back %name%</target>
+        <note>Line: 368</note>
+      </trans-unit>
+      <trans-unit id="3d8de6fcc09baf73f7175fe59f278ced">
+        <source>Your profile</source>
+        <target>Your profile</target>
+        <note>Line: 369</note>
+      </trans-unit>
+      <trans-unit id="c87aacf5673fada1108c9f809d354311">
+        <source>Sign out</source>
+        <target>Sign out</target>
+        <note>Line: 384</note>
+      </trans-unit>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Line: 301</note>
       </trans-unit>
       <trans-unit id="10df6a640ea9625829122dfb5842795e">
         <source>PrestaShop logo</source>
@@ -153,17 +153,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/quick_access.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/new-theme/template/components/layout/mobile_quickaccess.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="572e3c9b387943813b5b1cb2f1a96dc3">
         <source>Remove from Quick Access</source>
         <target>Remove from Quick Access</target>
-        <note>Line: 53</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="6f08b6d95d204a4e08ad0e186c673f4f">
         <source>Manage your quick accesses</source>
         <target>Manage your quick accesses</target>
-        <note>Line: 73</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>

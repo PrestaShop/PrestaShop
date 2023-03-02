@@ -50,6 +50,31 @@
   </file>
   <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="07b693f09040dc64d3c36b5daf95caae">
+        <source>Allowed characters: letters, spaces and "%special_chars%".</source>
+        <target>Allowed characters: letters, spaces and "%special_chars%".</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="a788f81b3aa0ef9c9efcb1fb67708d82">
+        <source>For in-store pickup, enter 0 to replace the carrier name with your shop name.</source>
+        <target>For in-store pickup, enter 0 to replace the carrier name with your shop name.</target>
+        <note>Line: 209</note>
+      </trans-unit>
+      <trans-unit id="4ca4a355318f45dac9fb0ee632d8dc3c">
+        <source>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</source>
+        <target>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</target>
+        <note>Line: 227</note>
+      </trans-unit>
+      <trans-unit id="d7049d8a068769eb32177e404639b8ce">
+        <source>Mark the groups that are allowed access to this carrier.</source>
+        <target>Mark the groups that are allowed access to this carrier.</target>
+        <note>Line: 441</note>
+      </trans-unit>
+      <trans-unit id="1c6c9d089ce4b751673e3dd09e97b935">
+        <source>Enable the carrier in the front office.</source>
+        <target>Enable the carrier in the front office.</target>
+        <note>Line: 490</note>
+      </trans-unit>
       <trans-unit id="95be6960ce35a5d972b7314203b312be">
         <source>The carrier's name will be displayed during checkout.</source>
         <target>The carrier's name will be displayed during checkout.</target>
@@ -109,31 +134,6 @@
   </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="07b693f09040dc64d3c36b5daf95caae">
-        <source>Allowed characters: letters, spaces and "%special_chars%".</source>
-        <target>Allowed characters: letters, spaces and "%special_chars%".</target>
-        <note>Line: 169</note>
-      </trans-unit>
-      <trans-unit id="a788f81b3aa0ef9c9efcb1fb67708d82">
-        <source>For in-store pickup, enter 0 to replace the carrier name with your shop name.</source>
-        <target>For in-store pickup, enter 0 to replace the carrier name with your shop name.</target>
-        <note>Line: 171</note>
-      </trans-unit>
-      <trans-unit id="4ca4a355318f45dac9fb0ee632d8dc3c">
-        <source>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</source>
-        <target>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</target>
-        <note>Line: 196</note>
-      </trans-unit>
-      <trans-unit id="d7049d8a068769eb32177e404639b8ce">
-        <source>Mark the groups that are allowed access to this carrier.</source>
-        <target>Mark the groups that are allowed access to this carrier.</target>
-        <note>Line: 220</note>
-      </trans-unit>
-      <trans-unit id="1c6c9d089ce4b751673e3dd09e97b935">
-        <source>Enable the carrier in the front office.</source>
-        <target>Enable the carrier in the front office.</target>
-        <note>Line: 241</note>
-      </trans-unit>
       <trans-unit id="3194ebe40c7a8c29c78ea79066b6e05c">
         <source>Carrier name displayed during checkout</source>
         <target>Carrier name displayed during checkout</target>

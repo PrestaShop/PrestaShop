@@ -191,32 +191,42 @@
       <trans-unit id="5c85aec638229f60a035c7a6ab3623c8">
         <source>This field does not refer to the shop name visible in the front office.</source>
         <target>This field does not refer to the shop name visible in the front office.</target>
-        <note>Line: 382</note>
+        <note>Line: 395</note>
       </trans-unit>
       <trans-unit id="1561fa99e3814c72f5206ab48b472335">
         <source>Follow [1]this link[/1] to edit the shop name used on the front office.</source>
         <target>Follow [1]this link[/1] to edit the shop name used on the front office.</target>
-        <note>Line: 383</note>
+        <note>Line: 396</note>
       </trans-unit>
       <trans-unit id="92aaf3cf7e8f1434886a8887e102391b">
         <source>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</source>
         <target>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</target>
-        <note>Line: 451</note>
+        <note>Line: 465</note>
       </trans-unit>
       <trans-unit id="fce5f624e66bd2e2f0296fc3bd2a8f64">
         <source>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</source>
         <target>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</target>
-        <note>Line: 461</note>
+        <note>Line: 475</note>
       </trans-unit>
       <trans-unit id="f0f7416fad0a9c9fc3163cabe68393c1">
         <source>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</source>
         <target>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</target>
-        <note>Line: 515</note>
+        <note>Line: 530</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="f0fe1aebeace842330fb048126151e06">
+        <source>Only letters, numbers and underscores ("_") are allowed.</source>
+        <target>Only letters, numbers and underscores ("_") are allowed.</target>
+        <note>Line: 424</note>
+      </trans-unit>
+      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
+        <source>Email template for both .html and .txt.</source>
+        <target>Email template for both .html and .txt.</target>
+        <note>Line: 425</note>
+      </trans-unit>
       <trans-unit id="a9c2e14555131d68a4ac37b604ee52a8">
         <source>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</source>
         <target>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</target>
@@ -452,20 +462,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f0fe1aebeace842330fb048126151e06">
-        <source>Only letters, numbers and underscores ("_") are allowed.</source>
-        <target>Only letters, numbers and underscores ("_") are allowed.</target>
-        <note>Line: 201</note>
-      </trans-unit>
-      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
-        <source>Email template for both .html and .txt.</source>
-        <target>Email template for both .html and .txt.</target>
-        <note>Line: 202</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bd92437d0543aa142ccea7c021c9efe9">
@@ -647,16 +643,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
-        <source>Invalid characters: numbers and</source>
-        <target>Invalid characters: numbers and</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
-        <source>Status will be highlighted in this color. HTML colors only.</source>
-        <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>Line: 49</note>
-      </trans-unit>
       <trans-unit id="43f4ac702eaf88267f6946aeb559b251">
         <source>Order's return status name.</source>
         <target>Order's return status name.</target>
@@ -671,15 +657,20 @@
         <target>Order status (e.g. 'Pending').</target>
         <note>Line: 41</note>
       </trans-unit>
+      <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
+        <source>Invalid characters: numbers and</source>
+        <target>Invalid characters: numbers and</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
+        <source>Status will be highlighted in this color. HTML colors only.</source>
+        <target>Status will be highlighted in this color. HTML colors only.</target>
+        <note>Line: 83</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
-        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
-        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 70</note>
-      </trans-unit>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
@@ -723,6 +714,15 @@
         <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
         <target>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</target>
         <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
+        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
+        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
+        <note>Line: 166</note>
       </trans-unit>
     </body>
   </file>

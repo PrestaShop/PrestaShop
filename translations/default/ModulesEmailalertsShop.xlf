@@ -2,19 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_emailalerts/views/templates/front/mailalerts-account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
+        <source>My alerts</source>
+        <target>My alerts</target>
+        <note>Line: 28</note>
+      </trans-unit>
       <trans-unit id="8bb23c2ae698681ebb650f43acb54dab">
         <source>No mail alerts yet.</source>
         <target>No mail alerts yet.</target>
         <note>Line: 39</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_emailalerts/views/templates/hook/my-account-footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
-        <source>My alerts</source>
-        <target>My alerts</target>
-        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>

@@ -16,6 +16,36 @@
   </file>
   <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="11cd708df7411da4546d8580356e711a">
+        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
+        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
+        <note>Line: 539</note>
+      </trans-unit>
+      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
+        <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
+        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
+        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
+        <source>ID of the warehouse to set as storage.</source>
+        <target>ID of the warehouse to set as storage.</target>
+        <note>Line: 339</note>
+      </trans-unit>
+      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
+        <note>Line: 331</note>
+      </trans-unit>
+      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
+        <source>A category root is where a category tree can begin. This is used with multistore.</source>
+        <target>A category root is where a category tree can begin. This is used with multistore.</target>
+        <note>Line: 212</note>
+      </trans-unit>
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
         <source>or</source>
         <target>or</target>
@@ -29,22 +59,22 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="c127560c7252928dc38d9a0ebf312ba4">
         <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
         <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
-        <note>Line: 600</note>
+        <note>Line: 615</note>
       </trans-unit>
       <trans-unit id="41ff4b3ea277bdc597fce74850a85510">
         <source>Click here to display the shops in the %name% shop group</source>
         <target>Click here to display the shops in the %name% shop group</target>
-        <note>Line: 790</note>
+        <note>Line: 805</note>
       </trans-unit>
       <trans-unit id="d916f5b0696f10712fad55220707fab9">
         <source>Click here to display the URLs of the %name% shop</source>
         <target>Click here to display the URLs of the %name% shop</target>
-        <note>Line: 812</note>
+        <note>Line: 827</note>
       </trans-unit>
       <trans-unit id="01af4d9c4808ce3ccd662c0e5ef7f203">
         <source>Click here to display the list of shop groups</source>
         <target>Click here to display the list of shop groups</target>
-        <note>Line: 864</note>
+        <note>Line: 879</note>
       </trans-unit>
     </body>
   </file>
@@ -123,48 +153,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</source>
         <target>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</target>
         <note>Line: 249</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/EntityField/Provider/CategoryFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="11cd708df7411da4546d8580356e711a">
-        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
-        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
-        <note>Line: 75</note>
-      </trans-unit>
-      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
-        <source>A category root is where a category tree can begin. This is used with multistore.</source>
-        <target>A category root is where a category tree can begin. This is used with multistore.</target>
-        <note>Line: 64</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
-        <note>Line: 90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/EntityField/Provider/ProductFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
-        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
-        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
-        <note>Line: 163</note>
-      </trans-unit>
-      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
-        <source>ID of the warehouse to set as storage.</source>
-        <target>ID of the warehouse to set as storage.</target>
-        <note>Line: 171</note>
-      </trans-unit>
-      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
-        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -400,6 +388,15 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestSettingsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e4e945df151735cc243961c3cb90a528">
+        <source>Enabling multi-statements queries increases the risk of SQL injection vulnerability to be exploited</source>
+        <target>Enabling multi-statements queries increases the risk of SQL injection vulnerability to be exploited</target>
+        <note>Line: 54</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Security/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4b620493cd5571cb4af81dba9c68812e">
@@ -625,8 +622,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="bd98e6133da373d5d4d0241cae2e5df5">
         <source>Click "%add_new_label%".</source>
         <target>Click "%add_new_label%".</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
         <source>Fill in the fields and click "%save_label%".</source>
@@ -659,7 +655,7 @@ Comment: Stable feature flags form</note>
       <trans-unit id="04da1735a100af1089236ff39c5021ca">
         <source>Scores are integers from 0 to 4.</source>
         <target>Scores are integers from 0 to 4.</target>
-        <note>Line: 66</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
