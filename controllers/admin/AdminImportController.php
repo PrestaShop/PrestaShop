@@ -2149,9 +2149,9 @@ class AdminImportControllerCore extends AdminController
                     if ($error) {
                         $this->warnings[] = $this->trans(
                             'Product #%id%: the picture (%url%) cannot be saved.', [
-                            '%id%' => Tools::htmlentitiesUTF8(isset($image) ? $image->id_product : ''),
-                            '%url%' => Tools::htmlentitiesUTF8($url),
-                        ],
+                                '%id%' => Tools::htmlentitiesUTF8(isset($image) ? $image->id_product : ''),
+                                '%url%' => Tools::htmlentitiesUTF8($url),
+                            ],
                             'Admin.Advparameters.Notification'
                         );
                     }
@@ -2191,18 +2191,17 @@ class AdminImportControllerCore extends AdminController
                     if (!empty($feature_name) && !empty($feature_value)) {
                         $id_feature = (int) Feature::getFeatureImport($feature_name, $position, ($action == 'add'));
 
-                        if($id_feature) {
+                        if ($id_feature) {
                             $id_product = null;
                             if ($force_ids || $match_ref) {
-                                $id_product = (int)$product->id;
+                                $id_product = (int) $product->id;
                             }
-                            $id_feature_value = (int)FeatureValue::getFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom, ($action == 'add'));
+                            $id_feature_value = (int) FeatureValue::getFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom, ($action == 'add'));
 
-                            if($id_feature_value) {
+                            if ($id_feature_value) {
                                 if ($action == 'delete') {
                                     Product::deleteFeatureProductImport($product->id, $id_feature, $id_feature_value);
-                                }
-                                else {
+                                } else {
                                     Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
                                 }
                             }
@@ -2292,7 +2291,7 @@ class AdminImportControllerCore extends AdminController
                         ],
                         'Admin.Advparameters.Notification'
                     );
-                    /* @phpstan-ignore-next-line Data from properties `advanced_stock_management` & `depends_on_stock` come from the database */
+                /* @phpstan-ignore-next-line Data from properties `advanced_stock_management` & `depends_on_stock` come from the database */
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                     $this->warnings[] = $this->trans(
                         'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
@@ -2616,7 +2615,7 @@ class AdminImportControllerCore extends AdminController
                         $obj->add();
                         $obj->associateTo($id_shop_list);
                         $groups[$group] = $obj->id;
-                        //}
+                    //}
                     } else {
                         $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
                     }

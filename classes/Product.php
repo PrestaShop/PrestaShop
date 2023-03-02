@@ -4768,10 +4768,9 @@ class ProductCore extends ObjectModel
      */
     public static function deleteFeatureProductImport($id_product, $id_feature, $id_feature_value)
     {
-        return Db::getInstance()->execute(
-            '
-            DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
-            WHERE `id_feature` = ' . (int) $id_feature . ' AND `id_product` = ' . (int) $id_product . ' AND `id_feature_value` = ' . (int) $id_feature_value
+        return Db::getInstance()->delete(
+            'feature_product',
+            '`id_feature` = ' . (int) $id_feature . ' AND `id_product` = ' . (int) $id_product . ' AND `id_feature_value` = ' . (int) $id_feature_value
         );
     }
 

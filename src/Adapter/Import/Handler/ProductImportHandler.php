@@ -1209,12 +1209,12 @@ final class ProductImportHandler extends AbstractImportHandler
             if (!empty($featureName) && !empty($featureValue)) {
                 $featureId = (int) Feature::getFeatureImport($featureName, $position, ($action == 'add'));
 
-                if($featureId) {
+                if ($featureId) {
                     $productId = null;
                     if ($importConfig->forceIds() || $importConfig->matchReferences()) {
-                        $productId = (int)$product->id;
+                        $productId = (int) $product->id;
                     }
-                    $featureValueId = (int)FeatureValue::getFeatureValueImport(
+                    $featureValueId = (int) FeatureValue::getFeatureValueImport(
                         $featureId,
                         $featureValue,
                         $productId,

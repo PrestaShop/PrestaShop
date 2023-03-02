@@ -251,6 +251,25 @@ class FeatureCore extends ObjectModel
      *
      * @return int Feature ID
      */
+    public static function addFeatureImport($name, $position = false)
+    {
+        @trigger_error(
+            'addFeatureImport method is deprecated, use getFeatureImport instead.',
+            E_USER_DEPRECATED
+        );
+
+        return self::getFeatureImport($name, $position);
+    }
+
+    /**
+     * Get a feature from import.
+     *
+     * @param string $name Feature name
+     * @param bool|int $position Feature position
+     * @param bool $add_if_not_exists Create feature if not exists
+     *
+     * @return int Feature ID
+     */
     public static function getFeatureImport($name, $position = false, $add_if_not_exists = true)
     {
         $rq = Db::getInstance()->getRow('
