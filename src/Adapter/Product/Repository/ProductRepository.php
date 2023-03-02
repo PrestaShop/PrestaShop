@@ -159,7 +159,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         $result = $qb->execute()->fetchAssociative();
         if (empty($result['id_shop_default'])) {
             throw new ProductNotFoundException(sprintf(
-                'Could not find Product with id %d',
+                'Could not find Product with id %d'.'test',
                 $productId->getValue()
             ));
         }
