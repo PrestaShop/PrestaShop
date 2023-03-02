@@ -44,35 +44,45 @@
   </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="80e868e8d753c3ec4066aab283e66cbc">
+        <source>The module was successfully removed from the hook.</source>
+        <target>The module was successfully removed from the hook.</target>
+        <note>Line: 509</note>
+      </trans-unit>
+      <trans-unit id="980b6caee06822f8c5df45eb7db277be">
+        <source>The module transplanted successfully to the hook.</source>
+        <target>The module transplanted successfully to the hook.</target>
+        <note>Line: 508</note>
+      </trans-unit>
       <trans-unit id="9bbf45a624c880d590d7b6796e5a7a9c">
         <source>The module was successfully downloaded.</source>
         <target>The module was successfully downloaded.</target>
-        <note>Line: 499</note>
+        <note>Line: 500</note>
       </trans-unit>
       <trans-unit id="6832d3339f3238558d9e290f4ff36bb8">
         <source>Module(s) installed successfully.</source>
         <target>Module(s) installed successfully.</target>
-        <note>Line: 503</note>
+        <note>Line: 504</note>
       </trans-unit>
       <trans-unit id="0be078b247fde4986e320cd2684e7ab9">
         <source>Module(s) uninstalled successfully.</source>
         <target>Module(s) uninstalled successfully.</target>
-        <note>Line: 504</note>
+        <note>Line: 505</note>
       </trans-unit>
       <trans-unit id="7f31b58c32d9112f9bb160a481f6a911">
         <source>Module reset successfully.</source>
         <target>Module reset successfully.</target>
-        <note>Line: 512</note>
+        <note>Line: 513</note>
       </trans-unit>
       <trans-unit id="3270965aab0523dca0351cefc83e40b0">
         <source>Module deleted successfully.</source>
         <target>Module deleted successfully.</target>
-        <note>Line: 513</note>
+        <note>Line: 514</note>
       </trans-unit>
       <trans-unit id="35a596598c0477aea67abfa33b053697">
         <source>Successfully signed in to PrestaShop Addons.</source>
         <target>Successfully signed in to PrestaShop Addons.</target>
-        <note>Line: 523</note>
+        <note>Line: 524</note>
       </trans-unit>
     </body>
   </file>
@@ -364,6 +374,21 @@
   </file>
   <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1c1824ce21df05df8689641c516c9d75">
+        <source>This module cannot be loaded.</source>
+        <target>This module cannot be loaded.</target>
+        <note>Line: 222</note>
+      </trans-unit>
+      <trans-unit id="0c01b89a049f95e9eb10cfeb2a2901f0">
+        <source>Hook cannot be loaded.</source>
+        <target>Hook cannot be loaded.</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="c40924509e257aa0e73ccc576bd6b953">
+        <source>An error occurred while deleting the module from its hook.</source>
+        <target>An error occurred while deleting the module from its hook.</target>
+        <note>Line: 227</note>
+      </trans-unit>
       <trans-unit id="63bc456afcd9d4c6285718e34ee8fed9">
         <source>This module has already been transplanted to this hook.</source>
         <target>This module has already been transplanted to this hook.</target>
@@ -423,57 +448,57 @@
       <trans-unit id="f2715f72988009e4f50e94d88b3df89f">
         <source>You are not allowed to install modules.</source>
         <target>You are not allowed to install modules.</target>
-        <note>Line: 91</note>
+        <note>Line: 94</note>
       </trans-unit>
       <trans-unit id="21f1ba3ca9bb026443f8dea1127f2f0b">
         <source>You are not allowed to uninstall the module %module%.</source>
         <target>You are not allowed to uninstall the module %module%.</target>
-        <note>Line: 139</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="ea328981d19b5b379639f915341bc4ad">
         <source>You are not allowed to upgrade the module %module%.</source>
         <target>You are not allowed to upgrade the module %module%.</target>
-        <note>Line: 165</note>
+        <note>Line: 172</note>
       </trans-unit>
       <trans-unit id="42874189778a946c2a51911076474ad4">
         <source>You are not allowed to enable the module %module%.</source>
         <target>You are not allowed to enable the module %module%.</target>
-        <note>Line: 192</note>
+        <note>Line: 201</note>
       </trans-unit>
       <trans-unit id="87c10be2be869072e9d1e7cbca858445">
         <source>You are not allowed to disable the module %module%.</source>
         <target>You are not allowed to disable the module %module%.</target>
-        <note>Line: 213</note>
+        <note>Line: 222</note>
       </trans-unit>
       <trans-unit id="c74f0e8fe4da4e6dcb5a051f0eef1ec3">
         <source>You are not allowed to enable the module %module% on mobile.</source>
         <target>You are not allowed to enable the module %module% on mobile.</target>
-        <note>Line: 234</note>
+        <note>Line: 243</note>
       </trans-unit>
       <trans-unit id="9fa7ea0487a785b31f48977415f3324a">
         <source>You are not allowed to disable the module %module% on mobile.</source>
         <target>You are not allowed to disable the module %module% on mobile.</target>
-        <note>Line: 255</note>
+        <note>Line: 264</note>
       </trans-unit>
       <trans-unit id="e65dccd7380f1af807453a7afdf3f427">
         <source>You are not allowed to reset the module %module%.</source>
         <target>You are not allowed to reset the module %module%.</target>
-        <note>Line: 279</note>
+        <note>Line: 288</note>
       </trans-unit>
       <trans-unit id="c913de38eb118ce08ddae76f27063126">
         <source>Unfortunately, the module did not return additional details.</source>
         <target>Unfortunately, the module did not return additional details.</target>
-        <note>Line: 324</note>
+        <note>Line: 333</note>
       </trans-unit>
       <trans-unit id="c111e1387c9a6c5c98635ecdbbcb26af">
         <source>The module is invalid and cannot be loaded.</source>
         <target>The module is invalid and cannot be loaded.</target>
-        <note>Line: 331</note>
+        <note>Line: 340</note>
       </trans-unit>
       <trans-unit id="83a812de8784135990c57d25d0f9b34b">
         <source>The module %module% must be installed first</source>
         <target>The module %module% must be installed first</target>
-        <note>Line: 368</note>
+        <note>Line: 377</note>
       </trans-unit>
     </body>
   </file>
@@ -520,61 +545,27 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="980b6caee06822f8c5df45eb7db277be">
-        <source>The module transplanted successfully to the hook.</source>
-        <target>The module transplanted successfully to the hook.</target>
-        <note>Line: 236</note>
-      </trans-unit>
-      <trans-unit id="80e868e8d753c3ec4066aab283e66cbc">
-        <source>The module was successfully removed from the hook.</source>
-        <target>The module was successfully removed from the hook.</target>
-        <note>Line: 237</note>
-      </trans-unit>
-      <trans-unit id="1c1824ce21df05df8689641c516c9d75">
-        <source>This module cannot be loaded.</source>
-        <target>This module cannot be loaded.</target>
-        <note>Line: 182</note>
-      </trans-unit>
-      <trans-unit id="0c01b89a049f95e9eb10cfeb2a2901f0">
-        <source>Hook cannot be loaded.</source>
-        <target>Hook cannot be loaded.</target>
-        <note>Line: 191</note>
-      </trans-unit>
-      <trans-unit id="c40924509e257aa0e73ccc576bd6b953">
-        <source>An error occurred while deleting the module from its hook.</source>
-        <target>An error occurred while deleting the module from its hook.</target>
-        <note>Line: 200</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="89d371deca1b2b50a933fabc8005ccfb">
         <source>%module% did not return a valid response on installation.</source>
         <target>%module% did not return a valid response on installation.</target>
-        <note>Line: 369</note>
+        <note>Line: 380</note>
       </trans-unit>
       <trans-unit id="35e839bc1864dd50a75500028c3ebb33">
         <source>Installation of module %module% was successful.</source>
         <target>Installation of module %module% was successful.</target>
-        <note>Line: 375</note>
+        <note>Line: 386</note>
       </trans-unit>
       <trans-unit id="f52c6f7b6fcbd586aee22044aeb6c897">
         <source>Installation of module %module% failed. %error%</source>
         <target>Installation of module %module% failed. %error%</target>
-        <note>Line: 414</note>
-      </trans-unit>
-      <trans-unit id="277a6bb3a47512862fc6a39dbbbb9b8b">
-        <source>Impossible to install form source</source>
-        <target>Impossible to install form source</target>
-        <note>Line: 398</note>
+        <note>Line: 425</note>
       </trans-unit>
       <trans-unit id="003d97add88d9195366bfa9edcb6b357">
         <source>Impossible to install from source</source>
         <target>Impossible to install from source</target>
-        <note>Line: 402</note>
+        <note>Line: 413</note>
       </trans-unit>
     </body>
   </file>

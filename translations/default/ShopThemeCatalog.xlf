@@ -5,7 +5,7 @@
       <trans-unit id="af342023e90ca45b0d69be497168ac56">
         <source>Unit discount</source>
         <target>Unit discount</target>
-        <note>Line: 1526</note>
+        <note>Line: 1528</note>
       </trans-unit>
     </body>
   </file>
@@ -111,6 +111,48 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/blockwishlist/views/templates/pages/products-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/src/Product/SearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="05d61847840bcddb5d37374de3be0ccc">
+        <source>Name, A to Z</source>
+        <target>Name, A to Z</target>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="e21f2ef58ff858167655c18a874f9706">
+        <source>Name, Z to A</source>
+        <target>Name, Z to A</target>
+        <note>Line: 102</note>
+      </trans-unit>
+      <trans-unit id="e2174d7435696694b8f4d984d99eef03">
+        <source>Price, low to high</source>
+        <target>Price, low to high</target>
+        <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="0ee81913615b71aba7dc8bbf1f144672">
+        <source>Price, high to low</source>
+        <target>Price, high to low</target>
+        <note>Line: 108</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/front/catalog/active-filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="734346d44245de59214137842ab17744">
+        <source>%1$s:</source>
+        <target>%1$s:</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_searchbar/ps_searchbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5bdba1fc0fba1010d61ce253c2e57da8">
@@ -127,26 +169,6 @@
   </file>
   <file original="src/Adapter/BestSales/BestSalesProductSearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="05d61847840bcddb5d37374de3be0ccc">
-        <source>Name, A to Z</source>
-        <target>Name, A to Z</target>
-        <note>Line: 92</note>
-      </trans-unit>
-      <trans-unit id="e21f2ef58ff858167655c18a874f9706">
-        <source>Name, Z to A</source>
-        <target>Name, Z to A</target>
-        <note>Line: 95</note>
-      </trans-unit>
-      <trans-unit id="e2174d7435696694b8f4d984d99eef03">
-        <source>Price, low to high</source>
-        <target>Price, low to high</target>
-        <note>Line: 98</note>
-      </trans-unit>
-      <trans-unit id="0ee81913615b71aba7dc8bbf1f144672">
-        <source>Price, high to low</source>
-        <target>Price, high to low</target>
-        <note>Line: 101</note>
-      </trans-unit>
       <trans-unit id="b56ffaa1656269759857ba14573dc144">
         <source>Sales, highest to lowest</source>
         <target>Sales, highest to lowest</target>
@@ -174,16 +196,6 @@
         <source>New</source>
         <target>New</target>
         <note>Line: 489</note>
-      </trans-unit>
-      <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
-        <source>Used</source>
-        <target>Used</target>
-        <note>Line: 249</note>
-      </trans-unit>
-      <trans-unit id="6da03a74721a0554b7143254225cc08a">
-        <source>Refurbished</source>
-        <target>Refurbished</target>
-        <note>Line: 255</note>
       </trans-unit>
       <trans-unit id="03de921a8ea82897e13d33d66c28b4db">
         <source>Online only</source>
@@ -243,6 +255,20 @@
         <source>Relevance</source>
         <target>Relevance</target>
         <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
+        <source>Used</source>
+        <target>Used</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="6da03a74721a0554b7143254225cc08a">
+        <source>Refurbished</source>
+        <target>Refurbished</target>
+        <note>Line: 202</note>
       </trans-unit>
     </body>
   </file>
@@ -311,12 +337,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_emailalerts/views/templates/hook/my-account-footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_emailalerts/views/templates/hook/my-account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
         <source>My alerts</source>
         <target>My alerts</target>
-        <note>Line: 28</note>
+        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -427,24 +453,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/_partials/pagination.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fb526aaa0add86e4e124263db50438c8">
-        <source>Showing %from%-%to% of %total% item(s)</source>
-        <target>Showing %from%-%to% of %total% item(s)</target>
-        <note>Line: 28</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="734346d44245de59214137842ab17744">
-        <source>%1$s:</source>
-        <target>%1$s:</target>
-        <note>Line: 35</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/templates/catalog/_partials/miniatures/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4d8adffdc001189e0202c01ac529a3a9">
@@ -470,6 +478,11 @@
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Line: 23</note>
+      </trans-unit>
       <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
         <source>Brand</source>
         <target>Brand</target>
@@ -566,6 +579,11 @@
   </file>
   <file original="themes/classic/templates/catalog/_partials/products-top.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="fb526aaa0add86e4e124263db50438c8">
+        <source>Showing %from%-%to% of %total% item(s)</source>
+        <target>Showing %from%-%to% of %total% item(s)</target>
+        <note>Line: 50</note>
+      </trans-unit>
       <trans-unit id="498007f495e00b14f415d5f6ae6a1362">
         <source>There are %product_count% products.</source>
         <target>There are %product_count% products.</target>
@@ -584,6 +602,20 @@
         <source>List of products by brand %brand_name%</source>
         <target>List of products by brand %brand_name%</target>
         <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/listing/product-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="539fcfb998ae696968c089223fb0500d">
+        <source>Stay tuned! More products will be shown here as they are added.</source>
+        <target>Stay tuned! More products will be shown here as they are added.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="85c435036ee6b5b6ae8dc26b5c336e3a">
+        <source>No products available yet</source>
+        <target>No products available yet</target>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
@@ -639,51 +671,35 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/_partials/order-detail-no-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/checkout/_partials/order-confirmation-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="54c02ba7929b1fda4847991a45b58a48">
+        <source>Product customization</source>
+        <target>Product customization</target>
+        <note>Line: 65</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2">
         <source>Unit price</source>
         <target>Unit price</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
-        <source>Reference</source>
-        <target>Reference</target>
-        <note>Line: 132</note>
-      </trans-unit>
-      <trans-unit id="54c02ba7929b1fda4847991a45b58a48">
-        <source>Product customization</source>
-        <target>Product customization</target>
-        <note>Line: 140</note>
-      </trans-unit>
-      <trans-unit id="deb10517653c255364175796ace3553f">
-        <source>Product</source>
-        <target>Product</target>
-        <note>Line: 30</note>
+        <note>Line: 36</note>
       </trans-unit>
       <trans-unit id="0eede552438475bdfe820c13f24c9399">
         <source>Total price</source>
         <target>Total price</target>
-        <note>Line: 33</note>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/errors/404.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/order-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="85c435036ee6b5b6ae8dc26b5c336e3a">
-        <source>No products available yet</source>
-        <target>No products available yet</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="539fcfb998ae696968c089223fb0500d">
-        <source>Stay tuned! More products will be shown here as they are added.</source>
-        <target>Stay tuned! More products will be shown here as they are added.</target>
-        <note>Line: 35</note>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>

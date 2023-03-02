@@ -37,6 +37,24 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 544</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/gsitemap/gsitemap.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
@@ -52,24 +70,6 @@
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
         <note>Line: 86</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CatalogPriceRuleGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Line: 343</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CurrencyGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Line: 153</note>
       </trans-unit>
     </body>
   </file>
@@ -91,12 +91,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationItemType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
         <source>Delete item</source>
         <target>Delete item</target>
-        <note>Line: 228</note>
+        <note>Line: 169</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Type/NumberMinMaxFilterType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c65196ecfecdada5e94d8d6ed8749789">
+        <source>Maximum value must be higher than minimum value.</source>
+        <target>Maximum value must be higher than minimum value.</target>
+        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>
@@ -114,8 +123,7 @@
       <trans-unit id="043f2b6920e5c8a140301051d18d8618">
         <source>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</source>
         <target>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
@@ -124,7 +132,7 @@ Comment: Stable feature flags form</note>
       <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
         <source>Are you sure you want to delete this item?</source>
         <target>Are you sure you want to delete this item?</target>
-        <note>Line: 326</note>
+        <note>Line: 325</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
