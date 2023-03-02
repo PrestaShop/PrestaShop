@@ -99,6 +99,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="classes/form/AbstractForm.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
+        <source>The %1$s field is too long (%2$d chars max).</source>
+        <target>The %1$s field is too long (%2$d chars max).</target>
+        <note>Line: 176</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/form/CustomerForm.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="eefb581d7c421334e62a68223c7a242a">
@@ -148,11 +157,6 @@
   </file>
   <file original="classes/stock/SupplyOrderDetail.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
-        <source>The %1$s field is too long (%2$d chars max).</source>
-        <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Line: 315</note>
-      </trans-unit>
       <trans-unit id="1f597c6798d6a39dd2bde999d547331a">
         <source>%s is required.</source>
         <target>%s is required.</target>
@@ -267,62 +271,52 @@
       <trans-unit id="456e77e04e2e26231ee352304627b26d">
         <source>Invalid key.</source>
         <target>Invalid key.</target>
-        <note>Line: 332</note>
+        <note>Line: 337</note>
       </trans-unit>
       <trans-unit id="1347119d36ae31564a89763f21476c1a">
         <source>This product does not exist in our store.</source>
         <target>This product does not exist in our store.</target>
-        <note>Line: 333</note>
+        <note>Line: 338</note>
       </trans-unit>
       <trans-unit id="38d5595927b80b331239ef904341b07c">
         <source>This product has been deleted.</source>
         <target>This product has been deleted.</target>
-        <note>Line: 334</note>
+        <note>Line: 339</note>
       </trans-unit>
       <trans-unit id="c9615dc36879116ef8c5f1ab08543191">
         <source>This file no longer exists.</source>
         <target>This file no longer exists.</target>
-        <note>Line: 335</note>
+        <note>Line: 340</note>
       </trans-unit>
       <trans-unit id="b1046eaca37cbbd3b53d17c33299bfab">
         <source>This product has been refunded.</source>
         <target>This product has been refunded.</target>
-        <note>Line: 336</note>
+        <note>Line: 341</note>
       </trans-unit>
       <trans-unit id="2d30f823fe8f59bbcbec1fec853e4549">
         <source>The product deadline is in the past.</source>
         <target>The product deadline is in the past.</target>
-        <note>Line: 337</note>
+        <note>Line: 342</note>
       </trans-unit>
       <trans-unit id="d5304279c07642327b2909efd15ff539">
         <source>The product expiration date has passed, preventing you from download this product.</source>
         <target>The product expiration date has passed, preventing you from download this product.</target>
-        <note>Line: 338</note>
+        <note>Line: 343</note>
       </trans-unit>
       <trans-unit id="cb3bf6b78b0297d94c00187dcafd77a3">
         <source>Expiration date has passed, you cannot download this product.</source>
         <target>Expiration date has passed, you cannot download this product.</target>
-        <note>Line: 339</note>
+        <note>Line: 344</note>
       </trans-unit>
       <trans-unit id="98bc3b9df6852d17661209b9c969128b">
         <source>You have reached the maximum number of downloads allowed.</source>
         <target>You have reached the maximum number of downloads allowed.</target>
-        <note>Line: 340</note>
+        <note>Line: 345</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e9c8b958cbfb895182fe7eeeeadd1121">
-        <source>A customer account has already been created from this guest account. Please sign in.</source>
-        <target>A customer account has already been created from this guest account. Please sign in.</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
-        <source>An unexpected error occurred while creating your account.</source>
-        <target>An unexpected error occurred while creating your account.</target>
-        <note>Line: 125</note>
-      </trans-unit>
       <trans-unit id="ddb329ec6521925a245fbe1334d2ce18">
         <source>Please provide the required information</source>
         <target>Please provide the required information</target>
@@ -355,6 +349,16 @@
         <source>The minimum score must be: %s</source>
         <target>The minimum score must be: %s</target>
         <note>Line: 154</note>
+      </trans-unit>
+      <trans-unit id="e9c8b958cbfb895182fe7eeeeadd1121">
+        <source>A customer account has already been created from this guest account. Please sign in.</source>
+        <target>A customer account has already been created from this guest account. Please sign in.</target>
+        <note>Line: 185</note>
+      </trans-unit>
+      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
+        <source>An unexpected error occurred while creating your account.</source>
+        <target>An unexpected error occurred while creating your account.</target>
+        <note>Line: 198</note>
       </trans-unit>
     </body>
   </file>
@@ -496,15 +500,19 @@
   </file>
   <file original="controllers/front/PdfOrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
-        <source>Order return not found.</source>
-        <target>Order return not found.</target>
-        <note>Line: 55</note>
-      </trans-unit>
       <trans-unit id="b55e152dc0683c3d315b6baabb98495d">
         <source>Order return not confirmed.</source>
         <target>Order return not confirmed.</target>
         <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PdfOrderSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
+        <source>Order return not found.</source>
+        <target>Order return not found.</target>
+        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>
@@ -513,7 +521,7 @@
       <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
         <source>Invalid message</source>
         <target>Invalid message</target>
-        <note>Line: 919</note>
+        <note>Line: 920</note>
       </trans-unit>
       <trans-unit id="91e6cde963af2000218553722fc7a093">
         <source>This product is no longer available.</source>
@@ -533,7 +541,7 @@
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 891</note>
+        <note>Line: 892</note>
       </trans-unit>
     </body>
   </file>

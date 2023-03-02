@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="install-dev/classes/controllerHttp.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
+        <source>Content of your store</source>
+        <target>Content of your store</target>
+        <note>Line: 123</note>
+      </trans-unit>
       <trans-unit id="fa6724c724e5524034b09c9bbac81f07">
         <source>Choose your language</source>
         <target>Choose your language</target>
@@ -441,11 +446,6 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="install-dev/theme/views/content.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
-        <source>Content of your store</source>
-        <target>Content of your store</target>
-        <note>Line: 29</note>
-      </trans-unit>
       <trans-unit id="82da52196edba4e07eb729fa3560027f">
         <source>Installation of theme</source>
         <target>Installation of theme</target>
@@ -456,9 +456,9 @@ Comment: We fill the process step used for Ajax queries</note>
         <target>Version:</target>
         <note>Line: 49</note>
       </trans-unit>
-      <trans-unit id="7b252eac57f192a69f1d65d65ebae990">
-        <source>Select the theme to install.</source>
-        <target>Select the theme to install.</target>
+      <trans-unit id="2b6dffeb7fe74b952dccebb3784a947e">
+        <source>Select the theme to install</source>
+        <target>Select the theme to install</target>
         <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="1ee54bd7ea05ef3b4534568b2f765959">
@@ -1039,12 +1039,12 @@ Comment: We fill the process step used for Ajax queries</note>
       <trans-unit id="4a85cd1d84d691a2e0b73a5f08cd3483">
         <source>Fixtures class "%class%" not found</source>
         <target>Fixtures class "%class%" not found</target>
-        <note>Line: 1082</note>
+        <note>Line: 1084</note>
       </trans-unit>
       <trans-unit id="e1120cceb6bcfd9596161e3912b2ad9d">
         <source>"%class%" must be an instance of "InstallXmlLoader"</source>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
-        <note>Line: 1089</note>
+        <note>Line: 1091</note>
       </trans-unit>
     </body>
   </file>

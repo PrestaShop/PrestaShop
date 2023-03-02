@@ -2,15 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="874d3deed67e503cac1d8bc00417794a">
-        <source>Move images</source>
-        <target>Move images</target>
-        <note>Line: 50</note>
-      </trans-unit>
       <trans-unit id="258606ef5a3ed5cd7e39da08435adec0">
         <source>Regenerate thumbnails</source>
         <target>Regenerate thumbnails</target>
         <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="874d3deed67e503cac1d8bc00417794a">
+        <source>Move images</source>
+        <target>Move images</target>
+        <note>Line: 50</note>
       </trans-unit>
       <trans-unit id="79750ba11832a44ccf92e15eb0e84ae4">
         <source>Select an image</source>
@@ -245,7 +245,7 @@
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
         <target>Pages</target>
-        <note>Line: 541</note>
+        <note>Line: 556</note>
       </trans-unit>
     </body>
   </file>
@@ -495,6 +495,21 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
+        <source>Theme</source>
+        <target>Theme</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="36866999eeb441da24edc6fd075e1765">
+        <source>Add new theme</source>
+        <target>Add new theme</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
+        <source>Export current theme</source>
+        <target>Export current theme</target>
+        <note>Line: 38</note>
+      </trans-unit>
       <trans-unit id="7961c4434751797a383d52d647e044d6">
         <source>Import from your computer</source>
         <target>Import from your computer</target>
@@ -514,21 +529,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
-        <source>Theme</source>
-        <target>Theme</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="36866999eeb441da24edc6fd075e1765">
-        <source>Add new theme</source>
-        <target>Add new theme</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
-        <source>Export current theme</source>
-        <target>Export current theme</target>
-        <note>Line: 37</note>
-      </trans-unit>
       <trans-unit id="6b8e9498b52135e7f6cee757294a6079">
         <source>My current theme</source>
         <target>My current theme</target>
