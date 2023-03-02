@@ -114,6 +114,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -140,6 +141,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -167,6 +169,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -185,6 +188,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -200,6 +204,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -216,6 +221,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -232,6 +238,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -248,6 +255,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
 
@@ -264,6 +272,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
+                'empty_data' => 0,
             ],
         ];
     }
@@ -278,6 +287,7 @@ class FeatureValueListenerTest extends FormListenerTestCase
         // it is too complicated to assert whole array with so many default values which are not expected to change
         $featureValueFieldConfig = $form->get('feature_value_id')->getConfig();
 
+        $this->assertSame($expectedOptions['empty_data'], $featureValueFieldConfig->getOption('empty_data'));
         $this->assertSame($expectedOptions['attr'], $featureValueFieldConfig->getOption('attr'));
         $this->assertSame($expectedOptions['disabled'], $featureValueFieldConfig->getOption('disabled'));
         $this->assertSame($expectedOptions['choices'], $featureValueFieldConfig->getOption('choices'));
@@ -314,13 +324,16 @@ class SimpleFeaturesFormTest extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('feature_value_id', ChoiceType::class, [
-            // these are the default options which should change after listener is called
+            // these are the default options which are important and might be affected by listener
             'disabled' => true,
             'attr' => [
                 'disabled' => true,
                 'data-toggle' => 'select2',
                 'class' => 'feature-value-selector',
             ],
+            // empty data = 0 is important. Without it being set to 0, the "invalid option" constraint is not triggered,
+            // and the form is not invalidated (which should happen because field is not optional therefore 0 is invalid option)
+            'empty_data' => 0,
         ]);
     }
 }

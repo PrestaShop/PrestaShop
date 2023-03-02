@@ -88,6 +88,7 @@ class FeatureValueType extends TranslatorAwareType
                 ],
             ])
             ->add('feature_value_id', ChoiceType::class, [
+                'empty_data' => 0,
                 'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
                 'label' => $this->trans('Pre-defined value', 'Admin.Catalog.Feature'),
                 'invalid_message' => $this->trans('Choose a value or provide a customized one', 'Admin.Catalog.Feature'),

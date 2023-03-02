@@ -1840,7 +1840,6 @@ services:
     arguments:
       - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
       - '@PrestaShopBundle\Form\FormCloner'
-      - '@translator'
     public: true
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
