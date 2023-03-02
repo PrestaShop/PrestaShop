@@ -147,7 +147,7 @@ class FeatureValueCore extends ObjectModel
      *
      * @return int
      */
-    public static function addFeatureValueImport($idFeature, $value, $idProduct = null, $idLang = null, $custom = false)
+    public static function getFeatureValueImport($idFeature, $value, $idProduct = null, $idLang = null, $custom = false, $add_if_not_exists = true)
     {
         $idFeatureValue = false;
         if (null !== $idProduct && $idProduct) {
@@ -184,14 +184,18 @@ class FeatureValueCore extends ObjectModel
             return (int) $idFeatureValue;
         }
 
-        // Feature doesn't exist, create it
-        $feature_value = new FeatureValue();
-        $feature_value->id_feature = (int) $idFeature;
-        $feature_value->custom = (bool) $custom;
-        $feature_value->value = array_fill_keys(Language::getIDs(false), $value);
-        $feature_value->add();
+        if($add_if_not_exists) {
+            // Feature doesn't exist, create it
+            $feature_value = new FeatureValue();
+            $feature_value->id_feature = (int)$idFeature;
+            $feature_value->custom = (bool)$custom;
+            $feature_value->value = array_fill_keys(Language::getIDs(false), $value);
+            $feature_value->add();
 
-        return (int) $feature_value->id;
+            return (int)$feature_value->id;
+        }
+
+        return 0;
     }
 
     /**

@@ -120,12 +120,12 @@ final class ProductImportHandler extends AbstractImportHandler
         ImportDataFormatter $dataFormatter,
         array $allShopIds,
         array $contextShopIds,
-        $currentContextShopId,
-        $isMultistoreEnabled,
-        $contextLanguageId,
+                            $currentContextShopId,
+                            $isMultistoreEnabled,
+                            $contextLanguageId,
         TranslatorInterface $translator,
         LoggerInterface $logger,
-        $employeeId,
+                            $employeeId,
         Database $legacyDatabase,
         CacheClearerInterface $cacheClearer,
         Connection $connection,
@@ -380,7 +380,7 @@ final class ProductImportHandler extends AbstractImportHandler
     private function fetchProductId(
         DataRowInterface $dataRow,
         array $entityFields,
-        $fetchByReference
+                         $fetchByReference
     ) {
         $productId = $this->fetchDataValueByKey($dataRow, $entityFields, 'id');
 
@@ -947,12 +947,12 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveSpecificPrice(
         Product $product,
-        $reductionPrice,
-        $reductionPercent,
-        $reductionFrom,
-        $reductionTo,
-        $validateOnly,
-        $productName
+                $reductionPrice,
+                $reductionPercent,
+                $reductionFrom,
+                $reductionTo,
+                $validateOnly,
+                $productName
     ) {
         $reductionPercent = (float) $reductionPercent;
         $reductionPrice = (float) $reductionPrice;
@@ -1180,6 +1180,13 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveFeatures(Product $product, ImportConfigInterface $importConfig)
     {
+        //delete existing features if "delete_existing_features" is set to 1
+        if (isset($product->delete_existing_features)) {
+            if ((bool) $product->delete_existing_features) {
+                $product->deleteProductFeatures();
+            }
+        }
+
         // Features import
         $features = get_object_vars($product);
         $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
@@ -1197,21 +1204,33 @@ final class ProductImportHandler extends AbstractImportHandler
             $featureValue = isset($feature[1]) ? trim($feature[1]) : '';
             $position = isset($feature[2]) ? (int) $feature[2] - 1 : false;
             $custom = isset($feature[3]) ? (int) $feature[3] : false;
+            $action = (isset($feature[4]) && in_array(trim($feature[4]), ['add', 'delete'])) ? trim($feature[4]) : 'add';
 
             if (!empty($featureName) && !empty($featureValue)) {
-                $featureId = (int) Feature::addFeatureImport($featureName, $position);
-                $productId = null;
-                if ($importConfig->forceIds() || $importConfig->matchReferences()) {
-                    $productId = (int) $product->id;
+                $featureId = (int) Feature::getFeatureImport($featureName, $position, ($action == 'add'));
+
+                if($featureId) {
+                    $productId = null;
+                    if ($importConfig->forceIds() || $importConfig->matchReferences()) {
+                        $productId = (int)$product->id;
+                    }
+                    $featureValueId = (int)FeatureValue::getFeatureValueImport(
+                        $featureId,
+                        $featureValue,
+                        $productId,
+                        $this->languageId,
+                        $custom,
+                        ($action == 'add')
+                    );
+                    if($featureValueId) {
+                        if ($action == 'delete') {
+                            Product::deleteFeatureProductImport($product->id, $featureId, $featureValueId);
+                        }
+                        else {
+                            Product::addFeatureProductImport($product->id, $featureId, $featureValueId);
+                        }
+                    }
                 }
-                $featureValueId = (int) FeatureValue::addFeatureValueImport(
-                    $featureId,
-                    $featureValue,
-                    $productId,
-                    $this->languageId,
-                    $custom
-                );
-                Product::addFeatureProductImport($product->id, $featureId, $featureValueId);
             }
         }
 
@@ -1313,7 +1332,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         'Admin.Advparameters.Notification'
                     )
                 );
-            /* @phpstan-ignore-next-line Data of properties `advanced_stock_management` & `depends_on_stock` comes from database */
+                /* @phpstan-ignore-next-line Data of properties `advanced_stock_management` & `depends_on_stock` comes from database */
             } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                 $this->warning(
                     $this->translator->trans(
