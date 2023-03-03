@@ -1,6 +1,7 @@
 name: UI tests Product V2
 on:
   pull_request:
+    # This list must be synced with the one in skip-sanity-productV2.yml
     paths:
       - .github/workflows/sanity-productV2.yml
       - tests/UI/campaigns/productV2/**
@@ -9,7 +10,7 @@ on:
       - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/**
       - src/Core/Domain/Product/**
       - src/Adapter/Product/**
-      - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
+      - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true

@@ -1,0 +1,18 @@
+name: UI tests Product V2
+on:
+  pull_request:
+    # This list must be synced with the one in sanity-productV2.yml
+    paths-ignore:
+      - .github/workflows/sanity-productV2.yml
+      - tests/UI/campaigns/productV2/**
+      - admin-dev/themes/new-theme/js/pages/product/**
+      - src/PrestaShopBundle/Form/Admin/Sell/Product/**
+      - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/**
+      - src/Core/Domain/Product/**
+      - src/Adapter/Product/**
+      - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "Not required"'
