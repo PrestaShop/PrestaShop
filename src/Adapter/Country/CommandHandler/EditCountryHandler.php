@@ -28,14 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
  * Handles update of country and address format
  */
-class EditCountryHandler implements EditCountryHandlerInterface
+class EditCountryHandler extends AbstractCountryHandler implements EditCountryHandlerInterface
 {
     /**
      * @var CountryRepository
@@ -54,40 +57,15 @@ class EditCountryHandler implements EditCountryHandlerInterface
     {
         $country = $this->countryRepository->get($command->getCountryId());
 
-        if (null !== $command->getLocalizedNames()) {
-            $country->name = $command->getLocalizedNames();
-        }
-        if (null !== $command->getIsoCode()) {
-            $country->iso_code = $command->getIsoCode();
-        }
-
-        if (null !== $command->getCallPrefix()) {
-            $country->call_prefix = $command->getCallPrefix();
-        }
-
-        if (null !== $command->needZipCode()) {
-            $country->need_zip_code = $command->needZipCode();
-        }
-
-        if (null !== $command->isEnabled()) {
-            $country->active = $command->isEnabled();
-        }
-
-        if (null !== $command->needIdNumber()) {
-            $country->need_identification_number = $command->needIdNumber();
-        }
-
-        if (null !== $command->displayTaxLabel()) {
-            $country->display_tax_label = $command->displayTaxLabel();
-        }
-
-        if (null !== $command->getShopAssociation()) {
-            $country->id_shop_list = $command->getShopAssociation();
-        }
-
-        if (null !== $command->containsStates()) {
-            $country->contains_states = $command->containsStates();
-        }
+        $country->name = $command->getLocalizedNames();
+        $country->iso_code = $command->getIsoCode();
+        $country->call_prefix = $command->getCallPrefix();
+        $country->need_zip_code = $command->needZipCode();
+        $country->active = $command->isEnabled();
+        $country->need_identification_number = $command->needIdNumber();
+        $country->display_tax_label = $command->displayTaxLabel();
+        $country->id_shop_list = $command->getShopAssociation();
+        $country->contains_states = $command->containsStates();
 
         if (null !== $command->getZipCodeFormat()) {
             $country->zip_code_format = $command->getZipCodeFormat()->getValue();
@@ -98,7 +76,15 @@ class EditCountryHandler implements EditCountryHandlerInterface
         }
 
         if (null !== $command->getZoneId()) {
-            $country->id_zone = $command->getZoneId();
+            $country->id_zone = $command->getZoneId()->getValue();
+        }
+
+        $this->countryRepository->add($country);
+
+        $addressFormat = $this->getValidAddressFormat((int) $country->id, $command->getAddressFormat());
+
+        if (false === $addressFormat->add()) {
+            throw new CannotAddAddressFormatException('Failed to add address format');
         }
 
         $this->countryRepository->update($country);

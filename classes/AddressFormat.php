@@ -107,6 +107,7 @@ class AddressFormatCore extends ObjectModel
         'call_prefix',
         'definition',
         'debug_list',
+        'htmlFields',
     ];
 
     /** @var array Default formbidden class list */

@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 /**
  * Handles creation of country and address format
  */
-class AddCountryHandler implements AddCountryHandlerInterface
+class AddCountryHandler extends AbstractCountryHandler implements AddCountryHandlerInterface
 {
     /**
      * @var CountryRepository
