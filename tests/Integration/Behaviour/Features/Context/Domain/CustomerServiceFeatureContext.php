@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
-use PrestaShop\PrestaShop\Core\Form\Handler;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -62,15 +61,9 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     private $configuration;
 
-    /**
-     * @var Handler
-     */
-    private $contactOptionsHandler;
-
     public function __construct()
     {
         $this->configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->contactOptionsHandler = CommonFeatureContext::getContainer()->get('prestashop.adapter.customer_service.contact_options.form_handler');
     }
 
     /**
@@ -83,7 +76,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
-        $contactReference = $this->contactRegistry[$data['contactReference']];
+        $contactReference = $this->referenceToId($data['contactReference']);
 
         // Add this message in the customer thread
         $customerThread = new CustomerThread();
@@ -250,7 +243,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertContactHasThreads(string $contactReference, int $expectedThreads): void
     {
-        $contactId = $this->contactRegistry[$contactReference];
+        $contactId = $this->referenceToId($contactReference);
         /** @var CustomerServiceSummary[] $getCustomerServiceSummary */
         $getCustomerServiceSummary = $this->getQueryBus()->handle(
             new GetCustomerServiceSummary()
@@ -295,7 +288,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         /** @var ContactId $id */
         $id = $commandBus->handle($command);
 
-        $this->contactRegistry[$contactReference] = $id->getValue();
+        $this->getSharedStorage()->set($contactReference, $id->getValue());
     }
 
     protected function formatContactDataIfNeeded(array $data)
@@ -319,8 +312,11 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
+        $contactOptionsHandler = CommonFeatureContext::getContainer()->get('prestashop.adapter.customer_service.contact_options.form_handler');
+
         $defaultLangMessage = [$this->configuration->get('PS_LANG_DEFAULT'), $data['defaultMessage']];
-        $this->contactOptionsHandler->save(
+
+        $contactOptionsHandler->save(
             [
                 'PS_CUSTOMER_SERVICE_SIGNATURE' => $defaultLangMessage,
                 'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => PrimitiveUtils::castStringBooleanIntoBoolean($data['allowFileUploading']),

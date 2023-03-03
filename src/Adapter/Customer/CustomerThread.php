@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Customer;
 use CustomerThread as CustomerThreadCore;
 use PrestaShop\PrestaShop\Core\Customer\CustomerThreadInterface;
 
+/**
+ * @experimental Refactor needed once the new model architecture is defined.
+ */
 class CustomerThread implements CustomerThreadInterface
 {
     public function getTotalCustomerThreads(?string $where): int

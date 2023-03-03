@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Customer;
 use CustomerMessage as CustomerMessageCore;
 use PrestaShop\PrestaShop\Core\Customer\CustomerMessageInterface;
 
+/**
+ * @experimental Refactor needed once the new model architecture is defined.
+ */
 class CustomerMessage implements CustomerMessageInterface
 {
     public function getTotalCustomerMessages(?string $where): int

@@ -28,5 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Customer;
 
 interface CustomerMessageInterface
 {
+    /**
+     * @experimental Refactor needed once the new model architecture is defined.
+     */
     public function getTotalCustomerMessages(?string $where): int;
 }

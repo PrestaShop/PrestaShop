@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Repository\ContactRepositoryInterf
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
+ * @experimental Refactor needed once the new model architecture is defined.
+ *
  * Class ContactRepository is responsible for retrieving contact data from database.
  *
  * @internal

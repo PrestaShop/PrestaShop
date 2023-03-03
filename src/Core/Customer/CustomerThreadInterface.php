@@ -28,5 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Customer;
 
 interface CustomerThreadInterface
 {
+    /**
+     * @experimental Refactor needed once the new model architecture is defined.
+     */
     public function getTotalCustomerThreads(?string $where): int;
 }
