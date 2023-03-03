@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Deletes zone
+ * Deletes country
  */
 class DeleteCountryCommand
 {
