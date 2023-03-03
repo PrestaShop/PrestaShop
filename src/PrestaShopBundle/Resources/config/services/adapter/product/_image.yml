@@ -79,6 +79,12 @@ services:
       - !php/const _PS_TMP_IMG_DIR_
       - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
 
+  PrestaShop\PrestaShop\Core\Domain\Product\Image\Provider\ProductImageProviderInterface: '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImageProvider'
+
+  PrestaShop\PrestaShop\Adapter\Product\Image\ProductImageProvider:
+    public: false
+    autowire: true
+
   # This is an alternative service that also generates product image path, but it returns absolute file path not urls
   prestashop.adapter.product.image.product_image_filesystem_path_factory:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory

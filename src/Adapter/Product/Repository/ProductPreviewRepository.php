@@ -28,9 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Provider\ProductImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -47,30 +46,18 @@ class ProductPreviewRepository
     private $productRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageProviderInterface
      */
-    private $productImageRepository;
+    private $productImageProvider;
 
-    /**
-     * @param ProductRepository $productRepository
-     * @param ProductImageMultiShopRepository $productImageRepository
-     */
     public function __construct(
         ProductRepository $productRepository,
-        ProductImageMultiShopRepository $productImageRepository
+        ProductImageProviderInterface $productImageProvider
     ) {
         $this->productRepository = $productRepository;
-        $this->productImageRepository = $productImageRepository;
+        $this->productImageProvider = $productImageProvider;
     }
 
-    /**
-     * @param ProductId $productId
-     * @param LanguageId $languageId
-     *
-     * @return ProductPreview
-     *
-     * @throws ProductNotFoundException
-     */
     public function getPreview(ProductId $productId, LanguageId $languageId): ProductPreview
     {
         $shopId = $this->productRepository->getProductDefaultShopId($productId);
@@ -79,7 +66,7 @@ class ProductPreviewRepository
         return new ProductPreview(
             $productId->getValue(),
             $product->name[$languageId->getValue()] ?? reset($product->name),
-            $this->productImageRepository->getProductCoverUrl($productId, $shopId)
+            $this->productImageProvider->getProductCoverUrl($productId, $shopId)
         );
     }
 }

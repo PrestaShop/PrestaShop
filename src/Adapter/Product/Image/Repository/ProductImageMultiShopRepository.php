@@ -32,8 +32,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Image;
 use ImageType;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -80,30 +78,16 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      */
     private $productImageValidator;
 
-    /**
-     * @var ProductImagePathFactory
-     */
-    private $productImagePathFactory;
-
-    /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductRepository $productRepository,
-        ProductImageValidator $productImageValidator,
-        ProductImagePathFactory $productImagePathFactory,
-        CombinationRepository $combinationRepository
+        ProductImageValidator $productImageValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productRepository = $productRepository;
         $this->productImageValidator = $productImageValidator;
-        $this->productImagePathFactory = $productImagePathFactory;
-        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -199,42 +183,6 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
     /**
      * @param ProductId $productId
-     * @todo: I don't think retrieving conver url (through the factory) needs to be in repository.
-     *        path factory should probably be used outside
-     *
-     * @return string
-     *
-     * @throws CoreException
-     */
-    public function getProductCoverUrl(ProductId $productId, ShopId $shopId): string
-    {
-        $imageId = $this->getDefaultImageId($productId, $shopId);
-
-        return $imageId ?
-            $this->productImagePathFactory->getPath($imageId) :
-            $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
-    }
-
-    /**
-     * @param CombinationId $combinationId
-     *
-     * @return string
-     *
-     * @throws CoreException
-     */
-    public function getCombinationCoverUrl(CombinationId $combinationId, ShopId $shopId): string
-    {
-        $imageId = $this->getPreviewCombinationProduct($combinationId);
-        if ($imageId) {
-            return $this->productImagePathFactory->getPath($imageId);
-        }
-        $productId = $this->combinationRepository->getProductId($combinationId);
-
-        return $this->getProductCoverUrl($productId, $shopId);
-    }
-
-    /**
-     * @param ProductId $productId
      * @param ShopId $shopId
      *
      * @return ImageId|null
@@ -276,7 +224,6 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             return $id->getValue();
         }, $combinationIds);
 
-        //@todo: multishop not handled
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pai.id_product_attribute, pai.id_image')
             ->from($this->dbPrefix . 'product_attribute_image', 'pai')
@@ -722,7 +669,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         return $imageTypes;
     }
 
-    protected function getPreviewCombinationProduct(CombinationId $combinationId): ?ImageId
+    public function getPreviewCombinationProduct(CombinationId $combinationId): ?ImageId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pai.id_image')

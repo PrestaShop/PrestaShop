@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Provider\ProductImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryHandler\GetPackedProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
@@ -90,6 +91,11 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
      */
     protected $translator;
 
+    /**
+     * @var ProductImageProviderInterface
+     */
+    private $productImageProvider;
+
     public function __construct(
         int $defaultLangId,
         ProductPackRepository $productPackRepository,
@@ -98,7 +104,8 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         AttributeRepository $attributeRepository,
         CombinationNameBuilder $combinationNameBuilder,
         ProductImageMultiShopRepository $productImageRepository,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ProductImageProviderInterface $productImageProvider
     ) {
         $this->languageId = $defaultLangId;
         $this->productPackRepository = $productPackRepository;
@@ -108,6 +115,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         $this->productImageRepository = $productImageRepository;
         $this->translator = $translator;
         $this->combinationRepository = $combinationRepository;
+        $this->productImageProvider = $productImageProvider;
     }
 
     /**
@@ -174,9 +182,9 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     private function getPackCoverForStandardProduct(PackId $packedItemId, ShopId $shopId): string
     {
         try {
-            return $this->productImageRepository->getProductCoverUrl($packedItemId, $shopId);
+            return $this->productImageProvider->getProductCoverUrl($packedItemId, $shopId);
         } catch (ShopAssociationNotFound $e) {
-            return $this->productImageRepository->getProductCoverUrl(
+            return $this->productImageProvider->getProductCoverUrl(
                 $packedItemId,
                 $this->productRepository->getProductDefaultShopId($packedItemId)
             );
@@ -186,9 +194,9 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     private function getPackCoverForCombination(CombinationId $packedCombinationId, ShopId $shopId): string
     {
         try {
-            return $this->productImageRepository->getCombinationCoverUrl($packedCombinationId, $shopId);
+            return $this->productImageProvider->getCombinationCoverUrl($packedCombinationId, $shopId);
         } catch (ShopAssociationNotFound $e) {
-            return $this->productImageRepository->getCombinationCoverUrl(
+            return $this->productImageProvider->getCombinationCoverUrl(
                 $packedCombinationId,
                 $this->combinationRepository->getDefaultShopIdForCombination($packedCombinationId)
             );
