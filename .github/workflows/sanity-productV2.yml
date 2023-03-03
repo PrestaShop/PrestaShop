@@ -1,7 +1,6 @@
 name: UI tests Product V2
 on:
   pull_request:
-    # This list must be synced with the one in skip-sanity-productV2.yml
     paths:
       - .github/workflows/sanity-productV2.yml
       - tests/UI/campaigns/productV2/**

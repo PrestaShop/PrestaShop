@@ -12,7 +12,12 @@ on:
       - src/Adapter/Product/**
       - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
 jobs:
-  build:
+  sanity_product_v2:
     runs-on: ubuntu-latest
+    name: Sanity Product V2
+    strategy:
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+      fail-fast: false
     steps:
       - run: 'echo "Not required"'
