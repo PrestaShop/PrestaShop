@@ -70,6 +70,10 @@ class Cart extends FOBasePage {
 
   private readonly cartRuleAlertMessage: string;
 
+  private readonly highlightPromoCodeBlock: string;
+
+  private readonly highlightPromoCode: string;
+
   public readonly cartRuleChooseCarrierAlertMessageText: string;
 
   public readonly cartRuleCannotUseVoucherAlertMessageText: string;
@@ -95,6 +99,8 @@ class Cart extends FOBasePage {
     this.alertChooseDeliveryAddressWarningText = 'You must choose a delivery address'
       + ' before applying this voucher to your order';
     this.noItemsInYourCartMessage = 'There are no more items in your cart';
+    this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
+    this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
 
     // Selectors for cart page
     // Shopping cart block selectors
@@ -121,13 +127,14 @@ class Cart extends FOBasePage {
     this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.label`;
     this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span`;
 
+    // Promo code selectors
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
     this.promoCodeRemoveIcon = (line: number) => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
-    this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
-    this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
+    this.highlightPromoCodeBlock = `${this.blockPromoDiv} div ul.promo-discounts`;
+    this.highlightPromoCode = `${this.blockPromoDiv} li span.code`;
 
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
 
@@ -303,6 +310,25 @@ class Cart extends FOBasePage {
       await page.click(this.promoCodeLink);
     }
     await this.setValue(page, this.promoInput, code);
+    await page.click(this.addPromoCodeButton);
+  }
+
+  /**
+   * Get highlight promo code
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getHighlightPromoCode(page: Page): Promise<string> {
+    return this.getTextContent(page, this.highlightPromoCodeBlock);
+  }
+
+  /**
+   * Click on highlight promo code
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnPromoCode(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.highlightPromoCode);
     await page.click(this.addPromoCodeButton);
   }
 
