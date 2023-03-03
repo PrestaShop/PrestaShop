@@ -193,11 +193,12 @@ jobs:
       - name: Upload to Google Cloud Storage (GCS)
         run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports
 
-  # Add pushed reports to GCp on nightly
+  # Add pushed reports to GCP on nightly
   push-nightly-reports:
     permissions:
       contents: none
     name: Push reports to nightly.prestashop.com
+    if: ${{ always() }}
     needs:
       - merge-upload-reports
     runs-on: ubuntu-latest
