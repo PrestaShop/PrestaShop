@@ -29,6 +29,9 @@ CREATE TABLE `PREFIX_address` (
   `other` text,
   `phone` varchar(32) DEFAULT NULL,
   `phone_mobile` varchar(32) DEFAULT NULL,
+  /* @TODO : Because it is more cleaner than stuffing it all into DNI that is not (SIRET OR APE) And EU kvk numbers maby 15? The idear is given but never implemented. */
+  `siret` varchar(15) DEFAULT NULL,
+  `ape` varchar(5) DEFAULT NULL,
   `vat_number` varchar(32) DEFAULT NULL,
   `dni` varchar(16) DEFAULT NULL,
   `date_add` datetime NOT NULL,
@@ -612,8 +615,10 @@ CREATE TABLE `PREFIX_customer` (
   `id_lang` int(10) unsigned NULL,
   `id_risk` int(10) unsigned NOT NULL DEFAULT '1',
   `company` varchar(255),
-  `siret` varchar(14),
+ /* @TODO : make it clean and EU ( Like KVK and Chamber of comm etc numbers )   */
+  `siret` varchar(15),
   `ape` varchar(5),
+  `vat_number` varchar(35),
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -1249,6 +1254,7 @@ CREATE TABLE `PREFIX_orders` (
   `round_mode` tinyint(1) NOT NULL DEFAULT '2',
   `round_type` tinyint(1) NOT NULL DEFAULT '1',
   `invoice_number` int(10) unsigned NOT NULL DEFAULT '0',
+/* @TODO : Make under invoice_number or invoice_date the store_Siret and store_vat_number or some were under with store info */
   `delivery_number` int(10) unsigned NOT NULL DEFAULT '0',
   `invoice_date` datetime NOT NULL,
   `delivery_date` datetime NOT NULL,
@@ -1286,6 +1292,7 @@ CREATE TABLE `PREFIX_order_detail_tax` (
 CREATE TABLE `PREFIX_order_invoice` (
   `id_order_invoice` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_order` int(11) NOT NULL,
+/* @TODO : Make under invoice_number or invoice_date the store_Siret and store_vat_number or some were under with store info */
   `number` int(11) NOT NULL,
   `delivery_number` int(11) NOT NULL,
   `delivery_date` datetime,
@@ -2116,6 +2123,11 @@ CREATE TABLE `PREFIX_store` (
   `longitude` decimal(13, 8) DEFAULT NULL,
   `phone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
+/* @TODO : Make siret -ape- vat_number avalable in store info. because note is not same and DNI or what you call it is not all the same. */
+  `siret` varchar(14) DEFAULT NULL,
+  `ape` varchar(5) DEFAULT NULL,
+  `vat_number` varchar(34) DEFAULT NULL,
+  `IBAN` varchar(34) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
@@ -2129,6 +2141,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
   `name` varchar(255) NOT NULL,
   `address1` varchar(255) NOT NULL,
   `address2` varchar(255) DEFAULT NULL,
+/* @TODO : OR here if you want? Make siret -ape- avalable in store info. because note is not same and DNI or what you call it is not all the same. */
   `hours` text,
   `note` text,
   PRIMARY KEY (`id_store`, `id_lang`)
