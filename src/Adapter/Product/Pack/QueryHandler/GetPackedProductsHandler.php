@@ -29,15 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryHandler\GetPackedProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -47,14 +51,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
 {
     /**
+     * @var int
+     */
+    protected $languageId;
+
+    /**
      * @var ProductPackRepository
+     */
+    protected $productPackRepository;
+
+    /**
+     * @var ProductRepository
      */
     protected $productRepository;
 
     /**
-     * @var CombinationNameBuilder
+     * @var CombinationRepository
      */
-    protected $combinationNameBuilder;
+    private $combinationRepository;
 
     /**
      * @var AttributeRepository
@@ -62,9 +76,9 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     protected $attributeRepository;
 
     /**
-     * @var int
+     * @var CombinationNameBuilder
      */
-    protected $languageId;
+    protected $combinationNameBuilder;
 
     /**
      * @var ProductImageMultiShopRepository
@@ -76,27 +90,24 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
      */
     protected $translator;
 
-    /**
-     * @param int $defaultLangId
-     * @param ProductPackRepository $productPackRepository
-     * @param AttributeRepository $attributeRepository
-     * @param CombinationNameBuilder $combinationNameBuilder
-     * @param ProductImageMultiShopRepository $productImageRepository
-     */
     public function __construct(
         int $defaultLangId,
         ProductPackRepository $productPackRepository,
+        ProductRepository $productRepository,
+        CombinationRepository $combinationRepository,
         AttributeRepository $attributeRepository,
         CombinationNameBuilder $combinationNameBuilder,
         ProductImageMultiShopRepository $productImageRepository,
         TranslatorInterface $translator
     ) {
-        $this->productRepository = $productPackRepository;
-        $this->combinationNameBuilder = $combinationNameBuilder;
-        $this->attributeRepository = $attributeRepository;
         $this->languageId = $defaultLangId;
+        $this->productPackRepository = $productPackRepository;
+        $this->productRepository = $productRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->combinationNameBuilder = $combinationNameBuilder;
         $this->productImageRepository = $productImageRepository;
         $this->translator = $translator;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -105,10 +116,10 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     public function handle(GetPackedProducts $query): array
     {
         $shopConstraint = $query->getShopConstraint();
-        $packedItems = $this->productRepository->getPackedProducts(
+        $packedItems = $this->productPackRepository->getPackedProducts(
             $query->getPackId(),
             $query->getLanguageId(),
-            $query->getShopConstraint()
+            $shopConstraint
         );
         $packedProducts = [];
         $combinationIds = [];
@@ -127,12 +138,12 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         foreach ($packedItems as $packedItem) {
             $combinationId = (int) $packedItem['id_product_attribute_item'];
             if ($combinationId === NoCombinationId::NO_COMBINATION_ID) {
-                $coverUrl = $this->productImageRepository->getProductCoverUrl(
-                    new ProductId((int) $packedItem['id_product_item']),
+                $coverUrl = $this->getPackCoverForStandardProduct(
+                    new PackId((int) $packedItem['id_product_item']),
                     $shopConstraint->getShopId()
                 );
             } else {
-                $coverUrl = $this->productImageRepository->getCombinationCoverUrl(
+                $coverUrl = $this->getPackCoverForCombination(
                     new CombinationId($combinationId),
                     $shopConstraint->getShopId()
                 );
@@ -158,5 +169,29 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         }
 
         return $packedProducts;
+    }
+
+    private function getPackCoverForStandardProduct(PackId $packedItemId, ShopId $shopId): string
+    {
+        try {
+            return $this->productImageRepository->getProductCoverUrl($packedItemId, $shopId);
+        } catch (ShopAssociationNotFound $e) {
+            return $this->productImageRepository->getProductCoverUrl(
+                $packedItemId,
+                $this->productRepository->getProductDefaultShopId($packedItemId)
+            );
+        }
+    }
+
+    private function getPackCoverForCombination(CombinationId $packedCombinationId, ShopId $shopId): string
+    {
+        try {
+            return $this->productImageRepository->getCombinationCoverUrl($packedCombinationId, $shopId);
+        } catch (ShopAssociationNotFound $e) {
+            return $this->productImageRepository->getCombinationCoverUrl(
+                $packedCombinationId,
+                $this->combinationRepository->getDefaultShopIdForCombination($packedCombinationId)
+            );
+        }
     }
 }

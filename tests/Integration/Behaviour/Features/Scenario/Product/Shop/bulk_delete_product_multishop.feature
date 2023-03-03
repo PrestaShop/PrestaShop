@@ -186,5 +186,4 @@ Feature: Bulk delete products when multishop feature is enabled
       | productWithCombinations |
     And product "standardProduct" should not exist anymore
     And product "productWithCombinations" should not exist anymore
-    And product productWithCombinations should have no combinations for shops "shop1,shop2,shop3,shop4"
     And combinations "product1LWhite,product1LBlack,product1LBlue" should not exist anymore
