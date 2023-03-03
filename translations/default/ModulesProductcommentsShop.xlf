@@ -50,6 +50,11 @@
   </file>
   <file original="modules/productcomments/controllers/front/ReportComment.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="198645056f217f726ff1dc6e65ccc322">
+        <source>Cannot find the requested product review.</source>
+        <target>Cannot find the requested product review.</target>
+        <note>Line: 63</note>
+      </trans-unit>
       <trans-unit id="4b6a3b2fdf3c89e9f83dfb44b34336fb">
         <source>You need to be logged in to report a review.</source>
         <target>You need to be logged in to report a review.</target>
@@ -64,11 +69,6 @@
   </file>
   <file original="modules/productcomments/controllers/front/UpdateCommentUsefulness.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="198645056f217f726ff1dc6e65ccc322">
-        <source>Cannot find the requested product review.</source>
-        <target>Cannot find the requested product review.</target>
-        <note>Line: 87</note>
-      </trans-unit>
       <trans-unit id="4ab403bbf7563d87b327f2a9b2e04baa">
         <source>This feature is not enabled.</source>
         <target>This feature is not enabled.</target>
@@ -188,6 +188,11 @@
   </file>
   <file original="modules/productcomments/views/templates/hook/product-additional-info.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="7966126831926ad29c528b239d69f855">
+        <source>Write your review</source>
+        <target>Write your review</target>
+        <note>Line: 45</note>
+      </trans-unit>
       <trans-unit id="a71a0229e164fecdcde3c4e0f40473fa">
         <source>Read user reviews</source>
         <target>Read user reviews</target>
@@ -211,11 +216,6 @@
   </file>
   <file original="modules/productcomments/views/templates/hook/product-comments-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7966126831926ad29c528b239d69f855">
-        <source>Write your review</source>
-        <target>Write your review</target>
-        <note>Line: 57</note>
-      </trans-unit>
       <trans-unit id="926d083c719119e1a02ccab444ebb2bc">
         <source>Sorry, your review appreciation cannot be sent.</source>
         <target>Sorry, your review appreciation cannot be sent.</target>

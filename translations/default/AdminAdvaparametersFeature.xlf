@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/KeysReference/FeatureFlagLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="790d59ef178acbc75d233bf4211763c6">
+        <source>Countries</source>
+        <target>Countries</target>
+        <note>Line: 64
+Comment: Countries feature flag</note>
+      </trans-unit>
+      <trans-unit id="b8464cdd84b5f068ad72bf5c4f32163d">
+        <source>States</source>
+        <target>States</target>
+        <note>Line: 68
+Comment: States feature flag</note>
+      </trans-unit>
+      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
+        <source>Carriers</source>
+        <target>Carriers</target>
+        <note>Line: 72
+Comment: Carriers feature flag</note>
+      </trans-unit>
+      <trans-unit id="8612579044efe457f11398b5a2377226">
+        <source>Titles</source>
+        <target>Titles</target>
+        <note>Line: 76
+Comment: Titles feature flag</note>
+      </trans-unit>
+      <trans-unit id="d08ccf52b4cdd08e41cfb99ec42e0b29">
+        <source>Permissions</source>
+        <target>Permissions</target>
+        <note>Line: 80
+Comment: Permissions feature flag</note>
+      </trans-unit>
+      <trans-unit id="98f770b0af18ca763421bac22b4b6805">
+        <source>Features</source>
+        <target>Features</target>
+        <note>Line: 84
+Comment: Features feature flag</note>
+      </trans-unit>
+      <trans-unit id="3d541d3352f36c85628c8dedea668348">
+        <source>Tax rule groups</source>
+        <target>Tax rule groups</target>
+        <note>Line: 88
+Comment: Tax rule groups feature flag</note>
+      </trans-unit>
+      <trans-unit id="207060096360e9c49b413073fe15daaa">
+        <source>Customer threads</source>
+        <target>Customer threads</target>
+        <note>Line: 92
+Comment: Customer threads feature flag</note>
+      </trans-unit>
+      <trans-unit id="0133c7a0fa55069df27f8d9be2c6ab89">
+        <source>Order states</source>
+        <target>Order states</target>
+        <note>Line: 96
+Comment: Order states feature flag</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
