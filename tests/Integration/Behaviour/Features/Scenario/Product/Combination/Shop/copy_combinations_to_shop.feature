@@ -47,7 +47,7 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
     And product "product1" default combination for shop "shop1" should be "product1SWhite"
 
   Scenario: I copy product from a shop to another the combinations are associated to the other shop along with the default
-    Given product "product1" should have no combinations for shops "shop2"
+    Given product product1 is not associated to shop "shop2"
     And product "product1" should not have a default combination for shop "shop2"
     When I set following shops for product "product1":
       | source shop | shop1       |

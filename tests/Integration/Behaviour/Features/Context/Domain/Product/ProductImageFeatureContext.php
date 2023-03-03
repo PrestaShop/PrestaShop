@@ -579,7 +579,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         }
 
         // Save uploaded file MD5 for future checks
-        $this->getSharedStorage()->set($fileName, md5_file( $this->getImagePath($imageId->getValue())));
+        $this->getSharedStorage()->set($fileName, md5_file($this->getImagePath($imageId->getValue())));
     }
 
     /**

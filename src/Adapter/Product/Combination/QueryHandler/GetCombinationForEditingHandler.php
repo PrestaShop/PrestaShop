@@ -304,7 +304,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     {
         $combinationIdValue = (int) $combination->id;
         $combinationId = new CombinationId($combinationIdValue);
-        $combinationImageIds = $this->productImageRepository->getImagesIdsForCombinations([$combinationId]);
+        $combinationImageIds = $this->productImageRepository->getImageIdsForCombinations([$combinationId]);
 
         if (empty($combinationImageIds[$combinationIdValue])) {
             return [];
