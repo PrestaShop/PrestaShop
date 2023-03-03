@@ -146,6 +146,9 @@ class CountryController extends FrameworkBundleAdminController
                 'prestashop.core.form.identifiable_object.handler.country_form_handler'
             );
 
+            /** @var AddressFormatData $addressFormat */
+            $addressFormat = $this->getQueryBus()->handle(new GetAddressFormatData());
+
             $countryForm = $countryFormBuilder->getFormFor($countryId);
             $countryForm->handleRequest($request);
             $result = $countryFormHandler->handleFor($countryId, $countryForm);
@@ -166,6 +169,10 @@ class CountryController extends FrameworkBundleAdminController
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'countryName' => $editableCountry->getLocalizedNames()[$this->getContextLangId()],
+            'addressFormat' => $addressFormat->getAddressFormat(),
+            'encodingAddressFormat' => urlencode($addressFormat->getAddressFormat()),
+            'defaultFormat' => urlencode($addressFormat->getDefaultFormat()),
+            'availableFields' => $addressFormat->getAvailableFields(),
         ]);
     }
 
