@@ -7,8 +7,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
-import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
+import profilesPage from '@pages/BO/advancedParameters/team/profiles';
 import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
 
 // Import data
@@ -48,7 +48,6 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
@@ -73,8 +72,8 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
 
   // 1 : Create 11 profiles
   describe('Create 10 profiles in BO', async () => {
-    const tests = new Array(10).fill(0, 0, 10);
-    tests.forEach((test, index) => {
+    const tests: number[] = new Array(10).fill(0, 0, 10);
+    tests.forEach((test: number, index: number) => {
       it('should go to add new profile page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewProfilePage${index}`, baseContext);
 
@@ -105,7 +104,7 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await profilesPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await profilesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 

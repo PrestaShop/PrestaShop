@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
-import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
+import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
@@ -77,12 +77,10 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
 
   // 1 : Create 2 tax rules with data from faker
   describe('Create 2 Tax rules in BO', async () => {
-    const tests = [
+    [
       {args: {taxRuleToCreate: firstTaxRuleData}},
       {args: {taxRuleToCreate: secondTaxRuleData}},
-    ];
-
-    tests.forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to add new tax rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTaxRulePage${index + 1}`, baseContext);
 
@@ -156,7 +154,7 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
     [
       {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}},
       {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterTaxesToChangeStatus${index}`, baseContext);
 
@@ -174,10 +172,8 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
       it(`should ${test.args.action} tax rules with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
-        /* Successful message is not visible, skipping it */
-        await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
-        // const textResult = await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
-        // await expect(textResult).to.be.equal(taxRulesPage.successfulUpdateStatusMessage);
+        const textResult = await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
+        await expect(textResult).to.contains(taxRulesPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await taxRulesPage.getNumberOfElementInGrid(page);
 

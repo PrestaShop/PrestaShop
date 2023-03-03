@@ -6,20 +6,24 @@ import testContext from '@utils/testContext';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 import {createOrderSpecificProductTest} from '@commonTests/FO/order';
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import creditSlipsPage from '@pages/BO/orders/creditSlips/index';
+import creditSlipsPage from '@pages/BO/orders/creditSlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
+import OrderData from '@data/faker/order';
 import ProductData from '@data/faker/product';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -53,12 +57,19 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
     quantity: 20,
   });
   // New order by customer
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    product,
-    productQuantity: 3,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product,
+        quantity: 3,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // Pre-condition: Create first product
   createProductTest(product, baseContext);
@@ -218,4 +229,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
   // Post-condition
   deleteProductTest(product, baseContext);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

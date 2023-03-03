@@ -17,7 +17,7 @@ import homePage from '@pages/FO/home';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import {Currencies} from '@data/demo/currencies';
+import Currencies from '@data/demo/currencies';
 import Products from '@data/demo/products';
 
 import {expect} from 'chai';

@@ -361,8 +361,13 @@ function updateProgression(currentPosition, total, nextPosition, finish, moreSte
 			$('#import_progressbar_next').width((progressionNext-progressionDone)+'%');
 		} else {
 			$('#import_progressbar_next').width('0%');
-			$('#import_progressbar_done').width((100-progressionDone)+'%');
-			$('#import_progressbar_done2').width(progressionDone+'%');
+      if (progressionDone === 100) {
+        $('#import_progressbar_done').width('100%');
+        $('#import_progressbar_done2').width('0%');
+      } else {
+        $('#import_progressbar_done').width((100-progressionDone)+'%');
+        $('#import_progressbar_done2').width(progressionDone+'%');
+      }
 			if (moreStepLabel) $('#import_progressbar_done2 span').html(moreStepLabel);
 		}
 	}

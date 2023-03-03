@@ -7,8 +7,8 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard/index';
-import pagesPage from '@pages/BO/design/pages/index';
+import dashboardPage from '@pages/BO/dashboard';
+import pagesPage from '@pages/BO/design/pages';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
@@ -78,6 +78,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPageCategoryPage${index}`, baseContext);
 
         await pagesPage.goToAddNewPageCategory(page);
+
         const pageTitle = await addPageCategoryPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });

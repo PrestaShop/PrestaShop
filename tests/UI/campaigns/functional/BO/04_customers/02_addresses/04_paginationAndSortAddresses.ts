@@ -14,7 +14,7 @@ import addressesPage from '@pages/BO/customers/addresses';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {Data} from '@data/import/addresses';
+import ImportAddresses from '@data/import/addresses';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -39,14 +39,14 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
   const fileName: string = 'addresses.csv';
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, ImportAddresses.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all customers data
-    await files.createCSVFile('.', fileName, Data);
+    await files.createCSVFile('.', fileName, ImportAddresses);
   });
 
   after(async () => {

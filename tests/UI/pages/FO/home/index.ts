@@ -15,6 +15,8 @@ import type {Page} from 'playwright';
 class Home extends FOBasePage {
   public readonly pageTitle: string;
 
+  public readonly successAddToCartMessage: string;
+
   private readonly carouselSliderId: string;
 
   private readonly carouselControlDirectionLink: (direction: string) => string;
@@ -29,7 +31,9 @@ class Home extends FOBasePage {
 
   private readonly homePageSection: string;
 
-  private readonly popularProductTitle: string;
+  private readonly productsBlockTitle: (blockId: number) => string;
+
+  private readonly productsBlockDiv: (blockId: number) => string;
 
   private readonly productArticle: (number: number) => string;
 
@@ -41,13 +45,19 @@ class Home extends FOBasePage {
 
   private readonly productColorLink: (number: number, color: string) => string;
 
-  public readonly allProductLink: string;
+  private readonly allProductLink: string;
 
-  public readonly totalProducts: string;
+  private readonly allProductsBlockLink: (blockId: number) => string;
+
+  private readonly totalProducts: string;
 
   private readonly productPrice: (number: number) => string;
 
   private readonly newFlag: (number: number) => string;
+
+  private readonly bannerImg: string;
+
+  private readonly customTextBlock: string;
 
   private readonly newsletterFormField: string;
 
@@ -95,6 +105,8 @@ class Home extends FOBasePage {
 
   private readonly addToCartButton: string;
 
+  private readonly blockCartLabel: string;
+
   private readonly blockCartModalDiv: string;
 
   private readonly blockCartModalCloseButton: string;
@@ -117,7 +129,7 @@ class Home extends FOBasePage {
 
   private readonly cartModalSubtotalBlock: string;
 
-  private readonly cartModalproductTaxInclBlock: string;
+  private readonly cartModalProductTaxInclBlock: string;
 
   private readonly cartModalCheckoutLink: string;
 
@@ -135,6 +147,7 @@ class Home extends FOBasePage {
     super();
 
     this.pageTitle = global.INSTALL.SHOP_NAME;
+    this.successAddToCartMessage = 'Product successfully added to your shopping cart';
 
     // Selectors of slider
     this.carouselSliderId = '#carousel';
@@ -146,7 +159,8 @@ class Home extends FOBasePage {
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
-    this.popularProductTitle = '#content section h2';
+    this.productsBlockTitle = (blockId: number) => `#content section:nth-child(${blockId}) h2`;
+    this.productsBlockDiv = (blockId: number) => `#content section:nth-child(${blockId}) div.products div.js-product`;
     this.productArticle = (number: number) => `#content .products div:nth-child(${number}) article`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
@@ -154,9 +168,12 @@ class Home extends FOBasePage {
     this.productColorLink = (number: number, color: string) => `${this.productArticle(number)} .variant-links`
       + ` a[aria-label='${color}']`;
     this.allProductLink = '#content a.all-product-link';
+    this.allProductsBlockLink = (blockId: number) => `#content section:nth-child(${blockId}) a.all-product-link`;
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = (number: number) => `${this.productArticle(number)} span[aria-label="Price"]`;
     this.newFlag = (number: number) => `${this.productArticle(number)} .product-flag.new`;
+    this.bannerImg = '.banner img';
+    this.customTextBlock = '#custom-text';
     this.newsletterFormField = '.block_newsletter [name=email]';
     this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
 
@@ -187,6 +204,7 @@ class Home extends FOBasePage {
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
+    this.blockCartLabel = '#myModalLabel';
     this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.close`;
     this.cartModalProductNameBlock = `${this.blockCartModalDiv} .product-name`;
     this.cartModalProductPriceBlock = `${this.blockCartModalDiv} .product-price`;
@@ -197,13 +215,22 @@ class Home extends FOBasePage {
     this.cartModalProductsCountBlock = `${this.cartContentBlock} .cart-products-count`;
     this.cartModalShippingBlock = `${this.cartContentBlock} .shipping.value`;
     this.cartModalSubtotalBlock = `${this.cartContentBlock} .subtotal.value`;
-    this.cartModalproductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
+    this.cartModalProductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
     this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
     this.continueShoppingButton = `${this.blockCartModalDiv} div.cart-content-btn button.btn-secondary`;
 
     // Newsletter subscription messages
     this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
     this.alreadyUsedEmailMessage = 'This email address is already registered.';
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.totalProducts);
   }
 
   /**
@@ -242,7 +269,7 @@ class Home extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getSliderURL(page: Page): Promise<string|null> {
+  async getSliderURL(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.carouselSliderURL, 'href');
   }
 
@@ -286,12 +313,117 @@ class Home extends FOBasePage {
   }
 
   /**
-   * Get popular product title
+   * Get products block title
    * @param page {Page} Browser tab
+   * @param blockID {number} The block number in the page
    * @returns {Promise<string>}
    */
-  getPopularProductTitle(page: Page): Promise<string> {
-    return this.getTextContent(page, this.popularProductTitle);
+  async getBlockTitle(page: Page, blockID: number = 1): Promise<string> {
+    let columnSelector: string;
+
+    switch (blockID) {
+      case 1:
+        columnSelector = this.productsBlockTitle(2);
+        break;
+
+      case 2:
+        columnSelector = this.productsBlockTitle(5);
+        break;
+
+      case 3:
+        columnSelector = this.productsBlockTitle(6);
+        break;
+
+      case 4:
+        columnSelector = this.productsBlockTitle(7);
+        break;
+
+      default:
+        throw new Error(`Block ${blockID} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get products block number
+   * @param blockID {number} The block number in the page
+   * @param page {Page} Browser tab
+   */
+  async getProductsBlockNumber(page: Page, blockID: number = 1): Promise<number> {
+    let columnSelector: string;
+
+    switch (blockID) {
+      case 1:
+        columnSelector = this.productsBlockDiv(2);
+        break;
+
+      case 2:
+        columnSelector = this.productsBlockDiv(5);
+        break;
+
+      case 3:
+        columnSelector = this.productsBlockDiv(6);
+        break;
+
+      case 4:
+        columnSelector = this.productsBlockDiv(7);
+        break;
+
+      default:
+        throw new Error(`Block ${blockID} was not found`);
+    }
+
+    return (await page.$$(columnSelector)).length;
+  }
+
+  /**
+   * Go to all products
+   * @param page {Page} Browser tab
+   * @param blockID {number} The block number in the page
+   * @return {Promise<void>}
+   */
+  async goToAllProductsBlockPage(page: Page, blockID: number = 1): Promise<void> {
+    let columnSelector: string;
+
+    switch (blockID) {
+      case 1:
+        columnSelector = this.allProductsBlockLink(2);
+        break;
+
+      case 2:
+        columnSelector = this.allProductsBlockLink(5);
+        break;
+
+      case 3:
+        columnSelector = this.allProductsBlockLink(6);
+        break;
+
+      case 4:
+        columnSelector = this.allProductsBlockLink(7);
+        break;
+
+      default:
+        throw new Error(`Block ${blockID} was not found`);
+    }
+
+    await this.clickAndWaitForNavigation(page, columnSelector);
+  }
+
+  /**
+   * Is banner visible
+   * @param page {Page} Browser tab
+   */
+  async isBannerVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.bannerImg, 1000);
+  }
+
+  /**
+   * Is custom text block visible
+   * @param page {Page} Browser tab
+   */
+  async isCustomTextBlockVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.customTextBlock, 1000);
   }
 
   // Quick view methods
@@ -344,15 +476,26 @@ class Home extends FOBasePage {
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products
    * @param quantityWanted {number} Quantity to order
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async addProductToCartByQuickView(page: Page, id: number, quantityWanted: number = 1): Promise<void> {
+  async addProductToCartByQuickView(page: Page, id: number, quantityWanted: number = 1): Promise<string> {
     await this.quickViewProduct(page, id);
     await this.setValue(page, this.quickViewQuantityWantedInput, quantityWanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
     ]);
+
+    return this.getTextContent(page, this.blockCartLabel);
+  }
+
+  /**
+   * Is add to cart button disabled
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAddToCartButtonDisabled(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.addToCartButton}[disabled]`, 1000);
   }
 
   /**
@@ -411,7 +554,7 @@ class Home extends FOBasePage {
    * @returns {Promise<void>}
    */
   async changeAttributesAndAddToCart(page: Page, attributes: ProductAttribute[], quantity: number) {
-    for (let i:number = 0; i < attributes.length; i++) {
+    for (let i: number = 0; i < attributes.length; i++) {
       await this.changeAttributes(page, attributes[i]);
     }
     await this.changeQuantity(page, quantity);
@@ -599,7 +742,7 @@ class Home extends FOBasePage {
       cartProductsCount: await this.getNumberFromText(page, this.cartModalProductsCountBlock),
       cartSubtotal: parseFloat((await this.getTextContent(page, this.cartModalSubtotalBlock)).replace('€', '')),
       cartShipping: await this.getTextContent(page, this.cartModalShippingBlock),
-      totalTaxIncl: parseFloat((await this.getTextContent(page, this.cartModalproductTaxInclBlock)).replace('€', '')),
+      totalTaxIncl: parseFloat((await this.getTextContent(page, this.cartModalProductTaxInclBlock)).replace('€', '')),
     };
   }
 
@@ -647,7 +790,7 @@ class Home extends FOBasePage {
    * @param socialSharing {string} The social network name
    * @returns {Promise<string|null>}
    */
-  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string|null> {
+  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string | null> {
     let selector;
 
     switch (socialSharing) {

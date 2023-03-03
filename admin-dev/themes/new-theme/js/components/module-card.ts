@@ -50,8 +50,6 @@ const BOEvent = {
 
 /**
  * Class is responsible for handling Module Card behavior
- *
- * This is a port of admin-dev/themes/default/js/bundle/module/module_card.js
  */
 export default class ModuleCard {
   moduleActionMenuLinkSelector: string;
@@ -72,9 +70,9 @@ export default class ModuleCard {
 
   moduleActionMenuUpdateLinkSelector: string;
 
-  moduleItemListSelector: string;
+  moduleActionMenuDeleteLinkSelector: string;
 
-  moduleItemGridSelector: string;
+  moduleItemListSelector: string;
 
   moduleItemActionsSelector: string;
 
@@ -97,8 +95,8 @@ export default class ModuleCard {
     this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disableMobile';
     this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
     this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
+    this.moduleActionMenuDeleteLinkSelector = 'button.module_action_menu_delete';
     this.moduleItemListSelector = '.module-item-list';
-    this.moduleItemGridSelector = '.module-item-grid';
     this.moduleItemActionsSelector = '.module-actions';
 
     /* Selectors only for modal buttons */
@@ -158,6 +156,18 @@ export default class ModuleCard {
           self.dispatchPreEvent('uninstall', this)
           && self.confirmAction('uninstall', this)
           && self.requestToController('uninstall', $(this))
+        );
+      },
+    );
+
+    $(document).on(
+      'click',
+      this.moduleActionMenuDeleteLinkSelector,
+      function () {
+        return (
+          self.dispatchPreEvent('delete', this)
+          && self.confirmAction('delete', this)
+          && self.requestToController('delete', $(this))
         );
       },
     );
@@ -315,14 +325,6 @@ export default class ModuleCard {
     );
   }
 
-  getModuleItemSelector(): string {
-    if ($(this.moduleItemListSelector).length) {
-      return this.moduleItemListSelector;
-    }
-
-    return this.moduleItemGridSelector;
-  }
-
   confirmAction(action: string, element: string): boolean {
     const modal = $(
       ComponentsMap.confirmModal($(element).data('confirm_modal')),
@@ -359,7 +361,6 @@ export default class ModuleCard {
     disableCacheClear: string | boolean = false,
     callback = () => true,
   ): boolean {
-    const self = this;
     let jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
     const spinnerObj = $(
@@ -420,7 +421,7 @@ export default class ModuleCard {
           return;
         }
 
-        const alteredSelector = self.getModuleItemSelector().replace('.', '');
+        const alteredSelector = this.moduleItemListSelector.replace('.', '');
         let mainElement = null;
 
         if (action === 'uninstall') {

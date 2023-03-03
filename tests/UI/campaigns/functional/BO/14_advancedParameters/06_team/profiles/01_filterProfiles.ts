@@ -6,9 +6,9 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard/index';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
-import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
+import dashboardPage from '@pages/BO/dashboard';
+import employeesPage from '@pages/BO/advancedParameters/team';
+import profilesPage from '@pages/BO/advancedParameters/team/profiles';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -46,7 +46,6 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);

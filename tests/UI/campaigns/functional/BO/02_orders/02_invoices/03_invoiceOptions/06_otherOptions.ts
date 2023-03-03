@@ -10,15 +10,16 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import InvoiceData from '@data/faker/invoice';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,12 +42,16 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
   let filePath: string|null;
 
   const invoiceData: InvoiceData = new InvoiceData({legalFreeText: 'Legal free text'});
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
@@ -146,7 +151,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLegalFreeText', baseContext);
 
       // Check the existence of the Legal free text
-      const exist = await files.isTextInPDF(filePath as string, invoiceData.legalFreeText);
+      const exist = await files.isTextInPDF(filePath, invoiceData.legalFreeText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
     });
 
@@ -154,7 +159,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
 
       // Check the existence of the Footer text
-      const exist = await files.isTextInPDF(filePath as string, invoiceData.footerText);
+      const exist = await files.isTextInPDF(filePath, invoiceData.footerText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
     });
   });

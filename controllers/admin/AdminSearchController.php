@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
 use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 
 class AdminSearchControllerCore extends AdminController
 {
@@ -288,7 +289,7 @@ class AdminSearchControllerCore extends AdminController
                 continue;
             }
             // Remove pages without access
-            if (!Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+            if (!Access::isGranted(Permission::PREFIX_TAB . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
                 continue;
             }
             $tab = Tab::getInstanceFromClassName($row['class_name']);

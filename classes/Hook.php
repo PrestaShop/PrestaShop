@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class HookCore extends ObjectModel
@@ -63,6 +64,8 @@ class HookCore extends ObjectModel
     public static $executed_hooks = [];
 
     public static $native_module;
+
+    protected static $disabledHookModules = [];
 
     /**
      * @see ObjectModel::$definition
@@ -423,6 +426,9 @@ class HookCore extends ObjectModel
                     return static::coreCallHook($module, $methodName, $hookArgs);
                 }
             }
+        } catch (ModuleErrorInterface $e) {
+            // Exceptions that implements ModuleErrorInterface are usefull to display error messages
+            throw $e;
         } catch (Exception $e) {
             $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
             if ($environment->isDebug()) {
@@ -724,6 +730,19 @@ class HookCore extends ObjectModel
         }
 
         return !empty($modulesToInvoke) ? $modulesToInvoke : false;
+    }
+
+    /**
+     * Add a module ID to the list of modules that should not execute hooks
+     */
+    public static function disableHooksForModule(int $moduleId): void
+    {
+        if (in_array($moduleId, self::$disabledHookModules)) {
+            return;
+        }
+
+        self::$disabledHookModules[] = $moduleId;
+        Cache::clean(self::MODULE_LIST_BY_HOOK_KEY . '*');
     }
 
     /**
@@ -1064,7 +1083,7 @@ class HookCore extends ObjectModel
             if ($use_groups) {
                 if ($customer instanceof Customer && $customer->isLogged()) {
                     $groups = $customer->getGroups();
-                } elseif ($customer instanceof Customer && $customer->isLogged(true)) {
+                } elseif ($customer instanceof Customer && $customer->isGuest()) {
                     $groups = [(int) Configuration::get('PS_GUEST_GROUP')];
                 } else {
                     $groups = [(int) Configuration::get('PS_UNIDENTIFIED_GROUP')];
@@ -1155,6 +1174,10 @@ class HookCore extends ObjectModel
                     $sql->where('mg.`id_group` IN (' . implode(', ', $groups) . ')');
                 }
             }
+        }
+
+        if (!empty(self::$disabledHookModules)) {
+            $sql->where('m.id_module NOT IN (' . implode(', ', self::$disabledHookModules) . ')');
         }
 
         $sql->groupBy('hm.id_hook, hm.id_module');

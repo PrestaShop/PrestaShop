@@ -55,18 +55,19 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
      * @param string $objectModelClass
      * @param string $exceptionClass
      * @param ShopId $shopId
+     * @param string $shopAssociationClass
      *
      * @return ObjectModel
      *
      * @throws CoreException
      * @throws ShopAssociationNotFound
      */
-    protected function getObjectModelForShop(int $id, string $objectModelClass, string $exceptionClass, ShopId $shopId): ObjectModel
+    protected function getObjectModelForShop(int $id, string $objectModelClass, string $exceptionClass, ShopId $shopId, string $shopAssociationClass = ShopAssociationNotFound::class): ObjectModel
     {
         $objectModel = $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, $shopId->getValue());
 
         // The object is fetched before checking the association, so that the NotFoundException has the priority over the NoAssociationException
-        $this->checkShopAssociation($id, $objectModelClass, $shopId);
+        $this->checkShopAssociation($id, $objectModelClass, $shopId, $shopAssociationClass);
 
         // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
         $objectModel->id_shop_list = [$shopId->getValue()];
@@ -184,13 +185,18 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
      * @param int $id
      * @param string $objectModelClassName
      * @param ShopId $shopId
+     * @param string $shopAssociationExceptionClass
      *
      * @throws ShopAssociationNotFound
      */
-    protected function checkShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): void
-    {
+    protected function checkShopAssociation(
+        int $id,
+        string $objectModelClassName,
+        ShopId $shopId,
+        string $shopAssociationExceptionClass = ShopAssociationNotFound::class
+    ): void {
         if (!$this->hasShopAssociation($id, $objectModelClassName, $shopId)) {
-            throw new ShopAssociationNotFound(sprintf(
+            throw new $shopAssociationExceptionClass(sprintf(
                 'Could not find association between %s %d and Shop %d',
                 $objectModelClassName,
                 $id,

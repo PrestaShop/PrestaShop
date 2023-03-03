@@ -58,6 +58,8 @@ class ColorBrightnessCalculatorTest extends TestCase
         yield ['#E0FFFF', true];
         yield ['#E0FFFF', true];
         yield ['#00008B', false];
+        yield ['#00F', false];
+        yield ['#0F1', true];
         yield ['transparent', true];
     }
 }

@@ -14,10 +14,11 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -46,12 +47,16 @@ describe('BO - Customers - Outstanding : View order', async () => {
   let outstandingId: string;
 
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
@@ -139,7 +144,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
 
       await outstandingPage.resetFilter(page);
 
-      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1) as string;
+      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1);
       await expect(outstandingId).to.be.at.least(1);
     });
 

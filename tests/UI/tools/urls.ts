@@ -1,4 +1,4 @@
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import {Page} from 'playwright';
 
 /**

@@ -26,6 +26,7 @@
 import ImageSelector from '@pages/product/combination/form/image-selector';
 import QuantityModeSwitcher from '@pages/product/combination/quantity-mode-switcher';
 import CombinationFormMapping from '@pages/product/combination/form/combination-form-mapping';
+import FormFieldToggler from '@components/form/form-field-toggler';
 
 // @ts-ignore
 const {$} = window;
@@ -41,6 +42,13 @@ $(() => {
   ]);
   new ImageSelector();
   new QuantityModeSwitcher();
+
+  // DisablingSwitch is already used in low_stock_alert field to decide if form field is intended to be updated or not
+  // so we toggle low_stock_threshold availability by low_stock_alert field here by initiating toggler manually.
+  new FormFieldToggler({
+    disablingInputSelector: 'input[name="bulk_combination[stock][low_stock_threshold][low_stock_alert]"]',
+    targetSelector: '#bulk_combination_stock_low_stock_threshold_threshold_value',
+  });
 
   const priceExcludedTaxId = CombinationFormMapping['price.excludedTaxId'];
   const priceIncludedTaxId = CombinationFormMapping['price.includedTaxId'];

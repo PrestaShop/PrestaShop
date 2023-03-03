@@ -16,13 +16,13 @@ import productPage from '@pages/FO/product';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import deliverySlipsPage from '@pages/BO/orders/deliverySlips/index';
+import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 import OrderStatuses from '@data/demo/orderStatuses';
 
 import {expect} from 'chai';
@@ -78,7 +78,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`${test.args.action} product image in delivery slip then check the file created`, async () => {
       it('should go to \'Orders > Delivery slips\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToDeliverySlipsPage${index}`, baseContext);

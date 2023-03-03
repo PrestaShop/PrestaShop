@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Mail;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -133,8 +132,7 @@ class MailThemeController extends FrameworkBundleAdminController
                     $modulesMailFolder
                 );
 
-                /** @var CommandBusInterface $commandBus */
-                $commandBus = $this->get('prestashop.core.command_bus');
+                $commandBus = $this->getCommandBus();
                 $commandBus->handle($generateCommand);
 
                 if ($data['overwrite']) {
@@ -275,7 +273,7 @@ class MailThemeController extends FrameworkBundleAdminController
      */
     public function sendTestMailAction($theme, $layout, $locale, $module = '')
     {
-        if ($this->configuration->get('PS_MAIL_THEME') !== $theme) {
+        if ($this->getConfiguration()->get('PS_MAIL_THEME') !== $theme) {
             $this->addFlash(
                 'error',
                 $this->trans(

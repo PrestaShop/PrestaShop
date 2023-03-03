@@ -179,7 +179,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     it('should update the created catalog price rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCatalogPriceRule', baseContext);
 
-      await catalogPriceRulesPage.goToEditCatalogPriceRulePage(page, newCatalogPriceRuleData);
+      await catalogPriceRulesPage.goToEditCatalogPriceRulePage(page, newCatalogPriceRuleData.name);
 
       const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCatalogPriceRulePage.editPageTitle);

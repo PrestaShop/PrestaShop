@@ -63,3 +63,6 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_COOKIE_LIFETIME_BO")'
+
+  PrestaShop\PrestaShop\Adapter\Security\Access:
+    public: false

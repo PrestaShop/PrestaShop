@@ -39,8 +39,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
-/*
+/**
  * This class is responsible for authenticating api calls using the Authorization header
+ *
+ * @experimental
  */
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {

@@ -24,9 +24,9 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -146,7 +146,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
   [
     {args: {action: 'activate', enable: true, prefix: '#NE'}},
     {args: {action: 'deactivate', enable: false, prefix: '#RE'}},
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 

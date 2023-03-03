@@ -18,10 +18,11 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import Order from '@data/types/order';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -37,17 +38,21 @@ Scenario:
 - Go to FO and check the invoice for the first order
 - Check that no invoice is visible for the second order
  */
-describe('FO - Account - Order details : download invoice', async () => {
+describe('FO - Account - Order details : Download invoice', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let fileName: string;
 
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -104,7 +109,7 @@ describe('FO - Account - Order details : download invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
       // Get invoice file name
-      fileName = await orderPageTabListBlock.getFileName(page) as string;
+      fileName = await orderPageTabListBlock.getFileName(page);
       await expect(fileName).not.null;
     });
   });

@@ -21,9 +21,9 @@ import foLoginPage from '@pages/FO/login';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import tax from '@data/demo/tax';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -104,7 +104,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     describe(`Set gift option with status: '${test.args.isGiftWrapping}', price: '${test.args.giftWrappingPrice}', `
       + `tax: '${test.args.isGiftWrappingTax}', recyclable packaging: '${test.args.isRecycledPackaging}'`, async () => {
       describe('Set gift options in BO', async () => {

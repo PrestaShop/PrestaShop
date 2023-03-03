@@ -28,16 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Create;
 
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -58,7 +62,7 @@ class CombinationCreator
     private $combinationGenerator;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -68,9 +72,19 @@ class CombinationCreator
     private $combinationRepository;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableMultiShopRepository;
+
+    /**
+     * @var AttributeGroupRepository
+     */
+    private $attributeGroupRepository;
+
+    /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
 
     /**
      * @var DefaultCombinationUpdater
@@ -80,15 +94,17 @@ class CombinationCreator
     /**
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationRepository $combinationRepository
-     * @param ProductMultiShopRepository $productRepository
-     * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
+     * @param ProductRepository $productRepository
+     * @param StockAvailableRepository $stockAvailableMultiShopRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
         CombinationRepository $combinationRepository,
-        ProductMultiShopRepository $productRepository,
-        StockAvailableMultiShopRepository $stockAvailableMultiShopRepository,
+        ProductRepository $productRepository,
+        StockAvailableRepository $stockAvailableMultiShopRepository,
+        AttributeGroupRepository $attributeGroupRepository,
+        AttributeRepository $attributeRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->combinationGenerator = $combinationGenerator;
@@ -96,6 +112,8 @@ class CombinationCreator
         $this->productRepository = $productRepository;
         $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
+        $this->attributeGroupRepository = $attributeGroupRepository;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -111,6 +129,8 @@ class CombinationCreator
     public function createCombinations(ProductId $productId, array $groupedAttributeIdsList, ShopConstraint $shopConstraint): array
     {
         $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
+        $this->assertAttributesExistenceInShops($productId, $groupedAttributeIdsList, $shopConstraint);
+
         if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
         }
@@ -292,6 +312,41 @@ class CombinationCreator
             SpecificPriceRule::applyAllRules([$productId->getValue()]);
         } catch (PrestaShopException $e) {
             throw new CoreException('Error occurred when trying to apply specific prices rules', 0, $e);
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param GroupedAttributeIds[] $groupedAttributeIdsList
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return void
+     *
+     * @throws CannotGenerateCombinationException
+     */
+    private function assertAttributesExistenceInShops(
+        ProductId $productId,
+        array $groupedAttributeIdsList,
+        ShopConstraint $shopConstraint
+    ): void {
+        $attributeGroupIds = [];
+        $attributeIds = [];
+        foreach ($groupedAttributeIdsList as $groupedAttributeIds) {
+            $attributeGroupIds[] = $groupedAttributeIds->getAttributeGroupId();
+            $attributeIds = array_merge($attributeIds, $groupedAttributeIds->getAttributeIds());
+        }
+
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+
+        try {
+            $this->attributeGroupRepository->assertExistsInEveryShop($attributeGroupIds, $shopIds);
+            $this->attributeRepository->assertExistsInEveryShop($attributeIds, $shopIds);
+        } catch (ShopAssociationNotFound $e) {
+            throw new CannotGenerateCombinationException(
+                'Not all provided attributes exists in all shops',
+                CannotGenerateCombinationException::DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS,
+                $e
+            );
         }
     }
 }

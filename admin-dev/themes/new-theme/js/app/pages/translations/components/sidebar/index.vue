@@ -23,18 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="col-sm-3">
-    <div class="card p-3">
-      <PSTree
-        ref="domainsTree"
-        :model="$store.getters.domainsTree"
-        class-name="translationTree"
-        :translations="translations"
-        :current-item="currentItem"
-        v-if="treeReady"
-      />
-      <PSSpinner v-else />
-    </div>
+  <div class="card p-3">
+    <PSTree
+      ref="domainsTree"
+      :model="$store.getters.domainsTree"
+      class-name="translationTree"
+      :translations="translations"
+      :current-item="currentItem"
+      v-if="treeReady"
+    />
+    <PSSpinner v-else />
   </div>
 </template>
 

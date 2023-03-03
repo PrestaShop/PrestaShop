@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+
 /**
  * Class ImageManagerCore.
  *
@@ -36,6 +38,10 @@ class ImageManagerCore
     public const ERROR_FILE_NOT_EXIST = 1;
     public const ERROR_FILE_WIDTH = 2;
     public const ERROR_MEMORY_LIMIT = 3;
+
+    // IMAGETYPE_AVIF constant is only available in php 8.1, so we make our own here
+    private const PS_IMAGETYPE_AVIF = 19;
+
     public const MIME_TYPE_SUPPORTED = [
         'image/gif',
         'image/jpg',
@@ -246,11 +252,14 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
+        $isMultipleImageFormatFeatureActive = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+
         // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
         // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
         // because JPG reencoding by GD, even with max quality setting, degrades the image.
         if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType) {
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType
+            || $isMultipleImageFormatFeatureActive && $type == IMAGETYPE_PNG && !$forceType) {
             $fileType = 'png';
         }
 
@@ -258,8 +267,13 @@ class ImageManagerCore
         // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
         // because JPG reencoding by GD, even with max quality setting, degrades the image.
         if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
-            || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType) {
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType
+            || $isMultipleImageFormatFeatureActive && $type == IMAGETYPE_WEBP && !$forceType) {
             $fileType = 'webp';
+        }
+
+        if ($isMultipleImageFormatFeatureActive && $type == self::PS_IMAGETYPE_AVIF && !$forceType) {
+            $fileType = 'avif';
         }
 
         if (!$sourceWidth) {
@@ -305,7 +319,7 @@ class ImageManagerCore
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
         // If the output is PNG, fill with transparency. Else fill with white background.
-        if ($fileType == 'png') {
+        if ($fileType == 'png' || $fileType == 'webp' || $fileType == 'avif') {
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
@@ -654,6 +668,7 @@ class ImageManagerCore
         static $psPngQuality = null;
         static $psJpegQuality = null;
         static $psWebpQuality = null;
+        static $psAvifQuality = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -667,6 +682,11 @@ class ImageManagerCore
             $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
         }
 
+        if ($psAvifQuality === null) {
+            $psAvifQuality = Configuration::get('PS_AVIF_QUALITY');
+        }
+
+        $success = false;
         switch ($type) {
             case 'gif':
                 // @phpstan-ignore-next-line
@@ -685,6 +705,13 @@ class ImageManagerCore
                 $quality = ($psWebpQuality === false ? 80 : $psWebpQuality);
                 // @phpstan-ignore-next-line
                 $success = imagewebp($resource, $filename, (int) $quality);
+
+                break;
+
+            case 'avif':
+                $quality = ($psAvifQuality === false ? 80 : $psAvifQuality);
+                // @phpstan-ignore-next-line
+                $success = imageavif($resource, $filename, $quality);
 
                 break;
 
@@ -721,6 +748,7 @@ class ImageManagerCore
             'image/png' => ['png'],
             'image/webp' => ['webp'],
             'image/svg+xml' => ['svg'],
+            'image/avif' => ['avif'],
         ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 

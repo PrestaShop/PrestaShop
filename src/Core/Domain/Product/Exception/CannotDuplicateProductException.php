@@ -46,7 +46,7 @@ class CannotDuplicateProductException extends ProductException
     /**
      * When product attributes duplication fails
      */
-    public const FAILED_DUPLICATE_ATTRIBUTES = 30;
+    public const FAILED_DUPLICATE_COMBINATIONS = 30;
 
     /**
      * When product group reduction duplication fails

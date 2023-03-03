@@ -13,13 +13,13 @@ export default class BOBasePage extends CommonPage {
 
   public successfulUpdateMessage: string;
 
-  public readonly successfulDeleteMessage: string;
+  public successfulDeleteMessage: string;
 
-  public readonly successfulMultiDeleteMessage: string;
+  public successfulMultiDeleteMessage: string;
 
-  private readonly accessDeniedMessage: string;
+  public readonly accessDeniedMessage: string;
 
-  private readonly pageNotFoundMessage: string;
+  public readonly pageNotFoundMessage: string;
 
   private readonly userProfileIconNonMigratedPages: string;
 
@@ -49,11 +49,23 @@ export default class BOBasePage extends CommonPage {
 
   private readonly manageYourQuickAccessLink: string;
 
-  private readonly navbarSarchInput: string;
+  private readonly navbarSearchInput: string;
 
-  private readonly helpButton: string;
+  protected readonly helpButton: string;
 
   private readonly menuMobileButton: string;
+
+  private readonly notificationsLink: string;
+
+  private readonly notificationsDropDownMenu: string;
+
+  private readonly totalNotificationsValue: string;
+
+  private readonly notificationsTab: (tabName: string) => string;
+
+  private readonly notificationsNumberInTab: (tabName: string) => string;
+
+  private readonly notificationRowInTab: (tabName: string, row: number) => string;
 
   private readonly desktopNavbar: string;
 
@@ -73,99 +85,99 @@ export default class BOBasePage extends CommonPage {
 
   public readonly deliverySlipslink: string;
 
-  private readonly shoppingCartsLink: string;
+  public readonly shoppingCartsLink: string;
 
   public readonly catalogParentLink: string;
 
   public readonly productsLink: string;
 
-  private readonly categoriesLink: string;
+  public readonly categoriesLink: string;
 
-  private readonly monitoringLink: string;
+  public readonly monitoringLink: string;
 
-  private readonly attributesAndFeaturesLink: string;
+  public readonly attributesAndFeaturesLink: string;
 
   public readonly brandsAndSuppliersLink: string;
 
-  private readonly filesLink: string;
+  public readonly filesLink: string;
 
-  private readonly discountsLink: string;
+  public readonly discountsLink: string;
 
-  private readonly stocksLink: string;
+  public readonly stocksLink: string;
 
   public readonly customersParentLink: string;
 
   public readonly customersLink: string;
 
-  private readonly addressesLink: string;
+  public readonly addressesLink: string;
 
-  private readonly outstandingLink: string;
+  public readonly outstandingLink: string;
 
-  private readonly customerServiceParentLink: string;
+  public readonly customerServiceParentLink: string;
 
-  private readonly customerServiceLink: string;
+  public readonly customerServiceLink: string;
 
-  private readonly orderMessagesLink: string;
+  public readonly orderMessagesLink: string;
 
-  private readonly merchandiseReturnsLink: string;
+  public readonly merchandiseReturnsLink: string;
 
-  private readonly modulesParentLink: string;
+  public readonly modulesParentLink: string;
 
   private readonly moduleCatalogueLink: string;
 
-  private readonly moduleManagerLink: string;
+  public readonly moduleManagerLink: string;
 
-  private readonly designParentLink: string;
+  public readonly designParentLink: string;
 
-  private readonly themeAndLogoParentLink: string;
+  public readonly themeAndLogoParentLink: string;
 
-  private readonly emailThemeLink: string;
+  public readonly emailThemeLink: string;
 
-  private readonly pagesLink: string;
+  public readonly pagesLink: string;
 
   private readonly positionsLink: string;
 
-  private readonly imageSettingsLink: string;
+  public readonly imageSettingsLink: string;
 
-  private readonly linkWidgetLink: string;
+  public readonly linkWidgetLink: string;
 
-  private readonly shippingLink: string;
+  public readonly shippingLink: string;
 
-  private readonly carriersLink: string;
+  public readonly carriersLink: string;
 
-  private readonly shippingPreferencesLink: string;
+  public readonly shippingPreferencesLink: string;
 
-  private readonly paymentParentLink: string;
+  public readonly paymentParentLink: string;
 
   private readonly paymentMethodsLink: string;
 
-  private readonly preferencesLink: string;
+  public readonly preferencesLink: string;
 
-  private readonly internationalParentLink: string;
+  public readonly internationalParentLink: string;
 
-  private readonly taxesLink: string;
+  public readonly taxesLink: string;
 
-  private readonly localizationLink: string;
+  public readonly localizationLink: string;
 
-  private readonly locationsLink: string;
+  public readonly locationsLink: string;
 
-  private readonly translationsLink: string;
+  public readonly translationsLink: string;
 
   public readonly shopParametersParentLink: string;
 
-  private readonly shopParametersGeneralLink: string;
+  public readonly shopParametersGeneralLink: string;
 
-  private readonly orderSettingsLink: string;
+  public readonly orderSettingsLink: string;
 
-  private readonly productSettingsLink: string;
+  public readonly productSettingsLink: string;
 
   public readonly customerSettingsLink: string;
 
   public readonly contactLink: string;
 
-  private readonly trafficAndSeoLink: string;
+  public readonly trafficAndSeoLink: string;
 
-  private readonly searchLink: string;
+  public readonly searchLink: string;
 
   public readonly advancedParametersLink: string;
 
@@ -177,17 +189,17 @@ export default class BOBasePage extends CommonPage {
 
   public readonly emailLink: string;
 
-  private readonly importLink: string;
+  public readonly importLink: string;
 
-  private readonly teamLink: string;
+  public readonly teamLink: string;
 
-  private readonly databaseLink: string;
+  public readonly databaseLink: string;
 
-  private readonly webserviceLink: string;
+  public readonly webserviceLink: string;
 
-  private readonly logsLink: string;
+  public readonly logsLink: string;
 
-  private readonly featureFlagLink: string;
+  public readonly featureFlagLink: string;
 
   private readonly securityLink: string;
 
@@ -195,17 +207,19 @@ export default class BOBasePage extends CommonPage {
 
   private readonly menuTabLink: string;
 
-  private readonly menuTree: { parent: string; children: string[] }[];
+  public readonly menuTree: { parent: string; children: string[] }[];
 
-  private readonly growlDiv: string;
+  protected readonly growlDiv: string;
 
   private readonly growlDefaultDiv: string;
 
   protected growlMessageBlock: string;
 
-  private readonly growlCloseButton: string;
+  protected growlCloseButton: string;
 
   protected alertBlock: string;
+
+  protected alertBlockCloseButton: string;
 
   protected readonly alertSuccessBlock: string;
 
@@ -215,27 +229,27 @@ export default class BOBasePage extends CommonPage {
 
   protected alertSuccessBlockParagraph: string;
 
-  private readonly alertDangerBlockParagraph: string;
+  protected alertDangerBlockParagraph: string;
 
   private readonly alertInfoBlockParagraph: string;
 
   private readonly confirmationModal: string;
 
-  private readonly modalDialog: string;
+  protected readonly modalDialog: string;
 
-  private readonly modalDialogYesButton: string;
+  protected readonly modalDialogYesButton: string;
 
   private readonly sfToolbarMainContentDiv: string;
 
   private readonly sfCloseToolbarLink: string;
 
-  private readonly rightSidebar: string;
+  protected readonly rightSidebar: string;
 
   private readonly helpDocumentURL: string;
 
-  private readonly invalidTokenContinuelink: string;
+  private readonly invalidTokenContinueLink: string;
 
-  private readonly invalidTokenCancellink: string;
+  private readonly invalidTokenCancelLink: string;
 
   /**
    * @constructs
@@ -269,11 +283,17 @@ export default class BOBasePage extends CommonPage {
     this.quickAddCurrentLink = '#quick-add-link';
     this.quickAccessRemoveLink = '#quick-remove-link';
     this.manageYourQuickAccessLink = '#quick-manage-link';
-    this.navbarSarchInput = '#bo_query';
+    this.navbarSearchInput = '#bo_query';
 
     // Header links
     this.helpButton = '#product_form_open_help';
     this.menuMobileButton = '.js-mobile-menu';
+    this.notificationsLink = '#notification';
+    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown';
+    this.totalNotificationsValue = '#total_notif_value';
+    this.notificationsTab = (tabName: string) => `#${tabName}-tab`;
+    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value`;
+    this.notificationRowInTab = (tabName: string, row: number) => `#${tabName}-notifications div a:nth-child(${row})`;
 
     // left navbar
     this.desktopNavbar = '.nav-bar:not(.mobile-nav)';
@@ -525,6 +545,7 @@ export default class BOBasePage extends CommonPage {
 
     // Alert Text
     this.alertBlock = 'div.alert';
+    this.alertBlockCloseButton = `${this.alertBlock} button[aria-label='Close']`;
     this.alertSuccessBlock = `${this.alertBlock}.alert-success`;
     this.alertDangerBlock = `${this.alertBlock}.alert-danger`;
     this.alertInfoBlock = `${this.alertBlock}.alert-info`;
@@ -546,13 +567,21 @@ export default class BOBasePage extends CommonPage {
     this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
 
     // Invalid token block
-    this.invalidTokenContinuelink = 'a.btn-continue';
-    this.invalidTokenCancellink = 'a.btn-cancel';
+    this.invalidTokenContinueLink = 'a.btn-continue';
+    this.invalidTokenCancelLink = 'a.btn-cancel';
   }
 
   /*
   Methods
    */
+  /**
+   * Go to dashboard page
+   * @param page {Page} Browser tab
+   */
+  async goToDashboardPage(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.dashboardLink);
+  }
+
   /**
    * Click on link from Quick access dropdown toggle
    * @param page {Page} Browser tab
@@ -581,7 +610,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async removeLinkFromQuickAccess(page: Page): Promise<string|null> {
+  async removeLinkFromQuickAccess(page: Page): Promise<string | null> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
 
@@ -594,7 +623,7 @@ export default class BOBasePage extends CommonPage {
    * @param pageName {string} Page name to add on quick access
    * @returns {Promise<string|null>}
    */
-  async addCurrentPageToQuickAccess(page: Page, pageName: string): Promise<string|null> {
+  async addCurrentPageToQuickAccess(page: Page, pageName: string): Promise<string | null> {
     await this.dialogListener(page, true, pageName);
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
@@ -732,7 +761,53 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
-   * Returns to the dashboard then logout
+   * Click on notifications link
+   * @param page {Page} Browser tab
+   */
+  async clickOnNotificationsLink(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.notificationsLink);
+
+    return this.elementVisible(page, this.notificationsDropDownMenu, 1000);
+  }
+
+  /**
+   * Get all notifications number
+   * @param page {Page} Browser tab
+   */
+  getAllNotificationsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.totalNotificationsValue, 2000);
+  }
+
+  /**
+   * Click on notifications tab
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   */
+  async clickOnNotificationsTab(page: Page, tabName: string): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.notificationsTab(tabName));
+  }
+
+  /**
+   * Get notifications number in tab
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   */
+  getNotificationsNumberInTab(page: Page, tabName: string): Promise<number> {
+    return this.getNumberFromText(page, this.notificationsNumberInTab(tabName), 2000);
+  }
+
+  /**
+   * Click on notification on tab
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   * @param row {number} row in notification tab
+   */
+  async clickOnNotification(page: Page, tabName: string, row: number = 1): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.notificationRowInTab(tabName, row));
+  }
+
+  /**
+   * Go to my profile page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
@@ -755,7 +830,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getCurrentEmployeeAvatar(page: Page): Promise<string|null> {
+  async getCurrentEmployeeAvatar(page: Page): Promise<string | null> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
     } else {
@@ -847,7 +922,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getHelpDocumentURL(page: Page): Promise<string|null> {
+  async getHelpDocumentURL(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.helpDocumentURL, 'data');
   }
 
@@ -857,7 +932,7 @@ export default class BOBasePage extends CommonPage {
    * @param timeout {number} Timeout to wait for the selector
    * @return {Promise<string|null>}
    */
-  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string|null> {
+  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
     return page.textContent(this.growlMessageBlock, {timeout});
   }
 
@@ -927,10 +1002,10 @@ export default class BOBasePage extends CommonPage {
    */
   async navigateToPageWithInvalidToken(page: Page, url: string, continueToPage: boolean = true): Promise<void> {
     await this.goTo(page, url);
-    if (await this.elementVisible(page, this.invalidTokenContinuelink, 10000)) {
+    if (await this.elementVisible(page, this.invalidTokenContinueLink, 10000)) {
       await this.clickAndWaitForNavigation(
         page,
-        continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
+        continueToPage ? this.invalidTokenContinueLink : this.invalidTokenCancelLink,
       );
     }
   }
@@ -942,7 +1017,7 @@ export default class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async search(page: Page, query: string): Promise<void> {
-    await this.setValue(page, this.navbarSarchInput, query);
+    await this.setValue(page, this.navbarSearchInput, query);
     await page.keyboard.press('Enter');
     await page.waitForNavigation({waitUntil: 'networkidle'});
   }

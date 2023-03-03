@@ -62,6 +62,14 @@ class TaxRulesGroupCore extends ObjectModel
 
     protected static $_taxes = [];
 
+    /**
+     * @param bool $null_values
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function update($null_values = false)
     {
         if (!$this->deleted && $this->isUsed()) {

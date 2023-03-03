@@ -1,12 +1,13 @@
-import {Currencies} from '@data/demo/currencies';
+import Currencies from '@data/demo/currencies';
 import Zones from '@data/demo/zones';
+import CurrencyData from '@data/faker/currency';
 import ZoneData from '@data/faker/zone';
 import CountryCreator from '@data/types/country';
 
 import {faker} from '@faker-js/faker';
 
 const zones: string[] = Object.values(Zones).map((zone: ZoneData) => zone.name);
-const currencies: string[] = Object.values(Currencies).map((currency) => currency.name);
+const currencies: string[] = Object.values(Currencies).map((currency: CurrencyData) => currency.name);
 
 /**
  * Create new country to use on creation form on country page on BO

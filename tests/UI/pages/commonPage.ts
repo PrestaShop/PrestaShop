@@ -69,7 +69,7 @@ export default class CommonPage {
    * @returns {Promise<void>}
    */
   async waitForSelector(
-    page: Page|Frame,
+    page: Page | Frame,
     selector: string,
     state: PageWaitForSelectorOptionsState,
     timeout: number = 10000,
@@ -84,7 +84,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
-  async waitForVisibleSelector(page: Page|Frame, selector: string, timeout: number = 10000): Promise<void> {
+  async waitForVisibleSelector(page: Page | Frame, selector: string, timeout: number = 10000): Promise<void> {
     await this.waitForSelector(page, selector, 'visible', timeout);
   }
 
@@ -117,7 +117,7 @@ export default class CommonPage {
    * @param waitForSelector {boolean} True to wait for selector to be visible before getting text
    * @return {Promise<string>}
    */
-  async getTextContent(page: Page|Frame, selector: string, waitForSelector: boolean = true): Promise<string> {
+  async getTextContent(page: Page | Frame, selector: string, waitForSelector: boolean = true): Promise<string> {
     if (waitForSelector) {
       await this.waitForVisibleSelector(page, selector);
     }
@@ -133,7 +133,7 @@ export default class CommonPage {
    * @param attribute {string} Name of the attribute to get
    * @returns {Promise<string|null>}
    */
-  async getAttributeContent(page: Page, selector: string, attribute: string): Promise<string|null> {
+  async getAttributeContent(page: Page, selector: string, attribute: string): Promise<string | null> {
     return page.getAttribute(selector, attribute);
   }
 
@@ -216,7 +216,7 @@ export default class CommonPage {
    * @param value {?string|number} Value to set on the input
    * @return {Promise<void>}
    */
-  async setValue(page: Page, selector: string, value: string|number): Promise<void> {
+  async setValue(page: Page, selector: string, value: string | number): Promise<void> {
     await this.clearInput(page, selector);
 
     if (value !== null) {
@@ -230,7 +230,7 @@ export default class CommonPage {
    * @param selector {string} String to locate the element for the deletion
    * @returns {Promise<void>}
    */
-  async clearInput(page: Page, selector:string): Promise<void> {
+  async clearInput(page: Page, selector: string): Promise<void> {
     await this.waitForVisibleSelector(page, selector);
     // eslint-disable-next-line no-return-assign,no-param-reassign
     await page.$eval(selector, (el: HTMLInputElement) => el.value = '');
@@ -262,9 +262,9 @@ export default class CommonPage {
    * @param tabId {number} Tab to get focus on after closing the other tab
    * @return {Promise<Page|undefined>}
    */
-  async closePage(browserContext: BrowserContext, page: Page, tabId: number = -1): Promise<Page|undefined> {
+  async closePage(browserContext: BrowserContext, page: Page, tabId: number = -1): Promise<Page | undefined> {
     await page.close();
-    let focusedPage: Page|undefined;
+    let focusedPage: Page | undefined;
 
     if (tabId !== -1) {
       focusedPage = (browserContext.pages())[tabId];
@@ -290,7 +290,7 @@ export default class CommonPage {
    * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByVisibleText(page: Page, selector: string, textValue: string|number, force: boolean = false): Promise<void> {
+  async selectByVisibleText(page: Page, selector: string, textValue: string | number, force: boolean = false): Promise<void> {
     await page.selectOption(selector, {label: textValue.toString()}, {force});
   }
 
@@ -313,9 +313,9 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<number>}
    */
-  async getNumberFromText(page: Page|Frame, selector: string, timeout: number = 0): Promise<number> {
+  async getNumberFromText(page: Page | Frame, selector: string, timeout: number = 0): Promise<number> {
     await page.waitForTimeout(timeout);
-    const text = await this.getTextContent(page, selector);
+    const text = await this.getTextContent(page, selector, false);
     const number = (/\d+/g.exec(text) ?? '').toString();
 
     return parseInt(number, 10);
@@ -433,7 +433,7 @@ export default class CommonPage {
    * @param filePath {Array<string>} Path of the file to add
    * @returns {Promise<void>}
    */
-  async uploadOnFileChooser(page: Page, selector: string, filePath: string): Promise<void> {
+  async uploadOnFileChooser(page: Page, selector: string, filePath: string[]): Promise<void> {
     // Set value when fileChooser is open
     page.once('filechooser', async (fileChooser: FileChooser) => {
       await fileChooser.setFiles(filePath);
@@ -473,7 +473,7 @@ export default class CommonPage {
    * @param targetBlank {boolean} Link has attribute target=blank
    * @returns {Promise<string|null>}
    */
-  async clickAndWaitForDownload(page: Page, selector: string, targetBlank: boolean = false): Promise<string|null> {
+  async clickAndWaitForDownload(page: Page, selector: string, targetBlank: boolean = false): Promise<string | null> {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     if (targetBlank) {

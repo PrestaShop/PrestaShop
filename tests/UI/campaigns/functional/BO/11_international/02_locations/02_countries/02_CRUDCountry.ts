@@ -19,7 +19,7 @@ import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foNewAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import CountryData from '@data/faker/country';
 
 import {expect} from 'chai';
@@ -206,6 +206,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPage', baseContext);
 
       await countriesPage.goToEditCountryPage(page, 1);
+
       const pageTitle = await addCountryPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
     });

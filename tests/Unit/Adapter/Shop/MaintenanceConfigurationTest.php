@@ -58,6 +58,7 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
                     ['PS_MAINTENANCE_IP', null, $shopConstraint, 'test'],
                     ['PS_MAINTENANCE_TEXT', null, $shopConstraint, 'test'],
                     ['PS_SHOP_ENABLE', false, $shopConstraint, true],
+                    ['PS_MAINTENANCE_ALLOW_ADMINS', false, $shopConstraint, false],
                 ]
             );
 
@@ -65,6 +66,7 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
         $this->assertSame(
             [
                 'enable_shop' => true,
+                'maintenance_allow_admins' => false,
                 'maintenance_ip' => 'test',
                 'maintenance_text' => 'test',
             ],
@@ -93,9 +95,10 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['enable_shop' => 'wrong_type', 'maintenance_ip' => 'test', 'maintenance_text' => ['fr' => 'test string']]],
-            [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_ip' => ['wrong_type'], 'maintenance_text' => ['fr' => 'test string']]],
-            [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_ip' => 'test', 'maintenance_text' => 'wrong_type']],
+            [InvalidOptionsException::class, ['enable_shop' => 'wrong_type', 'maintenance_allow_admins' => true, 'maintenance_ip' => 'test', 'maintenance_text' => ['fr' => 'test string']]],
+            [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_allow_admins' => 'wrong_type', 'maintenance_ip' => 'test', 'maintenance_text' => ['fr' => 'test string']]],
+            [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_allow_admins' => true, 'maintenance_ip' => ['wrong_type'], 'maintenance_text' => ['fr' => 'test string']]],
+            [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_allow_admins' => true, 'maintenance_ip' => 'test', 'maintenance_text' => 'wrong_type']],
         ];
     }
 
@@ -105,6 +108,7 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
 
         $res = $maintenanceConfiguration->updateConfiguration([
             'enable_shop' => true,
+            'maintenance_allow_admins' => false,
             'maintenance_ip' => 'test',
             'maintenance_text' => ['fr' => 'test string'],
         ]);

@@ -28,15 +28,19 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Category;
 use Configuration;
+use FeatureFlag;
 use Image;
 use ImageManager;
 use ImageType;
 use Language;
 use Link;
+use Manufacturer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use Store;
+use Supplier;
 
 /**
  * This class is mainly responsible of Product images.
@@ -48,9 +52,12 @@ class ImageRetriever
      */
     private $link;
 
+    private $isMultipleImageFormatFeatureActive;
+
     public function __construct(Link $link)
     {
         $this->link = $link;
+        $this->isMultipleImageFormatFeatureActive = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
     }
 
     /**
@@ -129,7 +136,7 @@ class ImageRetriever
     }
 
     /**
-     * @param Product|Store|Category $object
+     * @param Product|Store|Category|Manufacturer|Supplier $object
      * @param int $id_image
      *
      * @return array|null
@@ -142,92 +149,114 @@ class ImageRetriever
             return null;
         }
 
+        // Resolve functions we will use to get image links from Link class
         if (get_class($object) === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
-            $root = _PS_PRODUCT_IMG_DIR_;
+            // Product images are the only exception in path structure, they are placed in folder
+            // tree according to their ID.
             $imageFolderPath = implode(DIRECTORY_SEPARATOR, [
-                rtrim($root, DIRECTORY_SEPARATOR),
+                rtrim(_PS_PRODUCT_IMG_DIR_, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
             ]);
         } elseif (get_class($object) === 'Store') {
             $type = 'stores';
             $getImageURL = 'getStoreImageLink';
-            $root = _PS_STORE_IMG_DIR_;
-            $imageFolderPath = rtrim($root, DIRECTORY_SEPARATOR);
+            $imageFolderPath = rtrim(_PS_STORE_IMG_DIR_, DIRECTORY_SEPARATOR);
+        } elseif (get_class($object) === 'Manufacturer') {
+            $type = 'manufacturers';
+            $getImageURL = 'getManufacturerImageLink';
+            $imageFolderPath = rtrim(_PS_MANU_IMG_DIR_, DIRECTORY_SEPARATOR);
+        } elseif (get_class($object) === 'Supplier') {
+            $type = 'suppliers';
+            $getImageURL = 'getSupplierImageLink';
+            $imageFolderPath = rtrim(_PS_SUPP_IMG_DIR_, DIRECTORY_SEPARATOR);
         } else {
             $type = 'categories';
             $getImageURL = 'getCatImageLink';
-            $root = _PS_CAT_IMG_DIR_;
-            $imageFolderPath = rtrim($root, DIRECTORY_SEPARATOR);
+            $imageFolderPath = rtrim(_PS_CAT_IMG_DIR_, DIRECTORY_SEPARATOR);
         }
 
         $urls = [];
-        $image_types = ImageType::getImagesTypes($type, true);
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
-        $ext = 'jpg';
 
-        // Get path of original uploaded image we will use to get thumbnails
+        // Should we generate all sizes also in double the resolution?
+        // Obsolete solution, will be removed
+        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
+
+        // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
         $originalImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
-            $id_image . '.' . $ext,
+            $id_image . '.jpg',
         ]);
 
+        // Get image format list that we will use in case of new image system
+        $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
+
+        // Primary (fake) image name is object rewrite, fallbacks are name and ID
+        if (!empty($object->link_rewrite)) {
+            $rewrite = $object->link_rewrite;
+        } elseif (!empty($object->name)) {
+            $rewrite = $object->name;
+        } else {
+            $rewrite = $id_image;
+        }
+
+        // Check and generate each thumbnail size
+        $image_types = ImageType::getImagesTypes($type, true);
         foreach ($image_types as $image_type) {
-            // Final path thumbnail in our size
-            $thumbnailPath = implode(DIRECTORY_SEPARATOR, [
-                $imageFolderPath,
-                $id_image . '-' . $image_type['name'] . '.' . $ext,
-            ]);
+            $sources = [];
 
-            // Check if the thumbnail exists, if not, create it automatically on the fly
-            if (!file_exists($thumbnailPath)) {
-                ImageManager::resize(
-                    $originalImagePath,
-                    $thumbnailPath,
-                    (int) $image_type['width'],
-                    (int) $image_type['height']
-                );
-            }
+            // In legacy image system, image extension is always JPG and there could be JPG, PNG or webp image inside
+            // The format is decided by ImageManager
+            if (!$this->isMultipleImageFormatFeatureActive) {
+                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
 
-            /*
-            * If High-DPI images are enabled, we will also generate a thumbnail in
-            * double the size, so it can be used in src-sets.
-            */
-            if ($generateHighDpiImages) {
-                $thumbnailPathHighDpi = implode(DIRECTORY_SEPARATOR, [
-                    $imageFolderPath,
-                    $id_image . '-' . $image_type['name'] . '2x.' . $ext,
-                ]);
-                if (!file_exists($thumbnailPathHighDpi)) {
-                    ImageManager::resize(
-                        $originalImagePath,
-                        $thumbnailPathHighDpi,
-                        (int) $image_type['width'] * 2,
-                        (int) $image_type['height'] * 2
-                    );
+                // Get URL of the thumbnail
+                // Manufacturer and supplier use only IDs
+                if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
+                    $sources['jpg'] = $this->link->$getImageURL($id_image, $image_type['name'], 'jpg');
+                // Products, categories and stores pass both rewrite and ID
+                } else {
+                    $sources['jpg'] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], 'jpg');
+                }
+
+                if ($generateHighDpiImages) {
+                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
+                }
+                // In new image system, we generate each format with it's proper extension
+            } else {
+                foreach ($configuredImageFormats as $imageFormat) {
+                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
+
+                    // Manufacturer and supplier use only IDs
+                    if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
+                        $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
+                    // Products, categories and stores pass both rewrite and ID
+                    } else {
+                        $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
+                    }
+
+                    if ($generateHighDpiImages) {
+                        $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
+                    }
                 }
             }
 
-            // Thumbnail done, now let's generate it's seo-friendly URL and add it to our output
-            // Primary (fake) image name is object rewrite, fallbacks are name and ID
-            if (!empty($object->link_rewrite)) {
-                $rewrite = $object->link_rewrite;
-            } elseif (!empty($object->name)) {
-                $rewrite = $object->name;
+            // Let's resolve the base image URL we will use
+            if (isset($sources['jpg'])) {
+                $baseUrl = $sources['jpg'];
+            } elseif (isset($sources['png'])) {
+                $baseUrl = $sources['png'];
             } else {
-                $rewrite = $id_image;
+                $baseUrl = reset($sources);
             }
-            $url = $this->link->$getImageURL(
-                $rewrite,
-                $id_image,
-                $image_type['name']
-            );
 
+            // And add this size to our list
             $urls[$image_type['name']] = [
-                'url' => $url,
+                'url' => $baseUrl,
                 'width' => (int) $image_type['width'],
                 'height' => (int) $image_type['height'],
+                'sources' => $sources,
             ];
         }
 
@@ -250,6 +279,43 @@ class ImageRetriever
             'legend' => !empty($object->meta_title) ? $object->meta_title : $object->name,
             'id_image' => $id_image,
         ];
+    }
+
+    /**
+     * @param string $originalImagePath
+     * @param string $imageFolderPath
+     * @param int $idImage
+     * @param array $imageTypeData
+     * @param string $ext
+     * @param bool $hdpi
+     *
+     * @return void
+     */
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $ext, bool $hdpi = false)
+    {
+        $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $ext);
+
+        if ($hdpi) {
+            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $ext);
+            $imageTypeData['width'] *= 2;
+            $imageTypeData['height'] *= 2;
+        }
+
+        $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
+            $imageFolderPath,
+            $fileName,
+        ]);
+
+        if (!file_exists($resizedImagePath)) {
+            ImageManager::resize(
+                $originalImagePath,
+                $resizedImagePath,
+                (int) $imageTypeData['width'],
+                (int) $imageTypeData['height'],
+                $ext,
+                true
+            );
+        }
     }
 
     /**

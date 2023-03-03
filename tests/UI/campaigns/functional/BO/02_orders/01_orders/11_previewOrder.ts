@@ -23,7 +23,7 @@ import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
@@ -249,7 +249,7 @@ describe('BO - Orders : Preview order', async () => {
         {args: {product: Products.demo_12, productPrice: Products.demo_12.price}},
         {args: {product: Products.demo_13, productPrice: Products.demo_13.price}},
         {args: {product: Products.demo_14, productPrice: Products.demo_14.price}},
-      ].forEach((test, index) => {
+      ].forEach((test, index: number) => {
         it(`should check the product '${test.args.product.name}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProduct${index}`, baseContext);
 

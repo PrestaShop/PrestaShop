@@ -16,8 +16,8 @@ import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {Orders} from '@data/demo/orders';
+import Customers from '@data/demo/customers';
+import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
@@ -40,7 +40,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: Customers.johnDoe.email,
-    reference: Orders.firstOrder.ref,
+    reference: Orders.firstOrder.reference,
   });
 
   // before and after functions

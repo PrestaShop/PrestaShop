@@ -20,12 +20,12 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
+import OrderData from '@data/faker/order';
 import OrderStatusData from '@data/faker/orderStatus';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Frame, Page} from 'playwright';
@@ -59,13 +59,17 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     email: newCustomer.email,
     country: 'France',
   });
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: newCustomer,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
-  const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
+  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
   const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
 
   // Pre-condition: Create new customer
@@ -298,7 +302,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, orderStatus);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);

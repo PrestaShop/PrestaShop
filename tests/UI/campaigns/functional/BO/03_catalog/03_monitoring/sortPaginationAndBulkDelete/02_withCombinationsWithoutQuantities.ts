@@ -15,8 +15,8 @@ import monitoringPage from '@pages/BO/catalog/monitoring';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {CombinationsData} from '@data/import/combinations';
-import {ProductsData} from '@data/import/disabledProducts';
+import ImportCombinations from '@data/import/combinations';
+import ImportDisabledProducts from '@data/import/disabledProducts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -46,19 +46,19 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
   const combinationsFileName: string = 'combinations.csv';
 
   // Pre-condition: Import list of products
-  importFileTest(productFileName, ProductsData.entity, `${baseContext}_preTest_1`);
+  importFileTest(productFileName, ImportDisabledProducts.entity, `${baseContext}_preTest_1`);
 
   // Pre-condition: Import list of combinations
-  importFileTest(combinationsFileName, CombinationsData.entity, `${baseContext}_preTest_2`);
+  importFileTest(combinationsFileName, ImportCombinations.entity, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all products data
-    await files.createCSVFile('.', productFileName, ProductsData);
+    await files.createCSVFile('.', productFileName, ImportDisabledProducts);
     // Create csv file with all combinations data
-    await files.createCSVFile('.', combinationsFileName, CombinationsData);
+    await files.createCSVFile('.', combinationsFileName, ImportCombinations);
   });
 
   after(async () => {

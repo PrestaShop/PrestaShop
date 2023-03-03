@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -78,6 +79,19 @@ class MaintenanceType extends TranslatorAwareType
                     'label' => $this->trans('Enable store', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ]
+            )
+            ->add(
+                'maintenance_allow_admins',
+                SwitchType::class,
+                [
+                    'required' => false,
+                    'multistore_configuration_key' => 'PS_MAINTENANCE_ALLOW_ADMINS',
+                    'label' => $this->trans('Enable store for logged-in employees', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'When enabled, admins will access the store front office without storing their IP.',
                         'Admin.Shopparameters.Help'
                     ),
                 ]

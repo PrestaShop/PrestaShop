@@ -49,10 +49,11 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,7 +85,7 @@ class EmployeeController extends FrameworkBundleAdminController
         $employeeGrid = $employeeGridFactory->getGrid($filters);
 
         $helperCardDocumentationLinkProvider =
-            $this->get('prestashop.core.util.helper_card.documentation_link_provider');
+            $this->get(DocumentationLinkProviderInterface::class);
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::EMPLOYEES_CARD)
@@ -326,7 +327,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
         // If employee is editing his own profile - he doesn't need to have access to the edit form.
         if ($contextEmployeeProvider->getId() != $employeeId) {
-            if (!$this->isGranted(PageVoter::UPDATE, $request->get('_legacy_controller'))) {
+            if (!$this->isGranted(Permission::UPDATE, $request->get('_legacy_controller'))) {
                 $this->addFlash(
                     'error',
                     $this->trans(
@@ -421,7 +422,7 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function changeFormLanguageAction(Request $request)
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
 
         if ($configuration->getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')) {
             $languageChanger = $this->get('prestashop.adapter.employee.form_language_changer');

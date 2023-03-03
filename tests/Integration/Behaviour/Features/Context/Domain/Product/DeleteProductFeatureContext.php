@@ -32,7 +32,9 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DeleteProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -88,6 +90,55 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
             $this->getCommandBus()->handle(new DeleteProductFromShopsCommand(
                 $this->getSharedStorage()->get($reference),
                 $shopIds
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete following products from shop :shopReference:
+     *
+     * @param TableNode $productsList
+     * @param string $shopReference
+     */
+    public function bulkDeleteProductsFromShop(TableNode $productsList, string $shopReference): void
+    {
+        $this->bulkDeleteProductsByShopConstraint($productsList, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
+
+    /**
+     * @When I bulk delete following products from shop group :shopGroupReference:
+     *
+     * @param TableNode $productsList
+     * @param string $shopGroupReference
+     */
+    public function bulkDeleteProductsFromShopGroup(TableNode $productsList, string $shopGroupReference): void
+    {
+        $this->bulkDeleteProductsByShopConstraint($productsList, ShopConstraint::shopGroup($this->referenceToId($shopGroupReference)));
+    }
+
+    /**
+     * @When I bulk delete following products from all shops:
+     *
+     * @param TableNode $productsList
+     */
+    public function bulkDeleteProductsFromAllShops(TableNode $productsList): void
+    {
+        $this->bulkDeleteProductsByShopConstraint($productsList, ShopConstraint::allShops());
+    }
+
+    private function bulkDeleteProductsByShopConstraint(TableNode $productsList, ShopConstraint $shopConstraint): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductFromShopsCommand(
+                $productIds,
+                $shopConstraint
             ));
         } catch (ProductException $e) {
             $this->setLastException($e);

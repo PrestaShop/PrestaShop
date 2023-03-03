@@ -13,11 +13,11 @@ import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import loginPage from '@pages/BO/login/index';
+import loginPage from '@pages/BO/login';
 import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/products/index';
-import creditSlipsPage from '@pages/BO/orders/creditSlips/index';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import productsPage from '@pages/BO/catalog/products';
+import creditSlipsPage from '@pages/BO/orders/creditSlips';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
 // Import data
@@ -80,7 +80,6 @@ describe('BO - Header : My profile', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
       await dashboardPage.goToMyProfile(page);
-
       await myProfilePage.closeSfToolBar(page);
 
       const pageTitle = await myProfilePage.getPageTitle(page);
@@ -100,10 +99,10 @@ describe('BO - Header : My profile', async () => {
       const textResult = await myProfilePage.getAlertError(page);
       await expect(textResult).to.equal(myProfilePage.errorInvalidFirstNameMessage);
 
-      const lastNameResult = await myProfilePage.getInputValue(page, myProfilePage.lastNameInput);
+      const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
       await expect(lastNameResult).to.equal(employeeData.lastName);
 
-      const firstNameResult = await myProfilePage.getInputValue(page, myProfilePage.firstNameInput);
+      const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
       await expect(firstNameResult).to.equal(employeeData.firstName);
     });
 
@@ -117,10 +116,10 @@ describe('BO - Header : My profile', async () => {
       const textResult = await myProfilePage.getAlertError(page);
       await expect(textResult).to.equal(myProfilePage.errorInvalidLastNameMessage);
 
-      const lastNameResult = await myProfilePage.getInputValue(page, myProfilePage.lastNameInput);
+      const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
       await expect(lastNameResult).to.equal(employeeData.lastName);
 
-      const firstNameResult = await myProfilePage.getInputValue(page, myProfilePage.firstNameInput);
+      const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
       await expect(firstNameResult).to.equal(employeeData.firstName);
     });
 
@@ -135,10 +134,10 @@ describe('BO - Header : My profile', async () => {
       const textResult = await myProfilePage.getAlertSuccess(page);
       await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
 
-      const lastNameResult = await myProfilePage.getInputValue(page, myProfilePage.lastNameInput);
+      const lastNameResult = await myProfilePage.getInputValue(page, 'lastname');
       await expect(lastNameResult).to.equal(employeeData.lastName);
 
-      const firstNameResult = await myProfilePage.getInputValue(page, myProfilePage.firstNameInput);
+      const firstNameResult = await myProfilePage.getInputValue(page, 'firstname');
       await expect(firstNameResult).to.equal(employeeData.firstName);
 
       const pageTitle = await myProfilePage.getPageTitle(page);
@@ -187,7 +186,7 @@ describe('BO - Header : My profile', async () => {
       const textResult = await myProfilePage.getAlertSuccess(page);
       await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
 
-      const isChecked = await myProfilePage.isChecked(page, myProfilePage.enableGravatarInput(1));
+      const isChecked = await myProfilePage.isGravatarEnabled(page);
       await expect(isChecked).to.be.true;
 
       const avatarURL = await myProfilePage.getCurrentEmployeeAvatar(page);

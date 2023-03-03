@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  * @todo: since not all builders are migrated yet we need two interfaces but in the this is the only
  *        one that should remain, so it will be merged back or renamed as the initial one ProductCommandsBuilderInterface
  *        and the shop constraint parameter will always be mandatory (there might a few builders which won't need it
- *        though, but it doesn't matter) So this interface is a temporary one just like @see ProductMultiShopRepository
+ *        though, but it doesn't matter) So this interface is a temporary one just like @see ProductRepository
  */
 interface MultiShopProductCommandsBuilderInterface
 {

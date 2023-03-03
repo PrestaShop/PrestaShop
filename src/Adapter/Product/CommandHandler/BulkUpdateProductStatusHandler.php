@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkUpdateProductStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -41,13 +43,21 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements BulkUpdateProductStatusHandlerInterface
 {
     /**
-     * @var ProductStatusUpdater
+     * @var ProductRepository
      */
-    private $productStatusUpdater;
+    private $productRepository;
 
-    public function __construct(ProductStatusUpdater $productStatusUpdater)
-    {
-        $this->productStatusUpdater = $productStatusUpdater;
+    /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    public function __construct(
+        ProductRepository $productRepository,
+        ProductIndexationUpdater $productIndexationUpdater
+    ) {
+        $this->productRepository = $productRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     /**
@@ -66,7 +76,28 @@ class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements Bulk
      */
     protected function handleSingleAction(ProductId $productId, $command = null)
     {
-        $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
+        $product = $this->productRepository->getByShopConstraint($productId, $command->getShopConstraint());
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        $wasActive = (bool) $product->active;
+
+        $product->active = $command->getNewStatus();
+        $this->productRepository->partialUpdate(
+            $product,
+            ['active'],
+            $command->getShopConstraint(),
+            CannotUpdateProductException::FAILED_UPDATE_STATUS
+        );
+
+        // Reindexing is costly operation, so we check if properties impacting indexation have changed and then reindex if needed.
+        if (
+            $wasVisibleOnSearch !== $this->productIndexationUpdater->isVisibleOnSearch($product)
+            || $wasActive !== (bool) $product->active
+            // If multiple shops are impacted it's safer to update indexation, it's more complicated to check if it's needed
+            || $command->getShopConstraint()->forAllShops()
+            || $command->getShopConstraint()->getShopGroupId()
+        ) {
+            $this->productIndexationUpdater->updateIndexation($product, $command->getShopConstraint());
+        }
     }
 
     protected function buildBulkException(): BulkProductException

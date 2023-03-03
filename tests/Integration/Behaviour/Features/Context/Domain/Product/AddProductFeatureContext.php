@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use Product;
 
 class AddProductFeatureContext extends AbstractProductFeatureContext
@@ -56,6 +57,19 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
     {
         $shopId = $this->getSharedStorage()->get($shopReference);
         $this->addProduct($productReference, $shopId, $table);
+    }
+
+    /**
+     * @Then I should get error that stock available quantity is invalid
+     *
+     * @return void
+     */
+    public function assertLastErrorIsInvalidStockAvailableQuantity(): void
+    {
+        $this->assertLastErrorIs(
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INVALID_QUANTITY
+        );
     }
 
     /**

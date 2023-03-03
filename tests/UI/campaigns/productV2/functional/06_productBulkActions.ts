@@ -7,7 +7,10 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
+import {
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -67,7 +70,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
 
       await productsPage.closeSfToolBar(page);
 
-      const pageTitle: string = await productsPage.getPageTitle(page);
+      const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
@@ -81,7 +84,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible = await productsPage.clickOnNewProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
@@ -90,7 +93,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
 
       await productsPage.selectProductType(page, firstProductData.type);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
+      const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -99,7 +102,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
 
       await productsPage.clickOnAddNewProduct(page);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
+      const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -108,7 +111,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
 
       await createProductsPage.closeSfToolBar(page);
 
-      const createProductMessage: string = await createProductsPage.setProduct(page, firstProductData);
+      const createProductMessage = await createProductsPage.setProduct(page, firstProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
@@ -117,7 +120,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton2', baseContext);
 
-      const isModalVisible: boolean = await createProductsPage.clickOnNewProductButton(page);
+      const isModalVisible = await createProductsPage.clickOnNewProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
@@ -126,7 +129,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
 
       await createProductsPage.chooseProductType(page, secondProductData.type);
 
-      const isIframeVisible: boolean = await createProductsPage.isChooseProductIframeVisible(page);
+      const isIframeVisible = await createProductsPage.isChooseProductIframeVisible(page);
       await expect(isIframeVisible).to.be.false;
     });
 
@@ -135,7 +138,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
 
       await createProductsPage.closeSfToolBar(page);
 
-      const createProductMessage: string = await createProductsPage.setProduct(page, secondProductData);
+      const createProductMessage = await createProductsPage.setProduct(page, secondProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
   });
@@ -146,7 +149,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
 
       await createProductsPage.goToCatalogPage(page);
 
-      const pageTitle: string = await productsPage.getPageTitle(page);
+      const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
@@ -158,8 +161,8 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
       await expect(numberOfProductsAfterFilter).to.equal(2);
 
-      const textColumn: string = await productsPage.getTextColumn(page, 'product_name', 1);
-      await expect(textColumn).to.contains('MYFAVORITEPRODUCT');
+      const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
+      await expect(textColumn).to.contains('myFavoriteProduct');
     });
   });
 
@@ -192,26 +195,26 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
         productsNumber: 4,
       },
     },
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     describe(`Bulk ${test.args.action} created products`, async () => {
       it('should select the 2 products', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `selectProducts${index}`, baseContext);
 
-        const isBulkDeleteButtonEnabled: boolean = await productsPage.bulkSelectProducts(page);
+        const isBulkDeleteButtonEnabled = await productsPage.bulkSelectProducts(page);
         await expect(isBulkDeleteButtonEnabled).to.be.true;
       });
 
       it('should click on bulk actions button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnBulkActionsButton${index}`, baseContext);
 
-        const textMessage: string = await productsPage.clickOnBulkActionsProducts(page, test.args.action);
+        const textMessage = await productsPage.clickOnBulkActionsProducts(page, test.args.action);
         await expect(textMessage).to.equal(`${test.args.message} ${test.args.productsNumber} products`);
       });
 
       it(`should bulk ${test.args.action} products`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}Product`, baseContext);
 
-        const textMessage: string = await productsPage.bulkActionsProduct(page, test.args.action);
+        const textMessage = await productsPage.bulkActionsProduct(page, test.args.action);
         await expect(textMessage).to.equal(
           `${test.args.message} ${test.args.productsNumber} / ${test.args.productsNumber} products`);
       });
@@ -219,7 +222,7 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
       it('should close progress modal', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `close${test.args.action}ProgressModal`, baseContext);
 
-        const isModalVisible: boolean = await productsPage.closeBulkActionsProgressModal(page, test.args.action);
+        const isModalVisible = await productsPage.closeBulkActionsProgressModal(page, test.args.action);
         await expect(isModalVisible).to.be.true;
       });
 
@@ -227,13 +230,13 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
         it('should reset filter and get number of products', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProduct', baseContext);
 
-          const numberOfProductAfterBulkActions: number = await productsPage.resetAndGetNumberOfLines(page);
+          const numberOfProductAfterBulkActions = await productsPage.resetAndGetNumberOfLines(page);
           await expect(numberOfProductAfterBulkActions).to.be.equal(numberOfProducts);
         });
       }
     });
   });
 
-  // Post-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

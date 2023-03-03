@@ -27,12 +27,12 @@ import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 
 // Import data
 import Addresses from '@data/demo/address';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -61,12 +61,16 @@ describe('FO - Account : Check order return PDF', async () => {
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -121,14 +125,14 @@ describe('FO - Account : Check order return PDF', async () => {
     it('should get the created Order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
+      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
       await expect(orderReference).to.not.be.null;
     });
 
     it('should get the created Order date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderDate', baseContext);
 
-      orderDate = await ordersPage.getTextColumn(page, 'date_add', 1) as string;
+      orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
       orderDate = orderDate.substr(0, 10);
       await expect(orderDate).to.not.be.null;
     });
@@ -358,7 +362,6 @@ describe('FO - Account : Check order return PDF', async () => {
 
         // Click on view my shop
         page = await editMerchandiseReturnsPage.viewMyShop(page);
-
         // Change FO language
         await homePage.changeLanguage(page, 'en');
 

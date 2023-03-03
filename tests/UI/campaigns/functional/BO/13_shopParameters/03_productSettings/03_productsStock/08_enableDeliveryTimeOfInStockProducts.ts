@@ -54,7 +54,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
     {args: {action: 'disable', enable: false, deliveryTimeText: ''}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} delivery time of in-stock products`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 

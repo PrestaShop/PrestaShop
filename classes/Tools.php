@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Security\Hashing;
+use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
+use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
@@ -41,10 +44,10 @@ class ToolsCore
     public const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
-    public const PASSWORDGEN_FLAG_NUMERIC = 'NUMERIC';
-    public const PASSWORDGEN_FLAG_NO_NUMERIC = 'NO_NUMERIC';
-    public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
-    public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
+    public const PASSWORDGEN_FLAG_NUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_NUMERIC;
+    public const PASSWORDGEN_FLAG_NO_NUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_NO_NUMERIC;
+    public const PASSWORDGEN_FLAG_RANDOM = PasswordGenerator::PASSWORDGEN_FLAG_RANDOM;
+    public const PASSWORDGEN_FLAG_ALPHANUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_ALPHANUMERIC;
 
     public const LANGUAGE_EXTRACTOR_REGEXP = '#(?<=-)\w\w|\w\w(?!-)#';
 
@@ -96,69 +99,11 @@ class ToolsCore
      */
     public static function passwdGen($length = 8, $flag = self::PASSWORDGEN_FLAG_ALPHANUMERIC)
     {
-        $length = (int) $length;
-
-        if ($length <= 0) {
+        try {
+            return (new PasswordGenerator(new OpenSSL()))->generatePassword($length, $flag);
+        } catch (InvalidArgumentException $exception) {
             return false;
         }
-
-        switch ($flag) {
-            case static::PASSWORDGEN_FLAG_NUMERIC:
-                $str = '0123456789';
-
-                break;
-            case static::PASSWORDGEN_FLAG_NO_NUMERIC:
-                $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-                break;
-            case static::PASSWORDGEN_FLAG_RANDOM:
-                $num_bytes = (int) ceil($length * 0.75);
-                $bytes = self::getBytes($num_bytes);
-
-                return substr(rtrim(base64_encode($bytes), '='), 0, $length);
-            case static::PASSWORDGEN_FLAG_ALPHANUMERIC:
-            default:
-                $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-                break;
-        }
-
-        $bytes = Tools::getBytes($length);
-        $position = 0;
-        $result = '';
-
-        for ($i = 0; $i < $length; ++$i) {
-            $position = ($position + ord($bytes[$i])) % strlen($str);
-            $result .= $str[$position];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Random bytes generator.
-     *
-     * Limited to OpenSSL since 1.7.0.0
-     *
-     * @param int $length Desired length of random bytes
-     *
-     * @return bool|string Random bytes
-     */
-    public static function getBytes($length)
-    {
-        $length = (int) $length;
-
-        if ($length <= 0) {
-            return false;
-        }
-
-        $bytes = openssl_random_pseudo_bytes($length, $cryptoStrong);
-
-        if ($cryptoStrong === true) {
-            return $bytes;
-        }
-
-        return false;
     }
 
     /**
@@ -227,21 +172,6 @@ class ToolsCore
 
         header('Location: ' . $url);
         exit;
-    }
-
-    /**
-     * Redirect URLs already containing PS_BASE_URI.
-     *
-     * Warning: uses exit
-     *
-     * @param string $url Desired URL
-     *
-     * @deprecated since PrestaShop 8.0.0
-     */
-    public static function redirectLink($url)
-    {
-        Tools::displayAsDeprecated('Use Tools::redirect() instead');
-        static::redirect($url);
     }
 
     /**
@@ -1244,7 +1174,7 @@ class ToolsCore
      */
     public static function hash($passwd)
     {
-        return md5(_COOKIE_KEY_ . $passwd);
+        return (new Hashing())->hash($passwd, _COOKIE_KEY_);
     }
 
     /**
@@ -1272,7 +1202,7 @@ class ToolsCore
      */
     public static function hashIV($data)
     {
-        return md5(_COOKIE_IV_ . $data);
+        return (new Hashing())->hash($data, _COOKIE_IV_);
     }
 
     /**
@@ -1365,30 +1295,6 @@ class ToolsCore
     public static function getAdminImageUrl($image = null, $entities = false)
     {
         return Tools::getAdminUrl(basename(_PS_IMG_DIR_) . '/' . $image, $entities);
-    }
-
-    /**
-     * Return the friendly url from the provided string.
-     *
-     * @deprecated since 8.1
-     *
-     * @param string $str
-     * @param bool $utf8_decode (deprecated)
-     *
-     * @return string
-     */
-    public static function link_rewrite($str, $utf8_decode = null)
-    {
-        @trigger_error(
-            'This function is deprecated, use Tools::str2url($str) instead.',
-            E_USER_DEPRECATED
-        );
-
-        if ($utf8_decode !== null) {
-            Tools::displayParameterAsDeprecated('utf8_decode');
-        }
-
-        return Tools::str2url($str);
     }
 
     /**
@@ -2214,7 +2120,7 @@ class ToolsCore
         $hex = str_replace('#', '', $hex);
 
         if (Tools::strlen($hex) == 3) {
-            $hex .= $hex;
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
         }
 
         $r = hexdec(substr($hex, 0, 2));
@@ -2253,13 +2159,6 @@ class ToolsCore
         }
 
         return false;
-    }
-
-    public static function replaceByAbsoluteURL($matches)
-    {
-        Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
-
-        return Media::replaceByAbsoluteURL($matches);
     }
 
     protected static $_cache_nb_media_servers = null;
@@ -2486,14 +2385,6 @@ class ToolsCore
                 if ($rewrite_settings) {
                     // Compatibility with the old image filesystem
                     fwrite($write_fd, "# Images\n");
-                    if (Configuration::get('PS_LEGACY_IMAGES')) {
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+\-[a-z0-9]+\-[-\w]*)/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
-                        fwrite($write_fd, $media_domains);
-                        fwrite($write_fd, $domain_rewrite_cond);
-                        fwrite($write_fd, 'RewriteRule ^([\d]+(?:\-[\d]+){1,2})/.+(\.(?:jpe?g|webp|png|avif))$ %{ENV:REWRITEBASE}img/p/$1$2.jpg [L]' . PHP_EOL);
-                    }
 
                     // Rewrite product images < 10 millions
                     $path_components = [];
@@ -2809,19 +2700,6 @@ FileETag none
         }
 
         return $tab;
-    }
-
-    public static function generateIndex()
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1. Use PrestaShop\Autoload\PrestashopAutoload instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
     }
 
     /**
@@ -3690,30 +3568,6 @@ exit;
     }
 
     /**
-     * Delete unicode class from regular expression patterns.
-     *
-     * @deprecated Since 8.0.0 and will be removed in the next major.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     *
-     * @throws Exception
-     */
-    public static function cleanNonUnicodeSupport($pattern)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.0.0. Its use is not required.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return $pattern;
-    }
-
-    /**
      * Returns an array containing information about
      * HTTP file upload variable ($_FILES).
      *
@@ -3859,16 +3713,6 @@ exit;
         return self::$_user_browser;
     }
 
-    /**
-     * Allows to display the category description without HTML tags and slashes.
-     *
-     * @return string
-     */
-    public static function getDescriptionClean($description)
-    {
-        return strip_tags(stripslashes($description));
-    }
-
     public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
         static $use_html_purifier = null;
@@ -3996,21 +3840,6 @@ exit;
             ++$position;
         }
         unset($row);
-    }
-
-    /**
-     * Replaces elements from passed arrays into the first array recursively.
-     *
-     * @param array $base the array in which elements are replaced
-     * @param array $replacements the array from which elements will be extracted
-     *
-     * @deprecated since version 8.0.0, to be removed.
-     */
-    public static function arrayReplaceRecursive($base, $replacements)
-    {
-        Tools::displayAsDeprecated('Use PHP\'s array_replace_recursive() instead');
-
-        return array_replace_recursive($base, $replacements);
     }
 
     /**

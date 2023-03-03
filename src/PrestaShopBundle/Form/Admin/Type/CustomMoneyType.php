@@ -26,33 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension;
 
-class CustomMoneyType extends AbstractTypeExtension
+class CustomMoneyType extends CustomMoneyTypeExtension
 {
-    public const PRESTASHOP_DECIMALS = 6;
-
-    public static function getExtendedTypes(): iterable
-    {
-        return [MoneyType::class];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'precision' => null,
-            'scale' => self::PRESTASHOP_DECIMALS,
-            'grouping' => false,
-            'divisor' => 1,
-            'currency' => 'EUR',
-            'compound' => false,
-        ]);
-
-        $resolver->setAllowedTypes('scale', 'int');
-    }
 }

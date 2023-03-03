@@ -29,20 +29,28 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotDeleteStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use PrestaShopException;
 use StockAvailable;
 
-/**
- * Methods to handle StockAvailable data storage
- */
-class StockAvailableRepository extends AbstractObjectModelRepository
+class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var Connection
@@ -60,18 +68,20 @@ class StockAvailableRepository extends AbstractObjectModelRepository
     private $stockAvailableValidator;
 
     /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param StockAvailableValidator $stockAvailableValidator
+     * @var ShopGroupRepository
      */
+    private $shopGroupRepository;
+
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        StockAvailableValidator $stockAvailableValidator
+        StockAvailableValidator $stockAvailableValidator,
+        ShopGroupRepository $shopGroupRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->stockAvailableValidator = $stockAvailableValidator;
+        $this->shopGroupRepository = $shopGroupRepository;
     }
 
     /**
@@ -79,10 +89,164 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      *
      * @throws CoreException
      */
-    public function update(StockAvailable $stockAvailable): void
+    public function update(StockAvailable $stockAvailable, ShopId $shopId): void
     {
         $this->stockAvailableValidator->validate($stockAvailable);
-        $this->updateObjectModel($stockAvailable, CannotUpdateStockAvailableException::class);
+        $this->updateObjectModelForShops(
+            $stockAvailable,
+            [$shopId],
+            CannotUpdateStockAvailableException::class
+        );
+    }
+
+    /**
+     * When group shares its stock, StockAvailable id_shop value is 0, but sometimes we still need a fallback shop
+     * ID (because some code only accepts this as input even if they later update the group), so we return the first
+     * shop ID from the StockAvailable group.
+     *
+     * @param StockAvailable $stockAvailable
+     *
+     * @return ShopId
+     */
+    public function getFallbackShopId(StockAvailable $stockAvailable): ShopId
+    {
+        if ($stockAvailable->getShopId()) {
+            $shopId = $stockAvailable->getShopId();
+        } else {
+            // We can use any shop from the shop group, the stock movement will correctly associate the proper StockAvailable based on the shopId only
+            $shopsFromGroup = $this->shopGroupRepository->getShopsFromGroup(new ShopGroupId((int) $stockAvailable->id_shop_group));
+            $shopId = reset($shopsFromGroup)->getValue();
+        }
+
+        return new ShopId($shopId);
+    }
+
+    /**
+     * @param StockId $stockId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function get(StockId $stockId): StockAvailable
+    {
+        /** @var StockAvailable $stockAvailable */
+        $stockAvailable = $this->getObjectModel(
+            $stockId->getValue(),
+            StockAvailable::class,
+            StockAvailableNotFoundException::class
+        );
+
+        return $stockAvailable;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return StockId
+     *
+     * @throws StockAvailableNotFoundException
+     */
+    public function getStockIdByProduct(ProductId $productId, ShopId $shopId): StockId
+    {
+        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue(), null, $shopId->getValue());
+        if ($stockAvailableId <= 0) {
+            throw new StockAvailableNotFoundException(sprintf(
+                    'Cannot find StockAvailable for product #%d',
+                    $productId->getValue()
+                )
+            );
+        }
+
+        return new StockId($stockAvailableId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function getForProduct(ProductId $productId, ShopId $shopId): StockAvailable
+    {
+        $stockId = $this->getStockIdByProduct($productId, $shopId);
+
+        return $this->get($stockId);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws CoreException
+     */
+    public function delete(ProductId $productId, ShopId $shopId): void
+    {
+        $this->deleteObjectModel($this->getForProduct($productId, $shopId), CannotDeleteStockAvailableException::class);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return StockId
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function getStockIdByCombination(CombinationId $combinationId, ShopId $shopId): StockId
+    {
+        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
+        $qb = $this
+            ->connection
+            ->createQueryBuilder()
+            ->select('id_stock_available')
+            ->from($this->dbPrefix . 'stock_available')
+            ->where('id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+        $this->addShopCondition($qb, $shopId->getValue());
+
+        $row = $qb->execute()->fetch();
+        if (empty($row)) {
+            throw new StockAvailableNotFoundException(
+                sprintf(
+                    'Cannot find StockAvailable for combination #%d',
+                    $combinationId->getValue()
+                )
+            );
+        }
+
+        return new StockId((int) $row['id_stock_available']);
+    }
+
+    private function addShopCondition(QueryBuilder $qb, int $shopId): QueryBuilder
+    {
+        // Use legacy method, it checks if the shop belongs to a ShopGroup that shares stock, in which case the StockAvailable
+        // must be assigned to the group not the shop
+        $shopParams = [];
+        try {
+            StockAvailable::addSqlShopParams($shopParams, $shopId);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when trying to add StockAvailable shop condition', 0, $e);
+        }
+
+        foreach ($shopParams as $key => $value) {
+            if (!in_array($key, ['id_shop', 'id_shop_group'])) {
+                continue;
+            }
+
+            $qb->andWhere(sprintf('%s = :%s', $key, $key))
+                ->setParameter($key, $value, ParameterType::INTEGER)
+            ;
+        }
+
+        return $qb;
     }
 
     /**
@@ -93,27 +257,72 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function getForCombination(CombinationId $combinationId): StockAvailable
+    public function getForCombination(CombinationId $combinationId, ShopId $shopId): StockAvailable
     {
-        //@todo: multishop not handled
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('id_stock_available')
-            ->from($this->dbPrefix . 'stock_available')
-            ->where('id_product_attribute = :combinationId')
-            ->setParameter('combinationId', $combinationId->getValue())
-        ;
+        $stockId = $this->getStockIdByCombination($combinationId, $shopId);
 
-        $result = $qb->execute()->fetch();
+        return $this->get($stockId);
+    }
 
-        if (!$result) {
-            throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for combination #%d',
-                    $combinationId->getValue()
-                )
+    /**
+     * @param ProductId $productId
+     * @param CombinationId|null $combinationId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function createStockAvailable(ProductId $productId, ShopId $shopId, ?CombinationId $combinationId = null): StockAvailable
+    {
+        $stockAvailable = new StockAvailable();
+        $stockAvailable->id_product = $productId->getValue();
+        $stockAvailable->id_product_attribute = $combinationId ? $combinationId->getValue() : NoCombinationId::NO_COMBINATION_ID;
+
+        // Use legacy method, it checks if the shop belongs to a ShopGroup that shares stock, in which case the StockAvailable
+        // must be assigned to the group not the shop
+        $shopParams = [];
+        try {
+            StockAvailable::addSqlShopParams($shopParams, $shopId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to add StockAvailable shop params #%d', $productId->getValue()),
+                0,
+                $e
             );
         }
 
-        return $this->getStockAvailable(new StockId((int) $result['id_stock_available']));
+        if (empty($shopParams['id_shop']) && empty($shopParams['id_shop_group'])) {
+            throw new CannotAddStockAvailableException('StockAvailable must be assigned to a shop or a shop group');
+        }
+
+        $stockAvailable->id_shop = $shopParams['id_shop'] ?? 0;
+        $stockAvailable->id_shop_group = $shopParams['id_shop_group'] ?? 0;
+        $this->addObjectModel($stockAvailable, CannotAddStockAvailableException::class);
+
+        return $stockAvailable;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CombinationIdInterface $combinationId
+     *
+     * @return StockId[]
+     */
+    public function getAllShopsStockIds(ProductId $productId, CombinationIdInterface $combinationId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_stock_available')
+            ->from($this->dbPrefix . 'stock_available', 'sa')
+            ->where('sa.id_product = :productId AND sa.id_product_attribute = :combinationId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+
+        return array_map(static function (array $stock) {
+            return new StockId((int) $stock['id_stock_available']);
+        }, $qb->execute()->fetchAllAssociative());
     }
 
     /**
@@ -184,25 +393,5 @@ class StockAvailableRepository extends AbstractObjectModelRepository
             ;
             $updateQb->execute();
         }
-    }
-
-    /**
-     * @param StockId $stockId
-     *
-     * @return StockAvailable
-     *
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
-     */
-    private function getStockAvailable(StockId $stockId): StockAvailable
-    {
-        /** @var StockAvailable $stockAvailable */
-        $stockAvailable = $this->getObjectModel(
-            $stockId->getValue(),
-            StockAvailable::class,
-            StockAvailableNotFoundException::class
-        );
-
-        return $stockAvailable;
     }
 }

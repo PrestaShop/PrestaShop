@@ -5529,8 +5529,8 @@ class ProductCore extends ObjectModel
      */
     public static function defineProductImage($row, $id_lang)
     {
-        if (isset($row['id_image']) && $row['id_image']) {
-            return $row['id_product'] . '-' . $row['id_image'];
+        if (!empty($row['id_image'])) {
+            return $row['id_image'];
         }
 
         return Language::getIsoById((int) $id_lang) . '-default';
@@ -6087,11 +6087,21 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * @deprecated since 9.0.0, the customization price impact is already included in Product::getPriceStatic.
+     *
      * @param array $products
      * @param array $customized_datas
      */
     public static function addCustomizationPrice(&$products, &$customized_datas)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. The customization price impact is already included in Product::getPriceStatic.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (!$customized_datas) {
             return;
         }
@@ -6147,6 +6157,8 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * @deprecated since 9.0.0, the customization price impact is already included in Product::getPriceStatic.
+     *
      * Add customization price for a single product
      *
      * @param array $product Product data
@@ -6154,6 +6166,14 @@ class ProductCore extends ObjectModel
      */
     public static function addProductCustomizationPrice(&$product, &$customized_datas)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. The customization price impact is already included in Product::getPriceStatic.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (!$customized_datas) {
             return;
         }

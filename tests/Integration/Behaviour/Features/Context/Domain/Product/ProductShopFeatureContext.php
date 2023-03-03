@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductShopAssociationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class ProductShopFeatureContext extends AbstractProductFeatureContext
@@ -50,7 +50,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         $caughtException = null;
         try {
             $this->getProductForEditing($productReference, $shopId);
-        } catch (ShopAssociationNotFound $e) {
+        } catch (ProductShopAssociationNotFoundException $e) {
             $caughtException = $e;
         }
 
@@ -70,7 +70,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         $caughtException = null;
         try {
             $this->getProductForEditing($productReference, $shopId);
-        } catch (ShopAssociationNotFound $e) {
+        } catch (ProductShopAssociationNotFoundException $e) {
             $caughtException = $e;
         }
 
@@ -88,8 +88,8 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
         $shopId = $this->getSharedStorage()->get($shopReference);
 
-        /** @var ProductMultiShopRepository $productRepository */
-        $productRepository = CommonFeatureContext::getContainer()->get(ProductMultiShopRepository::class);
+        /** @var ProductRepository $productRepository */
+        $productRepository = CommonFeatureContext::getContainer()->get(ProductRepository::class);
         $defaultShopId = $productRepository->getProductDefaultShopId(new ProductId($productId));
         Assert::assertEquals($shopId, $defaultShopId->getValue());
     }

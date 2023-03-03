@@ -215,9 +215,9 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
   });
 
   // 3 - Create 16 order return statuses
-  const creationTests = new Array(16).fill(0, 0, 16);
+  const creationTests: number[] = new Array(16).fill(0, 0, 16);
 
-  creationTests.forEach((test, index) => {
+  creationTests.forEach((test: number, index: number) => {
     describe(`Create order return status n°${index + 1} in BO`, async () => {
       const orderReturnStatusData: OrderReturnStatusData = new OrderReturnStatusData({name: `todelete${index}`});
 
@@ -233,10 +233,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
       it('should create order status and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderReturnStatus${index}`, baseContext);
 
-        await addOrderReturnStatusPage.setOrderReturnStatus(page, orderReturnStatusData);
-        /* @todo Successful message is not visible, skipping it */
-        /* https://github.com/PrestaShop/PrestaShop/issues/21270 */
-        // await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
+        const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, orderReturnStatusData);
+        await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
 
         const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
         await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderReturnStatuses + index + 1);

@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustome
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
+use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
+use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -145,27 +147,40 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
             'firstName',
             'lastName',
             'email',
-            'password',
         ];
-
         foreach ($mandatoryFields as $mandatoryField) {
             if (!array_key_exists($mandatoryField, $data)) {
                 throw new Exception(sprintf('Mandatory property %s for customer has not been provided', $mandatoryField));
             }
+        }
+        if (!array_key_exists('password', $data) && empty($data['isGuest'])) {
+            throw new Exception('Password must be provided, if creating a registered customer');
+        }
+
+        // Apply minor differences for guests
+        if (!empty($data['isGuest'])) {
+            $password = (new PasswordGenerator(new OpenSSL()))->generatePassword(16, 'RANDOM');
+            $defaultGroupId = $defaultGroups->getGuestsGroup()->getId();
+            $groupIds = [$defaultGroups->getGuestsGroup()->getId()];
+        } else {
+            $password = $data['password'];
+            $defaultGroupId = $data['defaultGroupId'] ?? $defaultGroups->getCustomersGroup()->getId();
+            $groupIds = $data['groupIds'] ?? [$defaultGroups->getCustomersGroup()->getId()];
         }
 
         $command = new AddCustomerCommand(
             $data['firstName'],
             $data['lastName'],
             $data['email'],
-            $data['password'],
-            isset($data['defaultGroupId']) ? $data['defaultGroupId'] : $defaultGroups->getCustomersGroup()->getId(),
-            isset($data['groupIds']) ? $data['groupIds'] : [$defaultGroups->getCustomersGroup()->getId()],
+            $password,
+            $defaultGroupId,
+            $groupIds,
             (isset($data['shopId']) ? $data['shopId'] : 0),
             (isset($data['genderId']) ? $data['genderId'] : null),
             (isset($data['isEnabled']) ? $data['isEnabled'] : true),
             (isset($data['isPartnerOffersSubscribed']) ? $data['isPartnerOffersSubscribed'] : false),
-            (isset($data['birthday']) ? $data['birthday'] : null)
+            (isset($data['birthday']) ? $data['birthday'] : null),
+            (isset($data['isGuest']) ? $data['isGuest'] : false)
         );
 
         if (Configuration::get('PS_B2B_ENABLE')) {

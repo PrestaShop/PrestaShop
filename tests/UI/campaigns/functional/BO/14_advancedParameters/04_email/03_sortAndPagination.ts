@@ -20,8 +20,8 @@ import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -113,9 +113,9 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    const tests = new Array(6).fill(0, 0, 6);
+    const tests: number[] = new Array(6).fill(0, 0, 6);
 
-    tests.forEach((test, index) => {
+    tests.forEach((test: number, index: number) => {
       it(`should create the order n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
 
@@ -187,7 +187,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await emailPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await emailPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -208,7 +208,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await emailPage.selectPaginationLimit(page, '20');
+      const paginationNumber = await emailPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -300,8 +300,8 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
         const sortedTable = await emailPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

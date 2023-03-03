@@ -9,17 +9,17 @@ import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 
-import type {Order} from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 /**
  * Function to Create a non-ordered shopping cart connected in the FO
- * @param orderData {Order} Data to set when creating the order
+ * @param orderData {OrderData} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createShoppingCart(orderData: Order, baseContext: string = 'commonTests-createShoppingCart'): void {
+function createShoppingCart(orderData: OrderData, baseContext: string = 'commonTests-createShoppingCart'): void {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -63,10 +63,10 @@ function createShoppingCart(orderData: Order, baseContext: string = 'commonTests
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it(`should search for the product ${orderData.product.name}`, async function () {
+    it(`should search for the product ${orderData.products[0].product.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForProduct', baseContext);
 
-      await homePage.searchProduct(page, orderData.product.name);
+      await homePage.searchProduct(page, orderData.products[0].product.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -77,10 +77,10 @@ function createShoppingCart(orderData: Order, baseContext: string = 'commonTests
 
       await searchResultsPage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.productQuantity);
+      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(orderData.productQuantity);
+      await expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
     it('should sign out from FO', async function () {

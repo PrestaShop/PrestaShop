@@ -19,7 +19,7 @@ import newAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
 import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -107,7 +107,7 @@ describe('BO - International - Countries : Restrict country selections in front 
   [
     {args: {status: 'enable', enable: true, isCountryVisible: false}},
     {args: {status: 'disable', enable: false, isCountryVisible: true}},
-  ].forEach((status, index) => {
+  ].forEach((status, index: number) => {
     it(`should ${status.args.status} restrict country selections`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}RestrictCountry`, baseContext);
 
@@ -120,7 +120,6 @@ describe('BO - International - Countries : Restrict country selections in front 
 
       // Click on view my shop
       page = await countriesPage.viewMyShop(page);
-
       // Change FO language
       await homePage.changeLanguage(page, 'en');
 

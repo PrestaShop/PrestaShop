@@ -123,17 +123,6 @@ class CustomerFormCore extends AbstractForm
 
     public function validate()
     {
-        $emailField = $this->getField('email');
-        $id_customer = Customer::customerExists($emailField->getValue(), true, true);
-        $customer = $this->getCustomer();
-        if ($id_customer && $id_customer != $customer->id) {
-            $emailField->addError($this->translator->trans(
-                'The email is already used, please choose another one or sign in',
-                [],
-                'Shop.Notifications.Error'
-            ));
-        }
-
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField) &&

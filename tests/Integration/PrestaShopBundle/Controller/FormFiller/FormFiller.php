@@ -30,7 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\FormFiller;
 
 use DOMElement;
 use InvalidArgumentException;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;

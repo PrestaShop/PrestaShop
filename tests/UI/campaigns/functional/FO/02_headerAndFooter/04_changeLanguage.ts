@@ -8,8 +8,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
+import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import homePage from '@pages/FO/home';
 

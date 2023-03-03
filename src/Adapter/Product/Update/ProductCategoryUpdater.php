@@ -28,13 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use Cache;
 use Category;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 use Product;
+use SpecificPriceRule;
 
 /**
  * Methods to update product & category relations
@@ -47,74 +53,155 @@ class ProductCategoryUpdater
     private $productRepository;
 
     /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
+
+    /**
      * @param ProductRepository $productRepository
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * @param Product $product
-     * @param CategoryId[] $categoryIds
-     * @param CategoryId $defaultCategoryId
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      *
      * Warning: $categoryIds will replace current categories, erasing previous data
      *
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    public function updateCategories(Product $product, array $categoryIds, CategoryId $defaultCategoryId): void
+    public function removeAllCategories(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        $categoryIds = $this->formatCategoryIdsList($categoryIds, $defaultCategoryId);
+        // Get current categories based on the provided shop constraint
+        $this->deleteCategoriesAssociations($productId, [], $shopConstraint);
+        $this->assignFallbackDefaultCategory($productId);
 
-        try {
-            $this->assertCategoriesExists($categoryIds);
+        SpecificPriceRule::applyAllRules([$productId->getValue()]);
+        Cache::clean('Product::getProductCategories_' . $productId->getValue());
+    }
 
-            if (false === $product->updateCategories($categoryIds)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%d categories', $product->id),
-                    CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
-                );
+    /**
+     * @param ProductId $productId
+     * @param CategoryId[] $newCategoryIds
+     * @param CategoryId $defaultCategoryId
+     * @param shopConstraint $shopConstraint
+     *
+     * Warning: $categoryIds will replace current categories, erasing previous data, it will only impact the categories
+     * matching the shop constraint though
+     *
+     * @throws CannotUpdateProductException
+     * @throws CoreException
+     */
+    public function updateCategories(ProductId $productId, array $newCategoryIds, CategoryId $defaultCategoryId, ShopConstraint $shopConstraint): void
+    {
+        $newCategoryIds = $this->formatCategoryIdsList($newCategoryIds, $defaultCategoryId);
+        $this->assertCategoriesExists($newCategoryIds);
+
+        // Get curren categories based on the provided shop constraint
+        $this->deleteCategoriesAssociations($productId, $newCategoryIds, $shopConstraint);
+        $this->categoryRepository->addProductAssociations($productId, $newCategoryIds);
+        $this->updateDefaultCategory($productId, $defaultCategoryId, $shopConstraint);
+
+        SpecificPriceRule::applyAllRules([$productId->getValue()]);
+        Cache::clean('Product::getProductCategories_' . $productId->getValue());
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CategoryId[] $newCategories
+     * @param ShopConstraint $shopConstraint
+     */
+    private function deleteCategoriesAssociations(ProductId $productId, array $newCategories, ShopConstraint $shopConstraint): void
+    {
+        // Get current categories based on provided context, only these ones should be deleted
+        $currentCategoryIds = $this->categoryRepository->getProductCategoryIds($productId, $shopConstraint);
+        $deletedCategories = array_filter($currentCategoryIds, static function (CategoryId $currentCategoryId) use ($newCategories): bool {
+            foreach ($newCategories as $newCategory) {
+                if ($newCategory->getValue() === $currentCategoryId->getValue()) {
+                    return false;
+                }
             }
-            $this->updateDefaultCategory($product, $defaultCategoryId);
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to update product #%d categories', $product->id),
-                0,
-                $e
+
+            return true;
+        });
+
+        if (!empty($deletedCategories)) {
+            $this->categoryRepository->removeProductAssociations($productId, $deletedCategories);
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CategoryId $defaultCategoryId
+     * @param ShopConstraint $shopConstraint
+     */
+    private function updateDefaultCategory(ProductId $productId, CategoryId $defaultCategoryId, ShopConstraint $shopConstraint): void
+    {
+        $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
+        $product->id_category_default = $defaultCategoryId->getValue();
+
+        $this->productRepository->partialUpdate(
+            $product,
+            ['id_category_default'],
+            $shopConstraint,
+            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_CATEGORY
+        );
+
+        $this->assignFallbackDefaultCategory($productId);
+    }
+
+    private function assignFallbackDefaultCategory(ProductId $productId): void
+    {
+        // First define every shop that needs a fallback category defined, we perform the new association after each fallback is defined
+        // to avoid the first iteration to influence the fallback choice in following iterations
+        $fallbackCategories = [];
+        foreach ($this->productRepository->getAssociatedShopIds($productId) as $shopId) {
+            $defaultCategoryId = $this->categoryRepository->getProductDefaultCategory($productId, $shopId);
+            if (null === $defaultCategoryId) {
+                $shopConstraint = ShopConstraint::shop($shopId->getValue());
+                $productCategories = $this->categoryRepository->getProductCategoryIds($productId, $shopConstraint);
+                if (empty($productCategories)) {
+                    // If product has no more categories it needs at least the default category from shop
+                    $fallbackDefaultCategory = $this->categoryRepository->getShopDefaultCategory($shopId)->getValue();
+                } else {
+                    // If product has still some categories we use the one with smallest ID as fallback
+                    $fallbackDefaultCategory = min(array_values(array_map(static function (CategoryId $categoryId): int {
+                        return $categoryId->getValue();
+                    }, $productCategories)));
+                }
+                $fallbackCategories[$shopId->getValue()] = $fallbackDefaultCategory;
+            }
+        }
+
+        // We can update each default category for each shop, we also add the missing association
+        foreach ($fallbackCategories as $shopId => $fallbackDefaultCategory) {
+            $this->categoryRepository->addProductAssociations($productId, [new CategoryId($fallbackDefaultCategory)]);
+            $product = $this->productRepository->get($productId, new ShopId($shopId));
+            $product->id_category_default = $fallbackDefaultCategory;
+
+            $this->productRepository->partialUpdate(
+                $product,
+                ['id_category_default'],
+                ShopConstraint::shop($shopId),
+                CannotUpdateProductException::FAILED_UPDATE_DEFAULT_CATEGORY
             );
         }
     }
 
     /**
-     * @param Product $product
-     * @param CategoryId $defaultCategoryId
-     */
-    private function updateDefaultCategory(Product $product, CategoryId $defaultCategoryId): void
-    {
-        $categoryId = $defaultCategoryId->getValue();
-
-        $this->assertCategoriesExists([$categoryId]);
-        $product->id_category_default = $categoryId;
-
-        $this->productRepository->partialUpdate(
-            $product,
-            ['id_category_default'],
-            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_CATEGORY
-        );
-    }
-
-    /**
-     * Re-map array to contain scalar values instead of object,
-     * append default category id to the list
-     * and filter-out duplicate values
+     * Make sure default category ID is in the list and each ID is unique.
      *
      * @param CategoryId[] $categoryIds
      * @param CategoryId $defaultCategoryId
      *
-     * @return int[]
+     * @return CategoryId[]
      */
     private function formatCategoryIdsList(array $categoryIds, CategoryId $defaultCategoryId): array
     {
@@ -125,25 +212,27 @@ class ProductCategoryUpdater
         $categoryIds[] = $defaultCategoryId->getValue();
         $categoryIds = array_unique($categoryIds, SORT_REGULAR);
 
-        return $categoryIds;
+        return array_map(static function (int $categoryId) {
+            return new CategoryId($categoryId);
+        }, $categoryIds);
     }
 
     /**
-     * @param int[] $categoryIds
+     * @param CategoryId[] $categoryIds
      *
      * @throws CannotUpdateProductException|CoreException
      */
     private function assertCategoriesExists(array $categoryIds): void
     {
         try {
-            if (!Category::categoriesExists($categoryIds)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product categories. Some of categories doesn\'t exist.'),
-                    CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
-                );
+            foreach ($categoryIds as $categoryId) {
+                $this->categoryRepository->assertCategoryExists($categoryId);
             }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred when trying to assert categories existence');
+        } catch (CategoryNotFoundException $e) {
+            throw new CannotUpdateProductException(
+                sprintf('Failed to update product categories. Some of categories doesn\'t exist.'),
+                CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
+            );
         }
     }
 }

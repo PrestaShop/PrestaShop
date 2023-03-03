@@ -74,8 +74,8 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
 
   // 1 - Create 11 SQL queries
   describe('Create 11 SQL queries in BO', async () => {
-    const creationTests = new Array(11).fill(0, 0, 11);
-    creationTests.forEach((test, index) => {
+    const creationTests: number[] = new Array(11).fill(0, 0, 11);
+    creationTests.forEach((test: number, index: number) => {
       const sqlQueryData = new SqlQueryData({name: `todelete${index}`, tableName: `${dbPrefix}alias`});
 
       it('should go to add new SQL query page', async function () {
@@ -159,7 +159,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
       },
     ];
 
-    tests.forEach((test, index) => {
+    tests.forEach((test, index: number) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -227,8 +227,8 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
         const sortedTable = await sqlManagerPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

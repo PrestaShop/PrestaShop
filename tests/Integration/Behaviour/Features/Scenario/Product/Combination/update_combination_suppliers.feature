@@ -128,8 +128,8 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier1 |           | USD      | 0                  |
       | supplier2 |           | USD      | 0                  |
     And product product1 should have following supplier values:
-      | default supplier           | supplier2           |
-      | default supplier reference |                     |
+      | default supplier           | supplier2 |
+      | default supplier reference |           |
     # Infos are for product form, they should remain empty for combination products
     But product product1 should not have suppliers infos
     When I update following suppliers for combination "product1SWhite":
@@ -311,7 +311,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier1 |
       | supplier2 |
     And product product4 should have following supplier values:
-      | default supplier           | supplier2 |
+      | default supplier | supplier2 |
     And combination "product4SWhite" should have following suppliers:
       | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
       | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
@@ -403,7 +403,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product5 should have following supplier values:
-      | default supplier           | supplier4 |
+      | default supplier | supplier4 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     # No combinations but suppliers display the product regardless
@@ -499,7 +499,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product5 should have following supplier values:
-      | default supplier           | supplier4 |
+      | default supplier | supplier4 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     # No combinations but suppliers display the product regardless
@@ -528,7 +528,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product6 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":
@@ -544,7 +544,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product6 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":
@@ -583,7 +583,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product6 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":
@@ -611,7 +611,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product7 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":

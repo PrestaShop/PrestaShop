@@ -154,11 +154,16 @@ class AttributeController extends FrameworkBundleAdminController
 
         foreach ($attributes as $attribute) {
             foreach ($attribute as $combination) {
+                $formCombinations = $combinationDataProvider->getFormCombinations(
+                    [$combination['id_product_attribute']],
+                    $this->getContext()->language->id
+                );
+
                 $form = $this->get('form.factory')
                     ->createNamed(
                         'combination_' . $combination['id_product_attribute'],
                         'PrestaShopBundle\Form\Admin\Product\ProductCombination',
-                        $combinationDataProvider->getFormCombination($combination['id_product_attribute'])
+                        $formCombinations[$combination['id_product_attribute']]
                     );
                 $result['form'] .= $this->renderView(
                     '@Product/ProductPage/Forms/form_combination.html.twig',

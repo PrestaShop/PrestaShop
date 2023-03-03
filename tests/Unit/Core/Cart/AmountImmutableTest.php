@@ -30,9 +30,12 @@ namespace Tests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
+use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 
 class AmountImmutableTest extends TestCase
 {
+    use ExtendedTestCaseMethodsTrait;
+
     public function testGet(): void
     {
         $amount = new AmountImmutable(2.3, 3.5);
@@ -53,7 +56,7 @@ class AmountImmutableTest extends TestCase
         $this->assertEquals(4.6, $amount1->getTaxIncluded());
         $this->assertEquals(7.2, $amount1->getTaxExcluded());
 
-        $this->assertEquals(6.9, $amount2->getTaxIncluded());
+        $this->assertEqualsWithEpsilon(6.9, $amount2->getTaxIncluded());
         $this->assertEquals(10.7, $amount2->getTaxExcluded());
     }
 

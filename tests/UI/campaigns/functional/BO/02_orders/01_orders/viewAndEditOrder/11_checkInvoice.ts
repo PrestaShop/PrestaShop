@@ -11,6 +11,10 @@ import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/order';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
@@ -25,11 +29,12 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -70,12 +75,16 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
   // First order by customer data
-  const firstOrderByCustomer: Order = {
+  const firstOrderByCustomer: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   // Customized product data
   const customizedProduct: ProductData = new ProductData({
     name: `Customized product ${prefixNewProduct}`,
@@ -89,12 +98,16 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     },
   });
   // Second order by customer
-  const secondOrderByCustomer: Order = {
+  const secondOrderByCustomer: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    product: customizedProduct,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: customizedProduct,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   // Virtual product data
   const virtualProduct: ProductData = new ProductData({
     name: `Virtual product ${prefixNewProduct}`,
@@ -147,6 +160,9 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Pre-condition - Enable Ecotax
   enableEcoTaxTest(`${baseContext}_preTest_2`);
 
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -163,7 +179,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     customizedProduct,
     productWithSpecificPrice,
     productWithEcoTax,
-  ].forEach((product, index) => {
+  ].forEach((product: ProductData, index: number) => {
     describe(`PRE-TEST: Create product '${product.name}'`, async () => {
       if (index === 0) {
         it('should login in BO', async function () {
@@ -334,7 +350,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         filePath = await orderPageTabListBlock.viewInvoice(page);
         await expect(filePath).to.be.not.null;
 
-        const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
         await expect(doesFileExist, 'File is not downloaded!').to.be.true;
       });
     });
@@ -342,13 +358,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice1', baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath as string);
+          const imageNumber = await files.getImageNumberInPDF(filePath);
           await expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
 
-          const isVisible = await files.isTextInPDF(filePath as string, `INVOICE,,${today},,#${fileName}`);
+          const isVisible = await files.isTextInPDF(filePath, `INVOICE,,${today},,#${fileName}`);
           await expect(isVisible, 'File name header is not correct!').to.be.true;
         });
 
@@ -357,7 +374,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Delivery Address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
@@ -374,7 +391,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress1', baseContext);
 
           const billingAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Billing Address,,'
             + `${Addresses.third.firstName} ${Addresses.third.lastName},`
             + `${Addresses.third.company},`
@@ -391,7 +408,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceNumber1', baseContext);
 
             const invoiceNumberExist = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               'Invoice Number, ,Invoice Date, ,Order Reference, ,Order date,,'
               + `#${fileName}, ,${today}, ,${orderReference}, ,${today},`,
             );
@@ -405,7 +422,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference1', baseContext);
 
           const productReferenceExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${virtualProduct.reference}, ,${virtualProduct.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
@@ -416,7 +433,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkTaxRate1', baseContext);
 
           const productPriceExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${virtualProduct.name}, ,`
             + `${virtualProduct.tax} %, ,`
             + `€${virtualProduct.priceTaxExcluded.toFixed(2)}, ,`
@@ -435,7 +452,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkTaxesTable1', baseContext);
 
           const taxDetailsVisible = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,'
             + 'Products, ,'
             + '20.000 %, ,'
@@ -455,17 +472,17 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentMethod1', baseContext);
 
           const paymentMethodExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Payment Method, ,Bank transfer, ,'
             + `€${(virtualProduct.price * 13).toFixed(2)}`,
           );
           await expect(paymentMethodExist, 'Payment method and total to pay are not correct!').to.be.true;
         });
 
-        it.skip('should check that the carrier is not visible', async function () {
+        it('should check that the carrier is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierNotVisible', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath as string, `Carrier, ${Carriers.default.name}`);
+          const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ${Carriers.default.name}`);
           await expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is visible!`).to.be.false;
         });
       });
@@ -481,7 +498,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
             // Total Products, Total (Tax excl.), Total Tax, Total
             const isPaymentTableCorrect = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               `Total Products, ,€${totalPriceTaxExcl.toFixed(2)},,`
               + `Total (Tax excl.), ,€${totalPriceTaxExcl.toFixed(2)},,`
               + `Total Tax, ,€${(tax * 13).toFixed(2)},,`
@@ -567,7 +584,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         filePath = await orderPageTabListBlock.viewInvoice(page);
         await expect(filePath).is.not.null;
 
-        const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
         await expect(doesFileExist, 'File is not downloaded!').to.be.true;
       });
     });
@@ -575,13 +592,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice2', baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath as string);
+          const imageNumber = await files.getImageNumberInPDF(filePath);
           await expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
 
-          const isVisible = await files.isTextInPDF(filePath as string, `INVOICE,,${today},,#${fileName}`);
+          const isVisible = await files.isTextInPDF(filePath, `INVOICE,,${today},,#${fileName}`);
           await expect(isVisible, 'File name header is not correct!').to.be.true;
         });
 
@@ -590,7 +608,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Delivery Address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
@@ -607,7 +625,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress2', baseContext);
 
           const billingAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Billing Address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
@@ -625,7 +643,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceNumber2', baseContext);
 
             const invoiceNumberExist = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               'Invoice Number, ,Invoice Date, ,Order Reference, ,Order date,,'
               + `#${fileName}, ,${today}, ,${orderReference}, ,${today},`,
             );
@@ -638,7 +656,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference2', baseContext);
 
           const productReferenceExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${customizedProduct.reference}, ,${customizedProduct.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
@@ -648,7 +666,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCustomizedText', baseContext);
 
           const isCustomizedTextVisible = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${customizedProduct.customization}: text,(1)`,
           );
           await expect(isCustomizedTextVisible, 'Customized text is not visible!').to.be.false;
@@ -659,7 +677,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkProductCustomizedProduct', baseContext);
 
           const productPriceExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${customizedProduct.name}, ,`
             + `€${customizedProduct.price.toFixed(2)}, ,`
             + '1, ,'
@@ -676,7 +694,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that \'Tax Detail\' table is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkIsTaxesTableNotVisible', baseContext);
 
-          const isTaxTableVisible = await files.isTextInPDF(filePath as string, 'Tax Detail,Tax Rate,Base price,Total Tax');
+          const isTaxTableVisible = await files.isTextInPDF(filePath, 'Tax Detail,Tax Rate,Base price,Total Tax');
           await expect(isTaxTableVisible, 'Tax table is visible!').to.be.false;
         });
       });
@@ -686,7 +704,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentMethod2', baseContext);
 
           const paymentMethodExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Payment Method, ,Bank transfer, ,'
             + `€${(customizedProduct.price).toFixed(2)}`,
           );
@@ -696,7 +714,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the carrier is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierVisible2', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath as string, Carriers.default.name);
+          const isCarrierVisible = await files.isTextInPDF(filePath, Carriers.default.name);
           await expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is not visible!`).to.be.true;
         });
       });
@@ -708,7 +726,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
             // Total Products, Shipping Costs, Total (Tax excl.), Total
             const isShippingCostVisible = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               `Total Products, ,€${customizedProduct.price.toFixed(2)},`
               + 'Shipping Costs, ,Free Shipping,,'
               + `Total (Tax excl.), ,€${customizedProduct.price.toFixed(2)},,`
@@ -762,7 +780,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         filePath = await orderPageTabListBlock.viewInvoice(page);
         await expect(filePath).to.be.not.null;
 
-        const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
         await expect(doesFileExist, 'File is not downloaded!').to.be.true;
       });
     });
@@ -770,13 +788,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice3', baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath as string);
+          const imageNumber = await files.getImageNumberInPDF(filePath);
           await expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
 
-          const isVisible = await files.isTextInPDF(filePath as string, `INVOICE,,${today},,#${fileName}`);
+          const isVisible = await files.isTextInPDF(filePath, `INVOICE,,${today},,#${fileName}`);
           await expect(isVisible, 'File name header is not correct!').to.be.true;
         });
 
@@ -785,7 +804,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Delivery Address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
@@ -802,7 +821,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress3', baseContext);
 
           const billingAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Billing Address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
@@ -820,7 +839,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceNumber3', baseContext);
 
             const invoiceNumberExist = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               'Invoice Number, ,Invoice Date, ,Order Reference, ,Order date,,'
               + `#${fileName}, ,${today}, ,${orderReference}, ,${today},`,
             );
@@ -834,7 +853,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference3', baseContext);
 
           const productReferenceExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${productWithSpecificPrice.reference}, ,${productWithSpecificPrice.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
@@ -843,7 +862,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the column \'Base price (Tax excl.)\' is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceColumnVisible', baseContext);
 
-          const basePriceColumnVisible = await files.isTextInPDF(filePath as string, 'Base,price,(Tax excl.)');
+          const basePriceColumnVisible = await files.isTextInPDF(filePath, 'Base,price,(Tax excl.)');
           await expect(basePriceColumnVisible, 'Base price is not visible!').to.be.true;
         });
 
@@ -858,7 +877,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const unitPrice = productWithSpecificPrice.price - discountValue;
 
           const basePriceVisible = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${productWithSpecificPrice.name}, ,`
             + `€${productWithSpecificPrice.price.toFixed(2)}, ,`
             + `€${unitPrice.toFixed(2)}, ,`
@@ -875,7 +894,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that \'Tax Detail\' table is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkIsTaxesTableNotVisible2', baseContext);
 
-          const isTaxTableVisible = await files.isTextInPDF(filePath as string, 'Tax Detail,Tax Rate,Base price,Total Tax');
+          const isTaxTableVisible = await files.isTextInPDF(filePath, 'Tax Detail,Tax Rate,Base price,Total Tax');
           await expect(isTaxTableVisible, 'Tax table is visible!').to.be.false;
         });
       });
@@ -885,7 +904,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentMethod3', baseContext);
 
           const paymentMethodExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Payment Method, ,Bank transfer, ,'
             + `€${customizedProduct.price.toFixed(2)}`,
           );
@@ -895,7 +914,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the carrier is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierVisible3', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath as string, Carriers.default.name);
+          const isCarrierVisible = await files.isTextInPDF(filePath, Carriers.default.name);
           await expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is not visible!`).to.be.true;
         });
       });
@@ -915,7 +934,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
             // Total Products, Shipping Costs, Total (Tax excl.), Total
             const isShippingCostVisible = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               `Total Products, ,€${totalPriceTaxExcl.toFixed(2)},`
               + 'Shipping Costs, ,Free Shipping,,'
               + `Total (Tax excl.), ,€${totalPriceTaxExcl.toFixed(2)},,`
@@ -942,21 +961,21 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
         it('should check that the \'Product name\' is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkProductName', baseContext);
 
-          const productNameExist = await files.isTextInPDF(filePath as string, productWithSpecificPrice.name);
+          const productNameExist = await files.isTextInPDF(filePath, productWithSpecificPrice.name);
           await expect(productNameExist, 'Product name is visible!').to.be.false;
         });
 
         it('should check that the column \'Base price (Tax excl.)\' is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceColumn', baseContext);
 
-          const basePriceColumnVisible = await files.isTextInPDF(filePath as string, 'Base,price,(Tax excl.)');
+          const basePriceColumnVisible = await files.isTextInPDF(filePath, 'Base,price,(Tax excl.)');
           await expect(basePriceColumnVisible, 'Base price is not visible!').to.be.false;
         });
       });
@@ -1002,7 +1021,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         filePath = await orderPageTabListBlock.viewInvoice(page);
         await expect(filePath).to.be.not.null;
 
-        const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
         await expect(doesFileExist, 'File is not downloaded!').to.be.true;
       });
     });
@@ -1010,13 +1029,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/22581
         it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice4', baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath as string);
+          const imageNumber = await files.getImageNumberInPDF(filePath);
           await expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
 
-          const isVisible = await files.isTextInPDF(filePath as string, `INVOICE,,${today},,#${fileName}`);
+          const isVisible = await files.isTextInPDF(filePath, `INVOICE,,${today},,#${fileName}`);
           await expect(isVisible, 'File name header is not correct!').to.be.true;
         });
 
@@ -1025,7 +1045,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Delivery Address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
@@ -1042,7 +1062,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress4', baseContext);
 
           const billingAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Billing Address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
@@ -1060,7 +1080,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceNumber4', baseContext);
 
             const invoiceNumberExist = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               'Invoice Number, ,Invoice Date, ,Order Reference, ,Order date,,'
               + `#${fileName}, ,${today}, ,${orderReference}, ,${today},`,
             );
@@ -1074,7 +1094,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference4', baseContext);
 
           const productReferenceExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `${productWithEcoTax.reference}, ,${productWithEcoTax.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
@@ -1083,7 +1103,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the column \'Base price (Tax excl.)\' is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceColumnNotVisible', baseContext);
 
-          const basePriceColumnVisible = await files.isTextInPDF(filePath as string, 'Base,price,(Tax excl.)');
+          const basePriceColumnVisible = await files.isTextInPDF(filePath, 'Base,price,(Tax excl.)');
           await expect(basePriceColumnVisible, 'Base price is visible!').to.be.false;
         });
 
@@ -1092,7 +1112,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceWithEcoTax', baseContext);
 
             const basePriceVisible = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               `${productWithEcoTax.name}, ,`
               + `€${productWithEcoTax.price.toFixed(2)},,`
               + `Ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,`
@@ -1110,7 +1130,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkEcoTax', baseContext);
 
             const taxDetailsVisible = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,'
               + 'Ecotax, ,'
               + '0.000 %, ,'
@@ -1129,7 +1149,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentMethod4', baseContext);
 
           const paymentMethodExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Payment Method, ,Bank transfer, ,'
             + `€${customizedProduct.price.toFixed(2)}`,
           );
@@ -1139,7 +1159,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should check that the carrier is visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierVisible4', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath as string, Carriers.default.name);
+          const isCarrierVisible = await files.isTextInPDF(filePath, Carriers.default.name);
           await expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is not visible!`).to.be.true;
         });
       });
@@ -1153,7 +1173,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
             // Total Products, Shipping Costs, Total (Tax excl.), Total
             const isShippingCostVisible = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               `Total Products, ,€${totalPriceTaxExcl.toFixed(2)},`
               + 'Shipping Costs, ,Free Shipping,,'
               + `Total (Tax excl.), ,€${totalPriceTaxExcl.toFixed(2)},,`
@@ -1183,7 +1203,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
@@ -1191,7 +1211,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkEditedDeliveryAddress', baseContext);
 
           const deliveryAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Delivery Address,,'
             + `${Addresses.third.firstName} ${Addresses.third.lastName},`
             + `${Addresses.third.company},`
@@ -1219,7 +1239,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
@@ -1227,7 +1247,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkEditedBillingAddress', baseContext);
 
           const deliveryAddressExist = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Billing Address,,'
             + `${Addresses.third.firstName} ${Addresses.third.lastName},`
             + `${Addresses.third.company},`
@@ -1261,14 +1281,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
         it('should check that the note is visible in the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkIsNoteVisible', baseContext);
 
-          const isNoteVisible = await files.isTextInPDF(filePath as string, 'Test note');
+          const isNoteVisible = await files.isTextInPDF(filePath, 'Test note');
           await expect(isNoteVisible, 'Note does not exist in invoice!').to.be.true;
         });
 
@@ -1292,14 +1312,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
         it('should check that the note is not visible in the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkIsNoteNotVisible', baseContext);
 
-          const isNoteVisible = await files.isTextInPDF(filePath as string, 'Test note');
+          const isNoteVisible = await files.isTextInPDF(filePath, 'Test note');
           await expect(isNoteVisible, 'Note does is visible in invoice!').to.be.false;
         });
       });
@@ -1338,14 +1358,14 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
         it('should check that the edited \'Carrier\' is visible in the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkCarrier', baseContext);
 
-          const isCarrierVisible = await files.isTextInPDF(filePath as string, `Carrier, ,${Carriers.myCarrier.name}`);
+          const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ,${Carriers.myCarrier.name}`);
           await expect(isCarrierVisible, 'New carrier not exist in invoice!').to.be.true;
         });
 
@@ -1356,7 +1376,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
 
             const isDiscountVisible = await files.isTextInPDF(
-              filePath as string,
+              filePath,
               // Total Products, ,€25.00,Shipping Costs, ,€7.00,,Total (Tax excl.), ,€32.00,,Total, ,€32.00
               `Total Products, ,€${totalPrice.toFixed(2)},`
               + 'Shipping Costs, ,€7.00,,'
@@ -1385,7 +1405,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
@@ -1396,7 +1416,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const discount = await basicHelper.percentage(totalPrice, discountData.value);
 
           const isDiscountVisible = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             'Discounts,,Discount, ,'
             + `- €${discount.toFixed(2)}`,
           );
@@ -1410,7 +1430,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const discount = await basicHelper.percentage(totalPrice, discountData.value);
 
           const isDiscountVisible = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `Total Products, ,€${totalPrice.toFixed(2)},`
             + `Total Discounts, ,- €${discount.toFixed(2)},`
             + 'Shipping Costs, ,€7.00,,'
@@ -1434,7 +1454,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
@@ -1445,7 +1465,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const discount = await basicHelper.percentage(totalPrice, discountData.value);
 
           const isDiscountVisible = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             ' Total Discounts,'
             + `-€${(totalPrice - discount).toFixed(2)}`,
           );
@@ -1470,7 +1490,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           filePath = await orderPageTabListBlock.viewInvoice(page);
           await expect(filePath).to.be.not.null;
 
-          const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+          const doesFileExist = await files.doesFileExist(filePath, 5000);
           await expect(doesFileExist, 'File is not downloaded!').to.be.true;
         });
 
@@ -1478,7 +1498,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkNewPaymentMethod', baseContext);
 
           const isPaymentMethodVisible = await files.isTextInPDF(
-            filePath as string,
+            filePath,
             `,Payment Method, ,Bank transfer, ,€${customizedProduct.price.toFixed(2)},,`
             + `${paymentData.paymentMethod}, ,€${paymentData.amount}`,
           );
@@ -1496,4 +1516,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
   // Post-condition: Delete discount
   deleteCartRuleTest(discountData.name, `${baseContext}_postTest_3`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

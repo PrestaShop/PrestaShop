@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard/index';
+import dashboardPage from '@pages/BO/dashboard';
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
@@ -50,7 +50,6 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
       dashboardPage.advancedParametersLink,
       dashboardPage.webserviceLink,
     );
-
     await webservicePage.closeSfToolBar(page);
 
     const pageTitle = await webservicePage.getPageTitle(page);

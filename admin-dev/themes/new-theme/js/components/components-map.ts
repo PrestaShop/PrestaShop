@@ -89,6 +89,7 @@ export default {
   },
   deltaQuantityInput: {
     containerSelector: '.delta-quantity',
+    quantityInputSelector: '.delta-quantity-quantity',
     deltaInputSelector: '.delta-quantity-delta',
     updateQuantitySelector: '.quantity-update',
     modifiedQuantityClass: 'quantity-modified',

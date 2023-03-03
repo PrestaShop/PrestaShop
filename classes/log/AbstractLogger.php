@@ -61,6 +61,15 @@ abstract class AbstractLoggerCore implements PrestaShopLoggerInterface
         if ($level >= $this->level) {
             $this->logMessage($message, $level);
         }
+
+        Hook::exec(
+            'actionLoggerLogMessage',
+            [
+                'message' => $message,
+                'level' => $level,
+                'isLogged' => $level >= $this->level,
+            ]
+        );
     }
 
     /**

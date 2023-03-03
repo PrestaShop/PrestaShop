@@ -110,7 +110,11 @@ class ModuleManager implements ModuleManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         $installed = $module->onInstall();
-        $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+        if ($installed) {
+            // Only trigger install event if install has succeeded otherwise it could automatically add tabs linked to a
+            // module not installed (@see ModuleTabManagementSubscriber) or other unwanted automatic actions.
+            $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+        }
 
         return $installed;
     }
@@ -161,6 +165,26 @@ class ModuleManager implements ModuleManagerInterface
         return $uninstalled;
     }
 
+    public function delete(string $name): bool
+    {
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
+            throw new Exception($this->translator->trans(
+                'You are not allowed to delete the module %module%.',
+                ['%module%' => $name],
+                'Admin.Modules.Notification'
+            ));
+        }
+
+        $module = $this->moduleRepository->getModule($name);
+
+        $path = $this->moduleRepository->getModulePath($name);
+        $this->filesystem->remove($path);
+
+        $this->dispatch(ModuleManagementEvent::DELETE, $module);
+
+        return true;
+    }
+
     public function upgrade(string $name, $source = null): bool
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
@@ -177,6 +201,8 @@ class ModuleManager implements ModuleManagerInterface
             $handler = $this->sourceFactory->getHandler($source);
             $handler->handle($source);
         }
+
+        $this->hookManager->disableHooksForModule($this->moduleDataProvider->getModuleIdByName($name));
 
         $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name, 'source' => $source]);
 

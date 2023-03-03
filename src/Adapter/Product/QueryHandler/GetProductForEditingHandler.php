@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
@@ -84,7 +84,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $numberExtractor;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -94,7 +94,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $categoryRepository;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableRepository;
 
@@ -150,9 +150,9 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
     /**
      * @param NumberExtractor $numberExtractor
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
-     * @param StockAvailableMultiShopRepository $stockAvailableRepository
+     * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      * @param ProductImageMultiShopRepository $productImageMultiShopRepository
      * @param AttachmentRepository $attachmentRepository
@@ -166,9 +166,9 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
-        StockAvailableMultiShopRepository $stockAvailableRepository,
+        StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
         AttachmentRepository $attachmentRepository,
@@ -275,7 +275,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         $shopId = new ShopId($product->getShopId());
         $productId = new ProductId((int) $product->id);
 
-        $categoryIds = $this->categoryRepository->getProductCategoryIds($productId, $shopId);
+        $categoryIds = $this->categoryRepository->getProductCategoryIds($productId, ShopConstraint::shop($shopId->getValue()));
         $defaultCategoryId = (int) $product->id_category_default;
 
         $categoryNames = $this->categoryRepository->getLocalizedNames($categoryIds);
@@ -549,7 +549,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
     private function getCover(ProductId $productId, int $shopId): string
     {
-        $idOfCoverImage = $this->productImageMultiShopRepository->getCoverImageId($productId, new ShopId($shopId));
+        $idOfCoverImage = $this->productImageMultiShopRepository->findCoverImageId($productId, new ShopId($shopId));
 
         if ($idOfCoverImage) {
             return $this->productImageUrlFactory->getPathByType($idOfCoverImage, ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);

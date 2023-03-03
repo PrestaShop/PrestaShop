@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
@@ -21,9 +21,9 @@ import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 // Importing data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -73,7 +73,6 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
             dashboardPage.ordersParentLink,
             dashboardPage.invoicesLink,
           );
-
           await invoicesPage.closeSfToolBar(page);
 
           const pageTitle = await invoicesPage.getPageTitle(page);
@@ -222,17 +221,17 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           filePath = await orderPageTabListBlock.downloadInvoice(page);
           await expect(filePath).to.not.be.null;
 
-          const exist = await files.doesFileExist(filePath as string);
+          const exist = await files.doesFileExist(filePath);
           await expect(exist).to.be.true;
         });
 
         it('should check the product images in the PDF File', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImages${index}`, baseContext);
 
-          const imageNumber = await files.getImageNumberInPDF(filePath as string);
+          const imageNumber = await files.getImageNumberInPDF(filePath);
           await expect(imageNumber).to.be.equal(test.args.imageNumber);
 
-          await files.deleteFile(filePath as string);
+          await files.deleteFile(filePath);
         });
       });
     });

@@ -1,12 +1,18 @@
 name: Behaviour tests
-on: [ push, pull_request ]
+on:
+  push:
+  pull_request:
+    # Do not run when only tests are updated
+    paths-ignore:
+      - 'tests/UI/**'
+
 permissions:
   contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  integration:
+  behaviour:
     permissions:
       contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
     name: Behaviour tests

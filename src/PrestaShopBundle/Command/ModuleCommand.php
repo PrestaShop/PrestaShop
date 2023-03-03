@@ -50,6 +50,7 @@ class ModuleCommand extends Command
         'reset',
         'upgrade',
         'configure',
+        'delete',
     ];
 
     /**

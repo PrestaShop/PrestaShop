@@ -73,7 +73,7 @@ class ProductPreviewRepository
      */
     public function getPreview(ProductId $productId, LanguageId $languageId): ProductPreview
     {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getProductByDefaultShop($productId);
         $name = $product->name[$languageId->getValue()] ?? reset($product->name);
         $imagePath = $this->productImageRepository->getProductCoverUrl($productId);
 

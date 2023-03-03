@@ -300,3 +300,78 @@ Feature: Update product combination stock information in Back Office (BO)
     When I update product "product1" stock with following information:
       | out_of_stock_type | not_available |
     Then all combinations of product "product1" should have the stock policy to "not_available"
+
+  Scenario: I shouldn't be able to add bigger quantity then 2147483647
+    When I update combination "product1MBlack" stock with following details:
+      | delta quantity             | 2147483648  |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             | 2021-10-10  |
+    Then I should get error that stock available quantity is invalid
+    When I update combination "product1MBlack" stock with following details:
+      | delta quantity             | -2147483649 |
+      | minimal quantity           | 1           |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             | 2021-10-10  |
+    Then I should get error that stock available quantity is invalid
+
+  Scenario: Adding biggest and smallest possible combination quantities
+    When I update combination "product1MBlue" stock with following details:
+      | delta quantity             | 2147483647  |
+      | minimal quantity           | 1           |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+    Then combination "product1MBlue" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 2147483647  |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   | Storage nr1 |
+      | available date             |             |
+    And combination "product1MBlue" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 2147483647     |
+    When I update combination "product1MBlue" stock with following details:
+      | delta quantity             | -4294967295 |
+      | minimal quantity           | 1           |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             |             |
+    Then combination "product1MBlue" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | -2147483648 |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   | Storage nr1 |
+      | available date             |             |
+    And combination "product1MBlue" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -4294967295    |
+      | Puff Daddy | 2147483647     |
+    When I update combination "product1MBlue" stock with following details:
+      | delta quantity             | 4294967295  |
+      | minimal quantity           | 1           |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             |             |
+    Then combination "product1MBlue" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 2147483647  |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   | Storage nr1 |
+      | available date             |             |
+    And combination "product1MBlue" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 4294967295     |
+      | Puff Daddy | -4294967295    |
+      | Puff Daddy | 2147483647     |

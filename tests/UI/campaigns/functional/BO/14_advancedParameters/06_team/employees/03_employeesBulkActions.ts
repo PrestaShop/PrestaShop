@@ -57,7 +57,6 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);
@@ -126,7 +125,6 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
           page,
           employeeStatus.args.enable,
         );
-
         await expect(disableTextResult).to.be.equal(employeesPage.successfulUpdateStatusMessage);
 
         const numberOfEmployeesInGrid = await employeesPage.getNumberOfElementInGrid(page);

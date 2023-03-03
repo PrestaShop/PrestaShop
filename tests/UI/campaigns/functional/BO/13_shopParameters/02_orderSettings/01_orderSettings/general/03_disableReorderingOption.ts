@@ -16,7 +16,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -64,7 +64,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
     {args: {action: 'disable', status: false, reorderOption: true}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} reordering option`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `setReorderingOption${index}`, baseContext);
 

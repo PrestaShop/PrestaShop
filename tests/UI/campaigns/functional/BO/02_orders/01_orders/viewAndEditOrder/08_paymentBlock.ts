@@ -17,12 +17,12 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {Currencies} from '@data/demo/currencies';
-import Customers from '@data/demo/customer';
+import Currencies from '@data/demo/currencies';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -54,12 +54,16 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   const todayToCheck: string = date.getDateFormat('mm/dd/yyyy');
   const totalOrder: number = 22.94;
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const paymentDataAmountInfTotal = {
     date: today,
     paymentMethod: 'Payment by check',
@@ -492,13 +496,13 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
       await expect(filePath).to.be.not.null;
 
-      const exist = await files.doesFileExist(filePath as string);
+      const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File doesn\'t exist!').to.be.true;
 
-      const paymentMethodExist = await files.isTextInPDF(filePath as string, paymentDataAmountEqualRest.paymentMethod);
+      const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.paymentMethod);
       await expect(paymentMethodExist, 'Payment method does not exist in invoice!').to.be.true;
 
-      const amountExist = await files.isTextInPDF(filePath as string, paymentDataAmountEqualRest.amount);
+      const amountExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
       await expect(amountExist, 'Payment amount does not exist in invoice!').to.be.true;
     });
   });

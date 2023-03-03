@@ -5,7 +5,8 @@ admin_countries_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::indexAction'
     _legacy_controller: AdminCountries
-#    _legacy_link: AdminCountries
+    _legacy_link: AdminCountries
+    _legacy_feature_flag: country
 
 admin_countries_search:
   path: /
@@ -15,7 +16,8 @@ admin_countries_search:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.country
     redirectRoute: admin_countries_index
     _legacy_controller: AdminCountries
-#    _legacy_link: AdminCountries:submitFiltercountry
+    _legacy_link: AdminCountries:submitFiltercountry
+    _legacy_feature_flag: country
 
 admin_countries_create:
   path: /new
@@ -23,15 +25,17 @@ admin_countries_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::createAction'
     _legacy_controller: AdminCountries
-#    _legacy_link: AdminCountries:addCountry
+    _legacy_link: AdminCountries:addCountry
+    _legacy_feature_flag: country
 
 admin_countries_edit:
   path: /{countryId}/edit
   methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::editAction'
-    _legacy_controller: AdminCountry
-    # _legacy_link: AdminCountry:updateCountry
+    _legacy_controller: AdminCountries
+    _legacy_link: AdminCountries:updateCountry
+    _legacy_feature_flag: country
     _legacy_parameters:
       id_country: countryId
   requirements:

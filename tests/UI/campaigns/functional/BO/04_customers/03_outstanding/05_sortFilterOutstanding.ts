@@ -18,10 +18,11 @@ import ordersPage from '@pages/BO/orders';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -81,13 +82,17 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         email: customerData.email,
         country: 'France',
       });
-      const orderByCustomerData: Order = {
+      const orderByCustomerData: OrderData = new OrderData({
         customer: customerData,
-        productId: 1,
-        productQuantity: 1,
-        address: addressData,
-        paymentMethod: PaymentMethods.wirePayment.moduleName,
-      };
+        products: [
+          {
+            product: Products.demo_1,
+            quantity: 1,
+          },
+        ],
+        deliveryAddress: addressData,
+        paymentMethod: PaymentMethods.wirePayment,
+      });
 
       // Pre-Condition : Create new B2B customer
       createCustomerB2BTest(customerData, `${baseContext}_preTest_createB2BAccount_${index}`);
@@ -201,7 +206,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         },
       },
     ];
-    filterTests.forEach((test, index) => {
+    filterTests.forEach((test, index: number) => {
       it(`should filter by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier);
 
@@ -380,7 +385,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
   });
 
   // Post-Condition: Delete created customers by bulk action
-  customersData.forEach((customerData, index) => {
+  customersData.forEach((customerData: CustomerData, index: number) => {
     bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_${index + 1}`);
   });
 

@@ -6,17 +6,21 @@ import testContext from '@utils/testContext';
 // Import commonSteps
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 // Import BO pages
 import addProductPage from '@pages/BO/catalog/products/add';
-import boProductsPage from '@pages/BO/catalog/products/index';
+import boProductsPage from '@pages/BO/catalog/products';
 import dashboardPage from '@pages/BO/dashboard';
-import taxesPage from '@pages/BO/international/taxes/index';
+import taxesPage from '@pages/BO/international/taxes';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
-import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
+import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
@@ -25,9 +29,9 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import TaxRuleData from '@data/faker/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
@@ -52,8 +56,8 @@ Post-condition: Delete Product with bulk action
 describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let firstInvoiceFileName: string|null;
-  let secondInvoiceFileName: string|null;
+  let firstInvoiceFileName: string | null;
+  let secondInvoiceFileName: string | null;
 
   const taxRuleGroupToCreate: TaxRulesGroupData = new TaxRulesGroupData();
   const firstTaxRuleToCreate: TaxRuleData = new TaxRuleData({
@@ -70,6 +74,9 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
     type: 'Standard product',
     taxRule: taxRuleGroupToCreate.name,
   });
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_dnableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -308,7 +315,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await expect(firstInvoiceFileName).to.be.not.null;
 
         // Check that file exist
-        const exist = await files.doesFileExist(firstInvoiceFileName as string);
+        const exist = await files.doesFileExist(firstInvoiceFileName);
         await expect(exist).to.be.true;
       });
 
@@ -316,11 +323,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTaxBreakdownInFile', baseContext);
 
         // Check the existence of the first tax
-        let exist = await files.isTextInPDF(firstInvoiceFileName as string, '10.000 %');
+        let exist = await files.isTextInPDF(firstInvoiceFileName, '10.000 %');
         await expect(exist).to.be.true;
 
         // Check the existence of the second tax
-        exist = await files.isTextInPDF(firstInvoiceFileName as string, '20.000 %');
+        exist = await files.isTextInPDF(firstInvoiceFileName, '20.000 %');
         await expect(exist).to.be.true;
       });
     });
@@ -381,7 +388,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         secondInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
         await expect(secondInvoiceFileName).to.be.not.null;
 
-        const exist = await files.doesFileExist(secondInvoiceFileName as string);
+        const exist = await files.doesFileExist(secondInvoiceFileName);
         await expect(exist).to.be.true;
       });
 
@@ -389,13 +396,13 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNoTaxBreakdownInFile', baseContext);
 
         // Check that there is only one tax line 30.000 %
-        let exist = await files.isTextInPDF(secondInvoiceFileName as string, '10.000 %');
+        let exist = await files.isTextInPDF(secondInvoiceFileName, '10.000 %');
         await expect(exist).to.be.false;
 
-        exist = await files.isTextInPDF(secondInvoiceFileName as string, '20.000 %');
+        exist = await files.isTextInPDF(secondInvoiceFileName, '20.000 %');
         await expect(exist).to.be.false;
 
-        exist = await files.isTextInPDF(secondInvoiceFileName as string, '30.000 %');
+        exist = await files.isTextInPDF(secondInvoiceFileName, '30.000 %');
         await expect(exist).to.be.true;
       });
     });
@@ -464,4 +471,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
   // Post-condition: Delete the created products
   bulkDeleteProductsTest(productData.name, `${baseContext}_postTest`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

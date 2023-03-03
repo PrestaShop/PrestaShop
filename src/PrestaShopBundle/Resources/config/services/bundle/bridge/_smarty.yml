@@ -45,6 +45,6 @@ services:
     class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator
     arguments:
       - "@prestashop.adapter.legacy.configuration"
-      - "@prestashop.core.help.documentation"
+      - '@PrestaShop\PrestaShop\Core\Help\Documentation'
       - "@=service('prestashop.adapter.environment').isDebug()"
     tags: [ 'prestashop.bridge.smarty_configurator' ]

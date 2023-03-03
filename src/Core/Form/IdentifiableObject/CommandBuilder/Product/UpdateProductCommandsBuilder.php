@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 /**
  * Builds @see UpdateProductCommand for both single and All shops
@@ -69,11 +70,13 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configureStockInformation($config, $formData)
         ;
 
-        $config->addField('[header][active]', 'setActive', DataField::TYPE_BOOL);
+        $config->addMultiShopField('[header][active]', 'setActive', DataField::TYPE_BOOL);
 
         $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductCommand($productId->getValue(), $singleShopConstraint);
         $allShopsCommand = new UpdateProductCommand($productId->getValue(), ShopConstraint::allShops());
+
+        $this->setNameDependingOnStatus($formData, $shopCommand);
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
@@ -205,11 +208,23 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     {
         $config
             ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
-            ->addMultiShopField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
-            ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
             ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
             ->addMultiShopField('[stock][availability][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
         ;
+
+        $lowStockThresholdSwitchKey = sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX);
+
+        if (
+            // if low stock threshold switch is falsy, then we must set lowStockThreshold to its disabled value
+            // which will end up being 0 after falsy bool to int conversion
+            isset($formData['stock']['options'][$lowStockThresholdSwitchKey]) &&
+            !$formData['stock']['options'][$lowStockThresholdSwitchKey]
+        ) {
+            $config->addMultiShopField(sprintf('[stock][options][%s]', $lowStockThresholdSwitchKey), 'setLowStockThreshold', DataField::TYPE_INT);
+        } else {
+            // else we simply set the low stock threshold value from the form
+            $config->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT);
+        }
 
         $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
         if ($productType === ProductType::TYPE_COMBINATIONS) {
@@ -225,5 +240,33 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         }
 
         return $this;
+    }
+
+    /**
+     * Name and status are related - when name is not filled, then product cannot be enabled.
+     * When name is being updated for all shops, but status only for single shop, then status would be filled into
+     * single shop command while name only in all shops command. Since single shop command is always executed first,
+     * it will try to enable product before name is inserted in allShopsCommand and will end up throwing
+     * error about name being empty.
+     *
+     * So to solve that, we check if status is being updated for single shop,
+     * and if that is the case, then we manually fill the name into single shop command too.
+     * So at the end it will end up updating name twice - with single shop command and with all shops command,
+     * but at least it won't throw the error.
+     *
+     * @param array<string, mixed> $formData
+     * @param UpdateProductCommand $singleShopCommand
+     *
+     * @return void
+     */
+    private function setNameDependingOnStatus(array $formData, UpdateProductCommand $singleShopCommand): void
+    {
+        if (
+            !empty($formData['header']['active']) &&
+            empty($formData['header'][$this->modifyAllNamePrefix . 'active']) &&
+            isset($formData['header']['name'])
+        ) {
+            $singleShopCommand->setLocalizedNames($formData['header']['name']);
+        }
     }
 }

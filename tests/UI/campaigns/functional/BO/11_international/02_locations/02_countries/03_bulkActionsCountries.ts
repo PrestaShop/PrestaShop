@@ -138,7 +138,6 @@ describe('BO - International - Countries : Bulk actions', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}Countries`, baseContext);
 
         await countriesPage.bulkSetStatus(page, test.wantedStatus);
-
         const numberOfZonesBulkActions = await countriesPage.getNumberOfElementInGrid(page);
 
         for (let row = 1; row <= numberOfZonesBulkActions; row++) {

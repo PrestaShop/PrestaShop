@@ -162,12 +162,6 @@ class QuickAccessCore extends ObjectModel
      */
     private static function productPageV2Enabled(): bool
     {
-        $multistoreFeature = SymfonyContainer::getInstance()->get('prestashop.adapter.multistore_feature');
-
-        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(
-            $multistoreFeature->isActive()
-                ? FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP
-                : FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2
-        );
+        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
     }
 }

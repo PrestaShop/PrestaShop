@@ -66,7 +66,7 @@ describe('BO - Customers - Addresses : Addresses bulk actions', async () => {
     [
       {args: {addressToCreate: addressData}},
       {args: {addressToCreate: addressData}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to add new address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAddressPage${index + 1}`, baseContext);
 

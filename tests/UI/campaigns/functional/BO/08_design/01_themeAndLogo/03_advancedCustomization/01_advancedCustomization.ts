@@ -15,7 +15,7 @@ import moduleManagerPage from '@pages/BO/modules/moduleManager';
 import homePage from '@pages/FO/home';
 
 // Import data
-import {themeCustomization} from '@data/demo/modules';
+import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -69,19 +69,18 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       );
     });
 
-    it(`should search for module ${themeCustomization.name}`, async function () {
+    it(`should search for module ${Modules.themeCustomization.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage
-        .searchModule(page, themeCustomization.tag, themeCustomization.name);
-      await expect(isModuleVisible, `The module ${themeCustomization.name} is not installed`).to.be.true;
+      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.themeCustomization);
+      await expect(isModuleVisible, `The module ${Modules.themeCustomization.name} is not installed`).to.be.true;
     });
 
-    it(`should check the status of the module ${themeCustomization.name}`, async function () {
+    it(`should check the status of the module ${Modules.themeCustomization.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusModule', baseContext);
 
-      const isModuleEnabled = await moduleManagerPage.isModuleEnabled(page, themeCustomization.name);
-      await expect(isModuleEnabled, `The module ${themeCustomization.name} is disabled`).to.be.true;
+      const isModuleEnabled = await moduleManagerPage.isModuleEnabled(page, Modules.themeCustomization.name);
+      await expect(isModuleEnabled, `The module ${Modules.themeCustomization.name} is disabled`).to.be.true;
     });
   });
 
@@ -203,7 +202,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should close the current page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0) as Page;
+      page = await homePage.closePage(browserContext, page, 0);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
       await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);

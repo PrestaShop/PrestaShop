@@ -292,9 +292,17 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        $parameters['legacy'] = 'htmlspecialchars';
+        if (isset($parameters['_raw'])) {
+            @trigger_error(
+                'The _raw parameter is deprecated and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+            unset($parameters['_raw']);
 
-        return $this->translator->trans($id, $parameters, $domain, $locale);
+            return $this->translator->trans($id, $parameters, $domain, $locale);
+        }
+
+        return htmlspecialchars($this->translator->trans($id, $parameters, $domain, $locale), ENT_NOQUOTES);
     }
 
     /**
@@ -1215,6 +1223,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
 
             $length = Tools::strlen($value);
+
             if ($length < $size['min'] || $length > $size['max']) {
                 if ($human_errors) {
                     if (isset($data['lang']) && $data['lang']) {
@@ -1239,6 +1248,23 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
+        // Range validation allows you to check if the value is between the defined boundaries (min and max options)
+        if (!in_array('range', $skip) && isset($data['range']['min'], $data['range']['max'])) {
+            $range = $data['range'];
+            if ($value < $range['min'] || $value > $range['max']) {
+                return $this->trans(
+                    'The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.',
+                    [
+                        get_class($this) . '->' . $field,
+                        $value,
+                        $range['min'],
+                        $range['max'],
+                    ],
+                    'Admin.Notifications.Error'
+                );
+            }
+        }
+
         // Check field validator
         if (!in_array('validate', $skip) && !empty($data['validate'])) {
             if (!method_exists('Validate', $data['validate'])) {
@@ -1247,7 +1273,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             if (!empty($value)) {
                 $res = true;
-                if (Tools::strtolower($data['validate']) == 'iscleanhtml') {
+                if (Tools::strtolower($data['validate']) === 'iscleanhtml') {
                     if (!call_user_func(['Validate', $data['validate']], $value, $ps_allow_html_iframe)) {
                         $res = false;
                     }

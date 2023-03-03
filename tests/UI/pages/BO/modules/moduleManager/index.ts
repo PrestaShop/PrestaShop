@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import ModuleData from '@data/faker/module';
+
 import type {Page} from 'playwright';
 
 /**
@@ -80,14 +82,13 @@ class ModuleManager extends BOBasePage {
   /**
    * Search Module in Page module Catalog
    * @param page {Page} Browser tab
-   * @param moduleTag {string} Tag of the Module
-   * @param moduleName {string} Name of the module
+   * @param module {ModuleData} Tag of the Module
    * @return {Promise<boolean>}
    */
-  async searchModule(page: Page, moduleTag: string, moduleName: string): Promise<boolean> {
-    await page.type(this.searchModuleTagInput, moduleTag);
+  async searchModule(page: Page, module: ModuleData): Promise<boolean> {
+    await page.type(this.searchModuleTagInput, module.tag);
     await page.click(this.searchModuleButton);
-    return this.elementVisible(page, this.moduleBlock(moduleName), 10000);
+    return this.elementVisible(page, this.moduleBlock(module.name), 10000);
   }
 
   /**

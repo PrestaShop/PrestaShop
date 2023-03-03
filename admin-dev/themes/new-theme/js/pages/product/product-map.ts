@@ -123,6 +123,7 @@ export default {
     combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
+    deleteCombinationAllShopsSelector: '.delete-combination-all-shops',
     combinationName: 'form .combination-name-row .text-preview',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
@@ -173,7 +174,6 @@ export default {
       rowActionButtons: '.combination-row-actions button',
       footer: {
         cancel: '#cancel-combinations-edition',
-        reset: '#reset-combinations-edition',
         save: '#save-combinations-edition',
       },
     },
@@ -205,8 +205,9 @@ export default {
     bulkFixedQuantitySwitchName: 'bulk_combination[stock][disabling_switch_fixed_quantity]',
   },
   virtualProduct: {
-    container: '.virtual-product-file-container',
-    fileContentContainer: '.virtual-product-file-content',
+    fileContentContainer: '.virtual-product-file-container .virtual-product-file-content',
+    fileUploadInput: '#product_stock_virtual_product_file_file',
+    filenameInput: '#product_stock_virtual_product_file_name',
   },
   dropzone: {
     configuration: {

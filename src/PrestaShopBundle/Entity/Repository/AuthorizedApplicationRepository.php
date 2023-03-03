@@ -29,7 +29,56 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
-class AuthorizedApplicationRepository extends EntityRepository
+/**
+ * @experimental
+ */
+class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function create(AuthorizedApplicationInterface $application): void
+    {
+        $this->getEntityManager()->persist($application);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update(AuthorizedApplicationInterface $application): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getById(ApplicationId $applicationId): ?AuthorizedApplicationInterface
+    {
+        $application = $this->find($applicationId->getValue());
+        if ($application === null) {
+            throw new ApplicationNotFoundException(sprintf('Application with id "%d" was not found.', $applicationId->getValue()));
+        }
+
+        return $application;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByName(string $name): ?AuthorizedApplicationInterface
+    {
+        $application = $this->findOneBy(['name' => $name]);
+        if ($application === null) {
+            throw new ApplicationNotFoundException(sprintf('Application with name "%d" was not found.', $name));
+        }
+
+        return $application;
+    }
 }

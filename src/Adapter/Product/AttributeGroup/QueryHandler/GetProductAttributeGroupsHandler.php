@@ -29,9 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandlerInterface;
-use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
 
 /**
  * Handles the query GetProductAttributeGroups using adapter repository
@@ -39,20 +40,17 @@ use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
 class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandler implements GetProductAttributeGroupsHandlerInterface
 {
     /**
-     * @var AttributeRepository
+     * @var ProductRepository
      */
-    protected $attributeRepository;
+    private $productRepository;
 
-    /**
-     * @param AttributeGroupRepository $attributeGroupRepository
-     * @param AttributeRepository $attributeRepository
-     */
     public function __construct(
+        AttributeRepository $attributeRepository,
         AttributeGroupRepository $attributeGroupRepository,
-        AttributeRepository $attributeRepository
+        ProductRepository $productRepository
     ) {
-        parent::__construct($attributeGroupRepository);
-        $this->attributeRepository = $attributeRepository;
+        parent::__construct($attributeRepository, $attributeGroupRepository);
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -60,13 +58,29 @@ class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandle
      */
     public function handle(GetProductAttributeGroups $query): array
     {
-        $attributeIds = $this->attributeRepository->getProductAttributesIds($query->getProductId());
+        $shopConstraint = $query->getShopConstraint();
+        $productId = $query->getProductId();
+        $attributeGroupIds = $this->productRepository->getProductAttributesGroupIds($productId, $shopConstraint);
+
+        if (empty($attributeGroupIds)) {
+            return [];
+        }
+
+        $attributeIds = $this->productRepository->getProductAttributesIds($productId, $shopConstraint);
+
         if (empty($attributeIds)) {
             return [];
         }
 
-        $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups($query->withAttributes(), $attributeIds);
+        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint, $attributeGroupIds);
 
-        return $this->formatAttributeGroups($attributeGroupEntities, $query->withAttributes());
+        return $this->formatAttributeGroupsList(
+            $attributeGroups,
+            $this->attributeRepository->getGroupedAttributes(
+                $shopConstraint,
+                $attributeGroupIds,
+                $attributeIds
+            )
+        );
     }
 }

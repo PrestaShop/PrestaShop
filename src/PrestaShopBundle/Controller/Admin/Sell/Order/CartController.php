@@ -267,7 +267,7 @@ class CartController extends FrameworkBundleAdminController
      */
     public function updateDeliverySettingsAction(Request $request, int $cartId)
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
         $recycledPackagingEnabled = (bool) $configuration->get('PS_RECYCLABLE_PACK');
         $giftSettingsEnabled = (bool) $configuration->get('PS_GIFT_WRAPPING');
 

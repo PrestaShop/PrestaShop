@@ -16,7 +16,7 @@ import homePage from '@pages/FO/home';
 import loginFOPage from '@pages/FO/login';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,7 +68,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
     {args: {action: 'disable', enable: false}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} re-display cart at login`, async function () {
       await testContext.addContextItem(
         this,

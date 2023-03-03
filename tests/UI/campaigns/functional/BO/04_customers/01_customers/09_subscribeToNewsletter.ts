@@ -12,8 +12,8 @@ import moduleManagerPage from '@pages/BO/modules/moduleManager';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {psEmailSubscription} from '@data/demo/modules';
+import Customers from '@data/demo/customers';
+import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -72,7 +72,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
   [
     {args: {action: 'disable', value: false}},
     {args: {action: 'enable', value: true}},
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
 
@@ -95,15 +95,15 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should go to '${psEmailSubscription.name}' module`, async function () {
+    it(`should go to '${Modules.psEmailSubscription.name}' module`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToEmailSubscriptionModule${index}`, baseContext);
 
       // Search and go to configure module page
-      await moduleManagerPage.searchModule(page, psEmailSubscription.tag, psEmailSubscription.name);
-      await moduleManagerPage.goToConfigurationPage(page, psEmailSubscription.name);
+      await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
+      await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailSubscription.name);
 
       const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
-      await expect(pageTitle).to.contains(psEmailSubscription.name);
+      await expect(pageTitle).to.contains(Modules.psEmailSubscription.name);
     });
 
     it('should check customer registration to newsletter', async function () {

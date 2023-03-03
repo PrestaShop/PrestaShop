@@ -62,19 +62,17 @@ class StockInformationFiller implements CombinationFillerInterface
             $updatableProperties[] = 'available_date';
         }
 
-        if (null !== $command->getLowStockThreshold()) {
-            $combination->low_stock_threshold = $command->getLowStockThreshold();
+        $lowStockThreshold = $command->getLowStockThreshold();
+        if (null !== $lowStockThreshold) {
+            $combination->low_stock_threshold = $lowStockThreshold->getValue();
+            $combination->low_stock_alert = $lowStockThreshold->isEnabled();
             $updatableProperties[] = 'low_stock_threshold';
+            $updatableProperties[] = 'low_stock_alert';
         }
 
         if (null !== $command->getMinimalQuantity()) {
             $combination->minimal_quantity = $command->getMinimalQuantity();
             $updatableProperties[] = 'minimal_quantity';
-        }
-
-        if (null !== $command->isLowStockAlertEnabled()) {
-            $combination->low_stock_alert = $command->isLowStockAlertEnabled();
-            $updatableProperties[] = 'low_stock_alert';
         }
 
         return $updatableProperties;

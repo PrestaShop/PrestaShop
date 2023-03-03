@@ -17,7 +17,7 @@ import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
@@ -119,7 +119,7 @@ describe('BO - Customer Service : Change status', async () => {
       {args: {status: 'Re-open', statusToCheck: 'Mark as "handled"'}},
       {args: {status: 'Pending 1', statusToCheck: 'Disable pending status'}},
       {args: {status: 'Pending 2', statusToCheck: 'Disable pending status'}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to view message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToViewMessagePage${index}`, baseContext);
 

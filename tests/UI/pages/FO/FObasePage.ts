@@ -17,7 +17,7 @@ export default class FOBasePage extends CommonPage {
 
   private readonly breadCrumbLink: (link: string) => string;
 
-  public readonly cartProductsCount: string;
+  private readonly cartProductsCount: string;
 
   private readonly cartLink: string;
 
@@ -51,7 +51,7 @@ export default class FOBasePage extends CommonPage {
 
   private readonly currencySelect: string;
 
-  public readonly searchInput: string;
+  private readonly searchInput: string;
 
   private readonly autocompleteSearchResult: string;
 
@@ -119,9 +119,9 @@ export default class FOBasePage extends CommonPage {
 
   private readonly copyrightLink: string;
 
-  public readonly alertSuccessBlock: string;
+  protected readonly alertSuccessBlock: string;
 
-  public readonly notificationsBlock: string;
+  protected readonly notificationsBlock: string;
 
   /**
    * @constructs
@@ -671,6 +671,17 @@ export default class FOBasePage extends CommonPage {
    */
   async getInputValue(page: Page, input: string): Promise<string> {
     return page.inputValue(input);
+  }
+
+  /**
+   * Get the value of an input
+   *
+   * @param page {Page} Browser tab
+   * @param input {string} ID of the input
+   * @returns {Promise<string>}
+   */
+  async getSearchValue(page: Page): Promise<string> {
+    return page.inputValue(this.searchInput);
   }
 }
 

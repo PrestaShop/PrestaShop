@@ -93,7 +93,7 @@ export default class ProductData {
    * Constructor for class ProductData
    * @param productToCreate {Object} Could be used to force the value of some members
    */
-  constructor(productToCreate: ProductCreator) {
+  constructor(productToCreate: ProductCreator = {}) {
     /** @type {number} ID of the product */
     this.id = productToCreate.id || 0;
 

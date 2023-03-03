@@ -456,3 +456,18 @@ services:
     autowire: true
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+  PrestaShop\PrestaShop\Core\Grid\Query\CustomerGroupsQueryBuilder:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CustomerGroupsQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    public: false
+
+  PrestaShop\PrestaShop\Core\Grid\Query\TaxRuleQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+    public: false

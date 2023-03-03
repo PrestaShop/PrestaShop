@@ -29,4 +29,9 @@
 export default {
   passwordInput: '#customer_password',
   passwordStrengthFeedbackContainer: '.password-strength-feedback',
+  requiredFieldsFormAlertOptin: '#customerRequiredFieldsAlertMessageOptin',
+  requiredFieldsFormCheckboxOptin: '#customerRequiredFieldsContainer input[type="checkbox"][value="optin"]',
+  customerGroupCheckboxes: 'input[type="checkbox"][name="customer[group_ids][]"]',
+  defaultGroupSelect: '#customer_default_group_id',
+  defaultGroupSelectedOption: '#customer_default_group_id option:selected',
 };

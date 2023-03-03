@@ -58,6 +58,7 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_RESET => 'Admin.Actions',
         Module::ACTION_UPGRADE => 'Admin.Actions',
         Module::ACTION_CONFIGURE => 'Admin.Actions',
+        Module::ACTION_DELETE => 'Admin.Actions',
     ];
 
     /**
@@ -73,6 +74,7 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_RESET => 'Reset',
         Module::ACTION_UPGRADE => 'Upgrade',
         Module::ACTION_CONFIGURE => 'Configure',
+        Module::ACTION_DELETE => 'Delete',
     ];
 
     /**
@@ -88,6 +90,7 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_RESET,
         Module::ACTION_UPGRADE,
         Module::ACTION_UNINSTALL,
+        Module::ACTION_DELETE,
     ];
 
     /**
@@ -194,6 +197,10 @@ class AdminModuleDataProvider implements ModuleInterface
             return $this->employee->can('add', 'AdminModulessf');
         }
 
+        if ('delete' === $action) {
+            return $this->employee->can('delete', 'AdminModulessf');
+        }
+
         if ('uninstall' === $action) {
             return $this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name);
         }
@@ -202,6 +209,9 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
+     * Generates a list with actions and their respective URLs, depending on if the module is installed or not,
+     * enabled, upgradable and other variables.
+     *
      * @param ModuleCollection $modules
      * @param string|null $specific_action
      *
@@ -214,6 +224,7 @@ class AdminModuleDataProvider implements ModuleInterface
             $moduleAttributes = $module->getAttributes();
             $moduleDatabaseAttributes = $module->getDatabaseAttributes();
 
+            // Generate target URL for each action we offer
             foreach ($this->moduleActions as $action) {
                 if ($action === 'configure') {
                     $urls[$action] = $this->router->generate('admin_module_configure_action', [
@@ -221,14 +232,20 @@ class AdminModuleDataProvider implements ModuleInterface
                     ]);
                     continue;
                 }
-                $urls[$action] = $this->router->generate('admin_module_manage_action', [
+                $parameters = [
                     'action' => $action,
                     'module_name' => $moduleAttributes->get('name'),
-                ]);
+                ];
+                if ($action === 'upgrade' && $moduleAttributes->get('download_url') !== null) {
+                    $parameters['source'] = $moduleAttributes->get('download_url');
+                }
+                $urls[$action] = $this->router->generate('admin_module_manage_action', $parameters);
             }
 
+            // Let's filter the actions depending on conditions the module is in
             if ($module->isInstalled()) {
                 unset($urls['install']);
+                unset($urls['delete']);
                 if (!$module->isActive()) {
                     unset(
                         $urls['disable'],
@@ -253,9 +270,14 @@ class AdminModuleDataProvider implements ModuleInterface
                     unset($urls['configure']);
                 }
             } else {
-                $urls = ['install' => $urls['install']];
+                $urls = [
+                    'install' => $urls['install'],
+                    'delete' => $urls['delete'],
+                ];
             }
 
+            // Go through the actions and remove all actions that the current environment
+            // doesn't have rights for.
             $filteredUrls = $this->filterAllowedActions($urls, $moduleAttributes->get('name'));
 
             if ($specific_action && array_key_exists($specific_action, $filteredUrls)) {

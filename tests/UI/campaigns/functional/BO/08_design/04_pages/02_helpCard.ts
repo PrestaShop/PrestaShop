@@ -6,18 +6,18 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard/index';
-import pagesPage from '@pages/BO/design/pages/index';
+import dashboardPage from '@pages/BO/dashboard';
+import pagesPage from '@pages/BO/design/pages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_design_pages_helpCard';
 
-let browserContext: BrowserContext;
-let page: Page;
-
 describe('BO - Design - Pages : Help card on pages page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

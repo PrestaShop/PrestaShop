@@ -41,7 +41,6 @@ describe('BO - Advanced Parameters - Database : Help card in SQL Manager page', 
       dashboardPage.advancedParametersLink,
       dashboardPage.databaseLink,
     );
-
     await sqlManagerPage.closeSfToolBar(page);
 
     const pageTitle = await sqlManagerPage.getPageTitle(page);

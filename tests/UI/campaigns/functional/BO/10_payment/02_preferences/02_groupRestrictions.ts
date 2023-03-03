@@ -18,7 +18,7 @@ import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
 
@@ -76,7 +76,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     [
       {args: {customerData: visitorData}},
       {args: {customerData: guestData}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCustomerPage${index}`, baseContext);
 
@@ -118,7 +118,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
       {args: {groupName: 'Visitor', id: '0', customer: visitorData}},
       {args: {groupName: 'Guest', id: '1', customer: guestData}},
       {args: {groupName: 'Customer', id: '2', customer: Customers.johnDoe}},
-    ].forEach((group, groupIndex) => {
+    ].forEach((group, groupIndex: number) => {
       describe(`Configure '${group.args.groupName}' group restrictions then check in FO`, async () => {
         const tests = [
           {
@@ -163,7 +163,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
           },
         ];
 
-        tests.forEach((test, index) => {
+        tests.forEach((test, index: number) => {
           it(`should ${test.args.action} '${test.args.paymentModuleToEdit}'`, async function () {
             await testContext.addContextItem(
               this,
@@ -289,7 +289,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}${groupIndex}`, baseContext);
 
             // Close current tab
-            page = await homePage.closePage(browserContext, page, 0) as Page;
+            page = await homePage.closePage(browserContext, page, 0);
 
             const pageTitle = await preferencesPage.getPageTitle(page);
             await expect(pageTitle).to.contains(preferencesPage.pageTitle);
@@ -316,7 +316,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     [
       {args: {customerData: visitorData}},
       {args: {customerData: guestData}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 

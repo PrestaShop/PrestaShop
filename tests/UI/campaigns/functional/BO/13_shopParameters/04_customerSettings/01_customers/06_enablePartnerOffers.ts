@@ -64,7 +64,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} partner offer`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `partnerOffer${index}`, baseContext);
 

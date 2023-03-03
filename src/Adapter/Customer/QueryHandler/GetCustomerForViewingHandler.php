@@ -249,13 +249,14 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         $validOrders = [];
         $invalidOrders = [];
 
+        // Get orders for this customer
         $orders = Order::getCustomerOrders($customer->id, true);
-        $totalSpent = 0;
+        $ordersTotal = 0;
 
         foreach ($orders as $order) {
-            $order['total_paid_real_not_formated'] = $order['total_paid_real'];
-            $order['total_paid_real'] = $this->locale->formatPrice(
-                $order['total_paid_real'],
+            $order['total_paid_tax_incl_not_formated'] = $order['total_paid_tax_incl'];
+            $order['total_paid_tax_incl'] = $this->locale->formatPrice(
+                $order['total_paid_tax_incl'],
                 Currency::getIsoCodeById((int) $order['id_currency'])
             );
 
@@ -273,19 +274,19 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
                 $order['payment'],
                 $order['order_state'],
                 (int) $order['nb_products'],
-                $order['total_paid_real']
+                $order['total_paid_tax_incl']
             );
 
             if ($order['valid']) {
                 $validOrders[] = $customerOrderInformation;
-                $totalSpent += $order['total_paid_real_not_formated'] / $order['conversion_rate'];
+                $ordersTotal += $order['total_paid_tax_incl_not_formated'] / $order['conversion_rate'];
             } else {
                 $invalidOrders[] = $customerOrderInformation;
             }
         }
 
         return new OrdersInformation(
-            $this->locale->formatPrice($totalSpent, $this->context->getContext()->currency->iso_code),
+            $this->locale->formatPrice($ordersTotal, $this->context->getContext()->currency->iso_code),
             $validOrders,
             $invalidOrders
         );
@@ -514,10 +515,10 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
         foreach ($groups as $groupId) {
             $group = new Group($groupId);
-
             $customerGroups[] = new GroupInformation(
                 (int) $group->id,
-                $group->name[$this->contextLangId]
+                $group->name[$this->contextLangId],
+                (int) $group->id === (int) $customer->id_default_group
             );
         }
 

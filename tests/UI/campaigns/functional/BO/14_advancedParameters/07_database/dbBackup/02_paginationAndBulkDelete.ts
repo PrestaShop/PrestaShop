@@ -73,9 +73,9 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
 
   // 1 - Create 11 DB backup
   describe('Create 11 new DB Backup in BO', async () => {
-    const creationTests = new Array(11).fill(0, 0, 11);
+    const creationTests: number[] = new Array(11).fill(0, 0, 11);
 
-    creationTests.forEach((test, index) => {
+    creationTests.forEach((test: number, index: number) => {
       it(`should generate db backup n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `generateNewDbBackup${index}`, baseContext);
 
@@ -93,7 +93,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await dbBackupPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await dbBackupPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -114,7 +114,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await dbBackupPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await dbBackupPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });

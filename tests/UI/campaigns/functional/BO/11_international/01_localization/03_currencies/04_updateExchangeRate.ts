@@ -12,7 +12,7 @@ import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
 // Import data
-import {Currencies} from '@data/demo/currencies';
+import Currencies from '@data/demo/currencies';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

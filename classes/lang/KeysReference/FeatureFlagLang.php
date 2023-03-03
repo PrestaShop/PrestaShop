@@ -33,6 +33,8 @@ trans(
 
 // Product feature flag in 8.0
 trans('New product page - Single store', 'Admin.Advparameters.Feature');
+// Product feature flag in 8.1
+trans('New product page', 'Admin.Advparameters.Feature');
 trans('This page benefits from increased performance and includes new features such as a new combination management system.', 'Admin.Advparameters.Help');
 
 // Product multi store feature flag in 8.0
@@ -51,6 +53,45 @@ trans('Enable or disable the authorization server page.', 'Admin.Advparameters.H
 trans('Cart rules', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated cart rules page.', 'Admin.Advparameters.Help');
 
-// Cart rules feature flag
+// Catalog price rules feature flag
 trans('Catalog price rules', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
+
+// Multiple image formats feature flags
+trans('Enable / Disable having more than one image format (jpg, webp, avif, png...)', 'Admin.Advparameters.Feature');
+
+// Countries feature flag
+trans('Countries', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated countries page.', 'Admin.Advparameters.Help');
+
+// States feature flag
+trans('States', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated states page.', 'Admin.Advparameters.Help');
+
+// Carriers feature flag
+trans('Carriers', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated carriers page.', 'Admin.Advparameters.Help');
+
+// Titles feature flag
+trans('Titles', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated titles page.', 'Admin.Advparameters.Help');
+
+// Permissions feature flag
+trans('Permissions', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated permissions page.', 'Admin.Advparameters.Help');
+
+// Features feature flag
+trans('Features', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated features page.', 'Admin.Advparameters.Help');
+
+// Tax rule groups feature flag
+trans('Tax rule groups', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated tax rules page.', 'Admin.Advparameters.Help');
+
+// Customer threads feature flag
+trans('Customer threads', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated customer threads page.', 'Admin.Advparameters.Help');
+
+// Order states feature flag
+trans('Order states', 'Admin.Advaparameters.Feature');
+trans('Enable / Disable the migrated order states page.', 'Admin.Advparameters.Help');

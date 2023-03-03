@@ -80,6 +80,7 @@ class FrontControllerCore extends Controller
     /**
      * If set to true, user can be logged in as guest when checking if logged in.
      *
+     * @deprecated Since 8.0 and will be removed in the next major.
      * @see $auth
      *
      * @var bool
@@ -310,7 +311,7 @@ class FrontControllerCore extends Controller
         $this->recoverCart();
 
         // Redirect user to login page, if the controller requires authentication
-        if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
+        if ($this->auth && !$this->context->customer->isLogged()) {
             Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
         }
 
@@ -739,6 +740,13 @@ class FrontControllerCore extends Controller
     {
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
+
+            $is_admin = (int) (new Cookie('psAdmin'))->id_employee;
+            $maintenance_allow_admins = (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS');
+            if ($is_admin && $maintenance_allow_admins) {
+                return;
+            }
+
             $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
             if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
                 header('HTTP/1.1 503 Service Unavailable');
@@ -1619,7 +1627,7 @@ class FrontControllerCore extends Controller
         );
 
         $cust['id'] = $this->context->customer->id;
-        $cust['is_logged'] = $this->context->customer->isLogged(true);
+        $cust['is_logged'] = $this->context->customer->isLogged();
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
         unset($cust['id_gender']);

@@ -10,16 +10,17 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -42,12 +43,16 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
 
   const note: string = 'Test note for document';
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition - Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
@@ -276,7 +281,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 1);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
@@ -358,7 +363,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 3);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
@@ -385,7 +390,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       filePath = await orderPageTabListBlock.downloadInvoice(page, 4);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
   });

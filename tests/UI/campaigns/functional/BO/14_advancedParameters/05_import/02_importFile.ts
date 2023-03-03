@@ -12,7 +12,7 @@ import importPage from '@pages/BO/advancedParameters/import';
 import categoriesPage from '@pages/BO/catalog/categories';
 
 // Import data
-import {Data} from '@data/import/categories';
+import ImportCategories from '@data/import/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,7 +43,7 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all data
-    await files.createCSVFile('.', fileName, Data);
+    await files.createCSVFile('.', fileName, ImportCategories);
   });
 
   after(async () => {
@@ -91,7 +91,6 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
         dashboardPage.advancedParametersLink,
         dashboardPage.importLink,
       );
-
       await importPage.closeSfToolBar(page);
 
       const pageTitle = await importPage.getPageTitle(page);
@@ -162,7 +161,7 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
   });
 
   // Post-condition: Delete imported categories
-  describe('POSt-TEST: Delete imported categories', async () => {
+  describe('POST-TEST: Delete imported categories', async () => {
     it('should filter list by Name \'category\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterCategoriesTable', baseContext);
 

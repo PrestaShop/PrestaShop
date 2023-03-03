@@ -48,6 +48,13 @@ export default {
    * @returns {Promise<number>}
    */
   async age(birthdate: Date): Promise<number> {
-    return (today.getFullYear() - birthdate.getFullYear());
+    const age = today.getFullYear() - birthdate.getFullYear();
+
+    if (today.getMonth() < birthdate.getMonth()
+      || (today.getMonth() === birthdate.getMonth() && today.getDate() < birthdate.getDate())) {
+      return age - 1;
+    }
+
+    return age;
   },
 };

@@ -9,6 +9,10 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/order';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
@@ -20,13 +24,13 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CartRuleData from '@data/faker/cartRule';
 import CustomerData from '@data/faker/customer';
+import OrderData from '@data/faker/order';
 import ProductData from '@data/faker/product';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -74,13 +78,17 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const customerData: CustomerData = new CustomerData({password: ''});
   const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: customerData,
-    productId: 4,
-    productQuantity: 1,
-    address: addressData,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_5,
+        quantity: 1,
+      },
+    ],
+    deliveryAddress: addressData,
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const productOutOfStockAllowed: ProductData = new ProductData({
     name: `Out of stock allowed ${prefixNewProduct}`,
     reference: 'd12345',
@@ -201,6 +209,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   // Pre-condition: Enable EcoTax
   enableEcoTaxTest(`${baseContext}_preTest_2`);
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -787,7 +798,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
         const result = await orderPageProductsBlock.getProductDetails(page, 1);
         await Promise.all([
-          expect(result.basePrice, 'Base price was not updated').to.equal(25),
+          expect(result.basePrice, 'Base price was not updated').to.equal(newPrice),
           expect(result.total, 'Total price was not updated').to.equal(newPrice * newQuantity),
         ]);
       });
@@ -851,4 +862,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   // Post-condition: Disable EcoTax
   disableEcoTaxTest(`${baseContext}_postTest_4`);
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

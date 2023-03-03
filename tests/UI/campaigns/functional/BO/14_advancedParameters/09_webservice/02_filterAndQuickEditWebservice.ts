@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard/index';
+import dashboardPage from '@pages/BO/dashboard';
 import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
@@ -49,7 +49,6 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       dashboardPage.advancedParametersLink,
       dashboardPage.webserviceLink,
     );
-
     await webservicePage.closeSfToolBar(page);
 
     const pageTitle = await webservicePage.getPageTitle(page);
@@ -68,7 +67,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
     {args: {webserviceToCreate: secondWebServiceData}},
   ];
 
-  tests.forEach((test: {args: {webserviceToCreate: WebserviceData}}, index) => {
+  tests.forEach((test: {args: {webserviceToCreate: WebserviceData}}, index: number) => {
     it('should go to add new webservice key page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
 

@@ -33,6 +33,11 @@ use Alias;
 use AppKernel;
 use Attachment;
 use AttributeGroup;
+use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Behat\Hook\Scope\StepScope;
+use Behat\Gherkin\Node\ScenarioInterface;
+use Behat\Gherkin\Node\StepNode;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Cache;
 use Carrier;
 use Cart;
@@ -54,6 +59,7 @@ use CustomizationField;
 use DateRange;
 use Employee;
 use EmployeeSession;
+use Exception;
 use Feature;
 use FeatureValue;
 use Gender;
@@ -67,6 +73,7 @@ use Mail;
 use Manufacturer;
 use Message;
 use Meta;
+use ObjectModel;
 use OrderCartRule;
 use OrderHistory;
 use OrderInvoice;
@@ -78,6 +85,7 @@ use OrderSlip;
 use OrderState;
 use Pack;
 use Page;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Product;
 use ProductAttribute;
@@ -89,6 +97,7 @@ use RangePrice;
 use RangeWeight;
 use RequestSql;
 use Risk;
+use RuntimeException;
 use SearchEngine;
 use Shop;
 use ShopGroup;
@@ -122,6 +131,23 @@ use Zone;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
+    use SharedStorageTrait;
+
+    /**
+     * Shared storage key for last thrown exception
+     */
+    public const LAST_EXCEPTION_STORAGE_KEY = 'LAST_EXCEPTION';
+
+    /**
+     * Shared storage key for expected thrown exception
+     */
+    public const EXPECTED_EXCEPTION_STORAGE_KEY = 'EXPECTED_EXCEPTION';
+
+    /**
+     * Shared storage key for the step where the expected exception was raised
+     */
+    private const EXPECTED_EXCEPTION_STEP_STORAGE_KEY = 'EXPECTED_EXCEPTION_STEP';
+
     /**
      * PrestaShop Symfony AppKernel
      *
@@ -139,7 +165,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @BeforeSuite
      */
-    public static function prepare($scope)
+    public static function prepare(BeforeSuiteScope $scope)
     {
         require_once __DIR__ . '/../../bootstrap.php';
 
@@ -151,6 +177,9 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         $employee = new Employee();
         Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
+
+        // Disable legacy object model cache to prevent conflicts between scenarios.
+        ObjectModel::disableCache();
     }
 
     /**
@@ -343,6 +372,223 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $tables = explode(',', $tableNames);
         DatabaseDump::restoreTables($tables);
+    }
+
+    /**
+     * @Then :firstReference and :secondReference have different values
+     *
+     * @param string $firstReference
+     * @param string $secondReference
+     */
+    public function assertDifferentValues(string $firstReference, string $secondReference): void
+    {
+        Assert::assertNotEquals(
+            SharedStorage::getStorage()->get($firstReference),
+            SharedStorage::getStorage()->get($secondReference),
+            sprintf(
+                '%s and %s are expected to be different but they have same value %s',
+                $firstReference,
+                $secondReference,
+                (string) SharedStorage::getStorage()->get($firstReference)
+            )
+        );
+    }
+
+    /**
+     * @Then :firstReference and :secondReference have same value
+     *
+     * @param string $firstReference
+     * @param string $secondReference
+     */
+    public function assertSameValue(string $firstReference, string $secondReference): void
+    {
+        Assert::assertEquals(
+            SharedStorage::getStorage()->get($firstReference),
+            SharedStorage::getStorage()->get($secondReference),
+            sprintf(
+                '%s and %s are expected to be equals but they have different values %s != %s',
+                $firstReference,
+                $secondReference,
+                (string) SharedStorage::getStorage()->get($firstReference),
+                (string) SharedStorage::getStorage()->get($secondReference)
+            )
+        );
+    }
+
+    /**
+     * This method shouldn't be public, but it is mandatory to be a behat hook. But you shouldn't call it manually.
+     *
+     * @AfterStep
+     */
+    public function checkLastExceptionAfterStep(AfterStepScope $scope): void
+    {
+        // If no exception nothing to do, if there is already an exception to handle we don't override it
+        if (null === $this->getLastException() || null !== $this->getExpectedException()) {
+            return;
+        }
+
+        $e = $this->getLastException();
+        // We clean the last exception so that it doesn't pollute the following steps or scenarios, besides multiple
+        // contexts could have this hook, and we only need to handle it once
+        $this->cleanLastException();
+
+        // When the last step ends with an exception we throw it because there is no next step to assert it
+        $lastStep = $this->getLastStepFromScope($scope);
+        if ($lastStep === $scope->getStep()) {
+            throw $e;
+        }
+
+        // If there are steps left the exception must be checked in the next step, it is stored as the expected exception
+        $this->setExpectedException($e, $scope->getStep());
+    }
+
+    /**
+     * This method shouldn't be public, but it is mandatory to be a behat hook. But you shouldn't call it manually.
+     *
+     * @AfterStep
+     */
+    public function checkExpectedExceptionAfterStep(AfterStepScope $scope): void
+    {
+        if (null === $this->getExpectedException() || $scope->getStep() === $this->getExpectedExceptionStep()) {
+            return;
+        }
+
+        // When an expected exception is stored from another step it means it was not checked, so it is unexpected
+        $unexpectedException = $this->getExpectedException();
+        $exceptionStep = $this->getExpectedExceptionStep();
+
+        // We clean the expected exception so that it doesn't pollute the following scenarios
+        $this->cleanExpectedException();
+
+        throw new RuntimeException(implode(PHP_EOL, [
+            'An unexpected exception was raised in previous step:',
+            sprintf('Line %d: %s', $exceptionStep->getLine(), $exceptionStep->getText()),
+            sprintf('%s: %s', get_class($unexpectedException), $unexpectedException->getMessage()),
+            'Either it was unexpected and an error occurred or you forgot to add an intermediate step to assert that exception using assertLastErrorIs',
+        ]), 0, $unexpectedException);
+    }
+
+    /**
+     * This method shouldn't be public, but it is mandatory to be a behat hook. But you shouldn't call it manually.
+     *
+     * @BeforeScenario
+     */
+    public function cleanStoredExceptionsBeforeScenario(): void
+    {
+        $this->cleanLastException();
+        $this->cleanExpectedException();
+    }
+
+    /**
+     * This method is private because last exception should only be handled inside this abstract class, you can only
+     * use setLastException from inherited classes.
+     */
+    private function cleanLastException(): void
+    {
+        $this->getSharedStorage()->clear(self::LAST_EXCEPTION_STORAGE_KEY);
+    }
+
+    /**
+     * This method is private because expected exception should only be handled inside this abstract class, to clean it
+     * you need to assert it using the assertLastError function, this will automatically clean the stored exception.
+     */
+    private function cleanExpectedException(): void
+    {
+        $this->getSharedStorage()->clear(self::EXPECTED_EXCEPTION_STORAGE_KEY);
+        $this->getSharedStorage()->clear(self::EXPECTED_EXCEPTION_STEP_STORAGE_KEY);
+    }
+
+    /**
+     * This method is private because expected exception should only be handled inside this abstract class, the expected
+     * exception is automatically stored after each step.
+     *
+     * @param Exception $e
+     * @param StepNode $step
+     */
+    private function setExpectedException(Exception $e, StepNode $step): void
+    {
+        $this->getSharedStorage()->set(self::EXPECTED_EXCEPTION_STORAGE_KEY, $e);
+        $this->getSharedStorage()->set(self::EXPECTED_EXCEPTION_STEP_STORAGE_KEY, $step);
+    }
+
+    /**
+     * This method is private because last exception should only be accessed inside this abstract class, you can only
+     * use setLastException from inherited classes.
+     *
+     * @return Exception|null
+     */
+    private function getLastException(): ?Exception
+    {
+        if (!$this->getSharedStorage()->exists(self::LAST_EXCEPTION_STORAGE_KEY)) {
+            return null;
+        }
+
+        return $this->getSharedStorage()->get(self::LAST_EXCEPTION_STORAGE_KEY);
+    }
+
+    /**
+     * This method is private because expected exception should only be handled inside this abstract class, if you need
+     * to assert it you should use the assertLastError function which returns the exception if you need more assertions.
+     *
+     * @return Exception|null
+     */
+    private function getExpectedException(): ?Exception
+    {
+        if (!$this->getSharedStorage()->exists(self::EXPECTED_EXCEPTION_STORAGE_KEY)) {
+            return null;
+        }
+
+        return $this->getSharedStorage()->get(self::EXPECTED_EXCEPTION_STORAGE_KEY);
+    }
+
+    /**
+     * This method is private because expected exception step should only be handled inside this abstract class, it is
+     * only necessary to throw the unexpected exception in the next step only.
+     *
+     * @return StepNode|null
+     */
+    private function getExpectedExceptionStep(): ?StepNode
+    {
+        if (!$this->getSharedStorage()->exists(self::EXPECTED_EXCEPTION_STEP_STORAGE_KEY)) {
+            return null;
+        }
+
+        return $this->getSharedStorage()->get(self::EXPECTED_EXCEPTION_STEP_STORAGE_KEY);
+    }
+
+    private function getScenarioFromScope(StepScope $scope): ?ScenarioInterface
+    {
+        foreach ($scope->getFeature()->getScenarios() as $scenario) {
+            foreach ($scenario->getSteps() as $step) {
+                if ($step === $scope->getStep()) {
+                    return $scenario;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function getLastStepFromScope(StepScope $scope): StepNode
+    {
+        $scenario = $this->getScenarioFromScope($scope);
+        if (null !== $scenario) {
+            $steps = $scenario->getSteps();
+        } else {
+            foreach ($scope->getFeature()->getBackground()->getSteps() as $step) {
+                if ($step === $scope->getStep()) {
+                    $steps = $scope->getFeature()->getBackground()->getSteps();
+                    break;
+                }
+            }
+        }
+
+        // The step was not found in any scenario nor the background
+        if (!isset($steps)) {
+            throw new RuntimeException('Could not find step in the feature');
+        }
+
+        return $steps[count($steps) - 1];
     }
 
     private static function mockContext()

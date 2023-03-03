@@ -11,6 +11,9 @@ import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 import localizationPage from '@pages/BO/international/localization';
 
+// Import data
+import type CurrencyData from '@data/faker/currency';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -22,7 +25,7 @@ let page: Page;
  * @param currencyData {CurrencyData} Data to set to create currency
  * @param baseContext {string} String to identify the test
  */
-function createCurrencyTest(currencyData: object, baseContext: string = 'commonTests-createCurrencyTest'): void {
+function createCurrencyTest(currencyData: CurrencyData, baseContext: string = 'commonTests-createCurrencyTest'): void {
   describe('PRE-TEST: Create currency', async () => {
     // before and after functions
     before(async function () {
@@ -57,6 +60,7 @@ function createCurrencyTest(currencyData: object, baseContext: string = 'commonT
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
       await localizationPage.goToSubTabCurrencies(page);
+
       const pageTitle = await currenciesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
@@ -65,6 +69,7 @@ function createCurrencyTest(currencyData: object, baseContext: string = 'commonT
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCurrencyPage', baseContext);
 
       await currenciesPage.goToAddNewCurrencyPage(page);
+
       const pageTitle = await addCurrencyPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
     });
@@ -84,7 +89,7 @@ function createCurrencyTest(currencyData: object, baseContext: string = 'commonT
  * @param currencyData {CurrencyData} Data to set to delete currency
  * @param baseContext {string} String to identify the test
  */
-function deleteCurrencyTest(currencyData: object, baseContext: string = 'commonTests-deleteCurrencyTest'): void {
+function deleteCurrencyTest(currencyData: CurrencyData, baseContext: string = 'commonTests-deleteCurrencyTest'): void {
   describe('POST-TEST: Delete currency', async () => {
     // before and after functions
     before(async function () {
@@ -108,7 +113,6 @@ function deleteCurrencyTest(currencyData: object, baseContext: string = 'commonT
         dashboardPage.internationalParentLink,
         dashboardPage.localizationLink,
       );
-
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
@@ -119,6 +123,7 @@ function deleteCurrencyTest(currencyData: object, baseContext: string = 'commonT
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage2', baseContext);
 
       await localizationPage.goToSubTabCurrencies(page);
+
       const pageTitle = await currenciesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });

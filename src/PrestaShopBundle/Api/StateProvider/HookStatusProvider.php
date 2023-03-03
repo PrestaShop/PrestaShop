@@ -36,6 +36,8 @@ use PrestaShopBundle\Api\Resource\HookStatus;
 
 /**
  * Provide a HookStatus DTO when request the api about hook status
+ *
+ * @experimental
  */
 final class HookStatusProvider implements ProviderInterface
 {

@@ -13,10 +13,11 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,12 +39,16 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
   let filePath: string|null;
 
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-Condition : Create order from FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
@@ -243,7 +248,7 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       filePath = await orderPageTabListBlock.viewInvoice(page);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist, 'File is not downloaded!').to.be.true;
     });
 
@@ -274,7 +279,7 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       filePath = await orderPageTabListBlock.viewDeliverySlip(page);
       await expect(filePath).to.be.not.null;
 
-      const doesFileExist = await files.doesFileExist(filePath as string, 5000);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist, 'File is not downloaded!').to.be.true;
     });
   });

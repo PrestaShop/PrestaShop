@@ -6,9 +6,12 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import dashboardPage from '@pages/BO/dashboard';
+
+// Import
+import type EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -22,7 +25,7 @@ let numberOfEmployees: number = 0;
  * @param employeeData {EmployeeData} Data to set in employee form
  * @param baseContext {string} String to identify the test
  */
-function createEmployeeTest(employeeData: object, baseContext: string = 'commonTests-createEmployeeTest'): void {
+function createEmployeeTest(employeeData: EmployeeData, baseContext: string = 'commonTests-createEmployeeTest'): void {
   describe('PRE-TEST: Create employee', async () => {
     // before and after functions
     before(async function () {
@@ -81,7 +84,7 @@ function createEmployeeTest(employeeData: object, baseContext: string = 'commonT
  * @param employeeData {EmployeeData} Data to set to delete employee
  * @param baseContext {string} String to identify the test
  */
-function deleteEmployeeTest(employeeData: object, baseContext: string = 'commonTests-deleteEmployeeTest'): void {
+function deleteEmployeeTest(employeeData: EmployeeData, baseContext: string = 'commonTests-deleteEmployeeTest'): void {
   describe('POST-TEST: Delete employee', async () => {
     // before and after functions
     before(async function () {

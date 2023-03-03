@@ -1,3 +1,6 @@
+includes:
+	- phpstan-baseline.neon
+	- phpstan-disallowed-calls.neon
 parameters:
   level: 5
   bootstrapFiles:
@@ -73,16 +76,3 @@ parameters:
     - PaymentModuleCore::DEBUG_MODE
     - _PS_API_IN_USE_
     - _PS_ALLOW_MULTI_STATEMENTS_QUERIES_
-  disallowedNamespaces:
-        -
-            class: 'Symfony\Component\Translation\TranslatorInterface'
-            message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
-            disallowIn:
-                - src/*
-  disallowedMethodCalls:
-        -
-            method: 'PrestaShopBundle\Form\Admin\Type\CommonAbstractType::getConfiguration()'
-            message: 'Use dependency injection instead'
-            disallowIn:
-                - src/*
-

@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
@@ -44,7 +44,7 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
     [
       {args: {orderRow: 1, status: OrderStatuses.shipped.name}},
       {args: {orderRow: 2, status: OrderStatuses.paymentAccepted.name}},
-    ].forEach((orderToEdit, index) => {
+    ].forEach((orderToEdit, index: number) => {
       it('should go to \'Orders > Orders\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index + 1}`, baseContext);
 

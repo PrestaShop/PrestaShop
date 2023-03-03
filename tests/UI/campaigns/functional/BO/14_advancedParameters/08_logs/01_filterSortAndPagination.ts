@@ -12,7 +12,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import Employees from '@data/demo/employees';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard/index';
+import dashboardPage from '@pages/BO/dashboard';
 import logsPage from '@pages/BO/advancedParameters/logs';
 
 import type {BrowserContext, Page} from 'playwright';
@@ -52,7 +52,6 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToEraseLogs', baseContext);
 
     await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
-
     await logsPage.closeSfToolBar(page);
 
     const pageTitle = await logsPage.getPageTitle(page);
@@ -73,7 +72,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   describe('Logout then login 11 times to have 11 logs', async () => {
     const tests: number[] = new Array(11).fill(0, 0, 11);
 
-    tests.forEach((test, index) => {
+    tests.forEach((test: number, index: number) => {
       it(`should logout from BO n°${index + 1}`, async function () {
         await loginCommon.logoutBO(this, page);
       });
@@ -247,7 +246,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
-      for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
+      for (let row: number = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
         await expect(textColumn).to.contains(today);
       }
@@ -370,8 +369,8 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
         const sortedTable = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

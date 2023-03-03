@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
@@ -37,7 +37,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class AbstractGetStockMovementsHandler
 {
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     protected $stockAvailableRepository;
 
@@ -52,7 +52,7 @@ abstract class AbstractGetStockMovementsHandler
     protected $translator;
 
     public function __construct(
-        StockAvailableMultiShopRepository $stockAvailableRepository,
+        StockAvailableRepository $stockAvailableRepository,
         StockMovementRepository $stockMovementRepository,
         TranslatorInterface $translator
     ) {

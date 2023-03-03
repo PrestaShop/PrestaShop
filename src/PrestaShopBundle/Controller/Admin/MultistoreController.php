@@ -30,11 +30,12 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker;
@@ -60,6 +61,11 @@ class MultistoreController extends FrameworkBundleAdminController
      * @var EntityManager
      */
     public $entityManager;
+
+    /**
+     * @var ProductRepository
+     */
+    public $productRepository;
 
     /**
      * This method returns a Response object containing the multistore header displayed at the top of migrated pages
@@ -99,8 +105,7 @@ class MultistoreController extends FrameworkBundleAdminController
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
 
         // Filter shops that are not associated to product
-        $productRepository = $this->get(ProductMultiShopRepository::class);
-        $productShops = $productRepository->getAssociatedShopIds(new ProductId($productId));
+        $productShops = $this->productRepository->getAssociatedShopIds(new ProductId($productId));
 
         if (!empty($productShops)) {
             $productShopIds = array_map(function (ShopId $shopId) {
@@ -261,7 +266,7 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     private function renderHeader(string $headerTemplate, array $templateVars): Response
     {
-        $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
+        $colorBrightnessCalculator = $this->get(ColorBrightnessCalculator::class);
         $isAllShopContext = $this->multistoreContext->isAllShopContext();
         $isShopContext = $this->multistoreContext->isShopContext();
         $colorConfigLink = false;

@@ -8,6 +8,7 @@ import type ProductData from '@data/faker/product';
 import type OrderStatusData from '@data/faker/orderStatus';
 
 import type {Frame, Page} from 'playwright';
+import OrderData from '@data/faker/order';
 
 /**
  * Add order page, contains functions that can be used on create order page
@@ -137,7 +138,7 @@ class AddOrder extends BOBasePage {
 
   private readonly cartRuleErrorText: string;
 
-  private readonly addVoucherBUtton: string;
+  private readonly addVoucherButton: string;
 
   private readonly vouchersTable: string;
 
@@ -159,7 +160,7 @@ class AddOrder extends BOBasePage {
 
   private readonly invoiceAddressSelect: string;
 
-  private readonly invoiceAddressdetails: string;
+  private readonly invoiceAddressDetails: string;
 
   private readonly invoiceAddressEditButton: string;
 
@@ -305,7 +306,7 @@ class AddOrder extends BOBasePage {
     this.searchCartRuleResultBox = '#search-cart-rules-result-box';
     this.searchCartRuleResultFound = '#cart-rules-search-block li.js-found-cart-rule.found-cart-rule';
     this.cartRuleErrorText = '#js-cart-rule-error-text';
-    this.addVoucherBUtton = '#js-add-cart-rule-btn';
+    this.addVoucherButton = '#js-add-cart-rule-btn';
     this.vouchersTable = '#cart-rules-table';
     this.vouchersTableBody = `${this.vouchersTable} tbody`;
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
@@ -319,7 +320,7 @@ class AddOrder extends BOBasePage {
     this.deliveryAddressDetails = '#delivery-address-details';
     this.deliveryAddressEditButton = '#js-delivery-address-edit-btn';
     this.invoiceAddressSelect = '#invoice-address-select';
-    this.invoiceAddressdetails = '#invoice-address-details';
+    this.invoiceAddressDetails = '#invoice-address-details';
     this.invoiceAddressEditButton = '#js-invoice-address-edit-btn';
 
     // Shipping form selectors
@@ -420,12 +421,10 @@ class AddOrder extends BOBasePage {
 
     const customerFrame = await page.frame({url: /sell\/customers\/new/gmi});
 
-    await addCustomerPage.fillCustomerForm(customerFrame, customerData);
+    await addCustomerPage.closeSfToolBar(customerFrame);
+    await addCustomerPage.createEditCustomer(customerFrame, customerData, false);
 
-    await Promise.all([
-      customerFrame.click(addCustomerPage.saveCustomerButton),
-      this.waitForHiddenSelector(page, this.iframe),
-    ]);
+    await this.waitForHiddenSelector(page, this.iframe);
 
     return this.getCustomerNameFromResult(page);
   }
@@ -464,7 +463,7 @@ class AddOrder extends BOBasePage {
    * @param customerID {number} Id of customer to check
    * @returns {*}
    */
-  getCustomerIframe(page: Page, customerID: number): Frame|null {
+  getCustomerIframe(page: Page, customerID: number): Frame | null {
     return page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
   }
 
@@ -520,7 +519,7 @@ class AddOrder extends BOBasePage {
    * @param cartId {number} Id of customer to check
    * @returns {*}
    */
-  getShoppingCartIframe(page: Page, cartId: number): Frame|null {
+  getShoppingCartIframe(page: Page, cartId: number): Frame | null {
     return page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
   }
 
@@ -589,7 +588,7 @@ class AddOrder extends BOBasePage {
    * @param orderID {number} Id of order to check
    * @returns {*}
    */
-  getOrderIframe(page: Page, orderID: number): Frame|null {
+  getOrderIframe(page: Page, orderID: number): Frame | null {
     return page.frame({url: new RegExp(`sell/orders/${orderID}/view`, 'gmi')});
   }
 
@@ -841,7 +840,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async clickOnAddVoucherButton(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.addVoucherBUtton);
+    await this.waitForSelectorAndClick(page, this.addVoucherButton);
     await this.waitForVisibleSelector(page, this.iframe);
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -852,7 +851,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  getCreateVoucherIframe(page: Page): Frame|null {
+  getCreateVoucherIframe(page: Page): Frame | null {
     return page.frame({
       url: /controller=AdminCartRules&liteDisplaying=1&submitFormAjax=1&addcart_rule=1/gmi,
     });
@@ -938,7 +937,7 @@ class AddOrder extends BOBasePage {
   async getInvoiceAddressDetails(page: Page): Promise<string> {
     await page.waitForTimeout(2000);
 
-    return this.getTextContent(page, this.invoiceAddressdetails);
+    return this.getTextContent(page, this.invoiceAddressDetails);
   }
 
   /**
@@ -980,7 +979,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  getEditAddressIframe(page: Page): Frame|null {
+  getEditAddressIframe(page: Page): Frame | null {
     return page.frame({url: /sell\/addresses\/cart\//gmi});
   }
 
@@ -1000,7 +999,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  getAddAddressIframe(page: Page): Frame|null {
+  getAddAddressIframe(page: Page): Frame | null {
     return page.frame({url: /sell\/addresses\/new\?/gmi});
   }
 
@@ -1024,7 +1023,8 @@ class AddOrder extends BOBasePage {
    */
   async setDeliveryOption(page: Page, deliveryOptionName: string, isFreeShipping: boolean = false): Promise<string> {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), (el: HTMLElement) => el.click());
+    await page.waitForTimeout(1000);
+    await this.setFreeShipping(page, isFreeShipping);
     if (isFreeShipping) {
       await this.waitForVisibleSelector(page, this.vouchersTable);
     }
@@ -1060,7 +1060,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setFreeShipping(page: Page, isEnabled: boolean): Promise<void> {
-    await this.setChecked(page, this.freeShippingToggleInput(isEnabled ? 1 : 0));
+    await page.$eval(this.freeShippingToggleInput(isEnabled ? 1 : 0), (el: HTMLElement) => el.click());
   }
 
   /**
@@ -1070,7 +1070,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setRecycledPackaging(page: Page, isEnabled: boolean): Promise<void> {
-    await this.setChecked(page, this.recycledPackagingToggleInput(isEnabled ? 1 : 0));
+    await this.setChecked(page, this.recycledPackagingToggleInput(isEnabled ? 1 : 0), isEnabled);
     await page.waitForTimeout(3000);
   }
 
@@ -1150,7 +1150,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<Page|string>}
    */
   // eslint-disable-next-line consistent-return
-  async setMoreActions(page: Page, action: string): Promise<Page|string> {
+  async setMoreActions(page: Page, action: string): Promise<Page | string> {
     await this.waitForSelectorAndClick(page, this.moreActionsDropDownButton);
     if (action === 'pre-filled order') {
       await this.waitForSelectorAndClick(page, this.sendOrderMailButton);
@@ -1201,12 +1201,12 @@ class AddOrder extends BOBasePage {
   /**
    * Set summary block
    * @param page {Page} Browser tab
-   * @param paymentMethodName {string} Payment method to choose
+   * @param paymentMethodModuleName {string} Payment method to choose
    * @param orderStatus {OrderStatusData} Order status to choose
    * @returns {Promise<void>}
    */
-  async setSummaryAndCreateOrder(page: Page, paymentMethodName: string, orderStatus): Promise<void> {
-    await this.setPaymentMethod(page, paymentMethodName);
+  async setSummaryAndCreateOrder(page: Page, paymentMethodModuleName: string, orderStatus: OrderStatusData): Promise<void> {
+    await this.setPaymentMethod(page, paymentMethodModuleName);
     await this.setOrderStatus(page, orderStatus);
     await this.clickOnCreateOrderButton(page);
   }
@@ -1216,11 +1216,11 @@ class AddOrder extends BOBasePage {
   /**
    * Create order with existing customer
    * @param page {Page} Browser tab
-   * @param orderToMake {object} Order data to create
+   * @param orderToMake {OrderData} Order data to create
    * @param isNewCustomer {boolean} True if the customer is new
    * @returns {Promise<void>}
    */
-  async createOrder(page: Page, orderToMake, isNewCustomer: boolean = false): Promise<void> {
+  async createOrder(page: Page, orderToMake: OrderData, isNewCustomer: boolean = false): Promise<void> {
     // Choose customer
     // If it's a new customer, the creation of customer should be done in test
     // with add customer page
@@ -1234,20 +1234,20 @@ class AddOrder extends BOBasePage {
     // Add products to carts
     for (let i = 0; i < orderToMake.products.length; i++) {
       await this.addProductToCart(
-        page, orderToMake.products[i].value, orderToMake.products[i].value.name, orderToMake.products[i].quantity);
+        page, orderToMake.products[i].product, orderToMake.products[i].product.name, orderToMake.products[i].quantity);
     }
 
     // Choose address
-    await this.chooseAddresses(page, orderToMake.deliveryAddress, orderToMake.invoiceAddress);
+    await this.chooseAddresses(page, orderToMake.deliveryAddress.name, orderToMake.invoiceAddress.name);
 
     // Choose delivery options
     await this.setDeliveryOption(page, orderToMake.deliveryOption.name, orderToMake.deliveryOption.freeShipping);
 
     // Choose payment method
-    await this.setPaymentMethod(page, orderToMake.paymentMethod);
+    await this.setPaymentMethod(page, orderToMake.paymentMethod.moduleName);
 
     // Set order status
-    await this.setOrderStatus(page, orderToMake.orderStatus);
+    await this.setOrderStatus(page, orderToMake.status);
 
     // Create the order
     await this.clickAndWaitForNavigation(page, this.createOrderButton);

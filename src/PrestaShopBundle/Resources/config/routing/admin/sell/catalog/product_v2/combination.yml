@@ -60,50 +60,64 @@ admin_products_combinations_bulk_edit_combination:
     productId: \d+
 
 admin_products_combinations_delete_combination:
-  path: /combinations/{combinationId}/delete
+  path: /combinations/{combinationId}/delete/{shopId}
   methods: [ DELETE ]
   options:
     expose: true
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::deleteAction
     _legacy_controller: AdminProducts
+    shopId: null
   requirements:
     combinationId: \d+
+    shopId: \d+
 
 admin_products_combinations_bulk_delete:
-  path: /{productId}/combinations/bulk-delete
+  path: /{productId}/combinations/bulk-delete/{shopId}
   methods: [ POST ]
   options:
     expose: true
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::bulkDeleteAction
     _legacy_controller: AdminProducts
+    shopId: null
   requirements:
     productId: \d+
+    shopId: \d+
 
 admin_products_attribute_groups:
-  path: /{productId}/attribute-groups
+  path: /{productId}/attribute-groups/{shopId}
   methods: [ GET ]
   options:
     expose: true
   defaults:
+    shopId: null
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getAttributeGroupsAction
     _legacy_controller: AdminProducts
+  requirements:
+    shopId: \d+
 
 admin_all_attribute_groups:
-  path: /all-attribute-groups
+  path: /all-attribute-groups/{shopId}
   methods: [ GET ]
   options:
     expose: true
   defaults:
+    shopId: null
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getAllAttributeGroupsAction
     _legacy_controller: AdminProducts
+  requirements:
+    shopId: \d+
 
 admin_products_combinations_generate:
-  path: /generate-combinations/{productId}
+  path: /generate-combinations/{productId}/{shopId}
   methods: [ POST ]
   options:
     expose: true
   defaults:
+    shopId: null
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::generateCombinationsAction
     _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopId: \d+

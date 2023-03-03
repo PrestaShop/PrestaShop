@@ -1329,9 +1329,14 @@
 
 {% block delta_quantity_widget %}
   {% set quantity = value.quantity|default(form.quantity.vars.value) %}
-  {% set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': quantity}) %}
+  {# If initial quantity has not been computed we use value which may be containing a placeholder useful for collection rendering #}
+  {% if initialQuantity is null %}
+    {% set initialQuantity = quantity %}
+  {% endif %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': initialQuantity}) %}
   <div {{ block('widget_container_attributes') }}>
-    {{ form_widget(form.quantity, {value: quantity}) }}
+    {{ form_widget(form.initial_quantity, {value: initialQuantity}) }}
+    {{ form_widget(form.quantity, {initialQuantity: initialQuantity, deltaQuantity: deltaQuantity, value: quantity}) }}
     {{ form_row(form.delta) }}
   </div>
 {% endblock %}
@@ -1340,11 +1345,12 @@
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-quantity')|trim}) -%}
   <div {{ block('widget_container_attributes') }}>
     {{- block('form_widget_simple') -}}
-    <span class="initial-quantity">{{ value }}</span>
-    <span class="quantity-update">
+    <span class="initial-quantity">{{ initialQuantity }}</span>
+    <span class="quantity-update{% if deltaQuantity != 0 %} quantity-modified{% endif %}">
       <i class="material-icons">trending_flat</i>
       <span class="new-quantity">{{ value }}</span>
     </span>
+    {{ form_errors(form) }}
   </div>
 {% endblock %}
 
@@ -1505,9 +1511,36 @@
   <div {{ block('widget_attributes') }}>
     {% for group, buttons in button_groups %}
       <div class="btn-group group-{{ group }}">
-        {% for button in buttons %}
-          {{- form_widget(attribute(form, button)) -}}
+        {# Render inline actions #}
+        {% set inlineButtonsLimit = form.vars.inline_buttons_limit %}
+        {% for action in form.children %}
+          {% if inlineButtonsLimit is same as(null) or loop.index <= inlineButtonsLimit %}
+            {# Remove labels from inline elements if they are not forced #}
+            {% if form.vars.use_inline_labels %}
+              {% set actionLabel = action.vars.label %}
+            {% else %}
+              {% set actionLabel = '' %}
+            {% endif %}
+            {{ form_widget(action, {'label': actionLabel}) }}
+          {% endif %}
         {% endfor %}
+
+        {# Render remaining actions in dropdown #}
+        {% if inlineButtonsLimit is not same as(null) and form.children|length > inlineButtonsLimit %}
+          <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+          >
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            {% for action in form.children|slice(inlineButtonsLimit) %}
+              {{ form_widget(action, {'attr': {
+                'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
+              }}) }}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     {% endfor %}
   </div>

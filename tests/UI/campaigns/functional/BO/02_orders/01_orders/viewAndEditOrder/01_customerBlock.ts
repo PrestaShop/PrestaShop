@@ -12,21 +12,22 @@ import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 import AddressData from '@data/faker/address';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // Import BO pages
-import customersPage = require('@pages/BO/customers');
-import addressesPage = require('@pages/BO/customers/addresses');
-import viewCustomerPage = require('@pages/BO/customers/view');
+import customersPage from '@pages/BO/customers';
+import addressesPage from '@pages/BO/customers/addresses';
+import viewCustomerPage from '@pages/BO/customers/view';
 
 // Import data
-import CustomerData = require('@data/faker/customer');
+import Products from '@data/demo/products';
+import CustomerData from '@data/faker/customer';
+import OrderData from '@data/faker/order';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_customerBlock';
 
@@ -60,12 +61,16 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   const editInvoiceAddressData: AddressData = new AddressData({country: 'France'});
   const privateNote: string = 'Test private note';
   // New order by customer data
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: customerData,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   // Customer login data
   const customerLoginData = {
     email: customerData.email,

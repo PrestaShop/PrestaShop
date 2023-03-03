@@ -20,10 +20,13 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.1.x
           - 8.0.x
           - 1.7.8.x
         include:
           - BRANCH: develop
+            node: 16
+          - BRANCH: 8.1.x
             node: 16
           - BRANCH: 8.0.x
             node: 16

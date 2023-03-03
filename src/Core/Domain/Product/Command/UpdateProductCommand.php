@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductHandle
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshold;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Dimension;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
@@ -251,14 +252,9 @@ class UpdateProductCommand
     private $minimalQuantity;
 
     /**
-     * @var int|null
+     * @var LowStockThreshold|null
      */
     private $lowStockThreshold;
-
-    /**
-     * @var bool|null
-     */
-    private $lowStockAlertEnabled;
 
     /**
      * @var string[]|null key value pairs where key is the id of language
@@ -1035,9 +1031,9 @@ class UpdateProductCommand
     }
 
     /**
-     * @return int|null
+     * @return LowStockThreshold|null
      */
-    public function getLowStockThreshold(): ?int
+    public function getLowStockThreshold(): ?LowStockThreshold
     {
         return $this->lowStockThreshold;
     }
@@ -1049,27 +1045,7 @@ class UpdateProductCommand
      */
     public function setLowStockThreshold(int $lowStockThreshold): self
     {
-        $this->lowStockThreshold = $lowStockThreshold;
-
-        return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isLowStockAlertEnabled(): ?bool
-    {
-        return $this->lowStockAlertEnabled;
-    }
-
-    /**
-     * @param bool $enabled
-     *
-     * @return self
-     */
-    public function setLowStockAlert(bool $enabled): self
-    {
-        $this->lowStockAlertEnabled = $enabled;
+        $this->lowStockThreshold = new LowStockThreshold($lowStockThreshold);
 
         return $this;
     }

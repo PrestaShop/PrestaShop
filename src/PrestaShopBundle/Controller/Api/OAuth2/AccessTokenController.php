@@ -37,8 +37,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/*
+/**
  * Class responsible for handling access token requests
+ *
+ * @experimental
  */
 class AccessTokenController extends AbstractController
 {

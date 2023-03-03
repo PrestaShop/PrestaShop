@@ -17,9 +17,9 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderStatusData from '@data/faker/orderStatus';
 
@@ -61,7 +61,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     tax: 'None',
     isRecyclablePackage: false,
   };
-  const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
   const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
   const giftMessage: string = 'Gift message to test';
 
@@ -223,8 +223,10 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await addOrderPage.setGift(page, true);
     });
 
-    it('should re-check summary block', async function () {
+    it('should enable gift and re-check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
+
+      await addOrderPage.setGift(page, true);
 
       const tax = await basicHelper.percentage(giftOptions.price, 10);
       const totalTaxExc = (Products.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
@@ -238,10 +240,10 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       ]);
     });
 
-    it('should set a gift message and complete the order', async function () {
+    it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, orderStatus);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);

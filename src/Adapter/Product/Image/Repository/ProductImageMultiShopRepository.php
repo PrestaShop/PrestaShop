@@ -29,9 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -65,9 +67,9 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     private $dbPrefix;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
-    private $productMultiShopRepository;
+    private $productRepository;
 
     /**
      * @var ProductImageValidator
@@ -77,12 +79,12 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductMultiShopRepository $productMultiShopRepository,
+        ProductRepository $productRepository,
         ProductImageValidator $productImageValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->productMultiShopRepository = $productMultiShopRepository;
+        $this->productRepository = $productRepository;
         $this->productImageValidator = $productImageValidator;
     }
 
@@ -90,68 +92,74 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      * @param ProductId $productId
      *
      * @return Image[]
-     *
-     * @throws CoreException
      */
     public function getImages(ProductId $productId, ShopConstraint $shopConstraint): array
     {
         if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
-        } elseif ($shopConstraint->forAllShops()) {
-            $shopId = $this->productMultiShopRepository->getProductDefaultShopId($productId);
-        } else {
-            $shopId = $shopConstraint->getShopId();
+            throw new InvalidShopConstraintException('Shop group constraint is not supported');
+        }
+
+        if ($shopConstraint->getShopId()) {
+            $this->productRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
         }
 
         return array_map(
-            function (ImageId $imageId) use ($shopId): Image {
-                return $this->get($imageId, $shopId);
+            function (ImageId $imageId) use ($shopConstraint): Image {
+                return $this->getByShopConstraint($imageId, $shopConstraint);
             },
-            $this->getImagesIds($productId, $shopConstraint)
+            $this->getImageIds($productId, $shopConstraint)
         );
     }
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return ImageId[]
-     *
-     * @throws CoreException
      */
-    public function getImagesIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    public function getImageIds(ProductId $productId, ShopConstraint $shopConstraint): array
     {
-        $qb = $this->connection->createQueryBuilder()->select('id_image');
-
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
-        } elseif ($shopConstraint->forAllShops()) {
-            $qb->from($this->dbPrefix . 'image', 'i')
-                ->addOrderBy('i.position', 'ASC')
-            ;
-        } else {
-            $qb->from($this->dbPrefix . 'image_shop', 'i')
-                ->andWhere('i.id_shop = :shopId')
-                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
-            ;
-        }
-
-        $results = $qb->andWhere('i.id_product = :productId')
+        $qb = $this->connection->createQueryBuilder()
+            ->select('i.id_image')
+            ->from($this->dbPrefix . 'image', 'i')
+            ->andWhere('i.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('i.position', 'ASC')
             ->addOrderBy('i.id_image', 'ASC')
-            ->execute()
-            ->fetchAll()
         ;
 
-        if (!$results) {
-            return [];
+        if (!$shopConstraint->forAllShops()) {
+            $qb
+                ->innerJoin(
+                'i',
+                $this->dbPrefix . 'image_shop',
+                'img_shop',
+                'img_shop.id_image = i.id_image'
+                )
+                ->addGroupBy('i.id_image')
+            ;
+
+            if ($shopConstraint->getShopGroupId()) {
+                $qb
+                    ->innerJoin(
+                        'img_shop',
+                        $this->dbPrefix . 'shop',
+                        's',
+                        's.id_shop = img_shop.id_shop AND s.id_shop_group = :shopGroupId'
+                    )
+                    ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
+                ;
+            } else {
+                $this->productRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
+                $qb->andWhere('img_shop.id_shop = :shopId')
+                    ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+                ;
+            }
         }
 
-        $imagesIds = [];
-        foreach ($results as $result) {
-            $imagesIds[] = new ImageId((int) $result['id_image']);
-        }
-
-        return $imagesIds;
+        return array_map(static function (string $id): ImageId {
+            return new ImageId((int) $id);
+        }, $qb->execute()->fetchAll(FetchMode::COLUMN));
     }
 
     /**
@@ -172,6 +180,23 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         );
 
         return $image;
+    }
+
+    public function getByShopConstraint(ImageId $imageId, ShopConstraint $shopConstraint): Image
+    {
+        if ($shopConstraint->getShopId()) {
+            return $this->get($imageId, $shopConstraint->getShopId());
+        }
+
+        $shopIds = $this->getAssociatedShopIdsByShopConstraint($imageId, $shopConstraint);
+        // finds first associated shop and uses it to load object model
+        $shopId = reset($shopIds);
+
+        if (!$shopId) {
+            throw new ShopAssociationNotFound(sprintf('Image %d is not associated to any shop', $imageId->getValue()));
+        }
+
+        return $this->get($imageId, $shopId);
     }
 
     /**
@@ -195,6 +220,43 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         );
     }
 
+    /**
+     * @param ImageId $imageId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIdsByShopConstraint(ImageId $imageId, ShopConstraint $shopConstraint): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('is.id_shop')
+            ->from($this->dbPrefix . 'image_shop', '`is`')
+            ->where('is.id_image = :imageId')
+            ->setParameter('imageId', $imageId->getValue())
+        ;
+
+        if ($shopConstraint->getShopGroupId()) {
+            $qb
+                ->innerJoin(
+                    '`is`',
+                    $this->dbPrefix . 'shop',
+                    's',
+                    's.id_shop = is.id_shop AND s.id_shop_group = :shopGroupId'
+                )
+                ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
+            ;
+        } elseif ($shopConstraint->getShopId()) {
+            $qb
+                ->andWhere('is.id_shop = :shopId')
+                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+            ;
+        }
+
+        return array_map(static function (array $shop): ShopId {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->execute()->fetchAllAssociative());
+    }
+
     public function create(ProductId $productId, ShopConstraint $shopConstraint): Image
     {
         $productIdValue = $productId->getValue();
@@ -202,7 +264,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         $image->id_product = $productIdValue;
         $image->cover = null;
 
-        $shopIds = $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint);
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
         $this->addObjectModelToShops($image, $shopIds, CannotAddProductImageException::class);
 
         $this->updateMissingCovers($productId);
@@ -224,6 +286,27 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
         $this->deleteObjectModelFromShops(
             // We fetch the image from first shop, the values don't matter anyway we just need an Image instance
+            $this->get($imageId, reset($shopIds)),
+            $shopIds,
+            CannotDeleteProductImageException::class
+        );
+    }
+
+    /**
+     * @param ImageId $imageId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return void
+     */
+    public function deleteByShopConstraint(ImageId $imageId, ShopConstraint $shopConstraint): void
+    {
+        $shopIds = $this->getAssociatedShopIdsByShopConstraint($imageId, $shopConstraint);
+        if (empty($shopIds)) {
+            return;
+        }
+
+        $this->deleteObjectModelFromShops(
+        // We fetch the image from first shop, the values don't matter anyway we just need an Image instance
             $this->get($imageId, reset($shopIds)),
             $shopIds,
             CannotDeleteProductImageException::class
@@ -279,7 +362,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             $productImagesByShop[$shopId][] = new ShopImageAssociation((int) $result['id_image'], (int) $result['cover'] === 1);
         }
 
-        foreach ($this->productMultiShopRepository->getAssociatedShopIds($productId) as $shopId) {
+        foreach ($this->productRepository->getAssociatedShopIds($productId) as $shopId) {
             if (isset($productImagesByShop[$shopId->getValue()])) {
                 continue;
             }
@@ -297,7 +380,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         return ShopProductImagesCollection::from(...$shopProductImagesArray);
     }
 
-    public function getCoverImageId(ProductId $productId, ShopId $shopId): ?ImageId
+    public function findCoverImageId(ProductId $productId, ShopId $shopId): ?ImageId
     {
         $result = $this->connection->createQueryBuilder()
             ->select('id_image')
@@ -353,7 +436,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         ;
 
         foreach ($results as $image) {
-            $coverId = $this->getCoverImageId($productId, new ShopId((int) $image['id_shop']));
+            $coverId = $this->findCoverImageId($productId, new ShopId((int) $image['id_shop']));
             if ($coverId !== null && $coverId->getValue() === (int) $image['id_image']) {
                 continue;
             }

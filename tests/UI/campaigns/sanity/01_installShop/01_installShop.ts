@@ -199,7 +199,7 @@ describe('Install Prestashop', async () => {
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should installation step '${test.args.step.name}' be finished`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `CheckStep${index}`, baseContext);
 

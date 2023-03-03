@@ -32,8 +32,10 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class AdminControllerCore extends Controller
 {
@@ -256,17 +258,33 @@ class AdminControllerCore extends Controller
     /** @var string */
     public $override_folder;
 
-    /** @var int DELETE access level */
-    public const LEVEL_DELETE = 4;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int DELETE access level
+     */
+    public const LEVEL_DELETE = Permission::LEVEL_DELETE;
 
-    /** @var int ADD access level */
-    public const LEVEL_ADD = 3;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int ADD access level
+     */
+    public const LEVEL_ADD = Permission::LEVEL_CREATE;
 
-    /** @var int EDIT access level */
-    public const LEVEL_EDIT = 2;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int EDIT access level
+     */
+    public const LEVEL_EDIT = Permission::LEVEL_UPDATE;
 
-    /** @var int VIEW access level */
-    public const LEVEL_VIEW = 1;
+    /**
+     * @deprecated since 9.0
+     *
+     * @var int VIEW access level
+     */
+    public const LEVEL_VIEW = Permission::LEVEL_READ;
 
     /**
      * Actions to execute on multiple selections.
@@ -1092,7 +1110,7 @@ class AdminControllerCore extends Controller
             foreach ($this->fields_list as $key => $params) {
                 $field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8(Tools::nl2br($row[$key])) : '';
                 if ($key == 'image') {
-                    if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES')) {
+                    if ($params['image'] != 'p') {
                         $path_to_image = Tools::getShopDomain(true) . _PS_IMG_ . $params['image'] . '/' . $row['id_' . $this->table] . (isset($row['id_image']) ? '-' . (int) $row['id_image'] : '') . '.' . $this->imageType;
                     } else {
                         $path_to_image = Tools::getShopDomain(true) . _PS_IMG_ . $params['image'] . '/' . Image::getImgFolderStatic($row['id_image']) . (int) $row['id_image'] . '.' . $this->imageType;
@@ -2141,7 +2159,23 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
+            try {
+                $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
+            } catch (RouteNotFoundException $e) {
+                // If the route specified is not accessible we remove the tab (it can happen during module install process
+                // the route should be usable in next request/process once the cache has been cleared - on process shutdown).
+                // This is not ideal, but clearing the cache during a process and restart the whole kernel is quite a challenge.
+                $this->get('logger')->addWarning(
+                    sprintf('Route not found in one of the Tab %s', $tab['route_name'] ?? ''),
+                    [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ]
+                );
+                unset($tabs[$index]);
+                continue;
+            }
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
@@ -2245,6 +2279,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign([
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
+            'maintenance_allow_admins' => (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex . '&token=' . $this->token,
@@ -2735,12 +2770,11 @@ class AdminControllerCore extends Controller
     {
         @trigger_error(__FUNCTION__ . 'is deprecated. Use AdminController::trans instead.', E_USER_DEPRECATED);
 
-        $parameters = [];
-        if ($htmlentities) {
-            $parameters['legacy'] = 'htmlspecialchars';
+        if ($htmlentities === true) {
+            return htmlspecialchars($this->translator->trans($string, []), ENT_NOQUOTES);
         }
 
-        return $this->translator->trans($string, $parameters);
+        return $this->translator->trans($string, []);
     }
 
     /**
@@ -4718,32 +4752,32 @@ class AdminControllerCore extends Controller
     {
         if (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_DELETE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_DELETE;
+            return Permission::LEVEL_DELETE;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_CREATE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_ADD;
+            return Permission::LEVEL_CREATE;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_UPDATE',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_EDIT;
+            return Permission::LEVEL_UPDATE;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_READ',
+                Permission::PREFIX_TAB . strtoupper($this->controller_name) . '_READ',
                 $this->context->employee->id_profile
             )
         ) {
-            return AdminController::LEVEL_VIEW;
+            return Permission::LEVEL_READ;
         } else {
             return 0;
         }

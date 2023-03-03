@@ -10,13 +10,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import customerServicePage from '@pages/BO/customerService/customerService';
-import foLoginPage from '@pages/FO/login';
-import foContactUsPage from '@pages/FO/contactUs';
 // Import FO pages
+import foContactUsPage from '@pages/FO/contactUs';
 import foHomePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';

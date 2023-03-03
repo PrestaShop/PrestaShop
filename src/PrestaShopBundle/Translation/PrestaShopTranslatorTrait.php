@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -50,9 +49,13 @@ trait PrestaShopTranslatorTrait
     public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
         if (isset($parameters['legacy'])) {
-            $legacy = $parameters['legacy'];
+            @trigger_error(
+                'The legacy parameter is deprecated and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
             unset($parameters['legacy']);
         }
+
         $isSprintf = !empty($parameters) && $this->isSprintfString($id);
 
         if (empty($locale)) {
@@ -68,8 +71,6 @@ trait PrestaShopTranslatorTrait
         if ($isSprintf) {
             $translated = vsprintf($translated, $parameters);
         }
-
-        $translated = isset($legacy) ? $this->replaceSpecialCharsWithLegacyFunctions($translated, $legacy) : $translated;
 
         return $translated;
     }
@@ -200,24 +201,5 @@ trait PrestaShopTranslatorTrait
             : null;
 
         return $normalizedDomain;
-    }
-
-    /**
-     * Replaces special characters on the message
-     *
-     * @param string $message the message
-     * @param callable-string $functionName Name of function to be called
-     *
-     * @return string
-     */
-    private function replaceSpecialCharsWithLegacyFunctions(string $message, string $functionName): string
-    {
-        if ('htmlspecialchars' === $functionName) {
-            $translated = htmlspecialchars($message, ENT_NOQUOTES);
-        } else {
-            $translated = call_user_func($functionName, $message);
-        }
-
-        return $translated;
     }
 }

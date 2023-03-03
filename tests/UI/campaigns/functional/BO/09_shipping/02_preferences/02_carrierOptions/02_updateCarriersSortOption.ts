@@ -19,7 +19,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -82,7 +82,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       await expect(numberOfCarriers).to.be.above(0);
     });
 
-    carriersNames.forEach((carrierName, index) => {
+    carriersNames.forEach((carrierName: string, index: number) => {
       it(`should filter list by name ${carrierName}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByName${index}`, baseContext);
 
@@ -145,7 +145,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       {args: {sortBy: 'Position', orderBy: 'Descending'}},
       {args: {sortBy: 'Price', orderBy: 'Descending'}},
       {args: {sortBy: 'Price', orderBy: 'Ascending'}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it(`should set sort by '${test.args.sortBy}' and order by '${test.args.orderBy}' in BO`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
@@ -234,7 +234,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       await expect(pageTitle).to.contains(carriersPage.pageTitle);
     });
 
-    carriersNames.forEach((carrierName, index) => {
+    carriersNames.forEach((carrierName: string, index: number) => {
       it(`should filter list by name ${carrierName}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByName${index}ToDisable`, baseContext);
 

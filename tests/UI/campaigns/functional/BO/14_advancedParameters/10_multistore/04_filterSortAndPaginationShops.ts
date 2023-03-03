@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
-import shopsPage from '@pages/BO/advancedParameters/multistore/shop';
+import shopPage from '@pages/BO/advancedParameters/multistore/shop';
 
 // Import data
 import ShopData from '@data/faker/shop';
@@ -113,7 +113,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it('should go to add new shop page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopsPage${index}`, baseContext);
 
-        await shopsPage.goToNewShopPage(page);
+        await shopPage.goToNewShopPage(page);
 
         const pageTitle = await addShopPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
@@ -140,12 +140,12 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.filterBy}`, baseContext);
 
-        await shopsPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+        await shopPage.filterTable(page, test.args.filterBy, test.args.filterValue);
 
-        const numberOfElementAfterFilter = await shopsPage.getNumberOfElementInGrid(page);
+        const numberOfElementAfterFilter = await shopPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
-          const textColumn = await shopsPage.getTextColumn(page, i, test.args.filterBy);
+          const textColumn = await shopPage.getTextColumn(page, i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -153,7 +153,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it('should reset filter and check the number of shops', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
-        const numberOfElement = await shopsPage.resetAndGetNumberOfLines(page);
+        const numberOfElement = await shopPage.resetAndGetNumberOfLines(page);
         await expect(numberOfElement).to.be.above(20);
       });
     });
@@ -164,28 +164,28 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await shopsPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await shopPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await shopsPage.paginationNext(page);
+      const paginationNumber = await shopPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await shopsPage.paginationPrevious(page);
+      const paginationNumber = await shopPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await shopsPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await shopPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -257,10 +257,10 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await shopsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await shopPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await shopPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await shopPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -292,10 +292,10 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should delete the shop 'Todelete${index}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteShop${index}`, baseContext);
 
-        await shopsPage.filterTable(page, 'a!name', `Todelete${index}`);
+        await shopPage.filterTable(page, 'a!name', `Todelete${index}`);
 
-        const textResult = await shopsPage.deleteShop(page, 1);
-        await expect(textResult).to.contains(shopsPage.successfulDeleteMessage);
+        const textResult = await shopPage.deleteShop(page, 1);
+        await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
       });
     });
   });

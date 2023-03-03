@@ -77,6 +77,9 @@
   <configuration id="PS_SHOP_ENABLE" name="PS_SHOP_ENABLE">
     <value>1</value>
   </configuration>
+  <configuration id="PS_MAINTENANCE_ALLOW_ADMINS" name="PS_MAINTENANCE_ALLOW_ADMINS">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_NB_DAYS_NEW_PRODUCT" name="PS_NB_DAYS_NEW_PRODUCT">
     <value>20</value>
   </configuration>
@@ -382,9 +385,6 @@
   </configuration>
   <configuration id="PS_OS_COD_VALIDATION" name="PS_OS_COD_VALIDATION">
     <value>13</value>
-  </configuration>
-  <configuration id="PS_LEGACY_IMAGES" name="PS_LEGACY_IMAGES">
-    <value>0</value>
   </configuration>
   <configuration id="PS_IMAGE_QUALITY" name="PS_IMAGE_QUALITY">
     <value>jpg</value>
@@ -891,6 +891,12 @@ Country</value>
     </configuration>
     <configuration id="PS_PRODUCT_REDIRECTION_DEFAULT" name="PS_PRODUCT_REDIRECTION_DEFAULT">
       <value>404</value>
+    </configuration>
+    <configuration id="PS_AVIF_QUALITY" name="PS_AVIF_QUALITY">
+      <value>90</value>
+    </configuration>
+    <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
+      <value>jpg</value>
     </configuration>
   </entities>
 </entity_configuration>

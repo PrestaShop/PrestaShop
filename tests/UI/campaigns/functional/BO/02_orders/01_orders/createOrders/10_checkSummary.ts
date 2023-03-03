@@ -17,9 +17,9 @@ import checkoutPage from '@pages/FO/checkout';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
@@ -55,7 +55,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       tax: 'Tax excluded',
     },
   });
-  const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
   const orderMessage: string = 'Test order message';
 
   // Pre-condition: Create cart rule with code
@@ -281,7 +281,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnCreateOrder2', baseContext);
 
-          await addOrderPage.setPaymentMethod(page, paymentMethod);
+          await addOrderPage.setPaymentMethod(page, paymentMethodModuleName);
 
           const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, false);
           await expect(isOrderCreated, 'The order is created!').to.be.false;
@@ -291,7 +291,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnCreateOrder3', baseContext);
 
-          await addOrderPage.setPaymentMethod(page, paymentMethod);
+          await addOrderPage.setPaymentMethod(page, paymentMethodModuleName);
           await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
 
           const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, true);

@@ -213,6 +213,19 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I set :categoryReference as default category for shop :reference
+     *
+     * @param string $categoryReference
+     * @param string $shopReference
+     */
+    public function defineShopDefaultCategory(string $categoryReference, string $shopReference): void
+    {
+        $shop = new Shop($this->referenceToId($shopReference));
+        $shop->id_category = $this->referenceToId($categoryReference);
+        $shop->save();
+    }
+
+    /**
      * @Given single shop context is loaded
      */
     public function singleShopContextIsLoaded(): void

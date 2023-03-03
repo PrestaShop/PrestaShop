@@ -269,7 +269,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
   // 3 - Create 8 order statuses
   const creationTests: number[] = new Array(8).fill(0, 0, 8);
 
-  creationTests.forEach((test, index) => {
+  creationTests.forEach((test: number, index: number) => {
     describe(`Create order status n°${index + 1} in BO`, async () => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 

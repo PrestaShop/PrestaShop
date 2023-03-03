@@ -13,7 +13,8 @@ import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 
 // Import data
-import {Currencies} from '@data/demo/currencies';
+import Currencies from '@data/demo/currencies';
+import type CurrencyData from '@data/faker/currency';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -76,12 +77,12 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
     await expect(numberOfCurrencies).to.be.above(0);
   });
 
-  const currencies = [Currencies.mad, Currencies.all, Currencies.chileanPeso, Currencies.dzd, Currencies.tnd,
+  const currencies: CurrencyData[] = [Currencies.mad, Currencies.all, Currencies.chileanPeso, Currencies.dzd, Currencies.tnd,
     Currencies.try, Currencies.usd, Currencies.aed, Currencies.lyd, Currencies.lsl,
   ];
 
   // 1 - Create 10 currencies
-  currencies.forEach((currency, index) => {
+  currencies.forEach((currency: CurrencyData, index: number) => {
     describe(`Create official currency '${currency.name}'`, async () => {
       it('should go to create new currency page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCurrencyPage${index}`, baseContext);
@@ -155,7 +156,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
             filterValue: Currencies.all.enabled ? '1' : '0',
           },
       },
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -284,7 +285,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
 
   // 4 : Delete currencies created
   describe('Delete currencies', async () => {
-    currencies.forEach((currency, index) => {
+    currencies.forEach((currency: CurrencyData, index: number) => {
       it(`should filter list by currency name '${currency.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 

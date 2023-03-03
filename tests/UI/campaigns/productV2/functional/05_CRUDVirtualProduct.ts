@@ -23,12 +23,15 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
+import {
+  enableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 
 const baseContext: string = 'productV2_functional_CRUDVirtualProduct';
@@ -418,6 +421,6 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     });
   });
 
-  // Post-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -23,10 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import CustomerPreferencesMap from '@pages/customer-preferences/customer-preferences-map';
+
 $(() => {
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
     ],
   );
+
+  // Required fields : Display alert for optin checkbox
+  $(CustomerPreferencesMap.switchPartnerOffers).on('click', () => handleFormCheckboxPartnerOffers());
+
+  function handleFormCheckboxPartnerOffers(): void {
+    $(CustomerPreferencesMap.checkboxPartnerOffersAlertOptin).toggleClass(
+      'd-none',
+      ($(CustomerPreferencesMap.checkboxPartnerOffers).val() === '1'),
+    );
+  }
 });

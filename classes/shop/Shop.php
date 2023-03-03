@@ -244,6 +244,7 @@ class ShopCore extends ObjectModel
     public function add($autodate = true, $null_values = false)
     {
         $res = parent::add($autodate, $null_values);
+        Shop::resetStaticCache();
         Shop::cacheShops(true);
 
         return $res;

@@ -80,7 +80,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async 
   });
 
   describe('Create 2 titles in BO', async () => {
-    titlesToCreate.forEach((titleToCreate, index) => {
+    titlesToCreate.forEach((titleToCreate: TitleData, index: number) => {
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTitlePage${index + 1}`, baseContext);
 

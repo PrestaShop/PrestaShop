@@ -41,18 +41,14 @@ class AdminModuleController {
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
-    this.DEFAULT_MAX_PER_CATEGORIES = 6;
-    this.DISPLAY_GRID = 'grid';
     this.DISPLAY_LIST = 'list';
     this.CATEGORY_RECENTLY_USED = 'recently-used';
 
-    this.currentCategoryDisplay = {};
-    this.currentDisplay = '';
+    this.currentDisplay = this.DISPLAY_LIST;
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
-    this.currentRefCategory = null;
-    this.currentRefStatus = null;
-    this.currentSorting = null;
+    this.currentCategoryFilter = null;
+    this.currentModuleStatusFilter = null;
     this.pstaggerInput = null;
     this.lastBulkAction = null;
     this.isUploadStarted = false;
@@ -68,21 +64,14 @@ class AdminModuleController {
     this.modulesList = [];
 
     this.moduleShortList = '.module-short-list';
-    // See more & See less selector
-    this.seeMoreSelector = '.see-more';
-    this.seeLessSelector = '.see-less';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
-    this.moduleItemGridSelector = '.module-item-grid';
     this.moduleItemListSelector = '.module-item-list';
     this.categorySelectorLabelSelector = '.module-category-selector-label';
     this.categorySelector = '.module-category-selector';
     this.categoryItemSelector = '.module-category-menu';
     this.categoryResetBtnSelector = '.module-category-reset';
     this.moduleInstallBtnSelector = 'input.module-install-btn';
-    this.moduleSortingDropdownSelector = '.module-sorting-author select';
-    this.categoryGridSelector = '#modules-categories-grid';
-    this.categoryGridItemSelector = '.module-category-item';
 
     // Upgrade All selectors
     this.upgradeAllSource = '.module_action_menu_upgrade_all';
@@ -96,20 +85,12 @@ class AdminModuleController {
     this.bulkActionDropDownSelector = '.module-bulk-actions';
     this.bulkItemSelector = '.module-bulk-menu';
     this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list input';
-    this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid input';
     this.checkedBulkActionListSelector = `${this.bulkActionCheckboxListSelector}:checked`;
-    this.checkedBulkActionGridSelector = `${this.bulkActionCheckboxGridSelector}:checked`;
     this.bulkActionCheckboxSelector = '#module-modal-bulk-checkbox';
     this.bulkConfirmModalSelector = '#module-modal-bulk-confirm';
     this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
     this.bulkConfirmModalListSelector = '#module-modal-bulk-confirm-list';
     this.bulkConfirmModalAckBtnSelector = '#module-modal-confirm-bulk-ack';
-
-    // Placeholders
-    this.placeholderGlobalSelector = '.module-placeholders-wrapper';
-    this.placeholderFailureGlobalSelector = '.module-placeholders-failure';
-    this.placeholderFailureMsgSelector = '.module-placeholders-failure-msg';
-    this.placeholderFailureRetryBtnSelector = '#module-placeholders-failure-retry';
 
     // Module's statuses selectors
     this.statusSelectorLabelSelector = '.module-status-selector-label';
@@ -133,23 +114,17 @@ class AdminModuleController {
     this.moduleImportFailureMsgDetailsSelector = '.module-import-failure-details';
     this.moduleImportConfirmSelector = '.module-import-confirm';
 
-    this.initSortingDropdown();
     this.initBOEventRegistering();
-    this.initCurrentDisplay();
-    this.initSortingDisplaySwitch();
     this.initBulkDropdown();
     this.initSearchBlock();
     this.initCategorySelect();
-    this.initCategoriesGrid();
     this.initActionButtons();
     this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
-    this.initPlaceholderMechanism();
     this.initFilterStatusDropdown();
     this.fetchModulesList();
     this.getNotificationsCount();
-    this.initializeSeeMore();
   }
 
   initFilterStatusDropdown() {
@@ -157,7 +132,7 @@ class AdminModuleController {
     const body = $('body');
     body.on('click', self.statusItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefStatus = parseInt($(this).data('status-ref'), 10);
+      self.currentModuleStatusFilter = parseInt($(this).data('status-ref'), 10);
       // Change dropdown label to set it to the current status' displayname
       $(self.statusSelectorLabelSelector).text($(this).text());
       $(self.statusResetBtnSelector).show();
@@ -167,7 +142,7 @@ class AdminModuleController {
     body.on('click', self.statusResetBtnSelector, function () {
       $(self.statusSelectorLabelSelector).text($(this).text());
       $(this).hide();
-      self.currentRefStatus = null;
+      self.currentModuleStatusFilter = null;
       self.updateModuleVisibility();
     });
   }
@@ -176,10 +151,10 @@ class AdminModuleController {
     const self = this;
     const body = $('body');
 
-    body.on('click', self.getBulkCheckboxesSelector(), () => {
+    body.on('click', this.bulkActionCheckboxListSelector, () => {
       const selector = $(self.bulkActionDropDownSelector);
 
-      if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
+      if ($(this.checkedBulkActionListSelector).length > 0) {
         selector.closest('.module-top-menu-item').removeClass('disabled');
       } else {
         selector.closest('.module-top-menu-item').addClass('disabled');
@@ -187,7 +162,7 @@ class AdminModuleController {
     });
 
     body.on('click', self.bulkItemSelector, function initializeBodyChange() {
-      if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
+      if ($(this.checkedBulkActionListSelector).length === 0) {
         $.growl.warning({
           message: window.translate_javascripts['Bulk Action - One module minimum'],
         });
@@ -254,7 +229,7 @@ class AdminModuleController {
           active: parseInt(moduleElement.data('active'), 10),
           installed: moduleElement.data('installed') === 1,
           access: moduleElement.data('last-access'),
-          display: moduleElement.hasClass('module-item-list') ? this.DISPLAY_LIST : this.DISPLAY_GRID,
+          display: this.DISPLAY_LIST,
           container: module.container,
         };
 
@@ -268,77 +243,9 @@ class AdminModuleController {
   onModuleDisabled(event) {
     const self = this;
     self.updateModuleStatus(event);
-    self.getModuleItemSelector();
-
     $('.modules-list').each(() => {
       self.updateModuleVisibility();
     });
-  }
-
-  initPlaceholderMechanism() {
-    const self = this;
-
-    if ($(self.placeholderGlobalSelector).length) {
-      self.ajaxLoadPage();
-    }
-
-    // Retry loading mechanism
-    $('body').on('click', self.placeholderFailureRetryBtnSelector, () => {
-      $(self.placeholderFailureGlobalSelector).fadeOut();
-      $(self.placeholderGlobalSelector).fadeIn();
-      self.ajaxLoadPage();
-    });
-  }
-
-  ajaxLoadPage() {
-    const self = this;
-
-    $.ajax({
-      method: 'GET',
-      url: window.moduleURLs.catalogRefresh,
-    })
-      .done((response) => {
-        if (response.status === true) {
-          if (typeof response.domElements === 'undefined') response.domElements = null;
-          if (typeof response.msg === 'undefined') response.msg = null;
-
-          const stylesheet = document.styleSheets[0];
-          const stylesheetRule = '{display: none}';
-          const moduleGlobalSelector = '.modules-list';
-          const moduleSortingSelector = '.module-sorting-menu';
-          const requiredSelectorCombination = `${moduleGlobalSelector},${moduleSortingSelector}`;
-
-          if (stylesheet.insertRule) {
-            stylesheet.insertRule(requiredSelectorCombination + stylesheetRule, stylesheet.cssRules.length);
-          } else if (stylesheet.addRule) {
-            stylesheet.addRule(requiredSelectorCombination, stylesheetRule, -1);
-          }
-
-          $(self.placeholderGlobalSelector).fadeOut(800, () => {
-            $.each(response.domElements, (index, element) => {
-              $(element.selector).append(element.content);
-            });
-            $(moduleGlobalSelector)
-              .fadeIn(800)
-              .css('display', 'flex');
-            $(moduleSortingSelector).fadeIn(800);
-            $('[data-toggle="popover"]').popover();
-            self.initCurrentDisplay();
-            self.fetchModulesList();
-          });
-        } else {
-          $(self.placeholderGlobalSelector).fadeOut(800, () => {
-            $(self.placeholderFailureMsgSelector).text(response.msg);
-            $(self.placeholderFailureGlobalSelector).fadeIn(800);
-          });
-        }
-      })
-      .fail((response) => {
-        $(self.placeholderGlobalSelector).fadeOut(800, () => {
-          $(self.placeholderFailureMsgSelector).text(response.statusText);
-          $(self.placeholderFailureGlobalSelector).fadeIn(800);
-        });
-      });
   }
 
   fetchModulesList() {
@@ -368,7 +275,7 @@ class AdminModuleController {
           active: parseInt($this.data('active'), 10),
           installed: $this.data('installed') === 1,
           access: $this.data('last-access'),
-          display: $this.hasClass('module-item-list') ? self.DISPLAY_LIST : self.DISPLAY_GRID,
+          display: self.DISPLAY_LIST,
           container,
         });
 
@@ -379,56 +286,6 @@ class AdminModuleController {
     });
 
     self.updateModuleVisibility();
-    $('body').trigger('moduleCatalogLoaded');
-  }
-
-  /**
-   * Prepare sorting
-   *
-   */
-  updateModuleSorting() {
-    const self = this;
-
-    if (!self.currentSorting) {
-      return;
-    }
-
-    // Modules sorting
-    let order = 'asc';
-    let key = self.currentSorting;
-    const splittedKey = key.split('-');
-
-    if (splittedKey.length > 1) {
-      key = splittedKey[0];
-      if (splittedKey[1] === 'desc') {
-        order = 'desc';
-      }
-    }
-
-    const currentCompare = (a, b) => {
-      let aData = a[key];
-      let bData = b[key];
-
-      if (key === 'access') {
-        aData = new Date(aData).getTime();
-        bData = new Date(bData).getTime();
-        aData = Number.isNaN(aData) ? 0 : aData;
-        bData = Number.isNaN(bData) ? 0 : bData;
-        if (aData === bData) {
-          return b.name.localeCompare(a.name);
-        }
-      }
-
-      if (aData < bData) return -1;
-      if (aData > bData) return 1;
-
-      return 0;
-    };
-
-    self.modulesList.sort(currentCompare);
-    if (order === 'desc') {
-      self.modulesList.reverse();
-    }
   }
 
   updateModuleContainerDisplay() {
@@ -439,8 +296,9 @@ class AdminModuleController {
       const nbModulesInContainer = container.find('.module-item').length;
 
       if (
-        (self.currentRefCategory && self.currentRefCategory !== String(container.find('.modules-list').data('name')))
-        || (self.currentRefStatus !== null && nbModulesInContainer === 0)
+        (self.currentCategoryFilter
+          && self.currentCategoryFilter !== String(container.find('.modules-list').data('name')))
+        || (self.currentModuleStatusFilter !== null && nbModulesInContainer === 0)
         || (nbModulesInContainer === 0
           && String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED)
         || (self.currentTagsList.length > 0 && nbModulesInContainer === 0)
@@ -450,17 +308,13 @@ class AdminModuleController {
       }
 
       container.show();
-      container
-        .find(`${self.seeMoreSelector}, ${self.seeLessSelector}`)
-        .toggle(nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES);
     });
   }
 
   updateModuleVisibility() {
     const self = this;
 
-    self.updateModuleSorting();
-
+    // Remove recently used and modules list if we are on the modules page and no read more modal is opened
     if (self.isModulesPage() && !self.isReadMoreModalOpened()) {
       $(self.recentlyUsedSelector)
         .find('.module-item')
@@ -476,7 +330,6 @@ class AdminModuleController {
     let moduleCategory;
     let tagExists;
     let newValue;
-    let defaultMax;
 
     const paramsUrl = (new URL(document.location)).searchParams;
     const findModule = paramsUrl.get('find');
@@ -489,7 +342,7 @@ class AdminModuleController {
     }
 
     const modulesListLength = self.modulesList.length;
-    const counter = {};
+    let counter = 0;
     const checkTag = (index, value) => {
       newValue = value.toLowerCase();
       tagExists
@@ -501,79 +354,63 @@ class AdminModuleController {
 
     for (let i = 0; i < modulesListLength; i += 1) {
       currentModule = self.modulesList[i];
+      isVisible = true;
 
-      if (currentModule.display === self.currentDisplay) {
-        isVisible = true;
+      // Check if we are displaying normal categories or the recently used list
+      moduleCategory = self.currentCategoryFilter === self.CATEGORY_RECENTLY_USED
+        ? self.CATEGORY_RECENTLY_USED
+        : currentModule.categories;
 
-        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED
-          ? self.CATEGORY_RECENTLY_USED
-          : currentModule.categories;
+      // If category filter is set, we display only modules matching the current category
+      if (self.currentCategoryFilter !== null) {
+        isVisible &= moduleCategory === self.currentCategoryFilter;
+      }
 
-        // Check for same category
-        if (self.currentRefCategory !== null) {
-          isVisible &= moduleCategory === self.currentRefCategory;
-        }
+      // Check if the module status filter is enabled and hide modules that
+      // don't match it.
+      if (self.currentModuleStatusFilter !== null) {
+        isVisible &= (
+          (
+            currentModule.active === self.currentModuleStatusFilter
+              && currentModule.installed === true
+          )
+            || (
+              currentModule.installed === false
+                && self.currentModuleStatusFilter === 2
+            ) || (
+            currentModule.installed === true
+                && self.currentModuleStatusFilter === 3
+          )
+        );
+      }
 
-        // Check for same status
-        if (self.currentRefStatus !== null) {
-          isVisible &= (
-            (
-              currentModule.active === self.currentRefStatus
-                && currentModule.installed === true
-            )
-              || (
-                currentModule.installed === false
-                  && self.currentRefStatus === 2
-              ) || (
-              currentModule.installed === true
-                  && self.currentRefStatus === 3
-            )
-          );
-        }
+      // Check for tag list
+      if (self.currentTagsList.length) {
+        tagExists = false;
+        $.each(self.currentTagsList, checkTag);
+        isVisible &= tagExists;
+      }
 
-        // Check for tag list
-        if (self.currentTagsList.length) {
-          tagExists = false;
-          $.each(self.currentTagsList, checkTag);
-          isVisible &= tagExists;
-        }
+      // If we are not searching for a module, we need to manage module
+      // visibility within categories. If it's the recently used category,
+      // we will hide the module if we already reached the max limit.
+      if (!self.currentTagsList.length && moduleCategory === self.CATEGORY_RECENTLY_USED
+        && counter >= self.DEFAULT_MAX_RECENTLY_USED) {
+        isVisible = false;
+      }
 
-        /**
-         * If list display without search we must display only the first 5 modules
-         */
-        if (self.currentDisplay === self.DISPLAY_LIST && !self.currentTagsList.length) {
-          if (self.currentCategoryDisplay[moduleCategory] === undefined) {
-            self.currentCategoryDisplay[moduleCategory] = false;
-          }
-
-          if (!counter[moduleCategory]) {
-            counter[moduleCategory] = 0;
-          }
-
-          defaultMax = moduleCategory === self.CATEGORY_RECENTLY_USED
-            ? self.DEFAULT_MAX_RECENTLY_USED
-            : self.DEFAULT_MAX_PER_CATEGORIES;
-
-          if (counter[moduleCategory] >= defaultMax && isVisible) {
-            isVisible &= self.currentCategoryDisplay[moduleCategory];
-          }
-        }
-
-        // If visible, display (Thx captain obvious)
-        if (isVisible) {
-          counter[moduleCategory] += 1;
-
-          if (self.currentRefCategory === self.CATEGORY_RECENTLY_USED) {
-            $(self.recentlyUsedSelector).append(currentModule.domObject);
-          } else {
-            currentModule.container.append(currentModule.domObject);
-          }
+      // If visible, display (Thx captain obvious)
+      if (isVisible) {
+        counter += 1;
+        if (self.currentCategoryFilter === self.CATEGORY_RECENTLY_USED) {
+          $(self.recentlyUsedSelector).append(currentModule.domObject);
+        } else {
+          currentModule.container.append(currentModule.domObject);
         }
       }
     }
 
     self.updateModuleContainerDisplay();
-
     self.updateTotalResults();
   }
 
@@ -593,8 +430,8 @@ class AdminModuleController {
   }
 
   buildBulkActionModuleList() {
-    const checkBoxesSelector = this.getBulkCheckboxesCheckedSelector();
-    const moduleItemSelector = this.getModuleItemSelector();
+    const checkBoxesSelector = this.checkedBulkActionListSelector;
+    const moduleItemSelector = this.moduleItemListSelector;
     let alreadyDoneFlag = 0;
     let htmlGenerated = '';
     let currentElement;
@@ -719,6 +556,7 @@ class AdminModuleController {
        */
       timeout: 0,
       addedfile: () => {
+        $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}`).hide();
         self.animateStartUpload();
       },
       processing: () => {
@@ -797,22 +635,6 @@ class AdminModuleController {
     });
   }
 
-  getBulkCheckboxesSelector() {
-    return this.currentDisplay === this.DISPLAY_GRID
-      ? this.bulkActionCheckboxGridSelector
-      : this.bulkActionCheckboxListSelector;
-  }
-
-  getBulkCheckboxesCheckedSelector() {
-    return this.currentDisplay === this.DISPLAY_GRID
-      ? this.checkedBulkActionGridSelector
-      : this.checkedBulkActionListSelector;
-  }
-
-  getModuleItemSelector() {
-    return this.currentDisplay === this.DISPLAY_GRID ? this.moduleItemGridSelector : this.moduleItemListSelector;
-  }
-
   /**
    * Get the module notifications count and displays it as a badge on the notification tab
    * @return void
@@ -837,60 +659,6 @@ class AdminModuleController {
     });
   }
 
-  initCategoriesGrid() {
-    const self = this;
-
-    $('body').on('click', this.categoryGridItemSelector, function initilaizeGridBodyClick(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      const refCategory = $(this).data('category-ref');
-
-      // In case we have some tags we need to reset it !
-      if (self.currentTagsList.length) {
-        self.pstaggerInput.resetTags(false);
-        self.currentTagsList = [];
-      }
-      const menuCategoryToTrigger = $(`${self.categoryItemSelector}[data-category-ref="${refCategory}"]`);
-
-      if (!menuCategoryToTrigger.length) {
-        console.warn(`No category with ref (${refCategory}) seems to exist!`);
-        return false;
-      }
-
-      // Hide current category grid
-      if (self.isCategoryGridDisplayed === true) {
-        $(self.categoryGridSelector).fadeOut();
-        self.isCategoryGridDisplayed = false;
-      }
-
-      // Trigger click on right category
-      $(`${self.categoryItemSelector}[data-category-ref="${refCategory}"]`).click();
-      return true;
-    });
-  }
-
-  initCurrentDisplay() {
-    this.currentDisplay = this.currentDisplay === '' ? this.DISPLAY_LIST : this.DISPLAY_GRID;
-  }
-
-  initSortingDropdown() {
-    const self = this;
-
-    self.currentSorting = $(this.moduleSortingDropdownSelector)
-      .find(':checked')
-      .attr('value');
-    if (!self.currentSorting) {
-      self.currentSorting = 'access-desc';
-    }
-
-    $('body').on('change', self.moduleSortingDropdownSelector, function initializeBodySortingChange() {
-      self.currentSorting = $(this)
-        .find(':checked')
-        .attr('value');
-      self.updateModuleVisibility();
-    });
-  }
-
   doBulkAction(requestedBulkAction) {
     // This object is used to check if requested bulkAction is available and give proper
     // url segment to be called for it
@@ -904,6 +672,7 @@ class AdminModuleController {
       'bulk-disable-mobile': 'disableMobile',
       'bulk-enable-mobile': 'enableMobile',
       'bulk-reset': 'reset',
+      'bulk-delete': 'delete',
     };
 
     // Note no grid selector used yet since we do not needed it at dev time
@@ -917,7 +686,7 @@ class AdminModuleController {
     }
 
     // Loop over all checked bulk checkboxes
-    const bulkActionSelectedSelector = this.getBulkCheckboxesCheckedSelector();
+    const bulkActionSelectedSelector = this.checkedBulkActionListSelector;
     const bulkModuleAction = bulkActionToUrl[requestedBulkAction];
 
     if ($(bulkActionSelectedSelector).length <= 0) {
@@ -1103,8 +872,8 @@ class AdminModuleController {
     const body = $('body');
     body.on('click', self.categoryItemSelector, function initializeCategorySelectClick() {
       // Get data from li DOM input
-      self.currentRefCategory = $(this).data('category-ref');
-      self.currentRefCategory = self.currentRefCategory ? String(self.currentRefCategory).toLowerCase() : null;
+      self.currentCategoryFilter = $(this).data('category-ref');
+      self.currentCategoryFilter = self.currentCategoryFilter ? String(self.currentCategoryFilter).toLowerCase() : null;
       // Change dropdown label to set it to the current category's displayname
       $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
       $(self.categoryResetBtnSelector).show();
@@ -1119,7 +888,7 @@ class AdminModuleController {
 
       $(self.categorySelectorLabelSelector).text(originalText);
       $(this).hide();
-      self.currentRefCategory = null;
+      self.currentCategoryFilter = null;
       self.updateModuleVisibility();
     });
   }
@@ -1141,61 +910,7 @@ class AdminModuleController {
     });
   }
 
-  /**
-   * Initialize display switching between List or Grid
-   */
-  initSortingDisplaySwitch() {
-    const self = this;
-
-    $('body').on('click', '.module-sort-switch', function switchSort() {
-      const switchTo = $(this).data('switch');
-      const isAlreadyDisplayed = $(this).hasClass('active-display');
-
-      if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
-        self.switchSortingDisplayTo(switchTo);
-        self.currentDisplay = switchTo;
-      }
-    });
-  }
-
-  switchSortingDisplayTo(switchTo) {
-    if (switchTo !== this.DISPLAY_GRID && switchTo !== this.DISPLAY_LIST) {
-      console.error(`Can't switch to undefined display property "${switchTo}"`);
-      return;
-    }
-
-    $('.module-sort-switch').removeClass('module-sort-active');
-    $(`#module-sort-${switchTo}`).addClass('module-sort-active');
-    this.currentDisplay = switchTo;
-    this.updateModuleVisibility();
-  }
-
-  initializeSeeMore() {
-    const self = this;
-
-    $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = true;
-      $(this).addClass('d-none');
-      $(this)
-        .closest(self.moduleShortList)
-        .find(self.seeLessSelector)
-        .removeClass('d-none');
-      self.updateModuleVisibility();
-    });
-
-    $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = false;
-      $(this).addClass('d-none');
-      $(this)
-        .closest(self.moduleShortList)
-        .find(self.seeMoreSelector)
-        .removeClass('d-none');
-      self.updateModuleVisibility();
-    });
-  }
-
   updateTotalResults() {
-    const self = this;
     const replaceFirstWordBy = (element, value) => {
       const explodedText = element.text().split(' ');
       explodedText[0] = value;
@@ -1220,9 +935,7 @@ class AdminModuleController {
       replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
       // eslint-disable-next-line
-      const selectorToToggle =
-        self.currentDisplay === self.DISPLAY_LIST ? this.addonItemListSelector : this.addonItemGridSelector;
-      $(selectorToToggle).toggle(modulesCount !== this.modulesList.length / 2);
+      $(this.addonItemListSelector).toggle(modulesCount !== this.modulesList.length / 2);
     }
   }
 

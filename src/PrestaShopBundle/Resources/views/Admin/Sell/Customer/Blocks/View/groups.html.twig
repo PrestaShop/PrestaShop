@@ -55,6 +55,7 @@
               <a href="{{ getAdminLink('AdminGroups', true, {'id_group': group.groupId, 'viewgroup': 1}) }}">
                 {{ group.name }}
               </a>
+              {% if group.isDefault %} ({{ 'default'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}
             </td>
           </tr>
         {% endfor %}

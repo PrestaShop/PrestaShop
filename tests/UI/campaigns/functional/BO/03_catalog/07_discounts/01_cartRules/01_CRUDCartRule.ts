@@ -17,7 +17,7 @@ import foLoginPage from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 
@@ -134,7 +134,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await foProductPage.addProductToTheCart(page);
 
       // getNumberFromText is used to get the notifications number in the cart
-      const notificationsNumber = await cartPage.getNumberFromText(page, foProductPage.cartProductsCount);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(1);
     });
 
@@ -246,7 +246,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await foProductPage.addProductToTheCart(page);
 
       // getNumberFromText is used to get the notifications number in the cart
-      const notificationsNumber = await cartPage.getNumberFromText(page, foProductPage.cartProductsCount);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(1);
     });
 

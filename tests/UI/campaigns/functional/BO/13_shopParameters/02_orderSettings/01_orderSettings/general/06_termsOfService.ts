@@ -16,7 +16,7 @@ import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -88,7 +88,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
     },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test, index: number) => {
     it(`should ${test.args.action} terms of service`, async function () {
       await testContext.addContextItem(
         this,

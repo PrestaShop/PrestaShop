@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use Currency;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -46,22 +45,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PricingType extends TranslatorAwareType
 {
     /**
-     * @var Currency
+     * @var string
      */
-    private $defaultCurrency;
+    private $defaultCurrencyIsoCode;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param Currency $defaultCurrency
+     * @param string $defaultCurrencyIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency
+        string $defaultCurrencyIsoCode
     ) {
         parent::__construct($translator, $locales);
-        $this->defaultCurrency = $defaultCurrency;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
     }
 
     /**
@@ -80,7 +79,7 @@ class PricingType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
                 'label_subtitle' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'modify_all_shops' => true,
                 'constraints' => [
                     new NotBlank(),

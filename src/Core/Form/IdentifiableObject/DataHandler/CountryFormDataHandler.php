@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShopBundle\Exception\NotImplementedException;
 
 /**
  * Handles submitted zone form data.
@@ -82,9 +82,62 @@ class CountryFormDataHandler implements FormDataHandlerInterface
         return $countryId->getValue();
     }
 
-    public function update($id, array $data)
+    public function update($id, array $data): void
     {
-        // TODO: Implement update() method in edit PR.
-        throw new NotImplementedException();
+        $editCountryCommand = new EditCountryCommand($id);
+
+        if (null !== $data['name']) {
+            $editCountryCommand->setLocalizedNames($data['name']);
+        }
+
+        if (null !== $data['iso_code']) {
+            $editCountryCommand->setIsoCode($data['iso_code']);
+        }
+
+        if (null !== $data['call_prefix']) {
+            $editCountryCommand->setCallPrefix((int) $data['call_prefix']);
+        }
+
+        if (null !== $data['address_format']) {
+            $editCountryCommand->setAddressFormat($data['address_format']);
+        }
+
+        if (null !== $data['zip_code_format']) {
+            $editCountryCommand->setZipCodeFormat($data['zip_code_format']);
+        }
+
+        if (null !== $data['default_currency']) {
+            $editCountryCommand->setDefaultCurrency($data['default_currency']);
+        }
+
+        if (null !== $data['zone']) {
+            $editCountryCommand->setZoneId($data['zone']);
+        }
+
+        if (null !== $data['need_zip_code']) {
+            $editCountryCommand->setNeedZipCode($data['need_zip_code']);
+        }
+
+        if (null !== $data['is_enabled']) {
+            $editCountryCommand->setEnabled($data['is_enabled']);
+        }
+
+        if (null !== $data['contains_states']) {
+            $editCountryCommand->setContainsStates($data['contains_states']);
+        }
+
+        if (null !== $data['need_identification_number']) {
+            $editCountryCommand->setNeedIdNumber($data['need_identification_number']);
+        }
+
+        if (null !== $data['display_tax_label']) {
+            $editCountryCommand->setDisplayTaxLabel($data['display_tax_label']);
+        }
+
+        if (isset($data['shop_association'])) {
+            $editCountryCommand->setShopAssociation($data['shop_association']);
+        }
+
+        $this->commandBus->handle($editCountryCommand);
     }
 }

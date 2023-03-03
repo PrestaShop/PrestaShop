@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
 // Import data
-import {moduleCategories} from '@data/demo/moduleCategories';
+import ModuleCategories from '@data/demo/moduleCategories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,7 +50,7 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
   });
 
   describe('Filter modules by categories', async () => {
-    moduleCategories.forEach((category) => {
+    ModuleCategories.forEach((category: string) => {
       it(`should filter by category : '${category}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
 

@@ -16,7 +16,7 @@ import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Importing data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,7 +60,7 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
     {args: {action: 'check', paymentModule: 'ps_wirepayment', exist: true}},
     {args: {action: 'uncheck', paymentModule: 'ps_checkpayment', exist: false}},
     {args: {action: 'check', paymentModule: 'ps_checkpayment', exist: true}},
-  ].forEach((test, index) => {
+  ].forEach((test, index: number) => {
     it(`should ${test.args.action} the euro currency for '${test.args.paymentModule}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action + test.args.paymentModule, baseContext);
 

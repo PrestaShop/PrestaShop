@@ -4,6 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  disableNewProductPageTest,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -36,6 +40,9 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
   const productWithCombinationsWithoutQuantity: ProductData = new ProductData({type: 'Standard product', quantity: 0});
   const productWithoutPrice: ProductData = new ProductData({type: 'Standard product', price: 0});
   const productWithoutDescription: ProductData = new ProductData({type: 'Standard product', description: '', summary: ''});
+
+  // Pre-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -271,4 +278,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
       });
     });
   });
+
+  // Post-condition: Reset initial state
+  resetNewProductPageAsDefault(`${baseContext}_resetNewProduct`);
 });

@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import loginPage from '@pages/BO/login/index';
-import dashboardPage from '@pages/BO/dashboard/index';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import loginPage from '@pages/BO/login';
+import dashboardPage from '@pages/BO/dashboard';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-import productsPage from '@pages/BO/catalog/products/index';
+import productsPage from '@pages/BO/catalog/products';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
@@ -66,7 +66,6 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);

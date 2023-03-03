@@ -30,7 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataFormatter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 class BulkCombinationFormDataFormatterTest extends TestCase
 {
@@ -116,8 +116,10 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     ],
                     'minimal_quantity' => 2,
                     'stock_location' => 'far',
-                    'low_stock_threshold' => 5,
-                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
+                    'low_stock_threshold' => [
+                        'threshold_value' => 5,
+                        'low_stock_alert' => true,
+                    ],
                     'available_date' => '2022-01-15',
                 ],
             ],
@@ -148,8 +150,12 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     ],
                     'minimal_quantity' => 2,
                     'stock_location' => 'far',
-                    'low_stock_threshold' => 5,
-                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
+                    'low_stock_threshold' => [
+                        'threshold_value' => 5,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'threshold_value' => true,
+                        'low_stock_alert' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_alert' => true,
+                    ],
                     'available_date' => '2022-01-15',
                 ],
             ],
@@ -165,7 +171,13 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'options' => [
                         'stock_location' => 'far',
                         'low_stock_threshold' => 5,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_threshold' => true,
                         sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
+                        sprintf(
+                            '%s%slow_stock_threshold',
+                            self::MODIFY_ALL_SHOPS_PREFIX,
+                            DisablingSwitchExtension::FIELD_PREFIX
+                        ) => true,
                     ],
                     'available_date' => '2022-01-15',
                 ],
@@ -177,8 +189,10 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                 'stock' => [
                     'fixed_quantity' => 7,
                     'stock_location' => 'close',
-                    'low_stock_threshold' => 2,
-                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
+                    'low_stock_threshold' => [
+                        'threshold_value' => 2,
+                        'low_stock_alert' => false,
+                    ],
                     'available_date' => '2022-02-15',
                 ],
             ],
@@ -203,7 +217,10 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'fixed_quantity' => 7,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'fixed_quantity' => false,
                     'stock_location' => 'close',
-                    'low_stock_threshold' => 2,
+                    'low_stock_threshold' => [
+                        'threshold_value' => 2,
+                        'low_stock_alert' => false,
+                    ],
                     sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                     'available_date' => '2022-02-15',
                 ],
@@ -249,14 +266,16 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'delta_quantity' => [
                     ],
                     'stock_location' => 'far',
-                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
+                    'low_stock_threshold' => [
+                        'low_stock_alert' => false,
+                    ],
                 ],
             ],
             [
                 'stock' => [
                     'options' => [
                         'stock_location' => 'far',
-                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                     ],
                 ],
             ],

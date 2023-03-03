@@ -33,6 +33,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\CustomerInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
@@ -62,6 +63,7 @@ class SpecificPriceFormDataProviderTest extends TestCase
             'groups' => [
                 'shop_id' => self::CONTEXT_SHOP_ID,
             ],
+            'combination_id' => NoCombinationId::NO_COMBINATION_ID,
         ];
 
         $this->assertEquals($expectedDefaultData, $provider->getDefaultData());

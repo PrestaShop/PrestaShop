@@ -135,17 +135,16 @@ class CustomerPersisterCore
             $customer->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
         }
 
-        if ($customer->is_guest || $guestToCustomerConversion) {
-            // guest cannot update their email to that of an existing real customer
-            if (Customer::customerExists($customer->email, false, true)) {
-                $this->errors['email'][] = $this->translator->trans(
-                    'An account was already registered with this email address',
-                    [],
-                    'Shop.Notifications.Error'
-                );
+        // If we are converting to a registered customer, we must check if a customer
+        // with this email doesn't already exist.
+        if ($guestToCustomerConversion && Customer::customerExists($customer->email)) {
+            $this->errors['email'][] = $this->translator->trans(
+                'The email is already used, please choose another one or sign in',
+                [],
+                'Shop.Notifications.Error'
+            );
 
-                return false;
-            }
+            return false;
         }
 
         if ($customer->email != $this->context->customer->email) {
@@ -167,7 +166,11 @@ class CustomerPersisterCore
             if ($guestToCustomerConversion) {
                 $customer->cleanGroups();
                 $customer->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
-                $this->sendConfirmationMail($customer);
+
+                // Send him a welcome email, if enabled
+                if (Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+                    $customer->sendWelcomeEmail($this->context->language->id);
+                }
             }
         }
 
@@ -205,15 +208,13 @@ class CustomerPersisterCore
         }
 
         /*
-         * Check that there is not a customer registered with this email,
-         * we can't have two registered customers with the same email.
-         *
-         * Currently, it also checks for guests, because we don't allow guest checkout
-         * if there is a registered customer already, will be changed.
+         * If a password was entered in the forn, check that there is not
+         * a customer registered with this email, we can't have two
+         * registered customers with the same email.
          */
-        if (Customer::customerExists($customer->email, false, true)) {
+        if (!$customer->isGuest() && Customer::customerExists($customer->email)) {
             $this->errors['email'][] = $this->translator->trans(
-                'An account was already registered with this email address',
+                'The email is already used, please choose another one or sign in',
                 [],
                 'Shop.Notifications.Error'
             );
@@ -235,44 +236,17 @@ class CustomerPersisterCore
         if ($ok) {
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
-            // Send a welcome information email, only for registered customers
-            $this->sendConfirmationMail($customer);
+
+            // Send a welcome information email, only for registered customers and if enabled
+            if (!$customer->is_guest && Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+                $customer->sendWelcomeEmail($this->context->language->id);
+            }
+
             Hook::exec('actionCustomerAccountAdd', [
                 'newCustomer' => $customer,
             ]);
         }
 
         return $ok;
-    }
-
-    /**
-     * Send a welcome email after converting the customer, if configured.
-     *
-     * @param Customer $customer
-     *
-     * @return bool Indicates if mail was sent OK
-     */
-    private function sendConfirmationMail(Customer $customer)
-    {
-        if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
-            return true;
-        }
-
-        return Mail::Send(
-            $this->context->language->id,
-            'account',
-            $this->translator->trans(
-                'Welcome!',
-                [],
-                'Emails.Subject'
-            ),
-            [
-                '{firstname}' => $customer->firstname,
-                '{lastname}' => $customer->lastname,
-                '{email}' => $customer->email,
-            ],
-            $customer->email,
-            $customer->firstname . ' ' . $customer->lastname
-        );
     }
 }

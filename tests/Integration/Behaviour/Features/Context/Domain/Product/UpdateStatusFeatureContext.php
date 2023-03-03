@@ -47,23 +47,44 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
      * @param bool $status
      * @param TableNode $productsList
      */
-    public function bulkUpdateStatus(bool $status, TableNode $productsList): void
+    public function bulkUpdateStatusForDefaultShop(bool $status, TableNode $productsList): void
     {
-        $productIds = [];
-        foreach ($productsList->getColumnsHash() as $productInfo) {
-            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
-        }
+        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        try {
-            $this->getCommandBus()->handle(new BulkUpdateProductStatusCommand(
-                $productIds,
-                $status
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
+    /**
+     * @When /^I bulk change status to be (enabled|disabled) for following products for shop "([^"]+)":$/
+     *
+     * @param bool $status
+     * @param string $shopReference
+     * @param TableNode $productsList
+     */
+    public function bulkUpdateStatusForSpecificShop(bool $status, string $shopReference, TableNode $productsList): void
+    {
+        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
 
-            return;
-        }
+    /**
+     * @When /^I bulk change status to be (enabled|disabled) for following products for shop group "([^"]+)":$/
+     *
+     * @param bool $status
+     * @param string $shopGroupReference
+     * @param TableNode $productsList
+     */
+    public function bulkUpdateStatusForShopGroup(bool $status, string $shopGroupReference, TableNode $productsList): void
+    {
+        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::shopGroup($this->referenceToId($shopGroupReference)));
+    }
+
+    /**
+     * @When /^I bulk change status to be (enabled|disabled) for following products for all shops:$/
+     *
+     * @param bool $status
+     * @param TableNode $productsList
+     */
+    public function bulkUpdateStatusForAllShops(bool $status, TableNode $productsList): void
+    {
+        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::allShops());
     }
 
     /**
@@ -211,6 +232,26 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
             } else {
                 throw $e;
             }
+        }
+    }
+
+    private function bulkUpdateStatus(bool $status, TableNode $productsList, ShopConstraint $shopConstraint): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkUpdateProductStatusCommand(
+                $productIds,
+                $status,
+                $shopConstraint
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+
+            return;
         }
     }
 }

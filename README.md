@@ -8,7 +8,7 @@ About PrestaShop
 
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.2-8892BF.svg?style=flat-square)](https://php.net/)
 [![GitHub release](https://img.shields.io/github/v/release/prestashop/prestashop)](https://github.com/PrestaShop/PrestaShop)
-[![Slack chat](https://img.shields.io/badge/Chat-on%20Slack-red)](https://github.com/PrestaShop/open-source/blob/master/slack/readme.md)
+[![Slack chat](https://img.shields.io/badge/Chat-on%20Slack-red)](https://www.prestashop-project.org/slack/)
 [![GitHub forks](https://img.shields.io/github/forks/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/network)
 [![GitHub stars](https://img.shields.io/github/stars/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/stargazers)
 
@@ -70,7 +70,7 @@ Documentation
 
 For technical information (core, module and theme development, performance...), head on to [PrestaShop DevDocs][devdocs]
 
-If you want to learn how to use PrestaShop 8.0, read our [User documentation][user-doc].
+If you want to learn how to use PrestaShop 8, read our [User documentation][user-doc].
 
 First-time users will be particularly interested in the following guides:
 
@@ -111,7 +111,7 @@ The PrestaShop team tries to be very proactive when preventing security problems
 
 This is why we have set up a [Bug Bounty Program](https://yeswehack.com/programs/prestashop) where anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
 
-Understanding a security issue means knowing how the attacker got in and hacked the site. If you have those details, then please do contact us privately about it (and please do not publish those details before we answer). If you do not know how the attacker got in, please ask for help on the support forums.
+Understanding a security issue means knowing how the attacker got in and hacked the site. If you have those details, then please do contact us privately about it (and please do not publish those details before we answer). If you do not know how the attacker got in, please [ask for help][support].
 
 
 Extending PrestaShop
@@ -123,19 +123,21 @@ PrestaShop is a very extensible e-commerce platform, both through modules and th
 Community forums
 --------
 
-You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [PrestaShop Slack channel][chat] or on the [the PrestaShop forums][forums].
+You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [PrestaShop Slack channel][chat], [project's discussions on GitHub][ghdiscussions] or on the [the PrestaShop forums][forums].
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://github.com/PrestaShop/PrestaShop/releases
 [forums]: https://www.prestashop.com/forums/
+[ghdiscussions]: https://github.com/PrestaShop/PrestaShop/discussions
+[support]: https://www.prestashop-project.org/support/
 [chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://docs.prestashop-project.org
 [contributing-md]: CONTRIBUTING.md
 [contributing-tutorial]: https://devdocs.prestashop-project.org/8/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
-[getting-started]: https://docs.prestashop-project.org/1.7-documentation/getting-started
+[getting-started]: https://docs.prestashop-project.org/v.8-documentation/v/english/getting-started
 [user-guide]: https://docs.prestashop-project.org/v.8-documentation/v/english/user-guide
 [updating-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/updating-prestashop
 [merchant-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/merchants-guide

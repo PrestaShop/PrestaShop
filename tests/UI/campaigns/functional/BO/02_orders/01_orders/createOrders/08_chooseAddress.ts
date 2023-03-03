@@ -21,9 +21,9 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 
@@ -56,7 +56,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
   let orderID : number;
 
   // Const used for the payment status
-  const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
   // Variable used to create new address in Pre-condition
   const newAddressToCreate: AddressData = new AddressData({email: Customers.johnDoe.email, lastName: 'test', country: 'France'});
   // Variable used to edit demo address
@@ -153,7 +153,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, OrderStatuses.paymentAccepted);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, OrderStatuses.paymentAccepted);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
       await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);

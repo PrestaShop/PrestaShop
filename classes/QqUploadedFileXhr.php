@@ -25,10 +25,17 @@
  */
 
 /**
+ * @deprecated deprecated since version 8.1, will be dropped in 9.0
+ *
  * Handle file uploads via XMLHttpRequest.
  */
 class QqUploadedFileXhrCore
 {
+    public function __construct()
+    {
+        @trigger_error('This class is deprecated since 8.1 and will be dropped in 9.0.', E_USER_DEPRECATED);
+    }
+
     /**
      * Save the file to the specified path.
      *

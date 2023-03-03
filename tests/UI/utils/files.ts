@@ -1,3 +1,5 @@
+import ImportData from '@data/faker/import';
+
 import {createObjectCsvWriter} from 'csv-writer';
 import fs from 'fs';
 import imgGen from 'js-image-generator';
@@ -50,7 +52,7 @@ export default {
     const page = await pdf.getPage(pageNo);
     const tokenizedText = await page.getTextContent();
 
-    return tokenizedText.items.map((token: TextItem|TextMarkedContent): string => ('str' in token ? token.str : ''));
+    return tokenizedText.items.map((token: TextItem | TextMarkedContent): string => ('str' in token ? token.str : ''));
   },
 
   /**
@@ -60,7 +62,10 @@ export default {
    * @returns {Promise<boolean>}
    */
   async isTextInPDF(filePath: string, text: string): Promise<boolean> {
-    const pdf = await getDocument(filePath).promise;
+    const pdf = await getDocument({
+      url: filePath,
+      standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
+    }).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
 
@@ -79,7 +84,10 @@ export default {
    * @return {Promise<number>}
    */
   async getImageNumberInPDF(filePath: string): Promise<number> {
-    const pdf = await getDocument(filePath).promise;
+    const pdf = await getDocument({
+      url: filePath,
+      standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
+    }).promise;
     const nbrPages = pdf.numPages;
     let imageNumber = 0;
 
@@ -127,7 +135,7 @@ export default {
    * @return {Promise<void>}
    */
   async createFile(path: string, filename: string, content: string): Promise<void> {
-    await fs.writeFile(`${path}/${filename}`, content, (err: Error|null) => {
+    await fs.writeFile(`${path}/${filename}`, content, (err: Error | null) => {
       if (err) {
         throw err;
       }
@@ -162,6 +170,7 @@ export default {
       fileText = fileText.replace(/\?time=\d+/g, '');
       text = text.replace(/\?time=\d+/g, '');
     }
+
     return fileText.includes(text);
   },
 
@@ -173,7 +182,7 @@ export default {
    * @param quality {number} Quality chosen for the image
    * @return {Promise<void>}
    */
-  async generateImage(imageName: string, width: number = 200, height: number = 200, quality:number = 1): Promise<void> {
+  async generateImage(imageName: string, width: number = 200, height: number = 200, quality: number = 1): Promise<void> {
     await imgGen.generateImage(width, height, quality, (err: Error, image: object) => {
       if ('data' in image) {
         fs.writeFileSync(imageName, image.data);
@@ -197,10 +206,10 @@ export default {
    * Create csv file
    * @param path {string} Path of the file
    * @param fileName {string} Name of the file to create
-   * @param data {Object} Data to create csv file
+   * @param data {ImportData} Data to create csv file
    * @returns {Promise<void>}
    */
-  async createCSVFile(path: string, fileName: string, data: object): Promise<void> {
+  async createCSVFile(path: string, fileName: string, data: ImportData): Promise<void> {
     await this.createFile(path, fileName, '');
     if ('header' in data && 'records' in data) {
       const csvWriter = createObjectCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});

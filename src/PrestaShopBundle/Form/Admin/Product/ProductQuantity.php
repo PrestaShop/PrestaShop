@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -60,7 +60,7 @@ class ProductQuantity extends CommonAbstractType
      */
     public $locales;
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     private $router;
     /**
@@ -72,13 +72,13 @@ class ProductQuantity extends CommonAbstractType
      * Constructor.
      *
      * @param TranslatorInterface $translator
-     * @param Router $router
+     * @param UrlGeneratorInterface $router
      * @param LegacyContext $legacyContext
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
-        Router $router,
+        UrlGeneratorInterface $router,
         LegacyContext $legacyContext,
         ConfigurationInterface $configuration
     ) {

@@ -42,7 +42,6 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
       dashboardPage.advancedParametersLink,
       dashboardPage.importLink,
     );
-
     await importPage.closeSfToolBar(page);
 
     const pageTitle = await importPage.getPageTitle(page);

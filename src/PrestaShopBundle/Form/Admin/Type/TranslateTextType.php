@@ -36,7 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class is responsible for creating translatable text inputs.
  *
- * @deprecated since version 1.7.6 and will be removed in 1.8. Use the TranslatableType instead.
+ * @deprecated since version 1.7.6 and will be removed in 9.x, use the TranslatableType instead.
  */
 class TranslateTextType extends AbstractType
 {
@@ -44,7 +44,7 @@ class TranslateTextType extends AbstractType
     {
         @trigger_error(
             sprintf(
-                'The %s class is deprecated since version 1.7.6 and will be removed in 1.8. Use the %s class instead.',
+                'The %s class is deprecated since version 1.7.6 and will be removed in 9.x, use the %s class instead.',
                 __CLASS__,
                 TranslatableType::class
             ),

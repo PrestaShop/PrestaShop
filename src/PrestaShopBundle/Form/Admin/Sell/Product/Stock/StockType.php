@@ -105,6 +105,7 @@ class StockType extends TranslatorAwareType
             ])
             ->add('quantities', QuantityType::class, [
                 'product_id' => $options['product_id'],
+                'product_type' => $options['product_type'],
             ])
             ->add('options', StockOptionsType::class)
             ->add('virtual_product_file', VirtualProductFileType::class, [

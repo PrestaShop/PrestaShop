@@ -337,6 +337,8 @@ class CartCore extends ObjectModel
             WHERE  `id_cart` = ' . (int) $this->id . '
                 AND `id_address_delivery` = ' . (int) $id_address;
         Db::getInstance()->execute($sql);
+
+        Hook::exec('actionUpdateCartAddress', ['cart' => $this, 'oldAddressId' => (int) $id_address, 'newAddressId' => (int) $id_address_new]);
     }
 
     /**
@@ -363,6 +365,8 @@ class CartCore extends ObjectModel
             WHERE  `id_cart` = ' . (int) $this->id . '
                 AND `id_address_delivery` = ' . $currentAddressId;
         Db::getInstance()->execute($sql);
+
+        Hook::exec('actionUpdateCartAddress', ['cart' => $this, 'oldAddressId' => $currentAddressId, 'newAddressId' => $newAddressId]);
     }
 
     /**
@@ -1494,6 +1498,8 @@ class CartCore extends ObjectModel
         $quantity = (int) $quantity;
         $id_product = (int) $id_product;
         $id_product_attribute = (int) $id_product_attribute;
+        $id_customization = (int) $id_customization;
+        $id_address_delivery = (int) $id_address_delivery;
         $product = new Product($id_product, false, (int) Configuration::get('PS_LANG_DEFAULT'), $shop->id);
 
         if ($id_product_attribute) {
@@ -1631,6 +1637,14 @@ class CartCore extends ObjectModel
                 'id_customization' => (int) $id_customization,
             ]);
 
+            if ((int) $id_customization) {
+                $result_add &= Db::getInstance()->update('customization', [
+                    'id_product_attribute' => $id_product_attribute,
+                    'id_address_delivery' => $id_address_delivery,
+                    'in_cart' => 1,
+                ], '`id_customization` = ' . $id_customization);
+            }
+
             if (!$result_add) {
                 return false;
             }
@@ -1647,84 +1661,6 @@ class CartCore extends ObjectModel
         if ($auto_add_cart_rule) {
             CartRule::autoAddToCart($context, $useOrderPrices);
         }
-
-        if ($product->customizable) {
-            return $this->_updateCustomizationQuantity(
-                (int) $quantity,
-                (int) $id_customization,
-                (int) $id_product,
-                (int) $id_product_attribute,
-                (int) $id_address_delivery,
-                $operator
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * Customization management.
-     *
-     * @param int $quantity Quantity value to add or subtract
-     * @param int $id_customization Customization ID
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute ProductAttribute ID
-     * @param int $id_address_delivery Delivery Address ID
-     * @param string $operator Indicate if quantity must be increased (up) or decreased (down)
-     *
-     * @return bool
-     */
-    protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $id_address_delivery, $operator = 'up')
-    {
-        // Link customization to product combination when it is first added to cart
-        if (empty($id_customization)) {
-            $customization = $this->getProductCustomization($id_product, null, true);
-            foreach ($customization as $field) {
-                if ($field['quantity'] == 0) {
-                    Db::getInstance()->execute('
-                    UPDATE `' . _DB_PREFIX_ . 'customization`
-                    SET `quantity` = ' . (int) $quantity . ',
-                        `id_product_attribute` = ' . (int) $id_product_attribute . ',
-                        `id_address_delivery` = ' . (int) $id_address_delivery . ',
-                        `in_cart` = 1
-                    WHERE `id_customization` = ' . (int) $field['id_customization']);
-                }
-            }
-        }
-
-        /* Deletion */
-        if (!empty($id_customization) && (int) $quantity < 1) {
-            return $this->_deleteCustomization((int) $id_customization, (int) $id_product, (int) $id_product_attribute);
-        }
-
-        /* Quantity update */
-        if (!empty($id_customization)) {
-            $result = Db::getInstance()->getRow('SELECT `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_customization` = ' . (int) $id_customization);
-            if ($result && Db::getInstance()->numRows()) {
-                if ($operator == 'down' && (int) $result['quantity'] - (int) $quantity < 1) {
-                    return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_customization` = ' . (int) $id_customization);
-                }
-
-                return Db::getInstance()->execute('
-                    UPDATE `' . _DB_PREFIX_ . 'customization`
-                    SET
-                        `quantity` = `quantity` ' . ($operator == 'up' ? '+ ' : '- ') . (int) $quantity . ',
-                        `id_product_attribute` = ' . (int) $id_product_attribute . ',
-                        `id_address_delivery` = ' . (int) $id_address_delivery . ',
-                        `in_cart` = 1
-                    WHERE `id_customization` = ' . (int) $id_customization);
-            } else {
-                Db::getInstance()->execute('
-                    UPDATE `' . _DB_PREFIX_ . 'customization`
-                    SET `id_address_delivery` = ' . (int) $id_address_delivery . ',
-                    `id_product_attribute` = ' . (int) $id_product_attribute . ',
-                    `in_cart` = 1
-                    WHERE `id_customization` = ' . (int) $id_customization);
-            }
-        }
-        // refresh cache of self::_products
-        $this->_products = $this->getProducts(true);
-        $this->update();
 
         return true;
     }
@@ -1773,8 +1709,8 @@ class CartCore extends ObjectModel
             $id_customization = $exising_customization[0]['id_customization'];
         } else {
             Db::getInstance()->execute(
-                'INSERT INTO `' . _DB_PREFIX_ . 'customization` (`id_cart`, `id_product`, `id_product_attribute`, `quantity`)
-                VALUES (' . (int) $this->id . ', ' . (int) $id_product . ', ' . (int) $id_product_attribute . ', ' . (int) $quantity . ')'
+                'INSERT INTO `' . _DB_PREFIX_ . 'customization` (`id_cart`, `id_product`, `id_product_attribute`)
+                VALUES (' . (int) $this->id . ', ' . (int) $id_product . ', ' . (int) $id_product_attribute . ')'
             );
             $id_customization = Db::getInstance()->Insert_ID();
         }
@@ -1881,18 +1817,6 @@ class CartCore extends ObjectModel
 
         if ($result === false) {
             return false;
-        }
-
-        /* If the product still possesses customization it does not have to be deleted */
-        if (Db::getInstance()->numRows() && (int) $result['quantity']) {
-            return Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                SET `quantity` = ' . (int) $result['quantity'] . '
-                WHERE `id_cart` = ' . (int) $this->id . '
-                AND `id_product` = ' . (int) $id_product . '
-                AND `id_customization` = ' . (int) $id_customization .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
-            );
         }
 
         $preservedGifts = [];
@@ -3552,6 +3476,53 @@ class CartCore extends ObjectModel
         $id_zone = null,
         bool $keepOrderPrices = false
     ) {
+        $shippingCost = $this->getPackageShippingCostValue(
+            $id_carrier,
+            $use_tax,
+            $default_country,
+            $product_list,
+            $id_zone,
+            $keepOrderPrices
+        );
+
+        Hook::exec(
+            'actionCartGetPackageShippingCost',
+            [
+                'cart' => $this,
+                'id_carrier' => $id_carrier,
+                'use_tax' => $use_tax,
+                'default_country' => $default_country,
+                'product_list' => $product_list,
+                'id_zone' => $id_zone,
+                'keepOrderPrices' => $keepOrderPrices,
+                'shippingCost' => &$shippingCost,
+            ]
+        );
+
+        return $shippingCost;
+    }
+
+    /**
+     * Return calculated package shipping cost.
+     *
+     * @param int $id_carrier Carrier ID (default : current carrier)
+     * @param bool $use_tax
+     * @param Country|null $default_country
+     * @param array|null $product_list list of product concerned by the shipping.
+     *                                 If null, all the product of the cart are used to calculate the shipping cost
+     * @param int|null $id_zone Zone ID
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
+     *
+     * @return float|bool Shipping total, false if not possible to ship with the given carrier
+     */
+    protected function getPackageShippingCostValue(
+        $id_carrier = null,
+        $use_tax = true,
+        Country $default_country = null,
+        $product_list = null,
+        $id_zone = null,
+        bool $keepOrderPrices = false
+    ) {
         if ($this->isVirtualCart()) {
             return 0;
         }
@@ -4466,28 +4437,16 @@ class CartCore extends ObjectModel
                 $customs_by_id[$custom['id_customization']] = [
                     'id_product_attribute' => $custom['id_product_attribute'],
                     'id_product' => $custom['id_product'],
-                    'quantity' => $custom['quantity'],
                 ];
             }
         }
 
-        // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
-        $new_customization_method = (int) Db::getInstance()->getValue(
-            '
-            SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
-            WHERE `id_cart` = ' . (int) $this->id .
-                ' AND `id_customization` != 0'
-        ) > 0;
-
         // Insert new customizations
         $custom_ids = [];
         foreach ($customs_by_id as $customization_id => $val) {
-            if ($new_customization_method) {
-                $val['quantity'] = 0;
-            }
             Db::getInstance()->execute(
-                'INSERT INTO `' . _DB_PREFIX_ . 'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, quantity, `quantity_refunded`, `quantity_returned`, `in_cart`)
-                VALUES(' . (int) $cart->id . ', ' . (int) $val['id_product_attribute'] . ', ' . (int) $val['id_product'] . ', ' . (int) $id_address_delivery . ', ' . (int) $val['quantity'] . ', 0, 0, 1)'
+                'INSERT INTO `' . _DB_PREFIX_ . 'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, `in_cart`)
+                VALUES(' . (int) $cart->id . ', ' . (int) $val['id_product_attribute'] . ', ' . (int) $val['id_product'] . ', ' . (int) $id_address_delivery . ', 1)'
             );
             $custom_ids[$customization_id] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
         }
@@ -4678,8 +4637,6 @@ class CartCore extends ObjectModel
         $product['customizedDatas'] = null;
         if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']])) {
             $product['customizedDatas'] = $customized_datas[$product['id_product']][$product['id_product_attribute']];
-        } else {
-            $product['customizationQuantityTotal'] = 0;
         }
     }
 

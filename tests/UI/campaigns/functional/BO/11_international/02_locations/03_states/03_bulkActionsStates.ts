@@ -25,8 +25,8 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
   let numberOfStates: number = 0;
 
   const statesToCreate: StateData[] = [
-    new StateData({name: 'todelete1', isoCode: 'HM'}),
-    new StateData({name: 'todelete2', isoCode: 'BV'}),
+    new StateData({name: 'todelete1', isoCode: 'HM', status: false}),
+    new StateData({name: 'todelete2', isoCode: 'BV', status: false}),
   ];
 
   // before and after functions
@@ -69,7 +69,9 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
   it('should reset all filters and get number of states in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfStates = await statesPage.resetAndGetNumberOfLines(page);
+    await statesPage.resetAndGetNumberOfLines(page);
+
+    numberOfStates = await statesPage.getNumberOfElement(page);
     await expect(numberOfStates).to.be.above(0);
   });
 
@@ -90,7 +92,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
         const textResult = await addStatePage.createEditState(page, stateToCreate);
         await expect(textResult).to.contains(statesPage.successfulCreationMessage);
 
-        const numberOfStatesAfterCreation = await statesPage.getNumberOfElementInGrid(page);
+        const numberOfStatesAfterCreation = await statesPage.getNumberOfElement(page);
         await expect(numberOfStatesAfterCreation).to.be.equal(numberOfStates + index + 1);
       });
     });
@@ -103,7 +105,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
       await statesPage.filterStates(
         page,
         'input',
-        'a!name',
+        'name',
         'todelete',
       );
 
@@ -114,7 +116,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
         const textColumn = await statesPage.getTextColumn(
           page,
           i,
-          'a!name',
+          'name',
         );
         await expect(textColumn).to.contains('todelete');
       }

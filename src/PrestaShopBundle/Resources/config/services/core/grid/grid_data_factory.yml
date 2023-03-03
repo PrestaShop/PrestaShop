@@ -328,7 +328,7 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - "@prestashop.core.util.file_size.size_converter"
+      - '@PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter'
     calls:
       - [ setTranslator, [ '@translator' ] ]
 
@@ -550,3 +550,24 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'authorized_application'
+
+  prestashop.core.grid.data.factory.customer_groups:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\CustomerGroupsQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'customer_groups'
+
+  prestashop.core.grid.data.factory.tax_rule:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\TaxRuleQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'tax_rule'
+
+  PrestaShop\PrestaShop\Core\Grid\Data\Factory\TaxRuleGridDataFactory:
+    arguments:
+      - '@prestashop.core.grid.data.factory.tax_rule'
+      - '@translator'
