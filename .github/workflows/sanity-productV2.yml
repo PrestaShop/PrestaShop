@@ -10,7 +10,7 @@ on:
       - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/**
       - src/Core/Domain/Product/**
       - src/Adapter/Product/**
-      - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product
+      - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
