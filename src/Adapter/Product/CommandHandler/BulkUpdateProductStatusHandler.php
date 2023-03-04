@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkUpdateProductStatusHandlerInterface;
@@ -43,9 +43,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements BulkUpdateProductStatusHandlerInterface
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
-    private $productMultiShopRepository;
+    private $productRepository;
 
     /**
      * @var ProductIndexationUpdater
@@ -53,10 +53,10 @@ class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements Bulk
     private $productIndexationUpdater;
 
     public function __construct(
-        ProductMultiShopRepository $productMultiShopRepository,
+        ProductRepository $productRepository,
         ProductIndexationUpdater $productIndexationUpdater
     ) {
-        $this->productMultiShopRepository = $productMultiShopRepository;
+        $this->productRepository = $productRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
@@ -76,12 +76,12 @@ class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements Bulk
      */
     protected function handleSingleAction(ProductId $productId, $command = null)
     {
-        $product = $this->productMultiShopRepository->getByShopConstraint($productId, $command->getShopConstraint());
+        $product = $this->productRepository->getByShopConstraint($productId, $command->getShopConstraint());
         $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
         $wasActive = (bool) $product->active;
 
         $product->active = $command->getNewStatus();
-        $this->productMultiShopRepository->partialUpdate(
+        $this->productRepository->partialUpdate(
             $product,
             ['active'],
             $command->getShopConstraint(),

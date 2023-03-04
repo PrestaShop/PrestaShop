@@ -30,14 +30,9 @@
         <PSCheckbox
           ref="low-filter"
           id="low-filter"
-          class="mt-1"
           @checked="onCheck"
-        >
-          <span
-            slot="label"
-            class="ml-2"
-          >{{ trans('filter_low_stock') }}</span>
-        </PSCheckbox>
+        />
+        <span class="ml-2">{{ trans('filter_low_stock') }}</span>
       </div>
       <div class="content-topbar-right col mr-3 d-flex align-items-center justify-content-end">
         <a :href="stockExportUrl">

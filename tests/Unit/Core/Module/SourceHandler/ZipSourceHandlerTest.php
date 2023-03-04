@@ -67,26 +67,26 @@ class ZipSourceHandlerTest extends TestCase
         $this->resourceResetter->resetTestModules();
     }
 
-    public function testCanHandle()
+    public function testCanHandle(): void
     {
         $this->assertFalse($this->zipSourceHandler->canHandle(self::UNHANDLABLE_SOURCE));
         $this->assertTrue($this->zipSourceHandler->canHandle(self::INVALID_SOURCE));
         $this->assertTrue($this->zipSourceHandler->canHandle(self::VALID_SOURCE));
     }
 
-    public function testGetNameUnexistingSource()
+    public function testGetNameUnexistingSource(): void
     {
         $this->expectException(ModuleErrorException::class);
         $this->zipSourceHandler->getModuleName(self::UNHANDLABLE_SOURCE);
     }
 
-    public function testGetNameInvalidSource()
+    public function testGetNameInvalidSource(): void
     {
         $this->expectException(ModuleErrorException::class);
         $this->zipSourceHandler->getModuleName(self::INVALID_SOURCE);
     }
 
-    public function testGetNameValidSource()
+    public function testGetNameValidSource(): void
     {
         $this->assertSame(
             'valid_module',
@@ -94,13 +94,13 @@ class ZipSourceHandlerTest extends TestCase
         );
     }
 
-    public function testHandleUnhandlableSource()
+    public function testHandleUnhandlableSource(): void
     {
         $this->expectException(ModuleErrorException::class);
         $this->zipSourceHandler->handle(self::UNHANDLABLE_SOURCE);
     }
 
-    public function testHandleValidSource()
+    public function testHandleValidSource(): void
     {
         $this->zipSourceHandler->handle(self::VALID_SOURCE);
         $this->assertFileExists($this->resourceResetter::TEST_MODULES_DIR . '/valid_module/valid_module.php');

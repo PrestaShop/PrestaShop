@@ -32,14 +32,14 @@ Feature: Add product image from Back Office (BO)
     When I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
     Then image "image1" should have same file as "app_icon.png"
     And product "product1" should have following images for shop "shop1":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1 |
     When I add new image "image2" named "logo.jpg" to product "product1" for shop "shop1"
     Then image "image2" should have same file as "logo.jpg"
     And product "product1" should have following images for shop "shop1":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1 |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1 |
     And images "[image1, image2]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
@@ -47,25 +47,29 @@ Feature: Add product image from Back Office (BO)
       | large_default  | 800   | 800    |
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
-    And product "product1" should have no images for shops "shop2"
+    And product "product1" should have following images for shop "shop2":
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1 |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1 |
     When I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
     And product "product1" should have following images for shop "shop2":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image3          | true     |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
-  #todo: test all images for all shop (test query)
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops |
+      | image1          | false    |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1 |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1 |
+      | image3          | true     |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg | shop2 |
 
   Scenario: Add new product image for all shops
     When I add new image "image1" named "app_icon.png" to product "product1" for all shops
     Then image "image1" should have same file as "app_icon.png"
     And product "product1" should have following images for shops "shop1,shop2":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops       |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1,shop2 |
     When I add new image "image2" named "logo.jpg" to product "product1" for all shops
     Then image "image2" should have same file as "logo.jpg"
     And product "product1" should have following images for shops "shop1,shop2":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops       |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1,shop2 |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1,shop2 |
     And images "[image1, image2]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
@@ -74,25 +78,8 @@ Feature: Add product image from Back Office (BO)
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
 
-  Scenario: Add new product image for all shops
-    When I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
-    Then image "image1" should have same file as "app_icon.png"
-    And product "product1" should have following images for shops "shop1":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-    When I add new image "image2" named "logo.jpg" to product "product1" for all shops
-    Then image "image2" should have same file as "logo.jpg"
-    And product "product1" should have following images for shops "shop1":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
-    And product "product1" should have following images for shops "shop2":
-      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
-      | image2          | true    |                | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
-    And images "[image1, image2]" should have following types generated:
-      | name           | width | height |
-      | cart_default   | 125   | 125    |
-      | home_default   | 250   | 250    |
-      | large_default  | 800   | 800    |
-      | medium_default | 452   | 452    |
-      | small_default  | 98    | 98     |
+  Scenario: All shops and shop group constraints are not supported when retrieving product images
+    When I try to get product "product1" images for all shops
+    Then I should get error that shop constraint is invalid
+    When I try to get product "product1" images for shop group "default_shop_group"
+    Then I should get error that shop constraint is invalid

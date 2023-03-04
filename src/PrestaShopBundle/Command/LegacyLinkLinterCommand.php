@@ -48,6 +48,17 @@ class LegacyLinkLinterCommand extends Command
      */
     private $adminRouteProvider;
 
+    /**
+     * The _legacy_link configuration is not relevant for these routes, no need to apply the linter on them
+     */
+    private const ROUTE_WHITE_LIST = [
+        'admin_common_notifications_ack',
+        'admin_common_pagination',
+        'admin_common_sidebar',
+        'admin_common_reset_search',
+        'admin_common_reset_search_by_filter_id',
+    ];
+
     public function __construct(LegacyLinkLinter $legacyLinkLinter, AdminRouteProvider $adminRouteProvider)
     {
         parent::__construct();
@@ -99,7 +110,7 @@ class LegacyLinkLinterCommand extends Command
         $unconfiguredRoutes = [];
 
         foreach ($routes as $routeName => $route) {
-            if (true === $this->legacyLinkLinter->lint('_legacy_link', $route)) {
+            if (in_array($routeName, self::ROUTE_WHITE_LIST) || true === $this->legacyLinkLinter->lint('_legacy_link', $route)) {
                 continue;
             }
             $unconfiguredRoutes[] = $routeName;

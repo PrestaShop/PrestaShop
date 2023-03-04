@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\SetProductImagesForAllShopHandlerInterface;
@@ -53,17 +53,17 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
     private $productImageMultiShopRepository;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
-    private $productMultiShopRepository;
+    private $productRepository;
 
     public function __construct(
         ProductImageRepository $productImageRepository,
-        ProductMultiShopRepository $productMultiShopRepository,
+        ProductRepository $productRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository
     ) {
         $this->productImageRepository = $productImageRepository;
-        $this->productMultiShopRepository = $productMultiShopRepository;
+        $this->productRepository = $productRepository;
         $this->productImageMultiShopRepository = $productImageMultiShopRepository;
     }
 
@@ -100,7 +100,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
      */
     private function getShopIdsAssociatedToProduct(ProductId $productId): array
     {
-        $shopIdsAssociatedToProduct = $this->shopIdsToInt($this->productMultiShopRepository->getAssociatedShopIds($productId));
+        $shopIdsAssociatedToProduct = $this->shopIdsToInt($this->productRepository->getAssociatedShopIds($productId));
 
         return $shopIdsAssociatedToProduct;
     }
@@ -174,13 +174,11 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
      */
     private function shopIdsToInt(array $shopIds): array
     {
-        $shopIdsAssociatedToImage = array_map(
+        return array_map(
             function (ShopId $shopId): int {
                 return $shopId->getValue();
             },
             $shopIds
         );
-
-        return $shopIdsAssociatedToImage;
     }
 }

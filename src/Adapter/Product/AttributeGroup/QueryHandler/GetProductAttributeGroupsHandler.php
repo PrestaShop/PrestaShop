@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandlerInterface;
 
@@ -40,14 +40,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetPro
 class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandler implements GetProductAttributeGroupsHandlerInterface
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
     public function __construct(
         AttributeRepository $attributeRepository,
         AttributeGroupRepository $attributeGroupRepository,
-        ProductMultiShopRepository $productRepository
+        ProductRepository $productRepository
     ) {
         parent::__construct($attributeRepository, $attributeGroupRepository);
         $this->productRepository = $productRepository;

@@ -33,8 +33,8 @@ admin_countries_edit:
   methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::editAction'
-    _legacy_controller: AdminCountry
-    _legacy_link: AdminCountry:updateCountry
+    _legacy_controller: AdminCountries
+    _legacy_link: AdminCountries:updateCountry
     _legacy_feature_flag: country
     _legacy_parameters:
       id_country: countryId

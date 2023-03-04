@@ -47,6 +47,7 @@ class BulkCombinationType extends TranslatorAwareType
             ->add('price', BulkCombinationPriceType::class, [
                 'product_id' => $options['product_id'],
                 'country_id' => $options['country_id'],
+                'shop_id' => $options['shop_id'],
             ])
             ->add('references', BulkCombinationReferencesType::class)
             ->add('images', BulkCombinationImagesType::class, [
@@ -74,8 +75,11 @@ class BulkCombinationType extends TranslatorAwareType
             ->setRequired([
                 'product_id',
                 'country_id',
+                'shop_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('country_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
         ;
     }
 

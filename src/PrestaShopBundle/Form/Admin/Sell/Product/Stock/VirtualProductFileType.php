@@ -90,7 +90,6 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
     public static function getSubscribedEvents(): array
     {
         return [
-            FormEvents::PRE_SET_DATA => 'adaptSelf',
             FormEvents::PRE_SUBMIT => 'adaptSelf',
         ];
     }
@@ -123,6 +122,7 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                 ),
                 'constraints' => [
                     new File(['maxSize' => $maxUploadSize]),
+                    new NotBlank(),
                 ],
                 'download_url' => $virtualProductFileDownloadUrl,
                 'column_breaker' => true,
@@ -199,11 +199,15 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
         $form = $event->getForm();
         $data = $event->getData();
 
-        // Remove filename constraint if there is no virtual product to avoid invalidating the form for nothing
+        // Remove file & name constraints if there is no virtual file added, to avoid invalidating the form for nothing
         if (empty($data['has_file'])) {
+            $newFileField = $this->formCloner->cloneForm($form->get('file'), [
+                'constraints' => [],
+            ]);
             $newNameField = $this->formCloner->cloneForm($form->get('name'), [
                 'constraints' => [],
             ]);
+            $form->add($newFileField);
             $form->add($newNameField);
         }
     }

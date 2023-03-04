@@ -43,14 +43,7 @@
           {% else  %}
             <div class="module-short-list">
               <span id="{{ category.refMenu }}_modules" class="module-search-result-title">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
-
               {% include '@PrestaShop/Admin/Module/Includes/grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.refMenu } %}
-
-              {% block addon_card_see_more %}
-                {% if (category.modules | length) > maxModulesDisplayed %}
-                  {% include '@PrestaShop/Admin/Module/Includes/see_more.html.twig' with { 'id': category.refMenu } %}
-                {% endif %}
-              {% endblock %}
             </div>
           {% endif %}
         {% endfor %}

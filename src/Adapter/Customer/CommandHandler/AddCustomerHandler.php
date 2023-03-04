@@ -110,7 +110,10 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->getByEmail($email->getValue());
 
         if ($customer->id) {
-            throw new DuplicateCustomerEmailException($email, sprintf('Registered customer with email "%s" already exists', $email->getValue()));
+            throw new DuplicateCustomerEmailException(
+                $email, sprintf('Registered customer with email "%s" already exists', $email->getValue()),
+                DuplicateCustomerEmailException::ADD
+            );
         }
     }
 

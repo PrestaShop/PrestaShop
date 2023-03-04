@@ -125,7 +125,7 @@ class ProductImageUpdater
 
         $productId = new ProductId((int) $newCover->id_product);
         foreach ($shopIds as $shopId) {
-            $currentCover = $this->productImageMultiShopRepository->getCoverImageId($productId, $shopId);
+            $currentCover = $this->productImageMultiShopRepository->findCoverImageId($productId, $shopId);
 
             if ($currentCover !== null && $currentCover->getValue() === (int) $newCover->id) {
                 continue;
