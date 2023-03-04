@@ -319,7 +319,8 @@ class EmployeeCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
         if (!$result) {
-            return false;
+            // Create fake result to make sure computing time does not allow password enumeration
+            $result = ['passwd' => '123456'];
         }
 
         /** @var Hashing $crypto */
