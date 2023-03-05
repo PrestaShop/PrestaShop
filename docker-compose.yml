@@ -15,7 +15,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: prestashop
       MYSQL_DATABASE: prestashop
-    restart: 'no'
+    restart: always
   prestashop-git:
     build:
       dockerfile: .docker/Dockerfile
