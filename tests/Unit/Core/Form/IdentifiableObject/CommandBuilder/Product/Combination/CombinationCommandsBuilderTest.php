@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
 
 class CombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
 {
@@ -207,7 +206,7 @@ class MultiCommandsBuilder implements CombinationCommandsBuilderInterface
     {
         $commands = [];
         foreach ($this->builders as $builder) {
-            $commands = array_merge($commands, $builder->buildCommands($combinationId, $formData));
+            $commands = array_merge($commands, $builder->buildCommands($combinationId, $formData, $singleShopConstraint));
         }
 
         return $commands;

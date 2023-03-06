@@ -47,7 +47,7 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
     public function testBuildCommands(array $formData, array $expectedCommands): void
     {
         $builder = new VirtualProductFileCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
