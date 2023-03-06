@@ -53,6 +53,7 @@ jobs:
           - 'sanity:productV2'
           - 'regression'
           - 'functional:BO:login'
+          - 'functional:BO:dashboard'
           - 'functional:BO:orders'
           - 'functional:BO:catalog'
           - 'functional:productV2'
@@ -67,9 +68,14 @@ jobs:
           - 'functional:BO:advanced-parameters'
           - 'functional:BO:header'
           - 'functional:FO'
+          - 'functional:API'
         exclude:
           - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:BO:dashboard'
+          - BRANCH: 8.0.x
             CAMPAIGN: 'functional:productV2'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:API'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
