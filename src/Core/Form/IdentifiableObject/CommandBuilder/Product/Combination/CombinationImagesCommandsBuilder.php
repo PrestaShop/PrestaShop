@@ -31,16 +31,17 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationImagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Builds commands from command images form type
  */
-class CombinationImagesCommandsBuilder implements CombinationCommandsBuilderInterface
+class CombinationImagesCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData): array
+    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['images'])) {
             return [];

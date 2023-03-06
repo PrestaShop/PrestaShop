@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class CombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
 {
     /**
-     * @var iterable<CombinationCommandsBuilderInterface|MultiShopCombinationCommandsBuilderInterface>
+     * @var iterable<MultiShopCombinationCommandsBuilderInterface>
      */
     private $commandBuilders;
 
     /**
-     * @param iterable<CombinationCommandsBuilderInterface|MultiShopCombinationCommandsBuilderInterface> $commandBuilders
+     * @param iterable<MultiShopCombinationCommandsBuilderInterface> $commandBuilders
      */
     public function __construct(iterable $commandBuilders)
     {
@@ -53,11 +53,7 @@ class CombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderI
     {
         $commandCollection = [];
         foreach ($this->commandBuilders as $commandBuilder) {
-            if ($commandBuilder instanceof MultiShopCombinationCommandsBuilderInterface) {
-                $commands = $commandBuilder->buildCommands($combinationId, $formData, $singleShopConstraint);
-            } else {
-                $commands = $commandBuilder->buildCommands($combinationId, $formData);
-            }
+            $commands = $commandBuilder->buildCommands($combinationId, $formData, $singleShopConstraint);
 
             if (!empty($commands)) {
                 $commandCollection = array_merge($commandCollection, $commands);
