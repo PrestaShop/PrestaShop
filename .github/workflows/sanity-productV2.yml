@@ -1,4 +1,4 @@
-name: UI tests
+name: UI tests Product V2
 on:
   pull_request:
     paths:
