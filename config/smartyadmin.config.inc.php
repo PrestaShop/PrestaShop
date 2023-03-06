@@ -75,6 +75,30 @@ function smartyTranslate($params, $smarty)
         $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
     }
 
+    if ($isInPDF) {
+        return Translate::smartyPostProcessTranslation(
+            Translate::getPdfTranslation(
+                $params['s'],
+                $sprintf
+            ),
+            $params
+        );
+    }
+
+    // If the template is part of a module
+    if ($isInModule) {
+        return Translate::smartyPostProcessTranslation(
+            Translate::getModuleTranslation(
+                $params['mod'],
+                $params['s'],
+                basename($smarty->source->name, '.tpl'),
+                $sprintf,
+                isset($params['js'])
+            ),
+            $params
+        );
+    }
+
     if (!empty($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
@@ -110,34 +134,10 @@ function smartyTranslate($params, $smarty)
             }
         }
 
-        return $translator->trans($params['s'], $sprintf, $params['d']);
+        $translatedValue = $translator->trans($params['s'], $sprintf, $params['d']);
+    } else {
+        $translatedValue = $translator->trans($params['s'], $sprintf, null);
     }
-
-    if ($isInPDF) {
-        return Translate::smartyPostProcessTranslation(
-            Translate::getPdfTranslation(
-                $params['s'],
-                $sprintf
-            ),
-            $params
-        );
-    }
-
-    // If the template is part of a module
-    if ($isInModule) {
-        return Translate::smartyPostProcessTranslation(
-            Translate::getModuleTranslation(
-                $params['mod'],
-                $params['s'],
-                basename($smarty->source->name, '.tpl'),
-                $sprintf,
-                isset($params['js'])
-            ),
-            $params
-        );
-    }
-
-    $translatedValue = $translator->trans($params['s'], $sprintf, null);
 
     if ($htmlEntities) {
         $translatedValue = htmlspecialchars($translatedValue, ENT_COMPAT, 'UTF-8');
