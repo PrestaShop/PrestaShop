@@ -184,7 +184,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $imageId = (int) $this->getSharedStorage()->get($imageReference);
 
         /** @var ProductImage $productImage */
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId));
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId, ShopConstraint::shop($this->getDefaultShopId())));
 
         // This was previously saved during image upload
         $generatedDummyMD5 = $this->getSharedStorage()->get($fileName);

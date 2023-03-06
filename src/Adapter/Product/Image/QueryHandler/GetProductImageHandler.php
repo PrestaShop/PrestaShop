@@ -53,23 +53,15 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
     private $productImageUrlFactory;
 
     /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
      * @param ProductImageMultiShopRepository $productImageRepository
      * @param ProductImagePathFactory $productImageUrlFactory
-     * @param int $contextShopId
      */
     public function __construct(
         ProductImageMultiShopRepository $productImageRepository,
-        ProductImagePathFactory $productImageUrlFactory,
-        int $contextShopId
+        ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -77,10 +69,9 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
      */
     public function handle(GetProductImage $query): ProductImage
     {
-        //@todo: need to introduce shopConstraint into query instead of relying on context shop id
-        $image = $this->productImageRepository->get(
+        $image = $this->productImageRepository->getByShopConstraint(
             $query->getImageId(),
-            new ShopId($this->contextShopId)
+            $query->getShopConstraint()
         );
 
         return $this->formatImage(

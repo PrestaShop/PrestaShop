@@ -50,8 +50,6 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImageHandler:
     autowire: true
     public: false
-    arguments:
-      $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage

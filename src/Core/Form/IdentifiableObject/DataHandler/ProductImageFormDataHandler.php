@@ -44,26 +44,12 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
-     * @var int
-     */
-    private $defaultShopId;
-
-    /**
-     * @var int|null
-     */
-    private $contextShopId;
-
-    /**
      * @param CommandBusInterface $bus
      */
     public function __construct(
-        CommandBusInterface $bus,
-        int $defaultShopId,
-        ?int $contextShopId
+        CommandBusInterface $bus
     ) {
         $this->bus = $bus;
-        $this->defaultShopId = $defaultShopId;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -72,6 +58,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $uploadedFile = $data['file'] ?? null;
+
         if (!($uploadedFile instanceof UploadedFile)) {
             throw new FileUploadException('No file was uploaded', UPLOAD_ERR_NO_FILE);
         }
@@ -79,7 +66,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         $command = new AddProductImageCommand(
             (int) ($data['product_id'] ?? 0),
             $uploadedFile->getPathname(),
-            null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId)
+            $data['shop_id'] ? ShopConstraint::shop((int) $data['shop_id']) : ShopConstraint::allShops()
         );
 
         /** @var ImageId $imageId */
