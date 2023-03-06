@@ -464,3 +464,15 @@ admin_products_v2_search_product_combinations:
     languageId: \d+
   options:
     expose: true
+
+admin_products_v2_quantity:
+  path: /{productId}/quantity/{shopId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::quantityAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopId: \d+
+  options:
+    expose: true

@@ -74,7 +74,7 @@ class CombinationCreator
     /**
      * @var StockAvailableRepository
      */
-    private $stockAvailableMultiShopRepository;
+    private $stockAvailableRepository;
 
     /**
      * @var AttributeGroupRepository
@@ -95,14 +95,14 @@ class CombinationCreator
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationRepository $combinationRepository
      * @param ProductRepository $productRepository
-     * @param StockAvailableRepository $stockAvailableMultiShopRepository
+     * @param StockAvailableRepository $stockAvailableRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
         CombinationRepository $combinationRepository,
         ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableMultiShopRepository,
+        StockAvailableRepository $stockAvailableRepository,
         AttributeGroupRepository $attributeGroupRepository,
         AttributeRepository $attributeRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater
@@ -110,7 +110,7 @@ class CombinationCreator
         $this->combinationGenerator = $combinationGenerator;
         $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
-        $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
+        $this->stockAvailableRepository = $stockAvailableRepository;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
         $this->attributeGroupRepository = $attributeGroupRepository;
         $this->attributeRepository = $attributeRepository;
@@ -163,7 +163,7 @@ class CombinationCreator
         array $shopIdsByConstraint
     ): void {
         $productId = new ProductId((int) $product->id);
-        $productStockAvailable = $this->stockAvailableMultiShopRepository->getForProduct($productId, new ShopId($product->getShopId()));
+        $productStockAvailable = $this->stockAvailableRepository->getForProduct($productId, new ShopId($product->getShopId()));
         $outOfStockType = new OutOfStockType((int) $productStockAvailable->out_of_stock);
 
         if ($shopConstraint->forAllShops()) {
@@ -222,7 +222,7 @@ class CombinationCreator
                 // when combination already exists in product_attribute, then we add it to related product_attribute_shop
                 $this->combinationRepository->addToShop($matchingCombinationId, $shopId);
                 // create dedicated stock_available for combination in related shop
-                $this->stockAvailableMultiShopRepository->createStockAvailable($productId, $shopId, $matchingCombinationId);
+                $this->stockAvailableRepository->createStockAvailable($productId, $shopId, $matchingCombinationId);
             }
         }
 
