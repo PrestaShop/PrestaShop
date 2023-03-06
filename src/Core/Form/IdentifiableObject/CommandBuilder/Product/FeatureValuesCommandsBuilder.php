@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFea
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-final class FeatureValuesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+final class FeatureValuesCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}

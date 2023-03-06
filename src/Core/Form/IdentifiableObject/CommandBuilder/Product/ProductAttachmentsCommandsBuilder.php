@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedPr
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class ProductAttachmentsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class ProductAttachmentsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {

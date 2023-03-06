@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class RelatedProductsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class RelatedProductsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}

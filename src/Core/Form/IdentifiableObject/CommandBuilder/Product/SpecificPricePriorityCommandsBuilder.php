@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificP
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class SpecificPricePriorityCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class SpecificPricePriorityCommandsBuilder implements ProductCommandsBuilderInterface
 {
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-interface MultiShopProductCommandsBuilderInterface
+interface ProductCommandsBuilderInterface
 {
     /**
      * @param ProductId $productId

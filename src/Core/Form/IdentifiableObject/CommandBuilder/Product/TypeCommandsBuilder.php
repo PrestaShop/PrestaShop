@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * Builder used to build UpdateTypeCommand
  */
-class TypeCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class TypeCommandsBuilder implements ProductCommandsBuilderInterface
 {
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {

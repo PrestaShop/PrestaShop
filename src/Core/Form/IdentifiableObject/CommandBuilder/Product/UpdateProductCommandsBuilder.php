@@ -39,7 +39,7 @@ use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 /**
  * Builds @see UpdateProductCommand for both single and All shops
  */
-class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * @var string

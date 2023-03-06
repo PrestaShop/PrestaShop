@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
-class TagsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class TagsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}

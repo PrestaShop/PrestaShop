@@ -34,15 +34,15 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * This class builds a collection of product commands based on the form data and a list of ProductCommandBuilderInterface
  */
-class ProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class ProductCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @var iterable<MultiShopProductCommandsBuilderInterface>
+     * @var iterable<ProductCommandsBuilderInterface>
      */
     private $commandBuilders;
 
     /**
-     * @param iterable<MultiShopProductCommandsBuilderInterface> $commandBuilders
+     * @param iterable<ProductCommandsBuilderInterface> $commandBuilders
      */
     public function __construct(iterable $commandBuilders)
     {

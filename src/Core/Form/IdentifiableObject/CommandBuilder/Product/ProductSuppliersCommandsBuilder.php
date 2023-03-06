@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupp
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-final class ProductSuppliersCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}

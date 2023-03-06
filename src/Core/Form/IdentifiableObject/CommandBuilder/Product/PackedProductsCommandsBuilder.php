@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class PackedProductsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class PackedProductsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}

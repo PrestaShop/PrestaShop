@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-final class VirtualProductFileCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}

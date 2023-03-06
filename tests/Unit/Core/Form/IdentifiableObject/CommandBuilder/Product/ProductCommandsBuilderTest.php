@@ -30,8 +30,8 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\MultiShopProductCommandsBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
 class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -134,7 +134,7 @@ class FakeProductCommand
     }
 }
 
-class ConditionBuilder implements MultiShopProductCommandsBuilderInterface
+class ConditionBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * @var array
@@ -171,7 +171,7 @@ class ConditionBuilder implements MultiShopProductCommandsBuilderInterface
     }
 }
 
-class AlwaysEmptyBuilder implements MultiShopProductCommandsBuilderInterface
+class AlwaysEmptyBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
@@ -182,10 +182,10 @@ class AlwaysEmptyBuilder implements MultiShopProductCommandsBuilderInterface
     }
 }
 
-class MultiCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class MultiCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @var MultiShopProductCommandsBuilderInterface[]
+     * @var ProductCommandsBuilderInterface[]
      */
     private $builders;
 
