@@ -29,15 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * This interface is similar to ProductCommandsBuilderInterface except it handles the product commands
- * which are related to multishop fields, so it has an extra $singleShopConstraint parameter.
- *
- * @todo: since not all builders are migrated yet we need two interfaces but in the this is the only
- *        one that should remain, so it will be merged back or renamed as the initial one ProductCommandsBuilderInterface
- *        and the shop constraint parameter will always be mandatory (there might a few builders which won't need it
- *        though, but it doesn't matter) So this interface is a temporary one just like @see ProductRepository
- */
 interface MultiShopProductCommandsBuilderInterface
 {
     /**

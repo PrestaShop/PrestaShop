@@ -37,12 +37,12 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class ProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
-     * @var iterable<ProductCommandsBuilderInterface|MultiShopProductCommandsBuilderInterface>
+     * @var iterable<MultiShopProductCommandsBuilderInterface>
      */
     private $commandBuilders;
 
     /**
-     * @param iterable<ProductCommandsBuilderInterface|MultiShopProductCommandsBuilderInterface> $commandBuilders
+     * @param iterable<MultiShopProductCommandsBuilderInterface> $commandBuilders
      */
     public function __construct(iterable $commandBuilders)
     {
@@ -60,15 +60,13 @@ class ProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
     {
         $commandCollection = [];
         foreach ($this->commandBuilders as $commandBuilder) {
-            if ($commandBuilder instanceof MultiShopProductCommandsBuilderInterface) {
-                $commands = $commandBuilder->buildCommands($productId, $formData, $singleShopConstraint);
-            } else {
-                $commands = $commandBuilder->buildCommands($productId, $formData);
+            $commands = $commandBuilder->buildCommands($productId, $formData, $singleShopConstraint);
+
+            if (empty($commands)) {
+                continue;
             }
 
-            if (!empty($commands)) {
-                $commandCollection = array_merge($commandCollection, $commands);
-            }
+            $commandCollection = array_merge($commandCollection, $commands);
         }
 
         return $commandCollection;

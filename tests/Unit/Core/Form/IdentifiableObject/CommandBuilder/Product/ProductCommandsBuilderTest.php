@@ -29,8 +29,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\MultiShopProductCommandsBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
 class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -133,7 +134,7 @@ class FakeProductCommand
     }
 }
 
-class ConditionBuilder implements ProductCommandsBuilderInterface
+class ConditionBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
      * @var array
@@ -158,7 +159,7 @@ class ConditionBuilder implements ProductCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         foreach ($this->formCondition as $key => $value) {
             if (!isset($formData[$key]) || $formData[$key] !== $value) {
@@ -170,21 +171,21 @@ class ConditionBuilder implements ProductCommandsBuilderInterface
     }
 }
 
-class AlwaysEmptyBuilder implements ProductCommandsBuilderInterface
+class AlwaysEmptyBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $shopConstraint): array
     {
         return [];
     }
 }
 
-class MultiCommandsBuilder implements ProductCommandsBuilderInterface
+class MultiCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
-     * @var ProductCommandsBuilderInterface[]
+     * @var MultiShopProductCommandsBuilderInterface[]
      */
     private $builders;
 
@@ -201,11 +202,11 @@ class MultiCommandsBuilder implements ProductCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $commands = [];
         foreach ($this->builders as $builder) {
-            $commands = array_merge($commands, $builder->buildCommands($productId, $formData));
+            $commands = array_merge($commands, $builder->buildCommands($productId, $formData, $singleShopConstraint));
         }
 
         return $commands;
