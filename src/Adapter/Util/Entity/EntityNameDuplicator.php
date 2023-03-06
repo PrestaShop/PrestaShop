@@ -77,7 +77,7 @@ class EntityNameDuplicator
     public function getNewLocalizedNames(array $currentLocalizedNames, int $maxLength): array
     {
         if (empty($this->locales)) {
-            $this->buildLanguages();
+            $this->buildLocales();
         }
 
         $newLocalizedNames = [];
@@ -107,7 +107,7 @@ class EntityNameDuplicator
     public function getNewName(string $currentName, int $maxLength, int $langId): string
     {
         if (empty($this->locales)) {
-            $this->buildLanguages();
+            $this->buildLocales();
         }
 
         // Add copy word to the string
@@ -123,7 +123,7 @@ class EntityNameDuplicator
      *
      * @return void
      */
-    private function buildLanguages(): void
+    private function buildLocales(): void
     {
         foreach ($this->languages as $language) {
             $this->locales[(int) $language['id_lang']] = $language['locale'];
