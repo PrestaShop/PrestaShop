@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
 use Image;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHandlerInterface
 {
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -52,7 +52,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
     private $productRepository;
 
     public function __construct(
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         ProductRepository $productRepository
     ) {
         $this->productImageRepository = $productImageRepository;

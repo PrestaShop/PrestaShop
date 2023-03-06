@@ -32,7 +32,7 @@ use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
@@ -61,7 +61,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
     private $attributeRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -78,14 +78,14 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
     /**
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
-     * @param ProductImageMultiShopRepository $productImageRepository
+     * @param ProductImageRepository $productImageRepository
      * @param ProductImagePathFactory $productImagePathFactory
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      */
     public function __construct(
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
         AttributeRepository $attributeRepository,
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         ProductImagePathFactory $productImagePathFactory,
         CombinationNameBuilderInterface $combinationNameBuilder
     ) {

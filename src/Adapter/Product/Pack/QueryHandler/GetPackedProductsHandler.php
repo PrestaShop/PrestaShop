@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -82,7 +82,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     protected $combinationNameBuilder;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     protected $productImageRepository;
 
@@ -103,7 +103,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         CombinationRepository $combinationRepository,
         AttributeRepository $attributeRepository,
         CombinationNameBuilder $combinationNameBuilder,
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         TranslatorInterface $translator,
         ProductImageProviderInterface $productImageProvider
     ) {

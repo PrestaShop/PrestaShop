@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
@@ -104,9 +104,9 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $virtualProductFileRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
-    private $productImageMultiShopRepository;
+    private $productImageRepository;
 
     /**
      * @var TaxComputer
@@ -154,7 +154,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      * @param CategoryRepository $categoryRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
-     * @param ProductImageMultiShopRepository $productImageMultiShopRepository
+     * @param ProductImageRepository $productImageRepository
      * @param AttachmentRepository $attachmentRepository
      * @param TaxComputer $taxComputer
      * @param int $countryId
@@ -170,7 +170,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         CategoryRepository $categoryRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
-        ProductImageMultiShopRepository $productImageMultiShopRepository,
+        ProductImageRepository $productImageRepository,
         AttachmentRepository $attachmentRepository,
         TaxComputer $taxComputer,
         int $countryId,
@@ -189,7 +189,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         $this->countryId = $countryId;
         $this->attachmentRepository = $attachmentRepository;
         $this->targetProvider = $targetProvider;
-        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
         $this->specificPriceRepository = $specificPriceRepository;
         $this->configuration = $configuration;
@@ -549,7 +549,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
     private function getCover(ProductId $productId, int $shopId): string
     {
-        $idOfCoverImage = $this->productImageMultiShopRepository->findCoverImageId($productId, new ShopId($shopId));
+        $idOfCoverImage = $this->productImageRepository->findCoverImageId($productId, new ShopId($shopId));
 
         if ($idOfCoverImage) {
             return $this->productImageUrlFactory->getPathByType($idOfCoverImage, ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);

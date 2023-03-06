@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetRelatedProductsHandlerInterface;
@@ -44,7 +44,7 @@ class GetRelatedProductsHandler implements GetRelatedProductsHandlerInterface
     private $productRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -55,12 +55,12 @@ class GetRelatedProductsHandler implements GetRelatedProductsHandlerInterface
 
     /**
      * @param ProductRepository $productRepository
-     * @param ProductImageMultiShopRepository $productImageRepository
+     * @param ProductImageRepository $productImageRepository
      * @param ProductImagePathFactory $productImagePathFactory
      */
     public function __construct(
         ProductRepository $productRepository,
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         ProductImagePathFactory $productImagePathFactory
     ) {
         $this->productRepository = $productRepository;

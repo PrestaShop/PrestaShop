@@ -56,7 +56,7 @@ use PrestaShopException;
 /**
  * Provides access to product Image data source with shop context
  */
-class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelRepository
+class ProductImageRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var Connection

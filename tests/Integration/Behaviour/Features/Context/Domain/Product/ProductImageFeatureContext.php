@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
@@ -57,7 +57,7 @@ use Tests\Resources\DummyFileUploader;
 class ProductImageFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -68,7 +68,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
     public function __construct()
     {
-        $this->productImageRepository = $this->getContainer()->get(ProductImageMultiShopRepository::class);
+        $this->productImageRepository = $this->getContainer()->get(ProductImageRepository::class);
     }
 
     /**

@@ -11,7 +11,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\UpdateProductImageHandler:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
       - '@PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator'
@@ -56,7 +56,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator: ~
 
-  PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository:
+  PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository:
     autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
@@ -68,7 +68,7 @@ services:
       - '@PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface'
       - '@prestashop.core.grid.image.position_definition'
       - '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory:
     public: true

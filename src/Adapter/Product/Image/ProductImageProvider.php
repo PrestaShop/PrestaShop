@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Provider\ProductImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 class ProductImageProvider implements ProductImageProviderInterface
 {
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -52,7 +52,7 @@ class ProductImageProvider implements ProductImageProviderInterface
     private $productImagePathFactory;
 
     public function __construct(
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         CombinationRepository $combinationRepository,
         ProductImagePathFactory $productImagePathFactory
     ) {

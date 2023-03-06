@@ -33,7 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -88,7 +88,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $productRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -123,7 +123,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param StockAvailableRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
      * @param ProductRepository $productRepository
-     * @param ProductImageMultiShopRepository $productImageRepository
+     * @param ProductImageRepository $productImageRepository
      * @param NumberExtractor $numberExtractor
      * @param TaxComputer $taxComputer
      * @param int $contextLanguageId
@@ -136,7 +136,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         StockAvailableRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
         ProductRepository $productRepository,
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,
         int $contextLanguageId,
