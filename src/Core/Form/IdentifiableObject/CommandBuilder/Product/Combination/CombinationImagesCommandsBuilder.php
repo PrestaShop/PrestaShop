@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * Builds commands from command images form type
  */
-class CombinationImagesCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+class CombinationImagesCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class CombinationSuppliersCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}

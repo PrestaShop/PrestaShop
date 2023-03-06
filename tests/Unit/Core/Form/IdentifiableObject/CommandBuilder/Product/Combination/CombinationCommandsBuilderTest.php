@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\MultiShopCombinationCommandsBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
 
 class CombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
 {
@@ -135,7 +135,7 @@ class FakeCombinationCommand
     }
 }
 
-class ConditionBuilder implements MultiShopCombinationCommandsBuilderInterface
+class ConditionBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * @var array
@@ -172,7 +172,7 @@ class ConditionBuilder implements MultiShopCombinationCommandsBuilderInterface
     }
 }
 
-class AlwaysEmptyBuilder implements MultiShopCombinationCommandsBuilderInterface
+class AlwaysEmptyBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
@@ -183,7 +183,7 @@ class AlwaysEmptyBuilder implements MultiShopCombinationCommandsBuilderInterface
     }
 }
 
-class MultiCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+class MultiCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * @var CombinationCommandsBuilderInterface[]

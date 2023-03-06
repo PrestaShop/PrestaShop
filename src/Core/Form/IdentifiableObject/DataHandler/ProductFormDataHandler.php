@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
 /**
  * Handles data posted from product form
@@ -45,7 +45,7 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
-     * @var ProductCommandsBuilder
+     * @var ProductCommandsBuilderInterface
      */
     private $commandsBuilder;
 
@@ -61,13 +61,13 @@ class ProductFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param CommandBusInterface $bus
-     * @param ProductCommandsBuilder $commandsBuilder
+     * @param ProductCommandsBuilderInterface $commandsBuilder
      * @param int $defaultShopId
      * @param int|null $contextShopId
      */
     public function __construct(
         CommandBusInterface $bus,
-        ProductCommandsBuilder $commandsBuilder,
+        ProductCommandsBuilderInterface $commandsBuilder,
         int $defaultShopId,
         ?int $contextShopId
     ) {

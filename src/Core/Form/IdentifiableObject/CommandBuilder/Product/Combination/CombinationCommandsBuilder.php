@@ -31,15 +31,15 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class CombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+class CombinationCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
-     * @var iterable<MultiShopCombinationCommandsBuilderInterface>
+     * @var iterable<CombinationCommandsBuilderInterface>
      */
     private $commandBuilders;
 
     /**
-     * @param iterable<MultiShopCombinationCommandsBuilderInterface> $commandBuilders
+     * @param iterable<CombinationCommandsBuilderInterface> $commandBuilders
      */
     public function __construct(iterable $commandBuilders)
     {
