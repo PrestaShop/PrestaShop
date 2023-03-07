@@ -463,7 +463,7 @@ class ToolsCore
             $value = static::$fallbackParameters[$key];
         }
 
-        if (!isset($value)) {
+        if (empty($value)) {
             $value = $default_value;
         }
 
