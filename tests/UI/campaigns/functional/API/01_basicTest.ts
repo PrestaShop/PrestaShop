@@ -20,6 +20,7 @@ describe('BO - API : Basic Test', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestNewApi', baseContext);
 
       const apiResponse = await apiContext.get('new-api/');
+      console.log((await apiResponse.body()).toString());
       await expect(apiResponse.status()).to.eq(404);
     });
 
