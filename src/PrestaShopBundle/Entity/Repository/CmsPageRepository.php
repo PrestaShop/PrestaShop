@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use CMS;
+use CMS as CmsObjectModel;
 use PrestaShop\PrestaShop\Adapter\Util\Entity\EntityNameDuplicator;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\CmsPageSettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDuplicateCmsPageException;
@@ -65,7 +65,7 @@ class CmsPageRepository extends AbstractObjectModelRepository
         /** @var Cms $cms */
         $cms = $this->getObjectModel(
           $cmsPageId->getValue(),
-          Cms::class,
+          CmsObjectModel::class,
           CmsPageNotFoundException::class
         );
 
