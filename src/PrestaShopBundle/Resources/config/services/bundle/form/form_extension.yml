@@ -97,7 +97,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.context'
       - '@prestashop.core.admin.multistore'
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
 
   form.extension.downloadable_file:
     class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'

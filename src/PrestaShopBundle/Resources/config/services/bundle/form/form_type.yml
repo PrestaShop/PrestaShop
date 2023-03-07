@@ -31,7 +31,7 @@ services:
     class: PrestaShopBundle\Form\Admin\Type\DateRangeType
     arguments:
       - "@translator"
-      - "@form.form_cloner"
+      - '@PrestaShopBundle\Form\FormCloner'
     tags:
       - { name: form.type }
 
@@ -1548,14 +1548,15 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.stock.virtual_product_file_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType'
-    parent: 'form.type.translatable.aware'
-    public: true
+  PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType:
+    public: false
+    autowire: true
+    autoconfigure: true
     arguments:
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
-      - "@router"
-      - '@form.form_cloner'
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
+      $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
+      $router: "@router"
+      $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
     tags:
       - { name: form.type }
 
@@ -1797,7 +1798,7 @@ services:
       - '@prestashop.core.form.choice_provider.currency_by_id'
       - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
       - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
     tags:
       - { name: form.type }
 
@@ -1838,12 +1839,12 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
     arguments:
       - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
     public: true
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
     public: false
 
@@ -1860,7 +1861,7 @@ services:
   form.type.sell.product.event_listener.categories_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
     arguments:
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
     public: true
 
   # Combination form types
@@ -2093,7 +2094,7 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
     tags:
       - { name: form.type }
 
@@ -2170,7 +2171,7 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
     public: true
     arguments:
-      - '@form.form_cloner'
+      - '@PrestaShopBundle\Form\FormCloner'
 
   form.type.disabling_switch_type:
     class: 'PrestaShopBundle\Form\Admin\Type\DisablingSwitchType'
@@ -2191,3 +2192,8 @@ services:
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
     tags:
       - { name: form.type }
+
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
+    autowire: true
+    autoconfigure: true
+    public: false
