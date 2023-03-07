@@ -17,6 +17,7 @@ admin_customer_threads_filter:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer_thread
     redirectRoute: admin_customer_threads
     _legacy_controller: AdminCustomerThreads
+    _legacy_feature_flag: customer_threads
 
 admin_customer_threads_view:
   path: /{customerThreadId}/view
@@ -27,6 +28,7 @@ admin_customer_threads_view:
     _legacy_parameters:
       id_customer_thread: customerThreadId
     _legacy_link: AdminCustomerThreads:viewcustomer_thread
+    _legacy_feature_flag: customer_threads
   requirements:
     customerThreadId: \d+
   options:
