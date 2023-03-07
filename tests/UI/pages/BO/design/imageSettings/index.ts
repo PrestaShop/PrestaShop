@@ -84,6 +84,12 @@ class ImageSettings extends BOBasePage {
 
   private readonly paginationNextLink: string;
 
+  private readonly formImageGenerationOptions: string;
+
+  private readonly checkboxImageFormat: (imageFormat: string) => string;
+
+  private readonly submitImageGenerationOptions: string;
+
   private readonly formRegenerateThumbnails: string;
 
   private readonly submitRegenerateThumbnails: string;
@@ -101,6 +107,7 @@ class ImageSettings extends BOBasePage {
 
     this.pageTitle = 'Image Settings • ';
     this.messageThumbnailsRegenerated = 'The thumbnails were successfully regenerated.';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -163,6 +170,13 @@ class ImageSettings extends BOBasePage {
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
+    // Images generation options
+    this.formImageGenerationOptions = '#image_type_form';
+    this.checkboxImageFormat = (imageFormat: string) => `${this.formImageGenerationOptions} `
+      + `input[name="PS_IMAGE_FORMAT[]"][value="${imageFormat}"]`;
+    this.submitImageGenerationOptions = `${this.formImageGenerationOptions} button[type="submit"]`;
+
+    // Regenerate thumbnails
     this.formRegenerateThumbnails = '#display_regenerate_form';
     this.submitRegenerateThumbnails = `${this.formRegenerateThumbnails} button[type="submit"]`;
     this.modalRegenerateThumbnails = '#modalRegenerateThumbnails';
@@ -446,6 +460,26 @@ class ImageSettings extends BOBasePage {
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Returns if the image format is checked in Image Generation Options
+   * @param page {Page} Browser tab
+   * @param imageFormat {string} Image Format
+   * @returns {Promise<string>}
+   */
+  async isImageFormatToGenerateChecked(page: Page, imageFormat: string): Promise<boolean> {
+    return this.isChecked(page, this.checkboxImageFormat(imageFormat));
+  }
+
+  /**
+   Returns if the image format is disabled in Image Generation Options
+   * @param page {Page} Browser tab
+   * @param imageFormat {string} Image Format
+   * @returns {Promise<string>}
+   */
+  async isImageFormatToGenerateDisabled(page: Page, imageFormat: string): Promise<boolean> {
+    return this.isDisabled(page, this.checkboxImageFormat(imageFormat));
   }
 }
 
