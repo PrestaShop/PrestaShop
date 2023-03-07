@@ -66,7 +66,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         $command = new AddProductImageCommand(
             (int) ($data['product_id'] ?? 0),
             $uploadedFile->getPathname(),
-            $data['shop_id'] ? ShopConstraint::shop((int) $data['shop_id']) : ShopConstraint::allShops()
+            !empty($data['shop_id']) ? ShopConstraint::shop((int) $data['shop_id']) : ShopConstraint::allShops()
         );
 
         /** @var ImageId $imageId */

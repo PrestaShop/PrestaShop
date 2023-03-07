@@ -73,24 +73,22 @@ class GetRelatedProductsHandler implements GetRelatedProductsHandlerInterface
      */
     public function handle(GetRelatedProducts $query): array
     {
-        $productId = $query->getProductId();
-        $results = $this->productRepository->getRelatedProducts($productId, $query->getLanguageId());
-        // related products are not multishop compatible,
-        // so we just use default product shop to retrieve info required by multishop repositories
-        $shopId = $this->productRepository->getProductDefaultShopId($productId);
-
+        $results = $this->productRepository->getRelatedProducts($query->getProductId(), $query->getLanguageId());
         $relatedProducts = [];
 
         foreach ($results as $result) {
-            $productId = (int) $result['id_product'];
-            $imageId = $this->productImageRepository->getDefaultImageId(new ProductId($productId), $shopId);
+            $productId = new ProductId((int) $result['id_product']);
+            // related products are not multishop compatible,
+            // so we just use default product shop to retrieve info required by multishop repositories
+            $shopId = $this->productRepository->getProductDefaultShopId($productId);
+            $imageId = $this->productImageRepository->getDefaultImageId($productId, $shopId);
             $imagePath = $imageId ?
                 $this->productImagePathFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_HOME_DEFAULT) :
                 $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_HOME_DEFAULT)
             ;
 
             $relatedProducts[] = new RelatedProduct(
-                $productId,
+                $productId->getValue(),
                 $result['name'],
                 $result['reference'],
                 $imagePath
