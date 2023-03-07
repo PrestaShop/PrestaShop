@@ -51,8 +51,10 @@ class SetProductShopsCommand
 
     /**
      * @param int $productId the product for which the new shop association is being set
-     * @param int $sourceShopId the source shop from which product is copied when it is being added to a new shop
-     * @param int[] $shopIds ids of shops representing new product-shop association
+     * @param int $sourceShopId the source shop used as a reference for copy when a new shop association is being created
+     * @param int[] $shopIds ids of all the associated shops for this product,
+     *                       any shop which is not present in this list - will be unassociated,
+     *                       any shop not yet associated - will induce a new shop association creation
      */
     public function __construct(
         int $productId,
