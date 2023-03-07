@@ -120,8 +120,33 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
     /**
      * @Then I should get error that I cannot unassociate product from all shops
      */
-    public function assertLastExceptionIsInvalidProductShopAssociation(): void
+    public function assertLastExceptionIsEmptyProductShopAssociation(): void
     {
-        $this->assertLastErrorIs(InvalidProductShopAssociationException::class);
+        $this->assertLastErrorIs(
+            InvalidProductShopAssociationException::class,
+            InvalidProductShopAssociationException::EMPTY_SHOPS_ASSOCIATION
+        );
+    }
+
+    /**
+     * @Then I should get error that I cannot unassociate product from source shop
+     */
+    public function assertLastExceptionIsSourceShopMissingInShopAssociation(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidProductShopAssociationException::class,
+            InvalidProductShopAssociationException::SOURCE_SHOP_MISSING_IN_SHOP_ASSOCIATION
+        );
+    }
+
+    /**
+     * @Then I should get error that source shop is not associated to product
+     */
+    public function assertLastExceptionIsSourceShopIsNotAssociated(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidProductShopAssociationException::class,
+            InvalidProductShopAssociationException::SOURCE_SHOP_NOT_ASSOCIATED
+        );
     }
 }

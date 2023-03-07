@@ -100,8 +100,8 @@ Feature: Copy product from shop to shop.
       | delivery time out of stock notes[fr-FR] | En rupture de stock        |
       | active                                  | true                       |
     And I set following shops for product "productWithFields":
-      | source shop | shop2       |
-      | shops       | shop1,shop3 |
+      | source shop | shop2             |
+      | shops       | shop1,shop2,shop3 |
     And I update product "productWithFields" for shop shop3 with following values:
       | name[en-US]                             | smart sunglasses3           |
       | name[fr-FR]                             | lunettes de soleil3         |

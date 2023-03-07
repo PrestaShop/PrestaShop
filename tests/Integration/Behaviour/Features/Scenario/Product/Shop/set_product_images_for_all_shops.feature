@@ -26,8 +26,8 @@ Feature: Set product images for all shops from Back Office (BO)
       | shops       | shop1,shop2 |
     And I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
     And I set following shops for product "product1":
-      | source shop | shop2       |
-      | shops       | shop1,shop3 |
+      | source shop | shop2             |
+      | shops       | shop1,shop2,shop3 |
     Then product "product1" should have following images for shop "shop1,shop2,shop3":
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop2, shop3 |
@@ -62,7 +62,6 @@ Feature: Set product images for all shops from Back Office (BO)
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop2, shop3 |
       | image3          | 2        | shop2,shop3         |
-
     And following types for image "image2" should be removed:
       | name           |
       | cart_default   |

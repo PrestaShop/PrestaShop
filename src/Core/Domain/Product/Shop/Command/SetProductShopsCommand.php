@@ -59,9 +59,14 @@ class SetProductShopsCommand
         int $sourceShopId,
         array $shopIds
     ) {
-        $this->setShopIds($shopIds);
+        $this->assertShopsNotEmpty($shopIds);
+        $this->assertSourceShopExistsInShops($sourceShopId, $shopIds);
         $this->productId = new ProductId($productId);
         $this->sourceShopId = new ShopId($sourceShopId);
+
+        $this->shopIds = array_map(static function (int $shopId): ShopId {
+            return new ShopId($shopId);
+        }, $shopIds);
     }
 
     /**
@@ -89,21 +94,34 @@ class SetProductShopsCommand
     }
 
     /**
+     * @param int $sourceShopId
      * @param int[] $shopIds
      */
-    private function setShopIds(array $shopIds): void
+    private function assertSourceShopExistsInShops(int $sourceShopId, array $shopIds): void
+    {
+        if (in_array($sourceShopId, $shopIds, true)) {
+            return;
+        }
+
+        throw new InvalidProductShopAssociationException(
+            'Source shop must be one of associated shops',
+            InvalidProductShopAssociationException::SOURCE_SHOP_MISSING_IN_SHOP_ASSOCIATION
+        );
+    }
+
+    /**
+     * @param int[] $shopIds
+     */
+    private function assertShopsNotEmpty(array $shopIds): void
     {
         if (empty($shopIds)) {
             throw new InvalidProductShopAssociationException(
                 sprintf(
                     'Empty shop association provided. Use %s command to delete product instead',
                     DeleteProductCommand::class
-                )
+                ),
+                InvalidProductShopAssociationException::EMPTY_SHOPS_ASSOCIATION
             );
         }
-
-        $this->shopIds = array_map(static function (int $shopId): ShopId {
-            return new ShopId($shopId);
-        }, $shopIds);
     }
 }

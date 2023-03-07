@@ -45,8 +45,8 @@ Feature: Bulk delete products when multishop feature is enabled
     And I add new image "image1" named "app_icon.png" to product "standardProduct" for shop "shop2"
     And I add new image "image2" named "some_image.jpg" to product "standardProduct" for shop "shop2"
     When I set following shops for product "standardProduct":
-      | source shop | shop2             |
-      | shops       | shop1,shop3,shop4 |
+      | source shop | shop2                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     And product standardProduct is associated to shops "shop1,shop2,shop3,shop4"
     And product "standardProduct" should have following stock information for shops "shop1,shop2,shop3,shop4":
       | quantity | 51 |
@@ -62,8 +62,8 @@ Feature: Bulk delete products when multishop feature is enabled
       | Size  | [L]                |
       | Color | [White,Black,Blue] |
     And I set following shops for product "productWithCombinations":
-      | source shop | shop3             |
-      | shops       | shop1,shop2,shop4 |
+      | source shop | shop3                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     And product productWithCombinations is associated to shops "shop1,shop2,shop3,shop4"
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop3,shop4":

@@ -457,25 +457,6 @@ Feature: Copy product from shop to shop.
     When I delete product productToDelete from shops "shop1,shop3"
     Then product productToDelete should not exist anymore
 
-  Scenario: I should not be able to unassociate product from all shops
-    Given I add product "product" to shop "shop1" with following information:
-      | name[en-US] | magic staff |
-      | type        | standard    |
-    When I set following shops for product "product":
-      | source shop | shop1       |
-      | shops       | shop1,shop2 |
-    And product "product" is associated to shops "shop1,shop2"
-    When I set following shops for product "product":
-      | source shop | shop1 |
-      | shops       |       |
-    Then I should get error that I cannot unassociate product from all shops
-    And product "product" is associated to shops "shop1,shop2"
-    # check that source shop always stays associated
-    When I set following shops for product "product":
-      | source shop | shop1 |
-      | shops       | shop2 |
-    And product "product" is associated to shops "shop1,shop2"
-
   Scenario: Product combinations are copied/deleted when product is being copied/deleted to/from shop.
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
@@ -545,3 +526,37 @@ Feature: Copy product from shop to shop.
     And product "product2" is not associated to shop shop3
     When I try to get product "product2" images for shop "shop3"
     Then I should get error that shop association was not found
+
+  Scenario: I should not be able to unassociate product from all shops
+    Given I add product "product" to shop "shop1" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And product "product" is associated to shop "shop1"
+    When I set following shops for product "product":
+      | source shop | shop1 |
+      | shops       |       |
+    Then I should get error that I cannot unassociate product from all shops
+    And product "product" is associated to shop "shop1"
+
+  Scenario: I should not be able to unassociate product from source shop
+    Given I add product "product" to shop "shop1" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And product "product" is associated to shop "shop1"
+    When I set following shops for product "product":
+      | source shop | shop1 |
+      | shops       | shop2 |
+    Then I should get error that I cannot unassociate product from source shop
+    And product "product" is associated to shop "shop1"
+
+  Scenario: I should not be able to provide a source shop which is not associated to product
+    Given I add product "product" to shop "shop1" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And product "product" is associated to shop "shop1"
+    And product "product" is not associated to shop "shop2"
+    When I set following shops for product "product":
+      | source shop | shop2       |
+      | shops       | shop1,shop2 |
+    Then I should get error that source shop is not associated to product
+    And product "product" is associated to shop "shop1"
