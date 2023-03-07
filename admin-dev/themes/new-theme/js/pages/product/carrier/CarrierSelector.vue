@@ -37,7 +37,6 @@
           :selected-choice-ids="this.selectedCarrierIds"
           @selectChoice="addCarrier"
           @unselectChoice="removeCarrier"
-          @click="showModifyAllShopsCheckbox"
         />
         <button
           type="button"
@@ -64,23 +63,6 @@
           </li>
         </ul>
       </span>
-    </div>
-    <div>
-      <div
-        v-if="modifyAllShopsVisible"
-        class="form-check form-check-radio form-checkbox"
-      >
-        <div
-          class="md-checkbox md-checkbox-inline"
-        >
-          <label class="required">
-            <input
-              :name="modifyAllShopsName"
-              type="checkbox"
-              class="form-check-input"
-            ><i class="md-checkbox-control"/>{{ $t('modifyAllShops.label') }}</label>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -116,10 +98,6 @@
         type: String,
         required: true,
       },
-      modifyAllShopsName: {
-        type: String,
-        required: true,
-      },
       eventEmitter: {
         type: Object as PropType<typeof EventEmitter>,
         required: true,
@@ -142,9 +120,6 @@
       },
     },
     methods: {
-      showModifyAllShopsCheckbox(): void {
-        this.modifyAllShopsVisible = true;
-      },
       addCarrier(carrier: Choice): void {
         this.selectedCarrierIds.push(carrier.id);
       },
@@ -155,7 +130,6 @@
       },
       clearAllSelected(): void {
         this.selectedCarrierIds = [];
-        this.showModifyAllShopsCheckbox();
         this.eventEmitter.emit(ProductEventMap.shipping.clearAllCarriers);
       },
     },

@@ -78,7 +78,6 @@ export default function initCarrierSelector(
     carrierChoices,
     initialCarrierIds,
     choiceInputName,
-    modifyAllShopsName: container.dataset.modifyAllShopsName,
     eventEmitter,
   }).use(i18n);
 
