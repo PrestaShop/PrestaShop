@@ -73,6 +73,7 @@
   import {Choice} from '@app/components/checkboxes-dropdown/types';
   import EventEmitter from '@components/event-emitter';
   import ProductEventMap from '@pages/product/product-event-map';
+  import ProductMap from '@pages/product/product-map';
 
   export default defineComponent({
     name: 'CarrierSelector',
@@ -131,6 +132,9 @@
       clearAllSelected(): void {
         this.selectedCarrierIds = [];
         this.eventEmitter.emit(ProductEventMap.shipping.clearAllCarriers);
+        const carrierSelector = <HTMLDivElement> document.querySelector(ProductMap.shipping.carrierSelectorContainer);
+        // this event will allow modify_all_shops checkbox to stay visible after clearing all carriers
+        carrierSelector.dispatchEvent(new Event('change'));
       },
     },
   });

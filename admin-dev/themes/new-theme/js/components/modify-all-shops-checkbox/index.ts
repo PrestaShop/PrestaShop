@@ -76,6 +76,7 @@ export default class ModifyAllShopsCheckbox {
           $multiShopField.on('focus', ':input', (event) => {
             const {currentTarget} = <any> event;
 
+            // ignore focus event if target is dropdown (so that the checkbox doesn't mess with the dropdown selection)
             if (currentTarget instanceof HTMLElement && currentTarget.dataset.toggle !== 'dropdown') {
               widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
             }
@@ -89,13 +90,8 @@ export default class ModifyAllShopsCheckbox {
           $multiShopField.on('blur', () => {
             widget.classList.remove(MultiShopModifyAllMap.fieldFocusedClass);
           });
-          $multiShopField.on('blur', ':input', (event) => {
-            const {currentTarget} = <any> event;
-
-            // ignore blur event if it is button element
-            if (!(currentTarget instanceof HTMLButtonElement)) {
-              widget.classList.remove(MultiShopModifyAllMap.fieldFocusedClass);
-            }
+          $multiShopField.on('blur', ':input', () => {
+            widget.classList.remove(MultiShopModifyAllMap.fieldFocusedClass);
           });
 
           // When the checkbox is hovered keep it visible (it will be hidden when field is unfocused otherwise)
