@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Category;
 use Exception;
+use LogicException;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
@@ -112,7 +113,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
-     * @throws \LogicException
+     * @throws LogicException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Form\Exception\LogicException
@@ -387,7 +388,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      *
-     * @throws \LogicException
+     * @throws LogicException
      * @throws \PrestaShopException
      */
     public function newAction()
@@ -438,7 +439,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return array|Response Template vars
      *
-     * @throws \LogicException
+     * @throws Exception
      */
     public function formAction($id, Request $request)
     {
@@ -455,9 +456,18 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($id);
+        try {
+            $product = $productAdapter->getProduct($id);
+        } catch (LogicException $e) {
+            $product = null;
+        }
 
         if (!$product || empty($product->id)) {
+            $this->addFlash(
+                'warning',
+                $this->trans('The product you are trying to access doesn\'t exist', 'Admin.Catalog.Notification')
+            );
+
             return $this->redirectToRoute('admin_product_catalog');
         }
 
@@ -1251,7 +1261,7 @@ class ProductController extends FrameworkBundleAdminController
      * @deprecated since 1.7.5.0, to be removed in 1.8 rely on CommonController::renderFieldAction
      *
      * @throws \OutOfBoundsException
-     * @throws \LogicException
+     * @throws LogicException
      * @throws \PrestaShopException
      */
     public function renderFieldAction($productId, $step, $fieldName)
