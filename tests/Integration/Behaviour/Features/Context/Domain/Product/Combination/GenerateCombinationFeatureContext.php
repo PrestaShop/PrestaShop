@@ -51,7 +51,8 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
-     * @When I generate combinations in shop ":shopReference" for product :productReference using following attributes:
+     * @When I generate combinations in shop :shopReference for product :productReference using following attributes:
+     * @When I generate combinations for product :productReference in shop :shopReference using following attributes:
      *
      * @param string $shopReference
      * @param string $productReference
@@ -67,7 +68,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
-     * @When I generate combinations for product ":productReference" in all shops using following attributes:
+     * @When I generate combinations for product :productReference in all shops using following attributes:
      *
      * @param string $productReference
      * @param TableNode $table

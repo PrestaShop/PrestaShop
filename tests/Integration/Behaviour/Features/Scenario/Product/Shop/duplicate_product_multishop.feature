@@ -14,9 +14,19 @@ Feature: Copy product from shop to shop.
 
   Scenario: This are pre-requisite steps but it is only done once, that is why we don't use Background here
     Given I enable multishop feature
+    # Prepare languages
     And language "english" with locale "en-US" exists
     And language "french" with locale "fr-FR" exists
     And language with iso code "en" is the default one
+    # Prepare shops
+    And shop "shop1" with name "test_shop" exists
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
+    And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
+    And Shop group test_second_shop_group shares its stock
+    And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
+    And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
+    # Prepare attributes
     And attribute group "Size" named "Size" in en language exists
     And attribute group "Color" named "Color" in en language exists
     And attribute "S" named "S" in en language exists
@@ -26,13 +36,21 @@ Feature: Copy product from shop to shop.
     And attribute "Black" named "Black" in en language exists
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
-    And shop "shop1" with name "test_shop" exists
-    And shop group "default_shop_group" with name "Default" exists
-    And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
-    And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
-    And Shop group test_second_shop_group shares its stock
-    And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
-    And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
+    And attribute "Pink" named "Pink" in en language exists
+    And attribute "Green" named "Green" in en language exists
+    And attribute "Orange" named "Orange" in en language exists
+    And I associate attribute group "Size" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute group "Color" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "S" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "M" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "L" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "White" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Black" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Blue" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Red" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Pink" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Green" with shops "shop1,shop2,shop3,shop4"
+    And I associate attribute "Orange" with shops "shop1,shop2,shop3,shop4"
     And single shop context is loaded
     Given manufacturer studioDesign named "Studio Design" exists
     And carrier carrier1 named "ecoCarrier" exists
@@ -1279,3 +1297,200 @@ Feature: Copy product from shop to shop.
     And image "image1CopyAllShops" should have same file as "app_icon.png"
     And image "image2CopyAllShops" should have same file as "logo.jpg"
     And image "image3CopyAllShops" should have same file as "app_icon.png"
+
+  Scenario: Duplicate a product with combinations all combinations are duplicated in appropriate shops
+    # First prepare a product with complex combination associations (shop have different combinations and values)
+    When I add product "productWithCombinations" to shop shop1 with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I generate combinations in shop shop1 for product productWithCombinations using following attributes:
+      | Color | [Red,Blue] |
+    And I copy product productWithCombinations from shop shop1 to shop shop2
+    And I copy product productWithCombinations from shop shop1 to shop shop3
+    And I copy product productWithCombinations from shop shop1 to shop shop4
+    Then product productWithCombinations should have the following combinations for shops "shop1,shop2,shop3,shop4":
+      | id reference                | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationsBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    When I generate combinations for product productWithCombinations in shop shop1 using following attributes:
+      | Color | [Pink] |
+    And I generate combinations for product productWithCombinations in shop shop2 using following attributes:
+      | Color | [Green] |
+    And I generate combinations for product productWithCombinations in shop shop3 using following attributes:
+      | Color | [Black] |
+    And I generate combinations for product productWithCombinations in shop shop4 using following attributes:
+      | Color | [White] |
+    And I generate combinations for product productWithCombinations in all shops using following attributes:
+      | Color | [Orange] |
+    # Identify references for all combinations in all shops (some are common)
+    Then product productWithCombinations should have the following combinations for shop shop1:
+      | id reference                  | combination name | reference | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      |           | [Color:Red]    | 0               | 0        | true       |
+      | productWithCombinationsBlue   | Color - Blue     |           | [Color:Blue]   | 0               | 0        | false      |
+      | productWithCombinationsPink   | Color - Pink     |           | [Color:Pink]   | 0               | 0        | false      |
+      | productWithCombinationsOrange | Color - Orange   |           | [Color:Orange] | 0               | 0        | false      |
+    And product productWithCombinations should have the following combinations for shop shop2:
+      | id reference                  | combination name | reference | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      |           | [Color:Red]    | 0               | 0        | true       |
+      | productWithCombinationsBlue   | Color - Blue     |           | [Color:Blue]   | 0               | 0        | false      |
+      | productWithCombinationsGreen  | Color - Green    |           | [Color:Green]  | 0               | 0        | false      |
+      | productWithCombinationsOrange | Color - Orange   |           | [Color:Orange] | 0               | 0        | false      |
+    And product productWithCombinations should have the following combinations for shop shop3:
+      | id reference                  | combination name | reference | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      |           | [Color:Red]    | 0               | 0        | true       |
+      | productWithCombinationsBlue   | Color - Blue     |           | [Color:Blue]   | 0               | 0        | false      |
+      | productWithCombinationsBlack  | Color - Black    |           | [Color:Black]  | 0               | 0        | false      |
+      | productWithCombinationsOrange | Color - Orange   |           | [Color:Orange] | 0               | 0        | false      |
+    And product productWithCombinations should have the following combinations for shop shop4:
+      | id reference                  | combination name | reference | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      |           | [Color:Red]    | 0               | 0        | true       |
+      | productWithCombinationsBlue   | Color - Blue     |           | [Color:Blue]   | 0               | 0        | false      |
+      | productWithCombinationsWhite  | Color - White    |           | [Color:White]  | 0               | 0        | false      |
+      | productWithCombinationsOrange | Color - Orange   |           | [Color:Orange] | 0               | 0        | false      |
+    When I set combination "productWithCombinationsBlue" as default for shop "shop2"
+    And I set combination "productWithCombinationsWhite" as default for shop "shop4"
+    And I update combination "productWithCombinationsRed" with following values for all shops:
+      | reference       | redAllShops |
+      | impact on price | 51          |
+    And I update combination "productWithCombinationsOrange" with following values for all shops:
+      | reference       | orangeAllShops |
+      | impact on price | 69             |
+    And I update combination "productWithCombinationsBlue" with following values for shop "shop1":
+      | reference       | blueShop1 |
+      | impact on price | 10        |
+    And I update combination "productWithCombinationsPink" with following values for shop "shop1":
+      | reference       | pinkShop1 |
+      | impact on price | 11        |
+    And I update combination "productWithCombinationsBlue" with following values for shop "shop2":
+      | reference       | blueShop2 |
+      | impact on price | 20        |
+    And I update combination "productWithCombinationsGreen" with following values for shop "shop2":
+      | reference       | greenShop2 |
+      | impact on price | 21         |
+    And I update combination "productWithCombinationsBlue" with following values for shop "shop3":
+      | reference       | blueShop3 |
+      | impact on price | 30        |
+    And I update combination "productWithCombinationsBlack" with following values for shop "shop3":
+      | reference       | blackShop3 |
+      | impact on price | 31         |
+    # Reference is common to all shops so this last update will update all shops for the reference field
+    And I update combination "productWithCombinationsBlue" with following values for shop "shop4":
+      | reference       | blueShop4 |
+      | impact on price | 40        |
+    #
+    # Final check of the product combinations data before duplication
+    #
+    Then product productWithCombinations should have the following combinations for shop shop1:
+      | combination reference         | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 10              | 0        | false      |
+      | productWithCombinationsPink   | Color - Pink     | pinkShop1      | [Color:Pink]   | 11              | 0        | false      |
+      | productWithCombinationsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinations should have the following combinations for shop shop2:
+      | combination reference         | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
+      | productWithCombinationsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 20              | 0        | true       |
+      | productWithCombinationsGreen  | Color - Green    | greenShop2     | [Color:Green]  | 21              | 0        | false      |
+      | productWithCombinationsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinations should have the following combinations for shop shop3:
+      | combination reference         | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 30              | 0        | false      |
+      | productWithCombinationsBlack  | Color - Black    | blackShop3     | [Color:Black]  | 31              | 0        | false      |
+      | productWithCombinationsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinations should have the following combinations for shop shop4:
+      | combination reference         | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
+      | productWithCombinationsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 40              | 0        | false      |
+      | productWithCombinationsWhite  | Color - White    |                | [Color:White]  | 0               | 0        | true       |
+      | productWithCombinationsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    #
+    # Duplicate for single shop1
+    #
+    When I duplicate product productWithCombinations to a productWithCombinationCopyShop1 for shop shop1
+    Then product productWithCombinationCopyShop1 should have the following combinations for shop shop1:
+      | id reference                          | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationCopyShop1Red    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationCopyShop1Blue   | Color - Blue     | blueShop4      | [Color:Blue]   | 10              | 0        | false      |
+      | productWithCombinationCopyShop1Pink   | Color - Pink     | pinkShop1      | [Color:Pink]   | 11              | 0        | false      |
+      | productWithCombinationCopyShop1Orange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationCopyShop1 is not associated to shop shop2
+    And product productWithCombinationCopyShop1 is not associated to shop shop3
+    And product productWithCombinationCopyShop1 is not associated to shop shop4
+    #
+    # Duplicate for single shop3
+    #
+    When I duplicate product productWithCombinations to a productWithCombinationCopyShop3 for shop shop3
+    And product productWithCombinationCopyShop3 should have the following combinations for shop shop3:
+      | id reference                          | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationCopyShop3Red    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationCopyShop3Blue   | Color - Blue     | blueShop4      | [Color:Blue]   | 30              | 0        | false      |
+      | productWithCombinationCopyShop3Black  | Color - Black    | blackShop3     | [Color:Black]  | 31              | 0        | false      |
+      | productWithCombinationCopyShop3Orange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationCopyShop3 is not associated to shop shop1
+    And product productWithCombinationCopyShop3 is not associated to shop shop2
+    And product productWithCombinationCopyShop3 is not associated to shop shop4
+    #
+    # Duplicate for first shop group
+    #
+    When I duplicate product productWithCombinations to a productWithCombinationsCopyShopGroup1 for shop group default_shop_group
+    Then product productWithCombinationsCopyShopGroup1 should have the following combinations for shop shop1:
+      | id reference                                | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyShopGroup1Red    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationsCopyShopGroup1Blue   | Color - Blue     | blueShop4      | [Color:Blue]   | 10              | 0        | false      |
+      | productWithCombinationsCopyShopGroup1Pink   | Color - Pink     | pinkShop1      | [Color:Pink]   | 11              | 0        | false      |
+      | productWithCombinationsCopyShopGroup1Orange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationsCopyShopGroup1 should have the following combinations for shop shop2:
+      | id reference                                | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyShopGroup1Red    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
+      | productWithCombinationsCopyShopGroup1Blue   | Color - Blue     | blueShop4      | [Color:Blue]   | 20              | 0        | true       |
+      | productWithCombinationsCopyShopGroup1Green  | Color - Green    | greenShop2     | [Color:Green]  | 21              | 0        | false      |
+      | productWithCombinationsCopyShopGroup1Orange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationsCopyShopGroup1 is not associated to shop shop3
+    And product productWithCombinationsCopyShopGroup1 is not associated to shop shop4
+    #
+    # Duplicate for second shop group
+    #
+    When I duplicate product productWithCombinations to a productWithCombinationsCopyShopGroup2 for shop group test_second_shop_group
+    Then product productWithCombinationsCopyShopGroup2 should have the following combinations for shop shop3:
+      | id reference                                | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyShopGroup2Red    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationsCopyShopGroup2Blue   | Color - Blue     | blueShop4      | [Color:Blue]   | 30              | 0        | false      |
+      | productWithCombinationsCopyShopGroup2Black  | Color - Black    | blackShop3     | [Color:Black]  | 31              | 0        | false      |
+      | productWithCombinationsCopyShopGroup2Orange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationsCopyShopGroup2 should have the following combinations for shop shop4:
+      | id reference                                | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyShopGroup2Red    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
+      | productWithCombinationsCopyShopGroup2Blue   | Color - Blue     | blueShop4      | [Color:Blue]   | 40              | 0        | false      |
+      | productWithCombinationsCopyShopGroup2White  | Color - White    |                | [Color:White]  | 0               | 0        | true       |
+      | productWithCombinationsCopyShopGroup2Orange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationsCopyShopGroup2 is not associated to shop shop1
+    And product productWithCombinationsCopyShopGroup2 is not associated to shop shop2
+    #
+    # Duplicate all shops
+    #
+    When I duplicate product productWithCombinations to a productWithCombinationsCopyAllShops for all shops
+    Then product productWithCombinationsCopyAllShops should have the following combinations for shop shop1:
+      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 10              | 0        | false      |
+      | productWithCombinationsCopyAllShopsPink   | Color - Pink     | pinkShop1      | [Color:Pink]   | 11              | 0        | false      |
+      | productWithCombinationsCopyAllShopsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationsCopyAllShops should have the following combinations for shop shop2:
+      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
+      | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 20              | 0        | true       |
+      | productWithCombinationsCopyAllShopsGreen  | Color - Green    | greenShop2     | [Color:Green]  | 21              | 0        | false      |
+      | productWithCombinationsCopyAllShopsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationsCopyAllShops should have the following combinations for shop shop3:
+      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
+      | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 30              | 0        | false      |
+      | productWithCombinationsCopyAllShopsBlack  | Color - Black    | blackShop3     | [Color:Black]  | 31              | 0        | false      |
+      | productWithCombinationsCopyAllShopsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
+    And product productWithCombinationsCopyAllShops should have the following combinations for shop shop4:
+      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
+      | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 40              | 0        | false      |
+      | productWithCombinationsCopyAllShopsWhite  | Color - White    |                | [Color:White]  | 0               | 0        | true       |
+      | productWithCombinationsCopyAllShopsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |

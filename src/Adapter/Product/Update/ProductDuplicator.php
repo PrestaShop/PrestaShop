@@ -428,15 +428,29 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     {
         $oldRows = $this->getRows('category_product', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_CATEGORIES);
         $newRows = [];
+        $lastCategoriesPosition = [];
         foreach ($oldRows as $oldRow) {
+            $categoryId = (int) $oldRow['id_category'];
+            if (isset($lastCategoriesPosition[$categoryId])) {
+                $lastCategoryPosition = $lastCategoriesPosition[$categoryId];
+            } else {
+                $lastCategoryPosition = (int) $this->connection->createQueryBuilder()
+                    ->select('cp.position')
+                    ->from($this->dbPrefix . 'category_product', 'cp')
+                    ->where('cp.id_category = :categoryId')
+                    ->setParameter('categoryId', $categoryId)
+                    ->addOrderBy('position', 'DESC')
+                    ->execute()
+                    ->fetchOne()
+                ;
+            }
+
             $newRows[] = [
                 'id_product' => $newProductId,
-                'id_category' => $oldRow['id_category'],
-                'position' => '(SELECT tmp.max + 1 FROM (
-					SELECT MAX(cp.`position`) AS max
-					FROM `' . $this->dbPrefix . 'category_product` cp
-					WHERE cp.`id_category`=' . (int) $oldRow['id_category'] . ') AS tmp)',
+                'id_category' => $categoryId,
+                'position' => ++$lastCategoryPosition,
             ];
+            $lastCategoriesPosition[$categoryId] = $lastCategoryPosition;
         }
         $this->bulkInsert('category_product', $newRows, CannotDuplicateProductException::FAILED_DUPLICATE_CATEGORIES);
     }
@@ -490,16 +504,28 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
 
         // First create new combinations which are copies of the old ones
         $combinationMatching = [];
-        foreach ($oldCombinationsShop as $oldCombination) {
-            $oldCombinationId = (int) $oldCombination['id_product_attribute'];
+        $newShopAssociations = [];
+        foreach ($oldCombinationsShop as $oldCombinationShop) {
+            $oldCombinationId = (int) $oldCombinationShop['id_product_attribute'];
 
             if (!isset($combinationMatching[$oldCombinationId])) {
-                // New combination to create, associate it to the related shop
-                $shopId = new ShopId((int) $oldCombination['id_shop']);
-                $oldCombination = $this->combinationRepository->get(new CombinationId($oldCombinationId), $shopId);
-                $oldCombination->id_product = $newProductId;
-                $newCombination = $this->duplicateObjectModelToShop($oldCombination, $shopId);
-                $newCombinationId = (int) $newCombination->id;
+                // New combination to create, copy the old combination and associate to appropriate attributes, store the new ID for matching
+                $oldCombinations = $this->getRows(
+                    'product_attribute',
+                    [
+                        'id_product' => $oldProductId,
+                        'id_product_attribute' => $oldCombinationId,
+                    ],
+                    CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
+                );
+                $newCombination = array_merge(reset($oldCombinations), [
+                    'id_product' => $newProductId,
+                    'id_product_attribute' => null,
+                ]);
+                $newCombinationId = $this->insertRow('product_attribute', $newCombination, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
+                if (empty($newCombinationId)) {
+                    throw new CannotDuplicateProductException('Could not duplicate combination', CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
+                }
                 $combinationMatching[$oldCombinationId] = $newCombinationId;
 
                 // Associate attributes to combination
@@ -510,13 +536,35 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 );
                 $newAttributes = $this->replaceInRows($oldAttributes, ['id_product_attribute' => $newCombinationId]);
                 $this->bulkInsert('product_attribute_combination', $newAttributes, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
-            } else {
-                // Combination already created to another shop, now we focus on duplicating the data for every other shop
-                $newCombinationId = $combinationMatching[$oldCombinationId];
-                $newCombinationShop = $this->replaceInRows([$oldCombination], ['id_product_attribute' => $newCombinationId, 'id_product' => $newProductId]);
-                $this->bulkInsert('product_attribute_shop', $newCombinationShop, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
             }
+
+            // Add new shop association
+            $newCombinationId = $combinationMatching[$oldCombinationId];
+            $newCombinationShop = array_merge($oldCombinationShop, [
+                'id_product_attribute' => $newCombinationId,
+                'id_product' => $newProductId,
+            ]);
+            $newShopAssociations[] = $newCombinationShop;
         }
+
+        // Insert all shop associations
+        $this->bulkInsert('product_attribute_shop', $newShopAssociations, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
+
+        // Finally copy all combination multi lang fields
+        $oldCombinationsLang = $this->getRows(
+            'product_attribute_lang',
+            [
+                'id_product_attribute' => array_keys($combinationMatching),
+            ],
+            CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
+        );
+        $newCombinationsLang = [];
+        foreach ($oldCombinationsLang as $oldLang) {
+            $newCombinationsLang[] = array_merge($oldLang, [
+                'id_product_attribute' => $combinationMatching[(int) $oldLang['id_product_attribute']],
+            ]);
+        }
+        $this->bulkInsert('product_attribute_lang', $newCombinationsLang, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
 
         return $combinationMatching;
     }
@@ -903,32 +951,52 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * Bulk insert some row values, all row must be formatted with the exact same keys and in the same order
-     * so that the defined column match the values for each row.
+     * Bulk insert one row, the values is an associative array defining each column in the row.
      *
      * @param string $table
      * @param array $rowValues
      * @param int $errorCode
+     *
+     * @return int
      */
-    private function bulkInsert(string $table, array $rowValues, int $errorCode): void
+    private function insertRow(string $table, array $rowValues, int $errorCode): int
     {
-        if (empty($rowValues)) {
+        $this->bulkInsert($table, [$rowValues], $errorCode);
+
+        return (int) $this->connection->lastInsertId();
+    }
+
+    /**
+     * Bulk insert some row values, all row must be formatted with the exact same keys and in the same order
+     * so that the defined column match the values for each row.
+     *
+     * @param string $table
+     * @param array $multipleRowValues
+     * @param int $errorCode
+     */
+    private function bulkInsert(string $table, array $multipleRowValues, int $errorCode): void
+    {
+        if (empty($multipleRowValues)) {
             return;
         }
 
-        $insertKeys = array_keys(reset($rowValues));
-        $bulkInsertSql = 'INSERT IGNORE INTO ' . $this->dbPrefix . $table . ' (' . implode(',', $insertKeys) . ') VALUES ';
-        foreach ($rowValues as $i => $rowValue) {
+        $insertKeys = array_keys(reset($multipleRowValues));
+        $bulkInsertSql = 'INSERT INTO ' . $this->dbPrefix . $table . ' (' . implode(',', $insertKeys) . ') VALUES ';
+        foreach ($multipleRowValues as $i => $rowValue) {
             if (array_keys($rowValue) !== $insertKeys) {
                 throw new InvalidArgumentException('The provided data has different keys in some rows');
             }
 
             $bulkInsertSql .= '(' . implode(',', array_map(static function ($columnValue): string {
+                if ($columnValue === null) {
+                    return 'null';
+                }
+
                 // We stringify values to avoid SQL syntax error, the float and integers will correctly casted in the DB anyway
                 // however string values and date time need to be quoted
                 return "'$columnValue'";
             }, $rowValue)) . ')';
-            if ($i < count($rowValues) - 1) {
+            if ($i < count($multipleRowValues) - 1) {
                 $bulkInsertSql .= ',';
             } else {
                 $bulkInsertSql .= ';';
