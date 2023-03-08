@@ -379,8 +379,8 @@ $product-page-padding-bottom: 80px !default;
     background: $white;
     box-shadow: $gray-dark 0 0 10px;
     padding: {
-      top: $grid-gutter-width / 2;
-      bottom: $grid-gutter-width / 2;
+      top: 0.6rem;
+      bottom: 0.6rem;
     }
 
     .form-group {
