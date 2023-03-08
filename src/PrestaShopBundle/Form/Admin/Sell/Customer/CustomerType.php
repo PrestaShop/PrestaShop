@@ -129,10 +129,39 @@ class CustomerType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // Initialize password strength configuration set in Security section of backoffice
         $minScore = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE);
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
 
+        /*
+         * Initialize password constraints. When creating a customer, we are utilizing full constraints.
+         * When editing a customer, we use only length constraints, to validate the field ONLY if something
+         * was provided and the merchant actually wants to change the password.
+         */
+        $passwordConstraints = [
+            new Length([
+                'max' => Password::MAX_LENGTH,
+                'maxMessage' => $this->trans(
+                    'This field cannot be longer than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => Password::MAX_LENGTH]
+                ),
+                'min' => Password::MIN_LENGTH,
+                'minMessage' => $this->trans(
+                    'This field cannot be shorter than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => Password::MIN_LENGTH]
+                ),
+            ]),
+        ];
+        if ($options['is_password_required']) {
+            $passwordConstraints[] = new NotBlank([
+                'message' => $this->trans('Password is required.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
+        // We show the guest field only when creating the customer AND guest checkout is enabled.
         if ($options['show_guest_field'] === true) {
             $builder
                 ->add('is_guest', SwitchType::class, [
@@ -144,6 +173,7 @@ class CustomerType extends TranslatorAwareType
                     'required' => false,
                 ]);
         }
+
         $builder
             ->add('gender_id', ChoiceType::class, [
                 'choices' => $this->genderChoices,
@@ -232,25 +262,7 @@ class CustomerType extends TranslatorAwareType
                         '%length%' => Password::MIN_LENGTH,
                     ]
                 ),
-                'constraints' => [
-                    new Length([
-                        'max' => Password::MAX_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => Password::MAX_LENGTH]
-                        ),
-                        'min' => Password::MIN_LENGTH,
-                        'minMessage' => $this->trans(
-                            'This field cannot be shorter than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => Password::MIN_LENGTH]
-                        ),
-                    ]),
-                    new NotBlank([
-                        'message' => $this->trans('Password is required.', 'Admin.Notifications.Error'),
-                    ]),
-                ],
+                'constraints' => $passwordConstraints,
                 'required' => $options['is_password_required'],
             ])
             ->add('birthday', BirthdayType::class, [
