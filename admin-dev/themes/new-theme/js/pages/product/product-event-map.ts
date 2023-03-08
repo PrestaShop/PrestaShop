@@ -66,8 +66,5 @@ export default {
   specificPrice: {
     listUpdated: 'specificPricesListUpdated',
   },
-  shipping: {
-    clearAllCarriers: 'productClearAllCarriers',
-  },
   cancelProductShops: 'cancelProductShops',
 };

@@ -130,11 +130,17 @@
         );
       },
       clearAllSelected(): void {
+        const previouslySelectedCarrierIds = this.selectedCarrierIds;
         this.selectedCarrierIds = [];
-        this.eventEmitter.emit(ProductEventMap.shipping.clearAllCarriers);
-        const carrierSelector = <HTMLDivElement> document.querySelector(ProductMap.shipping.carrierSelectorContainer);
-        // this event will allow modify_all_shops checkbox to stay visible after clearing all carriers
-        carrierSelector.dispatchEvent(new Event('change'));
+        previouslySelectedCarrierIds.forEach((id: number) => {
+          const checkbox = <HTMLInputElement> document.querySelector(
+            `.carrier-selector .dropdown-item input[type="checkbox"][value="${id}"]`,
+          );
+          // trigger change event manually on every checkbox which was unchecked
+          // this will allow modify_all_shops checkbox to stay visible after clearing all carriers and
+          // trigger form save button state change
+          checkbox.dispatchEvent(new CustomEvent('change', {bubbles: true}));
+        });
       },
     },
   });

@@ -121,7 +121,6 @@ export default class ProductPartialUpdater {
 
     this.watchCustomizations();
     this.watchCategories();
-    this.watchCarriers();
     this.initFormattedTextarea();
   }
 
@@ -142,15 +141,6 @@ export default class ProductPartialUpdater {
    */
   private watchCategories(): void {
     this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.updateFooterButtonStates());
-  }
-
-  /**
-   * Watch events specifically related to carriers subform
-   *
-   * @private
-   */
-  private watchCarriers(): void {
-    this.eventEmitter.on(ProductEventMap.shipping.clearAllCarriers, () => this.updateFooterButtonStates());
   }
 
   /**
