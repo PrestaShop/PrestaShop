@@ -332,18 +332,29 @@ Feature: Duplicate product from Back Office (BO).
       | attachment reference | title                       | description                           | file name    | type      | size  |
       | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
 
-  #todo: add specific prices & priorities
-  Scenario: I duplicate a product its specific prices are copied
+  Scenario: I duplicate a product its specific prices and priorities are copied
     Given I add product "productWithSpecificPrices" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
+    And default specific price priorities are set to following:
+      | priorities  |
+      | id_group    |
+      | id_currency |
+      | id_country  |
+      | id_shop     |
     And I add a specific price price1 to product productWithSpecificPrices with following details:
       | fixed price     | 0.00   |
       | reduction type  | amount |
       | reduction value | 5.00   |
       | includes tax    | true   |
       | from quantity   | 1      |
+    And I set following custom specific price priorities for product productWithSpecificPrices:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
     When I duplicate product productWithSpecificPrices to a productWithSpecificPricesCopy
     And product "productWithSpecificPricesCopy" should have 1 specific prices
     Then product "productWithSpecificPricesCopy" should have following list of specific prices in "en" language:
@@ -380,6 +391,18 @@ Feature: Duplicate product from Back Office (BO).
       | customer              |                               |
       | product               | productWithSpecificPricesCopy |
     And price1 and price1Copy have different values
+    And product productWithSpecificPricesCopy should have following custom specific price priorities:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
+    And following specific price priorities should be used for product productWithSpecificPricesCopy:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
 
   Scenario: I duplicate a product its suppliers are copied
     Given I add product "productWithSuppliers" with following information:

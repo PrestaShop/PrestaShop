@@ -706,6 +706,11 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $specificPrice->id_product_attribute = $combinationMatching[(int) $specificPrice->id_product_attribute] ?? 0;
             $this->specificPriceRepository->add($specificPrice);
         }
+
+        // Duplicate priorities
+        $oldPriorities = $this->getRows('specific_price_priority', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_SPECIFIC_PRICES);
+        $newPriorities = $this->replaceInRows($oldPriorities, ['id_product' => $newProductId, 'id_specific_price_priority' => null]);
+        $this->bulkInsert('specific_price_priority', $newPriorities, CannotDuplicateProductException::FAILED_DUPLICATE_SPECIFIC_PRICES);
     }
 
     /**
