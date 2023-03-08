@@ -77,6 +77,12 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('f.id_feature, fl.name')
             ->addSelect('(f.position +1) AS position')
             ->addSelect('COUNT(fv.id_feature_value) AS values_count')
+            ->leftJoin(
+                'f',
+                $this->dbPrefix . 'feature_value',
+                'fv',
+                'f.id_feature = fv.id_feature'
+            )
             ->groupBy('f.id_feature')
         ;
 
@@ -93,10 +99,9 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(DISTINCT f.id_feature)');
-
-        return $qb;
+        return $this->getQueryBuilder($searchCriteria->getFilters())
+            ->select('COUNT(DISTINCT f.id_feature)')
+        ;
     }
 
     /**
@@ -115,14 +120,9 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 'f',
                 $this->dbPrefix . 'feature_shop',
                 'fs',
-                'fs.id_feature = f.id_feature'
+                'fs.id_feature = f.id_feature AND fs.id_shop IN (:contextShopIds)'
             )
-            ->leftJoin(
-                'f',
-                $this->dbPrefix . 'feature_value',
-                'fv',
-                'f.id_feature = fv.id_feature'
-            )
+            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
             ->leftJoin(
                 'f',
                 $this->dbPrefix . 'feature_lang',
@@ -130,7 +130,6 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 'f.id_feature = fl.id_feature AND fl.id_lang = :langId'
             )
             ->setParameter('langId', $this->contextLangId)
-            ->groupBy('f.id_feature')
         ;
 
         foreach ($filters as $filterName => $value) {
@@ -153,11 +152,6 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->andWhere('f.`' . $filterName . '` = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
-
-        $qb->andWhere('fs.`id_shop` IN (:contextShopIds)')
-            ->andWhere($qb->expr()->in('fs.id_shop', ':contextShopIds'))
-            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
-        ;
 
         return $qb;
     }
