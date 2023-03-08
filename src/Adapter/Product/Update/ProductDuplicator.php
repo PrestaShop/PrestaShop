@@ -365,16 +365,25 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $this->stockAvailableRepository->createStockAvailable($targetProductId, $targetShopId);
             }
 
-            $sourceStock = $this->stockAvailableRepository->getForProduct(new ProductId($oldProductId), $targetShopId);
-            $outOfStock = new OutOfStockType((int) $sourceStock->out_of_stock);
+            try {
+                $sourceStock = $this->stockAvailableRepository->getForProduct(new ProductId($oldProductId), $targetShopId);
+                $outOfStock = new OutOfStockType((int) $sourceStock->out_of_stock);
+                $productQuantity = (int) $sourceStock->quantity;
+                $location = $sourceStock->location;
+            } catch (StockAvailableNotFoundException $e) {
+                // The source product may not have any associated StockAvailable (this happens with product created with old versions)
+                $outOfStock = new OutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT);
+                $productQuantity = 0;
+                $location = '';
+            }
 
-            $stockModification = StockModification::buildFixedQuantity((int) $sourceStock->quantity);
+            $stockModification = StockModification::buildFixedQuantity($productQuantity);
             $stockProperties = new ProductStockProperties(
                 null,
                 $stockModification,
                 $outOfStock,
                 null,
-                $sourceStock->location
+                $location
             );
             $this->productStockUpdater->update($targetProductId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
 
@@ -408,13 +417,21 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             }
 
             // Get the source stock
-            $sourceStock = $this->stockAvailableRepository->getForCombination($oldCombinationId, $targetShopId);
+            try {
+                $sourceStock = $this->stockAvailableRepository->getForCombination($oldCombinationId, $targetShopId);
+                $combinationQuantity = (int) $sourceStock->quantity;
+                $location = $sourceStock->location;
+            } catch (StockAvailableNotFoundException $e) {
+                // The source combination may not have any associated StockAvailable (this happens with combinations created with old versions)
+                $combinationQuantity = 0;
+                $location = '';
+            }
 
-            $stockModification = StockModification::buildFixedQuantity((int) $sourceStock->quantity);
+            $stockModification = StockModification::buildFixedQuantity($combinationQuantity);
             $stockProperties = new CombinationStockProperties(
                 $stockModification,
                 null,
-                $sourceStock->location
+                $location
             );
             $this->combinationStockUpdater->update($newCombinationId, $stockProperties, $targetConstraint);
         }
