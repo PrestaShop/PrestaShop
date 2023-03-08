@@ -54,10 +54,6 @@ final class EditFeatureHandler extends AbstractObjectModelHandler implements Edi
             $feature->name = $command->getLocalizedNames();
         }
 
-        if (null !== $command->getAssociatedShopIds()) {
-            $this->associateWithShops($feature, $command->getAssociatedShopIds());
-        }
-
         if (false === $feature->validateFields(false)) {
             throw new FeatureConstraintException('Invalid data when updating feature');
         }
@@ -68,6 +64,10 @@ final class EditFeatureHandler extends AbstractObjectModelHandler implements Edi
 
         if (false === $feature->update()) {
             throw new CannotEditFeatureException(sprintf('Failed to edit Feature with id "%s".', $feature->id));
+        }
+
+        if (null !== $command->getAssociatedShopIds()) {
+            $this->associateWithShops($feature, $command->getAssociatedShopIds());
         }
     }
 }

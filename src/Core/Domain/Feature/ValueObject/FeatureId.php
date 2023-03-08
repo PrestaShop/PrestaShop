@@ -43,7 +43,7 @@ class FeatureId
      */
     public function __construct($featureId)
     {
-        $this->assertIntegerIsGreaterThanZero($featureId);
+        $this->assertIsGreaterThanZero($featureId);
 
         $this->featureId = $featureId;
     }
@@ -51,7 +51,7 @@ class FeatureId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->featureId;
     }
@@ -61,9 +61,9 @@ class FeatureId
      *
      * @throws InvalidFeatureIdException
      */
-    private function assertIntegerIsGreaterThanZero($featureId): void
+    private function assertIsGreaterThanZero(int $featureId): void
     {
-        if (!is_int($featureId) || 0 > $featureId) {
+        if (0 > $featureId) {
             throw new InvalidFeatureIdException(sprintf('Invalid feature id %s supplied. Feature id must be positive integer.', var_export($featureId, true)));
         }
     }

@@ -94,7 +94,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(f.id_feature)');
+        $qb->select('COUNT(DISTINCT f.id_feature)');
 
         return $qb;
     }
