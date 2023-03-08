@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import addPagePage from '@pages/BO/design/pages/add';
 import pagesPage from '@pages/BO/design/pages';
-import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
 import CMSPageData from '@data/faker/CMSpage';
@@ -75,8 +74,8 @@ describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
 
         await pagesPage.goToAddNewPage(page);
 
-        const pageTitle = await addPageCategoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
+        const pageTitle = await addPagePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
       });
 
       it(`should create page n°${index + 1}`, async function () {

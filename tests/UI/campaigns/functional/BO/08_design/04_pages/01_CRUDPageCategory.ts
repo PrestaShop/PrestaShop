@@ -218,8 +218,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await pagesPage.goToEditPage(page, 1);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await addPagePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
     });
 
     it('should preview the page in FO', async function () {
@@ -243,7 +243,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       page = await cmsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await addPagePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+      await expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
     });
 
     it('should click on cancel button', async function () {
@@ -272,8 +272,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await pagesPage.goToEditCategoryPage(page, 1);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await addPageCategoryPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleEdit);
     });
 
     it('should update the created page category', async function () {
@@ -364,8 +364,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await pagesPage.goToEditPage(page, 1);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await addPagePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addPagePage.editPageTitle(createPageData.title));
     });
 
     it('should update the created page', async function () {
@@ -389,8 +389,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await pagesPage.goToEditPage(page, 1);
 
-      const pageTitle = await pagesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(pagesPage.pageTitle);
+      const pageTitle = await addPagePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addPagePage.editPageTitle(editPageData.title));
     });
 
     it('should click on preview button and check that the page does not exist in FO', async function () {
@@ -408,7 +408,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       page = await cmsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await addPagePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
+      await expect(pageTitle).to.contains(addPagePage.editPageTitle(editPageData.title));
     });
 
     it('should click on cancel button', async function () {

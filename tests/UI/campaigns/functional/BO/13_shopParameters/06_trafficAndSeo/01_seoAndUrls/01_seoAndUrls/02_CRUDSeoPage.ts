@@ -102,7 +102,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
       await seoAndUrlsPage.goToEditSeoUrlPage(page, 1);
 
       const pageTitle = await addSeoAndUrlPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addSeoAndUrlPage.pageTitle);
+      await expect(pageTitle).to.contains(addSeoAndUrlPage.editPageTitle);
     });
 
     it('should edit seo page', async function () {

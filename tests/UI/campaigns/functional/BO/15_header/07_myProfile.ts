@@ -83,7 +83,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.closeSfToolBar(page);
 
       const pageTitle = await myProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit);
+      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
     });
   });
 
@@ -141,8 +141,7 @@ describe('BO - Header : My profile', async () => {
       await expect(firstNameResult).to.equal(employeeData.firstName);
 
       const pageTitle = await myProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${myProfilePage.pageTitleEdit} ${employeeData.lastName} ${
-        employeeData.firstName}`);
+      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit(employeeData.lastName, employeeData.firstName));
     });
 
     it('should upload an invalid format image and check error message', async function () {

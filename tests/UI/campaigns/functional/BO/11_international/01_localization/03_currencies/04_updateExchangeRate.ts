@@ -114,7 +114,7 @@ describe('BO - International - Currencies : Update exchange rate', async () => {
       await currenciesPage.goToEditCurrencyPage(page, 1);
 
       const pageTitle = await addCurrencyPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+      await expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
     });
 
     it('should update the exchange rate of the created currency', async function () {
