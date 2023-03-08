@@ -292,8 +292,8 @@ Feature: Add product to pack from Back Office (BO)
       | name[en-US] | casual sunglasses |
       | type        | standard          |
     And I set following shops for product "product7":
-      | source shop | shop4 |
-      | shops       | shop2 |
+      | source shop | shop4       |
+      | shops       | shop4,shop2 |
     Given I update pack productPack5 with following product quantities:
       | product  | quantity |
       | product5 | 10       |
