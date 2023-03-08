@@ -69,6 +69,9 @@ describe('BO - Customers - Customers : View information about customer', async (
   const yyyyEditBirth: string = editCustomerData.yearOfBirth;
   const editCustomerBirthDate: string = `${mmEditBirth}/${ddEditBirth}/${yyyyEditBirth}`;
 
+  const createCustomerName = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
+  const editCustomerName = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -149,7 +152,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await customersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
     });
 
     it('should check personal information title', async function () {
@@ -269,7 +272,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
     });
   });
 
@@ -304,7 +307,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await customersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
     });
 
     it('should check personal information title', async function () {
@@ -511,7 +514,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await customersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(editCustomerName));
     });
 
     it('should check order status', async function () {
@@ -575,10 +578,12 @@ describe('BO - Customers - Customers : View information about customer', async (
     it('should go to view cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCartPage', baseContext);
 
+      const idCart = await viewCustomerPage.getTextColumnFromTableCarts(page, 'id', 1);
+
       await viewCustomerPage.goToPage(page, 'Carts');
 
       const pageTitle = await viewCartPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCartPage.pageTitle);
+      await expect(pageTitle).to.contains(viewCartPage.pageTitle(idCart));
     });
   });
 

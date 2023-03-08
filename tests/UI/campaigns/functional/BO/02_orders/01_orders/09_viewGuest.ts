@@ -114,7 +114,7 @@ describe('BO - Orders : View guest from orders page', async () => {
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       await expect(pageTitle).to
-        .contains(`${viewCustomerPage.pageTitle} ${customerData.firstName[0]}. ${customerData.lastName}`);
+        .contains(viewCustomerPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
     });
   });
 

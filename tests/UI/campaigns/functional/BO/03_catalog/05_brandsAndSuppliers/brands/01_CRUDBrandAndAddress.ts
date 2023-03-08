@@ -253,7 +253,7 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
       await brandsPage.goToEditBrandAddressPage(page, 1);
 
       const pageTitle = await addBrandPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(brandsPage.pageTitle);
+      await expect(pageTitle).to.contains(addBrandPage.pageTitleEdit);
     });
 
     it('should edit brand address', async function () {
