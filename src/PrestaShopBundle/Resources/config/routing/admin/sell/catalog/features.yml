@@ -1,11 +1,21 @@
 # @todo: legacy links can be uncommented when page is fully migrated.
 admin_features_index:
   path: /
-  methods: [ GET, POST ]
+  methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::indexAction
     _legacy_controller: AdminFeatures
     # _legacy_link: AdminFeatures
+
+admin_features_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory
+    redirectRoute: admin_features_index
 
 admin_features_add:
   path: /new

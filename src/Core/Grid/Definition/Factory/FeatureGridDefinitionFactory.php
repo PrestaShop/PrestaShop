@@ -102,13 +102,13 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setOptions(['field' => 'position'])
             )
             //->add((new PositionColumn('position'))
-                //->setName($this->trans('Position', [], 'Admin.Global'))
-                //->setOptions([
-                    //'id_field' => 'id_feature',
-                    //'position_field' => 'position',
-                    //'update_method' => 'POST',
-                    //'update_route' => 'admin_features_update_position',
-                //])
+            //->setName($this->trans('Position', [], 'Admin.Global'))
+            //->setOptions([
+            //'id_field' => 'id_feature',
+            //'position_field' => 'position',
+            //'update_method' => 'POST',
+            //'update_route' => 'admin_features_update_position',
+            //])
             //)
             ->add((new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
@@ -116,14 +116,14 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'actions' => (new RowActionCollection())
                     // @todo: view action is not implemented yet
                     // ->add((new LinkRowAction('view'))
-                        // ->setName($this->trans('View', [], 'Admin.Actions'))
-                        // ->setIcon('zoom_in')
-                        // ->setOptions([
-                            // 'route' => 'admin_features_view',
-                            // 'route_param_name' => 'featureId',
-                            // 'route_param_field' => 'id_feature',
-                            // 'clickable_row' => true,
-                        // ])
+                    // ->setName($this->trans('View', [], 'Admin.Actions'))
+                    // ->setIcon('zoom_in')
+                    // ->setOptions([
+                    // 'route' => 'admin_features_view',
+                    // 'route_param_name' => 'featureId',
+                    // 'route_param_field' => 'id_feature',
+                    // 'clickable_row' => true,
+                    // ])
                     // )
                     ->add((new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
@@ -163,13 +163,13 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ],
             ])
             )
-             // @todo: export action is not implemented yet
-             // ->add((new LinkGridAction('export'))
-                // ->setName($this->trans('Export', [], 'Admin.Actions'))
-                // ->setIcon('cloud_download')
-                // ->setOptions([
-                    // 'route' => 'admin_features_export',
-                // ])
+            // @todo: export action is not implemented yet
+            // ->add((new LinkGridAction('export'))
+            // ->setName($this->trans('Export', [], 'Admin.Actions'))
+            // ->setIcon('cloud_download')
+            // ->setOptions([
+            // 'route' => 'admin_features_export',
+            // ])
             // )
             ->add((new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
@@ -191,7 +191,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_feature', TextType::class))
+            ->add((new Filter('id_feature', NumberType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -209,25 +209,27 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('position', NumberType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('position')
+            ->add(
+                (new Filter('position', NumberType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('position')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
-            ->setAssociatedColumn('actions')
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_features_index',
-            ])
-            ->setAssociatedColumn('actions')
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                    ->setAssociatedColumn('actions')
+                    ->setTypeOptions([
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
+                        ],
+                        'redirect_route' => 'admin_features_index',
+                    ])
+                    ->setAssociatedColumn('actions')
             );
     }
 

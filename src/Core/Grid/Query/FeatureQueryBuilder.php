@@ -145,7 +145,9 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('position' === $filterName) {
                 $qb->andWhere('position LIKE :' . $filterName)
-                    ->setParameter($filterName, '%' . $value . '%');
+                    // position value starts from 0 in database, but in list view they are incremented by +1,
+                    // so if it is a position filter, then we decrement the value to return expected results
+                    ->setParameter($filterName, '%' . ((int) $value - 1) . '%');
                 continue;
             }
 

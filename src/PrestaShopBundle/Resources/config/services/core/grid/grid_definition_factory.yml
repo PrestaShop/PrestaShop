@@ -409,4 +409,5 @@ services:
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     autowire: true
-    public: false
+    # must remain public to be accessed by CommonController:searchGridAction
+    public: true
