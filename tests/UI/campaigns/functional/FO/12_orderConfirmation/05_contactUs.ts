@@ -196,10 +196,6 @@ describe('FO - Order confirmation : Contact us', async () => {
       await expect(emailFieldValue).to.contains(Customers.johnDoe.email);
     });
 
-    it('should select the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectTheOrder', baseContext);
-    });
-
     it('should send the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendTheMessage', baseContext);
 
@@ -232,9 +228,10 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMessageView', baseContext);
 
       await customerServiceMainPage.goToViewMessagePage(page);
+      const threadNumber = await customerServiceMessageViewPage.getThreadNumber(page);
 
       const pageTitle = await customerServiceMessageViewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServiceMessageViewPage.pageTitle);
+      await expect(pageTitle).to.contains(customerServiceMessageViewPage.pageTitle(threadNumber.toString()));
     });
 
     it('should check the message content and uploaded file', async function () {
