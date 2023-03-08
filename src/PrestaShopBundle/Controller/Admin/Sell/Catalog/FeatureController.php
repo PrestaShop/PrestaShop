@@ -33,6 +33,7 @@ use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
@@ -58,23 +59,29 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(Request $request): Response
+    public function indexAction(FeatureFilters $filters): Response
     {
-        $this->setHeaderToolbarActions();
+        $featureGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
 
-        $helperListConfiguration = $this->buildListConfiguration(
-            'id_feature',
-            //@todo: position update is still handled by legacy ajax controller action. Need to handle in dedicated PR
-            'position',
-            $request->attributes->get('_route'),
-            'id_feature'
-        );
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'featureGrid' => $this->presentGrid($featureGridFactory->getGrid($filters)),
+        ]);
 
-        $this->setListFields($helperListConfiguration);
-        $this->setListActions($helperListConfiguration);
-        $this->processFilters($request, $helperListConfiguration);
-
-        return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
+//        $this->setHeaderToolbarActions();
+//
+//        $helperListConfiguration = $this->buildListConfiguration(
+//            'id_feature',
+//            //@todo: position update is still handled by legacy ajax controller action. Need to handle in dedicated PR
+//            'position',
+//            $request->attributes->get('_route'),
+//            'id_feature'
+//        );
+//
+//        $this->setListFields($helperListConfiguration);
+//        $this->setListActions($helperListConfiguration);
+//        $this->processFilters($request, $helperListConfiguration);
+//
+//        return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
     }
 
     /**

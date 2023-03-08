@@ -405,3 +405,8 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: false
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory:
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    autowire: true
+    public: false

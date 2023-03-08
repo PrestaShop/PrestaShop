@@ -513,3 +513,11 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
     public: false
+
+  PrestaShop\PrestaShop\Core\Grid\Query\FeatureQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextListShopID()"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
