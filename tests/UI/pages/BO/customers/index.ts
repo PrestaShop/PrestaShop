@@ -304,7 +304,8 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable, false to disable
    * @return {Promise<string|null|false>} Return message if action performed, false otherwise
    */
-  async setToggleColumnValue(page: Page, row: number, column: string, valueWanted: boolean = true): Promise<string | null | false> {
+  async setToggleColumnValue(page: Page, row: number, column: string, valueWanted: boolean = true):
+    Promise<string | null | false> {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
       // Click and wait for message
       const [message] = await Promise.all([
