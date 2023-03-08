@@ -55,6 +55,7 @@ Feature: Search products to associate them in the BO
       | ean13     | 978020137962      |
       | mpn       | mpn1              |
       | reference | ref1              |
+    # See DetailsAssertionFeatureContext::transformDetails
     Then product "product3" should have following details:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |

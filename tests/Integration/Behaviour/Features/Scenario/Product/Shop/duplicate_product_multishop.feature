@@ -179,6 +179,7 @@ Feature: Copy product from shop to shop.
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "productWithFieldsCopy" should have following details for shops shop1:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -253,6 +254,7 @@ Feature: Copy product from shop to shop.
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "productWithFieldsCopy3" should have following details for shops shop3:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -329,6 +331,7 @@ Feature: Copy product from shop to shop.
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "productWithFieldsOnAllShops" should have following details for shops "shop1,shop2":
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -396,6 +399,7 @@ Feature: Copy product from shop to shop.
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "productWithFieldsOnAllShops" should have following details for shops shop3:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -473,6 +477,7 @@ Feature: Copy product from shop to shop.
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "productWithFieldsDefaultGroup" should have following details for shops "shop1,shop2":
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -548,6 +553,7 @@ Feature: Copy product from shop to shop.
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "productWithFieldsSecondGroup" should have following details for shops shop3:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |

@@ -19,13 +19,15 @@ services:
       - '@prestashop.adapter.legacy.configuration'
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\AddCustomerGroupHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository'
+    public: false
+    autowire: true
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand'
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandler:
+    public: false
+    autowire: true
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing'

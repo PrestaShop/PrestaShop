@@ -10,6 +10,7 @@ Feature: Update product details from Back Office (BO)
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | type        | standard      |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "product1" should have following details:
       | product detail | value |
       | isbn           |       |
@@ -23,6 +24,7 @@ Feature: Update product details from Back Office (BO)
       | ean13     | 978020137962      |
       | mpn       | mpn1              |
       | reference | ref1              |
+    # See DetailsAssertionFeatureContext::transformDetails
     Then product "product1" should have following details:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -32,6 +34,7 @@ Feature: Update product details from Back Office (BO)
       | reference      | ref1              |
 
   Scenario: I only update product availability for order, leaving other properties unchanged
+    # See DetailsAssertionFeatureContext::transformDetails
     Given product "product1" should have following details:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -41,6 +44,7 @@ Feature: Update product details from Back Office (BO)
       | reference      | ref1              |
     When I update product "product1" with following values:
       | isbn |  |
+    # See DetailsAssertionFeatureContext::transformDetails
     Then product "product1" should have following details:
       | product detail | value        |
       | isbn           |              |
@@ -53,6 +57,7 @@ Feature: Update product details from Back Office (BO)
     Given I add product "product2" with following information:
       | name[en-US] | 'The truth is out there' wallpaper |
       | type        | virtual                            |
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "product2" should have following details:
       | product detail | value |
       | isbn           |       |
@@ -63,6 +68,7 @@ Feature: Update product details from Back Office (BO)
     When I update product "product2" with following values:
       | mpn | this is more than forty characters long string |
     Then I should get error that product mpn is invalid
+    # See DetailsAssertionFeatureContext::transformDetails
     And product "product2" should have following details:
       | product detail | value |
       | isbn           |       |

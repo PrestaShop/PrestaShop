@@ -2,8 +2,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler;
 
-
 use Group as CustomerGroup;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandlerInterface;
@@ -11,6 +12,16 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustome
 
 class GetCustomerGroupForEditingHandler implements GetCustomerGroupForEditingHandlerInterface
 {
+    /**
+     * @var GroupRepository
+     */
+    private $customerGroupRepository;
+
+    public function __construct(GroupRepository $customerGroupRepository)
+    {
+        $this->customerGroupRepository = $customerGroupRepository;
+    }
+
     /**
      * @param GetCustomerGroupForEditing $query
      *
@@ -21,19 +32,15 @@ class GetCustomerGroupForEditingHandler implements GetCustomerGroupForEditingHan
     public function handle(GetCustomerGroupForEditing $query): EditableCustomerGroup
     {
         $customerGroupId = $query->getCustomerGroupId();
+        $this->customerGroupRepository->assertGroupExists($customerGroupId);
+
         $customerGroup = new CustomerGroup($customerGroupId->getValue());
 
-        if ($customerGroup->id !== $customerGroupId->getValue()) {
-            throw new GroupNotFoundException(
-                sprintf('Customer Group with id "%d" was not found', $customerGroupId->getValue())
-            );
-        }
-
         return new EditableCustomerGroup(
-            $customerGroupId,
+            $customerGroupId->getValue(),
             $customerGroup->name,
-            (float) $customerGroup->reduction,
-            $customerGroup->price_display_method,
+            new DecimalNumber($customerGroup->reduction),
+            (bool) $customerGroup->price_display_method,
             $customerGroup->show_prices
         );
     }

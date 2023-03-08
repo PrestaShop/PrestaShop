@@ -2,35 +2,46 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupName;
+use PrestaShop\Decimal\DecimalNumber;
 
 class AddCustomerGroupCommand
 {
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     private $localizedNames;
-    /** @var float */
+
+    /**
+     * @var DecimalNumber
+     */
     private $reduction;
-    /** @var int */
-    private $priceDisplayMethod;
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
+    private $displayPriceTaxExcluded;
+
+    /**
+     * @var bool
+     */
     private $showPrice;
 
     /**
      * @param string[] $localizedNames
-     * @param float $reduction
-     * @param int $priceDisplayMethod
-     * @param bool $showPrices
+     * @param DecimalNumber $reduction
+     * @param bool $displayPriceTaxExcluded
+     * @param bool $showPrice
      */
     public function __construct(
         array $localizedNames,
-        float $reduction,
-        int $priceDisplayMethod,
-        bool $showPrices
+        DecimalNumber $reduction,
+        bool $displayPriceTaxExcluded,
+        bool $showPrice
     ) {
         $this->localizedNames = $localizedNames;
         $this->reduction = $reduction;
-        $this->priceDisplayMethod = $priceDisplayMethod;
-        $this->showPrice = $showPrices;
+        $this->displayPriceTaxExcluded = $displayPriceTaxExcluded;
+        $this->showPrice = $showPrice;
     }
 
     /**
@@ -42,17 +53,17 @@ class AddCustomerGroupCommand
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getPriceDisplayMethod(): int
+    public function displayPriceTaxExcluded(): bool
     {
-        return $this->priceDisplayMethod;
+        return $this->displayPriceTaxExcluded;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getReduction(): float
+    public function getReduction(): DecimalNumber
     {
         return $this->reduction;
     }
@@ -60,7 +71,7 @@ class AddCustomerGroupCommand
     /**
      * @return bool
      */
-    public function isShowPrice(): bool
+    public function showPrice(): bool
     {
         return $this->showPrice;
     }

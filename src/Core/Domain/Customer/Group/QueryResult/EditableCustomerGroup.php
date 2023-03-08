@@ -2,12 +2,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\Decimal\DecimalNumber;
 
 class EditableCustomerGroup
 {
     /**
-     * @var GroupId
+     * @var int
      */
     private $id;
 
@@ -17,14 +17,14 @@ class EditableCustomerGroup
     private $name;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $reduction;
 
     /**
-     * @var int
+     * @var bool
      */
-    private $priceDisplayMethod;
+    private $displayPriceTaxExcluded;
 
     /**
      * @var bool
@@ -32,30 +32,30 @@ class EditableCustomerGroup
     private $showPrice;
 
     /**
-     * @param GroupId $id
+     * @param int $id
      * @param string[] $name
-     * @param float $reduction
-     * @param int $priceDisplayMethod
+     * @param DecimalNumber $reduction
+     * @param bool $displayPriceTaxExcluded
      * @param bool $showPrice
      */
     public function __construct(
-        GroupId $id,
-        array   $name,
-        float   $reduction,
-        int     $priceDisplayMethod,
-        bool    $showPrice
+        int $id,
+        array $name,
+        DecimalNumber $reduction,
+        bool $displayPriceTaxExcluded,
+        bool $showPrice
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->reduction = $reduction;
-        $this->priceDisplayMethod = $priceDisplayMethod;
+        $this->displayPriceTaxExcluded = $displayPriceTaxExcluded;
         $this->showPrice = $showPrice;
     }
 
     /**
-     * @return GroupId
+     * @return int
      */
-    public function getId(): GroupId
+    public function getId(): int
     {
         return $this->id;
     }
@@ -69,25 +69,25 @@ class EditableCustomerGroup
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getReduction(): float
+    public function getReduction(): DecimalNumber
     {
         return $this->reduction;
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getPriceDisplayMethod(): int
+    public function displayPriceTaxExcluded(): bool
     {
-        return $this->priceDisplayMethod;
+        return $this->displayPriceTaxExcluded;
     }
 
     /**
      * @return bool
      */
-    public function isShowPrice(): bool
+    public function showPrice(): bool
     {
         return $this->showPrice;
     }

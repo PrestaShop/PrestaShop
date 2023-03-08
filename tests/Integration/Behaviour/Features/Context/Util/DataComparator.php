@@ -52,6 +52,12 @@ class DataComparator
                 $realElementType = gettype($realElement);
             }
 
+            // This handles DecimalNumber by turning it into a string for comparison.
+            if (($realElementType === 'array') && (array_key_exists('integerPart', $realElement))) {
+                $realElement = sprintf('%s.%s', $realElement['integerPart'], $realElement['fractionalPart']);
+                $realElementType = gettype($realElement);
+            }
+
             $isADateTime = (($realElementType === 'object') && (get_class($realElement) === 'DateTime'));
             if ($isADateTime) {
                 $realElementType = 'datetime';
