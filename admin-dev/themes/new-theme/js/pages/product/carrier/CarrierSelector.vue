@@ -32,6 +32,7 @@
         v-if="carrierChoices.length"
       >
         <checkboxes-dropdown
+          :id="checkboxesDropdownId"
           :choices="carrierChoices"
           :label="getLabel"
           :selected-choice-ids="this.selectedCarrierIds"
@@ -72,7 +73,6 @@
   import {defineComponent, PropType} from 'vue';
   import {Choice} from '@app/components/checkboxes-dropdown/types';
   import EventEmitter from '@components/event-emitter';
-  import ProductEventMap from '@pages/product/product-event-map';
   import ProductMap from '@pages/product/product-map';
 
   export default defineComponent({
@@ -119,6 +119,9 @@
           ? this.$t('selectedCarriers.label')
           : this.$t('allCarriers.label');
       },
+      checkboxesDropdownId(): string {
+        return ProductMap.shipping.carrierCheckboxesDropdownId;
+      },
     },
     methods: {
       addCarrier(carrier: Choice): void {
@@ -134,7 +137,7 @@
         this.selectedCarrierIds = [];
         previouslySelectedCarrierIds.forEach((id: number) => {
           const checkbox = <HTMLInputElement> document.querySelector(
-            `.carrier-selector .dropdown-item input[type="checkbox"][value="${id}"]`,
+            `#${this.checkboxesDropdownId} input[type="checkbox"][value="${id}"]`,
           );
           // trigger change event manually on every checkbox which was unchecked
           // this will allow modify_all_shops checkbox to stay visible after clearing all carriers and

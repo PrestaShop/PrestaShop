@@ -249,6 +249,7 @@ export default {
     deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
     carrierSelectorContainer: '#product_shipping_carriers',
     carrierChoiceLabel: '.carrier-choice-label',
+    carrierCheckboxesDropdownId: 'carrier-checkboxes-dropdown',
   },
   seo: {
     container: '#product_seo_serp',
