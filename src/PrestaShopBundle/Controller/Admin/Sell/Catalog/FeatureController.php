@@ -32,6 +32,8 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
@@ -53,13 +55,23 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(FeatureFilters $filters): Response
+    public function indexAction(Request $request, FeatureFilters $filters): Response
     {
         $featureGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
 
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed(
+                (int) $this->getContext()->employee->id,
+                ShowcaseCard::FEATURES_CARD
+            )
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featureGrid' => $this->presentGrid($featureGridFactory->getGrid($filters)),
             'settingsTipMessage' => $this->getSettingsTipMessage(),
+            'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
     }
 

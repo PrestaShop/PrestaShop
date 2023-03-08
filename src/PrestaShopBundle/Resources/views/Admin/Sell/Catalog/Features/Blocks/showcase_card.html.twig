@@ -23,36 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
-{% set layoutHeaderToolbarBtn = {
-  add_feature: {
-    href: path('admin_features_add'),
-    desc: 'Add new feature'|trans({}, 'Admin.Catalog.Feature'),
-    icon: 'add_circle_outline',
-  },
-}
-%}
-
-{% block content %}
-  {{ ps.infotip(settingsTipMessage, true) }}
-  {% block feature_group_showcase_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/showcase_card.html.twig' %}
-      </div>
+{% if not isShowcaseCardClosed %}
+  <div id="featuresShowcaseCard" class="helper-card card">
+    <div class="helper-card__left helper-card__feature shape-one">
+      <img src="{{ asset('themes/new-theme/scss/img/helper-card/features@3x.png') }}" class="img-fluid img-rtl">
     </div>
-  {% endblock %}
-  {% block features_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureGrid} %}
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/feature.bundle.js') }}"></script>
-{% endblock %}
+    <div class="helper-card__right">
+      <h2>{{ 'Set features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+      <p>{{ 'Features are your product\'s intrinsic characteristics. If you sell tee-shirts, their cotton composition is considered a feature because it remains the same, unlike colors or sizes.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+      <a class="btn btn-outline-secondary"
+         href="{{ documentation_link('feature') }}"
+         target="_blank"
+      >
+        {{ 'Learn more'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <i class="showcase-card__close material-icons js-remove-helper-block"
+       data-card-name="{{ showcaseCardName }}"
+       data-close-url="{{ path('admin_close_showcase_card') }}"
+    >
+      close
+    </i>
+  </div>
+{% endif %}

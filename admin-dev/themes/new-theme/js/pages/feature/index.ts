@@ -34,6 +34,8 @@ import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sq
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
+import ShowcaseCard from '@components/showcase-card/showcase-card';
 
 const {$} = window;
 
@@ -49,4 +51,7 @@ $(() => {
   grid.addExtension(new BulkActionCheckboxExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new LinkRowActionExtension());
+
+  const showcaseCard = new ShowcaseCard('featuresShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 });
