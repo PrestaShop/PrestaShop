@@ -38,6 +38,7 @@
 
 {% block content %}
   {% block features_listing %}
+    {{ ps.infotip(settingsTipMessage, true) }}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureGrid} %}
   {% endblock %}
 {% endblock %}
