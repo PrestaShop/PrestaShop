@@ -77,7 +77,7 @@ class SqlManager extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'SQL Manager •';
+    this.pageTitle = `SQL manager • ${global.INSTALL.SHOP_NAME}`;
     this.successfulDeleteMessage = 'Successful deletion';
 
     // Header Selectors

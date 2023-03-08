@@ -49,7 +49,7 @@ class Localization extends LocalizationBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Localization • ';
+    this.pageTitle = `Localization • ${global.INSTALL.SHOP_NAME}`;
     this.importLocalizationPackSuccessfulMessage = 'Localization pack imported successfully.';
     this.successfulSettingsUpdateMessage = 'Update successful';
 

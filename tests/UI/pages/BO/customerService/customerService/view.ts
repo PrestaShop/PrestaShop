@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class ViewCustomer extends BOBasePage {
-  public readonly pageTitle: string;
+  public readonly pageTitle: (threadNumber: string) => string;
 
   private readonly threadBadge: string;
 
@@ -31,10 +31,10 @@ class ViewCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = `View • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = (threadNumber: string) => `Customer thread #${threadNumber} • ${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
-    this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
+    this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header';
     this.messagesThredDiv = '#main-div div[data-role="messages-thread"]';
     this.attachmentLink = `${this.messagesThredDiv} a[href*='/upload']`;
     this.statusButton = (statusName: string) => `${this.messagesThredDiv} form input[value='${statusName}'] + button`;
@@ -49,12 +49,12 @@ class ViewCustomer extends BOBasePage {
 
   // Thread form
   /**
-   * Get badge number
+   * Get thread number
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<number>}
    */
-  getBadgeNumber(page: Page): Promise<string> {
-    return this.getTextContent(page, this.threadBadge);
+  getThreadNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.threadBadge);
   }
 
   /**
@@ -71,7 +71,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  getAttachedFileHref(page: Page): Promise<string|null> {
+  getAttachedFileHref(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.attachmentLink, 'href');
   }
 

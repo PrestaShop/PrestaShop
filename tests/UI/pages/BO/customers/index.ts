@@ -95,7 +95,7 @@ class Customers extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Manage your Customers • ';
+    this.pageTitle = `Customers • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
@@ -304,7 +304,7 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable, false to disable
    * @return {Promise<string|null|false>} Return message if action performed, false otherwise
    */
-  async setToggleColumnValue(page: Page, row: number, column: string, valueWanted: boolean = true): Promise<string|null|false> {
+  async setToggleColumnValue(page: Page, row: number, column: string, valueWanted: boolean = true): Promise<string | null | false> {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
       // Click and wait for message
       const [message] = await Promise.all([
@@ -326,7 +326,7 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable customer
    * @return {Promise<boolean>}
    */
-  setCustomerStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string|null|false> {
+  setCustomerStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string | null | false> {
     return this.setToggleColumnValue(page, row, 'active', valueWanted);
   }
 
@@ -337,7 +337,7 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable newsletter status
    * @return {Promise<boolean>}
    */
-  setNewsletterStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string|null|false> {
+  setNewsletterStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string | null | false> {
     return this.setToggleColumnValue(page, row, 'newsletter', valueWanted);
   }
 
@@ -348,7 +348,7 @@ class Customers extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable partner offers status
    * @return {Promise<boolean>}
    */
-  setPartnerOffersStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string|null|false> {
+  setPartnerOffersStatus(page: Page, row: number, valueWanted: boolean = true): Promise<string | null | false> {
     return this.setToggleColumnValue(page, row, 'optin', valueWanted);
   }
 
@@ -571,7 +571,7 @@ class Customers extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string|null>}
    */
-  async exportDataToCsv(page: Page): Promise<string|null> {
+  async exportDataToCsv(page: Page): Promise<string | null> {
     await Promise.all([
       page.click(this.customerGridActionsButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),

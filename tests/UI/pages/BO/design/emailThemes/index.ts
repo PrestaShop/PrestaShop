@@ -33,7 +33,7 @@ class EmailTheme extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Email Theme •';
+    this.pageTitle = `Email theme • ${global.INSTALL.SHOP_NAME}`;
     this.emailThemeConfigurationSuccessfulMessage = 'Email theme configuration saved successfully';
 
     // Configuration form selectors
@@ -71,11 +71,11 @@ class EmailTheme extends BOBasePage {
    * @return {Promise<void>}
    */
   async previewEmailTheme(page: Page, name: string): Promise<void> {
-    const tableRows: ElementHandle<HTMLElement|SVGElement>[] = await page.$$(this.tableRows);
+    const tableRows: ElementHandle<HTMLElement | SVGElement>[] = await page.$$(this.tableRows);
     let found: boolean = false;
 
     for (let i = 0; i < tableRows.length; i++) {
-      const textColumnName: string|null = await tableRows[i].$eval(this.columnName, (columnName) => columnName.textContent);
+      const textColumnName: string | null = await tableRows[i].$eval(this.columnName, (columnName) => columnName.textContent);
 
       if (textColumnName && textColumnName.includes(name)) {
         /* eslint-disable no-loop-func */

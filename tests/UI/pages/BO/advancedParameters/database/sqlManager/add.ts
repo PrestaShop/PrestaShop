@@ -12,6 +12,8 @@ import type {Page} from 'playwright';
 class AddSQLQuery extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly editPageTitle: string;
+
   private readonly sqlQueryNameInput: string;
 
   private readonly sqlQueryTextArea: string;
@@ -25,7 +27,8 @@ class AddSQLQuery extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'SQL Manager';
+    this.pageTitle = `New SQL query • ${global.INSTALL.SHOP_NAME}`;
+    this.editPageTitle = 'Editing SQL query';
 
     // Selectors
     this.sqlQueryNameInput = '#sql_request_name';

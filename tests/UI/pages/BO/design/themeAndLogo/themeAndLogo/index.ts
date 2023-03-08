@@ -15,7 +15,7 @@ class ThemeAndLogo extends themeAndLogoBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Theme & Logo > Theme •';
+    this.pageTitle = `Theme & Logo • ${global.INSTALL.SHOP_NAME}`;
   }
 }
 

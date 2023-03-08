@@ -38,7 +38,7 @@ class PreviewEmailTheme extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Preview Theme';
+    this.pageTitle = 'Previewing theme';
 
     // Selectors
     this.layoutBody = 'body pre';

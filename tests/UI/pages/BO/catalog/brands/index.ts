@@ -99,7 +99,7 @@ class Brands extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Brands •';
+    this.pageTitle = `Brands • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header Selectors
@@ -498,7 +498,7 @@ class Brands extends BOBasePage {
    * @param row {number} Row in table to get logo link
    * @return {Promise<string|null>}
    */
-  async getLogoLinkFromBrandsTable(page: Page, row: number): Promise<string|null> {
+  async getLogoLinkFromBrandsTable(page: Page, row: number): Promise<string | null> {
     return this.getAttributeContent(page, this.brandsTableColumnLogoImg(row), 'src');
   }
 
@@ -633,7 +633,7 @@ class Brands extends BOBasePage {
    * @param table {string} Which table to export
    * @return {Promise<string|null>}
    */
-  async exportDataToCsv(page: Page, table: string): Promise<string|null> {
+  async exportDataToCsv(page: Page, table: string): Promise<string | null> {
     await Promise.all([
       page.click(this.gridActionButton(table)),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu(table)}.show`),
@@ -647,7 +647,7 @@ class Brands extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string|null>}
    */
-  async exportBrandsDataToCsv(page: Page): Promise<string|null> {
+  async exportBrandsDataToCsv(page: Page): Promise<string | null> {
     return this.exportDataToCsv(page, 'manufacturer');
   }
 
