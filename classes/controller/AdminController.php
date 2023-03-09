@@ -2020,6 +2020,8 @@ class AdminControllerCore extends Controller
         }
 
         $tabs = $this->getTabs();
+        Hook::exec('adminTabs', ['tabs' => &$tabs], null, true);
+
         $currentTabLevel = 0;
         foreach ($tabs as $tab) {
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
@@ -2119,7 +2121,7 @@ class AdminControllerCore extends Controller
         return $tips[$type][array_rand($tips[$type])];
     }
 
-    private function getTabs($parentId = 0, $level = 0)
+    public function getTabs($parentId = 0, $level = 0)
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
         $current_id = Tab::getCurrentParentId();

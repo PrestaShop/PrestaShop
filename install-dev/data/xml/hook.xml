@@ -4494,5 +4494,10 @@
       <title>Modify customer thread grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for customer thread grid</description>
     </hook>
+    <hook id="adminTabs">
+      <name>adminTabs</name>
+      <title>Modify admin tabs</title>
+      <description>This hook allows to modify admin tabs which is about to be used in template for user menu</description>
+    </hook>
   </entities>
 </entity_hook>
