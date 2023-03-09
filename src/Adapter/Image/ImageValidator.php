@@ -43,14 +43,14 @@ class ImageValidator
     /**
      * @var int
      */
-    private $maxUploadSize;
+    protected $maxUploadSize;
 
     /**
-     * @param int $maxUploadSize
+     * @param int $maxUploadSizeInBytes
      */
-    public function __construct(int $maxUploadSize)
+    public function __construct(int $maxUploadSizeInBytes)
     {
-        $this->maxUploadSize = $maxUploadSize;
+        $this->maxUploadSize = $maxUploadSizeInBytes;
     }
 
     /**
