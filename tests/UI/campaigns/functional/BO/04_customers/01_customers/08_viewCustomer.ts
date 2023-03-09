@@ -69,8 +69,8 @@ describe('BO - Customers - Customers : View information about customer', async (
   const yyyyEditBirth: string = editCustomerData.yearOfBirth;
   const editCustomerBirthDate: string = `${mmEditBirth}/${ddEditBirth}/${yyyyEditBirth}`;
 
-  const createCustomerName = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
-  const editCustomerName = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;
+  const createCustomerName: string = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
+  const editCustomerName: string = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;
 
   // before and after functions
   before(async function () {

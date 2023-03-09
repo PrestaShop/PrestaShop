@@ -261,7 +261,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.clickOnNotification(page, 'customers');
 
-      const customerName = `${customerData.firstName[0]}. ${customerData.lastName}`;
+      const customerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(customerName));

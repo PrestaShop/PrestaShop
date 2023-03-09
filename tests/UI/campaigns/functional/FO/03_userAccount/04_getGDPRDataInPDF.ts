@@ -91,7 +91,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     reference: orderReference,
   });
 
-  const createCustomerName = `${customerData.firstName[0]}. ${customerData.lastName}`;
+  const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
 
   // before and after functions
   before(async function () {

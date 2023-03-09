@@ -32,8 +32,8 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
   const createCustomerData: CustomerData = new CustomerData();
   const editCustomerData: CustomerData = new CustomerData({enabled: false});
 
-  const createCustomerName = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
-  const editCustomerName = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;
+  const createCustomerName: string = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
+  const editCustomerName: string = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;
 
   // before and after functions
   before(async function () {
