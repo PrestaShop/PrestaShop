@@ -34,7 +34,7 @@ class CustomerSettings extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Customers •';
+    this.pageTitle = `Customer settings • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateMessage = 'Update successful';
 
     // Header selectors

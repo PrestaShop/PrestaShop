@@ -118,6 +118,7 @@ class CustomerController extends AbstractAdminController
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
             'layoutHeaderToolbarBtn' => $this->getCustomerToolbarButtons(),
+            'enableSidebar' => true,
         ]);
     }
 
@@ -194,6 +195,8 @@ class CustomerController extends AbstractAdminController
             'minPasswordLength' => Password::MIN_LENGTH,
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New customer', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -249,6 +252,14 @@ class CustomerController extends AbstractAdminController
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing customer %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => mb_substr($customerInformation->getFirstName()->getValue(), 0, 1) . '. ' . $customerInformation->getLastName()->getValue(),
+                ]
+            ),
         ]);
     }
 
@@ -333,6 +344,13 @@ class CustomerController extends AbstractAdminController
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
+            'layoutTitle' => $this->trans(
+                'Customer %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => mb_substr($customerInformation->getPersonalInformation()->getFirstName(), 0, 1) . '. ' . $customerInformation->getPersonalInformation()->getLastName(),
+                ]
+            ),
         ]);
     }
 

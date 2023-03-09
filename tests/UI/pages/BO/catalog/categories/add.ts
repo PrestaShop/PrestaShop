@@ -40,8 +40,8 @@ class AddCategory extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Add new';
-    this.pageTitleEdit = 'Edit: ';
+    this.pageTitleCreate = `New category • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing category ';
 
     // Selectors
     this.nameInput = '#category_name_1';

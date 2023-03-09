@@ -112,7 +112,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete prof
       await profilesPage.goToEditProfilePage(page, 1);
 
       const pageTitle = await addProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProfilePage.pageTitleEdit);
+      await expect(pageTitle).to.contains(addProfilePage.pageTitleEdit(createProfileData.name));
     });
 
     it('should update the profile', async function () {

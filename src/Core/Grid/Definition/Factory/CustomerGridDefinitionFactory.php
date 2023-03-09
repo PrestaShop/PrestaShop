@@ -129,7 +129,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Manage your Customers', [], 'Admin.Orderscustomers.Feature');
+        return $this->trans('Customers', [], 'Admin.Orderscustomers.Feature');
     }
 
     /**

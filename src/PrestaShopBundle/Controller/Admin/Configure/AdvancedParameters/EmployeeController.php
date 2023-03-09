@@ -99,6 +99,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'helperCardDocumentationLink' => $helperCardDocumentationLinkProvider->getLink('team'),
             'showcaseCardName' => ShowcaseCard::EMPLOYEES_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'enableSidebar' => true,
         ]);
     }
 
@@ -303,6 +304,7 @@ class EmployeeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New employee', 'Admin.Navigation.Menu'),
         ];
 
         return $this->render(
@@ -390,6 +392,15 @@ class EmployeeController extends FrameworkBundleAdminController
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
             'editableEmployee' => $editableEmployee,
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing %lastname% %firstname%\'s profile',
+                'Admin.Navigation.Menu',
+                [
+                    '%firstname%' => $editableEmployee->getFirstname()->getValue(),
+                    '%lastname%' => $editableEmployee->getLastName()->getValue(),
+                ]
+            ),
         ];
 
         return $this->render(

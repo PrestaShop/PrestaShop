@@ -77,7 +77,7 @@ class ProductSettings extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Product Settings •';
+    this.pageTitle = `Product settings • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors

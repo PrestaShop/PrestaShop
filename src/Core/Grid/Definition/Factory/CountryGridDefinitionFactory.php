@@ -67,7 +67,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Country', [], 'Admin.Global');
+        return $this->trans('Countries', [], 'Admin.Global');
     }
 
     /**

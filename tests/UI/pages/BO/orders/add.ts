@@ -223,7 +223,7 @@ class AddOrder extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Create order •';
+    this.pageTitle = `New order • ${global.INSTALL.SHOP_NAME}`;
     this.noCustomerFoundText = 'No customers found';
     this.noProductFoundText = 'No products found';
     this.cartRuleAlreadyExistErrorText = 'This voucher is already in your cart';

@@ -37,8 +37,8 @@ class AddContact extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Contacts •';
-    this.pageTitleEdit = 'Contacts •';
+    this.pageTitleCreate = `New contact • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing';
 
     // Selectors
     this.pageTitleLangButton = '#contact_title_dropdown';

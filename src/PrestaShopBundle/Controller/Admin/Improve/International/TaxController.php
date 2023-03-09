@@ -190,6 +190,7 @@ class TaxController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'layoutTitle' => $this->trans('New tax', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -247,6 +248,13 @@ class TaxController extends FrameworkBundleAdminController
             'taxName' => $editableTax->getLocalizedNames()[$this->getContextLangId()],
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing tax %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $editableTax->getLocalizedNames()[$this->getContextLangId()],
+                ]
+            ),
         ]);
     }
 

@@ -85,7 +85,7 @@ class ModuleController extends ModuleAbstractController
             [
                 'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
+                'layoutTitle' => $this->trans('Module manager', 'Admin.Navigation.Menu'),
                 'categories' => $categories['categories'],
                 'topMenuData' => $this->getTopMenuData($categories),
                 'requireBulkActions' => true,

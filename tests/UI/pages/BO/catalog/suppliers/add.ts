@@ -71,8 +71,8 @@ class AddSupplier extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new • ';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitle = `New supplier • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing supplier';
 
     // Selectors
     this.nameInput = '#supplier_name';

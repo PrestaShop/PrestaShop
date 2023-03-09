@@ -41,8 +41,8 @@ class AddLanguage extends LocalizationBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new •';
-    this.pageEditTitle = 'Edit:';
+    this.pageTitle = `New language • ${global.INSTALL.SHOP_NAME}`;
+    this.pageEditTitle = 'Editing language';
 
     // Selectors
     this.nameInput = '#language_name';

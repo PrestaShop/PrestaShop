@@ -22,20 +22,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
   {% block request_sql_view_block %}
     <div class="card">
-      <div class="card-header">
-        <h3 id="card-title">
-          <i class="material-icons">list</i>
-          {{ 'SQL query result'|trans }}
-          ({{ sqlRequestResult.rows|length }})
-        </h3>
-      </div>
+      <h3 class="card-header">
+        <i class="material-icons">list</i>
+        {{ 'SQL query results'|trans }} ({{ sqlRequestResult.rows|length }})
+      </h3>
       <div class="card-body">
         {% if sqlRequestResult.rows is not empty %}
           <div class="table-responsive">

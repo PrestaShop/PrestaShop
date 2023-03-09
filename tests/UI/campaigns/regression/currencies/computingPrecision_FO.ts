@@ -201,7 +201,7 @@ describe(
         await currenciesPage.goToEditCurrencyPage(page, 1);
 
         const pageTitle = await addCurrencyPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+        await expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
       });
 
       it('should set precision to 3', async function () {
@@ -464,7 +464,7 @@ describe(
           await currenciesPage.goToEditCurrencyPage(page, 1);
 
           const pageTitle = await addCurrencyPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+          await expect(pageTitle).to.contains(addCurrencyPage.editCurrencyPage);
         });
 
         it('should reset currency precision', async function () {

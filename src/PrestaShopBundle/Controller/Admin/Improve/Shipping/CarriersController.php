@@ -87,6 +87,7 @@ class CarriersController extends FrameworkBundleAdminController
             'isShowcaseCardClosed' => $showcaseCardIsClose,
             'layoutHeaderToolbarBtn' => $this->getLayoutHeaderToolbarButtons(),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Carriers', 'Admin.Navigation.Menu'),
         ]);
     }
 

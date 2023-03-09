@@ -179,7 +179,7 @@ class StateController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $editableState->getName()]),
+            'layoutTitle' => $this->trans('Editing state %value%', 'Admin.Navigation.Menu', ['%value%' => $editableState->getName()]),
             'stateForm' => $stateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -223,6 +223,7 @@ class StateController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'layoutTitle' => $this->trans('New state', 'Admin.Navigation.Menu'),
         ]);
     }
 

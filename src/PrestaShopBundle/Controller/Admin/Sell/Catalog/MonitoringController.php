@@ -111,6 +111,7 @@ class MonitoringController extends FrameworkBundleAdminController
             'productWithoutPriceGrid' => $this->presentGrid($productWithoutPriceGrid),
             'showcaseCardName' => ShowcaseCard::MONITORING_CARD,
             'isShowcaseCardClosed' => $isShowcaseCardClosed,
+            'layoutTitle' => $this->trans('Monitoring', 'Admin.Navigation.Menu'),
         ]);
     }
 

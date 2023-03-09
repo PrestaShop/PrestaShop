@@ -129,6 +129,8 @@ class SupplierController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/add.html.twig', [
             'supplierForm' => $supplierForm->createView(),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New supplier', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -332,6 +334,13 @@ class SupplierController extends FrameworkBundleAdminController
             'supplierForm' => $supplierForm->createView(),
             'supplierName' => $editableSupplier->getName(),
             'logoImage' => $editableSupplier->getLogoImage(),
+            'layoutTitle' => $this->trans(
+                'Editing supplier %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $editableSupplier->getName(),
+                ]
+            ),
         ]);
     }
 
@@ -392,12 +401,18 @@ class SupplierController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/view.html.twig', [
-            'layoutTitle' => $viewableSupplier->getName(),
             'viewableSupplier' => $viewableSupplier,
             'isStockManagementEnabled' => $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Supplier %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $viewableSupplier->getName(),
+                ]
+            ),
         ]);
     }
 

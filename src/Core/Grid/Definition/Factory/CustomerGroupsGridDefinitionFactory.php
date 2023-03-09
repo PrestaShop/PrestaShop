@@ -57,7 +57,7 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Customer Groups', [], 'Admin.Navigation.Menu');
+        return $this->trans('Customer groups', [], 'Admin.Navigation.Menu');
     }
 
     /**

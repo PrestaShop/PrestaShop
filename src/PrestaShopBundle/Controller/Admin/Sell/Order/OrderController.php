@@ -263,6 +263,7 @@ class OrderController extends FrameworkBundleAdminController
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
             'stockManagementEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
             'isB2BEnabled' => (bool) $configuration->get('PS_B2B_ENABLE'),
+            'layoutTitle' => $this->trans('New order', 'Admin.Navigation.Menu'),
         ]);
     }
 

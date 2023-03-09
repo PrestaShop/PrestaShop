@@ -110,6 +110,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'layoutTitle' => $this->trans('New tax rule', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -156,7 +157,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/International/TaxRulesGroup/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $taxRulesGroupForm->getData()['name']]),
+            'layoutTitle' => $this->trans('Editing tax rule %value%', 'Admin.Navigation.Menu', ['%value%' => $taxRulesGroupForm->getData()['name']]),
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'taxRuleGrid' => $this->presentGrid($taxRuleGrid),
@@ -337,7 +338,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_tax_rules_groups_create'),
-            'desc' => $this->trans('Add new tax rules group', 'Admin.International.Feature'),
+            'desc' => $this->trans('Add new tax rule', 'Admin.International.Feature'),
             'icon' => 'add_circle_outline',
         ];
 

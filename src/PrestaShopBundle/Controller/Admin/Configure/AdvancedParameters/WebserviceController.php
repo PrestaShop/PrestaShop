@@ -97,6 +97,7 @@ class WebserviceController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig',
             [
                 'webserviceKeyForm' => $form->createView(),
+                'layoutTitle' => $this->trans('New webservice key', 'Admin.Navigation.Menu'),
             ]
         );
     }
@@ -135,6 +136,13 @@ class WebserviceController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/edit.html.twig',
             [
                 'webserviceKeyForm' => $form->createView(),
+                'layoutTitle' => $this->trans(
+                    'Editing webservice key %key%',
+                    'Admin.Navigation.Menu',
+                    [
+                        '%key%' => $form->getData()['key'],
+                    ]
+                ),
             ]
         );
     }
@@ -356,6 +364,7 @@ class WebserviceController extends FrameworkBundleAdminController
                 'grid' => $this->presentGrid($grid),
                 'configurationWarnings' => $this->lookForWarnings(),
                 'webserviceStatus' => $this->getWebServiceStatus($request),
+                'enableSidebar' => true,
             ]
         );
     }

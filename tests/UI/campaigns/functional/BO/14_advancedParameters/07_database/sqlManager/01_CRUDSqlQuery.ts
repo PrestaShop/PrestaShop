@@ -154,7 +154,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await sqlManagerPage.goToEditSQLQueryPage(page, 1);
 
       const pageTitle = await addSqlQueryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
+      await expect(pageTitle).to.contains(addSqlQueryPage.editPageTitle);
     });
 
     it('should update SQL query', async function () {

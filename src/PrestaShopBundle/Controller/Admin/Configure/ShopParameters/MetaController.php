@@ -140,6 +140,7 @@ class MetaController extends FrameworkBundleAdminController
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'layoutTitle' => $this->trans('New page configuration', 'Admin.Navigation.Menu'),
         ]
         );
     }
@@ -175,6 +176,13 @@ class MetaController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
             'meta_form' => $metaForm->createView(),
+            'layoutTitle' => $this->trans(
+                'Editing configuration for %name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%name%' => $metaForm->getData()['page_name'],
+                ]
+            ),
         ]
         );
     }
@@ -492,7 +500,7 @@ class MetaController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
                         'href' => $this->generateUrl('admin_metas_create'),
-                        'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
+                        'desc' => $this->trans('Set up a new page', 'Admin.Shopparameters.Feature'),
                         'icon' => 'add_circle_outline',
                     ],
                 ],

@@ -33,8 +33,8 @@ class AddState extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Add new •';
-    this.pageTitleEdit = 'Edit: ';
+    this.pageTitleCreate = `New state • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing state';
 
     // Selectors
     this.nameInput = '#state_name';

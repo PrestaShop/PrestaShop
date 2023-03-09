@@ -27,8 +27,8 @@ class AddZone extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Add new •';
-    this.pageTitleEdit = 'Edit: ';
+    this.pageTitleCreate = `New zone • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing zone';
 
     // Selectors
     this.nameInput = '#zone_name';

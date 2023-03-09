@@ -152,6 +152,7 @@ class ProductController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
+            'layoutTitle' => $this->trans('Products', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -1237,7 +1238,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),
-            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'desc' => $this->trans('Add new product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product-button',
             'floating_class' => 'new-product-button',

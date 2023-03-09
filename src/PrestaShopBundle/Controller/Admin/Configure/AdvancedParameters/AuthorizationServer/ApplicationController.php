@@ -61,7 +61,7 @@ class ApplicationController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig', [
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
-            'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Authorization server management', 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -101,6 +101,7 @@ class ApplicationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
             'enableSidebar' => true,
             'applicationForm' => $authorizedApplicationForm->createView(),
+            'layoutTitle' => $this->trans('New authorized application', 'Admin.Navigation.Menu'),
         ]);
     }
 
@@ -139,6 +140,13 @@ class ApplicationController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'applicationForm' => $authorizedApplicationForm->createView(),
             'editableApplication' => $editableApplication,
+            'layoutTitle' => $this->trans(
+                'Editing application %application_name%',
+                'Admin.Navigation.Menu',
+                [
+                    '%application_name%' => $editableApplication->getname(),
+                ]
+            ),
         ]);
     }
 
@@ -164,7 +172,7 @@ class ApplicationController extends FrameworkBundleAdminController
 
         $toolbarButtons['addApiAccess'] = [
             'href' => $this->generateUrl('admin_api_accesses_create'),
-            'desc' => $this->trans('Add new Api access', 'Admin.Actions'),
+            'desc' => $this->trans('Add new API access', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary',
         ];

@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class ViewCustomer extends BOBasePage {
-  public readonly pageTitle: string;
+  public readonly pageTitle: (customerName: string) => string;
 
   public readonly updateSuccessfulMessage: string;
 
@@ -21,6 +21,10 @@ class ViewCustomer extends BOBasePage {
   private readonly ordersViewButton: (row: number) => string;
 
   private readonly cartsDiv: string;
+
+  private readonly cartsTableRow: (row: number) => string;
+
+  private readonly cartsTableColumn: (row: number, column: string) => string;
 
   private readonly cartsViewButton: (row: number) => string;
 
@@ -65,7 +69,7 @@ class ViewCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Information about customer';
+    this.pageTitle = (customerName: string) => `Customer ${customerName} • ${global.INSTALL.SHOP_NAME}`;
     this.updateSuccessfulMessage = 'Update successful';
 
     // Selectors
@@ -80,6 +84,8 @@ class ViewCustomer extends BOBasePage {
     // Carts
     this.cartsDiv = '.customer-carts-card';
     this.cartsViewButton = (row: number) => `${this.cartsDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
+    this.cartsTableRow = (row: number) => `.customer-carts-card tr:nth-child(${row})`;
+    this.cartsTableColumn = (row: number, column: string) => `${this.cartsTableRow(row)} td.customer-cart-${column}`;
 
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
@@ -237,6 +243,17 @@ class ViewCustomer extends BOBasePage {
    */
   getTextColumnFromTableLastConnections(page: Page, column: string, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.lastConnectionTableColumn(row, column));
+  }
+
+  /**
+   * Get text column from carts table
+   * @param page {Page} Browser tab
+   * @param column {string} Column name in table carts
+   * @param row {number} Row number in table carts
+   * @returns {Promise<string>}
+   */
+  getTextColumnFromTableCarts(page: Page, column: string, row: number = 1): Promise<string> {
+    return this.getTextContent(page, this.cartsTableColumn(row, column));
   }
 
   /**

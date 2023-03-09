@@ -49,8 +49,8 @@ class AddBrand extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Add new • ';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitle = `New brand • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing brand';
 
     // Selectors
     this.nameInput = '#manufacturer_name';

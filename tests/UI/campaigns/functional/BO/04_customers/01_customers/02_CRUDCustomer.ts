@@ -32,6 +32,9 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
   const createCustomerData: CustomerData = new CustomerData();
   const editCustomerData: CustomerData = new CustomerData({enabled: false});
 
+  const createCustomerName: string = `${createCustomerData.firstName[0]}. ${createCustomerData.lastName}`;
+  const editCustomerName: string = `${editCustomerData.firstName[0]}. ${editCustomerData.lastName}`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -152,7 +155,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
     });
 
     it('should check customer personal information', async function () {
@@ -273,7 +276,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await customersPage.goToViewCustomerPage(page, 1);
 
       const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+      await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(editCustomerName));
     });
 
     it('should check customer personal information', async function () {

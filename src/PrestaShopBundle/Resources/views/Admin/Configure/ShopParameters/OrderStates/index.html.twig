@@ -22,9 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Statuses'|trans({}, 'Admin.Navigation.Menu') %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set layoutHeaderToolbarBtn = {
   'add': {
     'href': path('admin_order_states_create'),
@@ -33,12 +31,10 @@
   },
   'add_return_state': {
     'href': path('admin_order_return_states_create'),
-    'desc': 'Add new order return status'|trans({}, 'Admin.Shopparameters.Feature'),
+    'desc': 'Add new return status'|trans({}, 'Admin.Shopparameters.Feature'),
     'icon': 'add_circle_outline'
   }
 } %}
-
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}

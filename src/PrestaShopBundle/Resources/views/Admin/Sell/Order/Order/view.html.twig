@@ -22,13 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% set use_regular_h1_structure = false %}
 {% set layoutTitle %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
 {% endset %}
-
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
   {{ parent() }}

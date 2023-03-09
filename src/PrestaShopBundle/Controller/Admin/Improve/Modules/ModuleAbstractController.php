@@ -49,7 +49,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         return [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
+            'layoutTitle' => $this->trans('Module notifications', 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'modules' => $modulePresenter->presentCollection($moduleCollection),
             'requireBulkActions' => false,

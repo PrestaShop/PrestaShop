@@ -56,7 +56,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/product_preferences.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Product Settings', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Product settings', 'Admin.Navigation.Menu'),
             'requireBulkAction' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

@@ -84,7 +84,7 @@ describe('BO - Orders : View customer from orders page', async () => {
 
     const pageTitle = await viewCustomerPage.getPageTitle(page);
     await expect(pageTitle).to
-      .contains(`${viewCustomerPage.pageTitle} ${Customers.johnDoe.firstName[0]}. ${Customers.johnDoe.lastName}`);
+      .eq(viewCustomerPage.pageTitle(`${Customers.johnDoe.firstName[0]}. ${Customers.johnDoe.lastName}`));
   });
 
   it('should go back to \'Orders > Orders\' page', async function () {

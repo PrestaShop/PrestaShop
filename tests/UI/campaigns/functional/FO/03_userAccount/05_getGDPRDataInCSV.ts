@@ -88,6 +88,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     reference: orderReference,
   });
 
+  const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -213,7 +215,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await customersPage.goToViewCustomerPage(page, 1);
 
         const pageTitle = await viewCustomerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+        await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
       });
 
       it('should get last connections ip address', async function () {
@@ -910,7 +912,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         await customersPage.goToViewCustomerPage(page, 1);
 
         const pageTitle = await viewCustomerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
+        await expect(pageTitle).to.contains(viewCustomerPage.pageTitle(createCustomerName));
       });
 
       it('should get last connections origin', async function () {

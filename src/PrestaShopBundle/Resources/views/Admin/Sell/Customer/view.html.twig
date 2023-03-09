@@ -22,9 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
-{% set layoutTitle = 'Information about customer %name%'|trans({'%name%': customerInformation.personalInformation.firstName[0:1] ~ '. ' ~ customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') %}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}

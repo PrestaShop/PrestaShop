@@ -61,7 +61,7 @@ class PaymentMethodsController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig', [
             'paymentModules' => $paymentModules,
             'isSingleShopContext' => $isSingleShopContext,
-            'layoutTitle' => $this->trans('Payment Methods', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Payment methods', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
         ]);

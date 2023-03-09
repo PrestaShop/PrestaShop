@@ -88,6 +88,7 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
                 'importDataConfigurationForm' => $form->createView(),
                 'dataRowCollection' => $presentedDataRowCollection,
                 'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
+                'layoutTitle' => $this->trans('Import', 'Admin.Navigation.Menu'),
                 'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
                 'requiredFields' => $entityFieldsProvider->getCollection()->getRequiredFields(),
             ]

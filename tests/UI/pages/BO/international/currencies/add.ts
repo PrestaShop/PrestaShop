@@ -12,6 +12,8 @@ import type {Page} from 'playwright';
 class AddCurrency extends LocalizationBasePage {
   public readonly pageTitle: string;
 
+  public readonly editCurrencyPage: string;
+
   private readonly currencySelect: string;
 
   private readonly alternativeCurrencyCheckBox: string;
@@ -37,7 +39,8 @@ class AddCurrency extends LocalizationBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Currencies • ';
+    this.pageTitle = `New currency • ${global.INSTALL.SHOP_NAME}`;
+    this.editCurrencyPage = 'Editing currency';
 
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';

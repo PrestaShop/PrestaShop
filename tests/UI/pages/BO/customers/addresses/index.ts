@@ -75,7 +75,7 @@ class Addresses extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Addresses •';
+    this.pageTitle = `Addresses • ${global.INSTALL.SHOP_NAME}`;
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors

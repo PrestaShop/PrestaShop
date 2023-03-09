@@ -59,8 +59,8 @@ class AddAddress extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Addresses •';
-    this.pageTitleEdit = 'Edit •';
+    this.pageTitleCreate = `New address • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = 'Editing address';
 
     // Selectors
     this.customerEmailInput = '#customer_address_customer_email';

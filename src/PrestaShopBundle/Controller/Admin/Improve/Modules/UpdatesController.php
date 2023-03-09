@@ -53,6 +53,12 @@ class UpdatesController extends ModuleAbstractController
             }
         }
 
-        return $this->render('@PrestaShop/Admin/Module/updates.html.twig', $pageData);
+        return $this->render(
+            '@PrestaShop/Admin/Module/updates.html.twig',
+            array_merge(
+                $pageData,
+                ['layoutTitle' => $this->trans('Module updates', 'Admin.Navigation.Menu')]
+            )
+        );
     }
 }

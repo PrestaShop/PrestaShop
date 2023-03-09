@@ -12,7 +12,7 @@ import type {Page} from 'playwright';
 class AddProfile extends BOBasePage {
   public readonly pageTitleCreate: string;
 
-  public readonly pageTitleEdit: string;
+  public readonly pageTitleEdit: (name: string) => string;
 
   private readonly nameInput: string;
 
@@ -25,8 +25,9 @@ class AddProfile extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Add new profile';
-    this.pageTitleEdit = 'Edit:';
+    this.pageTitleCreate = `New profile • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (name: string) => `Editing ${name} profile • `
+      + `${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
     this.nameInput = '#profile_name_1';

@@ -153,7 +153,8 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
         await employeesPage.goToEditEmployeePage(page, 1);
 
         const pageTitle = await addEmployeePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit);
+        await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
+          createEmployeeData.lastName, createEmployeeData.firstName));
       });
 
       it('should update the employee account', async function () {
@@ -222,7 +223,8 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
         await employeesPage.goToEditEmployeePage(page, 1);
 
         const pageTitle = await addEmployeePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit);
+        await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
+          firstEditEmployeeData.lastName, firstEditEmployeeData.firstName));
       });
 
       it('should disable the employee account', async function () {
