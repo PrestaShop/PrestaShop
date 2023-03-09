@@ -40,7 +40,7 @@ if (_PS_MODE_DEV_ === true) {
     if (_PS_DISPLAY_COMPATIBILITY_WARNING_ === false) {
         $errorReportingLevel = $errorReportingLevel & ~E_DEPRECATED & ~E_USER_DEPRECATED;
     }
-    if (_PS_DISPLAY_ONLY_ERRORS_ === true) {
+    if (_PS_DISPLAY_ONLY_ERRORS_ !== false) {
         $errorReportingLevel = $errorReportingLevel & ~E_WARNING & ~E_NOTICE;
     }
     @ini_set('display_errors', 'on');
