@@ -2020,7 +2020,7 @@ class AdminControllerCore extends Controller
         }
 
         $tabs = $this->getTabs();
-        Hook::exec('adminTabs', ['tabs' => &$tabs], null, true);
+        Hook::exec('actionAdminMenuTabsModifier', ['tabs' => &$tabs], null, true);
 
         $currentTabLevel = 0;
         foreach ($tabs as $tab) {
