@@ -60,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShopException;
 use Product;
@@ -1011,6 +1012,9 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
 
             $bulkInsertSql .= '(' . implode(',', array_map(static function ($columnValue): string {
                 if ($columnValue === null) {
+                    return 'null';
+                } elseif (!empty($columnValue) && DateTime::isNull($columnValue)) {
+                    // We can't use 0000-00-00 as a value it's not valid in Mysql, so we use null instead
                     return 'null';
                 }
 
