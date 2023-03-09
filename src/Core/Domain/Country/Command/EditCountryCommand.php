@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 /**
  * Adds new zone with provided data.
@@ -62,7 +63,7 @@ class EditCountryCommand
     private $defaultCurrency;
 
     /**
-     * @var int|null
+     * @var ZoneId|null
      */
     private $zoneId;
 
@@ -173,14 +174,14 @@ class EditCountryCommand
         return $this;
     }
 
-    public function getZoneId(): ?int
+    public function getZoneId(): ?ZoneId
     {
         return $this->zoneId;
     }
 
     public function setZoneId(?int $zoneId): EditCountryCommand
     {
-        $this->zoneId = $zoneId;
+        $this->zoneId = new ZoneId($zoneId);
 
         return $this;
     }

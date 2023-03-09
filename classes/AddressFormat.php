@@ -107,6 +107,7 @@ class AddressFormatCore extends ObjectModel
         'call_prefix',
         'definition',
         'debug_list',
+        'htmlFields',
     ];
 
     /** @var array Default formbidden class list */
@@ -214,7 +215,6 @@ class AddressFormatCore extends ObjectModel
     public function checkFormatFields()
     {
         $this->_errorFormatList = [];
-        $fieldsValidate = Address::getFieldsValidate();
         $usedKeyList = [];
 
         $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);

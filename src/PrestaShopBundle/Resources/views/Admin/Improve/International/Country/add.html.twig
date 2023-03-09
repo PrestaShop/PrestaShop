@@ -1,4 +1,4 @@
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +21,20 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-export default {
-  isZipCodeNeededSwitch: 'input[name="country[need_zip_code]"]',
-  zipCodeFormatInput: '#country_zip_code_format',
-  addressFormat: {
-    customAddressFieldsTabBtn: '#custom-address-fields',
-    addPatternBtn: '.add-pattern',
-    formatTextAreaField: '#country_address_format',
-    modifyAddressLayoutBtn: '.modify-address-layout',
-  }
-};
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Improve/International/Locations/Country/Blocks/form.html.twig' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/country_form.bundle.js') }}"></script>
+{% endblock %}
