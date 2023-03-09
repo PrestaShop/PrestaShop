@@ -621,18 +621,6 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * The "Add to cart" button should be shown for products available for order.
-     *
-     * @param array $product
-     *
-     * @return bool
-     */
-    private function shouldShowAddToCartButton(array $product): bool
-    {
-        return (bool) $product['available_for_order'];
-    }
-
-    /**
      * @param array $product
      *
      * @return bool
