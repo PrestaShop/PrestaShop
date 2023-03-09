@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This listener dynamically updates the choices allowed in the feature value selector,
@@ -51,15 +53,23 @@ class FeatureValueListener implements EventSubscriberInterface
     private $formCloner;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider
      * @param FormCloner $formCloner
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        TranslatorInterface $translator
     ) {
         $this->featureValuesChoiceProvider = $featureValuesChoiceProvider;
         $this->formCloner = $formCloner;
+        $this->translator = $translator;
     }
 
     /**
@@ -68,15 +78,15 @@ class FeatureValueListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            FormEvents::PRE_SET_DATA => 'updateFeatureValuesOptions',
-            FormEvents::PRE_SUBMIT => 'updateFeatureValuesOptions',
+            FormEvents::PRE_SET_DATA => 'updateFormOptions',
+            FormEvents::PRE_SUBMIT => 'updateFormOptions',
         ];
     }
 
     /**
      * @param FormEvent $event
      */
-    public function updateFeatureValuesOptions(FormEvent $event): void
+    public function updateFormOptions(FormEvent $event): void
     {
         $form = $event->getForm();
         $data = $event->getData();
@@ -99,6 +109,26 @@ class FeatureValueListener implements EventSubscriberInterface
 
         $newFeatureValueForm = $this->formCloner->cloneForm($form->get('feature_value_id'), $options);
         $form->add($newFeatureValueForm);
+
+        if (empty($data['feature_value_id']) && $hasCustomValue) {
+            // add constraints for custom_value when it is set, but only if feature_value_id is not set
+            $form->add($this->formCloner->cloneForm($form->get('custom_value'), [
+                'constraints' => [
+                    new DefaultLanguage([
+                        'message' => $this->translator->trans(
+                            'The field %field_name% is required at least in your default language.',
+                            [
+                                '%field_name%' => sprintf(
+                                    '"%s"',
+                                    $this->translator->trans('Custom value', [], 'Admin.Catalog.Feature')
+                                ),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]));
+        }
     }
 
     /**

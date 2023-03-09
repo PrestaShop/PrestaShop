@@ -29,15 +29,19 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
 use Generator;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\Integration\PrestaShopBundle\Form\FormListenerTestCase;
 
 class FeatureValueListenerTest extends FormListenerTestCase
@@ -72,22 +76,27 @@ class FeatureValueListenerTest extends FormListenerTestCase
      *
      * @param array<string, mixed> $formData
      * @param array<string, int> $choices
-     * @param array<string, mixed> $expectedOptions
+     * @param array<string, mixed> $expectedFeatureValueOptions
+     * @param array<string, mixed> $expectedCustomValueOptions
      */
-    public function testUpdateFeatureValuesOptions(
+    public function testUpdateFormOptions(
         array $formData,
         ?array $choices,
-        array $expectedOptions
+        array $expectedFeatureValueOptions,
+        array $expectedCustomValueOptions
     ): void {
-        $providerMock = $this->createChoiceProviderMock($formData, $choices);
-        $listener = new FeatureValueListener($providerMock, $this->formCloner);
+        $listener = new FeatureValueListener(
+            $this->createChoiceProviderMock($formData, $choices),
+            $this->formCloner,
+            $this->createMock(TranslatorInterface::class)
+        );
 
         $form = $this->createForm(SimpleFeaturesFormTest::class);
 
         $eventMock = $this->createEventMock($formData, $form);
-        $listener->updateFeatureValuesOptions($eventMock);
+        $listener->updateFormOptions($eventMock);
 
-        $this->assertFeatureValueOptions($form, $expectedOptions);
+        $this->assertFeatureValueOptions($form, $expectedFeatureValueOptions, $expectedCustomValueOptions);
     }
 
     public function getTestValues(): Generator
@@ -116,6 +125,10 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 ],
                 'empty_data' => 0,
             ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [],
+            ],
         ];
 
         yield [
@@ -142,6 +155,10 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'class' => 'feature-value-selector',
                 ],
                 'empty_data' => 0,
+            ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [],
             ],
         ];
 
@@ -171,13 +188,20 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 ],
                 'empty_data' => 0,
             ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [new DefaultLanguage()],
+            ],
         ];
 
-        // When no choices returned field is disabled
+        // When no choices returned field is disabled. Also custom value is provided, so constraint is added
         yield [
             [
                 'feature_id' => 42,
-                'custom' => false,
+                'custom_value' => [
+                    1 => 'custom',
+                    2 => null,
+                ],
             ],
             [],
             [
@@ -189,6 +213,10 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'class' => 'feature-value-selector',
                 ],
                 'empty_data' => 0,
+            ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [new DefaultLanguage()],
             ],
         ];
 
@@ -206,11 +234,19 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 ],
                 'empty_data' => 0,
             ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [],
+            ],
         ];
 
         yield [
             [
                 'feature_id' => null,
+                'custom_value' => [
+                    1 => 'custom',
+                    2 => null,
+                ],
             ],
             null,
             [
@@ -222,6 +258,10 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'class' => 'feature-value-selector',
                 ],
                 'empty_data' => 0,
+            ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [],
             ],
         ];
 
@@ -240,6 +280,10 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 ],
                 'empty_data' => 0,
             ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [],
+            ],
         ];
 
         yield [
@@ -256,6 +300,10 @@ class FeatureValueListenerTest extends FormListenerTestCase
                     'class' => 'feature-value-selector',
                 ],
                 'empty_data' => 0,
+            ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [],
             ],
         ];
 
@@ -274,23 +322,44 @@ class FeatureValueListenerTest extends FormListenerTestCase
                 ],
                 'empty_data' => 0,
             ],
+            [
+                'attr' => ['class' => 'custom-values'],
+                'constraints' => [],
+            ],
         ];
     }
 
     /**
      * @param FormInterface $form
-     * @param array<string, mixed> $expectedOptions
+     * @param array<string, mixed> $expectedFeatureValueOptions
+     * @param array<string, mixed> $expectedCustomValueOptions
      */
-    private function assertFeatureValueOptions(FormInterface $form, array $expectedOptions): void
-    {
+    private function assertFeatureValueOptions(
+        FormInterface $form,
+        array $expectedFeatureValueOptions,
+        array $expectedCustomValueOptions
+    ): void {
         // we only assert options that we expect to change,
         // it is too complicated to assert whole array with so many default values which are not expected to change
         $featureValueFieldConfig = $form->get('feature_value_id')->getConfig();
 
-        $this->assertSame($expectedOptions['empty_data'], $featureValueFieldConfig->getOption('empty_data'));
-        $this->assertSame($expectedOptions['attr'], $featureValueFieldConfig->getOption('attr'));
-        $this->assertSame($expectedOptions['disabled'], $featureValueFieldConfig->getOption('disabled'));
-        $this->assertSame($expectedOptions['choices'], $featureValueFieldConfig->getOption('choices'));
+        $this->assertSame($expectedFeatureValueOptions['empty_data'], $featureValueFieldConfig->getOption('empty_data'));
+        $this->assertSame($expectedFeatureValueOptions['attr'], $featureValueFieldConfig->getOption('attr'));
+        $this->assertSame($expectedFeatureValueOptions['disabled'], $featureValueFieldConfig->getOption('disabled'));
+        $this->assertSame($expectedFeatureValueOptions['choices'], $featureValueFieldConfig->getOption('choices'));
+
+        $customValueFieldConfig = $form->get('custom_value')->getConfig();
+        $this->assertSame($expectedCustomValueOptions['attr'], $customValueFieldConfig->getOption('attr'));
+
+        $expectedConstraints = $expectedCustomValueOptions['constraints'];
+        $actualConstraints = $customValueFieldConfig->getOption('constraints');
+        Assert::assertCount(count($expectedConstraints), $actualConstraints, 'Unexpected count of constraints');
+
+        foreach ($expectedConstraints as $i => $expectedConstraint) {
+            $actualConstraint = $actualConstraints[$i];
+            // It is enough to assert instance to test if constraint is added/removed, the content of constraint doesn't matter much
+            Assert::assertInstanceOf(get_class($expectedConstraint), $actualConstraint);
+        }
     }
 
     /**
@@ -323,17 +392,25 @@ class SimpleFeaturesFormTest extends CommonAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('feature_value_id', ChoiceType::class, [
-            // these are the default options which are important and might be affected by listener
-            'disabled' => true,
-            'attr' => [
+        $builder
+            ->add('feature_value_id', ChoiceType::class, [
+                // these are the default options which are important and might be affected by listener
                 'disabled' => true,
-                'data-toggle' => 'select2',
-                'class' => 'feature-value-selector',
-            ],
-            // empty data = 0 is important. Without it being set to 0, the "invalid option" constraint is not triggered,
-            // and the form is not invalidated (which should happen because field is not optional therefore 0 is invalid option)
-            'empty_data' => 0,
-        ]);
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+                // empty data = 0 is important. Without it being set to 0, the "invalid option" constraint is not triggered,
+                // and the form is not invalidated (which should happen because field is not optional therefore 0 is invalid option)
+                'empty_data' => 0,
+            ])
+            ->add('custom_value', TranslatableType::class, [
+                // we don't check all the options, but at least one to make sure that existing options are intact when adding constraints in listener
+                'attr' => ['class' => 'custom-values'],
+                // by default there should be no constraints
+                'constraints' => [],
+            ])
+        ;
     }
 }
