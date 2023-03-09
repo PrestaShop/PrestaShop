@@ -2121,7 +2121,7 @@ class AdminControllerCore extends Controller
         return $tips[$type][array_rand($tips[$type])];
     }
 
-    public function getTabs($parentId = 0, $level = 0)
+    private function getTabs($parentId = 0, $level = 0)
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
         $current_id = Tab::getCurrentParentId();
