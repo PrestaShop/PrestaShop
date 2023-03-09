@@ -27,18 +27,17 @@ import PaymentMethods from '@data/demo/paymentMethods';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_enabledDisabledPartialUse';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_enableDisablePartialUse';
 
 describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled partial use', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const presentDate: string = date.getDateFormat('yyyy-mm-dd', 'present');
   const cartRuleEnabledPartialUse: CartRuleData = new CartRuleData({
-    dateFrom: pastDate,
     name: 'partialUseEnabled',
     partialUse: true,
+    dateFrom: pastDate,
     discountType: 'Amount',
     discountAmount: {
       value: 100,
@@ -46,12 +45,10 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       tax: 'Tax included',
     },
   });
-  const amountValue = cartRuleEnabledPartialUse.discountAmount.value - Products.demo_1.finalPrice;
   const cartRuleDisabledPartialUse: CartRuleData = new CartRuleData({
-    dateFrom: presentDate,
-    dateTo: presentDate,
     name: 'partialUseEnabled',
     partialUse: false,
+    dateFrom: pastDate,
     discountType: 'Amount',
     discountAmount: {
       value: 100,
@@ -59,6 +56,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       tax: 'Tax included',
     },
   });
+
+  const amountValue: number = cartRuleEnabledPartialUse.discountAmount.value - Products.demo_1.finalPrice;
 
   // before and after functions
   before(async function () {
@@ -70,27 +69,27 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  it('should go to \'Catalog > Discounts\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.discountsLink,
-    );
-
-    const pageTitle = await cartRulesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
-  });
-
   describe('case 1 : Create cart rule with enabled partial use then check it on FO', async () => {
     describe('Create cart rule in BO', async () => {
+      it('should login in BO', async function () {
+        await loginCommon.loginBO(this, page);
+      });
+
+      it('should go to \'Catalog > Discounts\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.catalogParentLink,
+          dashboardPage.discountsLink,
+        );
+
+        const pageTitle = await cartRulesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      });
+
       it('should go to new cart rule page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
         await cartRulesPage.goToAddNewCartRulesPage(page);
 
@@ -99,7 +98,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should create cart rule', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'createCartRule2', baseContext);
 
         const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleEnabledPartialUse);
         await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
@@ -239,7 +238,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
     describe('Verify discount in BO', async () => {
       it('should go back to BO and reload the page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
         // Close tab and init other page objects with new current tab
         page = await homePage.closePage(browserContext, page, 0);
@@ -304,7 +303,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
   describe('case 2 : Create cart rule with disabled partial use then check it on FO', async () => {
     describe('Create cart rule in BO', async () => {
       it('should go to new cart rule page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
 
         await cartRulesPage.goToAddNewCartRulesPage(page);
 
@@ -313,7 +312,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should create cart rule', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'createCartRule1', baseContext);
 
         const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleDisabledPartialUse);
         await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
@@ -322,7 +321,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
 
     describe('Verify discount in FO', async () => {
       it('should view my shop', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
         // View my shop and init pages
         page = await addCartRulePage.viewMyShop(page);
@@ -333,7 +332,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should go to the first product page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage2', baseContext);
 
         await homePage.goToProductPage(page, 1);
 
@@ -342,7 +341,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should add product to cart and proceed to checkout', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
         await foProductPage.addProductToTheCart(page);
 
@@ -351,7 +350,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should verify the total after discount', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount2', baseContext);
 
         const priceATI = await cartPage.getATIPrice(page);
         await expect(priceATI).to.equal(0);
@@ -364,7 +363,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage2', baseContext);
 
         await cartPage.clickOnProceedToCheckout(page);
 
@@ -372,17 +371,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await expect(isCheckoutPage).to.be.true;
       });
 
-      it('should sign in by created customer', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
-
-        await checkoutPage.clickOnSignIn(page);
-
-        const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
-        await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
-      });
-
       it('should go to delivery step', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep2', baseContext);
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -390,7 +380,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should go to payment step', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep2', baseContext);
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
@@ -398,7 +388,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should confirm the order', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder2', baseContext);
 
         // Payment step - Choose payment step
         await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -409,7 +399,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should go to vouchers page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage2', baseContext);
 
         await homePage.goToMyAccountPage(page);
         await foMyAccountPage.goToVouchersPage(page);
@@ -419,7 +409,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should get the number of vouchers', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers2', baseContext);
 
         const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
         await expect(numberOfVouchers).to.equal(1);
@@ -435,7 +425,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         {args: {column: 'code', row: 1, value: cartRuleDisabledPartialUse.code}},
       ].forEach((cartRule, index: number) => {
         it(`should check the voucher ${cartRule.args.column}`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `checkVoucher2${index}`, baseContext);
 
           const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(
             page,
@@ -461,7 +451,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
       });
 
       it('should check the number of cart rules', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCartRules', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCartRules2', baseContext);
 
         const numberOfCartRules = await cartRulesPage.getNumberOfElementInGrid(page);
         await expect(numberOfCartRules).to.equal(1);
@@ -469,8 +459,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
     });
 
     describe('Delete the created cart rule', async () => {
-      it('should bulk delete cart rules', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRules', baseContext);
+      it('should bulk delete cart rule', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
         const deleteTextResult = await cartRulesPage.deleteCartRule(page);
         await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulDeleteMessage);
