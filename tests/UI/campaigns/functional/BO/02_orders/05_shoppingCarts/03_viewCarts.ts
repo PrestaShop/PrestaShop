@@ -113,7 +113,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);
+      await expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
       const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
       await expect(textColumn).to.contains('Non ordered');
@@ -122,10 +122,11 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should go the Shopping Cart details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage1', baseContext);
 
+      const lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
       await shoppingCartsPage.goToViewPage(page, 1);
 
       const pageTitle = await shoppingCartViewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle);
+      await expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
     });
 
     it('should check the cart total', async function () {
@@ -241,10 +242,11 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should go the Shopping Cart details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage2', baseContext);
 
+      const lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
       await shoppingCartsPage.goToViewPage(page, 1);
 
       const pageTitle = await shoppingCartViewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle);
+      await expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
     });
 
     it('should check the customer Information Block', async function () {
