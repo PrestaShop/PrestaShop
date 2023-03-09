@@ -65,6 +65,13 @@ class FeatureController extends FrameworkBundleAdminController
             'settingsTipMessage' => $this->getSettingsTipMessage(),
             'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'layoutHeaderToolbarBtn' => [
+                'add_feature' => [
+                    'href' => $this->generateUrl('admin_features_add'),
+                    'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
         ]);
     }
 
