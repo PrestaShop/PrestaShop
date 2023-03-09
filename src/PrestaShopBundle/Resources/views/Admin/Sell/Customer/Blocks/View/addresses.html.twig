@@ -27,7 +27,7 @@
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.addressesInformation|length }}</span>
+    <span class="badge badge-primary rounded">{{ customerAddressGrid.data.records_total }}</span>
 
     <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right" 
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">

@@ -26,11 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
-use Cart;
-use CartRule;
 use Category;
 use Context;
-use Currency;
 use Customer;
 use CustomerThread;
 use Db;
@@ -38,20 +35,15 @@ use Gender;
 use Group;
 use Language;
 use Link;
-use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\BoughtProductInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\CartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\DiscountInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GroupInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\LastConnectionInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\MessageInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\PersonalInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ProductsInformation;
@@ -135,14 +127,14 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $this->getGeneralInformation($customer),
             $this->getPersonalInformation($customer),
             $this->getCustomerOrders($customer),
-            $this->getCustomerCarts($customer),
+            [],
             $this->getCustomerProducts($customer),
             $this->getCustomerMessages($customer),
-            $this->getCustomerDiscounts($customer),
+            [],
             $this->getLastEmailsSentToCustomer($customer),
             $this->getLastCustomerConnections($customer),
             $this->getCustomerGroups($customer),
-            $this->getCustomerAddresses($customer)
+            []
         );
     }
 
@@ -248,40 +240,22 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     {
         $validOrders = [];
         $invalidOrders = [];
-
-        // Get orders for this customer
-        $orders = Order::getCustomerOrders($customer->id, true);
         $ordersTotal = 0;
 
+        // Get fast order information
+        $sql = '
+        SELECT o.id_order, o.valid, o.total_paid_tax_incl, o.conversion_rate FROM `' . _DB_PREFIX_ . 'orders` o
+        WHERE o.`id_customer` = ' . (int) $customer->id .
+        Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
+        GROUP BY o.`id_order`';
+        $orders = Db::getInstance()->executeS($sql);
+
         foreach ($orders as $order) {
-            $order['total_paid_tax_incl_not_formated'] = $order['total_paid_tax_incl'];
-            $order['total_paid_tax_incl'] = $this->locale->formatPrice(
-                $order['total_paid_tax_incl'],
-                Currency::getIsoCodeById((int) $order['id_currency'])
-            );
-
-            if (!isset($order['order_state'])) {
-                $order['order_state'] = $this->translator->trans(
-                    'There is no status defined for this order.',
-                    [],
-                    'Admin.Orderscustomers.Notification'
-                );
-            }
-
-            $customerOrderInformation = new OrderInformation(
-                (int) $order['id_order'],
-                Tools::displayDate($order['date_add']),
-                $order['payment'],
-                $order['order_state'],
-                (int) $order['nb_products'],
-                $order['total_paid_tax_incl']
-            );
-
             if ($order['valid']) {
-                $validOrders[] = $customerOrderInformation;
-                $ordersTotal += $order['total_paid_tax_incl_not_formated'] / $order['conversion_rate'];
+                $validOrders[] = $order;
+                $ordersTotal += $order['total_paid_tax_incl'] / $order['conversion_rate'];
             } else {
-                $invalidOrders[] = $customerOrderInformation;
+                $invalidOrders[] = $order;
             }
         }
 
@@ -290,35 +264,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $validOrders,
             $invalidOrders
         );
-    }
-
-    /**
-     * @param Customer $customer
-     *
-     * @return CartInformation[]
-     */
-    private function getCustomerCarts(Customer $customer)
-    {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT c.id_cart, c.date_add, ca.name as carrier_name, c.id_currency, cu.iso_code as currency_iso_code
-        FROM ' . _DB_PREFIX_ . 'cart c
-        LEFT JOIN ' . _DB_PREFIX_ . 'carrier ca ON ca.id_carrier = c.id_carrier
-        LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON cu.id_currency = c.id_currency
-        WHERE c.`id_customer` = ' . (int) $customer->id . '
-        ORDER BY c.`date_add` DESC');
-
-        $customerCarts = [];
-        foreach ($result as $row) {
-            $cart = new Cart((int) $row['id_cart']);
-            $customerCarts[] = new CartInformation(
-                sprintf('%06d', $row['id_cart']),
-                Tools::displayDate($row['date_add'], true),
-                $this->locale->formatPrice($cart->getOrderTotal(true), $row['currency_iso_code']),
-                $row['carrier_name']
-            );
-        }
-
-        return $customerCarts;
     }
 
     /**
@@ -426,32 +371,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     /**
      * @param Customer $customer
      *
-     * @return DiscountInformation[]
-     */
-    private function getCustomerDiscounts(Customer $customer)
-    {
-        $discounts = CartRule::getAllCustomerCartRules($customer->id);
-
-        $customerDiscounts = [];
-
-        foreach ($discounts as $discount) {
-            $availableQuantity = $discount['quantity'] > 0 ? (int) $discount['quantity_for_user'] : 0;
-
-            $customerDiscounts[] = new DiscountInformation(
-                (int) $discount['id_cart_rule'],
-                $discount['code'],
-                $discount['name'],
-                (bool) $discount['active'],
-                $availableQuantity
-            );
-        }
-
-        return $customerDiscounts;
-    }
-
-    /**
-     * @param Customer $customer
-     *
      * @return SentEmailInformation[]
      */
     private function getLastEmailsSentToCustomer(Customer $customer)
@@ -523,40 +442,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         }
 
         return $customerGroups;
-    }
-
-    /**
-     * @param Customer $customer
-     *
-     * @return AddressInformation[]
-     */
-    private function getCustomerAddresses(Customer $customer)
-    {
-        $addresses = $customer->getAddresses($this->contextLangId);
-        $customerAddresses = [];
-
-        foreach ($addresses as $address) {
-            $company = $address['company'] ?: '--';
-            $fullAddress = sprintf(
-                '%s %s %s %s',
-                $address['address1'],
-                $address['address2'] ?: '',
-                $address['postcode'],
-                $address['city']
-            );
-
-            $customerAddresses[] = new AddressInformation(
-                (int) $address['id_address'],
-                $company,
-                sprintf('%s %s', $address['firstname'], $address['lastname']),
-                $fullAddress,
-                $address['country'],
-                (string) $address['phone'],
-                (string) $address['phone_mobile']
-            );
-        }
-
-        return $customerAddresses;
     }
 
     /**

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,23 +22,34 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div class="customer-carts-card card">
-  <h3 class="card-header">
-    <i class="material-icons">shopping_cart</i>
-    {{ 'Carts'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ customerCartGrid.data.records_total }}</span>
-  </h3>
-  <div class="card-body">
-    {% if customerCartGrid.data.records_total > 0 %}
-      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerCartGrid} %}
-    {% else %}
-      <div class="text-center">
-        <p class="text-muted mb-2">
-          {{ '%firstname% %lastname% did not create any cart yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-        </p> 
-      </div>
-    {% endif %}
-  </div>
-</div>
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerOrderGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Default customer's order list filters
+ */
+final class CustomerOrderFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = CustomerOrderGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_order',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
+}

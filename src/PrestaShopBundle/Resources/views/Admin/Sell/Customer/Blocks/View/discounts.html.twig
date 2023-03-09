@@ -27,7 +27,7 @@
   <h3 class="card-header">
     <i class="material-icons">loyalty</i>
     {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.discountsInformation|length }}</span>
+    <span class="badge badge-primary rounded">{{ customerDiscountGrid.data.records_total }}</span>
 
     <a href="{{ getAdminLink('AdminCartRules', true, {'addcart_rule': 1, 'back': app.request.uri}) }}" class="tooltip-link float-right" 
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
