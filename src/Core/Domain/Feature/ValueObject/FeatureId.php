@@ -41,7 +41,7 @@ class FeatureId
     /**
      * @param int $featureId
      */
-    public function __construct($featureId)
+    public function __construct(int $featureId)
     {
         $this->assertIsGreaterThanZero($featureId);
 
@@ -63,8 +63,8 @@ class FeatureId
      */
     private function assertIsGreaterThanZero(int $featureId): void
     {
-        if (0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf('Invalid feature id %s supplied. Feature id must be positive integer.', var_export($featureId, true)));
+        if (0 >= $featureId) {
+            throw new InvalidFeatureIdException(sprintf('Invalid feature id %d. It must be greater than zero.', $featureId));
         }
     }
 }

@@ -45,8 +45,8 @@ class FeatureIdTest extends TestCase
 
     public function getValidInput(): iterable
     {
-        yield [0];
         yield [42];
+        yield [1000];
     }
 
     /**
@@ -61,8 +61,6 @@ class FeatureIdTest extends TestCase
     public function getInvalidInput(): iterable
     {
         yield [-1];
-        yield [1.1];
-        yield ['a'];
-        yield ['+'];
+        yield [0];
     }
 }
