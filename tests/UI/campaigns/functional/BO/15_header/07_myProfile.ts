@@ -199,7 +199,7 @@ describe('BO - Header : My profile', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAllOthersFields', baseContext);
       employeeData.email = 'demo1@prestashop.com';
       employeeData.password = 'prestashop_demo';
-      employeeData.language = 'Français (French)';
+      employeeData.language = 'English (English)';
       employeeData.defaultPage = 'Credit Slips';
 
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
@@ -219,7 +219,7 @@ describe('BO - Header : My profile', async () => {
       await loginPage.successLogin(page, employeeData.email, employeeData.password);
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(creditSlipsPage.pageTitleFR);
+      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
     });
 
     it('should reset the language', async function () {
@@ -232,7 +232,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessageFR);
+      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
     });
   });
 
