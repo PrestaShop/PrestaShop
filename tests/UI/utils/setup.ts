@@ -56,12 +56,14 @@ afterEach(async function () {
     const currentTab = await helper.getLastOpenedTab(this.browser);
 
     // Take a screenshot
-    await currentTab.screenshot(
-      {
-        path: `${global.SCREENSHOT.FOLDER}/fail_test_${screenshotNumber}.png`,
-        fullPage: true,
-      },
-    );
+    if (currentTab !== null) {
+      await currentTab.screenshot(
+        {
+          path: `${global.SCREENSHOT.FOLDER}/fail_test_${screenshotNumber}.png`,
+          fullPage: true,
+        },
+      );
+    }
 
     screenshotNumber += 1;
   }
