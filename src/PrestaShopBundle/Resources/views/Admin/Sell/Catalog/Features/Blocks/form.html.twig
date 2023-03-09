@@ -55,11 +55,10 @@
     </div>
 
     <div class="card-footer">
-      {#@todo uncomment path when index is migrated#}
-      <a href="{#{{ path('admin_features_index') }}#}" class="btn btn-outline-secondary">
+      <a href="{{ path('admin_features_index') }}" class="btn btn-outline-secondary">
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
-      <button class="btn btn-primary float-right">
+      <button class="btn btn-primary float-right" id="save-button">
         {{ 'Save'|trans({}, 'Admin.Actions') }}
       </button>
     </div>

@@ -123,7 +123,7 @@ class FeatureController extends FrameworkBundleAdminController
     public function editAction(int $featureId, Request $request): Response
     {
         try {
-            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
+            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing($featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 

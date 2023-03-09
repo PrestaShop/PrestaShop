@@ -209,27 +209,25 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             ->setAssociatedColumn('name')
             )
-            ->add(
-                (new Filter('position', NumberType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                        ],
-                    ])
-                    ->setAssociatedColumn('position')
+            ->add((new Filter('position', NumberType::class))
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('position')
             )
-            ->add(
-                (new Filter('actions', SearchAndResetType::class))
-                    ->setAssociatedColumn('actions')
-                    ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
-                        'reset_route_params' => [
-                            'filterId' => self::GRID_ID,
-                        ],
-                        'redirect_route' => 'admin_features_index',
-                    ])
-                    ->setAssociatedColumn('actions')
+            ->add((new Filter('actions', SearchAndResetType::class))
+            ->setAssociatedColumn('actions')
+            ->setTypeOptions([
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
+                ],
+                'redirect_route' => 'admin_features_index',
+            ])
+            ->setAssociatedColumn('actions')
             );
     }
 
