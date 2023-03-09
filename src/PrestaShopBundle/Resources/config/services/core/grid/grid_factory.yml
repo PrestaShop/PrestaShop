@@ -120,6 +120,22 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+  prestashop.core.grid.factory.customer.bought_product:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.customer.bought_product'
+      - '@prestashop.core.grid.data_provider.customer_bought_product'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.customer.viewed_product:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.customer.viewed_product'
+      - '@prestashop.core.grid.data_provider.customer_viewed_product'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
   prestashop.core.grid.factory.language:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:

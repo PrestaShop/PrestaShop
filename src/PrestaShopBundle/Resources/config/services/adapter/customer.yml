@@ -7,7 +7,6 @@ services:
     arguments:
       - '@translator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().link"
       - "@prestashop.core.localization.locale.context_locale"
     tags:
       - name: tactician.handler

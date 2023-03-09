@@ -100,6 +100,20 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
 
+  prestashop.core.grid.definition.factory.customer.bought_product:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerBoughtProductGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+    public: true
+
+  prestashop.core.grid.definition.factory.customer.viewed_product:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerViewedProductGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+    public: true
+
   prestashop.core.grid.definition.factory.language:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'

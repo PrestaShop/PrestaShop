@@ -58,10 +58,12 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerBoughtProductFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerCartFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerOrderFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerViewedProductFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
@@ -275,6 +277,8 @@ class CustomerController extends AbstractAdminController
      * @param CustomerAddressFilters $customerAddressFilters
      * @param CustomerCartFilters $customerCartFilters
      * @param CustomerOrderFilters $customerOrderFilters
+     * @param CustomerBoughtProductFilters $customerBoughtProductFilters
+     * @param CustomerViewedProductFilters $customerViewedProductFilters
      *
      * @return Response
      */
@@ -284,7 +288,9 @@ class CustomerController extends AbstractAdminController
         CustomerDiscountFilters $customerDiscountFilters,
         CustomerAddressFilters $customerAddressFilters,
         CustomerCartFilters $customerCartFilters,
-        CustomerOrderFilters $customerOrderFilters
+        CustomerOrderFilters $customerOrderFilters,
+        CustomerBoughtProductFilters $customerBoughtProductFilters,
+        CustomerViewedProductFilters $customerViewedProductFilters
     ) {
         try {
             /** @var ViewableCustomer $customerInformation */
@@ -329,6 +335,16 @@ class CustomerController extends AbstractAdminController
         $customerCartFilters->addFilter(['id_customer' => $customerId]);
         $customerCartGrid = $customerCartGridFactory->getGrid($customerCartFilters);
 
+        // Bought products listing
+        $customerBoughtProductGridFactory = $this->get('prestashop.core.grid.factory.customer.bought_product');
+        $customerBoughtProductFilters->addFilter(['id_customer' => $customerId]);
+        $customerBoughtProductGrid = $customerBoughtProductGridFactory->getGrid($customerBoughtProductFilters);
+
+        // Viewed products listing
+        $customerViewedProductGridFactory = $this->get('prestashop.core.grid.factory.customer.viewed_product');
+        $customerViewedProductFilters->addFilter(['id_customer' => $customerId]);
+        $customerViewedProductGrid = $customerViewedProductGridFactory->getGrid($customerViewedProductFilters);
+
         if ($request->query->has('conf')) {
             $this->manageLegacyFlashes($request->query->get('conf'));
         }
@@ -341,6 +357,8 @@ class CustomerController extends AbstractAdminController
             'customerAddressGrid' => $this->presentGrid($customerAddressGrid),
             'customerOrderGrid' => $this->presentGrid($customerOrderGrid),
             'customerCartGrid' => $this->presentGrid($customerCartGrid),
+            'customerBoughtProductGrid' => $this->presentGrid($customerBoughtProductGrid),
+            'customerViewedProductGrid' => $this->presentGrid($customerViewedProductGrid),
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),

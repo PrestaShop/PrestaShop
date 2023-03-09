@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,17 +22,34 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% if customerBoughtProductGrid.data.records_total > 0 %}
-<div class="card customer-bought-products-card">
-  <h3 class="card-header">
-    <i class="material-icons">attach_money</i>
-    {{ 'Purchased products'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    <span class="badge badge-primary rounded">{{ customerBoughtProductGrid.data.records_total }}</span>
-  </h3>
-  <div class="card-body">
-    {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerBoughtProductGrid} %}
-  </div>
-</div>
-{% endif %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerViewedProductGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Default customer's order list filters
+ */
+final class CustomerViewedProductFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = CustomerViewedProductGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => 20,
+            'offset' => 0,
+            'orderBy' => 'date_add',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
+}
