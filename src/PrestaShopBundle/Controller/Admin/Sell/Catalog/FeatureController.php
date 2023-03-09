@@ -35,9 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
-use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
-use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,10 +45,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FeatureController extends FrameworkBundleAdminController
 {
-    use FrameworkBridgeControllerTrait;
-    use FrameworkBridgeControllerListTrait;
-    use FrameworkControllerSmartyTrait;
-
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */

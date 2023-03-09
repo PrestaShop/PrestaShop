@@ -39,11 +39,7 @@
 {% block content %}
   {{ ps.infotip(settingsTipMessage, true) }}
   {% block feature_group_showcase_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/showcase_card.html.twig' %}
-      </div>
-    </div>
+      {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/showcase_card.html.twig' %}
   {% endblock %}
   {% block features_listing %}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureGrid} %}
