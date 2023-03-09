@@ -825,6 +825,16 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
+        // Disable because of catalog mode enabled in Prestashop settings
+        if ($this->settings->catalog_mode) {
+            return false;
+        }
+
+        // Disable because of "Available for order" checkbox unchecked in product settings
+        if ((bool) $product['available_for_order'] === false) {
+            return false;
+        }
+
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
             $shouldEnable = false;
 
@@ -840,8 +850,7 @@ class ProductLazyArray extends AbstractLazyArray
             $shouldEnable = true;
         }
 
-        $shouldEnable = $shouldEnable && $this->shouldShowAddToCartButton($product);
-
+        // Disable because of stock management
         if ($settings->stock_management_enabled
             && !$product['allow_oosp']
             && ($product['quantity'] <= 0
