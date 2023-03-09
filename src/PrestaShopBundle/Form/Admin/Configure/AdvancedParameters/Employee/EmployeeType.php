@@ -200,7 +200,7 @@ final class EmployeeType extends AbstractType
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Active', [], 'Admin.Global'),
                 'help' => $this->trans(
-                    'Allow or disallow this employee to log in to the Admin panel.',
+                    'Allow or deny this employee\'s access to the Admin panel.',
                     [],
                     'Admin.Advparameters.Help'
                 ),
@@ -215,9 +215,9 @@ final class EmployeeType extends AbstractType
                 'choices' => $this->profilesChoices,
             ])
             ->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                'label' => $this->trans('Store association', [], 'Admin.Global'),
                 'help' => $this->trans(
-                    'Select the shops the employee is allowed to access.',
+                    'Select the stores the employee is allowed to access.',
                     [],
                     'Admin.Advparameters.Help'
                 ),

@@ -942,7 +942,7 @@ class ProductLazyArray extends AbstractLazyArray
         // If the product is disabled, but still displayed, we display a proper message
         if ($this->product['active'] != 1) {
             $this->product['availability_message'] = $this->translator->trans(
-                'This product is no longer for sale',
+                'This product is no longer available for sale.',
                 [],
                 'Shop.Notifications.Error'
             );

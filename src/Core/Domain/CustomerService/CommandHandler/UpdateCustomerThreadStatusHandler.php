@@ -71,7 +71,7 @@ class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadStatusHan
         $statement->bindValue(':id_customer_thread', $command->getCustomerThreadId()->getValue());
 
         if (false === $statement->execute()) {
-            throw new CustomerServiceException('Failed to update customer thread status', CustomerServiceException::FAILED_TO_UPDATE_STATUS);
+            throw new CustomerServiceException('Failed to update customer thread status.', CustomerServiceException::FAILED_TO_UPDATE_STATUS);
         }
     }
 }

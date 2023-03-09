@@ -470,7 +470,7 @@ class SupplierController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteSupplierLogoImageCommand($supplierId));
             $this->addFlash(
                 'success',
-                $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('Image successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (SupplierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

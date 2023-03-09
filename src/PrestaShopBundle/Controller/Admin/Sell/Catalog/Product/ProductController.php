@@ -353,7 +353,7 @@ class ProductController extends FrameworkBundleAdminController
             $result = $this->getProductShopsFormHandler()->handleFor($productId, $productShopsForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 $redirectParams = ['productId' => $productId];
                 if ($request->query->has('liteDisplaying')) {
@@ -400,7 +400,7 @@ class ProductController extends FrameworkBundleAdminController
 
                 $createdData = $productForm->getData();
                 if (!empty($createdData['shop_id'])) {
-                    $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Your store context has been automatically modified.', 'Admin.Notifications.Success'));
 
                     // Force shop context switching to selected shop for creation (handled in admin-dev/init.php and/or AdminController)
                     $redirectParams['setShopContext'] = 's-' . $createdData['shop_id'];
@@ -430,7 +430,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         if ($request->query->get('switchToShop')) {
-            $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Your store context has been automatically modified.', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_products_v2_edit', [
                 'productId' => $productId,
@@ -1487,7 +1487,7 @@ class ProductController extends FrameworkBundleAdminController
         return $this->renderPreSelectShopPage(
             $productId,
             $this->trans(
-                'This page is only compatible in a single store context. Please select a store in the multistore header',
+                'This page is only compatible in a single-store context. Please select a store in the multistore header.',
                 'Admin.Notifications.Info'
             )
         );

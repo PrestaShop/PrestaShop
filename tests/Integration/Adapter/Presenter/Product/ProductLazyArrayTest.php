@@ -95,7 +95,7 @@ class ProductLazyArrayTest extends TestCase
         'active' => 1,
     ];
 
-    private const PRODUCT_DISCONTINUED = 'This product is no longer for sale';
+    private const PRODUCT_DISCONTINUED = 'This product is no longer available for sale.';
     private const PRODUCT_AVAILABLE_NOW = 'This product is available now';
     private const PRODUCT_AVAILABLE_LATER = 'This product is available on backorder';
     private const CONFIGURATION_AVAILABLE_NOW_LABEL = 'This product is available now - default';
