@@ -225,8 +225,6 @@ abstract class ModuleCore implements ModuleInterface
 
     public const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
-    public const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
-
     public const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
 
     public const MULTISTORE_COMPATIBILITY_NO = -20;
