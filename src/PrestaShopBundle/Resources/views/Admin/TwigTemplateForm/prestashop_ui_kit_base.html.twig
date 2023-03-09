@@ -1527,7 +1527,7 @@
 
         {# Render remaining actions in dropdown #}
         {% if inlineButtonsLimit is not same as(null) and form.children|length > inlineButtonsLimit %}
-          <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
+          <a id="{{ form.vars.id }}_dropdown" class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
              data-toggle="dropdown"
              aria-haspopup="true"
              aria-expanded="false"
