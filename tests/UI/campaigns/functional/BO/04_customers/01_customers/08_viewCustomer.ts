@@ -578,7 +578,7 @@ describe('BO - Customers - Customers : View information about customer', async (
     it('should go to view cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCartPage', baseContext);
 
-      const idCart = await viewCustomerPage.getTextColumnFromTableCarts(page, 'id', 1);
+      const idCart = await viewCustomerPage.getTextColumnFromTableCarts(page, 'id_cart', 1);
 
       await viewCustomerPage.goToPage(page, 'Carts');
 
