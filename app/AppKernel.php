@@ -146,7 +146,7 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return dirname(__DIR__) . '/var/logs';
+        return _PS_ROOT_DIR_ . '/var/logs';
     }
 
     /**
