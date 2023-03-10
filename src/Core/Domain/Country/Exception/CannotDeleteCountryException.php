@@ -26,33 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
-
-use Country;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
-use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\DeleteCountryHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * Handles country deletion
+ * Is thrown when adding new country fails
  */
-class DeleteCountryHandler implements DeleteCountryHandlerInterface
+class CannotDeleteCountryException extends CountryException
 {
-    /**
-     * @var CountryRepository
-     */
-    private $countryRepository;
-
-    public function __construct(CountryRepository $countryRepository)
-    {
-        $this->countryRepository = $countryRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(DeleteCountryCommand $command): void
-    {
-        $this->countryRepository->delete($command->getCountryId());
-    }
 }
