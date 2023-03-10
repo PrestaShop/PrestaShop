@@ -277,13 +277,6 @@ parameters:
                 - src/Adapter/*
                 - src/PrestaShopBundle/Install/*
         -
-            class:
-              - src/Adapter/*
-            message: 'No adapters inside the prestashop bundle. Use core interfaces instead'
-            disallowIn:
-                - src/PrestaShopBundle/*
-                - src/Core/*
-        -
             class: 'Symfony\Component\Translation\TranslatorInterface'
             message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
             disallowIn:
@@ -293,12 +286,7 @@ parameters:
             message: 'The @template annotation is deprecated and will be removed in future versions. We should not add any usages of it. '
             disallowIn:
                 - src/PrestaShopBundle/*
-  disallowedMethodCalls:
-        -
-            method: 'PrestaShopBundle\Form\Admin\Type\CommonAbstractType::getConfiguration()'
-            message: 'Use dependency injection instead'
-            disallowIn:
-                - src/*
+  disallowedMethodCalls: []
   disallowedConstants:
         -
             constant:
