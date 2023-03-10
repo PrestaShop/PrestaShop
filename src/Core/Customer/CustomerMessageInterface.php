@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Customer;
 
+/**
+ * @experimental Refactor needed once the new model architecture is defined.
+ */
 interface CustomerMessageInterface
 {
     /**

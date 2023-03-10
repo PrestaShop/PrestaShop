@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThread
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
+ * @experimental Refactor needed once the new model architecture is defined.
+ *
  * Methods to access data storage for customerThread
  */
 class CustomerThreadRepository extends AbstractObjectModelRepository

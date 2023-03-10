@@ -29,9 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Repository\ContactRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository\CustomerMessageRepository;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -48,10 +51,33 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
      */
     private $contactRepository;
 
-    public function __construct(RouterInterface $router, ContactRepositoryInterface $contactRepository)
-    {
+    /**
+     * @var CustomerThreadRepository
+     */
+    private $customerThreadRepository;
+
+    /**
+     * @var CustomerMessageRepository
+     */
+    private $customerMessageRepository;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        RouterInterface $router,
+        ContactRepositoryInterface $contactRepository,
+        CustomerThreadRepository $customerThreadRepository,
+        CustomerMessageRepository $customerMessageRepository,
+        TranslatorInterface $translator
+    ) {
         $this->router = $router;
         $this->contactRepository = $contactRepository;
+        $this->customerThreadRepository = $customerThreadRepository;
+        $this->customerMessageRepository = $customerMessageRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -88,8 +114,17 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
                 $viewUrl
             );
 
-            $customerServicesSummary[$customerServiceSummary->getContactId()] = $customerServiceSummary;
+            $customerServicesSummary['summaries'][$customerServiceSummary->getContactId()] = $customerServiceSummary;
         }
+
+        $customerServicesSummary['statistics'] = [
+            $this->translator->trans('Total threads', [], 'Admin.Catalog.Feature') => $all = $this->customerThreadRepository->getTotalCustomerThreads(),
+            $this->translator->trans('Threads pending', [], 'Admin.Catalog.Feature') => $pending = $this->customerThreadRepository->getTotalCustomerThreads('status LIKE "%pending%"'),
+            $this->translator->trans('Total number of customer messages', [], 'Admin.Catalog.Feature') => $this->customerMessageRepository->getTotalCustomerMessages('id_employee = 0'),
+            $this->translator->trans('Total number of employee messages', [], 'Admin.Catalog.Feature') => $this->customerMessageRepository->getTotalCustomerMessages('id_employee != 0'),
+            $this->translator->trans('Unread threads', [], 'Admin.Catalog.Feature') => $unread = $this->customerThreadRepository->getTotalCustomerThreads('status = "open"'),
+            $this->translator->trans('Closed threads', [], 'Admin.Catalog.Feature') => $all - ($unread + $pending),
+        ];
 
         return $customerServicesSummary;
     }

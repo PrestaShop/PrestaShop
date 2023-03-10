@@ -25,8 +25,7 @@
 
 <div class="">
   <div id="customer_thread_contacts" class="d-flex justify-content-around row">
-    {% set nb_categories = servicesSummary|length %}
-    {% for serviceSummary in servicesSummary %}
+    {% for serviceSummary in servicesSummary.summaries %}
 
       <div class="col-lg-3">
         <div class="card">
@@ -35,15 +34,15 @@
           </div>
           <div class="card-body">
             <p>{{ serviceSummary.description }}</p>
-            {% if serviceSummary.getTotalThreads() == 0 %}
+            {% if serviceSummary.totalThreads == 0 %}
               <span
                 class="message-mail text-secondary">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
             {% else %}
               <a
-                href="{{ serviceSummary.getViewUrl() }}"
+                href="{{ serviceSummary.viewUrl }}"
                 class="button">
-                {{ serviceSummary.getTotalThreads() }}
-                {% if serviceSummary.getTotalThreads() > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                {{ serviceSummary.totalThreads }}
+                {% if serviceSummary.totalThreads > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
                 {% endif %}
               </a>
             {% endif %}
@@ -57,7 +56,7 @@
           {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
         <ul class="list-unstyled card-body">
-          {% for text, value in statisticRows %}
+          {% for text, value in servicesSummary.statistics %}
             <li class="border-bottom">{{ text }} <span class="text-dark float-right font-weight-bold">{{ value }}</span>
             </li>
           {% endfor %}

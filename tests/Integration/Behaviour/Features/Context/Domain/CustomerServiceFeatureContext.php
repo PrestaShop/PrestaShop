@@ -27,10 +27,10 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use CustomerMessage;
 use CustomerThread;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
@@ -50,12 +50,6 @@ use Tools;
 
 class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * Registry to keep track of created/edited contacts using references
-     *
-     * @var int[]
-     */
-    protected $contactRegistry = [];
     /**
      * @var Configuration
      */
@@ -244,12 +238,12 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertContactHasThreads(string $contactReference, int $expectedThreads): void
     {
         $contactId = $this->referenceToId($contactReference);
-        /** @var CustomerServiceSummary[] $getCustomerServiceSummary */
-        $getCustomerServiceSummary = $this->getQueryBus()->handle(
+        /** @var CustomerServiceSummary[] $customerServiceSummary */
+        $customerServiceSummary = $this->getQueryBus()->handle(
             new GetCustomerServiceSummary()
         );
 
-        foreach ($getCustomerServiceSummary as $customerServiceSummary) {
+        foreach ($customerServiceSummary as $customerServiceSummary) {
             if ($customerServiceSummary->getContactId() !== $contactId) {
                 continue;
             }

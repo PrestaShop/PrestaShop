@@ -165,6 +165,19 @@ services:
         arguments:
           - '@prestashop.core.admin.tab.repository'
 
+  prestashop.admin.customer_thread.form_handler:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.customer_preferences.data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
+      - 'CustomerPreferencesPage'
+    calls:
+      - method: setTabRepository
+        arguments:
+          - '@prestashop.core.admin.tab.repository'
+
   prestashop.admin.order_preferences.general.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:
@@ -579,3 +592,13 @@ services:
       - '@PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ContactOptionsFormDataProvider'
       - 'PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ContactOptionType'
       - 'contact_options'
+
+#
+#  prestashop.admin.customer_service.contact_options.form_handler:
+#    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+#    arguments:
+#      - '@form.factory'
+#      - '@prestashop.core.hook.dispatcher'
+#      - '@PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ContactOptionsFormDataProvider'
+#      - 'PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ContactOptionType'
+#      - 'PaymentPreferences'
