@@ -33,14 +33,14 @@
   </h3>
 
   <div class="card-body">
-    {% block reply_to_customer_form_rest %}
+    {% block contact_option_form %}
       {{ form_rest(contactOptionsForm) }}
     {% endblock %}
   </div>
 
   <div class="card-footer">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary">{{ 'Send'|trans({}, 'Admin.Actions') }}</button>
+      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
     </div>
   </div>
 </div>

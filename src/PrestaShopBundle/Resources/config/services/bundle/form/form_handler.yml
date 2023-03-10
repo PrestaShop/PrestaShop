@@ -591,4 +591,5 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ContactOptionsFormDataProvider'
       - 'PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ContactOptionType'
+      - 'ContactOptions'
       - 'contact_options'
