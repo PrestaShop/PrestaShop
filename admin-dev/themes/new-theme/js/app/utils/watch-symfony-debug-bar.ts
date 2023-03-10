@@ -58,12 +58,13 @@ const initToggleWatching = (debugToken: string): void => {
 };
 
 const toggleDebugMode = () => {
-  if (getPreference('toolbar/displayState') === 'block') {
-    document.body.classList.add('debug-toolbar-shown');
-    document.body.classList.remove('debug-toolbar-hidden');
-  } else {
+  if (getPreference('toolbar/displayState') === 'none') {
     document.body.classList.add('debug-toolbar-hidden');
     document.body.classList.remove('debug-toolbar-shown');
+  } else {
+    // Alternative is block (set as shown) or null (default setting is shown)
+    document.body.classList.add('debug-toolbar-shown');
+    document.body.classList.remove('debug-toolbar-hidden');
   }
 };
 
