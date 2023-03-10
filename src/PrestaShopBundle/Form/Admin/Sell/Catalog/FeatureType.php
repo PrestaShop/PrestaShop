@@ -33,6 +33,7 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Type that builds a product feature add/edit form.
@@ -44,14 +45,15 @@ class FeatureType extends AbstractType
     /**
      * @var bool
      */
-    private $isMultistoreFeatureActive;
+    private $isMultistoreFeatureUsed;
 
     /**
-     * @param bool $isMultistoreFeatureActive
+     * @param bool $isMultistoreFeatureUsed
      */
-    public function __construct($isMultistoreFeatureActive)
+    public function __construct(TranslatorInterface $translator, bool $isMultistoreFeatureUsed)
     {
-        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
+        $this->isMultistoreFeatureUsed = $isMultistoreFeatureUsed;
+        $this->translator = $translator;
     }
 
     /**
@@ -70,7 +72,7 @@ class FeatureType extends AbstractType
             ],
         ]);
 
-        if ($this->isMultistoreFeatureActive) {
+        if ($this->isMultistoreFeatureUsed) {
             $builder->add('shop_association', ShopChoiceTreeType::class);
         }
     }

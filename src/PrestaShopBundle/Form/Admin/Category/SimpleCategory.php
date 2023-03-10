@@ -32,6 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form class is responsible to generate the basic category form
@@ -45,10 +46,10 @@ class SimpleCategory extends CommonAbstractType
     /**
      * Constructor.
      *
-     * @param object $translator
+     * @param TranslatorInterface $translator
      * @param object $categoryDataProvider
      */
-    public function __construct($translator, $categoryDataProvider)
+    public function __construct(TranslatorInterface $translator, $categoryDataProvider)
     {
         $this->translator = $translator;
         $this->formatValidList($categoryDataProvider->getNestedCategories());

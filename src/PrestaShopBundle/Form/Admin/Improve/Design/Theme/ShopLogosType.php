@@ -60,16 +60,16 @@ class ShopLogosType extends AbstractType
     private $contextShopIds;
 
     /**
-     * @param bool $isShopFeatureUsed
+     * @param bool $isMultiShopEnabled
      * @param bool $isSingleShopContext
      * @param array $contextShopIds
      */
     public function __construct(
-        $isShopFeatureUsed,
+        $isMultiShopEnabled,
         $isSingleShopContext,
         array $contextShopIds
     ) {
-        $this->isShopFeatureUsed = $isShopFeatureUsed;
+        $this->isShopFeatureUsed = $isMultiShopEnabled;
         $this->isSingleShopContext = $isSingleShopContext;
         $this->contextShopIds = $contextShopIds;
     }

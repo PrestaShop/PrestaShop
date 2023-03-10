@@ -86,8 +86,14 @@ class ProductShipping extends CommonAbstractType
      * @param string $dimensionUnit
      * @param string $weightUnit
      */
-    public function __construct($translator, $legacyContext, $warehouseDataProvider, $carrierDataProvider, string $dimensionUnit, string $weightUnit)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        LegacyContext $legacyContext,
+        WarehouseDataProvider $warehouseDataProvider,
+        CarrierDataProvider $carrierDataProvider,
+        string $dimensionUnit,
+        string $weightUnit
+    ) {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext;
         $this->currency = $legacyContext->getContext()->currency;

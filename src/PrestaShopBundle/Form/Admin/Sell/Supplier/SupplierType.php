@@ -40,12 +40,12 @@ use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -71,7 +71,7 @@ class SupplierType extends TranslatorAwareType
     private $isMultistoreEnabled;
 
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     private $router;
 
@@ -80,15 +80,15 @@ class SupplierType extends TranslatorAwareType
      * @param int $contextCountryId
      * @param TranslatorInterface $translator
      * @param bool $isMultistoreEnabled
-     * @param Router $router
+     * @param UrlGeneratorInterface $router
      * @param array $locales
      */
     public function __construct(
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
-        $contextCountryId,
+        int $contextCountryId,
         TranslatorInterface $translator,
-        $isMultistoreEnabled,
-        Router $router,
+        bool $isMultistoreEnabled,
+        UrlGeneratorInterface $router,
         array $locales = []
     ) {
         parent::__construct($translator, $locales);

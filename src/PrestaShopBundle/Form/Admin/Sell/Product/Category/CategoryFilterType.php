@@ -54,21 +54,21 @@ class CategoryFilterType extends AbstractType
     /**
      * @var int
      */
-    private $languageId;
+    private $contextLangId;
 
     /**
      * @param TranslatorInterface $translator
      * @param CategoryDataProvider $categoryDataProvider
-     * @param int $languageId
+     * @param int $contextLangId
      */
     public function __construct(
         TranslatorInterface $translator,
         CategoryDataProvider $categoryDataProvider,
-        int $languageId
+        int $contextLangId
     ) {
         $this->translator = $translator;
         $this->categoryProvider = $categoryDataProvider;
-        $this->languageId = $languageId;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -86,7 +86,7 @@ class CategoryFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $nestedTree = $this->categoryProvider->getNestedCategories(null, $this->languageId, false);
+        $nestedTree = $this->categoryProvider->getNestedCategories(null, $this->contextLangId, false);
         $flattenedTree = $this->flattenTree($nestedTree);
 
         $resolver->setDefaults([

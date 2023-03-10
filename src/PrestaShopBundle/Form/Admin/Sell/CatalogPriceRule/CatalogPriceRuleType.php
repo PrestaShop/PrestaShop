@@ -54,7 +54,7 @@ class CatalogPriceRuleType extends AbstractType
     /**
      * @var bool
      */
-    private $isMultishopEnabled;
+    private $isMultiShopEnabled;
 
     /**
      * @var array
@@ -88,7 +88,7 @@ class CatalogPriceRuleType extends AbstractType
 
     /**
      * @param TranslatorInterface $translator
-     * @param bool $isMultishopEnabled
+     * @param bool $isMultiShopEnabled
      * @param array $currencyByIdChoices
      * @param array $countryByIdChoices
      * @param array $groupByIdChoices
@@ -97,7 +97,7 @@ class CatalogPriceRuleType extends AbstractType
      */
     public function __construct(
         TranslatorInterface $translator,
-        bool $isMultishopEnabled,
+        bool $isMultiShopEnabled,
         array $currencyByIdChoices,
         array $countryByIdChoices,
         array $groupByIdChoices,
@@ -106,7 +106,7 @@ class CatalogPriceRuleType extends AbstractType
         string $defaultCurrencySymbol
     ) {
         $this->translator = $translator;
-        $this->isMultishopEnabled = $isMultishopEnabled;
+        $this->isMultiShopEnabled = $isMultiShopEnabled;
         $this->currencyByIdChoices = $currencyByIdChoices;
         $this->currencyByIdChoicesAttributes = $currencyByIdChoicesAttributes;
         $this->countryByIdChoices = $countryByIdChoices;
@@ -205,7 +205,7 @@ class CatalogPriceRuleType extends AbstractType
             ])
         ;
 
-        if ($this->isMultishopEnabled) {
+        if ($this->isMultiShopEnabled) {
             $builder->add('id_shop', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => false,

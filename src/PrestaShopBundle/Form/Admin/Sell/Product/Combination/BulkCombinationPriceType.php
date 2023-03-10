@@ -51,7 +51,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
     /**
      * @var string
      */
-    private $currencyIsoCode;
+    private $defaultCurrencyIsoCode;
 
     /**
      * @var string
@@ -71,13 +71,13 @@ class BulkCombinationPriceType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        string $currencyIsoCode,
+        string $defaultCurrencyIsoCode,
         string $weightUnit,
         ProductRepository $productRepository,
         TaxComputer $taxComputer
     ) {
         parent::__construct($translator, $locales);
-        $this->currencyIsoCode = $currencyIsoCode;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->weightUnit = $weightUnit;
         $this->productRepository = $productRepository;
         $this->taxComputer = $taxComputer;
@@ -93,7 +93,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->currencyIsoCode,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -108,7 +108,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->currencyIsoCode,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -121,7 +121,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax incl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->currencyIsoCode,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -134,7 +134,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 'label' => $this->trans('Impact on price per unit (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->currencyIsoCode,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
