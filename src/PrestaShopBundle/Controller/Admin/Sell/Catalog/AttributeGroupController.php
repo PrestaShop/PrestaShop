@@ -129,7 +129,6 @@ class AttributeGroupController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $attributeGroupId): Response
     {
-        $editableAttributeGroup = $this->getQueryBus()->handle(new GetAttributeGroupForEditing($attributeGroupId));
         $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
         $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
 
@@ -148,15 +147,13 @@ class AttributeGroupController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $contextLangId = $this->getConfiguration()->get('PS_LANG_DEFAULT');
-
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/edit.html.twig',
             [
                 'layoutTitle' => $this->trans(
                     'Editing attribute group %name%',
                     'Admin.Navigation.Menu',
-                    ['%name%' => $editableAttributeGroup->getName()[$contextLangId]]
+                    ['%name%' => $attributeGroupForm->getData()['name'][$this->getContextLangId()]]
                 ),
                 'attributeGroupForm' => $attributeGroupForm->createView(),
                 'attributeGroupId' => $attributeGroupId,

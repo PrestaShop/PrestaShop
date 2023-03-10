@@ -58,13 +58,6 @@ services:
       - 'PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType'
       - '@prestashop.core.form.identifiable_object.data_provider.category_form_data_provider'
 
-  prestashop.core.form.identifiable_object.builder.attribute_form_builder:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
-    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
-    arguments:
-      - 'PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType'
-      - '@prestashop.core.form.identifiable_object.data_provider.category_form_data_provider'
-
   prestashop.core.form.identifiable_object.builder.root_category_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
