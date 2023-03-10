@@ -84,7 +84,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      */
     public function editAttributeGroup(string $reference, TableNode $node): void
     {
-        $attributeGroupId = SharedStorage::getStorage()->get($reference);
+        $attributeGroupId = $this->referenceToId($reference);
 
         $properties = $node->getRowsHash();
         $this->editAttributeGroupUsingCommand($attributeGroupId, $properties['name'], $properties['public_name'], $properties['type']);

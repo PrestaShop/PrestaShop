@@ -77,7 +77,8 @@ class AttributeGroupType extends TranslatorAwareType
             $this->trans('Color or texture', 'Admin.Catalog.Feature') => GroupType::ATTRIBUTE_GROUP_TYPE_COLOR,
         ];
 
-        $builder->add('name', TranslatableType::class, [
+        $builder
+            ->add('name', TranslatableType::class, [
             'type' => TextType::class,
             'label' => $this->trans('Name', 'Admin.Global'),
             'options' => [
@@ -90,7 +91,7 @@ class AttributeGroupType extends TranslatorAwareType
             'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
                 . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                 . ' ' . TypedRegexValidator::CATALOG_CHARS,
-        ])
+            ])
             ->add('public_name', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans('Public name', 'Admin.Catalog.Feature'),
