@@ -107,7 +107,7 @@ class ZoneType extends AbstractType
                         ),
                     ]),
                 ],
-                'label' => $this->translator->trans('Shop association', [], 'Admin.Global'),
+                'label' => $this->translator->trans('Store association', [], 'Admin.Global'),
             ]);
         }
     }

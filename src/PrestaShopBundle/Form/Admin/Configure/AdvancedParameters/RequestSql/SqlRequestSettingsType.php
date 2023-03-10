@@ -51,7 +51,7 @@ class SqlRequestSettingsType extends TranslatorAwareType
             ->add('enable_multi_statements', SwitchType::class, [
                 'label' => $this->trans('Enable multi-statements queries', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans(
-                    'Enabling multi-statements queries increases the risk of SQL injection vulnerability to be exploited',
+                    'Enabling multi-statements queries increases the risk of SQL injection vulnerabilities being exploited.',
                     'Admin.Advparameters.Help'
                 ),
             ])

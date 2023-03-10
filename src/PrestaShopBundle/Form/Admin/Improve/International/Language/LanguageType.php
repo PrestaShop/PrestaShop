@@ -186,7 +186,7 @@ class LanguageType extends TranslatorAwareType
 
         if ($this->isMultistoreFeatureActive) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'label' => $this->trans('Store association', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new NotBlank([

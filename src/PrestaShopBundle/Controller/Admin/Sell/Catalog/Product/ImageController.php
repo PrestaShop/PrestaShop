@@ -331,7 +331,7 @@ class ImageController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             CannotRemoveCoverException::class => $this->trans(
-                'Cannot remove cover image',
+                'Cannot remove cover image.',
                 'Admin.Notifications.Error'
             ),
         ];

@@ -277,7 +277,7 @@ class ContactsController extends FrameworkBundleAdminController
                     [
                         sprintf(
                             '"%s"',
-                            $this->trans('Shop association', 'Admin.Global')
+                            $this->trans('Store association', 'Admin.Global')
                         ),
                     ]
                 ),

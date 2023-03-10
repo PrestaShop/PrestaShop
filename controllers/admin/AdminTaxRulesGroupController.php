@@ -214,7 +214,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                'label' => $this->trans('Store association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             ];
         }

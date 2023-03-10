@@ -101,7 +101,7 @@ class ApplicationController extends FrameworkBundleAdminController
 
         $toolbarButtons['addApiAccess'] = [
             'href' => $this->generateUrl('admin_api_accesses_create'),
-            'desc' => $this->trans('Add new Api access', 'Admin.Actions'),
+            'desc' => $this->trans('Add new API access', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary',
         ];

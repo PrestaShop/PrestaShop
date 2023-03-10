@@ -368,24 +368,24 @@ class CustomerThreadController extends FrameworkBundleAdminController
     {
         return [
             CustomerThreadNotFoundException::class => $this->trans(
-                'This customer thread does not exists',
+                'This customer thread does not exist.',
                 'Admin.International.Notification'
             ),
             CannotDeleteCustomerThreadException::class => $this->trans(
-                'Cannot delete this customer thread',
+                'Cannot delete this customer thread.',
                 'Admin.International.Notification'
             ),
             CustomerServiceException::class => [
                 CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE => $this->trans(
-                    'Failed to add customer message',
+                    'Failed to add customer message.',
                     'Admin.International.Notification'
                 ),
                 CustomerServiceException::FAILED_TO_UPDATE_STATUS => $this->trans(
-                    'Failed to update customer thread status',
+                    'Failed to update customer thread status.',
                     'Admin.International.Notification'
                 ),
                 CustomerServiceException::INVALID_COMMENT => $this->trans(
-                    'Comment is not valid',
+                    'Comment is not valid.',
                     'Admin.International.Notification'
                 ),
             ],
