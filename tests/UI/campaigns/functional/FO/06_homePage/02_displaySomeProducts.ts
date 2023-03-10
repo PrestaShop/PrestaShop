@@ -7,7 +7,6 @@ import categoryPageFO from '@pages/FO/category';
 import homePage from '@pages/FO/home';
 import pricesDropPage from '@pages/FO/pricesDrop';
 import newProductsPage from '@pages/FO/newProducts';
-import bestSellersPage from '@pages/FO/bestSales';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -20,7 +19,6 @@ const baseContext: string = 'functional_FO_homePage_displaySomeProducts';
 - Check the banner and the custom text block
 - Check the block of products on sale
 - Check the block of new products
-- Check the block of best sellers
  */
 describe('FO - Home Page : Display some products', async () => {
   let browserContext: BrowserContext;
@@ -162,31 +160,6 @@ describe('FO - Home Page : Display some products', async () => {
 
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
-    });
-  });
-
-  describe('Check best sellers block', async () => {
-    it('should check best sellers block title', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBestSellerProducts', baseContext);
-
-      const popularProductTitle = await homePage.getBlockTitle(page, 4);
-      await expect(popularProductTitle).to.equal('Best Sellers');
-    });
-
-    it('should check the number of best sellers products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBestSellersProductsNumber', baseContext);
-
-      const productsNumber = await homePage.getProductsBlockNumber(page, 4);
-      await expect(productsNumber).to.equal(1);
-    });
-
-    it('should check All best sellers products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAllBestSellerProductsLink', baseContext);
-
-      await homePage.goToAllProductsBlockPage(page, 4);
-
-      const pageTitle = await bestSellersPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(bestSellersPage.pageTitle);
     });
   });
 });

@@ -262,7 +262,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                 'input' => [
                     [
                         'type' => 'shop',
-                        'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                        'label' => $this->trans('Store association', [], 'Admin.Global'),
                         'name' => 'checkBoxShopAsso',
                     ],
                 ],

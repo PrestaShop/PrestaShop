@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
+namespace Tests\Integration\PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -37,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Tests\Integration\PrestaShopBundle\Form\FormListenerTestCase;
 
 class RedirectOptionListenerTest extends FormListenerTestCase
 {

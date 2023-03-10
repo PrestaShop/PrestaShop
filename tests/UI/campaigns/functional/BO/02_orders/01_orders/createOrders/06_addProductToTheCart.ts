@@ -12,11 +12,12 @@ import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international
 import loginCommon from '@commonTests/BO/loginBO';
 import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts';
 import {
-  disableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 import stocksPage from '@pages/BO/catalog/stocks';
@@ -199,7 +200,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -199,7 +199,7 @@ class ManufacturerType extends TranslatorAwareType
 
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'label' => $this->trans('Store association', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new NotBlank([

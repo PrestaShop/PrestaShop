@@ -27,6 +27,7 @@ services:
       $defaultFormLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
       $isDebug: '@=service("prestashop.adapter.environment").isDebug()'
       $multistoreFeature: '@prestashop.adapter.feature.multistore'
+      $multiStoreFeature: '@prestashop.adapter.feature.multistore'
       $contextShopId: '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       $contextLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       $contextLanguageId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
@@ -558,6 +559,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType:
     arguments:
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
+      $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:
@@ -746,6 +748,7 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.hook'
 
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener:
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener:
   PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener:

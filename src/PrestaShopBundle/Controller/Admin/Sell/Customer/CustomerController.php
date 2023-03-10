@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustom
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
@@ -474,8 +475,19 @@ class CustomerController extends AbstractAdminController
         $phrases = explode(' OR ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
+        if (!$request->query->has('shopId')) {
+            // this is important for keeping backwards compatibility, null acts different compared to AllShops constraint.
+            $shopConstraint = null;
+        } else {
+            $shopId = $request->query->getInt('shopId');
+            $shopConstraint = $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+        }
+
         try {
-            $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+            $customers = $this->getQueryBus()->handle(new SearchCustomers(
+                $phrases,
+                $shopConstraint
+            ));
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],

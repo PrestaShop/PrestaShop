@@ -4,8 +4,13 @@ import helper from '@utils/helpers';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {
+  setFeatureFlag,
+  resetNewProductPageAsDefault,
+} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 
@@ -16,10 +21,6 @@ import tax from '@data/demo/tax';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import {
-  disableNewProductPageTest,
-  resetNewProductPageAsDefault,
-} from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'sanity_productsBO_filterProducts';
 
@@ -31,7 +32,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let numberOfProductsOnPage: number = 0;
 
   // Pre-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
   // before and after functions
   before(async function () {

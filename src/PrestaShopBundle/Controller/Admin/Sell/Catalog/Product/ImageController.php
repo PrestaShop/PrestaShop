@@ -52,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -294,9 +295,7 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e): array
     {
-        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
-
-        return [
+        $messages = [
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_ID => $this->trans(
                     'Invalid ID.',
@@ -308,11 +307,6 @@ class ImageController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             UploadedImageConstraintException::class => [
-                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
-                'Max file size allowed is "%s" bytes.',
-                'Admin.Notifications.Error',
-                    [$iniConfig->getUploadMaxSizeInBytes()]
-                ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
@@ -337,9 +331,19 @@ class ImageController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             CannotRemoveCoverException::class => $this->trans(
-                'Cannot remove cover image',
+                'Cannot remove cover image.',
                 'Admin.Notifications.Error'
             ),
         ];
+
+        if ($e instanceof UploadedImageSizeException) {
+            $messages[UploadedImageSizeException::class] = $this->trans(
+                'Max file size allowed is "%s" bytes.',
+                'Admin.Notifications.Error',
+                [$e->getAllowedSizeBytes()]
+            );
+        }
+
+        return $messages;
     }
 }

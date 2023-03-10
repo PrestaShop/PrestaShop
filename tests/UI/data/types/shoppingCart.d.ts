@@ -9,4 +9,17 @@ type ShoppingCartCreator = {
   online?: boolean
 };
 
-export default ShoppingCartCreator;
+type ShoppingCartDetails = {
+  id_cart?: number
+  status?: string
+  lastname?: string
+  total?: string
+  carrier?: string
+  date?: string
+  online?: string
+}
+
+export {
+  ShoppingCartCreator,
+  ShoppingCartDetails,
+};

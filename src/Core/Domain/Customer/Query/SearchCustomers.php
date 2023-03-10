@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Searchers for customers by phrases matching customer's first name, last name, email, company name and id
@@ -39,13 +41,21 @@ class SearchCustomers
     private $phrases;
 
     /**
+     * @var ShopConstraint|null
+     */
+    private $shopConstraint;
+
+    /**
      * @param string[] $phrases
      */
-    public function __construct(array $phrases)
-    {
+    public function __construct(
+        array $phrases,
+        ?ShopConstraint $shopConstraint = null
+    ) {
         $this->assertPhrasesAreNotEmpty($phrases);
-
+        $this->assertShopConstraintIsSupported($shopConstraint);
         $this->phrases = $phrases;
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -57,12 +67,27 @@ class SearchCustomers
     }
 
     /**
+     * @return ShopConstraint|null
+     */
+    public function getShopConstraint(): ?ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    /**
      * @param string[] $phrases
      */
     private function assertPhrasesAreNotEmpty(array $phrases)
     {
         if (empty($phrases)) {
             throw new CustomerException('Phrases cannot be empty when searching customers.');
+        }
+    }
+
+    private function assertShopConstraintIsSupported(?ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint && $shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Shop group constraint is not supported');
         }
     }
 }

@@ -150,7 +150,7 @@ class ProductController extends FrameworkBundleAdminController
             'categoryFilterForm' => $categoriesForm->createView(),
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,
-            'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
+            'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons($request->get('_legacy_controller')),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
             'layoutTitle' => $this->trans('Products', 'Admin.Navigation.Menu'),
         ]);
@@ -354,7 +354,7 @@ class ProductController extends FrameworkBundleAdminController
             $result = $this->getProductShopsFormHandler()->handleFor($productId, $productShopsForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 $redirectParams = ['productId' => $productId];
                 if ($request->query->has('liteDisplaying')) {
@@ -401,7 +401,7 @@ class ProductController extends FrameworkBundleAdminController
 
                 $createdData = $productForm->getData();
                 if (!empty($createdData['shop_id'])) {
-                    $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Your store context has been automatically modified.', 'Admin.Notifications.Success'));
 
                     // Force shop context switching to selected shop for creation (handled in admin-dev/init.php and/or AdminController)
                     $redirectParams['setShopContext'] = 's-' . $createdData['shop_id'];
@@ -431,7 +431,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         if ($request->query->get('switchToShop')) {
-            $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Your store context has been automatically modified.', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_products_v2_edit', [
                 'productId' => $productId,
@@ -1032,6 +1032,24 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return JsonResponse
+     */
+    public function quantityAction(int $productId, int $shopId): JsonResponse
+    {
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(
+            new GetProductForEditing($productId, ShopConstraint::shop($shopId), $this->getContextLangId())
+        );
+
+        return $this->json(['quantity' => $productForEditing->getStockInformation()->getQuantity()]);
+    }
+
+    /**
      * @param ProductForAssociation[] $productsForAssociation
      *
      * @return array
@@ -1230,11 +1248,18 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return array
+     * @param string $securitySubject
+     *
+     * @return array<string, array<string, mixed>>
      */
-    private function getProductToolbarButtons(): array
+    private function getProductToolbarButtons(string $securitySubject): array
     {
         $toolbarButtons = [];
+
+        // do not show create button if user has no permissions for it
+        if (!$this->isGranted(Permission::CREATE, $securitySubject)) {
+            return $toolbarButtons;
+        }
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),
@@ -1463,7 +1488,7 @@ class ProductController extends FrameworkBundleAdminController
         return $this->renderPreSelectShopPage(
             $productId,
             $this->trans(
-                'This page is only compatible in a single store context. Please select a store in the multistore header',
+                'This page is only compatible in a single-store context. Please select a store in the multistore header.',
                 'Admin.Notifications.Info'
             )
         );

@@ -505,7 +505,7 @@ class AdminControllerCore extends Controller
             4 => $this->trans('Successful update', [], 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success'),
-            7 => $this->trans('The image was successfully deleted.', [], 'Admin.Notifications.Success'),
+            7 => $this->trans('Image successfully deleted.', [], 'Admin.Notifications.Success'),
             8 => $this->trans('The module was successfully downloaded.', [], 'Admin.Modules.Notification'),
             9 => $this->trans('The thumbnails were successfully regenerated.', [], 'Admin.Notifications.Success'),
             10 => $this->trans('The message was successfully sent to the customer.', [], 'Admin.Orderscustomers.Notification'),

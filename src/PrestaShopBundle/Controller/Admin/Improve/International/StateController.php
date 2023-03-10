@@ -391,7 +391,7 @@ class StateController extends FrameworkBundleAdminController
     {
         return [
             StateException::class => $this->trans(
-                'Unexpected error occurred.',
+                'An unexpected error occurred.',
                 'Admin.Notifications.Error'
             ),
             StateNotFoundException::class => $this->trans(

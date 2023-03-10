@@ -24,8 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-
 /**
  * Class ImageManagerCore.
  *
@@ -38,9 +36,6 @@ class ImageManagerCore
     public const ERROR_FILE_NOT_EXIST = 1;
     public const ERROR_FILE_WIDTH = 2;
     public const ERROR_MEMORY_LIMIT = 3;
-
-    // IMAGETYPE_AVIF constant is only available in php 8.1, so we make our own here
-    private const PS_IMAGETYPE_AVIF = 19;
 
     public const MIME_TYPE_SUPPORTED = [
         'image/gif',
@@ -178,8 +173,8 @@ class ImageManagerCore
      * @param string $destinationFile Destination filename
      * @param int $destinationWidth Desired width (optional)
      * @param int $destinationHeight Desired height (optional)
-     * @param string $fileType Desired file_type (may be override by PS_IMAGE_QUALITY)
-     * @param bool $forceType Don't override $file_type
+     * @param string $destinationFileType Desired file_type (may be override by PS_IMAGE_QUALITY)
+     * @param bool $forceType Don't override $file_type by PS_IMAGE_QUALITY, used when generating webp and avif files
      * @param int $error Out error code
      * @param int $targetWidth Needed by AdminImportController to speed up the import process
      * @param int $targetHeight Needed by AdminImportController to speed up the import process
@@ -194,7 +189,7 @@ class ImageManagerCore
         $destinationFile,
         $destinationWidth = null,
         $destinationHeight = null,
-        $fileType = 'jpg',
+        $destinationFileType = 'jpg',
         $forceType = false,
         &$error = 0,
         &$targetWidth = null,
@@ -205,13 +200,14 @@ class ImageManagerCore
     ) {
         clearstatcache(true, $sourceFile);
 
+        // Check if original file exists
         if (!file_exists($sourceFile) || !filesize($sourceFile)) {
             $error = self::ERROR_FILE_NOT_EXIST;
 
             return false;
         }
 
-        list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
+        list($tmpWidth, $tmpHeight, $sourceFileType) = getimagesize($sourceFile);
         $rotate = 0;
         if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
@@ -252,28 +248,18 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
-        $isMultipleImageFormatFeatureActive = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+        // If the filetype is not forced and we are requesting a JPG file, we must
+        // adjust the format inside according to PS_IMAGE_QUALITY in some cases.
+        if (!$forceType && $destinationFileType === 'jpg') {
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
+                || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType == IMAGETYPE_PNG)) {
+                $destinationFileType = 'png';
+            }
 
-        // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
-        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
-        // because JPG reencoding by GD, even with max quality setting, degrades the image.
-        if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType
-            || $isMultipleImageFormatFeatureActive && $type == IMAGETYPE_PNG && !$forceType) {
-            $fileType = 'png';
-        }
-
-        // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
-        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
-        // because JPG reencoding by GD, even with max quality setting, degrades the image.
-        if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
-            || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType
-            || $isMultipleImageFormatFeatureActive && $type == IMAGETYPE_WEBP && !$forceType) {
-            $fileType = 'webp';
-        }
-
-        if ($isMultipleImageFormatFeatureActive && $type == self::PS_IMAGETYPE_AVIF && !$forceType) {
-            $fileType = 'avif';
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
+                || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $sourceFileType == IMAGETYPE_WEBP)) {
+                $destinationFileType = 'webp';
+            }
         }
 
         if (!$sourceWidth) {
@@ -319,7 +305,7 @@ class ImageManagerCore
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
         // If the output is PNG, fill with transparency. Else fill with white background.
-        if ($fileType == 'png' || $fileType == 'webp' || $fileType == 'avif') {
+        if ($destinationFileType == 'png' || $destinationFileType == 'webp' || $destinationFileType == 'avif') {
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
@@ -329,7 +315,7 @@ class ImageManagerCore
             imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $white);
         }
 
-        $srcImage = ImageManager::create($type, $sourceFile);
+        $srcImage = ImageManager::create($sourceFileType, $sourceFile);
         if ($rotate) {
             /** @phpstan-ignore-next-line */
             $srcImage = imagerotate($srcImage, $rotate, 0);
@@ -340,13 +326,13 @@ class ImageManagerCore
         } else {
             ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
         }
-        $writeFile = ImageManager::write($fileType, $destImage, $destinationFile);
-        Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $fileType]);
+        $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
+        Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
         @imagedestroy($srcImage);
 
         file_put_contents(
             dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
-            $fileType
+            $destinationFileType
         );
 
         return $writeFile;

@@ -22,13 +22,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import EntitySearchInput from '@components/entity-search-input';
 import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/product/specific-price/specific-price-map';
 import SpecificPriceEventMap from '@pages/product/specific-price/specific-price-event-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
 import CombinationSelector from '@pages/product/specific-price/form/combination-selector';
 import Router from '@components/router';
+import CustomerSelector from '@pages/product/specific-price/form/customer-selector';
 
 const {$} = window;
 
@@ -94,15 +94,7 @@ $(() => {
     SpecificPriceMap.reductionTypeAmountSymbol,
   );
 
-  new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
-    responseTransformer: (response: any) => {
-      if (!response || response.customers.length === 0) {
-        return [];
-      }
-
-      return Object.values(response.customers);
-    },
-  });
+  new CustomerSelector();
 
   // When customer search is disabled we also disable the selected item (if present)
   eventEmitter.on(SpecificPriceEventMap.switchCustomer, (event: any) => {

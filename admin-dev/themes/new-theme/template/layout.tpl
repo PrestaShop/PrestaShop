@@ -59,7 +59,7 @@
             <strong>{l s='Your store is in maintenance mode.' d='Admin.Navigation.Notification'}</strong>
           </p>
           <p class="text-left">
-              {l s='Your visitors and customers cannot access your shop while in maintenance mode.' d='Admin.Navigation.Notification'}
+              {l s='Your visitors and customers cannot access your store while in maintenance mode.' d='Admin.Navigation.Notification'}
           </p>
           <p class="text-left">
               {l s='To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' d='Admin.Navigation.Notification'}
