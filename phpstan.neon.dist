@@ -76,3 +76,4 @@ parameters:
     - PaymentModuleCore::DEBUG_MODE
     - _PS_API_IN_USE_
     - _PS_ALLOW_MULTI_STATEMENTS_QUERIES_
+    - _PS_DISPLAY_ONLY_ERRORS_

@@ -390,6 +390,7 @@ parameters:
                 - '_THEME_PROFILE_DIR_'
                 - '_THEMES_DIR_'
                 - 'PS_INSTALLATION_LOCK_FILE'
+                - '_PS_DISPLAY_ONLY_ERRORS_'
             message: 'Use dependency injection instead'
             disallowIn:
                 - src/PrestaShopBundle/*
