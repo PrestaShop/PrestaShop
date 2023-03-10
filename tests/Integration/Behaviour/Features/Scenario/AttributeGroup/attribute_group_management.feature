@@ -1,6 +1,6 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s attribute_group
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s attribute group
 @restore-all-tables-before-feature
-@feature-management
+@attribute-group-management
 Feature: Attribute group management
   PrestaShop allows BO users to manage product attribute groups
   As a BO user
@@ -8,24 +8,37 @@ Feature: Attribute group management
 
   Background:
     Given shop "shop1" with name "test_shop" exists
+    Given language "language1" with locale "en-US" exists
+    And language with iso code "en" is the default one
+    And language "language2" with locale "fr-FR" exists
 
   Scenario: Adding new attribute group
     When I create attribute group "attributeGroup1" with specified properties:
-      | name        | Color        |
-      | public_name | Public color |
-      | type        | radio        |
-    Then attribute group "attributeGroup1" "name" in default language should be "Color"
-    And attribute group "attributeGroup1" "public_name" in default language should be "Public color"
-    And attribute group "attributeGroup1" "group_type" should be "radio"
+      | name[en-US]        | Color          |
+      | name[fr-FR]        | Couleur        |
+      | public_name[en-US] | Public Color   |
+      | public_name[fr-FR] | Public couleur |
+      | type               | radio          |
+    Then attribute group "attributeGroup1" should have the following properties:
+      | name[en-US]        | Color          |
+      | name[fr-FR]        | Couleur        |
+      | public_name[en-US] | Public Color   |
+      | public_name[fr-FR] | Public couleur |
+      | type               | radio          |
 
   Scenario: Editing attribute group
     When I edit attribute group "attributeGroup1" with specified properties:
-      | name        | Colour        |
-      | public_name | Public colour |
-      | type        | color         |
-    Then attribute group "attributeGroup1" "name" in default language should be "Colour"
-    And attribute group "attributeGroup1" "public_name" in default language should be "Public colour"
-    And attribute group "attributeGroup1" "group_type" should be "color"
+      | name[en-US]        | Coulor         |
+      | name[fr-FR]        | Couleur        |
+      | public_name[en-US] | Public Colour  |
+      | public_name[fr-FR] | Public couleur |
+      | type               | color          |
+    Then attribute group "attributeGroup1" should have the following properties:
+      | name[en-US]        | Coulor         |
+      | name[fr-FR]        | Couleur        |
+      | public_name[en-US] | Public Colour  |
+      | public_name[fr-FR] | Public couleur |
+      | type               | color          |
 
   Scenario: Deleting attribute group
     When I delete attribute group "attributeGroup1"
