@@ -112,6 +112,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AttributeGroupFormDataProvider:
     autowire: true
+    public: false
     arguments:
       - '@prestashop.core.query_bus'
 
