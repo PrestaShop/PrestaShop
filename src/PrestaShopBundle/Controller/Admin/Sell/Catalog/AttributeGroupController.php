@@ -111,6 +111,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/create.html.twig',
             [
+                'layoutTitle' => $this->trans('New attribute group', 'Admin.Navigation.Menu'),
                 'attributeGroupForm' => $attributeGroupForm->createView(),
             ]
         );
@@ -152,9 +153,13 @@ class AttributeGroupController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/edit.html.twig',
             [
+                'layoutTitle' => $this->trans(
+                    'Editing attribute group %name%',
+                    'Admin.Navigation.Menu',
+                    ['%name%' => $editableAttributeGroup->getName()[$contextLangId]]
+                ),
                 'attributeGroupForm' => $attributeGroupForm->createView(),
                 'attributeGroupId' => $attributeGroupId,
-                'attributeGroupName' => $editableAttributeGroup->getName()[$contextLangId],
             ]
         );
     }

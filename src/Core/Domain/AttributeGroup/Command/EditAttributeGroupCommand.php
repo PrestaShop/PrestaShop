@@ -68,8 +68,13 @@ class EditAttributeGroupCommand
      *
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(int $attributeGroupId, array $localizedNames, array $localizedPublicNames, AttributeGroupType $type, array $shopAssociation = [])
-    {
+    public function __construct(
+        int $attributeGroupId,
+        array $localizedNames,
+        array $localizedPublicNames,
+        AttributeGroupType $type,
+        array $shopAssociation = []
+    ) {
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
         $this->assertNamesAreValid($localizedNames);
         $this->assertNamesAreValid($localizedPublicNames);
