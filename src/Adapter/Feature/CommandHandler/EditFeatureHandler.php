@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException
 /**
  * Handles feature editing.
  */
-final class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatureHandlerInterface
+class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatureHandlerInterface
 {
     /**
      * {@inheritdoc}

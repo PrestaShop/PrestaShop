@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 /**
  * Handles adding of features using legacy logic.
  */
-final class AddFeatureHandler extends AbstractObjectModelHandler implements AddFeatureHandlerInterface
+class AddFeatureHandler extends AbstractObjectModelHandler implements AddFeatureHandlerInterface
 {
     /**
      * {@inheritdoc}

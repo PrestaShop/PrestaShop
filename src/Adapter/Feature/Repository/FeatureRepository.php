@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Feature;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -63,6 +65,23 @@ class FeatureRepository extends AbstractObjectModelRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+    }
+
+    public function get(FeatureId $featureId): Feature
+    {
+        /** @var Feature $feature */
+        $feature = $this->getObjectModel(
+            $featureId->getValue(),
+            Feature::class,
+            FeatureNotFoundException::class
+        );
+
+        return $feature;
+    }
+
+    public function delete(FeatureId $featureId): void
+    {
+        $this->deleteObjectModel($this->get($featureId), CannotDeleteFeatureException::class);
     }
 
     /**
