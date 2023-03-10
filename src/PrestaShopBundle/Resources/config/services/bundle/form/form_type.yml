@@ -1479,13 +1479,13 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.details.feature_value_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType'
+  PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
     parent: 'form.type.translatable.aware'
+    autowire: true
+    public: false
     arguments:
-      - '@prestashop.adapter.form.choice_provider.features_choice_provider'
-      - '@form.type.sell.product.event_listener.feature_value_listener'
-    public: true
+      $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
+      $featureValueListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
     tags:
       - { name: form.type }
 
@@ -1835,12 +1835,11 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
     public: true
 
-  form.type.sell.product.event_listener.feature_value_listener:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener:
+    public: false
+    autowire: true
     arguments:
-      - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
-      - '@PrestaShopBundle\Form\FormCloner'
-    public: true
+      $featureValuesChoiceProvider: '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
