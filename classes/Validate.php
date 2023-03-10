@@ -25,7 +25,6 @@
  */
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
@@ -33,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
 use ZxcvbnPhp\Zxcvbn;
 
@@ -80,11 +80,19 @@ class ValidateCore
             return false;
         }
 
+        $validator = Validation::createValidator();
+        $errors = $validator->validate($email, new Email([
+            'mode' => 'loose',
+        ]));
+
+        if (count($errors) > 0) {
+            return false;
+        }
+
         // Check if the value is correct according to both validators (RFC & SwiftMailer)
         return (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
             new RFCValidation(),
             new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
-            new NoRFCWarningsValidation(),
         ]));
     }
 
