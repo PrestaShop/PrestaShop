@@ -677,8 +677,7 @@ class EmployeeCore extends ObjectModel
      */
     public function stampResetPasswordToken()
     {
-        $salt = $this->id . '+' . uniqid((string) mt_rand(0, mt_getrandmax()), true);
-        $this->reset_password_token = sha1(time() . $salt);
+        $this->reset_password_token = bin2hex(random_bytes(32));
         $validity = (int) Configuration::get('PS_PASSWD_RESET_VALIDITY') ?: 1440;
         $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+' . $validity . ' minutes'));
     }
