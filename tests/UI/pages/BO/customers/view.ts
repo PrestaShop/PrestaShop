@@ -85,7 +85,7 @@ class ViewCustomer extends BOBasePage {
     this.cartsDiv = '.customer-carts-card';
     this.cartsViewButton = (row: number) => `${this.cartsDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
     this.cartsTableRow = (row: number) => `.customer-carts-card tr:nth-child(${row})`;
-    this.cartsTableColumn = (row: number, column: string) => `${this.cartsTableRow(row)} td.customer-cart-${column}`;
+    this.cartsTableColumn = (row: number, column: string) => `${this.cartsTableRow(row)} td.column-${column}`;
 
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
