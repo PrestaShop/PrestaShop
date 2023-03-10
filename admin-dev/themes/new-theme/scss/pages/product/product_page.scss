@@ -33,7 +33,13 @@ $product-page-padding-bottom: 80px !default;
   &.debug-toolbar-shown {
     .product-page {
       .product-footer {
-        padding-bottom: calc($grid-gutter-width / 2 + 2.25rem);
+        padding-bottom: 0.6rem + 2.25rem;
+      }
+    }
+
+    .combination-page {
+      #combination_form {
+        padding-bottom: 1rem;
       }
     }
   }
