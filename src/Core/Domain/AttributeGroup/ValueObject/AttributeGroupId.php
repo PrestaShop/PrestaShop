@@ -66,7 +66,7 @@ class AttributeGroupId
     private function assertIntegerIsGreaterThanZero(int $attributeGroupId): void
     {
         if (0 > $attributeGroupId) {
-            throw new InvalidAttributeGroupIdException(sprintf('Invalid attributeGroup id %s supplied. Attribute group id must be positive integer.', $attributeGroupId));
+            throw new AttributeGroupConstraintException(sprintf('Invalid attributeGroup id %s supplied. Attribute group id must be positive integer.', $attributeGroupId), AttributeGroupConstraintException::INVALID_ID);
         }
     }
 }
