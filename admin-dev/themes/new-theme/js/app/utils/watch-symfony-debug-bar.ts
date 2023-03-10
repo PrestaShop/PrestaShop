@@ -48,16 +48,12 @@ const waitForDebugContent = (debugToken: string): void => {
 };
 
 const initToggleWatching = (debugToken: string): void => {
-  document.getElementById(`sfToolbarMiniToggler-${debugToken}`)?.addEventListener('click', () => {
-    toggleDebugMode();
-  });
-  document.getElementById(`sfToolbarHideButton-${debugToken}`)?.addEventListener('click', () => {
-    toggleDebugMode();
-  });
+  document.getElementById(`sfToolbarMiniToggler-${debugToken}`)?.addEventListener('click', toggleDebugMode);
+  document.getElementById(`sfToolbarHideButton-${debugToken}`)?.addEventListener('click', toggleDebugMode);
   toggleDebugMode();
 };
 
-const toggleDebugMode = () => {
+const toggleDebugMode = (): void => {
   if (getPreference('toolbar/displayState') === 'none') {
     document.body.classList.add('debug-toolbar-hidden');
     document.body.classList.remove('debug-toolbar-shown');
