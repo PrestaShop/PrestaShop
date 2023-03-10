@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -42,7 +43,7 @@ class GeolocationController extends FrameworkBundleAdminController
     /**
      * Show geolocation page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -72,7 +73,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * Process the Geolocation ByIpAddress configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation_index"
      * )
@@ -95,7 +96,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * Process the Geolocation Whitelist configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation_index"
      * )
@@ -118,7 +119,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * Process the Geolocation Options configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation_index"
      * )

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,7 @@ class CountryController extends FrameworkBundleAdminController
     /**
      * Show countries listing page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CountryFilters $filters
@@ -72,7 +73,7 @@ class CountryController extends FrameworkBundleAdminController
      * Show "Add new" country form and handles its submit.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_countries_index",
      *     message="You need permission to create new country."
      * )
@@ -113,7 +114,7 @@ class CountryController extends FrameworkBundleAdminController
      * Displays country edit form and handles its submit.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_countries_index",
      *     message="You need permission to edit this."
      * )

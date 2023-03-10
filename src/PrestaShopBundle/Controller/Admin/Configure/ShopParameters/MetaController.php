@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -55,7 +56,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Shows index Meta page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param MetaFilters $filters
      * @param Request $request
@@ -82,7 +83,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * Used for applying filtering actions.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
@@ -109,7 +110,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Points to the form where new record of meta list can be created.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))", message="You do not have permission to add this.")
      *
      * @param Request $request
      *
@@ -148,7 +149,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Redirects to page where list record can be edited.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $metaId
      * @param Request $request
@@ -190,7 +191,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Removes single element from meta list.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param int $metaId
@@ -217,7 +218,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Removes multiple records from meta list.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
@@ -244,7 +245,7 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
@@ -277,7 +278,7 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
@@ -310,7 +311,7 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
@@ -338,7 +339,7 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param MetaFilters $filters
@@ -374,7 +375,7 @@ class MetaController extends FrameworkBundleAdminController
      * Generates robots.txt file for Front Office.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))"
      * )
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *

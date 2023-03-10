@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\TitleFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -48,7 +49,7 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Show customer titles page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      * @param TitleFilters $filters
@@ -72,7 +73,7 @@ class TitleController extends FrameworkBundleAdminController
      * Displays and handles currency form.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_title_index",
      *     message="You need permission to create this."
      * )
@@ -97,7 +98,7 @@ class TitleController extends FrameworkBundleAdminController
      * Displays title form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_title_index",
      *     message="You need permission to edit this."
      * )
@@ -125,7 +126,7 @@ class TitleController extends FrameworkBundleAdminController
      * Deletes title.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_title_index",
      *     message="You need permission to delete this."
      * )
@@ -153,7 +154,7 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * Deletes titles in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_title_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_title_index")
      * @DemoRestricted(redirectRoute="admin_title_index")
      *
      * @param Request $request

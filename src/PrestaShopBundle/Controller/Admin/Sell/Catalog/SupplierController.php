@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -68,7 +69,7 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Show suppliers listing.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param SupplierFilters $filters
@@ -95,7 +96,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Displays supplier creation form and handles form submit which creates new supplier.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to add this."
      * )
@@ -138,7 +139,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Deletes supplier.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to delete this."
      * )
@@ -170,7 +171,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Bulk deletion of suppliers.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to delete this."
      * )
@@ -210,7 +211,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Bulk disables supplier statuses.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to edit this."
      * )
@@ -249,7 +250,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Bulk enables supplier statuses.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to edit this."
      * )
@@ -288,7 +289,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Displays edit supplier form and submits form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to edit this."
      * )
@@ -348,7 +349,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Toggles supplier active status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_suppliers_index",
      *     message="You do not have permission to edit this."
      * )
@@ -379,7 +380,7 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Views supplier products information.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $supplierId
@@ -419,7 +420,7 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Exports to csv visible suppliers list data.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param SupplierFilters $filters
      *
@@ -460,7 +461,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Deletes supplier logo image.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_suppliers_edit",
      *     redirectQueryParamsToKeep={"supplierId"}

@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -68,7 +69,7 @@ class CombinationController extends FrameworkBundleAdminController
     private const COMBINATIONS_PAGINATION_OPTIONS = [ProductCombinationFilters::LIST_LIMIT, 20, 50, 100];
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $combinationId
@@ -112,7 +113,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param string $languageCode
@@ -162,7 +163,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $productId
@@ -216,7 +217,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $productId
      *
@@ -238,7 +239,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $productId
@@ -301,7 +302,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     * @AdminSecurity("is_granted(Permission::READ, 'AdminProducts')")
      *
      * Note: role must be hard coded because there is no route associated to this action therefore not
      * _legacy_controller request parameter.
@@ -331,7 +332,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param int|null $shopId
@@ -350,7 +351,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param int|null $shopId
      *
@@ -367,7 +368,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param ProductCombinationFilters $combinationFilters
@@ -391,7 +392,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param ProductCombinationFilters $filters
@@ -416,7 +417,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @param int $combinationId
      * @param int|null $shopId
@@ -442,7 +443,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $productId
@@ -503,7 +504,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param Request $request
@@ -544,7 +545,7 @@ class CombinationController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))"
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller'))"
      * )
      *
      * @param int $productId

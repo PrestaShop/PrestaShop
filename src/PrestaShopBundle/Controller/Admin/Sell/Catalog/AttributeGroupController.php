@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,7 +49,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Displays Attribute groups page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param AttributeGroupFilters $attributeGroupFilters
@@ -76,7 +77,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to create this."
      * )
      *
@@ -90,7 +91,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *
@@ -106,7 +107,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     message="You do not have permission to export this."
      * )
 
@@ -124,7 +125,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Updates attribute groups positioning order
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_attribute_groups_index"
      * )
      *
@@ -159,7 +160,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Deletes attribute group
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attribute_groups_index",
      * )
      *
@@ -185,7 +186,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Deletes multiple attribute groups by provided ids from request
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attribute_groups_index",
      * )
      *

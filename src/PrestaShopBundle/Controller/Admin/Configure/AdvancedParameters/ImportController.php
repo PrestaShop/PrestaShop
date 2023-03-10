@@ -52,7 +52,7 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return array|RedirectResponse|Response
      */
@@ -164,7 +164,7 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Delete import file.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
@@ -186,7 +186,7 @@ class ImportController extends FrameworkBundleAdminController
      * Download import file from history.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.", redirectRoute="admin_import"
      * )
      * @DemoRestricted(redirectRoute="admin_import")
@@ -212,7 +212,7 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Download import sample file.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_import")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", redirectRoute="admin_import")
      *
      * @param string $sampleName
      *
@@ -237,7 +237,7 @@ class ImportController extends FrameworkBundleAdminController
      * Get available entity fields.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     redirectRoute="admin_import"
      * )
      *
@@ -263,7 +263,7 @@ class ImportController extends FrameworkBundleAdminController
      * Process the import.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_import"
      * )
      * @DemoRestricted(redirectRoute="admin_import")

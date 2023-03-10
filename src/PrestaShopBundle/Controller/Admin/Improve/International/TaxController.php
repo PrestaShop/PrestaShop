@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -54,7 +55,7 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * Show taxes page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param TaxFilters $filters
@@ -81,7 +82,7 @@ class TaxController extends FrameworkBundleAdminController
      * Process tax options configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index"
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
@@ -117,7 +118,7 @@ class TaxController extends FrameworkBundleAdminController
      *
      * Provides filters functionality.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -142,7 +143,7 @@ class TaxController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
      *
@@ -198,7 +199,7 @@ class TaxController extends FrameworkBundleAdminController
      * Handles tax edit
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
      *
@@ -262,7 +263,7 @@ class TaxController extends FrameworkBundleAdminController
      * Deletes tax.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
@@ -291,7 +292,7 @@ class TaxController extends FrameworkBundleAdminController
      * @param int $taxId
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
@@ -321,7 +322,7 @@ class TaxController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
@@ -350,7 +351,7 @@ class TaxController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
@@ -379,7 +380,7 @@ class TaxController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index",
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")

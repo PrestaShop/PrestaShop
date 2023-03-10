@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -56,7 +57,7 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Show profiles listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param ProfileFilters $filters
      *
@@ -92,7 +93,7 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -119,7 +120,7 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Show profile's create page
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param Request $request
@@ -161,7 +162,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Shows profile edit form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")
@@ -225,7 +226,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Delete a profile.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")
@@ -253,7 +254,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Bulk delete profiles.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")

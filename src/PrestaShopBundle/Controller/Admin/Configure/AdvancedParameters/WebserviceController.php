@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKe
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -52,7 +53,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Displays the Webservice main page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param WebserviceKeyFilters $filters - filters for webservice list
      * @param Request $request
@@ -67,7 +68,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Shows Webservice Key form and handles its submit
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -105,7 +106,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Redirects to webservice account form where existing webservice account record can be edited.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $webserviceKeyId
      * @param Request $request
@@ -152,7 +153,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * Searches for specific records.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -180,7 +181,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Deletes single record.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $webserviceKeyId
      *
@@ -207,7 +208,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Deletes selected records.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param Request $request
      *
@@ -236,7 +237,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Enables status for selected rows.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
@@ -261,7 +262,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Disables status for selected rows.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
@@ -286,7 +287,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Toggles webservice account status.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $webserviceKeyId
      *
@@ -314,7 +315,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      *

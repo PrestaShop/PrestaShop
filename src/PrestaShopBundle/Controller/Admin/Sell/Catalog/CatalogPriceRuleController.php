@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -62,7 +63,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Displays catalog price rule listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CatalogPriceRuleFilters $catalogPriceRuleFilters
@@ -86,7 +87,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Retrieves catalog prices rules for product.
      *
-     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminSpecificPriceRule')")
+     * @AdminSecurity("is_granted(Permission::READ, 'AdminProducts') || is_granted(Permission::READ, 'AdminSpecificPriceRule')")
      *
      * @param Request $request
      *
@@ -114,7 +115,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -136,7 +137,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Deletes catalog price rule
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
      * @DemoRestricted(redirectRoute="admin_catalog_price_rules_index")
      *
      * @param int|string $catalogPriceRuleId
@@ -161,7 +162,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Deletes catalogPriceRules on bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_catalog_price_rules_index")
      * @DemoRestricted(redirectRoute="admin_catalog_price_rules_index")
      *
      * @param Request $request
@@ -188,7 +189,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule creation.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -221,7 +222,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule editing.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $catalogPriceRuleId
      * @param Request $request

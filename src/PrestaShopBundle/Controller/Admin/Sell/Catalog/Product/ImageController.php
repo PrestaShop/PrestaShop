@@ -52,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -63,7 +64,7 @@ class ImageController extends FrameworkBundleAdminController
     /**
      * Retrieves images for all shops, but the cover (which is multi-shop compatable) is retrieved based on $shopId
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param int $productId
      * @param int $shopId
@@ -82,7 +83,7 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to red or update this.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to red or update this.")
      *
      * @param int $productId
      *
@@ -113,7 +114,7 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
      *
@@ -148,7 +149,7 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
      * @param int $productImageId
@@ -181,7 +182,7 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param int $productImageId
      *

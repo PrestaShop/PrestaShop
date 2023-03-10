@@ -122,7 +122,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Shows products listing.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param ProductFilters $filters
@@ -161,7 +161,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -197,7 +197,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Reset filters for the grid only (category is kept, it can be cleared via another dedicated action)
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return JsonResponse
      */
@@ -228,7 +228,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Apply the category filter and redirect to list on first page.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -255,7 +255,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Shows products shop details.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param ProductFilters $filters
      * @param int $productId
@@ -287,7 +287,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     * @AdminSecurity("is_granted(Permission::READ, 'AdminProducts')")
      *
      * @return Response
      */
@@ -307,7 +307,7 @@ class ProductController extends FrameworkBundleAdminController
      * since the LinkRowAction expects a symfony route, so this action is merely used as a proxy for symfony routing
      * and redirects to the appropriate product preview url.
      *
-     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     * @AdminSecurity("is_granted(Permission::READ, 'AdminProducts')")
      *
      * @return RedirectResponse
      */
@@ -333,7 +333,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
      * @param int $productId
@@ -371,7 +371,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
      *
@@ -417,7 +417,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
      * @param int $productId
@@ -488,7 +488,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $productId
      *
@@ -510,7 +510,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $productId
      * @param int $shopId
@@ -533,7 +533,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $productId
      * @param int $shopGroupId
@@ -559,7 +559,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $shopId
      *
@@ -571,7 +571,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $shopGroupId
      *
@@ -583,7 +583,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param int $productId
      *
@@ -595,7 +595,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param int $productId
      * @param int $shopId
@@ -608,7 +608,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param int $productId
      * @param int $shopGroupId
@@ -623,7 +623,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Toggles product status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
      * @param int $shopId
@@ -660,7 +660,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Enable product status for all shops and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
      *
@@ -674,7 +674,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Enable product status for shop group and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
      * @param int $shopGroupId
@@ -689,7 +689,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Disable product status for shop group and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
      * @param int $shopGroupId
@@ -704,7 +704,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Disable product status for all shops and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
      *
@@ -719,7 +719,7 @@ class ProductController extends FrameworkBundleAdminController
      * Updates product position.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     redirectQueryParamsToKeep={"id_category"},
      *     message="You do not have permission to edit this."
@@ -756,7 +756,7 @@ class ProductController extends FrameworkBundleAdminController
      * Delete products in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to delete this."
      * )
@@ -790,7 +790,7 @@ class ProductController extends FrameworkBundleAdminController
      * Enable products in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -808,7 +808,7 @@ class ProductController extends FrameworkBundleAdminController
      * Enable products in bulk action for a specific shop.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -827,7 +827,7 @@ class ProductController extends FrameworkBundleAdminController
      * Enable products in bulk action for a specific shop group.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -846,7 +846,7 @@ class ProductController extends FrameworkBundleAdminController
      * Disable products in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -864,7 +864,7 @@ class ProductController extends FrameworkBundleAdminController
      * Disable products in bulk action for a specific shop.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -883,7 +883,7 @@ class ProductController extends FrameworkBundleAdminController
      * Disable products in bulk action for a specific shop group.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -902,7 +902,7 @@ class ProductController extends FrameworkBundleAdminController
      * Duplicate products in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -920,7 +920,7 @@ class ProductController extends FrameworkBundleAdminController
      * Duplicate products in bulk action for specific shop.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -939,7 +939,7 @@ class ProductController extends FrameworkBundleAdminController
      * Duplicate products in bulk action for specific shop group.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_products_v2_index",
      *     message="You do not have permission to edit this."
      * )
@@ -955,7 +955,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to read this.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="You do not have permission to read this.")
      *
      * Download the content of the virtual product.
      *
@@ -985,7 +985,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param string $languageCode

@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -44,7 +45,7 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Show localization settings page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -79,7 +80,7 @@ class LocalizationController extends FrameworkBundleAdminController
      * Process the Localization Configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_localization_index")
@@ -101,7 +102,7 @@ class LocalizationController extends FrameworkBundleAdminController
      * Process the Localization Local Units form.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_localization_index")
@@ -123,7 +124,7 @@ class LocalizationController extends FrameworkBundleAdminController
      * Process the Localization Advanced form.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_localization_index")
@@ -180,7 +181,7 @@ class LocalizationController extends FrameworkBundleAdminController
      * Handles localization pack import.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_localization_index")

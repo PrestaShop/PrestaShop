@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -60,7 +61,7 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Show languages listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param LanguageFilters $filters
@@ -90,7 +91,7 @@ class LanguageController extends FrameworkBundleAdminController
      *
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -112,7 +113,7 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Show language creation form page and handle its submit.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -149,7 +150,7 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Show language edit form page and handle its submit.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $languageId
      * @param Request $request
@@ -215,7 +216,7 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Deletes language
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
      * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param int $languageId
@@ -238,7 +239,7 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Deletes languages in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
      * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param Request $request
@@ -266,7 +267,7 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Toggles language status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
      * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param int $languageId
@@ -298,7 +299,7 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Toggles languages status in bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
      * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param Request $request

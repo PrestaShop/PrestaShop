@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
@@ -62,7 +63,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Show mail theme settings and generation page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -92,7 +93,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Manage generation form post and generate mails.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -181,7 +182,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Save mail theme configuration
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -223,7 +224,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Preview the list of layouts for a defined theme
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param string $theme
@@ -260,7 +261,7 @@ class MailThemeController extends FrameworkBundleAdminController
      * These modifications will be performed in a future release so for now we can only send test emails
      * with the current email theme using generated static files.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param string $theme
      * @param string $layout
@@ -354,7 +355,7 @@ class MailThemeController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *
@@ -395,7 +396,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Preview a mail layout from a defined theme
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param string $theme
      * @param string $layout
@@ -418,7 +419,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * Display the raw source of a theme layout (mainly useful for developers/integrators)
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param string $theme
      * @param string $layout

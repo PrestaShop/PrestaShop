@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Zone\QueryResult\EditableZone;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ZoneFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -58,7 +59,7 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Show all zones.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param ZoneFilters $zoneFilters
@@ -81,7 +82,7 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -103,7 +104,7 @@ class ZoneController extends FrameworkBundleAdminController
      * Show "Add new" zone form and handles its submit.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_zones_index",
      *     message="You need permission to create new zone."
      * )
@@ -144,7 +145,7 @@ class ZoneController extends FrameworkBundleAdminController
      * Displays zone edit for and handles its submit.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_zones_index",
      *     message="You need permission to edit this."
      * )
@@ -204,7 +205,7 @@ class ZoneController extends FrameworkBundleAdminController
      * Deletes zone.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_zones_index",
      *     message="You need permission to delete this."
      * )
@@ -233,7 +234,7 @@ class ZoneController extends FrameworkBundleAdminController
      * Toggles zone active status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_zones_index",
      *     message="You do not have permission to edit this."
      * )
@@ -264,7 +265,7 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Deletes zones in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_zones_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_zones_index")
      * @DemoRestricted(redirectRoute="admin_zones_index")
      *
      * @param Request $request
@@ -293,7 +294,7 @@ class ZoneController extends FrameworkBundleAdminController
      * Bulk toggles zones status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_zones_index",
      * )
      * @DemoRestricted(redirectRoute="admin_zones_index")

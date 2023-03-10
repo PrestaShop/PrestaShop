@@ -73,7 +73,7 @@ class ThemeController extends AbstractAdminController
      * Show main themes page.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -111,7 +111,7 @@ class ThemeController extends AbstractAdminController
     /**
      * Upload shop logos.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_themes_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_themes_index")
      * @DemoRestricted(redirectRoute="admin_themes_index")
      *
      * @param Request $request
@@ -150,7 +150,7 @@ class ThemeController extends AbstractAdminController
      * Export current theme.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to view this."
      * )
@@ -181,7 +181,7 @@ class ThemeController extends AbstractAdminController
      * Import new theme.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to add this."
      * )
@@ -244,7 +244,7 @@ class ThemeController extends AbstractAdminController
      * Enable selected theme.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to edit this."
      * )
@@ -278,7 +278,7 @@ class ThemeController extends AbstractAdminController
      * Delete selected theme.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to delete this."
      * )
@@ -310,7 +310,7 @@ class ThemeController extends AbstractAdminController
      * Adapts selected theme to RTL languages.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to edit this."
      * )
@@ -355,7 +355,7 @@ class ThemeController extends AbstractAdminController
      * Reset theme's page layouts.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to edit this."
      * )

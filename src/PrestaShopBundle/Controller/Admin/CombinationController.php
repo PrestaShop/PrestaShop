@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +38,7 @@ class CombinationController extends FrameworkBundleAdminController
      * Generate combination
      *
      * @AdminSecurity(
-     *     "is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')"
+     *     "is_granted(Permission::CREATE, 'ADMINPRODUCTS_') && is_granted(Permission::UPDATE, 'ADMINPRODUCTS_')"
      * )
      *
      * @return Response
@@ -72,7 +73,7 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * Get all Combinations for a product.
      *
-     * @AdminSecurity("is_granted('read', 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(Permission::READ, 'ADMINPRODUCTS_')")
      *
      * @param int $idProduct The product id
      *

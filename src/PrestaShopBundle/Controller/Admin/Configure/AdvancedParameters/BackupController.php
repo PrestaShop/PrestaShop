@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
 use PrestaShop\PrestaShop\Core\Backup\Manager\BackupRemoverInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\BackupFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -49,7 +50,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show backup page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))",
      *           message="You do not have permission to update this.",
      *          redirectRoute="admin_product_catalog"
      * )
@@ -98,7 +99,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show file download view.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
@@ -124,7 +125,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Return a backup content as a download.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @param string $downloadFileName
@@ -142,7 +143,7 @@ class BackupController extends FrameworkBundleAdminController
      * Process backup options saving.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *          message="You do not have permission to update this.",
      *          redirectRoute="admin_backups_index"
      * )
@@ -175,7 +176,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Create new backup.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *          message="You do not have permission to create this.",
      *          redirectRoute="admin_backups_index"
      * )
@@ -216,7 +217,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup file deletion.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *          message="You do not have permission to delete this.",
      *          redirectRoute="admin_backups_index"
      * )
@@ -252,7 +253,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process bulk backup deletion.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *          message="You do not have permission to delete this.",
      *          redirectRoute="admin_backups_index"
      * )

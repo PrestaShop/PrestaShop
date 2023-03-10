@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStat
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,7 +49,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * Render merchandise returns grid and options.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     redirectRoute="admin_merchandise_returns_index"
      * )
      *
@@ -89,7 +90,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * Edit existing order return
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_merchandise_returns_index"
      * )
      *

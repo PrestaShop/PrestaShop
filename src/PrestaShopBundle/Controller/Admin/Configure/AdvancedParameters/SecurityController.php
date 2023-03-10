@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -61,7 +62,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Show sessions listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -93,7 +94,7 @@ class SecurityController extends FrameworkBundleAdminController
      * Process the Security general configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))"
      * )
      *
      * @param Request $request
@@ -113,7 +114,7 @@ class SecurityController extends FrameworkBundleAdminController
      * Process the Security password policy configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))"
      * )
      *
      * @param Request $request
@@ -167,7 +168,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Show Employees sessions listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param EmployeeFilters $filters
      *
@@ -197,7 +198,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Show Customers sessions listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param CustomerFilters $filters
      *
@@ -225,7 +226,7 @@ class SecurityController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -245,7 +246,7 @@ class SecurityController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -267,7 +268,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Delete an employee session.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @param int $sessionId
      *
@@ -291,7 +292,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Delete a customer session.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @param int $sessionId
      *
@@ -315,7 +316,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Bulk delete customer session.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -341,7 +342,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Bulk delete employee session.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

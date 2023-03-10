@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\StateFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -90,7 +91,7 @@ class StateController extends FrameworkBundleAdminController
     /**
      * Show states listing page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param StateFilters $filters
@@ -112,7 +113,7 @@ class StateController extends FrameworkBundleAdminController
     /**
      * Deletes state
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
      * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
@@ -138,7 +139,7 @@ class StateController extends FrameworkBundleAdminController
      * Handles edit form rendering and submission
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_states_index"
      * )
      *
@@ -189,7 +190,7 @@ class StateController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_states_index",
      *     message="You do not have permission to create this."
      * )
@@ -230,7 +231,7 @@ class StateController extends FrameworkBundleAdminController
     /**
      * Toggles state status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_states_index")
      * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
@@ -264,7 +265,7 @@ class StateController extends FrameworkBundleAdminController
      * Delete states in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_states_index",
      *     message="You do not have permission to delete this."
      * )
@@ -293,7 +294,7 @@ class StateController extends FrameworkBundleAdminController
     /**
      * Enables states on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_states_index")
      * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request
@@ -321,7 +322,7 @@ class StateController extends FrameworkBundleAdminController
     /**
      * Disables states on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_states_index")
      * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request

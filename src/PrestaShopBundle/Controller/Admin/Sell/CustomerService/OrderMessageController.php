@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNotFoun
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -50,7 +51,7 @@ class OrderMessageController extends FrameworkBundleAdminController
     /**
      * Show list of Order messages
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param OrderMessageFilters $filters
      * @param Request $request
@@ -81,7 +82,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Create new order message
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *
@@ -126,7 +127,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Edit existing order message
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *
@@ -176,7 +177,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Delete single order message
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *
@@ -201,7 +202,7 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Delete order messages in bulk action
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
      *

@@ -65,6 +65,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -82,7 +83,7 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Responsible for displaying page content.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param CmsPageCategoryFilters $categoryFilters
      * @param CmsPageFilters $cmsFilters
@@ -144,7 +145,7 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -177,7 +178,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Creates cms page
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to add this."
@@ -239,7 +240,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
     /**
      *  @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -325,7 +326,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Displays cms category page form and handles create new cms page category logic.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to add this."
@@ -375,7 +376,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Displays cms category page form and handles update cms page category logic.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -447,7 +448,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Deletes cms page category and all its children categories.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to delete this."
@@ -486,7 +487,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Deletes multiple cms page categories.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to delete this."
@@ -529,7 +530,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Updates cms page category position.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -584,7 +585,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Updates cms page listing position.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *      redirectRoute="admin_cms_pages_index",
      *      redirectQueryParamsToKeep={"id_cms_category"},
      *      message="You do not have permission to edit this."
@@ -636,7 +637,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Toggles cms page category status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *      redirectRoute="admin_cms_pages_index",
      *      redirectQueryParamsToKeep={"id_cms_category"},
      *      message="You do not have permission to edit this."
@@ -675,7 +676,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Changes multiple cms page category statuses to enabled.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -718,7 +719,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Changes multiple cms page category statuses to disabled.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -764,7 +765,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Toggles cms page listing status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -801,7 +802,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Disables multiple cms pages.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -844,7 +845,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Enables multiple cms pages.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to edit this."
@@ -892,7 +893,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Deletes multiple cms pages.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to delete this."
@@ -942,7 +943,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * Deletes cms page by given id.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"id_cms_category"},
      *     message="You do not have permission to delete this."

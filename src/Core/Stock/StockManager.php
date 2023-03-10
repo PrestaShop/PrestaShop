@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\StockMvt;
 use Product;
 use StockAvailable;
@@ -316,7 +317,7 @@ class StockManager
         foreach (Employee::getEmployees() as $employeeData) {
             $employee = new Employee($employeeData['id_employee']);
 
-            if (Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ', $employee->id_profile)) {
+            if (Access::isGranted(Permission::PREFIX_TAB . 'ADMINSTOCKMANAGEMENT_READ', $employee->id_profile)) {
                 $templateVars['{firstname}'] = $employee->firstname;
                 $templateVars['{lastname}'] = $employee->lastname;
 

@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -52,7 +53,7 @@ class PositionsController extends FrameworkBundleAdminController
      * Display hooks positions.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::CREATE', request.get('_legacy_controller')) || is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="Access denied.")
      *
      * @param Request $request
@@ -150,7 +151,7 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Unhook module.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
      *
@@ -247,7 +248,7 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Toggle hook status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
      *

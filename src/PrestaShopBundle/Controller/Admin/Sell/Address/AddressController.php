@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -71,7 +72,7 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Show addresses listing page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param AddressFilters $filters
@@ -97,7 +98,7 @@ class AddressController extends FrameworkBundleAdminController
      * Process addresses required fields configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index"
      * )
      *
@@ -129,7 +130,7 @@ class AddressController extends FrameworkBundleAdminController
     /**
      * Deletes address
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_addresses_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_addresses_index")
      *
      * @param int $addressId
      *
@@ -156,7 +157,7 @@ class AddressController extends FrameworkBundleAdminController
      * Delete addresses in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index",
      *     message="You do not have permission to delete this."
      * )
@@ -232,7 +233,7 @@ class AddressController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index",
      *     message="You do not have permission to create this."
      * )
@@ -323,7 +324,7 @@ class AddressController extends FrameworkBundleAdminController
      * Handles edit form rendering and submission
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index"
      * )
      *
@@ -399,7 +400,7 @@ class AddressController extends FrameworkBundleAdminController
      * Handles edit form rendering and submission for order address
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_index"
      * )
      *
@@ -500,7 +501,7 @@ class AddressController extends FrameworkBundleAdminController
      * Handles edit form rendering and submission for cart address
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_index"
      * )
      *

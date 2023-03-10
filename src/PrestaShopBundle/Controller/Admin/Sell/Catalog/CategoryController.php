@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
@@ -79,7 +80,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show categories listing.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="You do not have permission to list this."
      * )
      *
@@ -135,7 +136,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -158,7 +159,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to create this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -209,7 +210,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show "Add new root category" page & process adding.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to create this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -259,7 +260,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show & process category editing.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -349,7 +350,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show and process category editing.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -429,7 +430,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Deletes category cover image.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
      *     redirectQueryParamsToKeep={"categoryId"}
@@ -470,7 +471,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Delete given menu thumbnail for category.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
      *     redirectQueryParamsToKeep={"categoryId"}
@@ -515,7 +516,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Toggle category status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *
@@ -557,7 +558,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Process bulk action for categories status enabling.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
@@ -591,7 +592,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Process bulk action for categories status disabling.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
@@ -625,7 +626,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Processes bulk categories deleting.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
@@ -672,7 +673,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Process single category deleting.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
@@ -713,7 +714,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Export filtered categories.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to view this."
      * )
@@ -759,7 +760,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Updates category position
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      * )
      *
@@ -791,7 +792,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller')) || is_granted(Permission::CREATE, 'AdminProducts')")
      *
      * @param Request $request
      *

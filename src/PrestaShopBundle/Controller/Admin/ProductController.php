@@ -104,7 +104,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $limit The size of the listing
@@ -1171,7 +1171,7 @@ class ProductController extends FrameworkBundleAdminController
      * Toggle product status
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *

@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CarrierFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -61,7 +62,7 @@ class CarriersController extends FrameworkBundleAdminController
     /**
      * Show carriers listing page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CarrierFilters $filters
@@ -94,7 +95,7 @@ class CarriersController extends FrameworkBundleAdminController
     /**
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -129,7 +130,7 @@ class CarriersController extends FrameworkBundleAdminController
      * Deletes carrier.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
      * @DemoRestricted(redirectRoute="admin_carriers_index")
@@ -154,7 +155,7 @@ class CarriersController extends FrameworkBundleAdminController
      * Toggles carrier status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      *     message="You need permission to edit this."
      * )
@@ -185,7 +186,7 @@ class CarriersController extends FrameworkBundleAdminController
      * Toggles carrier is-free status
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      *     message="You need permission to edit this."
      * )
@@ -216,7 +217,7 @@ class CarriersController extends FrameworkBundleAdminController
      * Changes carrier position
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      *     message="You need permission to edit this."
      * )
@@ -253,7 +254,7 @@ class CarriersController extends FrameworkBundleAdminController
      * Bulk deletes carriers.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
      * @DemoRestricted(redirectRoute="admin_carriers_index")
@@ -283,7 +284,7 @@ class CarriersController extends FrameworkBundleAdminController
      * Enables carrier status on bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
      * @DemoRestricted(redirectRoute="admin_carriers_index")
@@ -313,7 +314,7 @@ class CarriersController extends FrameworkBundleAdminController
      * Disables carrier status on bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
      * @DemoRestricted(redirectRoute="admin_carriers_index")

@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefi
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnStatesFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderStatesFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -57,7 +58,7 @@ use Symfony\Component\HttpFoundation\Response;
 class OrderStateController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -88,7 +89,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -115,7 +116,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order_state create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -162,7 +163,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order_state edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -217,7 +218,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order return state create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -256,7 +257,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order return state edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -304,7 +305,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Deletes order return state
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
      *
      * @param int $orderReturnStateId
      *
@@ -331,7 +332,7 @@ class OrderStateController extends FrameworkBundleAdminController
      * Delete order return states in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_states",
      *     message="You do not have permission to delete this."
      * )
@@ -361,7 +362,7 @@ class OrderStateController extends FrameworkBundleAdminController
      * Toggle order state delivery option.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_states",
      *     message="You do not have permission to edit this."
      * )
@@ -396,7 +397,7 @@ class OrderStateController extends FrameworkBundleAdminController
      * Toggle order state invoice option.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_states",
      *     message="You do not have permission to edit this."
      * )
@@ -431,7 +432,7 @@ class OrderStateController extends FrameworkBundleAdminController
      * Toggle order state send_email option.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_states",
      *     message="You do not have permission to edit this."
      * )
@@ -465,7 +466,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Deletes order state
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
      *
      * @param int $orderStateId
      *
@@ -492,7 +493,7 @@ class OrderStateController extends FrameworkBundleAdminController
      * Delete order states in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_states",
      *     message="You do not have permission to delete this."
      * )

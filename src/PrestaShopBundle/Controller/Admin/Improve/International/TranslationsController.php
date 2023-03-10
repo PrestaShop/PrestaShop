@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
@@ -65,7 +66,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract theme using locale and theme name.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -93,7 +94,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Show translations settings page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -125,7 +126,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Modify translations action.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -150,7 +151,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Add language pack for new languages and updates for the existing ones action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))"))
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))"))
      *
      * @param Request $request
      *
@@ -189,7 +190,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract catalogues using locale.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -286,7 +287,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Copy language action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

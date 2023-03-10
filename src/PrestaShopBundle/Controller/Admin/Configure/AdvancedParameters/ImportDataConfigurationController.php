@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -45,7 +46,7 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Shows import data page where the configuration of importable data and the final step of import is handled.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
@@ -98,7 +99,7 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Create import data match configuration.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
@@ -135,7 +136,7 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Delete import data match configuration.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
@@ -154,7 +155,7 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
      * Get import data match configuration.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     redirectRoute="admin_import"
      * )
      *

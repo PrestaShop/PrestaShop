@@ -46,7 +46,7 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Show email configuration page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      * @param EmailLogsFilter $filters
@@ -87,7 +87,7 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * @deprecated since 8.0 and will be removed in next major. Use CommonController:searchGridAction instead
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -116,7 +116,7 @@ class EmailController extends FrameworkBundleAdminController
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="Access denied."
      * )
      *
@@ -150,7 +150,7 @@ class EmailController extends FrameworkBundleAdminController
      * Delete selected email logs.
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -179,7 +179,7 @@ class EmailController extends FrameworkBundleAdminController
      * Delete all email logs.
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return RedirectResponse
      */
@@ -198,7 +198,7 @@ class EmailController extends FrameworkBundleAdminController
      * Delete single email log.
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param int $mailId
      *

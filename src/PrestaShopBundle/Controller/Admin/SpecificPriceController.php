@@ -31,6 +31,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityDataInconsistencyException;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice as SpecificPriceFormType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,7 +46,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Get specific price list for a product.
      *
-     * @AdminSecurity("is_granted('read', 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(Permission::READ, 'ADMINPRODUCTS_')")
      *
      * @param string|int $idProduct The product ID
      *
@@ -89,7 +90,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      * Add specific price Form process.
      *
      * @AdminSecurity(
-     *     "is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')"
+     *     "is_granted(Permission::CREATE, 'ADMINPRODUCTS_') && is_granted(Permission::UPDATE, 'ADMINPRODUCTS_')"
      * )
      *
      * @param Request $request The request
@@ -116,7 +117,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      * Get one specific price list for a product.
      *
      * @AdminSecurity(
-     *     "is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')"
+     *     "is_granted(Permission::CREATE, 'ADMINPRODUCTS_') && is_granted(Permission::UPDATE, 'ADMINPRODUCTS_')"
      * )
      *
      * @param int $idSpecificPrice
@@ -166,7 +167,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      * Update specific price Form process.
      *
      * @AdminSecurity(
-     *     "is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')"
+     *     "is_granted(Permission::CREATE, 'ADMINPRODUCTS_') && is_granted(Permission::UPDATE, 'ADMINPRODUCTS_')"
      * )
      *
      * @param int $idSpecificPrice
@@ -197,7 +198,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Delete a specific price.
      *
-     * @AdminSecurity("is_granted('delete', 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(Permission::DELETE', 'ADMINPRODUCTS_')")
      *
      * @param int $idSpecificPrice The specific price ID
      * @param Request $request The request

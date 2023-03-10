@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class AttachementProductController extends FrameworkBundleAdminController
     /**
      * Manage form add product attachment.
      *
-     * @AdminSecurity("is_granted('create', 'ADMINPRODUCTS_') && is_granted('update', 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(Permission::CREATE, 'ADMINPRODUCTS_') && is_granted(Permission::UPDATE, 'ADMINPRODUCTS_')")
      *
      * @param int $idProduct
      * @param Request $request

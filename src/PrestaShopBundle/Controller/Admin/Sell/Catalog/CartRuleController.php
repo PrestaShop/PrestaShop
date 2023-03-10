@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -54,7 +55,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Displays cart rule listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CartRuleFilters $cartRuleFilters
@@ -79,7 +80,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Searches for cart rules by provided search phrase
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller')) || is_granted(Permission::CREATE, 'AdminOrders')")
      *
      * @param Request $request
      *
@@ -109,7 +110,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Deletes cart rule
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param int $cartRuleId
@@ -134,7 +135,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Deletes cartRules on bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request
@@ -161,7 +162,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Toggles cart rule status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param int $cartRuleId
@@ -208,7 +209,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Enables cart rules on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request
@@ -236,7 +237,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Disables cart rules on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request

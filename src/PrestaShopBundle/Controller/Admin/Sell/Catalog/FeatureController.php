@@ -33,6 +33,7 @@ use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
@@ -56,7 +57,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     use FrameworkControllerSmartyTrait;
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      */
     public function indexAction(Request $request): Response
     {
@@ -80,7 +81,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     /**
      * Create feature action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -122,7 +123,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     /**
      * Edit feature action.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $featureId
      * @param Request $request

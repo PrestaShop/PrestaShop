@@ -61,6 +61,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -79,7 +80,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Show manufacturers listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -106,7 +107,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -134,7 +135,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process manufacturer creation.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))"
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))"
      * )
      *
      * @return Response
@@ -167,7 +168,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * View single manufacturer details
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param int $manufacturerId
      *
@@ -207,7 +208,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process manufacturer editing.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))"
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))"
      * )
      *
      * @param int $manufacturerId
@@ -261,7 +262,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Deletes manufacturer
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @param int|string $manufacturerId
@@ -286,7 +287,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Deletes manufacturers on bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @return RedirectResponse
@@ -311,7 +312,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Enables manufacturers on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @return RedirectResponse
@@ -337,7 +338,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Disables manufacturers on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @return RedirectResponse
@@ -363,7 +364,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Toggles manufacturer status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @param int $manufacturerId
@@ -393,7 +394,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Export filtered manufacturers.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
@@ -439,7 +440,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Deletes manufacturer logo image.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_manufacturers_edit",
      *     redirectQueryParamsToKeep={"manufacturerId"}
@@ -478,7 +479,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Deletes address
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @param int $addressId
@@ -504,7 +505,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Export filtered manufacturer addresses.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
@@ -550,7 +551,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Deletes adresses in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
      * @return RedirectResponse
@@ -575,7 +576,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Show & process address creation.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -619,7 +620,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * Show & process address editing.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $addressId
      *

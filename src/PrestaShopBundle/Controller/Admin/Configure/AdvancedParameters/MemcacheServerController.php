@@ -43,7 +43,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     public const CONTROLLER_NAME = 'AdminPerformance';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return JsonResponse
      */
@@ -53,7 +53,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
@@ -78,7 +78,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))", message="Access denied.")
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
@@ -137,7 +137,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", message="Access denied.")
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request

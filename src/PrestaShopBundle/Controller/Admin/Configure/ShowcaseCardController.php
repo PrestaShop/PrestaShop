@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\InvalidShowcaseCardNameException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -51,7 +52,7 @@ class ShowcaseCardController extends FrameworkBundleAdminController
      * @see ShowcaseCard
      *
      * @AdminSecurity(
-     *     "is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')"
+     *     "is_granted(Permission::CREATE, 'CONFIGURE') && is_granted(Permission::UPDATE, 'CONFIGURE')"
      * )
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *

@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialP
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -51,7 +52,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     private const UNSPECIFIED_VALUE_FORMAT = '--';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      */
     public function listAction(Request $request, int $productId): JsonResponse
     {
@@ -74,7 +75,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -106,7 +107,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -137,7 +138,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $specificPriceId

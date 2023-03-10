@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,7 +43,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Show payment preferences page.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *      message="Access denied."
      * )
      *
@@ -81,7 +82,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Process payment modules preferences form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller')) && is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="Access denied.",
      *     redirectRoute="admin_payment_preferences"
      * )

@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OutstandingFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -44,7 +45,7 @@ class OutstandingController extends FrameworkBundleAdminController
     /**
      * Show list of outstandings.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param OutstandingFilters $filters
@@ -66,7 +67,7 @@ class OutstandingController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_outstanding_index")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", redirectRoute="admin_outstanding_index")
      *
      * @param Request $request
      *

@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThread
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
@@ -57,7 +58,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
     /**
      * Show list of customer threads
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CustomerThreadFilter $filters
@@ -81,7 +82,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * View customer thread
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     message="You do not have permission to view this.",
      *     redirectRoute="admin_customer_threads_index"
      * )
@@ -125,7 +126,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Reply to customer thread
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_customer_threads_index"
      * )
@@ -185,7 +186,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Update customer thread status
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_customer_threads_index"
      * )
@@ -210,7 +211,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * @param int $customerThreadId
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_customer_threads")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_customer_threads")
      *
      * @return RedirectResponse
      */
@@ -225,7 +226,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Forward customer thread to another employee
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller')) && is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_customer_threads_index"
      * )
@@ -308,7 +309,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Delete customer thread
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_customer_threads"
      * )
      *
@@ -334,7 +335,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Bulk delete customer thread
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_customer_threads"
      * )
      *

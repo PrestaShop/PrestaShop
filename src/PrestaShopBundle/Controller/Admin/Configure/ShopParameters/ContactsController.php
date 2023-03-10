@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -47,7 +48,7 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Shows page content.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param ContactFilters $filters
@@ -82,7 +83,7 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * Grid search action.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -110,7 +111,7 @@ class ContactsController extends FrameworkBundleAdminController
      * Display the Contact creation form.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_contacts_index",
      *     message="You do not have permission to add this."
      * )
@@ -156,7 +157,7 @@ class ContactsController extends FrameworkBundleAdminController
      * Display the contact edit form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_contacts_index",
      *     message="You do not have permission to edit this."
      * )
@@ -207,7 +208,7 @@ class ContactsController extends FrameworkBundleAdminController
      * Delete a contact.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_contacts_index",
      *     message="You do not have permission to delete this."
      * )
@@ -238,7 +239,7 @@ class ContactsController extends FrameworkBundleAdminController
      * Bulk delete contacts.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_contacts_index",
      *     message="You do not have permission to delete this."
      * )

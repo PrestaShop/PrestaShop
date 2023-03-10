@@ -77,7 +77,7 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Show currency page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param CurrencyFilters $filters
      * @param Request $request
@@ -102,7 +102,7 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -125,7 +125,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * Displays and handles currency form.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to create this."
      * )
@@ -163,7 +163,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * Displays currency form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to edit this."
      * )
@@ -264,7 +264,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * Deletes currency.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to delete this."
      * )
@@ -294,7 +294,7 @@ class CurrencyController extends FrameworkBundleAdminController
      *
      * @param string $currencyIsoCode
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return JsonResponse
@@ -342,7 +342,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @param int $currencyId
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to edit this."
      * )
@@ -372,7 +372,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * Refresh exchange rates.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
      *     message="You need permission to edit this."
      * )
@@ -484,7 +484,7 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Toggles currencies status in bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param Request $request
@@ -517,7 +517,7 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Deletes currencies in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param Request $request

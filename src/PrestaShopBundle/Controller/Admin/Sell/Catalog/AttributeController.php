@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -50,7 +51,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Displays Attribute groups > attributes page
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
@@ -90,7 +91,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Updates attributes positioning order
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
@@ -129,7 +130,7 @@ class AttributeController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to create this."
      * )
      *
@@ -147,7 +148,7 @@ class AttributeController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *
@@ -167,7 +168,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Deletes attribute
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )
@@ -197,7 +198,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Deletes multiple attributes by provided ids from request
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attributes_index",
      *     redirectQueryParamsToKeep={"attributeGroupId"}
      * )

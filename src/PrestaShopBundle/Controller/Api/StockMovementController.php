@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
@@ -47,7 +48,7 @@ class StockMovementController extends ApiController
     public $queryParams;
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -68,7 +69,7 @@ class StockMovementController extends ApiController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -80,7 +81,7 @@ class StockMovementController extends ApiController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

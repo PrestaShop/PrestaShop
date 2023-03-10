@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -61,7 +62,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AttachmentController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      */
     public function indexAction(Request $request, AttachmentFilters $filters): Response
     {
@@ -80,7 +81,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to create this."
      * )
@@ -134,7 +135,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * Show & process attachment editing.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to edit this."
      * )
@@ -201,7 +202,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * View attachment.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller'))",
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to edit this."
      * )
@@ -223,7 +224,7 @@ class AttachmentController extends FrameworkBundleAdminController
     /**
      * Deletes attachment
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
+     * @AdminSecurity("is_granted(Permission::DELETE', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
      * @DemoRestricted(redirectRoute="admin_attachments_index")
      */
     public function deleteAction(int $attachmentId): RedirectResponse
@@ -245,7 +246,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * Delete attachments in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to delete this."
      * )
@@ -268,7 +269,7 @@ class AttachmentController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")
+     * @AdminSecurity("is_granted(Permission::READ, 'AdminProducts') || is_granted(Permission::READ, 'AdminAttachments')")
      *
      * @param int $attachmentId
      *
@@ -282,7 +283,7 @@ class AttachmentController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")
+     * @AdminSecurity("is_granted(Permission::READ, 'AdminProducts') || is_granted(Permission::READ, 'AdminAttachments')")
      *
      * @param string $searchPhrase
      *

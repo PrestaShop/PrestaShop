@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +41,7 @@ class ErrorController extends FrameworkBundleAdminController
      * Enables debug mode from error page (500 for example)
      *
      * @AdminSecurity(
-     *     "is_granted('update', 'AdminPerformance') && is_granted('create', 'AdminPerformance') && is_granted('delete', 'AdminPerformance')"
+     *     "is_granted(Permission::UPDATE, 'AdminPerformance') && is_granted(Permission::CREATE, 'AdminPerformance') && is_granted(Permission::DELETE', 'AdminPerformance')"
      * )
      *
      * @param Request $request

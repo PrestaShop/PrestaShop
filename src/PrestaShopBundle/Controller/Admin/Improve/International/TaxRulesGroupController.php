@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRuleFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -58,7 +59,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     /**
      * Show tax rules group page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param TaxRulesGroupFilters $filters
@@ -80,7 +81,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
      *
@@ -118,7 +119,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * Handles tax rules group edit
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
      *
@@ -168,7 +169,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * Deletes tax rules group.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
      *
@@ -195,7 +196,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * Toggles status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
      *
@@ -232,7 +233,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
      *
@@ -261,7 +262,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
      *
@@ -290,7 +291,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
      *

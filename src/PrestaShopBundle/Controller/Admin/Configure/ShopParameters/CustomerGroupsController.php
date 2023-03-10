@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerGroupsFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +43,7 @@ class CustomerGroupsController extends FrameworkBundleAdminController
     /**
      * Show Groups tab.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      * @param CustomerGroupsFilters $filters
@@ -66,7 +67,7 @@ class CustomerGroupsController extends FrameworkBundleAdminController
      * Displays and handles customer group form.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::CREATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_customer_groups_index",
      *     message="You need permission to create this."
      * )
@@ -91,7 +92,7 @@ class CustomerGroupsController extends FrameworkBundleAdminController
      * Displays title form.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::UPDATE, request.get('_legacy_controller'))",
      *     redirectRoute="admin_customer_groups_index",
      *     message="You need permission to edit this."
      * )

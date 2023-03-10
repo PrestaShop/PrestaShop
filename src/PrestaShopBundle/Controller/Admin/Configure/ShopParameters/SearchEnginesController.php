@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\SearchEngineNotFoun
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\SearchEngineForEditing;
 use PrestaShop\PrestaShop\Core\Search\Filters\SearchEngineFilters;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,7 +52,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Show search engines listing page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::READ, request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param SearchEngineFilters $filters
@@ -73,7 +74,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Shows search engine creation form page and handle its submit.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::CREATE, request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -114,7 +115,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
     /**
      * Show search engine edit form page and handles its submit.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(Permission::UPDATE, request.get('_legacy_controller'))")
      *
      * @param int $searchEngineId
      * @param Request $request
@@ -173,7 +174,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
      * Deletes search engine.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_search_engines_index",
      * )
      *
@@ -198,7 +199,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
      * Deletes search engines in bulk action.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     redirectRoute="admin_search_engines_index",
      * )
      *

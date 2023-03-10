@@ -57,7 +57,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
-     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(Permission::READ, 'ADMINMODULESSF_')")
      *
      * @return Response
      */
@@ -100,7 +100,7 @@ class ModuleController extends ModuleAbstractController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('read', 'ADMINMODULESSF_') || is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')"
+     *     "is_granted(Permission::READ, 'ADMINMODULESSF_') || is_granted(Permission::CREATE, 'ADMINMODULESSF_') || is_granted(Permission::UPDATE, 'ADMINMODULESSF_') || is_granted(Permission::DELETE', 'ADMINMODULESSF_')"
      * )
      *
      * @param Request $module_name

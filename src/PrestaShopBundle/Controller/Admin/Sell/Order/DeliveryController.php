@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\Form\Form;
@@ -43,7 +44,7 @@ class DeliveryController extends FrameworkBundleAdminController
      * Main page for Delivery slips.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="Access denied."
      * )
      *
@@ -60,7 +61,7 @@ class DeliveryController extends FrameworkBundleAdminController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()
-            && $this->isGranted('update', $request->attributes->get('_legacy_controller')
+            && $this->isGranted(Permission::UPDATE, $request->attributes->get('_legacy_controller')
         )) {
             $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
@@ -90,7 +91,7 @@ class DeliveryController extends FrameworkBundleAdminController
      * Delivery slips PDF generator.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(Permission::READ, request.get('_legacy_controller')) || is_granted(Permission::UPDATE, request.get('_legacy_controller')) || is_granted(Permission::CREATE, request.get('_legacy_controller')) || is_granted(Permission::DELETE', request.get('_legacy_controller'))",
      *     message="Access denied."
      * )
      *
