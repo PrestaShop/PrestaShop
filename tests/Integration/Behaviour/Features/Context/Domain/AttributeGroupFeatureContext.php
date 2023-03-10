@@ -61,12 +61,6 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      */
     private $defaultShopId;
 
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
 
     /**
      * @When I create attribute group :reference with specified properties:
