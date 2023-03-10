@@ -981,6 +981,7 @@ class AdminCartsControllerCore extends AdminController
             $helper->list_skip_actions['delete'] = (array) $skip_list;
         }
         $helper->force_show_bulk_actions = true;
+        $helper->force_hide_bulk_actions_btn = count($helper->list_skip_actions['delete']) === count($this->_list);
 
         return $helper->generateList($this->_list, $this->fields_list);
     }
