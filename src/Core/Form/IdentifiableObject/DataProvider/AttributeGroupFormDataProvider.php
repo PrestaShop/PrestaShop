@@ -49,6 +49,9 @@ class AttributeGroupFormDataProvider implements FormDataProviderInterface
         $this->queryBus = $queryBus;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getData($id)
     {
         /** @var EditableAttributeGroup $editableAttributeGroup */
@@ -62,6 +65,9 @@ class AttributeGroupFormDataProvider implements FormDataProviderInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultData()
     {
         return [
