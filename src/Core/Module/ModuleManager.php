@@ -156,11 +156,11 @@ class ModuleManager implements ModuleManagerInterface
         $module = $this->moduleRepository->getModule($name);
         $uninstalled = $module->onUninstall();
 
-        if ($deleteFiles && $path = $this->moduleRepository->getModulePath($name)) {
-            $this->filesystem->remove($path);
-        }
-
         $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
+
+        if ($deleteFiles) {
+            return $uninstalled && $this->delete($name);
+        }
 
         return $uninstalled;
     }
@@ -182,7 +182,7 @@ class ModuleManager implements ModuleManagerInterface
 
         $this->dispatch(ModuleManagementEvent::DELETE, $module);
 
-        return true;
+        return $this->filesystem->exists($path);
     }
 
     public function upgrade(string $name, $source = null): bool
