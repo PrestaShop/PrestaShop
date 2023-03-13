@@ -4971,20 +4971,13 @@ class CartCore extends ObjectModel
      * Are all products of the Cart in stock?
      *
      * @param bool $ignoreVirtual Ignore virtual products
-     * @param bool $exclusive (DEPRECATED) If true, the validation is exclusive : it must be present product in stock and out of stock
      *
      * @since 1.5.0
      *
      * @return bool False if not all products in the cart are in stock
      */
-    public function isAllProductsInStock($ignoreVirtual = false, $exclusive = false)
+    public function isAllProductsInStock($ignoreVirtual = false)
     {
-        if (func_num_args() > 1) {
-            @trigger_error(
-                '$exclusive parameter is deprecated since version 1.7.3.2 and will be removed in the next major version.',
-                E_USER_DEPRECATED
-            );
-        }
         $productOutOfStock = 0;
         $productInStock = 0;
 
@@ -5002,20 +4995,8 @@ class CartCore extends ObjectModel
                 $product['id_customization']
             );
 
-            if (!$exclusive
-                && ($productQuantity < 0 && !$availableOutOfStock)
-            ) {
+            if ($productQuantity < 0 && !$availableOutOfStock) {
                 return false;
-            } elseif ($exclusive) {
-                if ($productQuantity <= 0) {
-                    ++$productOutOfStock;
-                } else {
-                    ++$productInStock;
-                }
-
-                if ($productInStock > 0 && $productOutOfStock > 0) {
-                    return false;
-                }
             }
         }
 
