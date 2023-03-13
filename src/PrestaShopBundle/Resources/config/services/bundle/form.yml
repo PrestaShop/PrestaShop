@@ -7,7 +7,7 @@ services:
     autowire: true
     autoconfigure: true
     bind:
-      $multistoreFeature: '@prestashop.adapter.feature.multistore'
+      $multiStoreFeature: '@prestashop.adapter.feature.multistore'
       $defaultCurrencyId: '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
       $defaultLanguageId: '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       $formRenderer: '@twig.form.renderer'

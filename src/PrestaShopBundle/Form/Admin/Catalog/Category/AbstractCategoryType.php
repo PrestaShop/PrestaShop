@@ -60,7 +60,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var ConfigurationInterface
@@ -71,20 +71,20 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
-     * @param FeatureInterface $multistoreFeature
+     * @param FeatureInterface $multiStoreFeature
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->configuration = $configuration;
     }
 
@@ -250,7 +250,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ]);
 
-        if ($this->multistoreFeature->isUsed()) {
+        if ($this->multiStoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class);
         }
     }

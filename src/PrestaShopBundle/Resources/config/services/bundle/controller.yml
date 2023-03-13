@@ -155,8 +155,8 @@ services:
     parent: PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController
     public: true
     properties:
-      multistoreFeature: "@prestashop.adapter.multistore_feature"
-      multistoreContext: "@prestashop.adapter.shop.context"
+      multiStoreFeature: "@prestashop.adapter.multistore_feature"
+      multiStoreContext: "@prestashop.adapter.shop.context"
       entityManager: "@doctrine.orm.entity_manager"
       productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     tags:

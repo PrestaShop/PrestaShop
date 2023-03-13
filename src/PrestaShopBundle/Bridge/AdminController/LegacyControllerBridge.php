@@ -91,7 +91,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var LegacyContext
@@ -145,18 +145,18 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
 
     /**
      * @param ControllerConfiguration $controllerConfiguration
-     * @param FeatureInterface $multistoreFeature
+     * @param FeatureInterface $multiStoreFeature
      * @param LegacyContext $legacyContext
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         ControllerConfiguration $controllerConfiguration,
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         LegacyContext $legacyContext,
         HookDispatcherInterface $hookDispatcher
     ) {
         $this->controllerConfiguration = $controllerConfiguration;
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->legacyContext = $legacyContext;
         $this->hookDispatcher = $hookDispatcher;
     }
@@ -185,7 +185,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
             $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/main.bundle.js?v=' . _PS_VERSION_);
 
             // the multistore dropdown should be called only once, and only if multistore is used
-            if ($this->multistoreFeature->isUsed()) {
+            if ($this->multiStoreFeature->isUsed()) {
                 $this->addJs(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/multistore_dropdown.bundle.js?v=' . _PS_VERSION_);
             }
             $this->addJqueryPlugin(['chosen', 'fancybox']);
