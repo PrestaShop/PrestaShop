@@ -41,14 +41,14 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var CombinationCommandsBuilderInterface
-     */
-    private $commandsBuilder;
-
-    /**
      * @var BulkCombinationFormDataFormatter
      */
     private $bulkCombinationFormDataFormatter;
+
+    /**
+     * @var CombinationCommandsBuilderInterface
+     */
+    private $commandsBuilder;
 
     /**
      * @var int
