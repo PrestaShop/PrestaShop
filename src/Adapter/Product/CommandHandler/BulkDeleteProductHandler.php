@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Handles command which deletes products in bulk action
@@ -42,16 +42,14 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 final class BulkDeleteProductHandler extends AbstractBulkHandler implements BulkDeleteProductHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductDeleter
      */
-    private $productRepository;
+    private $productDeleter;
 
-    /**
-     * @param ProductRepository $productRepository
-     */
-    public function __construct(ProductRepository $productRepository)
-    {
-        $this->productRepository = $productRepository;
+    public function __construct(
+        ProductDeleter $productDeleter
+    ) {
+        $this->productDeleter = $productDeleter;
     }
 
     /**
@@ -59,12 +57,30 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
      */
     public function handle(BulkDeleteProductCommand $command): void
     {
-        $this->handleBulkAction($command->getProductIds());
+        $this->handleBulkAction($command->getProductIds(), $command);
     }
 
-    protected function handleSingleAction(ProductId $productId, $command = null)
+    /**
+     * @param ProductId $productId
+     * @param BulkDeleteProductCommand|null $command
+     *
+     * @return void
+     */
+    protected function handleSingleAction(ProductId $productId, $command = null): void
     {
-        $this->productRepository->deleteByShopConstraint($productId, ShopConstraint::allShops());
+        if (!($command instanceof BulkDeleteProductCommand)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Expected argument $command of type "%s". Got "%s"',
+                    BulkDeleteProductCommand::class,
+                    var_export($command, true)
+                ));
+        }
+
+        $this->productDeleter->deleteByShopConstraint(
+            $productId,
+            $command->getShopConstraint()
+        );
     }
 
     protected function buildBulkException(): BulkProductException

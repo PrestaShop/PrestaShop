@@ -26,15 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 
-/**
- * Defines contract to handle @see CopyProductToShopCommand
- */
-interface CopyProductToShopHandlerInterface
+interface SetProductShopsHandlerInterface
 {
-    /**
-     * @param CopyProductToShopCommand $command
-     */
-    public function handle(CopyProductToShopCommand $command): void;
+    public function handle(SetProductShopsCommand $command): void;
 }

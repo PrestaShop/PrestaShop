@@ -23,43 +23,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\CopyProductToShopHandlerInterface;
-
-/**
- * Handles @see CopyProductToShopCommand using dedicated service
- */
-class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
+class InvalidProductShopAssociationException extends ProductException
 {
-    /**
-     * @var ProductShopUpdater
-     */
-    private $productShopUpdater;
+    public const EMPTY_SHOPS_ASSOCIATION = 1;
 
-    /**
-     * @param ProductShopUpdater $productShopUpdater
-     */
-    public function __construct(
-        ProductShopUpdater $productShopUpdater
-    ) {
-        $this->productShopUpdater = $productShopUpdater;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function handle(CopyProductToShopCommand $command): void
-    {
-        $this->productShopUpdater->copyToShop(
-            $command->getProductId(),
-            $command->getSourceShopId(),
-            $command->getTargetShopId()
-        );
-    }
+    public const SOURCE_SHOP_MISSING_IN_SHOP_ASSOCIATION = 2;
+    public const SOURCE_SHOP_NOT_ASSOCIATED = 3;
 }

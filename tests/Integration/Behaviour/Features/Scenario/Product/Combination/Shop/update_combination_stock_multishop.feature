@@ -40,7 +40,9 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     And I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
@@ -519,8 +521,9 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | employee   | delta_quantity |
       | Puff Daddy | 50             |
       | Puff Daddy | 50             |
-    Given I copy product product1 from shop shop1 to shop shop3
-    Given I copy product product1 from shop shop1 to shop shop4
+    Given I set following shops for product "product1":
+      | source shop | shop1                   |
+      | shops       | shop1,shop3,shop4 |
     Then combination "product1SBlack" should have following stock details for shops "shop1,shop3,shop4":
       | combination stock detail   | value           |
       | quantity                   | 100             |

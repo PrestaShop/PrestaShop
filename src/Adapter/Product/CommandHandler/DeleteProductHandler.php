@@ -28,30 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles @see DeleteProductCommand using legacy object model
- *
- * @todo: this command along with BulkDeleteProductCommand needs to be refactored to fully support shop constraint.
- *        Then the DeleteFromShopsCommand should be refactored to a SetProductShopsCommand.
  */
 class DeleteProductHandler implements DeleteProductHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductDeleter
      */
-    private $productRepository;
+    private $productDeleter;
 
-    /**
-     * @param ProductRepository $productRepository
-     */
-    public function __construct(ProductRepository $productRepository)
-    {
-        $this->productRepository = $productRepository;
+    public function __construct(
+        ProductDeleter $productDeleter
+    ) {
+        $this->productDeleter = $productDeleter;
     }
 
     /**
@@ -59,6 +53,9 @@ class DeleteProductHandler implements DeleteProductHandlerInterface
      */
     public function handle(DeleteProductCommand $command): void
     {
-        $this->productRepository->deleteByShopConstraint($command->getProductId(), ShopConstraint::allShops());
+        $this->productDeleter->deleteByShopConstraint(
+            $command->getProductId(),
+            $command->getShopConstraint()
+        );
     }
 }

@@ -99,8 +99,9 @@ Feature: Copy product from shop to shop.
       | delivery time out of stock notes[en-US] | product out of stock       |
       | delivery time out of stock notes[fr-FR] | En rupture de stock        |
       | active                                  | true                       |
-    And I copy product productWithFields from shop shop2 to shop shop1
-    And I copy product productWithFields from shop shop2 to shop shop3
+    And I set following shops for product "productWithFields":
+      | source shop | shop2             |
+      | shops       | shop1,shop2,shop3 |
     And I update product "productWithFields" for shop shop3 with following values:
       | name[en-US]                             | smart sunglasses3           |
       | name[fr-FR]                             | lunettes de soleil3         |
@@ -127,9 +128,7 @@ Feature: Copy product from shop to shop.
       | delivery time out of stock notes[en-US] | product out of stock3       |
       | delivery time out of stock notes[fr-FR] | En rupture de stock3        |
       | active                                  | false                       |
-    Then product productWithFields is associated to shop shop1
-    And product productWithFields is associated to shop shop2
-    And product productWithFields is associated to shop shop3
+    Then product productWithFields is associated to shops "shop1,shop2,shop3"
     And product productWithFields is not associated to shop shop4
     And default shop for product productWithFields is shop2
     #
@@ -205,9 +204,7 @@ Feature: Copy product from shop to shop.
       | carriers                                | []                   |
     And productWithFields and productWithFieldsCopy have different values
     And product productWithFieldsCopy is associated to shop shop1
-    And product productWithFieldsCopy is not associated to shop shop2
-    And product productWithFieldsCopy is not associated to shop shop3
-    And product productWithFieldsCopy is not associated to shop shop4
+    And product productWithFieldsCopy is not associated to shops "shop2,shop3,shop4"
     And default shop for product productWithFieldsCopy is shop1
     #
     # Duplicate for shop 3
@@ -283,9 +280,7 @@ Feature: Copy product from shop to shop.
     And productWithFields and productWithFieldsCopy3 have different values
     And productWithFieldsCopy and productWithFieldsCopy3 have different values
     And product productWithFieldsCopy3 is associated to shop shop3
-    And product productWithFieldsCopy3 is not associated to shop shop1
-    And product productWithFieldsCopy3 is not associated to shop shop2
-    And product productWithFieldsCopy3 is not associated to shop shop4
+    And product productWithFieldsCopy3 is not associated to shops "shop1,shop2,shop4"
     And default shop for product productWithFieldsCopy3 is shop3
 
   Scenario: I duplicate a product for all shops all its associated data is copied (based on created product in previous scenario)
@@ -427,9 +422,7 @@ Feature: Copy product from shop to shop.
       | carriers                                | []                    |
     And productWithFields and productWithFieldsOnAllShops have different values
     And productWithFieldsCopy and productWithFieldsOnAllShops have different values
-    And product productWithFieldsOnAllShops is associated to shop shop1
-    And product productWithFieldsOnAllShops is associated to shop shop2
-    And product productWithFieldsOnAllShops is associated to shop shop3
+    And product productWithFieldsOnAllShops is associated to shops "shop1,shop2,shop3"
     And product productWithFieldsOnAllShops is not associated to shop shop4
     # The default shop is the same as the initial one
     And default shop for product productWithFieldsOnAllShops is shop2
@@ -504,10 +497,8 @@ Feature: Copy product from shop to shop.
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
       | carriers                                | []                   |
     And productWithFields and productWithFieldsDefaultGroup have different values
-    And product productWithFieldsDefaultGroup is associated to shop shop1
-    And product productWithFieldsDefaultGroup is associated to shop shop2
-    And product productWithFieldsDefaultGroup is not associated to shop shop3
-    And product productWithFieldsDefaultGroup is not associated to shop shop4
+    And product productWithFieldsDefaultGroup is associated to shops "shop1,shop2"
+    And product productWithFieldsDefaultGroup is not associated to shops "shop3,shop4"
     # The default shop is the same as the initial one because it is part of the group
     And default shop for product productWithFieldsDefaultGroup is shop2
     #
@@ -584,8 +575,6 @@ Feature: Copy product from shop to shop.
     And productWithFields and productWithFieldsSecondGroup have different values
     And productWithFieldsCopy and productWithFieldsSecondGroup have different values
     And product productWithFieldsSecondGroup is associated to shop shop3
-    And product productWithFieldsSecondGroup is not associated to shop shop1
-    And product productWithFieldsSecondGroup is not associated to shop shop2
-    And product productWithFieldsSecondGroup is not associated to shop shop4
+    And product productWithFieldsSecondGroup is not associated to shops "shop1,shop2,shop4"
     # The default shop is shop3 as it's the first associated one in the second group
     And default shop for product productWithFieldsSecondGroup is shop3

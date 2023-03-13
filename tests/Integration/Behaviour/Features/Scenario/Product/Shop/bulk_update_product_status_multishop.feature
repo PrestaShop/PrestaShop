@@ -24,27 +24,27 @@ Feature: Copy product from shop to shop.
     And I add product "product1" to shop shop1 with following information:
       | name[en-US] | product 1 |
       | type        | standard  |
-    And I copy product product1 from shop shop1 to shop shop2
-    And I copy product product1 from shop shop1 to shop shop3
-    And I copy product product1 from shop shop1 to shop shop4
+    And I set following shops for product "product1":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     And product product1 type should be standard for shops "shop1,shop2,shop3,shop4"
     And product "product1" should be disabled for shops "shop1,shop2,shop3,shop4"
     And product "product1" should not be indexed for shops "shop1,shop2,shop3,shop4"
     And I add product "product2" to shop shop1 with following information:
       | name[en-US] | product 2 |
       | type        | standard  |
-    And I copy product product2 from shop shop1 to shop shop2
-    And I copy product product2 from shop shop1 to shop shop3
-    And I copy product product2 from shop shop1 to shop shop4
+    And I set following shops for product "product2":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     And product product2 type should be standard for shops "shop1,shop2,shop3,shop4"
     And product "product2" should be disabled for shops "shop1,shop2,shop3,shop4"
     And product "product2" should not be indexed for shops "shop1,shop2,shop3,shop4"
     And I add product "product3" to shop shop1 with following information:
       | name[en-US] | product 3 |
       | type        | standard  |
-    And I copy product product3 from shop shop1 to shop shop2
-    And I copy product product3 from shop shop1 to shop shop3
-    And I copy product product3 from shop shop1 to shop shop4
+    And I set following shops for product "product3":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     And product product3 type should be standard for shops "shop1,shop2,shop3,shop4"
     And product "product3" should be disabled for shops "shop1,shop2,shop3,shop4"
     And product "product3" should not be indexed for shops "shop1,shop2,shop3,shop4"

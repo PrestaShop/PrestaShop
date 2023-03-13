@@ -41,7 +41,9 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
 
   Scenario: Generate combinations in default shop
     When I generate combinations in shop "shop1" for product product1 using following attributes:
@@ -304,7 +306,9 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
     And I associate attribute "S" with shops "shop3"
     But attribute "S" is not associated to shops "shop4"
     And I associate attribute "M" with shops "shop3,shop4"
-    And I copy product "product2" from shop "shop3" to shop "shop4"
+    And I set following shops for product "product2":
+      | source shop | shop3       |
+      | shops       | shop3,shop4 |
     And product "product2" should have no combinations for shops "shop3,shop4"
     # Generate when attribute is missing in another shop
     When I generate combinations for product "product2" in all shops using following attributes:

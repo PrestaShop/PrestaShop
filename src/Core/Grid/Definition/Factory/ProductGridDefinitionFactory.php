@@ -412,7 +412,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             $disableLabel = $this->trans('Disable for group', [], 'Admin.Actions');
             $duplicateLabel = $this->trans('Duplicate group', [], 'Admin.Actions');
         } else {
-            $deleteRouteName = 'admin_products_v2_delete';
+            $deleteRouteName = 'admin_products_v2_delete_from_all_shops';
             $duplicateRouteName = 'admin_products_v2_duplicate_all_shops';
             $enableRouteName = 'admin_products_v2_enable_for_all_shops';
             $disableRouteName = 'admin_products_v2_disable_for_all_shops';

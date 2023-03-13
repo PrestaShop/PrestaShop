@@ -18,12 +18,18 @@ Feature: Get every image details for a product in every shop
       | name[en-US] | bottle of water |
       | type        | standard        |
     And product "product1" type should be standard
-    And I copy product product1 from shop shop1 to shop shop4
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop4 |
     And I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
     And I add new image "image2" named "some_image.jpg" to product "product1" for shop "shop1"
-    And I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1             |
+      | shops       | shop1,shop2,shop4 |
     And I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
-    And I copy product product1 from shop shop2 to shop shop3
+    When I set following shops for product "product1":
+      | source shop | shop2                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     Then product "product1" should have following images for shops "shop1,shop2,shop3":
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop2, shop3 |
