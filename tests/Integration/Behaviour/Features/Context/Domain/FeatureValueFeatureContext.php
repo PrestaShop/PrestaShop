@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Language;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueConstraintException;
@@ -201,5 +202,27 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
                 $featureValueReference
             ));
         }
+    }
+
+    /**
+     * @Then feature value :featureValueReference should exist
+     *
+     * @param string $featureValueReference
+     */
+    public function featureValueExists(string $featureValueReference): void
+    {
+        $editableFeatureValue = $this->getFeatureValue($featureValueReference);
+
+        Assert::assertEquals(
+            $this->getSharedStorage()->get($featureValueReference),
+            $editableFeatureValue->getFeatureValueId()->getValue()
+        );
+    }
+
+    private function getFeatureValue(string $featureValueReference): EditableFeatureValue
+    {
+        return $this->getQueryBus()->handle(new GetFeatureValueForEditing(
+            $this->getSharedStorage()->get($featureValueReference)
+        ));
     }
 }

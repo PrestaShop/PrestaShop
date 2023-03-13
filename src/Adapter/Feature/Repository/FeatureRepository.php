@@ -31,7 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Feature;
+use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValidator;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -56,15 +59,23 @@ class FeatureRepository extends AbstractObjectModelRepository
     protected $dbPrefix;
 
     /**
+     * @var FeatureValidator
+     */
+    private $featureValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param FeatureValidator $featureValidator
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        FeatureValidator $featureValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->featureValidator = $featureValidator;
     }
 
     public function get(FeatureId $featureId): Feature
@@ -77,6 +88,34 @@ class FeatureRepository extends AbstractObjectModelRepository
         );
 
         return $feature;
+    }
+
+    /**
+     * @param array<int, string> $localizedNames
+     * @param ShopId[] $associatedShopIds
+     *
+     * @return Feature
+     */
+    public function create(
+        array $localizedNames,
+        array $associatedShopIds
+    ): Feature {
+        $feature = new Feature();
+        $feature->name = $localizedNames;
+        $feature->id_shop_list = array_map(static function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $associatedShopIds);
+
+        $this->featureValidator->validate($feature);
+        $this->addObjectModel($feature, CannotAddFeatureException::class);
+
+        return $feature;
+    }
+
+    public function update(Feature $feature): void
+    {
+        $this->featureValidator->validate($feature);
+        $this->updateObjectModel($feature, CannotEditFeatureException::class);
     }
 
     public function delete(FeatureId $featureId): void

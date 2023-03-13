@@ -50,7 +50,9 @@ class BulkDeleteFeatureHandler extends AbstractBulkActionHandler implements Bulk
 
     public function handle(BulkDeleteFeatureCommand $command): void
     {
-        $this->handleBulkAction(array_map('intval', $command->getFeatureIds()));
+        $this->handleBulkAction(array_map(static function (FeatureId $featureId): int {
+            return $featureId->getValue();
+        }, $command->getFeatureIds()));
     }
 
     protected function handleSingleAction(int $id): void

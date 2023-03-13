@@ -25,32 +25,28 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\Command;
+namespace PrestaShop\PrestaShop\Adapter\Feature\Validate;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use Feature;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 
-class BulkDeleteFeatureCommand
+class FeatureValidator extends AbstractObjectModelValidator
 {
-    /**
-     * @var FeatureId[]
-     */
-    private $featureIds;
-
-    /**
-     * @param int[] $featureIds
-     */
-    public function __construct(array $featureIds)
+    public function validate(Feature $feature): void
     {
-        foreach ($featureIds as $featureId) {
-            $this->featureIds[] = new FeatureId($featureId);
-        }
-    }
+        $this->validateObjectModelProperty(
+            $feature,
+            'position',
+            FeatureConstraintException::class,
+            FeatureConstraintException::INVALID_POSITION
+        );
 
-    /**
-     * @return FeatureId[]
-     */
-    public function getFeatureIds(): array
-    {
-        return $this->featureIds;
+        $this->validateObjectModelLocalizedProperty(
+            $feature,
+            'name',
+            FeatureConstraintException::class,
+            FeatureConstraintException::INVALID_NAME
+        );
     }
 }

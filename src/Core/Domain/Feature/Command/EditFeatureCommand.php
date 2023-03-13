@@ -82,7 +82,10 @@ class EditFeatureCommand
     public function setLocalizedNames(array $localizedNames): self
     {
         if (empty($localizedNames)) {
-            throw new FeatureConstraintException('Feature name cannot be empty', FeatureConstraintException::EMPTY_NAME);
+            throw new FeatureConstraintException(
+                'Feature name cannot be empty',
+                FeatureConstraintException::INVALID_NAME
+            );
         }
 
         $this->localizedNames = $localizedNames;

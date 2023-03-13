@@ -242,11 +242,6 @@ class FeatureController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             FeatureConstraintException::class => [
-                FeatureConstraintException::EMPTY_NAME => $this->trans(
-                    'The field %field_name% is required at least in your default language.',
-                    'Admin.Notifications.Error',
-                    ['%field_name%' => $this->trans('Name', 'Admin.Global')]
-                ),
                 FeatureConstraintException::INVALID_NAME => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',

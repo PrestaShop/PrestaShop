@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
@@ -39,28 +40,32 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use RuntimeException;
 
 class FeatureFeatureContext extends AbstractDomainFeatureContext
 {
     /**
      * @When I create product feature :reference with specified properties:
      */
-    public function createFeature($reference, TableNode $tableNode)
+    public function createFeature(string $featureReference, TableNode $tableNode): void
     {
         $localizedData = $this->localizeByRows($tableNode);
 
-        /** @var FeatureId $featureId */
-        $featureId = $this->getCommandBus()->handle(new AddFeatureCommand(
-            $localizedData['name'],
-            isset($localizedData['shop association']) ? $this->referencesToIds($localizedData['shop association']) : []
-        ));
+        try {
+            /** @var FeatureId $featureId */
+            $featureId = $this->getCommandBus()->handle(new AddFeatureCommand(
+                $localizedData['name'],
+                isset($localizedData['shop association']) ? $this->referencesToIds($localizedData['shop association']) : []
+            ));
 
-        $this->getSharedStorage()->set($reference, $featureId->getValue());
+            $this->getSharedStorage()->set($featureReference, $featureId->getValue());
+        } catch (FeatureException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
-     * @When I update product feature :feature reference with following details:
+     * @When I update product feature :feature with following details:
      *
      * @param string $featureReference
      * @param TableNode $tableNode
@@ -98,11 +103,27 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I bulk delete product features :featureReferences
+     *
+     * @param string $featureReferences
+     */
+    public function bulkDeleteFeatures(string $featureReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkDeleteFeatureCommand($this->referencesToIds($featureReferences)));
+    }
+
+    /**
      * @Given product feature :featureReference exists
+     * @Given product feature :featureReference should exist
      */
     public function productFeatureExists(string $featureReference): void
     {
-        $this->getFeatureForEditing($featureReference);
+        $editableFeature = $this->getFeatureForEditing($featureReference);
+
+        Assert::assertSame(
+            $this->getSharedStorage()->get($featureReference),
+            $editableFeature->getFeatureId()->getValue()
+        );
     }
 
     /**
@@ -112,14 +133,19 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertFeatureDoesNotExist(string $featureReference): void
     {
+        $coughtException = null;
+
         try {
             $this->getFeatureForEditing($featureReference);
-            throw new NoExceptionAlthoughExpectedException(sprintf(
-                'Expected exception %s',
-                FeatureNotFoundException::class
-            ));
         } catch (FeatureNotFoundException $e) {
-            // FeatureNotFoundException is expected, so test is successful
+            $coughtException = $e;
+        }
+
+        if (null === $coughtException) {
+            throw new RuntimeException(sprintf(
+                'Feature %s was expected not to be found',
+                $featureReference
+            ));
         }
     }
 
@@ -150,13 +176,13 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get an error that feature name cannot be empty in default language
+     * @Then I should get an error that feature name is invalid
      */
-    public function assertLastErrorIsFeatureNameIsEmpty()
+    public function assertLastErrorIsFeatureNameIsInvalid(): void
     {
         $this->assertLastErrorIs(
             FeatureConstraintException::class,
-            FeatureConstraintException::EMPTY_NAME
+            FeatureConstraintException::INVALID_NAME
         );
     }
 

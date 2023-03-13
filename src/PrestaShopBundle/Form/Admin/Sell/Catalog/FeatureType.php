@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -63,6 +64,9 @@ class FeatureType extends AbstractType
     {
         $builder->add('name', TranslatableType::class, [
             'type' => TextType::class,
+            'constraints' => [
+                new DefaultLanguage(),
+            ],
             'options' => [
                 'constraints' => [
                     new TypedRegex([

@@ -30,14 +30,14 @@ Feature: Product feature management
       | name[en-US]      | My feature en |
       | name[fr-FR]      | My feature fr |
       | associated shops | shop1         |
-    When I update product feature feature2 reference with following details:
+    When I update product feature feature2 with following details:
       | name[en-US] | My feature en updated1 |
       | name[fr-FR] | My feature fr updated1 |
     Then product feature feature2 should have following details:
       | name[en-US] | My feature en updated1 |
       | name[fr-FR] | My feature fr updated1 |
 
-  Scenario: Creating and updating feature with empty shop association should assign the feature to current shop by default
+  Scenario: Creating and updating feature with empty shop association should assign the feature to current shop context by default
     When I create product feature "feature3" with specified properties:
       | name[en-US]      | My feature en |
       | name[fr-FR]      | My feature fr |
@@ -46,24 +46,28 @@ Feature: Product feature management
       | name[en-US]      | My feature en |
       | name[fr-FR]      | My feature fr |
       | associated shops | shop1         |
-    When I update product feature feature3 reference with following details:
+    When I update product feature feature3 with following details:
       | associated shops |  |
     Then product feature feature3 should have following details:
       | name[en-US]      | My feature en |
       | name[fr-FR]      | My feature fr |
       | associated shops | shop1         |
 
-  Scenario: Updating product feature with empty name in default language should not be allowed
+  Scenario: Creating and updating product feature with empty name in default language should not be allowed
+    When I create product feature "feature4" with specified properties:
+      | name[en-US] |               |
+      | name[fr-FR] | My feature fr |
+    Then I should get an error that feature name is invalid
     Given I create product feature "feature4" with specified properties:
       | name[en-US] | My feature en |
       | name[fr-FR] | My feature fr |
     And product feature feature4 should have following details:
       | name[en-US] | My feature en |
       | name[fr-FR] | My feature fr |
-    When I update product feature feature4 reference with following details:
+    When I update product feature feature4 with following details:
       | name[en-US] |               |
       | name[fr-FR] | My feature fr |
-    Then I should get an error that feature name cannot be empty in default language
+    Then I should get an error that feature name is invalid
     And product feature feature4 should have following details:
       | name[en-US] | My feature en |
       | name[fr-FR] | My feature fr |
@@ -72,36 +76,53 @@ Feature: Product feature management
     When I create product feature "feature5" with specified properties:
       | name[en-US] |               |
       | name[fr-FR] | My feature fr |
-    Then I should get an error that feature name cannot be empty in default language
-    And product feature feature5 should not exist
+    Then I should get an error that feature name is invalid
 
   Scenario: Delete feature which has no values
     Given I create product feature feature6 with specified properties:
       | name[en-US] | My feature en |
       | name[fr-FR] |               |
+    # this creation also checks that non-default lang name is filled with default one when its empty
     And product feature feature6 should have following details:
       | name[en-US] | My feature en |
-      | name[fr-FR] |               |
+      | name[fr-FR] | My feature en |
     When I delete product feature feature6
     Then product feature feature6 should not exist
 
-  Scenario: Deleting feature should also remove its values
-    Given I create product feature "feature7" with specified properties:
+  Scenario: Deleting feature should also remove related feature values
+    Given I create product feature feature7 with specified properties:
       | name[en-US] | My feature 7    |
-      | name[fr-FR] | My feature 7 fr |
-    And product feature feature6 should have following details:
-      | name[en-US] | My feature en |
-      | name[fr-FR] |               |
-    Then product feature feature7 should have following details:
-      | name[en-US] | My feature 7    |
-      | name[fr-FR] | My feature 7 fr |
-    When I create feature value "featureValue7" for feature "feature7" with following properties:
+    And product feature feature7 should exist
+    And I create feature value "featureValue7" for feature "feature7" with following properties:
       | value[en-US] | Earth |
-      | value[fr-FR] | Terre |
-    And feature value "featureValue3" localized value should be:
-      | locale | value |
-      | en-US  | Earth |
-      | fr-FR  | Terre |
+    And feature value featureValue7 should exist
+    And I create feature value "featureValue72" for feature "feature7" with following properties:
+      | value[en-US] | value2 |
+    And feature value featureValue72 should exist
     When I delete product feature feature7
     Then product feature feature7 should not exist
     And feature value featureValue7 should not exist
+    And feature value featureValue72 should not exist
+
+  Scenario: Bulk delete features should also remove related feature values
+    Given I create product feature feature8 with specified properties:
+      | name[en-US] | My feature 8    |
+    And I create product feature feature9 with specified properties:
+      | name[en-US] | My feature 9  |
+    And I create product feature feature10 with specified properties:
+      | name[en-US] | My feature 10    |
+    And I create feature value "featureValue8" for feature "feature8" with following properties:
+      | value[en-US] | value8 |
+    And I create feature value "featureValue9" for feature "feature9" with following properties:
+      | value[en-US] | value9 |
+    And product feature feature8 should exist
+    And feature value featureValue8 should exist
+    And product feature feature9 should exist
+    And feature value featureValue9 should exist
+    And product feature feature10 should exist
+    When I bulk delete product features "feature9,feature10"
+    Then product feature feature9 should not exist
+    And feature value featureValue9 should not exist
+    And product feature feature10 should not exist
+    But product feature feature8 should exist
+    And feature value featureValue8 should exist

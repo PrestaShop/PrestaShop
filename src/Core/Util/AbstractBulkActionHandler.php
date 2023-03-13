@@ -52,7 +52,7 @@ abstract class AbstractBulkActionHandler
             }
         }
 
-        if (empty($this->exceptions)) {
+        if (!empty($this->exceptions)) {
             throw $this->buildBulkException($this->exceptions);
         }
     }

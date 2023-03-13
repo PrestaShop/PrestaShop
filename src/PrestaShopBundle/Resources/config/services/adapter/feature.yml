@@ -6,11 +6,15 @@ services:
       $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureHandler:
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureHandler:
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand
@@ -64,4 +68,4 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository:
     autowire: true
-    public: true
+    public: false
