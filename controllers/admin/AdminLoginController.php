@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
+use PrestaShopBundle\Security\Admin\SessionRenewer;
 use Symfony\Component\HttpFoundation\IpUtils;
 
 class AdminLoginControllerCore extends AdminController
@@ -260,6 +261,8 @@ class AdminLoginControllerCore extends AdminController
                 }
 
                 $cookie->write();
+
+                $this->get(SessionRenewer::class)->renew();
 
                 // If there is a valid controller name submitted, redirect to it
                 if (isset($_POST['redirect']) && Validate::isControllerName($_POST['redirect'])) {
