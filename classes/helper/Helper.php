@@ -36,6 +36,12 @@ class HelperCore
     public $context;
     public $toolbar_scroll = false;
     public $bootstrap = false;
+    public $className;
+    public $name_controller;
+    public $shopLink;
+    public $allow_employee_form_lang;
+    public $multiple_fieldsets;
+    public $position_group_identifier;
 
     /** @var Module|null */
     public $module;
