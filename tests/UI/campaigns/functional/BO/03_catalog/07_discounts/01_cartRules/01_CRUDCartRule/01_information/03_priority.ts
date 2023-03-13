@@ -37,9 +37,7 @@ describe('BO - Catalog - Cart rules : Priority', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   const cartRulePriority2: CartRuleData = new CartRuleData({
-    dateFrom: pastDate,
     name: 'cartRulePriority2',
     priority: 2,
     discountType: 'Amount',
@@ -106,7 +104,7 @@ describe('BO - Catalog - Cart rules : Priority', async () => {
       });
     });
 
-    describe(`Create second cart rule '${cartRulePriority2.name}'`, async () => {
+    describe(`Create second cart rule '${cartRulePriority1.name}'`, async () => {
       it('should go to new cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
 
