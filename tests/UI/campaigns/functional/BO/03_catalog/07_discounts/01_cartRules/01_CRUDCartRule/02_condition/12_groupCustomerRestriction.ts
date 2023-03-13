@@ -24,7 +24,7 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_groupCustomerRestriction';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_groupCustomerRestriction';
 
 describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', async () => {
   let browserContext: BrowserContext;

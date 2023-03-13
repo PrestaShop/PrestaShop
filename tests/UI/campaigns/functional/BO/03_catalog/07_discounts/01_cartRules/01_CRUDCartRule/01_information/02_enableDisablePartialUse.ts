@@ -27,7 +27,7 @@ import PaymentMethods from '@data/demo/paymentMethods';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_enableDisablePartialUse';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_enableDisablePartialUse';
 
 describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled partial use', async () => {
   let browserContext: BrowserContext;
@@ -459,7 +459,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
     });
 
     describe('Delete the created cart rule', async () => {
-      it('should bulk delete cart rule', async function () {
+      it('should delete cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
         const deleteTextResult = await cartRulesPage.deleteCartRule(page);
