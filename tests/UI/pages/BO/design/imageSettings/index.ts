@@ -107,7 +107,6 @@ class ImageSettings extends BOBasePage {
 
     this.pageTitle = 'Image Settings • ';
     this.messageThumbnailsRegenerated = 'The thumbnails were successfully regenerated.';
-    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
