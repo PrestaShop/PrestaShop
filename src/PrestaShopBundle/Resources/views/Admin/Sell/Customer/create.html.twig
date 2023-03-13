@@ -32,4 +32,11 @@
   {{ parent() }}
 
   <script src="{{ asset('themes/new-theme/public/customer_form.bundle.js') }}"></script>
+  <script>
+    var data = {
+      defaultGroups: {{ defaultGroups|json_encode() }},
+      customerGroupId: {{ customerGroupId }},
+      guestGroupId: {{ guestGroupId }},
+    }
+  </script>
 {% endblock %}

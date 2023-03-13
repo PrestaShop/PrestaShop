@@ -36,6 +36,7 @@ use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -43,6 +44,8 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -88,6 +91,11 @@ class CustomerType extends TranslatorAwareType
     private $configuration;
 
     /**
+     * @var FormCloner
+     */
+    protected $formCloner;
+
+    /**
      * @param array $genderChoices
      * @param array $groupChoices
      * @param array $riskChoices
@@ -103,7 +111,8 @@ class CustomerType extends TranslatorAwareType
         array $riskChoices,
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
         $this->genderChoices = $genderChoices;
@@ -112,6 +121,7 @@ class CustomerType extends TranslatorAwareType
         $this->riskChoices = $riskChoices;
         $this->isPartnerOffersEnabled = $isPartnerOffersEnabled;
         $this->configuration = $configuration;
+        $this->formCloner = $formCloner;
     }
 
     /**
@@ -119,9 +129,50 @@ class CustomerType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // Initialize password strength configuration set in Security section of backoffice
         $minScore = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE);
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
+
+        /*
+         * Initialize password constraints. When creating a customer, we are utilizing full constraints.
+         * When editing a customer, we use only length constraints, to validate the field ONLY if something
+         * was provided and the merchant actually wants to change the password.
+         */
+        $passwordConstraints = [
+            new Length([
+                'max' => Password::MAX_LENGTH,
+                'maxMessage' => $this->trans(
+                    'This field cannot be longer than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => Password::MAX_LENGTH]
+                ),
+                'min' => Password::MIN_LENGTH,
+                'minMessage' => $this->trans(
+                    'This field cannot be shorter than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => Password::MIN_LENGTH]
+                ),
+            ]),
+        ];
+        if ($options['is_password_required']) {
+            $passwordConstraints[] = new NotBlank([
+                'message' => $this->trans('Password is required.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
+        // We show the guest field only when creating the customer AND guest checkout is enabled.
+        if ($options['show_guest_field'] === true) {
+            $builder
+                ->add('is_guest', SwitchType::class, [
+                    'label' => $this->trans('Guest account', 'Admin.Global'),
+                    'help' => $this->trans(
+                        'Quick customers with no password, who don\'t have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.',
+                        'Admin.Orderscustomers.Help'
+                    ),
+                    'required' => false,
+                ]);
+        }
 
         $builder
             ->add('gender_id', ChoiceType::class, [
@@ -202,6 +253,7 @@ class CustomerType extends TranslatorAwareType
                     'data-minscore' => $minScore,
                     'data-minlength' => $minLength,
                     'data-maxlength' => $maxLength,
+                    'autocomplete' => 'new-password',
                 ],
                 'help' => $this->trans(
                     'Password should be at least %length% characters long.',
@@ -210,22 +262,7 @@ class CustomerType extends TranslatorAwareType
                         '%length%' => Password::MIN_LENGTH,
                     ]
                 ),
-                'constraints' => [
-                    new Length([
-                        'max' => Password::MAX_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => Password::MAX_LENGTH]
-                        ),
-                        'min' => Password::MIN_LENGTH,
-                        'minMessage' => $this->trans(
-                            'This field cannot be shorter than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => Password::MIN_LENGTH]
-                        ),
-                    ]),
-                ],
+                'constraints' => $passwordConstraints,
                 'required' => $options['is_password_required'],
             ])
             ->add('birthday', BirthdayType::class, [
@@ -358,6 +395,20 @@ class CustomerType extends TranslatorAwareType
                 ])
             ;
         }
+
+        // We add a listener that will make password field not required, if we want to create a guest
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $formData = $event->getData();
+
+            // If is_guest was provided and it's yes, we make the field optional (removing the constraints)
+            if (isset($formData['is_guest']) && $formData['is_guest'] == 1) {
+                $form->add($this->formCloner->cloneForm($form->get('password'), [
+                    'required' => false,
+                    'constraints' => [],
+                ]));
+            }
+        });
     }
 
     /**
@@ -370,8 +421,10 @@ class CustomerType extends TranslatorAwareType
                 // password is configurable
                 // so it may be optional when editing customer
                 'is_password_required' => true,
+                'show_guest_field' => false,
             ])
             ->setAllowedTypes('is_password_required', 'bool')
+            ->setAllowedTypes('show_guest_field', 'bool')
         ;
     }
 }

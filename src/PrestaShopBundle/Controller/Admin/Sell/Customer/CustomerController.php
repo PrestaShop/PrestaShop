@@ -161,8 +161,12 @@ class CustomerController extends AbstractAdminController
         }
 
         $this->addGroupSelectionToRequest($request);
-
-        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
+        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm(
+            [],
+            [
+                'show_guest_field' => (bool) $this->get('prestashop.adapter.legacy.configuration')->get('PS_GUEST_CHECKOUT_ENABLED'),
+            ]
+        );
         $customerForm->handleRequest($request);
 
         $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
@@ -189,6 +193,9 @@ class CustomerController extends AbstractAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
+        // Get default groups for JS purposes
+        $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
             'customerForm' => $customerForm->createView(),
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
@@ -197,6 +204,13 @@ class CustomerController extends AbstractAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('New customer', 'Admin.Navigation.Menu'),
+            'defaultGroups' => [
+                $defaultGroups->getVisitorsGroup()->getId(),
+                $defaultGroups->getGuestsGroup()->getId(),
+                $defaultGroups->getCustomersGroup()->getId(),
+            ],
+            'customerGroupId' => $defaultGroups->getCustomersGroup()->getId(),
+            'guestGroupId' => $defaultGroups->getGuestsGroup()->getId(),
         ]);
     }
 
@@ -217,6 +231,7 @@ class CustomerController extends AbstractAdminController
         $customerInformation = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
         $customerFormOptions = [
             'is_password_required' => false,
+            'show_guest_field' => false,
         ];
         try {
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
