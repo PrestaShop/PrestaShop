@@ -7833,24 +7833,20 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Get the default category according to the shop.
+     * Get the default category id according to the shop.
      *
-     * @return array{id_category_default: int}|int
+     * @return int
      */
-    public function getDefaultCategory()
+    public function getDefaultCategory(): int
     {
         $default_category = Db::getInstance()->getValue(
             'SELECT product_shop.`id_category_default`
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
-            WHERE p.`id_product` = ' . (int) $this->id
+            WHERE p.`id_product` = ' . (int)$this->id
         );
 
-        if (!$default_category) {
-            return ['id_category_default' => Context::getContext()->shop->id_category];
-        } else {
-            return (int) $default_category;
-        }
+        return $default_category ? (int)$default_category : Context::getContext()->shop->id_category;
     }
 
     /**
