@@ -92,7 +92,7 @@ class WebserviceKeyType extends TranslatorAwareType
                     '%s<br>%s',
                     $this->trans('Webservice account key.', 'Admin.Advparameters.Feature'),
                     $this->trans(
-                        'Key should be at least %length% characters long.',
+                        'The key must be %length% characters long.',
                         'Admin.Notifications.Info',
                         [
                             '%length%' => Key::LENGTH,
@@ -108,8 +108,11 @@ class WebserviceKeyType extends TranslatorAwareType
                         'min' => Key::LENGTH,
                         'max' => Key::LENGTH,
                         'exactMessage' => $this->trans(
-                            'Key length must be 32 character long.',
-                            'Admin.Advparameters.Notification'
+                            'Key length must be %length% characters long.',
+                            'Admin.Advparameters.Notification',
+                            [
+                                '%length%' => Key::LENGTH,
+                            ]
                         ),
                     ]),
                     new TypedRegex([
