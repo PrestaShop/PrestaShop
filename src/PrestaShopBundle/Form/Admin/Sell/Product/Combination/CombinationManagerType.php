@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form type is not really used for product form data. It is actually rendered specifically via its form theme
@@ -45,9 +47,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class CombinationManagerType extends TranslatorAwareType
 {
+    /**
+     * @var FeatureInterface
+     */
+    private $multiStoreFeature;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FeatureInterface $multiStoreFeature
+    ) {
+        parent::__construct($translator, $locales);
+        $this->multiStoreFeature = $multiStoreFeature;
+    }
+
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['productId'] = $options['product_id'];
+        $view->vars['isMultiStoreActive'] = $this->multiStoreFeature->isActive();
     }
 
     public function configureOptions(OptionsResolver $resolver)

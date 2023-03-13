@@ -149,17 +149,34 @@ class LogoUploader
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                $isMultipleImageFeatureEnabled = $this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
                 if (ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
                     if (!copy($tmpName, $this->imageDirection . $logoName)) {
                         throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                     }
-                } elseif (!$isMultipleImageFeatureEnabled && !ImageManager::resize($tmpName, $this->imageDirection . $logoName)) {
-                    throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 } else {
-                    foreach ($this->imageFormatConfiguration->getGenerationFormats() as $imageFormat) {
-                        $logoName = $this->getLogoName($logoPrefix, '.' . $imageFormat);
-                        if (!ImageManager::resize($tmpName, $this->imageDirection . $logoName, null, null, $imageFormat, true)) {
+                    /*
+                    * Let's resolve which formats we will use for image generation.
+                    * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+                    *
+                    * In case of .jpg images, the actual format inside is decided by ImageManager.
+                    */
+                    if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+                        $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
+                    } else {
+                        $configuredImageFormats = ['jpg'];
+                    }
+                    foreach ($configuredImageFormats as $imageFormat) {
+                        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                        // For webp and avif extensions, we want it to follow our command and ignore the original format.
+                        $forceFormat = ($imageFormat !== 'jpg');
+                        if (!ImageManager::resize(
+                            $tmpName,
+                            $this->imageDirection . $this->getLogoName($logoPrefix, '.' . $imageFormat),
+                            null,
+                            null,
+                            $imageFormat,
+                            $forceFormat
+                        )) {
                             throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                         }
                     }

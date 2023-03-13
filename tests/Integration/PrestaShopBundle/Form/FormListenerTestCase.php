@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
+namespace Tests\Integration\PrestaShopBundle\Form;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

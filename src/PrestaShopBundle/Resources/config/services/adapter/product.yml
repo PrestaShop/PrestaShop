@@ -345,24 +345,11 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
 
-  PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\CopyProductToShopHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand
-
   PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\DeleteProductFromShopsHandler:
     autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
-
-  PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\BulkDeleteProductFromShopsHandler:
-    autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
     autowire: true
@@ -389,6 +376,13 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\SetProductShopsHandler:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler:
     autowire: true
@@ -439,3 +433,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInformationFiller:
     tags: [ 'core.product_filler' ]
+
+  PrestaShop\PrestaShop\Adapter\Product\ProductDeleter:
+    autowire: true
+    public: false

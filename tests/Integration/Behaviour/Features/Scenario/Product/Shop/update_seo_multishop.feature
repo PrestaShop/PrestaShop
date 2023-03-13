@@ -26,7 +26,9 @@ Feature: Update product SEO options from Back Office (BO)
       | link_rewrite[en-US]     | magic-staff                  |
       | redirect_type           | 404                          |
       | redirect_target         |                              |
-    And I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" localized "meta_title" for shops "shop1,shop2" should be:
       | locale | value                  |
       | en-US  | magic staff meta title |
@@ -38,8 +40,7 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  | magic-staff |
     And product "product1" should have following seo options for shops "shop1,shop2":
       | redirect_type   | 404         |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product SEO options for specific shop
     When I update product "product1" for shop "shop2" with following values:
@@ -70,8 +71,7 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  | cool-magic-staff |
     And product "product1" should have following seo options for shops "shop2":
       | redirect_type   | 301-category |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product SEO options for all associated shop
     When I update product "product1" for all shops with following values:
@@ -91,8 +91,7 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  | cool-magic-staff |
     And product "product1" should have following seo options for shops "shop1,shop2":
       | redirect_type   | 301-category |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product SEO options for single shop and right after for all shops
     When I update product "product1" for shop "shop2" with following values:
@@ -122,8 +121,7 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  | cool-magic-staff |
     And product "product1" should have following seo options for shops "shop2":
       | redirect_type   | 301-category |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product SEO options for all shops and right after for single shops
     When I update product "product1" for all shops with following values:
@@ -148,5 +146,4 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  | cool-magic-staff |
     And product "product1" should have following seo options for shops "shop1,shop2":
       | redirect_type   | 301-category |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shop "shop3,shop4"

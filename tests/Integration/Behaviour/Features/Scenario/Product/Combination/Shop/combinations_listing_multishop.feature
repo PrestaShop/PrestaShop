@@ -39,7 +39,9 @@ Feature: List attribute combinations for product in Back Office (BO) of multiple
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
-    And I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     When I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |

@@ -37,6 +37,9 @@ export default {
   productLocalizedNameInput: 'input[name^="product[header][name]"]',
   productLocalizedLinkRewriteInput: 'input[name^="product[seo][link_rewrite]"]',
   productTypePreview: '.product-type-preview',
+  summaryTotalQuantityContainer: '.product-field-preview[data-role="quantity"]',
+  summaryTotalQuantity: '.product-field-preview[data-role="quantity"] .product-total-quantity',
+  summaryTotalQuantityLabel: '.product-field-preview[data-role="quantity"] .product-total-quantity-label',
   productType: {
     headerSelector: '#product_header_type',
     headerPreviewButton: '.product-type-preview',

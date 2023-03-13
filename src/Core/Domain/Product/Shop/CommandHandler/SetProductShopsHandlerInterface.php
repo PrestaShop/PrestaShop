@@ -24,55 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-
-/**
- * Remove product association with a Shop.
- */
-class DeleteProductFromShopsCommand
+interface SetProductShopsHandlerInterface
 {
-    /**
-     * @var ProductId
-     */
-    private $productId;
-
-    /**
-     * @var ShopId[]
-     */
-    private $shopIds;
-
-    /**
-     * @param int $productId
-     * @param int[] $shopIds
-     */
-    public function __construct(
-        int $productId,
-        array $shopIds
-    ) {
-        $this->productId = new ProductId($productId);
-        foreach ($shopIds as $shopId) {
-            $this->shopIds[] = new ShopId($shopId);
-        }
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return ShopId[]
-     */
-    public function getShopIds(): array
-    {
-        return $this->shopIds;
-    }
+    public function handle(SetProductShopsCommand $command): void;
 }

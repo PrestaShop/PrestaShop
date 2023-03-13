@@ -558,7 +558,11 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType:
     arguments:
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
+      $router: "@router"
+      $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:

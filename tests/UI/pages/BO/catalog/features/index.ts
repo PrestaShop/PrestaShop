@@ -52,6 +52,12 @@ class Features extends BOBasePage {
 
   private readonly tableColumnActionsViewLink: (row: number) => string;
 
+  private readonly tableColumnActionsDropDownButton: (row: number) => string;
+
+  private readonly tableColumnActionsEditLink: (row: number) => string;
+
+  private readonly tableColumnActionsDeleteLink: (row: number) => string;
+
   private readonly paginationActiveLabel: string;
 
   private readonly paginationDiv: string;
@@ -79,6 +85,8 @@ class Features extends BOBasePage {
   private readonly selectAllLink: string;
 
   private readonly bulkDeleteLink: string;
+
+  private readonly deleteModalButtonYes: string;
 
   /**
    * @constructs
@@ -125,6 +133,9 @@ class Features extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnActionsDropDownButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} li a.edit`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActions(row)} li a.delete`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
@@ -148,6 +159,9 @@ class Features extends BOBasePage {
 
     // Growl message
     this.growlMessageBlock = '#growls .growl-message';
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
   }
 
   /* Header methods */
@@ -249,6 +263,32 @@ class Features extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 
+  /**
+   * Click on edit feature
+   * @param page {Page} Browser tab
+   * @param row {number} Feature row in table
+   * @return {Promise<void>}
+   */
+  async clickOnEditFeature(page: Page, row: number): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.tableColumnActionsDropDownButton(row));
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete feature
+   * @param page {Page} Browser tab
+   * @param row {number} Feature row in table
+   * @return {Promise<string>}
+   */
+  async deleteFeature(page: Page, row: number): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.tableColumnActionsDropDownButton(row));
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsDeleteLink(row));
+
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
   /* Helper card methods */
   /**
    * @override
@@ -280,7 +320,7 @@ class Features extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getHelpDocumentURL(page: Page): Promise<string|null> {
+  async getHelpDocumentURL(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.helpCardLink, 'href');
   }
 
@@ -418,7 +458,7 @@ class Features extends BOBasePage {
    * @param newPosition {number} New position to change
    * @return {Promise<string|null>}
    */
-  async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string|null> {
+  async changePosition(page: Page, actualPosition: number, newPosition: number): Promise<string | null> {
     await this.dragAndDrop(
       page,
       this.tableColumnPosition(actualPosition),

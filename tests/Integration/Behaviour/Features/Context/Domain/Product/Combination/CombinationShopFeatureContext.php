@@ -33,27 +33,27 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationS
 class CombinationShopFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
-     * @Then /^combinations "(.*)" are not associated to shop "(.*)"$/
+     * @Then combinations :combinationReferences are not associated to shop(s) :shopReferences
      *
      * @param string $combinationReferences
-     * @param string $shopReference
+     * @param string $shopReferences
      */
-    public function checkNoShopAssociation(string $combinationReferences, string $shopReference): void
+    public function checkNoShopAssociation(string $combinationReferences, string $shopReferences): void
     {
-        $shopId = $this->getSharedStorage()->get($shopReference);
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            foreach (explode(',', $combinationReferences) as $combinationReference) {
+                $caughtException = null;
+                try {
+                    $this->getCombinationForEditing($combinationReference, $shopId);
+                } catch (CombinationShopAssociationNotFoundException $e) {
+                    // We catch CombinationShopAssociationNotFoundException specifically because it is thrown first if the combination association is not thrown
+                    // If it is present but not the product association ProductShopAssociationNotFoundException but it only ensure product's association was removed
+                    // not that all combinations associations have been correctly cleared
+                    $caughtException = $e;
+                }
 
-        foreach (explode(',', $combinationReferences) as $combinationReference) {
-            $caughtException = null;
-            try {
-                $this->getCombinationForEditing($combinationReference, $shopId);
-            } catch (CombinationShopAssociationNotFoundException $e) {
-                // We catch CombinationShopAssociationNotFoundException specifically because it is thrown first if the combination association is not thrown
-                // If it is present but not the product association ProductShopAssociationNotFoundException but it only ensure product's association was removed
-                // not that all combinations associations have been correctly cleared
-                $caughtException = $e;
+                Assert::assertNotNull($caughtException);
             }
-
-            Assert::assertNotNull($caughtException);
         }
     }
 

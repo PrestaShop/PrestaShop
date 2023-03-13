@@ -304,7 +304,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         $products = $this->getEntitiesFromGrid();
         $initialEntityCount = $products->count();
 
-        $this->deleteEntityFromPage('admin_products_v2_delete', ['productId' => $productId]);
+        $this->deleteEntityFromPage('admin_products_v2_delete_from_all_shops', ['productId' => $productId]);
 
         $newProducts = $this->getEntitiesFromGrid();
         $this->assertCount($initialEntityCount - 1, $newProducts);

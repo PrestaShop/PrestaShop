@@ -41,7 +41,9 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" should have following options for shops "shop1,shop2":
       | product option      | value        |
       | visibility          | catalog      |
@@ -102,8 +104,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | new           |
       | show_condition      | true          |
       | manufacturer        | graphicCorner |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product search indexation related values in different shops
     Given product "product1" should not be indexed for shops "shop1,shop2"

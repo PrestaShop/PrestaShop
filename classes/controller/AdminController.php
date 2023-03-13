@@ -505,7 +505,7 @@ class AdminControllerCore extends Controller
             4 => $this->trans('Successful update', [], 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success'),
-            7 => $this->trans('The image was successfully deleted.', [], 'Admin.Notifications.Success'),
+            7 => $this->trans('Image successfully deleted.', [], 'Admin.Notifications.Success'),
             8 => $this->trans('The module was successfully downloaded.', [], 'Admin.Modules.Notification'),
             9 => $this->trans('The thumbnails were successfully regenerated.', [], 'Admin.Notifications.Success'),
             10 => $this->trans('The message was successfully sent to the customer.', [], 'Admin.Orderscustomers.Notification'),
@@ -2573,17 +2573,17 @@ class AdminControllerCore extends Controller
         $helper->simple_header = $this->list_simple_header;
         $helper->bulk_actions = $this->bulk_actions;
         $helper->currentIndex = self::$currentIndex;
-        if (isset($helper->className)) {
+        if ($helper->className === null) {
             $helper->className = $this->className;
         }
         $helper->table = $this->table;
-        if (isset($helper->name_controller)) {
+        if ($helper->name_controller === null) {
             $helper->name_controller = Tools::getValue('controller');
         }
         $helper->orderBy = $this->_orderBy;
         $helper->orderWay = $this->_orderWay;
         $helper->listTotal = $this->_listTotal;
-        if (isset($helper->shopLink)) {
+        if ($helper->shopLink === null) {
             $helper->shopLink = $this->shopLink;
         }
         $helper->shopLinkType = $this->shopLinkType;
@@ -2598,15 +2598,15 @@ class AdminControllerCore extends Controller
         $helper->ajax_params = isset($this->ajax_params) ? $this->ajax_params : null;
         // @phpstan-ignore-next-line
         $helper->default_form_language = $this->default_form_language;
-        if (isset($helper->allow_employee_form_lang)) {
+        if ($helper->allow_employee_form_lang === null) {
             $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
         }
-        if (isset($helper->multiple_fieldsets)) {
+        if ($helper->multiple_fieldsets === null) {
             $helper->multiple_fieldsets = $this->multiple_fieldsets;
         }
         $helper->row_hover = $this->row_hover;
         $helper->position_identifier = $this->position_identifier;
-        if (isset($helper->position_group_identifier)) {
+        if ($helper->position_group_identifier === null) {
             $helper->position_group_identifier = $this->position_group_identifier;
         }
         // @phpstan-ignore-next-line

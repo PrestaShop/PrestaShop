@@ -25,7 +25,9 @@ Feature: Update product basic information from Back Office (BO)
       | name[en-US]              | magic staff              |
       | description[en-US]       | such a super magic staff |
       | description_short[en-US] | super magic staff        |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" localized "name" for shops "shop1,shop2" should be:
       | locale | value       |
       | en-US  | magic staff |
@@ -35,8 +37,7 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" for shops "shop1,shop2" should be:
       | locale | value             |
       | en-US  | super magic staff |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product basic information for specific shop
     When I update product "product1" for shop "shop2" with following values:
@@ -61,8 +62,7 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" for shops "shop2" should be:
       | locale | value            |
       | en-US  | cool magic staff |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product basic information for all associated shop
     When I update product "product1" for all shops with following values:
@@ -78,8 +78,7 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" for shops "shop1,shop2" should be:
       | locale | value            |
       | en-US  | cool magic staff |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update some fields for single shop and right after for all shops
     When I update product "product1" for shop "shop2" with following values:
@@ -102,8 +101,7 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" for shops "shop1,shop2" should be:
       | locale | value             |
       | en-US  | weird magic staff |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update some fields for all shops and right after for single shops
     When I update product "product1" for all shops with following values:
@@ -123,5 +121,4 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" for shops "shop2" should be:
       | locale | value             |
       | en-US  | weird magic staff |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"

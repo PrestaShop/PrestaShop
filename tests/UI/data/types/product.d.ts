@@ -60,8 +60,10 @@ type ProductCustomization = {
 };
 
 type ProductDetails = {
+  image:string
   name: string
   price: number
+  quantity: number
   summary: string
   description: string
   shipping?: string

@@ -17,6 +17,9 @@
     "// Specific test": "Script to run a specific test/folder",
     "test:specific": "ts-mocha --recursive --file utils/setup.ts campaigns/$TEST_PATH",
     "test:specific:fast-fail": "ts-mocha --bail --recursive --file utils/setup.ts campaigns/$TEST_PATH",
+    "// CLDR": "Scripts to run CLDR tests",
+    "test:cldr": "TEST_PATH='cldr/**/*.ts' npm run test:specific",
+    "test:cldr:fast-fail": "TEST_PATH='cldr/**/*.ts' npm run test:specific:fast-fail",
     "// Sanity": "Scripts to run sanity tests",
     "test:sanity": "TEST_PATH='sanity/**/*.{ts,js}' npm run test:specific",
     "test:sanity:fast-fail": "TEST_PATH='sanity/**/*.{ts,js}' npm run test:specific:fast-fail",
@@ -24,6 +27,8 @@
     "test:sanity:productV2:fast-fail": "TEST_PATH='productV2/sanity/**/*.{ts,js}' npm run test:specific:fast-fail",
     "// Functional": "Scripts to run functional tests",
     "test:functional": "TEST_PATH='functional/**/*.{ts,js}' npm run test:specific",
+    "// Functional API": "Scripts to run functional API tests",
+    "test:functional:API": "TEST_PATH='functional/API/**/*.ts' npm run test:specific",
     "// Functional BO": "Scripts to run functional BO tests",
     "test:functional:BO": "TEST_PATH='functional/BO/**/*.{ts,js}' npm run test:specific",
     "test:functional:BO:login": "TEST_PATH='functional/BO/00_login/**/*.{ts,js}' npm run test:specific",
@@ -69,7 +74,7 @@
     "// Regression tests": "Scripts to run regression tests",
     "test:regression": "TEST_PATH='regression/**/*.{ts,js}' npm run test:specific",
     "// All tests": "Scripts to run all campaigns",
-    "test:all": "ts-mocha --recursive --file utils/setup.ts campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
+    "test:all": "ts-mocha --recursive --file utils/setup.ts campaigns/cldr/* campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
   },
   "_moduleAliases": {
     "@pages": "pages",

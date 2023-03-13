@@ -27,15 +27,15 @@ Feature: Update product image from Back Office (BO)
       | type        | standard       |
     And product "product1" type should be standard
     And product "product1" should have no images
-    And I copy product product1 from shop shop1 to shop shop2
-    And I copy product product1 from shop shop1 to shop shop3
     And product "product1" should have following cover "http://myshop.com/img/p/{no_picture}-cart_default.jpg" for shops "shop1"
-    And product "product1" should have following cover "http://myshop.com/img/p/{no_picture}-cart_default.jpg" for shops "shop2"
-    And product "product1" should have following cover "http://myshop.com/img/p/{no_picture}-cart_default.jpg" for shops "shop3"
     When I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
-    And I copy product product1 from shop shop1 to shop shop3
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop3 |
     When I add new image "image2" named "logo.jpg" to product "product1" for shop "shop1"
-    And I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1             |
+      | shops       | shop1,shop2,shop3 |
     And product "product1" should have following images for shops "shop1,shop2,shop3":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops             |
       | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1,shop2,shop3 |

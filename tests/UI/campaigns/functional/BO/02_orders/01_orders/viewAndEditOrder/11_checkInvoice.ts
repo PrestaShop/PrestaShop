@@ -67,7 +67,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfProducts: number = 0;
-  let filePath: string|null;
+  let filePath: string | null;
   let fileName: string = '';
   let orderReference: string = '';
 
@@ -1115,7 +1115,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
               filePath,
               `${productWithEcoTax.name}, ,`
               + `€${productWithEcoTax.price.toFixed(2)},,`
-              + `Ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,`
+              + `ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,`
               + '1, ,'
               + `€${productWithEcoTax.price.toFixed(2)}`,
             );

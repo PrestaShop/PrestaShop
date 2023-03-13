@@ -2875,32 +2875,53 @@ class AdminProductsControllerCore extends AdminController
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
+
+                    // Should we generate high DPI images?
                     $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
                     $sfContainer = SymfonyContainer::getInstance();
-                    $isMultipleImageFormatFeatureEnabled = $sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
-                    $imageFormatsList = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
+
+                    /*
+                    * Let's resolve which formats we will use for image generation.
+                    * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+                    *
+                    * In case of .jpg images, the actual format inside is decided by ImageManager.
+                    */
+                    if ($sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+                        $configuredImageFormats = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
+                    } else {
+                        $configuredImageFormats = ['jpg'];
+                    }
                     foreach ($imagesTypes as $imageType) {
-                        if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                            $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
-
-                            continue;
-                        }
-
-                        if ($generate_hight_dpi_images) {
-                            if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
+                        foreach ($configuredImageFormats as $imageFormat) {
+                            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                            // For webp and avif extensions, we want it to follow our command and ignore the original format.
+                            $forceFormat = ($imageFormat !== 'jpg');
+                            if (!ImageManager::resize(
+                                $file['save_path'],
+                                $new_path . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
+                                $imageType['width'],
+                                $imageType['height'],
+                                $imageFormat,
+                                $forceFormat
+                            )) {
                                 $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
 
                                 continue;
                             }
-                        }
 
-                        if ($isMultipleImageFormatFeatureEnabled) {
-                            foreach ($imageFormatsList as $imageFormat) {
-                                ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, $imageType['width'], $imageType['height'], $imageFormat);
+                            if ($generate_hight_dpi_images) {
+                                if (!ImageManager::resize(
+                                    $file['save_path'],
+                                    $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
+                                    (int) $imageType['width'] * 2,
+                                    (int) $imageType['height'] * 2,
+                                    $imageFormat,
+                                    $forceFormat
+                                )) {
+                                    $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
 
-                                if ($generate_hight_dpi_images) {
-                                    ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $imageFormat);
+                                    continue;
                                 }
                             }
                         }

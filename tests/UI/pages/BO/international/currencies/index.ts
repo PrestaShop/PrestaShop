@@ -14,6 +14,8 @@ class Currencies extends LocalizationBasePage {
 
   public readonly successfulUpdateStatusMessage: string;
 
+  public readonly cannotDisableDefaultCurrencyMessage: string;
+
   private readonly newCurrencyLink: string;
 
   private readonly gridPanel: string;
@@ -79,6 +81,7 @@ class Currencies extends LocalizationBasePage {
 
     this.pageTitle = 'Currencies • ';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.cannotDisableDefaultCurrencyMessage = 'You cannot disable the default currency';
 
     // Header Selectors
     this.newCurrencyLink = '#page-header-desc-configuration-add';

@@ -32,8 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\BulkDeleteProductFromShopsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DeleteProductFeatureContext extends AbstractProductFeatureContext
@@ -43,15 +41,9 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $reference
      */
-    public function deleteProduct(string $reference): void
+    public function deleteProductFromDefaultShop(string $reference): void
     {
-        try {
-            $this->getCommandBus()->handle(new DeleteProductCommand(
-                $this->getSharedStorage()->get($reference)
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+        $this->deleteProduct($reference, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
     /**
@@ -59,18 +51,9 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param TableNode $productsList
      */
-    public function bulkDeleteProducts(TableNode $productsList): void
+    public function bulkDeleteProductsFromDefaultShop(TableNode $productsList): void
     {
-        $productIds = [];
-        foreach ($productsList->getColumnsHash() as $productInfo) {
-            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
-        }
-
-        try {
-            $this->getCommandBus()->handle(new BulkDeleteProductCommand($productIds));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+        $this->bulkDeleteProducts($productsList, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
     /**
@@ -80,20 +63,40 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
      */
     public function deleteProductFromShops(string $reference, string $shopReferences): void
     {
-        $shopReferences = explode(',', $shopReferences);
-        $shopIds = [];
-        foreach ($shopReferences as $shopReference) {
-            $shopIds[] = $this->getSharedStorage()->get(trim($shopReference));
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            try {
+                $this->getCommandBus()->handle(new DeleteProductCommand(
+                    $this->getSharedStorage()->get($reference),
+                    ShopConstraint::shop($shopId)
+                ));
+            } catch (ProductException $e) {
+                $this->setLastException($e);
+            }
         }
+    }
 
-        try {
-            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand(
-                $this->getSharedStorage()->get($reference),
-                $shopIds
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+    /**
+     * @When I delete product ":productReference" from shop group ":shopGroupReference"
+     *
+     * @param string $productReference
+     * @param string $shopGroupReference
+     */
+    public function deleteProductFromShopGroup(string $productReference, string $shopGroupReference): void
+    {
+        $this->deleteProduct(
+            $productReference,
+            ShopConstraint::shopGroup($this->getSharedStorage()->get($shopGroupReference))
+        );
+    }
+
+    /**
+     * @When I delete product ":productReference" from all shops
+     *
+     * @param string $productReference
+     */
+    public function deleteProductFromAllShops(string $productReference): void
+    {
+        $this->deleteProduct($productReference, ShopConstraint::allShops());
     }
 
     /**
@@ -136,10 +139,36 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteProductFromShopsCommand(
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand(
                 $productIds,
                 $shopConstraint
             ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function deleteProduct(string $reference, ShopConstraint $shopConstraint): void
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductCommand(
+                $this->getSharedStorage()->get($reference),
+                $shopConstraint
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function bulkDeleteProducts(TableNode $productsList, ShopConstraint $shopConstraint): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand($productIds, $shopConstraint));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }

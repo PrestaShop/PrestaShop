@@ -158,12 +158,22 @@ export default {
    * @param browser {Browser} Browser given
    * @returns {Promise<Page>}
    */
-  async getLastOpenedTab(browser: Browser): Promise<Page> {
+  async getLastOpenedTab(browser: Browser): Promise<Page | null> {
     // Get contexts
     const contexts = browser.contexts();
 
+    // Return null if no context found
+    if (contexts.length === 0) {
+      return null;
+    }
+
     // Get pages from last created context
     const tabs = contexts[contexts.length - 1].pages();
+
+    // Return null if no tabs found
+    if (tabs.length === 0) {
+      return null;
+    }
 
     return tabs[tabs.length - 1];
   },

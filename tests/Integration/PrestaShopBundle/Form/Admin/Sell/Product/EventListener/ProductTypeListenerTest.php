@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
+namespace Tests\Integration\PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
@@ -35,6 +35,7 @@ use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
 use PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Tests\Integration\PrestaShopBundle\Form\FormListenerTestCase;
 use Tests\Integration\PrestaShopBundle\Form\TestProductFormType;
 
 class ProductTypeListenerTest extends FormListenerTestCase

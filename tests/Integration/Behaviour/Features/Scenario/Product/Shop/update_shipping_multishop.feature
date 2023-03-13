@@ -63,7 +63,9 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[en-US] | product out of stock        |
       | delivery time out of stock notes[fr-FR] | produit en rupture de stock |
       | carriers                                | [carrier1,carrier2]         |
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product product1 should have following shipping information for shops "shop1,shop2":
       | width                                   | 10.5                        |
       | height                                  | 6                           |
@@ -76,8 +78,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[en-US] | product out of stock        |
       | delivery time out of stock notes[fr-FR] | produit en rupture de stock |
       | carriers                                | [carrier1,carrier2]         |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product shipping information for a specific shop
     When I update product "product1" for shop "shop2" with following values:
@@ -118,8 +119,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[en-US] | product out of stock        |
       | delivery time out of stock notes[fr-FR] | produit en rupture de stock |
       | carriers                                | [carrier1,carrier2]         |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shops "shop3,shop4"
 
   Scenario: I update product shipping information for all associated shops
     When I update product "product1" for all shops with following values:
@@ -147,5 +147,4 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[en-US] | not-available |
       | delivery time out of stock notes[fr-FR] | no-ok         |
       | carriers                                | [carrier2]    |
-    And product product1 is not associated to shop shop3
-    And product product1 is not associated to shop shop4
+    And product product1 is not associated to shop "shop3,shop4"
