@@ -229,7 +229,7 @@ class AdminAccessControllerCore extends AdminController
                 $children[$id]['children'] = $this->getChildrenTab($tabs, $id);
             }
         }
-
+        $this->trans('Test.', [], 'Admin.Notifications.Error');
         return $children;
     }
 }
