@@ -1,7 +1,6 @@
 import type {APIResponse} from 'playwright';
 import crypto from 'crypto';
 import {readFileSync} from 'fs';
-import path from 'path';
 
 type HttpHeader = {
   name: string
@@ -62,8 +61,7 @@ function parseJwtPayload(token: string): JwtAccessToken {
  * @return {string}
  */
 function extractAPIPrivateKey(): string {
-  const parametersFile: string = path.resolve(__dirname, '../../../', 'app/config/parameters.php');
-  const parametersData = readFileSync(parametersFile, 'utf8');
+  const parametersData = readFileSync(global.PSConfig.parametersFile, 'utf8');
   const regexPrivateKey: RegExp = /'api_private_key' => '([\S\s]+)'/;
   const regexMatch: RegExpMatchArray|null = parametersData.match(regexPrivateKey);
 
