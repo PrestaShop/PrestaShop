@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DeleteFeatureCommand
 {
@@ -37,17 +36,10 @@ class DeleteFeatureCommand
      */
     private $featureId;
 
-    /**
-     * @var ShopConstraint
-     */
-    private $shopConstraint;
-
     public function __construct(
-        int $featureId,
-        ShopConstraint $shopConstraint
+        int $featureId
     ) {
         $this->featureId = new FeatureId($featureId);
-        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -56,13 +48,5 @@ class DeleteFeatureCommand
     public function getFeatureId(): FeatureId
     {
         return $this->featureId;
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
     }
 }
