@@ -11,7 +11,7 @@ admin_features_horizontal_index:
   path: /horizontal
   methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::horizontalIndexAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\HorizontalFeatureController::indexAction
     _legacy_controller: AdminFeatures
 
 admin_features_search:
