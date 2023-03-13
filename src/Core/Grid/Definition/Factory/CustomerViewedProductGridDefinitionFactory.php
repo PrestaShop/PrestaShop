@@ -73,7 +73,7 @@ final class CustomerViewedProductGridDefinitionFactory extends AbstractGridDefin
      */
     protected function getName()
     {
-        return $this->trans('Viewed products', [], 'Admin.Orderscustomers.Feature');
+        return $this->trans('Products in carts', [], 'Admin.Orderscustomers.Feature');
     }
 
     /**
@@ -83,7 +83,7 @@ final class CustomerViewedProductGridDefinitionFactory extends AbstractGridDefin
     {
         return (new ColumnCollection())
             ->add((new DateTimeColumn('date_add'))
-            ->setName($this->trans('Date added to cart', [], 'Admin.Global'))
+            ->setName($this->trans('Added to cart', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'date_add',
                 'format' => $this->contextDateFormat,
