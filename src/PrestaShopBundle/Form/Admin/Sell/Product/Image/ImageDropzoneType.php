@@ -70,7 +70,7 @@ class ImageDropzoneType extends TranslatorAwareType
 
         if ($this->multistoreFeature->isUsed()) {
             $builder->add('shop_images', ButtonType::class, [
-                'label' => $this->trans('Manage images', 'Admin.Catalog.feature'),
+                'label' => $this->trans('Manage images', 'Admin.Catalog.Feature'),
                 'row_attr' => [
                     'class' => 'manage-shop-images-button-container',
                     'data-product-id' => $options['product_id'],
