@@ -1051,7 +1051,9 @@ class Checkout extends FOBasePage {
    * @return {Promise<void>}
    */
   async choosePaymentAndOrder(page: Page, paymentModuleName: string): Promise<void> {
-    await page.click(this.paymentOptionInput(paymentModuleName));
+    if (await this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 1000)) {
+      await page.click(this.paymentOptionInput(paymentModuleName));
+    }
     await Promise.all([
       this.waitForVisibleSelector(page, this.paymentConfirmationButton),
       page.click(this.conditionToApproveLabel),
