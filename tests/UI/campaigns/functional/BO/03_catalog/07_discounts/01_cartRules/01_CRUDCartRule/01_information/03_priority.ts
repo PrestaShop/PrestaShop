@@ -29,7 +29,7 @@ const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartR
 Scenario:
 - Create cart rule with priority 1
 - Create cart rule with priority 2
-- GO to FO, add product to cart and proceed to checkout
+- Go to FO, add product to cart and proceed to checkout
 - In cart page check the 2 cart rules
 - Bulk delete the created cart rules
  */
