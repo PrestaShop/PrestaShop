@@ -23,16 +23,33 @@ type JwtAccessToken = {
   scopes: string[]
 };
 
+/**
+ * Filter headers for fetching a specific header
+ * @param {HttpHeader[]} headers
+ * @param {string} headerName
+ * @return {HttpHeader[]}
+ */
 function filterResponseHeader(headers: HttpHeader[], headerName: string): HttpHeader[] {
   return headers.filter((value: HttpHeader) => value.name === headerName);
 }
 
+/**
+ * Parse a JWT and extract the header part
+ * @param {string} token
+ * @return {JwtAccessHeader}
+ */
 function parseJwtHeader(token: string): JwtAccessHeader {
   const base64Payload: string = token.split('.')[0];
   const payload: Buffer = Buffer.from(base64Payload, 'base64');
 
   return JSON.parse(payload.toString());
 }
+
+/**
+ * Parse a JWT and extract the payload part
+ * @param {string} token
+ * @return {JwtAccessToken}
+ */
 function parseJwtPayload(token: string): JwtAccessToken {
   const base64Payload: string = token.split('.')[1];
   const payload: Buffer = Buffer.from(base64Payload, 'base64');
@@ -40,6 +57,10 @@ function parseJwtPayload(token: string): JwtAccessToken {
   return JSON.parse(payload.toString());
 }
 
+/**
+ * Extract the API private key from the file `app/config/parameters.php`
+ * @return {string}
+ */
 function extractAPIPrivateKey(): string {
   const parametersFile: string = path.resolve(__dirname, '../../../', 'app/config/parameters.php');
   const parametersData = readFileSync(parametersFile, 'utf8');
