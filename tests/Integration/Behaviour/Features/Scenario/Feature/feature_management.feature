@@ -27,3 +27,10 @@ Feature: Product feature management
   Scenario: Creating product feature with empty name should not be allowed
     When I create product feature with empty name
     Then I should get an error that feature name is invalid.
+
+  Scenario: Delete feature
+    Given I create product feature "feature2" with specified properties:
+      | name | My feature |
+    And product feature "feature2" name should be "My feature"
+    When I delete product feature feature2
+    Then product feature feature2 should not exist

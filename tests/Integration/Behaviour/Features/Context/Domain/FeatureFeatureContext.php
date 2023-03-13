@@ -32,12 +32,15 @@ use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class FeatureFeatureContext extends AbstractDomainFeatureContext
 {
@@ -53,6 +56,38 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I delete product feature :featureReference
+     *
+     * @param string $featureReference
+     */
+    public function deleteFeature(string $featureReference): void
+    {
+        $this->getCommandBus()->handle(
+            new DeleteFeatureCommand($this->getSharedStorage()->get($featureReference))
+        );
+    }
+
+    /**
+     * @todo: need to assert feature values were deleted as well
+     *
+     * @Then product feature :featureReference should not exist
+     *
+     * @param string $featureReference
+     */
+    public function assertFeatureDoesNotExist(string $featureReference): void
+    {
+        try {
+            $this->getFeatureForEditing($featureReference);
+            throw new NoExceptionAlthoughExpectedException(sprintf(
+                'Expected exception %s',
+                FeatureNotFoundException::class
+            ));
+        } catch (FeatureNotFoundException $e) {
+            // FeatureNotFoundException is expected, so test is successful
+        }
+    }
+
+    /**
      * @Then /^product feature "([^"]*)" name should be "([^"]*)"$/
      */
     public function productFeatureNameShouldBe($reference, $name)
@@ -62,20 +97,11 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given /^product feature with id "([^"]*)" exists$/
-     */
-    public function productFeatureWithIdExists($featureId)
-    {
-        $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
-    }
-
-    /**
      * @Given /^product feature with reference "([^"]*)" exists$/
      */
     public function productFeatureWithReferenceExists(string $featureReference): void
     {
-        $productFeatureId = $this->getSharedStorage()->get($featureReference);
-        $this->getQueryBus()->handle(new GetFeatureForEditing($productFeatureId));
+        $this->getFeatureForEditing($featureReference);
     }
 
     /**
@@ -168,5 +194,12 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         );
 
         return $this->getCommandBus()->handle($command);
+    }
+
+    private function getFeatureForEditing(string $featureReference): EditableFeature
+    {
+        return $this->getQueryBus()->handle(
+            new GetFeatureForEditing($this->getSharedStorage()->get($featureReference))
+        );
     }
 }
