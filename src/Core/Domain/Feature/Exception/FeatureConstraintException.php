@@ -32,12 +32,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 class FeatureConstraintException extends FeatureException
 {
     /**
-     * Code is used when feature does not have name.
+     * When feature name is empty in default language
      */
     public const EMPTY_NAME = 1;
 
     /**
-     * Used when feature name is invalid.
+     * When feature name is invalid.
      */
     public const INVALID_NAME = 2;
 }

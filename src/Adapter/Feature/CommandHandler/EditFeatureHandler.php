@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\EditFeatureHandlerI
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles feature editing.
@@ -67,7 +68,9 @@ class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatu
         }
 
         if (null !== $command->getAssociatedShopIds()) {
-            $this->associateWithShops($feature, $command->getAssociatedShopIds());
+            $this->associateWithShops($feature, array_map(static function (ShopId $shopId) {
+                return $shopId->getValue();
+            }, $command->getAssociatedShopIds()));
         }
     }
 }

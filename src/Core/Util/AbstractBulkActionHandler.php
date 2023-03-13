@@ -57,13 +57,7 @@ abstract class AbstractBulkActionHandler
         }
     }
 
-    protected function buildBulkException(array $exceptions): BulkActionExceptionInterface
-    {
-        return new BulkActionExceptionInterface(
-            $exceptions,
-            'Multiple exceptions occurred during bulk action'
-        );
-    }
+    abstract protected function buildBulkException(array $exceptions): BulkActionExceptionInterface;
 
     abstract protected function handleSingleAction(int $id): void;
 }

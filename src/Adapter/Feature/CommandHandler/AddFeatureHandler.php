@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\AddFeatureHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles adding of features using legacy logic.
@@ -60,7 +61,9 @@ class AddFeatureHandler extends AbstractObjectModelHandler implements AddFeature
             throw new CannotAddFeatureException('Unable to create new feature');
         }
 
-        $this->associateWithShops($feature, $command->getShopAssociation());
+        $this->associateWithShops($feature, array_map(static function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $command->getAssociatedShopIds()));
 
         return new FeatureId((int) $feature->id);
     }

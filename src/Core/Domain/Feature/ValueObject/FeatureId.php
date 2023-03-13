@@ -44,7 +44,6 @@ class FeatureId
     public function __construct(int $featureId)
     {
         $this->assertIsGreaterThanZero($featureId);
-
         $this->featureId = $featureId;
     }
 
