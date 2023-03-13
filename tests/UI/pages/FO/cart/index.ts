@@ -304,7 +304,7 @@ class Cart extends FOBasePage {
   /**
    * Is cart rule name visible
    * @param page {Page} Browser tab
-   * @param line {number}  Cart summary line
+   * @param line {number} Cart summary line
    * @returns {Promise<boolean>}
    */
   isCartRuleNameVisible(page: Page, line: number = 1): Promise<boolean> {
