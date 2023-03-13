@@ -27,6 +27,7 @@
     <div class="col-4">
       <h4>{{ $t('step.symbol') }}</h4>
       <input
+        id="custom-symbol"
         type="text"
         v-model="customSymbol"
       >
