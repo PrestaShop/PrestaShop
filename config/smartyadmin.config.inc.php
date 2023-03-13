@@ -44,11 +44,17 @@ smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('Addre
 smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
 smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
 smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
+smartyRegisterFunction($smarty, 'function', 'isBrightColor', 'isBrightColor');
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources, $isAdmin = true));
+
+function isBrightColor(string $params): bool {
+    $colorBrightnessCalculator = new PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator();
+    return $colorBrightnessCalculator->isBright($params);
+}
 
 function toolsConvertPrice($params, &$smarty)
 {
