@@ -40,6 +40,7 @@ describe('BO - Catalog - Cart rules : Priority', async () => {
   const cartRulePriority2: CartRuleData = new CartRuleData({
     name: 'cartRulePriority2',
     priority: 2,
+    status: true,
     discountType: 'Amount',
     discountAmount: {
       value: 2,
@@ -50,6 +51,7 @@ describe('BO - Catalog - Cart rules : Priority', async () => {
   const cartRulePriority1: CartRuleData = new CartRuleData({
     name: 'cartRulePriority1',
     priority: 1,
+    status: true,
     discountType: 'Amount',
     discountAmount: {
       value: 2,
