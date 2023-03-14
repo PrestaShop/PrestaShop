@@ -30,6 +30,7 @@ use Exception;
 use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\Key;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -385,7 +386,13 @@ class WebserviceController extends FrameworkBundleAdminController
     {
         return [
             WebserviceConstraintException::class => [
-                WebserviceConstraintException::INVALID_KEY => $this->trans('Key length must be 32 character long.', 'Admin.Advparameters.Notification'),
+                WebserviceConstraintException::INVALID_KEY => $this->trans(
+                    'Key length must be %length% characters long.',
+                    'Admin.Advparameters.Notification',
+                    [
+                        '%length%' => Key::LENGTH,
+                    ]
+                ),
             ],
             DuplicateWebserviceKeyException::class => $this->trans('This key already exists.', 'Admin.Advparameters.Notification'),
         ];
