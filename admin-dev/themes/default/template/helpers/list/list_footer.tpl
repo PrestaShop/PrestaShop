@@ -26,7 +26,7 @@
 </div>
 <div class="row">
 	<div class="col-lg-6">
-		{if $bulk_actions && $has_bulk_actions}
+		{if $bulk_actions && $has_bulk_actions && !$hide_bulk_actions_btn}
 		<div class="btn-group bulk-actions dropup">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" {if $table}id="bulk_action_menu_{$table}"{/if}>
 				{l s='Bulk actions' d='Admin.Global'} <span class="caret"></span>

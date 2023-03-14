@@ -65,7 +65,7 @@ class ShippingAssertionFeatureContext extends AbstractShippingFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following shipping information for shops ":shopReferences":
+     * @Then product :productReference should have following shipping information for shop(s) :shopReferences:
      *
      * @param string $productReference
      * @param TableNode $tableNode

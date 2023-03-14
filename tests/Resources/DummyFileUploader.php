@@ -69,6 +69,11 @@ class DummyFileUploader
         return __DIR__ . '/dummyFile/';
     }
 
+    public static function getDummyFilePath(string $dummyFilename): string
+    {
+        return static::getDummyFilesPath() . $dummyFilename;
+    }
+
     /**
      * @return string
      */
