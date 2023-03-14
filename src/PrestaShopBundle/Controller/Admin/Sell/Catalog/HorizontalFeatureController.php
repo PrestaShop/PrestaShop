@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+/* @phpstan-ignore-next-line */
 use Feature;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
@@ -39,6 +40,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+/* @phpstan-ignore-next-line */
 use Tools;
 
 /**
@@ -89,6 +91,7 @@ class HorizontalFeatureController extends FrameworkBundleAdminController impleme
     {
         return $this->buildControllerConfiguration(
             'feature',
+            /* @phpstan-ignore-next-line */
             Feature::class,
             'AdminFeatures'
         );
@@ -118,6 +121,7 @@ class HorizontalFeatureController extends FrameworkBundleAdminController impleme
                 'icon' => 'process-icon-new',
             ])
             ->addHeaderToolbarAction('new_feature_value', [
+                /* @phpstan-ignore-next-line */
                 'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
                 'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
                 'icon' => 'process-icon-new',
