@@ -112,6 +112,7 @@ class HelperListCore extends Helper
 
     public $bulk_actions = false;
     public $force_show_bulk_actions = false;
+    public $force_hide_bulk_actions_btn = false;
     public $specificConfirmDelete = null;
     public $colorOnBackground;
 
@@ -802,6 +803,7 @@ class HelperListCore extends Helper
             'toolbar_scroll' => $this->toolbar_scroll,
             'toolbar_btn' => $this->toolbar_btn,
             'has_bulk_actions' => $this->hasBulkActions($has_value),
+            'hide_bulk_actions_btn' => $this->force_hide_bulk_actions_btn,
             'filters_has_value' => (bool) $has_value,
         ]);
 
