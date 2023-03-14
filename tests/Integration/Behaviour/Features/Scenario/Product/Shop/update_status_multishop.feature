@@ -22,9 +22,9 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | type        | standard      |
-    And I copy product product1 from shop shop1 to shop shop2
-    And I copy product product1 from shop shop1 to shop shop3
-    And I copy product product1 from shop shop1 to shop shop4
+    When I set following shops for product "product1":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     Then product "product1" should have following options for shops "shop1,shop2,shop3,shop4":
       | product option      | value |
       | visibility          | both  |

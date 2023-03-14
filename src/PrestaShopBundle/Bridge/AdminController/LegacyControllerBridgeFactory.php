@@ -36,7 +36,7 @@ class LegacyControllerBridgeFactory
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var LegacyContext
@@ -49,14 +49,14 @@ class LegacyControllerBridgeFactory
     private $hookDispatcher;
 
     /**
-     * @param FeatureInterface $multistoreFeature
+     * @param FeatureInterface $multiStoreFeature
      */
     public function __construct(
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         LegacyContext $legacyContext,
         HookDispatcherInterface $hookDispatcher
     ) {
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->legacyContext = $legacyContext;
         $this->hookDispatcher = $hookDispatcher;
     }
@@ -71,7 +71,7 @@ class LegacyControllerBridgeFactory
     ): LegacyControllerBridgeInterface {
         return new LegacyControllerBridge(
             $controllerConfiguration,
-            $this->multistoreFeature,
+            $this->multiStoreFeature,
             $this->legacyContext,
             $this->hookDispatcher
         );

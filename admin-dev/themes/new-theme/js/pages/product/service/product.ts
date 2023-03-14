@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,17 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler;
+import Router from '@components/router';
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
+const router = new Router();
 
-/**
- * Defines contract to handle @see CopyProductToShopCommand
- */
-interface CopyProductToShopHandlerInterface
-{
-    /**
-     * @param CopyProductToShopCommand $command
-     */
-    public function handle(CopyProductToShopCommand $command): void;
+export interface QuantityResult {
+  quantity: number,
 }
+
+export const getProductQuantity = async (productId: number, shopId: number): Promise<Response> => fetch(
+  router.generate('admin_products_v2_quantity', {
+    productId,
+    shopId,
+  }),
+);
+
+export default {
+  getProductQuantity,
+};

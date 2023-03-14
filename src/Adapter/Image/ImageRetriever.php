@@ -189,8 +189,17 @@ class ImageRetriever
             $id_image . '.jpg',
         ]);
 
-        // Get image format list that we will use in case of new image system
-        $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
+        /*
+         * Let's resolve which formats we will use for image generation.
+         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+         *
+         * In case of .jpg images, the actual format inside is decided by ImageManager.
+         */
+        if ($this->isMultipleImageFormatFeatureActive) {
+            $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
+        } else {
+            $configuredImageFormats = ['jpg'];
+        }
 
         // Primary (fake) image name is object rewrite, fallbacks are name and ID
         if (!empty($object->link_rewrite)) {
@@ -206,39 +215,20 @@ class ImageRetriever
         foreach ($image_types as $image_type) {
             $sources = [];
 
-            // In legacy image system, image extension is always JPG and there could be JPG, PNG or webp image inside
-            // The format is decided by ImageManager
-            if (!$this->isMultipleImageFormatFeatureActive) {
-                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
+            foreach ($configuredImageFormats as $imageFormat) {
+                // Generate the thumbnail and optionally a high DPI version
+                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
+                if ($generateHighDpiImages) {
+                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
+                }
 
-                // Get URL of the thumbnail
+                // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
                 if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
-                    $sources['jpg'] = $this->link->$getImageURL($id_image, $image_type['name'], 'jpg');
+                    $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
                 // Products, categories and stores pass both rewrite and ID
                 } else {
-                    $sources['jpg'] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], 'jpg');
-                }
-
-                if ($generateHighDpiImages) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
-                }
-                // In new image system, we generate each format with it's proper extension
-            } else {
-                foreach ($configuredImageFormats as $imageFormat) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
-
-                    // Manufacturer and supplier use only IDs
-                    if (get_class($object) === 'Manufacturer' || get_class($object) === 'Supplier') {
-                        $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
-                    // Products, categories and stores pass both rewrite and ID
-                    } else {
-                        $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
-                    }
-
-                    if ($generateHighDpiImages) {
-                        $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
-                    }
+                    $sources[$imageFormat] = $this->link->$getImageURL($rewrite, $id_image, $image_type['name'], $imageFormat);
                 }
             }
 
@@ -286,17 +276,17 @@ class ImageRetriever
      * @param string $imageFolderPath
      * @param int $idImage
      * @param array $imageTypeData
-     * @param string $ext
+     * @param string $imageFormat
      * @param bool $hdpi
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $ext, bool $hdpi = false)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
     {
-        $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $ext);
+        $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
 
         if ($hdpi) {
-            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $ext);
+            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $imageFormat);
             $imageTypeData['width'] *= 2;
             $imageTypeData['height'] *= 2;
         }
@@ -306,14 +296,19 @@ class ImageRetriever
             $fileName,
         ]);
 
+        // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+        // For webp and avif extensions, we want it to follow our command and ignore the original format.
+        $forceFormat = ($imageFormat !== 'jpg');
+
+        // Check if the thumbnail exists and generate it if needed
         if (!file_exists($resizedImagePath)) {
             ImageManager::resize(
                 $originalImagePath,
                 $resizedImagePath,
                 (int) $imageTypeData['width'],
                 (int) $imageTypeData['height'],
-                $ext,
-                true
+                $imageFormat,
+                $forceFormat
             );
         }
     }

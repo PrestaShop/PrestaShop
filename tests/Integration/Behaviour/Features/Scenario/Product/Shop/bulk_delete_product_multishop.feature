@@ -7,8 +7,8 @@
 @clear-cache-after-feature
 @product-multishop
 @bulk-delete-product-multishop
-Feature: Copy product from shop to shop.
-  As a BO user I want to be able to bulk product depending on shop context.
+Feature: Bulk delete products when multishop feature is enabled
+  As a BO user I want to be able to delete multiple products at once depending on shop context.
 
   Background:
     Given I enable multishop feature
@@ -44,13 +44,10 @@ Feature: Copy product from shop to shop.
       | delta_quantity | 51 |
     And I add new image "image1" named "app_icon.png" to product "standardProduct" for shop "shop2"
     And I add new image "image2" named "some_image.jpg" to product "standardProduct" for shop "shop2"
-    And I copy product standardProduct from shop shop2 to shop shop1
-    And I copy product standardProduct from shop shop2 to shop shop3
-    And I copy product standardProduct from shop shop2 to shop shop4
-    And product standardProduct is associated to shop shop1
-    And product standardProduct is associated to shop shop2
-    And product standardProduct is associated to shop shop3
-    And product standardProduct is associated to shop shop4
+    When I set following shops for product "standardProduct":
+      | source shop | shop2                   |
+      | shops       | shop1,shop2,shop3,shop4 |
+    And product standardProduct is associated to shops "shop1,shop2,shop3,shop4"
     And product "standardProduct" should have following stock information for shops "shop1,shop2,shop3,shop4":
       | quantity | 51 |
     And product "standardProduct" should have following images for shops "shop1,shop2,shop3,shop4":
@@ -64,13 +61,10 @@ Feature: Copy product from shop to shop.
     And I generate combinations in shop "shop3" for product productWithCombinations using following attributes:
       | Size  | [L]                |
       | Color | [White,Black,Blue] |
-    And I copy product productWithCombinations from shop shop3 to shop shop1
-    And I copy product productWithCombinations from shop shop3 to shop shop2
-    And I copy product productWithCombinations from shop shop3 to shop shop4
-    And product productWithCombinations is associated to shop shop1
-    And product productWithCombinations is associated to shop shop2
-    And product productWithCombinations is associated to shop shop3
-    And product productWithCombinations is associated to shop shop4
+    And I set following shops for product "productWithCombinations":
+      | source shop | shop3                   |
+      | shops       | shop1,shop2,shop3,shop4 |
+    And product productWithCombinations is associated to shops "shop1,shop2,shop3,shop4"
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop3,shop4":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -94,10 +88,8 @@ Feature: Copy product from shop to shop.
       | reference               |
       | standardProduct         |
       | productWithCombinations |
-    And product standardProduct is not associated to shop shop1
-    And product standardProduct is not associated to shop shop2
-    And product standardProduct is associated to shop shop3
-    And product standardProduct is associated to shop shop4
+    And product standardProduct is not associated to shops "shop1,shop2"
+    And product standardProduct is associated to shop "shop3,shop4"
     And default shop for product standardProduct is shop3
     And product "standardProduct" should have following stock information for shops "shop3,shop4":
       | quantity | 51 |
@@ -105,10 +97,8 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops        |
       | image1          | 1        | shop3, shop4 |
       | image2          | 2        | shop3, shop4 |
-    And product productWithCombinations is not associated to shop shop1
-    And product productWithCombinations is not associated to shop shop2
-    And product productWithCombinations is associated to shop shop3
-    And product productWithCombinations is associated to shop shop4
+    And product productWithCombinations is not associated to shop "shop1,shop2"
+    And product productWithCombinations is associated to shops "shop3,shop4"
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop3,shop4":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -116,18 +106,15 @@ Feature: Copy product from shop to shop.
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
     And product productWithCombinations should have no combinations for shops "shop1,shop2"
-    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop1"
-    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop2"
+    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shops "shop1,shop2"
 
   Scenario: I can bulk delete product from second shop group
     When I bulk delete following products from shop group test_second_shop_group:
       | reference               |
       | standardProduct         |
       | productWithCombinations |
-    And product standardProduct is associated to shop shop1
-    And product standardProduct is associated to shop shop2
-    And product standardProduct is not associated to shop shop3
-    And product standardProduct is not associated to shop shop4
+    And product standardProduct is associated to shops "shop1,shop2"
+    And product standardProduct is not associated to shops "shop3,shop4"
     And default shop for product standardProduct is shop2
     And product "standardProduct" should have following stock information for shops "shop1,shop2":
       | quantity | 51 |
@@ -135,10 +122,8 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops        |
       | image1          | 1        | shop1, shop2 |
       | image2          | 2        | shop1, shop2 |
-    And product productWithCombinations is associated to shop shop1
-    And product productWithCombinations is associated to shop shop2
-    And product productWithCombinations is not associated to shop shop3
-    And product productWithCombinations is not associated to shop shop4
+    And product productWithCombinations is associated to shops "shop1,shop2"
+    And product productWithCombinations is not associated to shop "shop3,shop4"
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -146,18 +131,15 @@ Feature: Copy product from shop to shop.
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
     And product productWithCombinations should have no combinations for shops "shop3,shop4"
-    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3"
-    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop4"
+    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3,shop4"
 
   Scenario: I can bulk delete product from shop shop2
     When I bulk delete following products from shop shop2:
       | reference               |
       | standardProduct         |
       | productWithCombinations |
-    And product standardProduct is associated to shop shop1
     And product standardProduct is not associated to shop shop2
-    And product standardProduct is associated to shop shop3
-    And product standardProduct is associated to shop shop4
+    And product standardProduct is associated to shops "shop1,shop3,shop4"
     And default shop for product standardProduct is shop1
     And product "standardProduct" should have following stock information for shops "shop1,shop3,shop4":
       | quantity | 51 |
@@ -165,10 +147,8 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop3, shop4 |
       | image2          | 2        | shop1, shop3, shop4 |
-    And product productWithCombinations is associated to shop shop1
     And product productWithCombinations is not associated to shop shop2
-    And product productWithCombinations is associated to shop shop3
-    And product productWithCombinations is associated to shop shop4
+    And product productWithCombinations is associated to shops "shop1,shop3,shop4"
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop3,shop4":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -183,10 +163,8 @@ Feature: Copy product from shop to shop.
       | reference               |
       | standardProduct         |
       | productWithCombinations |
-    And product standardProduct is associated to shop shop1
-    And product standardProduct is associated to shop shop2
+    And product standardProduct is associated to shop "shop1,shop2,shop4"
     And product standardProduct is not associated to shop shop3
-    And product standardProduct is associated to shop shop4
     And default shop for product standardProduct is shop2
     And product "standardProduct" should have following stock information for shops "shop1,shop2,shop4":
       | quantity | 51 |
@@ -194,10 +172,8 @@ Feature: Copy product from shop to shop.
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop2, shop4 |
       | image2          | 2        | shop1, shop2, shop4 |
-    And product productWithCombinations is associated to shop shop1
-    And product productWithCombinations is associated to shop shop2
+    And product productWithCombinations is associated to shops "shop1,shop2,shop4"
     And product productWithCombinations is not associated to shop shop3
-    And product productWithCombinations is associated to shop shop4
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop4":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |

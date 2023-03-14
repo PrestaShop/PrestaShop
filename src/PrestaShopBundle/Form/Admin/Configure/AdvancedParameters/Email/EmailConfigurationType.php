@@ -89,7 +89,7 @@ class EmailConfigurationType extends TranslatorAwareType
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
             ])
             ->add('subject_prefix', SwitchType::class, [
-                'label' => $this->trans('Enable the shop name as a prefix in the emails subject', 'Admin.Advparameters.Feature'),
+                'label' => $this->trans('Enable the store name as a prefix in the email\'s subject', 'Admin.Advparameters.Feature'),
             ])
             ->add('mail_type', ChoiceType::class, [
                 'expanded' => true,

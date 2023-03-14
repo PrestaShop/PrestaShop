@@ -97,42 +97,49 @@ class ImageGenerator
      */
     protected function resize(string $filePath, ImageType $imageType): bool
     {
-        $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-
         if (!is_file($filePath)) {
             throw new ImageUploadException(sprintf('File "%s" does not exist', $filePath));
         }
 
-        //@todo: hardcoded extension as it was in legacy code. Changing it would be a huge BC break.
-        //@todo: in future we should consider using extension by mimeType
-        $destinationExtension = '.jpg';
-        $width = $imageType->width;
-        $height = $imageType->height;
-
-        if (Configuration::get('PS_HIGHT_DPI')) {
-            $destinationExtension = '2x' . $destinationExtension;
-            $width *= 2;
-            $height *= 2;
+        /*
+         * Let's resolve which formats we will use for image generation.
+         * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
+         *
+         * In case of .jpg images, the actual format inside is decided by ImageManager.
+         */
+        if ($this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
+            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
+        } else {
+            $configuredImageFormats = ['jpg'];
         }
 
-        if (!$this->featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT)) {
-            return ImageManager::resize(
-                $filePath,
-                sprintf('%s-%s%s', rtrim($filePath, '.' . $fileExtension), stripslashes($imageType->name), $destinationExtension),
-                $width,
-                $height,
-                trim(mime_content_type($filePath), 'image/'));
-        }
+        // Should we generate high DPI images?
+        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         $result = true;
 
-        foreach ($this->imageFormatConfiguration->getGenerationFormats() as $imageFormat) {
+        foreach ($configuredImageFormats as $imageFormat) {
+            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+            // For webp and avif extensions, we want it to follow our command and ignore the original format.
+            $forceFormat = ($imageFormat !== 'jpg');
             if (!ImageManager::resize(
                 $filePath,
-                sprintf('%s-%s.%s', rtrim($filePath, '.' . $fileExtension), stripslashes($imageType->name), $imageFormat),
-                $width,
-                $height,
-                trim(mime_content_type($filePath), 'image/')
+                sprintf('%s-%s.%s', rtrim($filePath, '.' . $imageFormat), stripslashes($imageType->name), $imageFormat),
+                $imageType->width,
+                $imageType->height,
+                $imageFormat,
+                $forceFormat
+            )) {
+                $result = false;
+            }
+
+            if ($generate_high_dpi_images && !ImageManager::resize(
+                $filePath,
+                sprintf('%s-%s.%s', rtrim($filePath, '.' . $imageFormat), stripslashes($imageType->name) . '2x', $imageFormat),
+                $imageType->width * 2,
+                $imageType->height * 2,
+                $imageFormat,
+                $forceFormat
             )) {
                 $result = false;
             }

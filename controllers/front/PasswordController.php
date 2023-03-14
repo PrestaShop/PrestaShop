@@ -76,7 +76,7 @@ class PasswordControllerCore extends FrontController
 
             if (!Validate::isLoadedObject($customer)) {
                 $this->success[] = $this->trans(
-                    'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.',
+                    'If this email address has been registered in our store, you will receive a link to reset your password at %email%.',
                     ['%email%' => $customer->email],
                     'Shop.Notifications.Success'
                 );
@@ -112,7 +112,7 @@ class PasswordControllerCore extends FrontController
                         $customer->firstname . ' ' . $customer->lastname
                     )
                 ) {
-                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', ['%email%' => $customer->email], 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('If this email address has been registered in our store, you will receive a link to reset your password at %email%.', ['%email%' => $customer->email], 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while sending the email.', [], 'Shop.Notifications.Error');

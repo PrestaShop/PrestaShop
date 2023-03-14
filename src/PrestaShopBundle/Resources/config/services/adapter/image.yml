@@ -40,6 +40,11 @@ services:
     arguments:
       - '@=service("prestashop.core.configuration.upload_size_configuration").getMaxUploadSizeInBytes()'
 
+  PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator:
+    arguments:
+      - '@=service("prestashop.core.configuration.upload_size_configuration").getMaxUploadSizeInBytes()'
+      - '@prestashop.adapter.upload_quota.configuration'
+
   prestashop.adapter.image.image_validator:
     alias: PrestaShop\PrestaShop\Adapter\Image\ImageValidator
     deprecated: ~

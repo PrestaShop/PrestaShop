@@ -14,6 +14,10 @@ class AddCountry extends BOBasePage {
 
   public readonly pageTitleEdit: string;
 
+  public readonly errorMessageIsoCode: string;
+
+  public readonly errorMessagePrefix: string;
+
   private readonly nameInput: string;
 
   private readonly isoCodeInput: string;
@@ -47,6 +51,8 @@ class AddCountry extends BOBasePage {
 
     this.pageTitleCreate = 'Countries > Add new •';
     this.pageTitleEdit = 'Edit: ';
+    this.errorMessageIsoCode = 'This ISO code already exists.You cannot create two countries with the same ISO code.';
+    this.errorMessagePrefix = 'The call_prefix field is invalid.';
 
     // Selectors
     this.nameInput = '#name_1';
@@ -90,7 +96,7 @@ class AddCountry extends BOBasePage {
     // Save country
     await this.clickAndWaitForNavigation(page, this.saveCountryButton);
 
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertBlock);
   }
 }
 

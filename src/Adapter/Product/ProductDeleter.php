@@ -23,24 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\DeleteProductFromShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
-/**
- * Handles @see DeleteProductFromShopsCommand using dedicated service
- */
-class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInterface
+class ProductDeleter
 {
     /**
      * @var ProductRepository
@@ -48,45 +42,54 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
     private $productRepository;
 
     /**
+     * @var ProductImageMultiShopRepository
+     */
+    private $productImageRepository;
+
+    /**
      * @var CombinationRepository
      */
     private $combinationRepository;
 
-    /**
-     * @var ProductImageMultiShopRepository
-     */
-    private $productImageMultiShopRepository;
-
-    /**
-     * @param ProductRepository $productRepository
-     */
     public function __construct(
         ProductRepository $productRepository,
-        CombinationRepository $combinationMultiShopRepository,
-        ProductImageMultiShopRepository $productImageMultiShopRepository
+        ProductImageMultiShopRepository $productImageRepository,
+        CombinationRepository $combinationRepository
     ) {
         $this->productRepository = $productRepository;
-        $this->combinationRepository = $combinationMultiShopRepository;
-        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productImageRepository = $productImageRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
-     * {@inheritDoc}
+     * @param ProductId $productId
+     * @param ShopId[] $shopIds
      */
-    public function handle(DeleteProductFromShopsCommand $command): void
+    public function deleteFromShops(ProductId $productId, array $shopIds): void
     {
-        $shopIds = $command->getShopIds();
-        $productId = $command->getProductId();
-
-        $this->removeImages($productId, $shopIds);
-
-        if ($this->productRepository->hasCombinations($command->getProductId())) {
-            foreach ($shopIds as $shopId) {
-                $this->combinationRepository->deleteByProductId($productId, ShopConstraint::shop($shopId->getValue()));
-            }
+        if (empty($shopIds)) {
+            return;
         }
 
-        $this->productRepository->deleteFromShops($command->getProductId(), $shopIds);
+        $this->removeImages(
+            $productId,
+            $shopIds
+        );
+        $this->removeCombinations($productId, $shopIds);
+        $this->productRepository->deleteFromShops($productId, $shopIds);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+
+        $this->removeImages($productId, $shopIds);
+        $this->removeCombinations($productId, $shopIds);
+        $this->productRepository->deleteFromShops($productId, $shopIds);
     }
 
     /**
@@ -96,10 +99,25 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
     private function removeImages(ProductId $productId, array $shopIds): void
     {
         foreach ($shopIds as $shopId) {
-            $imageIds = $this->productImageMultiShopRepository->getImageIds($productId, ShopConstraint::shop($shopId->getValue()));
+            $imageIds = $this->productImageRepository->getImageIds($productId, ShopConstraint::shop($shopId->getValue()));
             foreach ($imageIds as $imageId) {
-                $this->productImageMultiShopRepository->deleteFromShops($imageId, [$shopId]);
+                $this->productImageRepository->deleteFromShops($imageId, [$shopId]);
             }
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId[] $shopIds
+     */
+    private function removeCombinations(ProductId $productId, array $shopIds): void
+    {
+        if (!$this->productRepository->hasCombinations($productId)) {
+            return;
+        }
+
+        foreach ($shopIds as $shopId) {
+            $this->combinationRepository->deleteByProductId($productId, ShopConstraint::shop($shopId->getValue()));
         }
     }
 }

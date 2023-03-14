@@ -32,7 +32,7 @@ use Configuration;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -564,16 +564,12 @@ class MultiShopProductControllerTest extends GridControllerTestCase
         static::createProduct($commandBus, self::PARTIAL_SHOPS_PRODUCT_DATA);
         static::createProduct($commandBus, self::ALL_SHOPS_PRODUCT_DATA);
 
-        // Copy fixtures product
-        $fixturesProductsId = (int) Product::getIdByReference('demo_14');
-        foreach (array_keys(self::FIXTURE_PRODUCT_DATA) as $shopName) {
-            $shopId = (int) Shop::getIdByName($shopName);
+        $shopIds = array_map(static function (string $shopName): int {
+            return (int) Shop::getIdByName($shopName);
+        }, array_keys(self::FIXTURE_PRODUCT_DATA));
 
-            // Copy product to new shops
-            if ($shopId !== static::DEFAULT_SHOP_ID) {
-                $commandBus->handle(new CopyProductToShopCommand($fixturesProductsId, static::DEFAULT_SHOP_ID, $shopId));
-            }
-        }
+        // copy product to new shops
+        $commandBus->handle(new SetProductShopsCommand((int) Product::getIdByReference('demo_14'), static::DEFAULT_SHOP_ID, $shopIds));
     }
 
     protected static function createProduct(CommandBusInterface $commandBus, array $multiShopProductData): void
@@ -588,15 +584,11 @@ class MultiShopProductControllerTest extends GridControllerTestCase
         ));
         static::$testProductId = $productId->getValue();
 
-        // Copy product to new shops
-        foreach (array_keys($multiShopProductData) as $shopName) {
-            $shopId = (int) Shop::getIdByName($shopName);
+        $shopIds = array_map(static function (string $shopName): int {
+            return (int) Shop::getIdByName($shopName);
+        }, array_keys($multiShopProductData));
 
-            // Copy product to new shops
-            if ($shopId !== static::DEFAULT_SHOP_ID) {
-                $commandBus->handle(new CopyProductToShopCommand($productId->getValue(), static::DEFAULT_SHOP_ID, $shopId));
-            }
-        }
+        $commandBus->handle(new SetProductShopsCommand($productId->getValue(), static::DEFAULT_SHOP_ID, $shopIds));
 
         foreach ($multiShopProductData as $shopName => $shopProductData) {
             $shopConstraint = ShopConstraint::shop((int) Shop::getIdByName($shopName));

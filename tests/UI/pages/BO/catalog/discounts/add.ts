@@ -130,6 +130,8 @@ class AddCartRule extends BOBasePage {
 
   private readonly saveButton: string;
 
+  private readonly cancelButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add cart rule page
@@ -237,6 +239,7 @@ class AddCartRule extends BOBasePage {
 
     // Form footer selectors
     this.saveButton = '#desc-cart_rule-save';
+    this.cancelButton = '#desc-cart_rule-cancel';
   }
 
   /* Methods */
@@ -419,7 +422,7 @@ class AddCartRule extends BOBasePage {
    * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
    * @returns {Promise<string|null>}
    */
-  async createEditCartRules(page: Page, cartRuleData: CartRuleData, waitForNavigation: boolean = true): Promise<string|null> {
+  async createEditCartRules(page: Page, cartRuleData: CartRuleData, waitForNavigation: boolean = true): Promise<string | null> {
     // Fill information form
     await this.fillInformationForm(page, cartRuleData);
 
@@ -438,6 +441,39 @@ class AddCartRule extends BOBasePage {
     // Save
     await this.waitForSelectorAndClick(page, this.saveButton);
     return null;
+  }
+
+  /**
+   * Get limit single customer
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getLimitSingleCustomer(page: Page): Promise<string | null> {
+    // Go to tab conditions
+    await page.click(this.conditionsTabLink);
+
+    return this.getAttributeContent(page, this.singleCustomerInput, 'value');
+  }
+
+  /**
+   * Get amount value
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getAmountValue(page: Page): Promise<string | null> {
+    // Go to actions tab
+    await page.click(this.actionsTabLink);
+
+    return this.getAttributeContent(page, this.discountAmountInput, 'value');
+  }
+
+  /**
+   * Click on cancel button
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async clickOnCancelButton(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.cancelButton);
   }
 }
 

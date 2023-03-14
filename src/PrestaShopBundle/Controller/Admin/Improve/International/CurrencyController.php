@@ -432,7 +432,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
         $response = [
             'status' => false,
-            'message' => $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error'),
+            'message' => $this->trans('An unexpected error occurred.', 'Admin.Notifications.Error'),
         ];
         $statusCode = Response::HTTP_BAD_REQUEST;
 

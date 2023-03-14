@@ -25,7 +25,7 @@
 <div class="modal-body">
   <div class="form-group">
     {l
-      s="By deleting this image format, the theme will not be able to use it. This will result in a degraded experience on your front office."
+      s="If you delete this image format, the theme won't be able to use it anymore. This will result in a degraded experience on your front office."
       d="Admin.Design.Notification"
     }
   </div>

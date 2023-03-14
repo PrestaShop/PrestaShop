@@ -7,6 +7,7 @@ import CustomerData from '@data/faker/customer';
 import CarrierData from '@data/faker/carrier';
 
 import type {Page} from 'playwright';
+import {ProductDetails} from '@data/types/product';
 
 /**
  * Checkout page, contains functions that can be used on the page
@@ -42,6 +43,24 @@ class Checkout extends FOBasePage {
 
   private readonly noPaymentNeededElement: string;
 
+  private readonly itemsNumber: string;
+
+  private readonly showDetailsLink: string;
+
+  private readonly productList: string;
+
+  private readonly productRowLink: (productRow: number) => string;
+
+  private readonly productDetailsImage: (productRow: number) => string;
+
+  private readonly productDetailsName: (productRow: number) => string;
+
+  private readonly productDetailsQuantity: (productRow: number) => string;
+
+  private readonly productDetailsPrice: (productRow: number) => string;
+
+  private readonly productDetailsAttributes: (productRow: number) => string;
+
   private readonly noPaymentNeededText: string;
 
   private readonly promoCodeArea: string;
@@ -51,6 +70,8 @@ class Checkout extends FOBasePage {
   private readonly checkoutPromoCodeAddButton: string;
 
   private readonly personalInformationStepForm: string;
+
+  private readonly forgetPasswordLink: string;
 
   private readonly activeLink: string;
 
@@ -243,6 +264,7 @@ class Checkout extends FOBasePage {
     this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
     // Sign in selectors
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
+    this.forgetPasswordLink = '#login-form div.forgot-password a[href*=password-recovery]';
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
@@ -327,6 +349,20 @@ class Checkout extends FOBasePage {
     this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
 
+    // Cart details selectors
+    this.itemsNumber = `${this.checkoutSummary} div.cart-summary-products.js-cart-summary-products p:nth-child(1)`;
+    this.showDetailsLink = `${this.checkoutSummary} div.cart-summary-products.js-cart-summary-products a.js-show-details`;
+    this.productList = '#cart-summary-product-list';
+    this.productRowLink = (productRow: number) => `${this.productList} ul li:nth-child(${productRow})`;
+    this.productDetailsImage = (productRow: number) => `${this.productRowLink(productRow)} div.media-left a img`;
+    this.productDetailsName = (productRow: number) => `${this.productRowLink(productRow)} div.media-body span.product-name`;
+    this.productDetailsQuantity = (productRow: number) => `${this.productRowLink(productRow)} `
+      + 'div.media-body span.product-quantity';
+    this.productDetailsPrice = (productRow: number) => `${this.productRowLink(productRow)} div.media-body `
+      + 'span.product-price.float-xs-right';
+    this.productDetailsAttributes = (productRow: number) => `${this.productRowLink(productRow)} div.media-body `
+      + 'div.product-line-info';
+
     // Gift selectors
     this.giftCheckbox = '#input_gift';
     this.giftMessageTextarea = '#gift_message';
@@ -358,6 +394,71 @@ class Checkout extends FOBasePage {
     return this.elementVisible(page, `${stepSelector}.-complete`, 1000);
   }
 
+  /**
+   * Click on show details link
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnShowDetailsLink(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.showDetailsLink);
+
+    return this.elementVisible(page, `${this.showDetailsLink}[aria-expanded=true]`, 1000);
+  }
+
+  /**
+   * Get product details
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row in details block
+   * @returns {Promise<ProductDetails>
+   */
+  async getProductDetails(page: Page, productRow: number): Promise<ProductDetails> {
+    return {
+      image: await this.getAttributeContent(page, this.productDetailsImage(productRow), 'src'),
+      name: await this.getTextContent(page, this.productDetailsName(productRow)),
+      quantity: await this.getNumberFromText(page, this.productDetailsQuantity(productRow)),
+      price: await this.getPriceFromText(page, this.productDetailsPrice(productRow)),
+    };
+  }
+
+  /**
+   * Get product details
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row in details block
+   * @returns {Promise<string}
+   */
+  async getProductAttributes(page: Page, productRow: number): Promise<string> {
+    return this.getTextContent(page, this.productDetailsAttributes(productRow));
+  }
+
+  /**
+   * Get product details
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row in details block
+   * @returns {Promise<void}
+   */
+  async clickOnProductImage(page: Page, productRow: number): Promise<void> {
+    return this.clickAndWaitForNavigation(page, this.productDetailsImage(productRow));
+  }
+
+  /**
+   * Get product details
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row in details block
+   * @returns {Promise<Page}
+   */
+  async clickOnProductName(page: Page, productRow: number): Promise<Page> {
+    return this.openLinkWithTargetBlank(page, this.productDetailsName(productRow));
+  }
+
+  /**
+   * Get items number
+   * @param page {Page} Browser tab
+   * @returns {Promise<string}
+   */
+  async getItemsNumber(page: Page): Promise<string> {
+    return this.getTextContent(page, this.itemsNumber);
+  }
+
   // Methods for personal information step
   /**
    * Click on sign in
@@ -377,6 +478,15 @@ class Checkout extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.personalInformationLogoutLink);
 
     return this.isStepCompleted(page, this.personalInformationStepForm);
+  }
+
+  /**
+   * Go to password reminder page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToPasswordReminderPage(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.forgetPasswordLink);
   }
 
   /**
@@ -941,7 +1051,9 @@ class Checkout extends FOBasePage {
    * @return {Promise<void>}
    */
   async choosePaymentAndOrder(page: Page, paymentModuleName: string): Promise<void> {
-    await page.click(this.paymentOptionInput(paymentModuleName));
+    if (await this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 1000)) {
+      await page.click(this.paymentOptionInput(paymentModuleName));
+    }
     await Promise.all([
       this.waitForVisibleSelector(page, this.paymentConfirmationButton),
       page.click(this.conditionToApproveLabel),

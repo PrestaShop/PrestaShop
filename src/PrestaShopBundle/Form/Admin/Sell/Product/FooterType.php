@@ -59,7 +59,7 @@ class FooterType extends TranslatorAwareType
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var int|null
@@ -72,7 +72,7 @@ class FooterType extends TranslatorAwareType
      * @param ProductProvider $productUrlProvider
      * @param ProductPreviewProvider $productPreviewUrlProvider
      * @param RouterInterface $router
-     * @param FeatureInterface $multistoreFeature
+     * @param FeatureInterface $multiStoreFeature
      * @param int|null $contextShopId
      */
     public function __construct(
@@ -81,7 +81,7 @@ class FooterType extends TranslatorAwareType
         ProductProvider $productUrlProvider,
         ProductPreviewProvider $productPreviewUrlProvider,
         RouterInterface $router,
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         ?int $contextShopId
     ) {
         parent::__construct($translator, $locales);
@@ -89,7 +89,7 @@ class FooterType extends TranslatorAwareType
         $this->productPreviewUrlProvider = $productPreviewUrlProvider;
         $this->router = $router;
         $this->contextShopId = $contextShopId;
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
     }
 
     /**
@@ -99,7 +99,7 @@ class FooterType extends TranslatorAwareType
     {
         $productId = $options['product_id'];
 
-        $deleteUrl = $this->router->generate('admin_products_v2_delete', [
+        $deleteUrl = $this->router->generate('admin_products_v2_delete_from_all_shops', [
             'productId' => $productId,
         ]);
         $duplicateUrl = $this->router->generate('admin_products_v2_duplicate_shop', [
@@ -114,7 +114,7 @@ class FooterType extends TranslatorAwareType
         $seoUrl = $this->productUrlProvider->getUrl($productId, '{friendly-url}');
 
         $duplicateLabel = $this->trans('Duplicate', 'Admin.Actions');
-        if ($this->multistoreFeature->isActive()) {
+        if ($this->multiStoreFeature->isActive()) {
             $duplicateLabel = $this->trans('Duplicate for current store', 'Admin.Actions');
         }
 

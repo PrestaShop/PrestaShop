@@ -296,7 +296,7 @@ class AdminStoresControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                'label' => $this->trans('Store association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             ];
         }
@@ -411,6 +411,8 @@ class AdminStoresControllerCore extends AdminController
     protected function postImage($id)
     {
         $ret = parent::postImage($id);
+
+        // Should we generate high DPI images?
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {

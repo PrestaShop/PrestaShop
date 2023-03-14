@@ -55,7 +55,7 @@ class AddValue extends BOBasePage {
    * @return {Promise<string>}
    */
   // eslint-disable-next-line consistent-return
-  async addEditValue(page: Page, valueData: FeatureValueData, saveAndStay: boolean = false): Promise<string|void> {
+  async addEditValue(page: Page, valueData: FeatureValueData, saveAndStay: boolean = false): Promise<string | void> {
     // Set group and value
     await this.selectByVisibleText(page, this.featureSelect, valueData.featureName);
     await this.setValue(page, this.valueInput, valueData.value);
@@ -67,11 +67,12 @@ class AddValue extends BOBasePage {
     // Save value
     if (saveAndStay) {
       await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
-    } else {
-      await this.clickAndWaitForNavigation(page, this.saveButton);
       // Return successful message
-      return this.getAlertSuccessBlockParagraphContent(page);
+      return this.getAlertSuccessBlockContent(page);
     }
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    // Return successful message
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

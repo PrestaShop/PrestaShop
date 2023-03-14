@@ -53,7 +53,7 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var MultistoreContextCheckerInterface
@@ -71,11 +71,11 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
     private $checkboxLabel;
 
     public function __construct(
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         TranslatorInterface $translator
     ) {
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->translator = $translator;
     }
@@ -96,7 +96,7 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!$this->multistoreFeature->isUsed() || !$this->multistoreContextChecker->isSingleShopContext()) {
+        if (!$this->multiStoreFeature->isUsed() || !$this->multistoreContextChecker->isSingleShopContext()) {
             return;
         }
 
@@ -133,7 +133,7 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
-        if (!$this->multistoreFeature->isUsed() || !$this->multistoreContextChecker->isSingleShopContext()) {
+        if (!$this->multiStoreFeature->isUsed() || !$this->multistoreContextChecker->isSingleShopContext()) {
             return;
         }
 

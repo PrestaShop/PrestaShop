@@ -90,7 +90,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_INVOICE',
                     'label' => $this->trans('Enable invoices', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'If enabled, your customers will receive an invoice for the purchase.',
+                        'When enabled, your customers will receive an invoice for the purchase.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
@@ -114,7 +114,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_PDF_IMG_INVOICE',
                     'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'Adds an image in front of the product name on the invoice',
+                        'Adds an image in front of the product name on the invoice.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
@@ -192,7 +192,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_INVOICE_LEGAL_FREE_TEXT',
                     'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).',
+                        'Use this field to show additional information on the invoice such as specific legal information. It will be displayed below the payment methods summary.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
@@ -218,7 +218,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'translation_domain' => false,
                     'multistore_configuration_key' => 'PS_INVOICE_MODEL',
                     'label' => $this->trans('Invoice model', 'Admin.Orderscustomers.Feature'),
-                    'help' => $this->trans('Choose an invoice model.', 'Admin.Orderscustomers.Help'),
+                    'help' => $this->trans('Choose an invoice model', 'Admin.Orderscustomers.Help'),
                 ]
             )
             ->add(

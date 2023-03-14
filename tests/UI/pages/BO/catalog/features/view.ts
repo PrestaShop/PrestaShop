@@ -12,6 +12,8 @@ class ViewFeature extends BOBasePage {
 
   private readonly addNewValueLink: string;
 
+  private readonly backToListButton: string;
+
   private readonly gridForm: string;
 
   private readonly gridTableHeaderTitle: string;
@@ -142,6 +144,9 @@ class ViewFeature extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
+
+    // Footer selectors
+    this.backToListButton = '#desc-feature_value-back';
   }
 
   /* Header methods */
@@ -153,6 +158,39 @@ class ViewFeature extends BOBasePage {
    */
   async goToAddNewValuePage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewValueLink);
+  }
+
+  /**
+   * Go to edit value page
+   * @param page {Page} Browser tab
+   * @param row {number} Row in values table
+   * @return {Promise<void>}
+   */
+  async goToEditValuePage(page: Page, row: number): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Click on back to the list button
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async clickOnBackToTheListButton(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.backToListButton);
+  }
+
+  /**
+   * Delete value
+   * @param page {Page} Browser tab
+   * @param row {number} Row in values table
+   * @return {Promise<string>}
+   */
+  async deleteValue(page: Page, row: number): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.tableColumnActionsToggleButton(row));
+    await this.waitForSelectorAndClick(page, this.tableColumnActionsDeleteLink(row));
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /* Filter methods */

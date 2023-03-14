@@ -58,7 +58,7 @@ trans('Catalog price rules', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
 
 // Multiple image formats feature flags
-trans('Enable / Disable having more than one image format (jpg, webp, avif, png...)', 'Admin.Advparameters.Feature');
+trans('Enable / Disable having more than one image format (jpg, webp, avif, png, etc.)', 'Admin.Advparameters.Feature');
 
 // Countries feature flag
 trans('Countries', 'Admin.Advaparameters.Feature');

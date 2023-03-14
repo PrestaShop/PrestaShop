@@ -142,7 +142,7 @@
 			</div>
 
 			<div class="front forgot_confirm" style="display: none">
-				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.' d='Admin.Login.Notification'}<br/><br/>{l s='If this email address has been registered in our shop, you will receive a link to reset your password.' d='Admin.Login.Notification'}</h4>
+				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.' d='Admin.Login.Notification'}<br/><br/>{l s='If this email address has been registered in our store, you will receive a link to reset your password.' d='Admin.Login.Notification'}</h4>
 			</div>
 		</div>
 		{else}

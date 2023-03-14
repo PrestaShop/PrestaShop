@@ -49,7 +49,9 @@ Feature: Copy product from shop to shop.
     Then product "product1" should be assigned to following categories for shop shop2:
       | id reference | name  | is default |
       | women        | Women | true       |
-    When I copy product product1 from shop shop2 to shop shop1
+    When I set following shops for product "product1":
+      | source shop | shop2       |
+      | shops       | shop1,shop2 |
     # Women is not associated to shop1, we need to pick another default category for shop1 (home is picked since it's the shop's default category)
     # Since the associations are common to all shops, shop2 is already assigned to home now
     Then product "product1" should be assigned to following categories for shop shop2:

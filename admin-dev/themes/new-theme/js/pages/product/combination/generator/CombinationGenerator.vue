@@ -43,7 +43,10 @@
       </template>
 
       <template #footer-confirmation>
-        <div class="md-checkbox md-checkbox-inline">
+        <div
+          v-if="isMultiStoreActive"
+          class="md-checkbox md-checkbox-inline"
+        >
           <label>
             <input
               v-model="applyToAllShops"
@@ -135,6 +138,10 @@
       },
       shopId: {
         type: Number,
+        required: true,
+      },
+      isMultiStoreActive: {
+        type: Boolean,
         required: true,
       },
       eventEmitter: {

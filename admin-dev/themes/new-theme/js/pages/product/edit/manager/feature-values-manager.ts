@@ -108,7 +108,11 @@ export default class FeatureValuesManager {
       const $featureValueSelector = $(ProductMap.featureValues.featureValueSelect, $collectionRow).first();
       $featureValueSelector.prop('disabled', hasCustomValue);
       if (hasCustomValue) {
-        $featureValueSelector.val('');
+        $featureValueSelector.val('0');
+      } else {
+        const $featureInput = $(ProductMap.featureValues.featureSelect, $collectionRow).first();
+        const featureId = Number($featureInput.val());
+        this.renderFeatureValueChoices($featureValueSelector, featureId);
       }
     });
   }
@@ -116,7 +120,7 @@ export default class FeatureValuesManager {
   private watchFeatureSelectors(): void {
     $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, (event) => {
       const $selector = $(event.target);
-      const idFeature = $selector.val();
+      const idFeature = Number($selector.val());
       const $collectionRow = $selector.closest(ProductMap.featureValues.collectionRow);
       const $featureValueSelector = $(ProductMap.featureValues.featureValueSelect, $collectionRow).first();
       const $customValueInputs = $(ProductMap.featureValues.customValueInput, $collectionRow);
@@ -124,26 +128,30 @@ export default class FeatureValuesManager {
 
       // Reset values
       $customValueInputs.val('');
-      $featureValueSelector.val('');
+      $featureValueSelector.val('0');
       $customFeatureIdInput.val('');
 
-      $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
-        .then((featureValuesData) => {
-          $featureValueSelector.prop('disabled', featureValuesData.length === 0);
-          $featureValueSelector.empty();
-          $.each(featureValuesData, (index, featureValue) => {
-            // The placeholder shouldn't be posted.
-            if (featureValue.id === '0') {
-              // eslint-disable-next-line
-              featureValue.id = '';
-            }
-
-            $featureValueSelector
-              .append($('<option></option>')
-                .attr('value', featureValue.id)
-                .text(featureValue.value));
-          });
-        });
+      this.renderFeatureValueChoices($featureValueSelector, idFeature);
     });
+  }
+
+  private renderFeatureValueChoices($featureValueSelector: JQuery, idFeature: number): void {
+    if (!idFeature) {
+      $featureValueSelector.prop('disabled', true);
+
+      return;
+    }
+
+    $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
+      .then((featureValuesData) => {
+        $featureValueSelector.prop('disabled', featureValuesData.length === 0);
+        $featureValueSelector.empty();
+        $.each(featureValuesData, (index, featureValue) => {
+          $featureValueSelector
+            .append($('<option></option>')
+              .attr('value', featureValue.id)
+              .text(featureValue.value));
+        });
+      });
   }
 }

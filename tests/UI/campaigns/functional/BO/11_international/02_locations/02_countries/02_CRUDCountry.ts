@@ -28,15 +28,27 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_BO_international_locations_countries_CRUDCountry';
 
 /*
-Create country
-Update country
-Delete country
+Scenario:
+- Try to create country with used iso code and invalid prefix
+- Create enabled country
+- Go to FO > Login > go to addresses > new address form and check the new country
+- Update country (disable country)
+- Go to FO > Login > go to addresses > new address form and check that the new country is not visible
+- Delete country by bulk actions
  */
 describe('BO - International - Countries : CRUD country', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCountries: number = 0;
 
+  const countryDataIncorrectDate: CountryData = new CountryData({
+    name: 'countryTest',
+    isoCode: 'MC',
+    callPrefix: '+99',
+    currency: 'Euro',
+    zipCodeFormat: 'NNNN',
+    active: true,
+  });
   const createCountryData: CountryData = new CountryData({
     name: 'countryTest',
     isoCode: 'CT',
@@ -45,7 +57,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     zipCodeFormat: 'NNNN',
     active: true,
   });
-  const editCountryData:CountryData = new CountryData({
+  const editCountryData: CountryData = new CountryData({
     name: 'countryTestEdit',
     isoCode: 'CT',
     callPrefix: 333,
@@ -106,6 +118,13 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       const pageTitle = await addCountryPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCountryPage.pageTitleCreate);
+    });
+
+    it('should try to create new country with a used ISO code and an invalid prefix', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreateNewCountry', baseContext);
+
+      const textResult = await addCountryPage.createEditCountry(page, countryDataIncorrectDate);
+      await expect(textResult).to.to.contains(addCountryPage.errorMessageIsoCode).and.contains(addCountryPage.errorMessagePrefix);
     });
 
     it('should create new country', async function () {
@@ -280,7 +299,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     });
   });
 
-  describe('Delete country by bulk actions', async () => {
+  describe('Delete country', async () => {
     it(`should filter country by name '${editCountryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 

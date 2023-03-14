@@ -138,11 +138,11 @@ class CountryType extends AbstractType
             ])
             ->add('need_zip_code', SwitchType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Does it need Zip/Postal code?', [], 'Admin.International.Feature'),
+                'label' => $this->translator->trans('Does it need a ZIP/Postal code?', [], 'Admin.International.Feature'),
             ])
             ->add('zip_code_format', TextType::class, [
                 'required' => true,
-                'label' => $this->translator->trans(' Zip/Postal code format', [], 'Admin.International.Feature'),
+                'label' => $this->translator->trans('ZIP/Postal code format', [], 'Admin.International.Feature'),
                 'help' => $this->translator->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', [], 'Admin.International.Help'),
                 'constraints' => [
                     new TypedRegex([

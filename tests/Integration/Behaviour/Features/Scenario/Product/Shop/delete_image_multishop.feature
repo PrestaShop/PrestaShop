@@ -26,10 +26,10 @@ Feature: Delete product image from Back Office (BO)
       | type        | standard       |
     And product "product1" type should be standard
     And product "product1" should have no images
-    And I copy product product1 from shop shop1 to shop shop2
     And I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
-    And I copy product product1 from shop shop1 to shop shop3
-    And I copy product product1 from shop shop1 to shop shop2
+    And I set following shops for product "product1":
+      | source shop | shop1             |
+      | shops       | shop1,shop2,shop3 |
     And I add new image "image2" named "logo.jpg" to product "product1" for shop "shop1"
     And I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
       | cover | true |

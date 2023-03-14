@@ -67,7 +67,7 @@ class Vouchers extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableVouchers(page: Page, row: number, columnName: string): Promise<string> {
-    let columnSelector:string;
+    let columnSelector: string;
 
     switch (columnName) {
       case 'code':
@@ -103,6 +103,15 @@ class Vouchers extends FOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get number of vouchers
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfVouchers(page: Page): Promise<number> {
+    return (await page.$$(this.vouchersTableRows)).length;
   }
 }
 
