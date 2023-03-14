@@ -7843,7 +7843,7 @@ class ProductCore extends ObjectModel
             'SELECT product_shop.`id_category_default`
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
-            WHERE p.`id_product` = ' . (int)$this->id
+            WHERE p.`id_product` = ' . (int) $this->id
         );
 
         return $default_category ? (int)$default_category : Context::getContext()->shop->id_category;
