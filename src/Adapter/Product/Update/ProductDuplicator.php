@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use Combination;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Language;
@@ -36,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
@@ -65,7 +64,6 @@ use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShopException;
 use Product;
 use ProductDownload as VirtualProductFile;
-use Shop;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -135,7 +133,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     private $combinationStockUpdater;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -157,7 +155,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         StockAvailableRepository $stockAvailableRepository,
         ProductStockUpdater $productStockUpdater,
         CombinationStockUpdater $combinationStockUpdater,
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         ProductImagePathFactory $productImageSystemPathFactory
     ) {
         $this->productRepository = $productRepository;
