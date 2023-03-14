@@ -8,12 +8,14 @@ Feature: Product feature value management
 
   Background:
     Given shop "shop1" with name "test_shop" exists
-    When I create product feature "element" with specified properties:
-      | name | Nature Element |
-    Then product feature "element" name should be "Nature Element"
-    Given language "language1" with locale "en-US" exists
+    And language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
-    And language "language2" with locale "fr-FR" exists
+    And I create product feature "element" with specified properties:
+      | name[en-US] | Nature Element |
+    And product feature "element" should have following details:
+      | name[en-US] | Nature Element |
+      | name[fr-FR] | Nature Element |
 
   Scenario: I create and edit feature value
     When I create feature value "fire" for feature "element" with following properties:
@@ -33,7 +35,7 @@ Feature: Product feature value management
 
   Scenario: Creating product feature value with empty name should not be allowed
     When I create feature value "water" for feature "element" with following properties:
-      | value[en-US] | |
+      | value[en-US] |  |
     Then I should get an error that feature value is invalid
     When I create feature value "water" for feature "element" with following properties:
       | value[en-US] | <invalid |
@@ -48,7 +50,7 @@ Feature: Product feature value management
       | en-US  | Earth |
       | fr-FR  | Terre |
     When I edit feature value "earth" with following properties:
-      | value[en-US] | |
+      | value[en-US] |  |
     Then I should get an error that feature value is invalid
     When I edit feature value "earth" with following properties:
       | value[en-US] | <invalid |
@@ -64,7 +66,9 @@ Feature: Product feature value management
       | fr-FR  | Terre |
     And feature value "earth" should be associated to feature "element"
     When I create product feature "planet" with specified properties:
-      | name | Planet |
-    Then product feature "planet" name should be "Planet"
+      | name[en-US] | Planet |
+    Then product feature "planet" should have following details:
+      | name[en-US] | Planet |
+      | name[fr-FR] | Planet |
     When I associate feature value "earth" to feature "planet"
     Then feature value "earth" should be associated to feature "planet"
