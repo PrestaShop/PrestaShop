@@ -7846,7 +7846,7 @@ class ProductCore extends ObjectModel
             WHERE p.`id_product` = ' . (int) $this->id
         );
 
-        return $default_category ? (int)$default_category : Context::getContext()->shop->id_category;
+        return (int) $defaultCategory ?? Context::getContext()->shop->id_category;
     }
 
     /**
