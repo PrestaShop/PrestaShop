@@ -1,5 +1,6 @@
 import Employees from '@data/demo/employees';
 import {config} from 'dotenv';
+import path from 'path';
 
 config();
 
@@ -18,6 +19,10 @@ global.BO = {
   PASSWD: process.env.PASSWD || Employees.DefaultEmployee.password,
   FIRSTNAME: process.env.FIRSTNAME || Employees.DefaultEmployee.firstName,
   LASTNAME: process.env.LASTNAME || Employees.DefaultEmployee.lastName,
+};
+
+global.PSConfig = {
+  parametersFile: process.env.PS_PARAMETERS_FILE || path.resolve(__dirname, '../../../', 'app/config/parameters.php'),
 };
 
 global.INSTALL = {
