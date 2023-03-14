@@ -33,7 +33,7 @@ Scenario:
 - In cart page check the 2 cart rules
 - Bulk delete the created cart rules
  */
-describe('BO - Catalog - Cart rules : Priority', async () => {
+describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

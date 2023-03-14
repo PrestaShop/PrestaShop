@@ -30,7 +30,7 @@ Scenario:
 - Check that the cart rule is not visible
 - Delete the created cart rule
  */
-describe('BO - Catalog - Cart rules : Disable status', async () => {
+describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
