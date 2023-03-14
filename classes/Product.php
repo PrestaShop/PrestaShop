@@ -7839,7 +7839,7 @@ class ProductCore extends ObjectModel
      */
     public function getDefaultCategory(): int
     {
-        $default_category = Db::getInstance()->getValue(
+        $defaultCategory = Db::getInstance()->getValue(
             'SELECT product_shop.`id_category_default`
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
