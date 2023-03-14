@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
@@ -56,7 +56,7 @@ use Tests\Resources\DummyFileUploader;
 class ProductImageFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     private $productImageRepository;
 
@@ -67,7 +67,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
     public function __construct()
     {
-        $this->productImageRepository = $this->getContainer()->get(ProductImageRepository::class);
+        $this->productImageRepository = $this->getContainer()->get(ProductImageMultiShopRepository::class);
     }
 
     /**
@@ -607,6 +607,15 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             count($images),
             sprintf('Expected and actual images count does not match. ShopConstraint: %s', var_export($shopConstraint, true))
         );
+
+        // Set new references if defined (used for duplication tests) and update reference for following assertion loop
+        foreach ($dataRows as $index => $dataRow) {
+            if (isset($dataRow['new image reference'])) {
+                $actualImage = $images[$index];
+                $this->getSharedStorage()->set($dataRow['new image reference'], $actualImage->getImageId());
+                $dataRows[$index]['image reference'] = $dataRow['new image reference'];
+            }
+        }
 
         foreach ($dataRows as $index => $dataRow) {
             $imageId = (int) $this->getSharedStorage()->get($dataRow['image reference']);

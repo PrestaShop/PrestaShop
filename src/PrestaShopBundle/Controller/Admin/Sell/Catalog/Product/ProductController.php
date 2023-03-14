@@ -1235,6 +1235,9 @@ class ProductController extends FrameworkBundleAdminController
             $productIds[$i] = (int) $productId;
         }
 
+        // Return product IDs ordered
+        sort($productIds);
+
         return $productIds;
     }
 

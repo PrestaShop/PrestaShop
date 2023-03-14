@@ -169,8 +169,37 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Given file ":fileReference" for product ":productReference" exists in system
-     * @Given file ":fileReference" for product ":productReference" should exist in system
+     * @Then file :fileReference for product :productReference should have same file as :dummyFileName
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     * @param string $dummyFileName
+     */
+    public function assertFileIsSameAsDummyFile(string $productReference, string $fileReference, string $dummyFileName): void
+    {
+        $reference = $this->buildSystemFileReference($productReference, $fileReference);
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException('No file reference stored in shared storage');
+        }
+
+        $virtualDownloadFilePath = $this->getSharedStorage()->get($reference);
+
+        // This was previously saved during image upload
+        $dummyFilePath = DummyFileUploader::getDummyFilePath($dummyFileName);
+        $dummyMD5 = md5_file($dummyFilePath);
+
+        if ($dummyMD5 !== md5_file($virtualDownloadFilePath)) {
+            throw new RuntimeException(sprintf(
+                'Expected files dummy %s and file %s to be identical',
+                $dummyFileName,
+                $fileReference
+            ));
+        }
+    }
+
+    /**
+     * @Given file :fileReference for product :productReference exists in system
+     * @Given file :fileReference for product :productReference should exist in system
      *
      * @param string $productReference
      * @param string $fileReference
@@ -250,6 +279,10 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         }
         $this->getSharedStorage()->set($fileReference, $actualFile->getId());
         $this->assertVirtualFile($actualFile, $dataTable);
+
+        // Set path for new reference used in other assertions
+        $reference = $this->buildSystemFileReference($productReference, $fileReference);
+        $this->getSharedStorage()->set($reference, _PS_DOWNLOAD_DIR_ . $actualFile->getFileName());
     }
 
     private function assertVirtualFile(VirtualProductFileForEditing $actualFile, TableNode $dataTable): void

@@ -49,7 +49,7 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
     }
 
     /**
-     * @When I update combination ":combinationReference" stock for shop ":shopReference" with following details:
+     * @When I update combination :combinationReference stock for shop :shopReference with following details:
      */
     public function updateStockForShop(
         string $combinationReference,

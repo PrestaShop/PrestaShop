@@ -261,6 +261,21 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         $actualFields = $this->getProductCustomizationFields($productReference, $shopConstraint);
         $notFoundExpectedFields = [];
 
+        // Assign new references if defined
+        foreach ($data as $index => $expectedField) {
+            if (!isset($expectedField['new reference'])) {
+                break;
+            }
+
+            // If a new reference is being set we match it with the same order as the returned data
+            if (!$this->getSharedStorage()->exists($expectedField['new reference'])) {
+                $actualField = $actualFields[$index];
+                $this->getSharedStorage()->set($expectedField['new reference'], $actualField->getCustomizationFieldId());
+                // New reference becomes the expected reference for the second loop
+                $data[$index]['reference'] = $expectedField['new reference'];
+            }
+        }
+
         foreach ($data as $expectedField) {
             $expectedId = $this->getSharedStorage()->get($expectedField['reference']);
             $foundExpectedField = false;

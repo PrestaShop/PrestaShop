@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -135,47 +134,6 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
                     $this->getSharedStorage()->set($productInfo['copy_reference'], $newProductId->getValue());
                 }
             }
-        }
-    }
-
-    /**
-     * @Then product :newProductReference should have identical customization fields to :oldProductReference
-     *
-     * @param string $newProductReference
-     * @param string $oldProductReference
-     */
-    public function assertDuplicatedCustomizationFields(string $newProductReference, string $oldProductReference): void
-    {
-        $oldCustomizationFields = $this->getProductCustomizationFields($oldProductReference, ShopConstraint::shop($this->getDefaultShopId()));
-        $newCustomizationFields = $this->getProductCustomizationFields($newProductReference, ShopConstraint::shop($this->getDefaultShopId()));
-
-        Assert::assertEquals(
-            count($oldCustomizationFields),
-            count($newCustomizationFields),
-            'Old product customization fields count differs from new duplicated product'
-        );
-
-        foreach ($oldCustomizationFields as $key => $oldCustomizationField) {
-            Assert::assertEquals(
-                $oldCustomizationField->getLocalizedNames(),
-                $newCustomizationFields[$key]->getLocalizedNames(),
-                'Unexpected localized names of duplicated product customization field'
-            );
-            Assert::assertEquals(
-                $oldCustomizationField->getType(),
-                $newCustomizationFields[$key]->getType(),
-                'Unexpected type of duplicated product customization field'
-            );
-            Assert::assertEquals(
-                $oldCustomizationField->isAddedByModule(),
-                $newCustomizationFields[$key]->isAddedByModule(),
-                'Unexpected "addedByModule" property of duplicated product customization field'
-            );
-            Assert::assertEquals(
-                $oldCustomizationField->isRequired(),
-                $newCustomizationFields[$key]->isRequired(),
-                'Unexpected "required" property of duplicated product customization field'
-            );
         }
     }
 }
