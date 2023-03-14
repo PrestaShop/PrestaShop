@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModificatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -226,6 +227,17 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     {
         $sourceDefaultShopId = $this->productRepository->getProductDefaultShopId($sourceProductId);
         $shopIds = $this->productRepository->getShopIdsByConstraint($sourceProductId, $shopConstraint);
+
+        if (empty($shopIds)) {
+            throw new ShopAssociationNotFound(
+                sprintf(
+                    'No shops associated with product %d by shop constraint %s',
+                    $sourceProductId->getValue(),
+                    var_export($shopConstraint, true)
+                )
+            );
+        }
+
         if ($shopConstraint->getShopId()) {
             $targetDefaultShopId = $shopConstraint->getShopId();
         } elseif ($shopConstraint->getShopGroupId()) {
