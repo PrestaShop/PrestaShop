@@ -37,10 +37,14 @@ describe('BO - Catalog - Cart rules : Priority', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
+  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
+  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
   const cartRulePriority2: CartRuleData = new CartRuleData({
     name: 'cartRulePriority2',
     priority: 2,
     status: true,
+    dateFrom: pastDate,
+    dateTo: futureDate,
     discountType: 'Amount',
     discountAmount: {
       value: 2,
@@ -52,6 +56,8 @@ describe('BO - Catalog - Cart rules : Priority', async () => {
     name: 'cartRulePriority1',
     priority: 1,
     status: true,
+    dateFrom: pastDate,
+    dateTo: futureDate,
     discountType: 'Amount',
     discountAmount: {
       value: 2,
