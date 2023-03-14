@@ -88,8 +88,8 @@ class AddCurrency extends LocalizationBasePage {
       + 'div.btn-group-action button';
 
     // Currency Format Modal
-    this.currencyFormatEditModal = '#currency-format-edit-modal .modal.show';
-    this.currencyFormatEditSymbolInput = `${this.currencyFormatEditModal} #custom-symbol`;
+    this.currencyFormatEditModal = 'div[data-role="currency-format-edit-modal"] .modal.show';
+    this.currencyFormatEditSymbolInput = `${this.currencyFormatEditModal} input[data-role="custom-symbol"]`;
     this.currencyFormatEditSubmit = `${this.currencyFormatEditModal} footer button.btn-primary`;
   }
 

@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div id="currency-format-edit-modal">
+  <div data-role="currency-format-edit-modal">
     <modal
       confirmation
       :modal-title="modalTitle"
