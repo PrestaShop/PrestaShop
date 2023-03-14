@@ -68,4 +68,4 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository:
     autowire: true
-    public: false
+    public: true
