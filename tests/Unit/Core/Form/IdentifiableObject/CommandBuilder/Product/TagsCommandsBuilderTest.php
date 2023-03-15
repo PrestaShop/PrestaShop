@@ -46,7 +46,8 @@ class TagsCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $builder = new TagsCommandsBuilder();
         $builtCommands = $builder->buildCommands(
             $this->getProductId(),
-            $formData
+            $formData,
+            $this->getSingleShopConstraint()
         );
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -163,10 +164,14 @@ class TagsCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected tags to be a localized array');
 
-        $builder->buildCommands($this->getProductId(), [
-            'seo' => [
-                'tags' => 'cotton, candy',
+        $builder->buildCommands(
+            $this->getProductId(),
+            [
+                'seo' => [
+                    'tags' => 'cotton, candy',
+                ],
             ],
-        ]);
+            $this->getSingleShopConstraint()
+        );
     }
 }

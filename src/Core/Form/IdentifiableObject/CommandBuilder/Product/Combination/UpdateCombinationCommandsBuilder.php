@@ -41,7 +41,7 @@ use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
  * edition, to clarify the configuration each sub-domain is configured separately but in the end we use one config, one
  * builder and one command for the whole Combination fields updates.
  */
-class UpdateCombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * @var string

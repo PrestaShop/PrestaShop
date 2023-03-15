@@ -30,13 +30,14 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Builder used to build UpdateTypeCommand
  */
 class TypeCommandsBuilder implements ProductCommandsBuilderInterface
 {
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['header']['type'])) {
             return [];

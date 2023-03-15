@@ -37,8 +37,8 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.virtual_product_file_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandsBuilder:
+    class:
     tags: [ 'core.product_command_builder' ]
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCategoriesCommandsBuilder:
@@ -65,8 +65,6 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder:
     arguments:
       - !tagged core.combination_command_builder
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\MultiShopCombinationCommandsBuilderInterface: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]

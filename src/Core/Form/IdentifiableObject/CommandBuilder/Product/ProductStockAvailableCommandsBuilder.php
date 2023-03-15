@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
  *
  * @see UpdateProductStockAvailableCommand
  */
-class ProductStockAvailableCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class ProductStockAvailableCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * @var string

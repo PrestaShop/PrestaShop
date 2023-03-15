@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class TagsCommandsBuilder implements ProductCommandsBuilderInterface
@@ -37,7 +38,7 @@ class TagsCommandsBuilder implements ProductCommandsBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $commands = [];
         $seoData = $formData['seo'] ?? [];
