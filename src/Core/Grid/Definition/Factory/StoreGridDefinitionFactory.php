@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -59,11 +58,12 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
-            ->setOptions([
-                'bulk_field' => 'id_store',
-            ])
-            )
+            // @todo: uncomment when bulk actions are implemented
+            //->add((new BulkActionColumn('bulk'))
+            //->setOptions([
+                //'bulk_field' => 'id_store',
+            //])
+            //)
             ->add((new DataColumn('id_store'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
