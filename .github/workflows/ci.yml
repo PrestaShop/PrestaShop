@@ -5,7 +5,7 @@ on:
   pull_request:
   workflow_dispatch:
   push:
-    branches: [main, karol_sklepbaletowy/8.0.1]
+    branches: [main, sklepbaletowy/8.0.1]
   release:
     types: [published]
   
