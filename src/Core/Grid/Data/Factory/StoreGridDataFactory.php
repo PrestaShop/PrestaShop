@@ -66,9 +66,18 @@ final class StoreGridDataFactory implements GridDataFactoryInterface
      */
     private function applyModification(array $stores): array
     {
+        $optionalFields = ['state', 'fax', 'phone'];
+
         foreach ($stores as $i => $store) {
-            if (null === $store['state']) {
-                $stores[$i]['state'] = '--';
+            foreach ($store as $key => $value) {
+                if (!in_array($key, $optionalFields, true)) {
+                    continue;
+                }
+
+                // adds placeholder "--" to every field which contains empty value
+                if (!$value) {
+                    $stores[$i][$key] = '--';
+                }
             }
         }
 

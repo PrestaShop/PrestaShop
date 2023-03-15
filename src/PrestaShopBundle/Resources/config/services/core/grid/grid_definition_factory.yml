@@ -414,5 +414,5 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    public: false
+    public: true
     autowire: true

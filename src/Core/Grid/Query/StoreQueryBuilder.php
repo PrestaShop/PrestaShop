@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    /**
      * @var int[]
      */
     protected $shopIds;
@@ -43,36 +48,53 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     protected $languageId;
 
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     * @param int[] $shopIds
+     * @param int $languageId
+     */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         array $shopIds,
         int $languageId
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->shopIds = $shopIds;
         $this->languageId = $languageId;
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this->getCommonQueryBuilder()
+        $qb = $this->getCommonQueryBuilder($searchCriteria->getFilters())
             ->select('
                 s.id_store, sl.name, sl.address1 AS address, s.city, s.postcode,
                 state.name AS state, cl.name AS country, s.phone, s.fax, s.active
             ')
             ->groupBy('s.id_store')
         ;
+
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb)
+        ;
+
+        return $qb;
     }
 
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this->getCommonQueryBuilder()->select('COUNT(DISTINCT s.id_store)x');
+        return $this->getCommonQueryBuilder($searchCriteria->getFilters())
+            ->select('COUNT(DISTINCT s.id_store)x');
     }
 
-    protected function getCommonQueryBuilder(): QueryBuilder
+    protected function getCommonQueryBuilder(array $filters): QueryBuilder
     {
-        return $this->connection->createQueryBuilder()
+        $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'store', 's')
             ->innerJoin(
                 's',
@@ -101,5 +123,50 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
                 's.id_state = state.id_state'
             )
         ;
+
+        $this->applyFilters($qb, $filters);
+
+        return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param array<string, int|string|bool> $filters
+     */
+    protected function applyFilters(QueryBuilder $qb, array $filters): void
+    {
+        $filtersMap = [
+            'id_store' => 's.id_store',
+            'active' => 's.active',
+            'name' => 'sl.name',
+            'address' => 'sl.address1',
+            'city' => 's.city',
+            'postcode' => 's.postcode',
+            'state' => 'state.name',
+            'country' => 'cl.name',
+            'phone' => 's.phone',
+            'fax' => 's.fax',
+        ];
+
+        foreach ($filters as $filterName => $value) {
+            // make sure filters are known, to avoid sql injection
+            if (!array_key_exists($filterName, $filtersMap)) {
+                continue;
+            }
+
+            $dbColumn = $filtersMap[$filterName];
+
+            // apply strict filtering only for certain fields
+            if ('id_store' === $filterName || 'active' === $filterName) {
+                $qb->andWhere($dbColumn . ' = :' . $filterName)
+                    ->setParameter($filterName, $value);
+
+                continue;
+            }
+
+            // and wildcard for all other filters
+            $qb->andWhere($dbColumn . ' LIKE :' . $filterName)
+                ->setParameter($filterName, '%' . $value . '%');
+        }
     }
 }
