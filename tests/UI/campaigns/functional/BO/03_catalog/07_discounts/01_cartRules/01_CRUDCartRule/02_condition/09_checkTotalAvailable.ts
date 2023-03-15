@@ -27,7 +27,7 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_checkTotalAvailable';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_checkTotalAvailable';
 
 describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () => {
   let browserContext: BrowserContext;
