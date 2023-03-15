@@ -42,6 +42,10 @@ type GlobalBrowser = {
   interceptErrors: any
 }
 
+type GlobalPSConfig = {
+  parametersFile: string
+}
+
 type GlobalBrowserErrors = {
   responses: Array<any>
   js: Array<any>
@@ -64,6 +68,7 @@ declare global {
   var URLHasPort: boolean;
   var FO: GlobalFO;
   var BO: GlobalBO;
+  var PSConfig: GlobalPSConfig;
   var BROWSER: GlobalBrowser;
   var GENERATE_FAILED_STEPS: any;
   var SCREENSHOT: GlobalScreenshot;

@@ -69,7 +69,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @Then product ":productReference" should have following combinations:
+     * @Then product :productReference should have following combinations:
      *
      * @param string $productReference
      * @param TableNode $tableNode
@@ -80,7 +80,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @Then product :productReference should have the following combinations for shops :shopReferences:
+     * @Then product :productReference should have the following combinations for shop(s) :shopReferences:
      *
      * @param string $productReference
      * @param TableNode $tableNode

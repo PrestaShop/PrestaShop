@@ -69,7 +69,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository:
     autowire: true
-    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'

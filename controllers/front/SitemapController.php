@@ -35,7 +35,7 @@ class SitemapControllerCore extends FrontController
      */
     public function initContent()
     {
-        $urls = [
+        $sitemapUrls = [
             'our_offers' => [
                 'name' => $this->trans('Our Offers', [], 'Shop.Theme.Global'),
                 'links' => $this->getOffersLinks(),
@@ -55,34 +55,12 @@ class SitemapControllerCore extends FrontController
         ];
 
         /*
-         * Backward compatibility with older themes.
-         * Intentionally not modifiable by a hook, so somebody doesn't remove a group completely.
-         * (this would break the theme relying on the var on being there)
-         * This should be removed as soon as possible, because $pages variable is overwriting
-         * our global template variable assigned in FrontController.
-         */
-        $this->context->smarty->assign(
-            [
-                'our_offers' => $urls['our_offers']['name'],
-                'categories' => $urls['categories']['name'],
-                'your_account' => $urls['your_account']['name'],
-                'pages' => $urls['pages']['name'],
-                'links' => [
-                    'offers' => $urls['our_offers']['links'],
-                    'pages' => $urls['pages']['links'],
-                    'user_account' => $urls['your_account']['links'],
-                    'categories' => $urls['categories']['links'],
-                ],
-            ]
-        );
-
-        /*
          * Allows modules to add own urls (even whole new groups) to frontend sitemap.
          * For example landing pages, blog posts and others.
          */
         Hook::exec(
             'actionModifyFrontendSitemap',
-            ['urls' => &$urls],
+            ['urls' => &$sitemapUrls],
             null,
             false,
             true,
@@ -91,7 +69,27 @@ class SitemapControllerCore extends FrontController
             true
         );
 
-        $this->context->smarty->assign('urls', $urls);
+        /*
+         * Backward compatibility with older themes.
+         * This should be removed as soon as possible, because $pages variable is overwriting
+         * our global template variable assigned in FrontController.
+         */
+        $this->context->smarty->assign(
+            [
+                'our_offers' => !empty($sitemapUrls['our_offers']['name']) ? $sitemapUrls['our_offers']['name'] : '',
+                'categories' => !empty($sitemapUrls['categories']['name']) ? $sitemapUrls['categories']['name'] : '',
+                'your_account' => !empty($sitemapUrls['your_account']['name']) ? $sitemapUrls['your_account']['name'] : '',
+                'pages' => !empty($sitemapUrls['pages']['name']) ? $sitemapUrls['pages']['name'] : '',
+                'links' => [
+                    'offers' => !empty($sitemapUrls['our_offers']['links']) ? $sitemapUrls['our_offers']['links'] : [],
+                    'pages' => !empty($sitemapUrls['pages']['links']) ? $sitemapUrls['pages']['links'] : [],
+                    'user_account' => !empty($sitemapUrls['your_account']['links']) ? $sitemapUrls['your_account']['links'] : [],
+                    'categories' => !empty($sitemapUrls['categories']['links']) ? $sitemapUrls['categories']['links'] : [],
+                ],
+            ]
+        );
+
+        $this->context->smarty->assign('sitemapUrls', $sitemapUrls);
         parent::initContent();
         $this->setTemplate('cms/sitemap');
     }

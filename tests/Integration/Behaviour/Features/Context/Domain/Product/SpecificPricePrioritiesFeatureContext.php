@@ -144,7 +144,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     /**
      * @see transformPriorityList
      *
-     * @Then following specific price priorities should be used for product ":productReference":
+     * @Then following specific price priorities should be used for product :productReference:
      *
      * @param string $productReference
      * @param PriorityList $priorityList
