@@ -511,3 +511,11 @@ services:
       - '@prestashop.core.grid.data.factory.feature'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+
+prestashop.core.grid.grid_factory.store:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\StoreGridDataFactory'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'

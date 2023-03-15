@@ -634,3 +634,17 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'feature'
+
+  prestashop.core.grid.data.factory.store:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\StoreQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'store'
+
+  PrestaShop\PrestaShop\Core\Grid\Data\Factory\StoreGridDataFactory:
+    autowire: true
+    public: false
+    arguments:
+      - '@prestashop.core.grid.data.factory.store'

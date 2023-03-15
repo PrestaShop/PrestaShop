@@ -1,0 +1,8 @@
+admin_stores_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::indexAction'
+    _legacy_controller: AdminStores
+    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
+    # _legacy_link: AdminStores
