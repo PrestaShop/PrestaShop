@@ -1,0 +1,48 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches: [main, karol_sklepbaletowy/8.0.1]
+  release:
+    types: [published]
+  
+jobs:
+  docker:
+    name: Build the Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+        git diff origin/8.0.1 > my_git_diff.patch
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: agentpietrucha/sklepbaletowy
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+
+      - name: Login to image repository
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: .docker/Dockerfile-sklepbaletowy
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=8.0-apache
+            USER_ID=1000
+            GROUP_ID=1000

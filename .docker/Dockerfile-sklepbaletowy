@@ -1,0 +1,9 @@
+FROM prestashop/prestashop:8.0.1-8.1
+
+RUN apt-get update
+
+RUN apt-get install git -y 
+
+COPY ./my_git_diff.patch .
+
+RUN git apply ./my_git_diff.patch

@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  db8:
+    image: mariadb:10.11.2
+    restart: always
+    volumes:
+      - presta8-db:/var/lib/mysql
+    networks:
+      - presta8-network
+    environment:
+      - MARIADB_ROOT_PASSWORD=admin
+
+  presta8:
+    image: mybuild:v1
+    restart: always
+    volumes:
+      - presta8_cache:/var/www/html/cache
+      - presta8_img:/var/www/html/img
+      - presta8_modules:/var/www/html/modules
+      - presta8_themes:/var/www/html/themes
+      - presta8_upload:/var/www/html/upload
+      - presta8_config:/var/www/html/config
+    networks:
+      - presta8-network
+      - nginx-network
+    environment:
+      - DB_SERVER=db8
+      - VIRTUAL_HOST=p8.sklepbaletowy.pl
+      - LETSENCRYPT_HOST=p8.sklepbaletowy.pl
+      - LETSENCRYPT_SINGLE_DOMAIN_CERTS=true
+      - PS_ENABLE_SSL=1
+      - PS_DOMAIN=p8.sklepbaletowy.pl
+      - PS_FOLDER_ADMIN=adminX
+      - PS_FOLDER_INSTALL=installX
+    depends_on:
+      - db8
+    ports:
+      - "8008:80"
+
+
+networks:
+  presta8-network:
+    name: presta8-network
+  nginx-network:
+    name: nginx-netowrk
+
+volumes:
+  presta8-db:
+    name: presta8-db
+  presta8_cache:
+    name: presta8_cache
+  presta8_img:
+    name: presta8_img
+  presta8_modules:
+    name: presta8_modules
+  presta8_themes:
+    name: presta8_themes
+  presta8_upload:
+    name: presta8_upload
+  presta8_config:
+    name: presta8_config
