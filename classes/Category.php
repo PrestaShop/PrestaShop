@@ -209,10 +209,10 @@ class CategoryCore extends ObjectModel
                 $this->addPosition($position, $idShop);
             }
         } else {
-            foreach (Shop::getShops(true) as $shop) {
-                $position = (int) Category::getLastPosition((int) $this->id_parent, $shop['id_shop']);
-                $this->addPosition($position, $shop['id_shop']);
-            }
+            $id = Context::getContext()->shop->id;
+            $idShop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
+            $position = (int) Category::getLastPosition((int) $this->id_parent, $idShop);
+            $this->addPosition($position, $idShop);
         }
 
         if (!$this->doNotRegenerateNTree) {

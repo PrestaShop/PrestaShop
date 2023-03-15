@@ -104,7 +104,12 @@ class CombinationCore extends ObjectModel
             'id_product' => ['required' => true, 'xlink_resource' => 'products'],
         ],
         'associations' => [
-            'product_option_values' => ['resource' => 'product_option_value'],
+            'product_option_values' => [
+                'resource' => 'product_option_value', 
+                'fields' => [
+                    'id' => ['required' => true],
+                ],
+            ],
             'images' => ['resource' => 'image', 'api' => 'images/products'],
         ],
     ];
