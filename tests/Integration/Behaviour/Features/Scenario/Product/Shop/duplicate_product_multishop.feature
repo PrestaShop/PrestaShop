@@ -617,9 +617,9 @@ Feature: Copy product from shop to shop.
     And I assign product productWithCategories to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
-    And I copy product productWithCategories from shop shop1 to shop shop2
-    And I copy product productWithCategories from shop shop1 to shop shop3
-    And I copy product productWithCategories from shop shop1 to shop shop4
+    And I set following shops for product "productWithCategories":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     # Duplicate on one shop
     When I duplicate product productWithCategories to a productWithCategoriesCopyShop for shop shop1
     Then product productWithCategoriesCopyShop should be assigned to following categories for shop shop1:
@@ -650,9 +650,9 @@ Feature: Copy product from shop to shop.
     And I assign product productWithCarriers with following carriers:
       | carrier1 |
       | carrier2 |
-    And I copy product productWithCarriers from shop shop1 to shop shop2
-    And I copy product productWithCarriers from shop shop1 to shop shop3
-    And I copy product productWithCarriers from shop shop1 to shop shop4
+    And I set following shops for product "productWithCarriers":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     # Duplicate to one shop
     When I duplicate product productWithCarriers to a productWithCarriersCopyShop for shop shop1
     And product "productWithCarriersCopyShop" should have following shipping information for shop "shop1":
@@ -671,9 +671,9 @@ Feature: Copy product from shop to shop.
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
-    And I copy product productWithStock from shop shop1 to shop shop2
-    And I copy product productWithStock from shop shop1 to shop shop3
-    And I copy product productWithStock from shop shop1 to shop shop4
+    And I set following shops for product "productWithStock":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     When I update product "productWithStock" stock for shop shop1 with following information:
       | delta_quantity | 10     |
       | location       | shelf1 |
@@ -782,9 +782,9 @@ Feature: Copy product from shop to shop.
       | id reference                | combination name | reference | attributes   | impact on price | quantity | is default |
       | productWithCombinationsRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
       | productWithCombinationsBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
-    And I copy product productWithCombinationAndStock from shop shop1 to shop shop2
-    And I copy product productWithCombinationAndStock from shop shop1 to shop shop3
-    And I copy product productWithCombinationAndStock from shop shop1 to shop shop4
+    And I set following shops for product "productWithCombinationAndStock":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     # Update stock for shop1
     And I update combination "productWithCombinationsRed" stock for shop shop1 with following details:
       | delta quantity | 10        |
@@ -1122,9 +1122,9 @@ Feature: Copy product from shop to shop.
     Given I add product "productWithCustomizationFields" to shop "shop1" with following information:
       | name[en-US] | bottle of beer |
       | type        | standard       |
-    And I copy product productWithCustomizationFields from shop shop1 to shop shop2
-    And I copy product productWithCustomizationFields from shop shop1 to shop shop3
-    And I copy product productWithCustomizationFields from shop shop1 to shop shop4
+    And I set following shops for product "productWithCustomizationFields":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     And I update product productWithCustomizationFields with following customization fields for shop shop1:
       | reference    | type | name[en-US]  | name[fr-FR]  | is required |
       | customField1 | text | field1 shop1 | champ1 shop1 | true        |
@@ -1191,9 +1191,13 @@ Feature: Copy product from shop to shop.
       | type        | combinations |
     And I add new image "image1" named "app_icon.png" to product "productWithImages" for shop "shop1"
     And I add new image "image2" named "logo.jpg" to product "productWithImages" for shop "shop1"
-    And I copy product productWithImages from shop shop1 to shop shop2
+    And I set following shops for product "productWithImages":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     And I add new image "image3" named "app_icon.png" to product "productWithImages" for shop "shop2"
-    And I copy product productWithImages from shop shop2 to shop shop3
+    And I set following shops for product "productWithImages":
+      | source shop | shop2             |
+      | shops       | shop1,shop2,shop3 |
     And product "productWithImages" should have following images for shop "shop1,shop2,shop3":
       | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops               |
       | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2, shop3 |
@@ -1294,9 +1298,9 @@ Feature: Copy product from shop to shop.
       | type        | combinations |
     And I generate combinations in shop shop1 for product productWithCombinations using following attributes:
       | Color | [Red,Blue] |
-    And I copy product productWithCombinations from shop shop1 to shop shop2
-    And I copy product productWithCombinations from shop shop1 to shop shop3
-    And I copy product productWithCombinations from shop shop1 to shop shop4
+    And I set following shops for product "productWithCombinations":
+      | source shop | shop1                   |
+      | shops       | shop1,shop2,shop3,shop4 |
     Then product productWithCombinations should have the following combinations for shops "shop1,shop2,shop3,shop4":
       | id reference                | combination name | reference | attributes   | impact on price | quantity | is default |
       | productWithCombinationsRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
@@ -1460,25 +1464,25 @@ Feature: Copy product from shop to shop.
     #
     When I duplicate product productWithCombinations to a productWithCombinationsCopyAllShops for all shops
     Then product productWithCombinationsCopyAllShops should have the following combinations for shop shop1:
-      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | id reference                              | combination name | reference      | attributes     | impact on price | quantity | is default |
       | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
       | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 10              | 0        | false      |
       | productWithCombinationsCopyAllShopsPink   | Color - Pink     | pinkShop1      | [Color:Pink]   | 11              | 0        | false      |
       | productWithCombinationsCopyAllShopsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
     And product productWithCombinationsCopyAllShops should have the following combinations for shop shop2:
-      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | id reference                              | combination name | reference      | attributes     | impact on price | quantity | is default |
       | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
       | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 20              | 0        | true       |
       | productWithCombinationsCopyAllShopsGreen  | Color - Green    | greenShop2     | [Color:Green]  | 21              | 0        | false      |
       | productWithCombinationsCopyAllShopsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
     And product productWithCombinationsCopyAllShops should have the following combinations for shop shop3:
-      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | id reference                              | combination name | reference      | attributes     | impact on price | quantity | is default |
       | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | true       |
       | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 30              | 0        | false      |
       | productWithCombinationsCopyAllShopsBlack  | Color - Black    | blackShop3     | [Color:Black]  | 31              | 0        | false      |
       | productWithCombinationsCopyAllShopsOrange | Color - Orange   | orangeAllShops | [Color:Orange] | 69              | 0        | false      |
     And product productWithCombinationsCopyAllShops should have the following combinations for shop shop4:
-      | id reference                  | combination name | reference      | attributes     | impact on price | quantity | is default |
+      | id reference                              | combination name | reference      | attributes     | impact on price | quantity | is default |
       | productWithCombinationsCopyAllShopsRed    | Color - Red      | redAllShops    | [Color:Red]    | 51              | 0        | false      |
       | productWithCombinationsCopyAllShopsBlue   | Color - Blue     | blueShop4      | [Color:Blue]   | 40              | 0        | false      |
       | productWithCombinationsCopyAllShopsWhite  | Color - White    |                | [Color:White]  | 0               | 0        | true       |
