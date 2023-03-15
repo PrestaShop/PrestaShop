@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          git diff origin/8.0.1 > my_git_diff.patch
+          git diff 8.0.1 > my_git_diff.patch
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
