@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-final class StoreGridDataFactory implements GridDataFactoryInterface
+class StoreGridDataFactory implements GridDataFactoryInterface
 {
     /**
      * @var GridDataFactoryInterface
@@ -64,7 +64,7 @@ final class StoreGridDataFactory implements GridDataFactoryInterface
      *
      * @return array<int, array<string, mixed>>
      */
-    private function applyModification(array $stores): array
+    protected function applyModification(array $stores): array
     {
         $optionalFields = ['state', 'fax', 'phone'];
 

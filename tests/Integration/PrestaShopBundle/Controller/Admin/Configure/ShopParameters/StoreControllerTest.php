@@ -33,12 +33,9 @@ use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
-use Tests\Integration\Utility\ContextMockerTrait;
 
 class StoreControllerTest extends FormGridControllerTestCase
 {
-    use ContextMockerTrait;
-
     /**
      * @var KernelBrowser
      */

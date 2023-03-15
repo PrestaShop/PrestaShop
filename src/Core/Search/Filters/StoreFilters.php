@@ -36,9 +36,9 @@ class StoreFilters extends Filters
     protected $filterId = StoreGridDefinitionFactory::GRID_ID;
 
     /**
-     * {@inheritdoc}
+     * @return array<string, mixed>
      */
-    public static function getDefaults()
+    public static function getDefaults(): array
     {
         return [
             'limit' => self::LIST_LIMIT,

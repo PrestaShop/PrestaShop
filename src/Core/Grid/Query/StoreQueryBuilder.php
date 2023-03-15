@@ -92,6 +92,11 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('COUNT(DISTINCT s.id_store)x');
     }
 
+    /**
+     * @param array<string, int|string|bool> $filters
+     *
+     * @return QueryBuilder
+     */
     protected function getCommonQueryBuilder(array $filters): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
