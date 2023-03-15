@@ -105,7 +105,7 @@ class CombinationCore extends ObjectModel
         ],
         'associations' => [
             'product_option_values' => [
-                'resource' => 'product_option_value', 
+                'resource' => 'product_option_value',
                 'fields' => [
                     'id' => ['required' => true],
                 ],
