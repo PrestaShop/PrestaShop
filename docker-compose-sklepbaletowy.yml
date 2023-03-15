@@ -20,6 +20,7 @@ services:
       - presta8_themes:/var/www/html/themes
       - presta8_upload:/var/www/html/upload
       - presta8_config:/var/www/html/config
+      - presta8_app_config:/var/www/html/app/config
     networks:
       - presta8-network
       - nginx-network
@@ -59,3 +60,5 @@ volumes:
     name: presta8_upload
   presta8_config:
     name: presta8_config
+  presta8_app_config:
+    name: presta8_app_config
