@@ -12,7 +12,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import CategoryData from '@data/faker/category';
 
-const baseContext: string = 'functional_FO_menuAndNavigation_consultCategoriesInHeader';
+const baseContext: string = 'functional_FO_menuAndNavigation_navigateInCategories_consultCategoriesInHeader';
 
 /*
 Go to FO

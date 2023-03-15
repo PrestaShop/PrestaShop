@@ -27,6 +27,8 @@ class Category extends FOBasePage {
 
   private readonly paginationNext: string;
 
+  private readonly paginationPrevious: string;
+
   private readonly sortByDiv: string;
 
   private readonly sortByButton: string;
@@ -34,6 +36,12 @@ class Category extends FOBasePage {
   private readonly productList: string;
 
   private readonly productArticle: (number: number) => string;
+
+  private readonly productTitle: (number: number) => string;
+
+  private readonly productPrice: (number: number) => string;
+
+  private readonly productAttribute: (number: number, attribute: string) => string;
 
   private readonly productImg: (number: number) => string;
 
@@ -62,12 +70,17 @@ class Category extends FOBasePage {
     this.productItemListDiv = `${this.productListDiv} .products div.product`;
     this.paginationText = `${this.productListDiv} .pagination div:nth-child(1)`;
     this.paginationNext = '#js-product-list nav.pagination a[rel=\'next\']';
+    this.paginationPrevious = '#js-product-list nav.pagination a[rel=\'prev\']';
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
 
     // Products list
     this.productList = '#js-product-list';
     this.productArticle = (number: number) => `${this.productList} .products div:nth-child(${number}) article`;
+
+    this.productTitle = (number: number) => `${this.productArticle(number)} .product-title`;
+    this.productPrice = (number: number) => `${this.productArticle(number)} .product-price-and-shipping`;
+    this.productAttribute = (number: number, attribute: string) => `${this.productArticle(number)} .product-${attribute}`;
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
@@ -132,6 +145,30 @@ class Category extends FOBasePage {
     return this.elementVisible(page, this.sortByButton, 1000);
   }
 
+  async sortProductsList(page: Page, sortBy: string): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.sortByButton);
+    await this.waitForVisibleSelector(page, `${this.sortByButton}[aria-expanded="true"]`);
+    await this.waitForSelectorAndClick(page, `#js-product-list-top .products-sort-order .dropdown-menu a[href*='${sortBy}']`);
+    await page.waitForTimeout(3000);
+  }
+
+  async getAllProductsAttribute(page: Page, attribute: string): Promise<string[]> {
+    let rowContent: string;
+    const rowsNumber: number = await this.getNumberOfProducts(page);
+    const allRowsContentTable: string[] = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      if (attribute === 'price-and-shipping') {
+        rowContent = await this.getTextContent(page, `${this.productAttribute(i, attribute)} span.price`);
+      } else {
+        rowContent = await this.getTextContent(page, this.productAttribute(i, attribute));
+      }
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
   /**
    * Get showing Items
    * @param page {Page} Browser tab
@@ -148,6 +185,10 @@ class Category extends FOBasePage {
    */
   async goToNextPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.paginationNext);
+  }
+
+  async goToPreviousPage(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.paginationPrevious);
   }
 
   // Quick view methods
