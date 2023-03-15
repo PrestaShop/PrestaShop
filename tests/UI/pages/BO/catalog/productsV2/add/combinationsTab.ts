@@ -24,7 +24,7 @@ class CombinationsTab extends BOBasePage {
 
   private readonly combinationsTabLink: string;
 
-  private readonly attributesAndFeaturesLink: string;
+  public readonly attributesAndFeaturesLink: string;
 
   private readonly generateFirstCombinationsButton: string;
 
@@ -233,9 +233,10 @@ class CombinationsTab extends BOBasePage {
     this.bulkCombinationProgressModalCloseButton = '#bulk-combination-progress-modal button.close-modal-button';
 
     // Filter by size selectors
-    this.filterBySizeButton = '#form_invoice_prefix[data-role=filter-by-size]';
-    this.filterBySizeDropDownMenu = '.combinations-filters-dropdown div.dropdown-menu';
-    this.filterBySizeCheckboxButton = (id: number) => `div.combinations-filters div:nth-child(${id}) .md-checkbox-container`;
+    this.filterBySizeButton = 'button[data-role=filter-by-size]';
+    this.filterBySizeDropDownMenu = 'div.combinations-filters div.dropdown-menu';
+    this.filterBySizeCheckboxButton = (id: number) => `${this.filterBySizeDropDownMenu} div:nth-child(${id}) `
+      + '.md-checkbox-container';
     this.clearFilterButton = 'div.combinations-filters button.combinations-filters-clear';
 
     // Selectors of combinations table

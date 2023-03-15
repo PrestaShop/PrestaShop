@@ -38,6 +38,7 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
+        :data-role="`filter-by-${label.toLowerCase()}`"
       >
         {{ label }} {{ nbFiles }}
       </button>
