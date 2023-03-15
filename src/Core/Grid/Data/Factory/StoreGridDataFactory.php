@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
@@ -32,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-class StoreGridDataFactory implements GridDataFactoryInterface
+final class StoreGridDataFactory implements GridDataFactoryInterface
 {
     /**
      * @var GridDataFactoryInterface
@@ -65,20 +64,11 @@ class StoreGridDataFactory implements GridDataFactoryInterface
      *
      * @return array<int, array<string, mixed>>
      */
-    protected function applyModification(array $stores): array
+    private function applyModification(array $stores): array
     {
-        $optionalFields = ['state', 'fax', 'phone'];
-
         foreach ($stores as $i => $store) {
-            foreach ($store as $key => $value) {
-                if (!in_array($key, $optionalFields, true)) {
-                    continue;
-                }
-
-                // adds placeholder "--" to every field which contains empty value
-                if (!$value) {
-                    $stores[$i][$key] = '--';
-                }
+            if (null === $store['state']) {
+                $stores[$i]['state'] = '--';
             }
         }
 

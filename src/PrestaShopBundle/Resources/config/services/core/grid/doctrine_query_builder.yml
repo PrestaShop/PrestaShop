@@ -540,6 +540,5 @@ services:
     public: false
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
+      $shopIds: '@=service("prestashop.adapter.shop.context").getContextListShopID()'
       $languageId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-      $connection: '@doctrine.dbal.default_connection'
-      $dbPrefix: '%database_prefix%'

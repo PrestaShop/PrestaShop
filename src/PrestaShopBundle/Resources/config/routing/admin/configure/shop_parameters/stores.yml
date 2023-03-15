@@ -1,72 +1,8 @@
 admin_stores_index:
   path: /
-  methods: [ GET ]
+  methods: GET
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::indexAction'
     _legacy_controller: AdminStores
     # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
     # _legacy_link: AdminStores
-
-admin_stores_search:
-  path: /
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    _legacy_controller: AdminStores
-    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
-    # _legacy_link: AdminStores
-    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory
-    redirectRoute: admin_stores_index
-
-admin_stores_toggle_status:
-  path: /{storeId}/toggle-status
-  methods: [ POST ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::toggleStatusAction'
-    _legacy_controller: AdminStores
-    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
-    # _legacy_link: AdminStores:statusstore
-    _legacy_parameters:
-      id_store: storeId
-  requirements:
-    storeId: \d+
-
-admin_stores_delete:
-  path: /{storeId}/delete
-  methods: [ POST, DELETE ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::deleteAction'
-    _legacy_controller: AdminStores
-    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
-    # _legacy_link: AdminStores:deletestore
-    _legacy_parameters:
-      id_store: storeId
-  requirements:
-    storeId: \d+
-
-admin_stores_bulk_delete:
-  path: /bulk-delete
-  methods: [ POST, DELETE ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDeleteAction'
-    _legacy_controller: AdminStores
-    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
-    # _legacy_link: AdminStores:submitBulkdeletestore
-
-admin_stores_bulk_enable:
-  path: /bulk-enable
-  methods: [ POST ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkEnableAction'
-    _legacy_controller: AdminStores
-    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
-    # _legacy_link: AdminStores:submitBulkenableSelectionstore
-
-admin_stores_bulk_disable:
-  path: /bulk-disable
-  methods: [ POST ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDisableAction'
-    _legacy_controller: AdminStores
-    # @todo; uncomment legacy link when page is fully migrated and ready to be displayed by default
-    # _legacy_link: AdminStores:submitBulkdisableSelectionstore
