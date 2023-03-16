@@ -3950,9 +3950,9 @@ exit;
      *
      * @param float $amount The amount to spread across the rows
      * @param int $precision Rounding precision
-     * e.g. if $amount is 1, $precision is 0 and $rows = [['a' => 2], ['a' => 1]]
-     * then the resulting $rows will be [['a' => 3], ['a' => 1]]
-     * But if $precision were 1, then the resulting $rows would be [['a' => 2.5], ['a' => 1.5]]
+     *                       e.g. if $amount is 1, $precision is 0 and $rows = [['a' => 2], ['a' => 1]]
+     *                       then the resulting $rows will be [['a' => 3], ['a' => 1]]
+     *                       But if $precision were 1, then the resulting $rows would be [['a' => 2.5], ['a' => 1.5]]
      * @param array $rows An array, associative or not, containing arrays that have at least $column and $sort_column fields
      * @param string $column The column on which to perform adjustments
      */
