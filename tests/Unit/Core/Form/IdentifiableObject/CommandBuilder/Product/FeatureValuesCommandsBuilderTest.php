@@ -45,7 +45,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new FeatureValuesCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -260,7 +260,7 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     {
         $this->expectException($exceptionClass);
         $builder = new FeatureValuesCommandsBuilder();
-        $builder->buildCommands($this->getProductId(), $formData);
+        $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
     }
 
     public function getInvalidCommands(): Generator

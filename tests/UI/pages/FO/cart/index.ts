@@ -62,6 +62,8 @@ class Cart extends FOBasePage {
 
   private readonly promoCodeLink: string;
 
+  private readonly promoCodeBlock: string;
+
   private readonly promoInput: string;
 
   private readonly addPromoCodeButton: string;
@@ -128,6 +130,7 @@ class Cart extends FOBasePage {
     this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span`;
 
     // Promo code selectors
+    this.promoCodeBlock = '#main div.block-promo';
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
@@ -296,6 +299,16 @@ class Cart extends FOBasePage {
    */
   getAlertWarningForPromoCode(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertPromoCode);
+  }
+
+  /**
+   * Is cart rule name visible
+   * @param page {Page} Browser tab
+   * @param line {number} Cart summary line
+   * @returns {Promise<boolean>}
+   */
+  isCartRuleNameVisible(page: Page, line: number = 1): Promise<boolean> {
+    return this.elementVisible(page, this.cartRuleName(line), 1000);
   }
 
   /**

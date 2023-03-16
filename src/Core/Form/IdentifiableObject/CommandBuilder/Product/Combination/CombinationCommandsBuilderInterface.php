@@ -27,18 +27,16 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * This interface is used by CombinationCommandsBuilder each object which implements must build
- * a combination command based on the input form data.
- */
 interface CombinationCommandsBuilderInterface
 {
     /**
      * @param CombinationId $combinationId
      * @param array $formData
+     * @param ShopConstraint $singleShopConstraint
      *
      * @return array Returns empty array if the required data for the command is absent
      */
-    public function buildCommands(CombinationId $combinationId, array $formData): array;
+    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array;
 }
