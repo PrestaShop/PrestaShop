@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -118,11 +119,13 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'field' => 'fax',
             ])
             )
-            // @todo: make "active" a toggleColumn when toggle action is implemented
-            ->add((new DataColumn('active'))
+            ->add((new ToggleColumn('active'))
             ->setName($this->trans('Enabled', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'active',
+                'primary_field' => 'id_store',
+                'route' => 'admin_stores_toggle_status',
+                'route_param_name' => 'storeId',
             ])
             )
             ->add((new ActionColumn('actions'))

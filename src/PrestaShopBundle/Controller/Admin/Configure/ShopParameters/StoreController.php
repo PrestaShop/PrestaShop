@@ -27,6 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -60,5 +63,34 @@ class StoreController extends FrameworkBundleAdminController
             //],
             //],
         ]);
+    }
+
+    /**
+     * @param int $storeId
+     *
+     * @return Response
+     */
+    public function toggleStatusAction(int $storeId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new ToggleStoreStatusCommand($storeId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_stores_index');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            CannotToggleStoreStatusException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }
