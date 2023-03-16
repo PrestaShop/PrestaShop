@@ -31,12 +31,12 @@ use PHPUnit\Framework\Assert;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DomCrawler\Crawler;
-use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
-use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
+use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 use Tests\Resources\Resetter\StoreResetter;
 
-class StoreControllerTest extends FormGridControllerTestCase
+//@todo: when form actions are ready, this class should extend FormGridControllerTestCase and add additional tests for forms
+class StoreControllerTest extends GridControllerTestCase
 {
     /**
      * @var KernelBrowser
@@ -233,39 +233,6 @@ class StoreControllerTest extends FormGridControllerTestCase
         $initialEntityCount = $this->getEntitiesFromGrid()->count();
         $this->bulkDeleteEntitiesFromPage('admin_stores_bulk_delete', ['store_bulk' => [2, 3]]);
         $this->assertCount($initialEntityCount - 2, $this->getEntitiesFromGrid());
-    }
-
-    protected function generateCreateUrl(): string
-    {
-        //@todo: fix when create action is implemented
-        return '';
-    }
-
-    protected function getCreateSubmitButtonSelector(): string
-    {
-        //@todo: fix when create action is implemented
-        return '';
-    }
-
-    protected function getFormHandlerChecker(): FormHandlerChecker
-    {
-        //@todo: fix when form actions are implemented. Now random from_handler is used to avoid return type error
-        /** @var FormHandlerChecker $checker */
-        $checker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.product_form_handler');
-
-        return $checker;
-    }
-
-    protected function generateEditUrl(array $routeParams): string
-    {
-        //@todo: fix when edit action is implemented
-        return '';
-    }
-
-    protected function getEditSubmitButtonSelector(): string
-    {
-        //@todo: fix when edit action is implemented
-        return '';
     }
 
     protected function getFilterSearchButtonSelector(): string
