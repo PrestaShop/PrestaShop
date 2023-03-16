@@ -29,7 +29,7 @@
  */
 class CategoryCore extends ObjectModel
 {
-    public $halko2;
+    public $halko3;
     public $id;
 
     /** @var int category ID */
