@@ -624,7 +624,8 @@ class AddProduct extends BOBasePage {
   /**
    * Delete specific price
    * @param page {Page} Browser tab
-   * @param row
+   * @param row {number} Row in specific price table
+   * @return {promise<string | null>}
    */
   async deleteSpecificPrice(page: Page, row: number = 1): Promise<string | null> {
     // Go to pricing tab : id = 2

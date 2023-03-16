@@ -248,7 +248,6 @@ class Product extends FOBasePage {
    * @returns {Promise<ProductDetails>}
    */
   async getProductInformation(page: Page): Promise<ProductDetails> {
-    // @ts-ignore
     return {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),
