@@ -165,9 +165,16 @@
     flex-wrap: wrap;
     margin: 0 -0.35rem;
   }
-  #selected-carriers ul li {
-    list-style-type: none;
-    display: inline;
+
+  #selected-carriers {
+    margin-left: 10px;
+    ul {
+      padding: 0;
+      li {
+        list-style-type: none;
+        display: inline;
+      }
+    }
   }
 }
 </style>
