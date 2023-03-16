@@ -91,6 +91,8 @@ class AddProduct extends BOBasePage {
 
   private readonly applyButton: string;
 
+  private readonly deleteSpecificPriceButton: (row: number) => string;
+
   private readonly selectAttributeInput: string;
 
   private readonly generateCombinationsButton: string;
@@ -194,6 +196,7 @@ class AddProduct extends BOBasePage {
     this.applyDiscountOfInput = '#form_step2_specific_price_sp_reduction';
     this.reductionType = '#form_step2_specific_price_sp_reduction_type';
     this.applyButton = '#form_step2_specific_price_save';
+    this.deleteSpecificPriceButton = (row: number) => `#js-specific-price-list tr:nth-child(${row}) td a.delete`;
 
     // Selector of Step 3 : Combinations
     this.selectAttributeInput = '#form_step3_attributes-tokenfield';
@@ -266,8 +269,8 @@ class AddProduct extends BOBasePage {
    * @param imagesPaths {Array<?string>} Paths of the images to add to the product
    * @returns {Promise<void>}
    */
-  async addProductImages(page: Page, imagesPaths: (string|null)[] = []): Promise<void> {
-    const filteredImagePaths: string[] = imagesPaths.filter((el: string|null) => el !== null);
+  async addProductImages(page: Page, imagesPaths: (string | null)[] = []): Promise<void> {
+    const filteredImagePaths: string[] = imagesPaths.filter((el: string | null) => el !== null);
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
       const numberOfImages = await this.getNumberOfImages(page);
@@ -324,7 +327,7 @@ class AddProduct extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async saveProduct(page: Page): Promise<string|null> {
+  async saveProduct(page: Page): Promise<string | null> {
     await page.click(this.saveProductButton);
     const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
     await this.closeGrowlMessage(page);
@@ -338,7 +341,7 @@ class AddProduct extends BOBasePage {
    * @param productData {ProductData} Data to set on new/edit product form
    * @returns {Promise<string>}
    */
-  async createEditBasicProduct(page: Page, productData: ProductData): Promise<string|null> {
+  async createEditBasicProduct(page: Page, productData: ProductData): Promise<string | null> {
     await this.setBasicSetting(page, productData);
 
     if (productData.type === 'Pack of products') {
@@ -355,7 +358,7 @@ class AddProduct extends BOBasePage {
    * @param productData {ProductData} Data to set on combination form
    * @returns {Promise<string>}
    */
-  async setAttributesInProduct(page: Page, productData: ProductData): Promise<string|null> {
+  async setAttributesInProduct(page: Page, productData: ProductData): Promise<string | null> {
     await page.click(this.productWithCombinationsInput);
     // GOTO Combination tab : id = 3
     await this.goToFormStep(page, 3);
@@ -537,7 +540,7 @@ class AddProduct extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getFriendlyURL(page: Page): Promise<string|null> {
+  async getFriendlyURL(page: Page): Promise<string | null> {
     await this.reloadPage(page);
     await this.goToFormStep(page, 5);
 
@@ -551,7 +554,7 @@ class AddProduct extends BOBasePage {
    * @param row {number} Row of input
    * @returns {Promise<string>}
    */
-  async addCustomization(page: Page, customizationData: ProductCustomization, row: number = 0): Promise<string|null> {
+  async addCustomization(page: Page, customizationData: ProductCustomization, row: number = 0): Promise<string | null> {
     // Go to options tab : id = 6
     await this.goToFormStep(page, 6);
     await Promise.all([
@@ -575,7 +578,7 @@ class AddProduct extends BOBasePage {
    * @param specificPriceData {ProductSpecificPrice} Data to set on specific price form
    * @return {Promise<string|null>}
    */
-  async addSpecificPrices(page: Page, specificPriceData: ProductSpecificPrice): Promise<string|null> {
+  async addSpecificPrices(page: Page, specificPriceData: ProductSpecificPrice): Promise<string | null> {
     await this.reloadPage(page);
 
     // Go to pricing tab : id = 2
@@ -604,6 +607,24 @@ class AddProduct extends BOBasePage {
 
     await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);
+
+    return growlMessageText;
+  }
+
+  /**
+   * Delete specific price
+   * @param page {Page} Browser tab
+   * @param row
+   */
+  async deleteSpecificPrice(page: Page, row: number = 1): Promise<string | null> {
+    // Go to pricing tab : id = 2
+    await this.goToFormStep(page, 2);
+    await this.waitForSelectorAndClick(page, `#js-specific-price-list tr:nth-child(${row}) td a.delete`);
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.modalDialog),
+      page.click(this.modalDialogYesButton),
+    ]);
+    const growlMessageText = await this.getGrowlMessageContent(page, 30000);
 
     return growlMessageText;
   }
@@ -675,7 +696,7 @@ class AddProduct extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string|null>}
    */
-  getProductName(page: Page): Promise<string|null> {
+  getProductName(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.productNameInput, 'value');
   }
 
@@ -728,7 +749,7 @@ class AddProduct extends BOBasePage {
    * @param productData {ProductData} Data to set on add/edit product form
    * @returns {Promise<string|null>}
    */
-  async setProduct(page: Page, productData: ProductData): Promise<string|null> {
+  async setProduct(page: Page, productData: ProductData): Promise<string | null> {
     await this.setBasicSetting(page, productData);
     if (productData.type === 'Pack of products') {
       await this.addPackOfProducts(page, productData.pack);
@@ -749,7 +770,7 @@ class AddProduct extends BOBasePage {
    * @param ecoTax
    * @returns {Promise<string|null>}
    */
-  async addEcoTax(page: Page, ecoTax: number): Promise<string|null> {
+  async addEcoTax(page: Page, ecoTax: number): Promise<string | null> {
     // Go to pricing tab : id = 2
     await this.goToFormStep(page, 2);
     await Promise.all([

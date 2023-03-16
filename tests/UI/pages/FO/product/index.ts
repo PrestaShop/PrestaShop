@@ -225,11 +225,30 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Get product tag
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getProductTag(page: Page): Promise<string> {
+    return this.getTextContent(page, '#content li.product-flag');
+  }
+
+  /**
+   * Is product tag visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  isProductTagVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, '#content li.product-flag');
+  }
+
+  /**
    * Get Product information (Product name, price, short description, description)
    * @param page {Page} Browser tab
    * @returns {Promise<ProductDetails>}
    */
   async getProductInformation(page: Page): Promise<ProductDetails> {
+    // @ts-ignore
     return {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),
@@ -368,6 +387,11 @@ class Product extends FOBasePage {
     return this.getTextContent(page, this.discountPercentageSpan);
   }
 
+  /**
+   * Get product availability label
+   * @param page {Page} Browser tab
+   * @return {promise<string>}
+   */
   getProductAvailabilityLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.productAvailability, false);
   }
