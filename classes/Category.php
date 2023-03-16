@@ -29,7 +29,6 @@
  */
 class CategoryCore extends ObjectModel
 {
-    public $halko4;
     public $id;
 
     /** @var int category ID */
