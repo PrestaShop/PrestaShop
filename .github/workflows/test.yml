@@ -1,4 +1,4 @@
-name: Move new issues into Triage
+name: Need 2nd approval
 
 on:
   pull_request_review:
