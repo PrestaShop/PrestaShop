@@ -12,6 +12,8 @@ import type {Page} from 'playwright';
 class AddCurrency extends LocalizationBasePage {
   public readonly pageTitle: string;
 
+  public readonly resetCurrencyFormatMessage: string;
+
   private readonly currencySelect: string;
 
   private readonly alternativeCurrencyCheckBox: string;
@@ -30,6 +32,26 @@ class AddCurrency extends LocalizationBasePage {
 
   private readonly currencyLoadingModal: string;
 
+  private readonly currencyFormatDiv: string;
+
+  private readonly currencyFormatTable: string;
+
+  private readonly currencyFormatRows: string;
+
+  private readonly currencyFormatRow: (nthRow: number) => string;
+
+  private readonly currencyFormatCell: (nthRow: number, nthColumn: number) => string;
+
+  private readonly currencyFormatEdit: (nthRow: number) => string;
+
+  private readonly currencyFormatReset: (nthRow: number) => string;
+
+  private readonly currencyFormatEditModal: string;
+
+  private readonly currencyFormatEditSymbolInput: string;
+
+  private readonly currencyFormatEditSubmit: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add currency page
@@ -38,6 +60,7 @@ class AddCurrency extends LocalizationBasePage {
     super();
 
     this.pageTitle = 'Currencies • ';
+    this.resetCurrencyFormatMessage = 'Your symbol and format customizations have been successfully reset for this language.';
 
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';
@@ -51,6 +74,23 @@ class AddCurrency extends LocalizationBasePage {
 
     // currency modal
     this.currencyLoadingModal = '#currency_loading_data_modal';
+
+    // Currency Format
+    this.currencyFormatDiv = '#currency_formatter';
+    this.currencyFormatTable = `${this.currencyFormatDiv} table`;
+    this.currencyFormatRows = `${this.currencyFormatTable} tbody tr`;
+    this.currencyFormatRow = (nthRow: number) => `${this.currencyFormatRows}:nth-child(${nthRow})`;
+    this.currencyFormatCell = (nthRow: number, nthColumn:number) => `${this.currencyFormatRow(nthRow)} `
+      + `td:nth-child(${nthColumn})`;
+    this.currencyFormatEdit = (nthRow: number) => `${this.currencyFormatCell(nthRow, 3)} `
+      + 'div.btn-group-action button';
+    this.currencyFormatReset = (nthRow: number) => `${this.currencyFormatCell(nthRow, 4)} `
+      + 'div.btn-group-action button';
+
+    // Currency Format Modal
+    this.currencyFormatEditModal = 'div[data-role="currency-format-edit-modal"] .modal.show';
+    this.currencyFormatEditSymbolInput = `${this.currencyFormatEditModal} input[data-role="custom-symbol"]`;
+    this.currencyFormatEditSubmit = `${this.currencyFormatEditModal} footer button.btn-primary`;
   }
 
   /*
@@ -95,9 +135,8 @@ class AddCurrency extends LocalizationBasePage {
     }
 
     await this.setChecked(page, this.statusToggleInput(currencyData.enabled ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveButton);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.saveCurrencyForm(page);
   }
 
   /**
@@ -112,9 +151,8 @@ class AddCurrency extends LocalizationBasePage {
     await this.setValue(page, this.isoCodeInput, currencyData.isoCode);
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
     await this.setChecked(page, this.statusToggleInput(currencyData.enabled ? 1 : 0));
-    await this.clickAndWaitForNavigation(page, this.saveButton);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.saveCurrencyForm(page);
   }
 
   /**
@@ -125,9 +163,8 @@ class AddCurrency extends LocalizationBasePage {
    */
   async updateExchangeRate(page: Page, value: number): Promise<string> {
     await this.setValue(page, this.exchangeRateInput, value.toString());
-    await this.clickAndWaitForNavigation(page, this.saveButton);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.saveCurrencyForm(page);
   }
 
   /**
@@ -139,10 +176,83 @@ class AddCurrency extends LocalizationBasePage {
   async setCurrencyPrecision(page: Page, value: number = 2): Promise<string> {
     await this.setValue(page, this.precisionInput, value.toString());
 
-    // Save new value
+    return this.saveCurrencyForm(page);
+  }
+
+  /**
+   * Save the currency form
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async saveCurrencyForm(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Table methods */
+  /**
+   * Get number of element in grid
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
+    return (await page.$$(this.currencyFormatRows)).length;
+  }
+
+  /**
+   * Get text from a column
+   * @param page {Page} Browser tab
+   * @param row {number} Row in table to get text column
+   * @param column {number} Column to get text content
+   * @return {Promise<string>}
+   */
+  async getTextColumnFromTable(page: Page, row: number, column: number): Promise<string> {
+    return this.getTextContent(page, this.currencyFormatCell(row, column));
+  }
+
+  /**
+   * Click on the edit and displays the modal
+   * @param {Page} page
+   * @param {number} row
+   * @return {boolean} Return if the modal is visible
+   */
+  async editCurrencyFormat(page: Page, row: number): Promise<boolean> {
+    await page.click(this.currencyFormatEdit(row));
+    await this.waitForVisibleSelector(page, this.currencyFormatEditModal);
+
+    return this.elementVisible(page, this.currencyFormatEditModal);
+  }
+
+  /**
+   * Click on the edit and displays the modal
+   * @param {Page} page
+   * @param {number} row
+   * @return {string} Return the message of the grow
+   */
+  async resetCurrencyFormat(page: Page, row: number): Promise<string|null> {
+    await page.click(this.currencyFormatReset(row));
+
+    return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Set the symbol for the currency format
+   * @param {Page} page
+   * @param {string} symbol
+   * @return {void}
+   */
+  async setCurrencyFormatSymbol(page: Page, symbol: string): Promise<void> {
+    await this.setValue(page, this.currencyFormatEditSymbolInput, symbol);
+  }
+
+  /**
+   * Save the currency format form
+   * @param {Page} page
+   * @return {void}
+   */
+  async saveCurrencyFormat(page: Page): Promise<void> {
+    await page.click(this.currencyFormatEditSubmit);
   }
 }
 
