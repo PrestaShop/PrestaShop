@@ -81,6 +81,10 @@ class StoreRepository extends AbstractObjectModelRepository
      */
     public function delete(StoreId $storeId): void
     {
-        $this->deleteObjectModel($this->get($storeId), CannotDeleteStoreException::class);
+        $this->deleteObjectModel(
+            $this->get($storeId),
+            CannotDeleteStoreException::class,
+            CannotDeleteStoreException::FAILED_DELETE
+        );
     }
 }

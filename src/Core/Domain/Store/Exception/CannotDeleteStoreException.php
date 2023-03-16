@@ -33,4 +33,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
  */
 class CannotDeleteStoreException extends StoreException
 {
+    public const FAILED_DELETE = 1;
+
+    public const FAILED_BULK_DELETE = 2;
 }

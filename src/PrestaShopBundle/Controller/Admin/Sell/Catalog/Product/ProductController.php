@@ -1141,7 +1141,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new BulkDuplicateProductCommand(
-                    $this->getProductIdsFromRequest($request),
+                    $this->getBulkActionIds($request, 'product_bulk'),
                     $shopConstraint
                 )
             );
@@ -1197,7 +1197,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand(
-                $this->getProductIdsFromRequest($request),
+                $this->getBulkActionIds($request, 'product_bulk'),
                 $shopConstraint
             ));
             $this->addFlash(
@@ -1213,33 +1213,6 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->json(['success' => true]);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return array<int, int>
-     */
-    private function getProductIdsFromRequest(Request $request): array
-    {
-        $productIds = $request->request->get('product_bulk');
-
-        if (is_numeric($productIds)) {
-            return [(int) $productIds];
-        }
-
-        if (!is_array($productIds)) {
-            return [];
-        }
-
-        foreach ($productIds as $i => $productId) {
-            $productIds[$i] = (int) $productId;
-        }
-
-        // Return product IDs ordered
-        sort($productIds);
-
-        return $productIds;
     }
 
     /**
@@ -1307,7 +1280,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new BulkUpdateProductStatusCommand(
-                    $this->getProductIdsFromRequest($request),
+                    $this->getBulkActionIds($request, 'product_bulk'),
                     $newStatus,
                     $shopConstraint
                 )

@@ -27,13 +27,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -41,9 +47,13 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'store';
 
     protected function getId(): string
@@ -59,12 +69,11 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
-            // @todo: uncomment when bulk actions are implemented
-            //->add((new BulkActionColumn('bulk'))
-            //->setOptions([
-                //'bulk_field' => 'id_store',
-            //])
-            //)
+            ->add((new BulkActionColumn('bulk'))
+            ->setOptions([
+                'bulk_field' => 'id_store',
+            ])
+            )
             ->add((new DataColumn('id_store'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
@@ -130,27 +139,27 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
-            // @todo: uncomment when edit and delte actions are implemented
-            //->setOptions([
-            //'actions' => (new RowActionCollection())
-            //->add((new LinkRowAction('edit'))
-            //->setName($this->trans('Edit', [], 'Admin.Actions'))
-            //->setIcon('edit')
-            //->setOptions([
-            //'route' => 'admin_stores_edit',
-            //'route_param_name' => 'storeId',
-            //'route_param_field' => 'id_store',
-            //])
-            //)
-            //->add(
-            //$this->buildDeleteAction(
-            //'admin_stores_delete',
-            //'storeId',
-            //'id_store',
-            //Request::METHOD_DELETE
-            //)
-            //),
-            //])
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    //@todo: uncomment when edit action is implemented
+                    //->add((new LinkRowAction('edit'))
+                    //->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    //->setIcon('edit')
+                    //->setOptions([
+                        //'route' => 'admin_stores_edit',
+                        //'route_param_name' => 'storeId',
+                        //'route_param_field' => 'id_store',
+                    //])
+                    //)
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_stores_delete',
+                            'storeId',
+                            'id_store',
+                            Request::METHOD_DELETE
+                        )
+                    ),
+            ])
             );
     }
 
@@ -179,6 +188,25 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             );
+    }
+
+    protected function getBulkActions(): BulkActionCollectionInterface
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('store_bulk_enable'))
+            ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => 'admin_stores_bulk_enable',
+            ])
+            )
+            ->add((new SubmitBulkAction('store_bulk_disable'))
+            ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => 'admin_stores_bulk_disable',
+            ])
+            )
+            ->add($this->buildBulkDeleteAction('admin_stores_bulk_delete'))
+        ;
     }
 
     /**
@@ -268,9 +296,8 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             ->setAssociatedColumn('fax')
             )
-            ->add(
-                (new Filter('active', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('active')
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')

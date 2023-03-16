@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotDeleteStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 
 /**
@@ -53,7 +54,17 @@ class BulkDeleteStoreHandler implements BulkDeleteStoreHandlerInterface
     public function handle(BulkDeleteStoreCommand $command): void
     {
         foreach ($command->getStoreIds() as $storeId) {
-            $this->storeRepository->delete($storeId);
+            try {
+                $this->storeRepository->delete($storeId);
+            } catch (CannotDeleteStoreException $e) {
+                throw new CannotDeleteStoreException(
+                    sprintf(
+                        'Error occurred when trying to bulk delete stores. [%s]',
+                        $e->getMessage()
+                    ),
+                    CannotDeleteStoreException::FAILED_BULK_DELETE
+                );
+            }
         }
     }
 }
