@@ -1,15 +1,17 @@
 name: Move new issues into Triage
 
 on:
-  issues:
-    types: [opened]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
-  automate-project-columns:
+  approved:
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
+      - run: echo "This PR was approved"
       - uses: alex-page/github-project-automation-plus@v0.8.3
         with:
           project: backlog
-          column: Todo
+          column: Need review
           repo-token: ${{ secrets.GHPROJECT_TOKEN }}
