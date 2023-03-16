@@ -33,7 +33,7 @@ admin_stores_toggle_status:
 
 admin_stores_delete:
   path: /{storeId}/delete
-  methods: [ DELETE ]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::deleteAction'
     _legacy_controller: AdminStores
@@ -46,7 +46,7 @@ admin_stores_delete:
 
 admin_stores_bulk_delete:
   path: /bulk-delete
-  methods: [ POST ]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDeleteAction'
     _legacy_controller: AdminStores

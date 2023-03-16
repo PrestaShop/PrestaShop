@@ -182,6 +182,12 @@ abstract class GridControllerTestCase extends WebTestCase
         return $this->parseEntitiesFromGridTable($crawler);
     }
 
+    protected function resetGridFilters(): void
+    {
+        // grid filters reset button highly depends on javascript so there is no point trying to test it here
+        DatabaseDump::restoreTables(['admin_filter']);
+    }
+
     /**
      * @param Crawler $crawler
      * @param array $formModifications

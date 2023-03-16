@@ -27,12 +27,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PHPUnit\Framework\Assert;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
+use Tests\Resources\Resetter\StoreResetter;
 
 class StoreControllerTest extends FormGridControllerTestCase
 {
@@ -40,20 +42,34 @@ class StoreControllerTest extends FormGridControllerTestCase
      * @var KernelBrowser
      */
     protected $client;
+
     /**
      * @var Router
      */
     protected $router;
 
-    public function testIndex(): int
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::mockContext();
+        StoreResetter::resetStores();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        StoreResetter::resetStores();
+    }
+
+    public function testIndex(): void
     {
         $stores = $this->getEntitiesFromGrid();
         $this->assertNotEmpty($stores);
-
-        return $stores->count();
     }
 
     /**
+     * @depends testIndex
+     *
      * Testing filters by using already existing entities from fixtures
      */
     public function testFilters(): void
@@ -103,6 +119,120 @@ class StoreControllerTest extends FormGridControllerTestCase
                 ]
             )
         );
+
+        $this->resetGridFilters();
+    }
+
+    /**
+     * @depends testFilters
+     */
+    public function testToggleStatus(): void
+    {
+        $enabledStores = $this->getFilteredEntitiesFromGrid(['store[active]' => 1]);
+        $disabledStoresCount = $this->getFilteredEntitiesFromGrid(['store[active]' => 0])->count();
+
+        Assert::assertGreaterThan(0, $enabledStores->count());
+        Assert::assertEmpty($disabledStoresCount);
+
+        /** @var TestEntityDTO $firstFoundStore */
+        $firstFoundStore = $enabledStores->first();
+
+        $this->toggleStatus('admin_stores_toggle_status', ['storeId' => $firstFoundStore->getId()]);
+
+        Assert::assertSame(
+            $this->getFilteredEntitiesFromGrid(['store[active]' => 1])->count(),
+            $enabledStores->count() - 1
+        );
+
+        Assert::assertSame(
+            $this->getFilteredEntitiesFromGrid(['store[active]' => 0])->count(),
+            $disabledStoresCount + 1
+        );
+
+        $this->resetGridFilters();
+    }
+
+    /**
+     * @depends testToggleStatus
+     */
+    public function testBulkStatusUpdate(): void
+    {
+        $allStores = $this->getEntitiesFromGrid();
+        $allStoresCount = $allStores->count();
+
+        $enabledStores = $this->getFilteredEntitiesFromGrid(['store[active]' => 1]);
+        $disabledStoresCount = $this->getFilteredEntitiesFromGrid(['store[active]' => 0])->count();
+
+        // these numbers are know because of testToggleStatus which only disables one store
+        Assert::assertEquals(1, $disabledStoresCount);
+        Assert::assertEquals($allStoresCount - 1, $enabledStores->count());
+
+        $this->resetGridFilters();
+
+        $allStoreIds = [];
+        /** @var TestEntityDTO $store */
+        foreach ($allStores as $store) {
+            $allStoreIds[] = $store->getId();
+        }
+
+        //first disable all of them
+        $this->client->request(
+            'POST',
+            $this->router->generate('admin_stores_bulk_disable'),
+            ['store_bulk' => $allStoreIds]
+        );
+
+        // check that all of them was disabled
+        Assert::assertEquals(
+            $allStoresCount,
+            $this->getFilteredEntitiesFromGrid(['store[active]' => 0])->count()
+        );
+        // and none left active
+        Assert::assertEmpty($this->getFilteredEntitiesFromGrid(['store[active]' => 1]));
+
+        // then enable all of them again
+        $this->client->request(
+            'POST',
+            $this->router->generate('admin_stores_bulk_enable'),
+            ['store_bulk' => $allStoreIds]
+        );
+
+        // check that all of them was enabled
+        Assert::assertEquals(
+            $allStoresCount,
+            $this->getFilteredEntitiesFromGrid(['store[active]' => 1])->count()
+        );
+        // and none left disabled
+        Assert::assertEmpty($this->getFilteredEntitiesFromGrid(['store[active]' => 0]));
+
+        // and reset grid filters, so it doesn't impact further steps
+        $this->resetGridFilters();
+    }
+
+    /**
+     * @depends testToggleStatus
+     *
+     * @return int
+     */
+    public function testDelete(): int
+    {
+        $initialEntityCount = $this->getEntitiesFromGrid()->count();
+        $this->deleteEntityFromPage('admin_stores_delete', ['storeId' => 5]);
+
+        $entityCount = $this->getEntitiesFromGrid()->count();
+        $this->assertSame($initialEntityCount - 1, $entityCount);
+
+        return $entityCount;
+    }
+
+    /**
+     * @depends testDelete
+     */
+    public function testBulkDelete(): void
+    {
+        $initialEntityCount = $this->getEntitiesFromGrid()->count();
+        $this->bulkDeleteEntitiesFromPage('admin_stores_bulk_delete', ['store_bulk' => [2, 3]]);
+        $this->assertCount($initialEntityCount - 2, $this->getEntitiesFromGrid());
     }
 
     protected function generateCreateUrl(): string

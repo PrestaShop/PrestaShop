@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusExc
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -130,9 +131,9 @@ class StoreController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function bulkEnableAction(Request $request): Response
+    public function bulkEnableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, true);
     }
@@ -142,9 +143,9 @@ class StoreController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function bulkDisableAction(Request $request): Response
+    public function bulkDisableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, false);
     }
@@ -153,9 +154,9 @@ class StoreController extends FrameworkBundleAdminController
      * @param Request $request
      * @param bool $newStatus
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    private function bulkUpdateStatus(Request $request, bool $newStatus): Response
+    private function bulkUpdateStatus(Request $request, bool $newStatus): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new BulkUpdateStoreStatusCommand(
