@@ -6,7 +6,7 @@ import {APIRequestContext, request} from 'playwright';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_internalAuthServer_resourceEndpoint';
 
-describe('BO - API : Resource Endpoint', async () => {
+describe('API : Resource Endpoint', async () => {
   let apiContext: APIRequestContext;
   let accessToken: string;
   let accessTokenExpired: string;
