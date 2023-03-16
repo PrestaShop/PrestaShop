@@ -1251,7 +1251,7 @@ class AdminTranslationsControllerCore extends AdminController
                 if ($type_file == 'php') {
                     $regex = '/this->l\((\')' . _PS_TRANS_PATTERN_ . '\'[\)|\,]/U';
                 } elseif ($type_file == 'specific') {
-                    $regex = '/Translate::getAdminTranslation\((\')' . _PS_TRANS_PATTERN_ . '\'(?:,.*)*\)/U';
+                    $regex = '/Context::getContext\(\)->getTranslator\(\)->trans\((\')' . _PS_TRANS_PATTERN_ . '\'(?:,.*)*\)/U';
                 } else {
                     $regex = '/\{l\s*s\s*=([\'\"])' . _PS_TRANS_PATTERN_ . '\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
                 }
