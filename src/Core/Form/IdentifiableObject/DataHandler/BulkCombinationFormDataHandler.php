@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\MultiShopCombinationCommandsBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter;
 
 class BulkCombinationFormDataHandler implements FormDataHandlerInterface
@@ -41,14 +41,14 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var MultiShopCombinationCommandsBuilderInterface
-     */
-    private $commandsBuilder;
-
-    /**
      * @var BulkCombinationFormDataFormatter
      */
     private $bulkCombinationFormDataFormatter;
+
+    /**
+     * @var CombinationCommandsBuilderInterface
+     */
+    private $commandsBuilder;
 
     /**
      * @var int
@@ -63,14 +63,14 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
     /**
      * @param CommandBusInterface $commandBus
      * @param BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter
-     * @param MultiShopCombinationCommandsBuilderInterface $commandsBuilder
+     * @param CombinationCommandsBuilderInterface $commandsBuilder
      * @param int $contextShopId
      * @param int $defaultShopId
      */
     public function __construct(
         CommandBusInterface $commandBus,
         BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter,
-        MultiShopCombinationCommandsBuilderInterface $commandsBuilder,
+        CombinationCommandsBuilderInterface $commandsBuilder,
         int $contextShopId,
         int $defaultShopId
     ) {

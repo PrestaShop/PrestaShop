@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-final class CarriersCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+final class CarriersCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * @var string

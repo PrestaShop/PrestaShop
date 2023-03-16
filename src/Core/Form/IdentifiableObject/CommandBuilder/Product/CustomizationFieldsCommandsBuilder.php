@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * Builds commands from product customizations form
  */
-final class CustomizationFieldsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+final class CustomizationFieldsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}

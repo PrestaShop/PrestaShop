@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 /**
  * Builds commands from command stock form type only fields related to StockAvailable
  */
-class UpdateCombinationStockAvailableCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+class UpdateCombinationStockAvailableCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * @var string

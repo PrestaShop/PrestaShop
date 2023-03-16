@@ -53,7 +53,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builtCommands = $this->commandsBuilder->buildCommands($this->getProductId(), $formData);
+        $builtCommands = $this->commandsBuilder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
