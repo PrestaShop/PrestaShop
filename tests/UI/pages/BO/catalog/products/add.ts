@@ -285,6 +285,16 @@ class AddProduct extends BOBasePage {
   }
 
   /**
+   * Set product quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} The product quantity to set in the input
+   */
+  async setProductQuantity(page: Page, quantity: number): Promise<void> {
+    await this.goToFormStep(page, 1);
+    await this.setValue(page, this.productQuantityInput, quantity);
+  }
+
+  /**
    * Set Name, type of product, Reference, price ATI, description and short description
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set on basic settings form

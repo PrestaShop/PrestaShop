@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
+import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -37,6 +38,28 @@ describe('FO - Navigation and display : Display tags', async () => {
     },
   });
 
+  const packOfProducts: ProductData = new ProductData({
+    name: 'Pack of products',
+    type: 'Pack of products',
+    pack: [
+      {
+        reference: 'demo_13',
+        quantity: 1,
+      },
+      {
+        reference: 'demo_7',
+        quantity: 1,
+      },
+    ],
+    price: 12.65,
+    taxRule: 'No tax',
+    quantity: 100,
+    minimumQuantity: 2,
+    stockLocation: 'stock 3',
+    lowStockLevel: 3,
+    behaviourOutOfStock: 'Default behavior',
+  });
+
   // Pre-condition: Disable new product page
   setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
 
@@ -50,9 +73,9 @@ describe('FO - Navigation and display : Display tags', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('FO - Check new tag', async () => {
+  describe('FO - Check the new tag', async () => {
     it('should open the shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'openShopPage', baseContext);
 
       await homePage.goTo(page, global.FO.URL);
 
@@ -61,7 +84,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it(`should search for the product '${Products.demo_6.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo6', baseContext);
 
       await homePage.searchProduct(page, Products.demo_6.name);
 
@@ -70,7 +93,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it('should go to the product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo6', baseContext);
 
       await searchResultsPage.goToProductPage(page, 1);
 
@@ -86,13 +109,13 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
   });
 
-  describe('BO - Edit \'Number of days for which the product is considered \'new\'\'', async () => {
+  describe('BO - Edit \'Number of days for which the product is considered \'New\'\'', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -105,7 +128,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it('should change the number of days to 0', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays0', baseContext);
 
       const result = await productSettingsPage.updateNumberOfDays(page, 0);
       await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
@@ -114,7 +137,7 @@ describe('FO - Navigation and display : Display tags', async () => {
 
   describe('FO - Check that the new tag is no displayed in product page', async () => {
     it('should open the shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO1', baseContext);
 
       await homePage.goTo(page, global.FO.URL);
 
@@ -123,7 +146,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it(`should search for the product '${Products.demo_6.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo6_2', baseContext);
 
       await homePage.searchProduct(page, Products.demo_6.name);
 
@@ -132,7 +155,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it('should go to the product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageDemo6_2', baseContext);
 
       await searchResultsPage.goToProductPage(page, 1);
 
@@ -141,7 +164,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it('should check that the new tag is not displayed', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkIsTagVisible', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkIsNewTagNotVisible', baseContext);
 
       const isTagVisible = await productPage.isProductTagVisible(page);
       await expect(isTagVisible).to.be.false;
@@ -150,7 +173,7 @@ describe('FO - Navigation and display : Display tags', async () => {
 
   describe(`BO - Add specific price to the product '${Products.demo_6.name}'`, async () => {
     it('should go back BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       await productPage.goTo(page, global.BO.URL);
 
@@ -159,7 +182,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -175,14 +198,14 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      await productsPage.resetFilterCategory(page);
+      await productsPage.resetFilter(page);
 
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter by product name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfActiveProducts', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterProductName', baseContext);
 
       await productsPage.filterProducts(page, 'name', Products.demo_6.name, 'input');
 
@@ -191,7 +214,7 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
 
     it('should go to the product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage2', baseContext);
 
       await productsPage.goToEditProductPage(page, 1);
 
@@ -207,55 +230,131 @@ describe('FO - Navigation and display : Display tags', async () => {
     });
   });
 
-  describe('FO - Check discount tag', async () => {
-    it('should open the shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+  describe('FO - Check the discount tag', async () => {
+    it('should preview product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO2', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
-
-      const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
-    });
-
-    it(`should search for the product '${Products.demo_6.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
-
-      await homePage.searchProduct(page, Products.demo_6.name);
-
-      const pageTitle = await searchResultsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
-    });
-
-    it('should go to the product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
-
-      await searchResultsPage.goToProductPage(page, 1);
+      page = await addProductPage.previewProduct(page);
 
       const pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle).to.contains(Products.demo_6.name);
     });
 
     it('should check the discount tag', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNewTag', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
       const flagText = await productPage.getProductTag(page);
       await expect(flagText).to.eq('-€10.00');
     });
   });
 
+  describe('BO - Create a pack of products', async () => {
+    it('should go back BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
+
+      page = await homePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage3', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should go to add product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage2', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it(`create product '${packOfProducts.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      const createProductMessage = await addProductPage.setProduct(page, packOfProducts);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  describe('FO - Check the pack tag', async () => {
+    it('should preview product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO3', baseContext);
+
+      page = await addProductPage.previewProduct(page);
+
+      const pageTitle = await productPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(packOfProducts.name);
+    });
+
+    it('should check the pack tag', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPackTag', baseContext);
+
+      const flagText = await productPage.getProductTag(page);
+      await expect(flagText).to.eq('Pack');
+    });
+  });
+
+  describe('BO - Change the created product quantity to 0', async () => {
+    it('should go back BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
+
+      page = await homePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should edit the quantity', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editQuantity', baseContext);
+
+      await addProductPage.setProductQuantity(page, 0);
+
+      const message = await addProductPage.saveProduct(page);
+      await expect(message).to.eq(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  describe('FO - Check the out-of-stock tag', async () => {
+    it('should preview product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO4', baseContext);
+
+      page = await addProductPage.previewProduct(page);
+
+      const pageTitle = await productPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(packOfProducts.name);
+    });
+
+    it('should check the out-of-stock and pack tags', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOutOfStockTag', baseContext);
+
+      const flagText = await productPage.getProductTag(page);
+      await expect(flagText).to.contain('Pack')
+        .and.contain('Out-of-Stock');
+    });
+  });
+
   // Post-condition: Reset 'Number of days for which the product is considered 'new''
   describe('POST-TEST : Reset \'Number of days for which the product is considered \'new\'\'', async () => {
     it('should go back BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
-      await productPage.goTo(page, global.BO.URL);
+      page = await homePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -267,7 +366,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
-    it('should change the number of days to 0', async function () {
+    it('should change the number of days to 12', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeNumberOfDays', baseContext);
 
       const result = await productSettingsPage.updateNumberOfDays(page, 12);
@@ -291,6 +390,15 @@ describe('FO - Navigation and display : Display tags', async () => {
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
+    it('should filter by product name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByProductName2', baseContext);
+
+      await productsPage.filterProducts(page, 'name', Products.demo_6.name, 'input');
+
+      const numberOfProducts = await productsPage.getNumberOfProductsFromList(page);
+      await expect(numberOfProducts).to.eq(1);
+    });
+
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
@@ -307,6 +415,9 @@ describe('FO - Navigation and display : Display tags', async () => {
       await expect(message).to.equal(addProductPage.successfulDeleteMessage);
     });
   });
+
+  // Post-condition: Delete created product
+  deleteProductTest(packOfProducts, `${baseContext}_deleteProduct`);
 
   // Post-condition: Disable new product page
   setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);

@@ -230,7 +230,7 @@ class Product extends FOBasePage {
    * @return {Promise<string>}
    */
   getProductTag(page: Page): Promise<string> {
-    return this.getTextContent(page, '#content li.product-flag');
+    return this.getTextContent(page, '#content ul.product-flags');
   }
 
   /**
