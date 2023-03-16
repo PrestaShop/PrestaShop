@@ -345,12 +345,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
 
-  PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\DeleteProductFromShopsHandler:
-    autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
-
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
     autowire: true
     arguments:
