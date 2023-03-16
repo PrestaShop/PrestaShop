@@ -38,9 +38,9 @@ class AddCurrency extends LocalizationBasePage {
 
   private readonly currencyFormatRows: string;
 
-  private readonly currencyFormatCell: (nthRow: number, nthColumn: number) => string;
-
   private readonly currencyFormatRow: (nthRow: number) => string;
+
+  private readonly currencyFormatCell: (nthRow: number, nthColumn: number) => string;
 
   private readonly currencyFormatEdit: (nthRow: number) => string;
 
@@ -79,12 +79,12 @@ class AddCurrency extends LocalizationBasePage {
     this.currencyFormatDiv = '#currency_formatter';
     this.currencyFormatTable = `${this.currencyFormatDiv} table`;
     this.currencyFormatRows = `${this.currencyFormatTable} tbody tr`;
-    this.currencyFormatCell = (nthRow: number, nthColumn:number) => `${this.currencyFormatRows}:nth-child(${nthRow}) `
-      + `td:nth-child(${nthColumn})`;
     this.currencyFormatRow = (nthRow: number) => `${this.currencyFormatRows}:nth-child(${nthRow})`;
-    this.currencyFormatEdit = (nthRow: number) => `${this.currencyFormatRow(nthRow)} td:nth-child(3) `
+    this.currencyFormatCell = (nthRow: number, nthColumn:number) => `${this.currencyFormatRow(nthRow)} `
+      + `td:nth-child(${nthColumn})`;
+    this.currencyFormatEdit = (nthRow: number) => `${this.currencyFormatCell(nthRow, 3)} `
       + 'div.btn-group-action button';
-    this.currencyFormatReset = (nthRow: number) => `${this.currencyFormatRow(nthRow)} td:nth-child(4) `
+    this.currencyFormatReset = (nthRow: number) => `${this.currencyFormatCell(nthRow, 4)} `
       + 'div.btn-group-action button';
 
     // Currency Format Modal
