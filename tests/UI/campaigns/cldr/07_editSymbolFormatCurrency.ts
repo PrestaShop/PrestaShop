@@ -168,7 +168,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
   });
 
   it('should update the currency', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrency', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrency0', baseContext);
 
     const result = await addCurrencyPage.saveCurrencyForm(page);
     await expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
@@ -195,7 +195,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
 
   // @todo : Enable when https://github.com/PrestaShop/PrestaShop/issues/31812 is fixed
   it.skip('should check the restoration is done', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat0', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkRestorationDone', baseContext);
 
     const exampleFormatRow1 = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
     await expect(exampleFormatRow1).to.startWith(customSymbol);
@@ -206,7 +206,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
 
   // @todo : Remove when https://github.com/PrestaShop/PrestaShop/issues/31812 is fixed
   it('should edit the currency format #1 and open a modal', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat1', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkRestorationDoneBypass0', baseContext);
 
     const isModalVisible = await addCurrencyPage.editCurrencyFormat(page, 1);
     await expect(isModalVisible).to.be.true;
@@ -214,7 +214,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
 
   // @todo : Remove when https://github.com/PrestaShop/PrestaShop/issues/31812 is fixed
   it(`should update the symbol by ${Currencies.euro.symbol} and the format`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat0', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkRestorationDoneBypass1', baseContext);
 
     await addCurrencyPage.setCurrencyFormatSymbol(page, Currencies.euro.symbol);
     await addCurrencyPage.setCurrencyFormatFormat(page, 'leftWithoutSpace');
@@ -226,7 +226,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
 
   // @todo : Remove when https://github.com/PrestaShop/PrestaShop/issues/31812 is fixed
   it('should edit the currency format #2 and open a modal', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat1', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkRestorationDoneBypass2', baseContext);
 
     const isModalVisible = await addCurrencyPage.editCurrencyFormat(page, 2);
     await expect(isModalVisible).to.be.true;
@@ -234,7 +234,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
 
   // @todo : Remove when https://github.com/PrestaShop/PrestaShop/issues/31812 is fixed
   it(`should update the symbol by ${Currencies.euro.symbol} and the format`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat1', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkRestorationDoneBypass3', baseContext);
 
     await addCurrencyPage.setCurrencyFormatSymbol(page, Currencies.euro.symbol);
     await addCurrencyPage.setCurrencyFormatFormat(page, 'rightWithSpace');
@@ -245,7 +245,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
   });
 
   it('should update the currency', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrency', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrency1', baseContext);
 
     const result = await addCurrencyPage.saveCurrencyForm(page);
     await expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
