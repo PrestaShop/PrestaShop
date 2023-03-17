@@ -25,14 +25,14 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Util;
+namespace PrestaShop\PrestaShop\Core\Domain;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Exception\BulkActionExceptionInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use Throwable;
 
-abstract class AbstractBulkActionHandler
+abstract class AbstractBulkCommandHandler
 {
     /**
      * @var Exception[]
@@ -43,11 +43,11 @@ abstract class AbstractBulkActionHandler
      * @param array $ids
      * @param string|null $exceptionToCatch when cought this exception will allow the loop to continue
      *                                      and show bulk error at the end of the loop, instead of breaking it on first error.
-     *                                      When NULL is provided, then loop will stop on first error.
+     *                                      All other exceptions will cause the loop to immediately stop and throw the exception.
      *
-     * @throws BulkActionExceptionInterface
+     * @throws BulkCommandExceptionInterface
      */
-    protected function handleBulkAction(array $ids, ?string $exceptionToCatch = null): void
+    protected function handleBulkAction(array $ids, string $exceptionToCatch): void
     {
         foreach ($ids as $id) {
             try {
@@ -58,10 +58,6 @@ abstract class AbstractBulkActionHandler
                 }
                 $this->handleSingleAction($id);
             } catch (Throwable $e) {
-                if (null === $exceptionToCatch) {
-                    throw $e;
-                }
-
                 if (!($e instanceof $exceptionToCatch)) {
                     throw $e;
                 }
@@ -78,9 +74,9 @@ abstract class AbstractBulkActionHandler
     /**
      * @param Throwable[] $coughtExceptions
      *
-     * @return BulkActionExceptionInterface
+     * @return BulkCommandExceptionInterface
      */
-    abstract protected function buildBulkException(array $coughtExceptions): BulkActionExceptionInterface;
+    abstract protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface;
 
     /**
      * @param mixed $id

@@ -27,10 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
-use PrestaShop\PrestaShop\Core\Exception\BulkActionExceptionInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use Throwable;
 
-class BulkFeatureException extends FeatureException implements BulkActionExceptionInterface
+class BulkFeatureException extends FeatureException implements BulkCommandExceptionInterface
 {
     /**
      * @var Throwable[]

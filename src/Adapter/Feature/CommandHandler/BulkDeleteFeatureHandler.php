@@ -28,15 +28,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\BulkDeleteFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-use PrestaShop\PrestaShop\Core\Exception\BulkActionExceptionInterface;
-use PrestaShop\PrestaShop\Core\Util\AbstractBulkActionHandler;
 
-class BulkDeleteFeatureHandler extends AbstractBulkActionHandler implements BulkDeleteFeatureHandlerInterface
+class BulkDeleteFeatureHandler extends AbstractBulkCommandHandler implements BulkDeleteFeatureHandlerInterface
 {
     /**
      * @var FeatureRepository
@@ -65,7 +65,7 @@ class BulkDeleteFeatureHandler extends AbstractBulkActionHandler implements Bulk
     /**
      * {@inheritDoc}
      */
-    protected function buildBulkException(array $coughtExceptions): BulkActionExceptionInterface
+    protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface
     {
         return new BulkFeatureException(
             $coughtExceptions,
@@ -78,10 +78,6 @@ class BulkDeleteFeatureHandler extends AbstractBulkActionHandler implements Bulk
      */
     protected function supports($id): bool
     {
-        if ($id instanceof FeatureId) {
-            return true;
-        }
-
-        return false;
+        return $id instanceof FeatureId;
     }
 }

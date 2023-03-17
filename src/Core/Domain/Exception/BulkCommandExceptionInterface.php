@@ -24,11 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
 use Throwable;
 
-interface BulkActionExceptionInterface extends Throwable
+interface BulkCommandExceptionInterface extends Throwable
 {
     /**
      * @return Throwable[]
