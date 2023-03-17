@@ -119,8 +119,8 @@ services:
       - '@prestashop.adapter.validate'
 
   PrestaShop\PrestaShop\Adapter\Configuration\ContactOptionsConfiguration:
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
+    autowire: true
+    public: false
 
   prestashop.adapter.order.delivery.slip.options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'

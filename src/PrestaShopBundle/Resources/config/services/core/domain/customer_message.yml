@@ -1,6 +1,6 @@
 services:
   _defaults:
     autowire: true
-    public: true
+    public: false
 
   PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository\CustomerMessageRepository: ~
