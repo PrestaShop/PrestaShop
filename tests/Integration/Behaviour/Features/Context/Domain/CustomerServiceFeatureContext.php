@@ -257,7 +257,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I create a contact "(.+)" with following properties:$/
      */
-    public function createContactUsingCommand($contactReference, TableNode $table)
+    public function createContactUsingCommand($contactReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
         $data = $this->formatContactDataIfNeeded($data);
@@ -285,7 +285,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $this->getSharedStorage()->set($contactReference, $id->getValue());
     }
 
-    protected function formatContactDataIfNeeded(array $data)
+    protected function formatContactDataIfNeeded(array $data): array
     {
         if (array_key_exists('localisedTitles', $data)) {
             $data['localisedTitles'] = [$this->getDefaultShopId() => $data['localisedTitles']];
