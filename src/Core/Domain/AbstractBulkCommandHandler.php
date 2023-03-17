@@ -41,9 +41,9 @@ abstract class AbstractBulkCommandHandler
 
     /**
      * @param array $ids
-     * @param string|null $exceptionToCatch when cought this exception will allow the loop to continue
-     *                                      and show bulk error at the end of the loop, instead of breaking it on first error.
-     *                                      All other exceptions will cause the loop to immediately stop and throw the exception.
+     * @param string $exceptionToCatch when cought this exception will allow the loop to continue
+     *                                 and show bulk error at the end of the loop, instead of breaking it on first error.
+     *                                 All other exceptions will cause the loop to immediately stop and throw the exception.
      *
      * @throws BulkCommandExceptionInterface
      */
