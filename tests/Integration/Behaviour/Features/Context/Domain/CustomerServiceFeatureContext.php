@@ -238,12 +238,12 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertContactHasThreads(string $contactReference, int $expectedThreads): void
     {
         $contactId = $this->referenceToId($contactReference);
-        /** @var CustomerServiceSummary[] $customerServiceSummary */
-        $customerServiceSummary = $this->getQueryBus()->handle(
+        $customerServiceSummaries = $this->getQueryBus()->handle(
             new GetCustomerServiceSummary()
         );
 
-        foreach ($customerServiceSummary as $customerServiceSummary) {
+        /** @var CustomerServiceSummary $customerServiceSummary */
+        foreach ($customerServiceSummaries['summaries'] as $customerServiceSummary) {
             if ($customerServiceSummary->getContactId() !== $contactId) {
                 continue;
             }
@@ -251,6 +251,10 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
             if ($customerServiceSummary->getTotalThreads() !== $expectedThreads) {
                 throw new NoExceptionAlthoughExpectedException(sprintf('Contact expected to have %s threads, but it had %s', $expectedThreads, $customerServiceSummary->getTotalThreads()));
             }
+        }
+
+        if (count($customerServiceSummaries['statistics']) !== 6) {
+            throw new NoExceptionAlthoughExpectedException(sprintf('Statistics expect to have 6 different text rows but it has %s', count($customerServiceSummaries['statistics'])));
         }
     }
 
