@@ -20,7 +20,7 @@ admin_features_search:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminFeatures
-    _legacy_link: AdminFeatures
+    # _legacy_link: AdminFeatures
     gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory
     redirectRoute: admin_features_index
 
