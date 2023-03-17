@@ -180,9 +180,6 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_UNINSTALL:
                 $deniedAccess = $this->checkPermission(Permission::DELETE);
                 break;
-            case ModuleAdapter::ACTION_DELETE:
-                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
-                break;
 
             default:
                 $deniedAccess = null;

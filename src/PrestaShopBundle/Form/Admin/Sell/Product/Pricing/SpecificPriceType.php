@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -62,7 +61,7 @@ class SpecificPriceType extends TranslatorAwareType
     private $urlGenerator;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -90,13 +89,13 @@ class SpecificPriceType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param UrlGeneratorInterface $urlGenerator
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         UrlGeneratorInterface $urlGenerator,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         AttributeRepository $attributeRepository,
         EventSubscriberInterface $specificPriceCombinationListener,
         CombinationNameBuilderInterface $combinationNameBuilder,

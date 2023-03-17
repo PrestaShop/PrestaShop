@@ -36,13 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCust
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
@@ -69,24 +66,13 @@ class CustomerThreadController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CustomerThreadFilter $filters): Response
     {
-        $customerThreadKpiFactory = $this->get(HookableKpiRowFactory::class);
         $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
         $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
-
-        $contactOptionForm = $this->get('prestashop.adapter.customer_service.contact_options.form_handler')->getForm();
-
-        /** @var CustomerServiceSummary[] $customerServiceSummary */
-        $customerServiceSummary = $this->getQueryBus()->handle(
-            new GetCustomerServiceSummary()
-        );
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
-            'contactOptionsForm' => $contactOptionForm->createView(),
             'enableSidebar' => true,
-            'customerThreadKpiRow' => $customerThreadKpiFactory->build(),
-            'servicesSummary' => $customerServiceSummary,
             'layoutTitle' => $this->trans('Customer service', 'Admin.Navigation.Menu'),
         ]);
     }
@@ -375,31 +361,6 @@ class CustomerThreadController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update customer service settings
-     *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_customer_threads_index"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processAction(Request $request): RedirectResponse
-    {
-        $this->get('prestashop.adapter.customer_service.contact_options.form_handler')->save($request->request->get('contact_options'));
-
-        $this->addFlash(
-            'success',
-            $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
-        );
-
-        return $this->redirectToRoute('admin_customer_threads');
-    }
-
-    /**
      * Returns customer thread error messages mapping.
      *
      * @return array
@@ -454,7 +415,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(
-                new UpdateCustomerThreadStatusCommand($customerThreadId, $newStatus)
+                new UpdateCustomerThreadStatusCommand((int) $customerThreadId, $newStatus)
             );
 
             $this->addFlash(
