@@ -237,7 +237,8 @@ class LinkCore
             foreach ($product->getParentCategories($idLang) as $cat) {
                 if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
                     //remove root and home category from the URL
-                    $cats[] = $cat['link_rewrite'];
+                    $cat_url  = $this->getCategoryLink($cat['id_category'], null, $idLang); 
+                    $cats[] = trim( str_replace($url, '', $cat_url), '/');
                 }
             }
             $params['categories'] = implode('/', $cats);
