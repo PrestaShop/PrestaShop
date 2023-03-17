@@ -2,7 +2,7 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\PrestaShop\Adapter\Support\ContactRepository:
+  PrestaShop\PrestaShop\Adapter\Support\ContactRepository: ~
 
   prestashop.adapter.contact.deleter:
     class: 'PrestaShop\PrestaShop\Adapter\Support\ContactDeleter'

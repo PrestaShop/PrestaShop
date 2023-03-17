@@ -3,4 +3,4 @@ services:
     autowire: true
     public: true
 
-  PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository\CustomerMessageRepository:
+  PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository\CustomerMessageRepository: ~

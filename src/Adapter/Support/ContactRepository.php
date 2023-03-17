@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Support;
 
 use CustomerThread;
-use PrestaShop\PrestaShop\Adapter\Entity\Contact;
+use Contact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Repository\ContactRepositoryInterface as DomainContactRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
