@@ -67,11 +67,11 @@ class Profiles extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Profiles';
+    this.pageTitle = 'Roles';
 
     // Selectors
     // Header links
-    this.addNewProfileLink = '#page-header-desc-configuration-add[title=\'Add new profile\']';
+    this.addNewProfileLink = '#page-header-desc-configuration-add[title=\'Add new role\']';
 
     // List of profiles
     this.profileGridPanel = '#profile_grid_panel';

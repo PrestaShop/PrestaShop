@@ -98,7 +98,7 @@ trans('Positions', 'Admin.Navigation.Menu');
 trans('Discounts', 'Admin.Navigation.Menu');
 trans('Product Settings', 'Admin.Navigation.Menu');
 trans('Products', 'Admin.Navigation.Menu');
-trans('Profiles', 'Admin.Navigation.Menu');
+trans('Roles', 'Admin.Navigation.Menu');
 trans('Quick Access', 'Admin.Navigation.Menu');
 trans('Referrers', 'Admin.Navigation.Menu');
 trans('Search', 'Admin.Navigation.Menu');

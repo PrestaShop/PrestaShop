@@ -72,13 +72,13 @@ class ProfileController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
                         'href' => $this->generateUrl('admin_profiles_create'),
-                        'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
+                        'desc' => $this->trans('Add new role', 'Admin.Advparameters.Feature'),
                         'icon' => 'add_circle_outline',
                     ],
                 ],
                 'help_link' => $this->generateSidebarLink('AdminProfiles'),
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Profiles', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Roles', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($profilesGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
