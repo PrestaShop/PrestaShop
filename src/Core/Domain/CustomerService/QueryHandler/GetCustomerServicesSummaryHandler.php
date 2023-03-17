@@ -81,7 +81,7 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
     }
 
     /**
-     * @return CustomerServiceSummary[]
+     * @return array{"summaries": CustomerServiceSummary[], "statistics": string}
      */
     public function handle(GetCustomerServiceSummary $query): array
     {

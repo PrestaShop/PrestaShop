@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Support;
 
-use CustomerThread;
 use Contact;
+use CustomerThread;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Repository\ContactRepositoryInterface as DomainContactRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
