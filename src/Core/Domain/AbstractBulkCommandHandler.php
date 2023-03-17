@@ -35,7 +35,7 @@ use Throwable;
 abstract class AbstractBulkCommandHandler
 {
     /**
-     * @var Exception[]
+     * @var Throwable[]
      */
     protected $exceptions;
 
