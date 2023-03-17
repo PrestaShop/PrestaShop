@@ -219,10 +219,14 @@ class LinkCore
         }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'category', $idShop)) {
+            $params['category'] = $category;
             if (!$category) {
                 $product = $this->getProductObject($product, $idLang, $idShop);
-            }
-            $params['category'] = (!$category) ? $product->category : $category;
+		        if ( !empty($product->id_category_default) ) {
+		            $cat_url  = $this->getCategoryLink($product->id_category_default, null, $idLang); 
+		            $params['category'] = trim( str_replace($url, '', $cat_url), '/');
+		        }
+            }   
         }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'reference', $idShop)) {
