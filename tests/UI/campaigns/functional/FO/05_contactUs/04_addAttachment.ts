@@ -174,10 +174,11 @@ describe('FO - Contact us : Add attachment', async () => {
     await expect(badgeNumber).to.contains(idCustomer);
 
     const text = await viewPage.getCustomerMessage(page);
+    console.log(text);
     expect(text)
       .to.contains(contactUsData.emailAddress)
       .and.to.contains(contactUsData.subject)
-      .and.to.contains(`${messageDateTime.substr(0, 10)} access_time - ${messageDateTime.substr(11, 5)}`)
+      .and.to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`)
       .and.to.contains('Attachment')
       .and.to.contains(contactUsData.message);
   });
