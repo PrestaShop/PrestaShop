@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\BulkDeleteFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShop\PrestaShop\Core\Exception\BulkActionExceptionInterface;
 use PrestaShop\PrestaShop\Core\Util\AbstractBulkActionHandler;
@@ -50,21 +51,37 @@ class BulkDeleteFeatureHandler extends AbstractBulkActionHandler implements Bulk
 
     public function handle(BulkDeleteFeatureCommand $command): void
     {
-        $this->handleBulkAction(array_map(static function (FeatureId $featureId): int {
-            return $featureId->getValue();
-        }, $command->getFeatureIds()));
+        $this->handleBulkAction($command->getFeatureIds(), FeatureException::class);
     }
 
-    protected function handleSingleAction(int $id): void
+    /**
+     * @param FeatureId $id
+     */
+    protected function handleSingleAction($id): void
     {
-        $this->featureRepository->delete(new FeatureId($id));
+        $this->featureRepository->delete($id);
     }
 
-    protected function buildBulkException(array $exceptions): BulkActionExceptionInterface
+    /**
+     * {@inheritDoc}
+     */
+    protected function buildBulkException(array $coughtExceptions): BulkActionExceptionInterface
     {
         return new BulkFeatureException(
-            $exceptions,
-            'Errors occurred during bulk action'
+            $coughtExceptions,
+            'Errors occurred during Feature bulk delete action'
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function supports($id): bool
+    {
+        if ($id instanceof FeatureId) {
+            return true;
+        }
+
+        return false;
     }
 }

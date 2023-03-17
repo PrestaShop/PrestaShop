@@ -45,7 +45,7 @@ class BulkFeatureException extends FeatureException implements BulkActionExcepti
      */
     public function __construct(
         array $exceptions,
-        string $message = '',
+        string $message = 'Errors occurred during Feature bulk action',
         int $code = 0,
         Throwable $previous = null
     ) {

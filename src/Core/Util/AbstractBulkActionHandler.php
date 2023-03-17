@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Util;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Exception\BulkActionExceptionInterface;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use Throwable;
 
 abstract class AbstractBulkActionHandler
 {
@@ -38,16 +40,32 @@ abstract class AbstractBulkActionHandler
     protected $exceptions;
 
     /**
-     * @param int[] $ids
+     * @param array $ids
+     * @param string|null $exceptionToCatch when cought this exception will allow the loop to continue
+     *                                      and show bulk error at the end of the loop, instead of breaking it on first error.
+     *                                      When NULL is provided, then loop will stop on first error.
      *
      * @throws BulkActionExceptionInterface
      */
-    protected function handleBulkAction(array $ids): void
+    protected function handleBulkAction(array $ids, ?string $exceptionToCatch = null): void
     {
         foreach ($ids as $id) {
             try {
+                if (!$this->supports($id)) {
+                    throw new InvalidArgumentException(
+                        sprintf('%s not supported by bulk action', var_export($id, true))
+                    );
+                }
                 $this->handleSingleAction($id);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
+                if (null === $exceptionToCatch) {
+                    throw $e;
+                }
+
+                if (!($e instanceof $exceptionToCatch)) {
+                    throw $e;
+                }
+
                 $this->exceptions[] = $e;
             }
         }
@@ -57,7 +75,24 @@ abstract class AbstractBulkActionHandler
         }
     }
 
-    abstract protected function buildBulkException(array $exceptions): BulkActionExceptionInterface;
+    /**
+     * @param Throwable[] $coughtExceptions
+     *
+     * @return BulkActionExceptionInterface
+     */
+    abstract protected function buildBulkException(array $coughtExceptions): BulkActionExceptionInterface;
 
-    abstract protected function handleSingleAction(int $id): void;
+    /**
+     * @param mixed $id
+     */
+    abstract protected function handleSingleAction($id): void;
+
+    /**
+     * Should return true if provided $id type is supported by actions, false otherwise
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    abstract protected function supports($id): bool;
 }
