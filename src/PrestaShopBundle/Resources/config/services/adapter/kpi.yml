@@ -100,16 +100,13 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi'
 
   PrestaShop\PrestaShop\Adapter\Kpi\AverageResponseTimeKpi:
-    arguments:
-      - '@translator'
-      - "@prestashop.adapter.legacy.context"
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Kpi\MessagesPerThreadKpi:
-    arguments:
-      - '@translator'
-      - "@prestashop.adapter.legacy.context"
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Kpi\PendingDiscussionThreadsKpi:
-    arguments:
-      - '@translator'
-      - "@prestashop.adapter.legacy.context"
+    autowire: true
+    public: false
