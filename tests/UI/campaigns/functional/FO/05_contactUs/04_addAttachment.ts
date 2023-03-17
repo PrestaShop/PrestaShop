@@ -174,7 +174,6 @@ describe('FO - Contact us : Add attachment', async () => {
     await expect(badgeNumber).to.contains(idCustomer);
 
     const text = await viewPage.getCustomerMessage(page);
-    console.log(text);
     expect(text)
       .to.contains(contactUsData.emailAddress)
       .and.to.contains(contactUsData.subject)
