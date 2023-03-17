@@ -78,8 +78,8 @@ class SslMiddleware
             return;
         }
 
-        $enabled = (1 == $this->configuration->get('PS_SSL_ENABLED'));
-        $forced = (1 == $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE'));
+        $enabled = (1 === (int) $this->configuration->get('PS_SSL_ENABLED'));
+        $forced = (1 === (int) $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE'));
         $serverParams = $event->getRequest()->server;
         $refererSsl = ($serverParams->has('HTTP_REFERER') && strpos($serverParams->get('HTTP_REFERER'), 'https') === 0);
 
