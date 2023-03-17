@@ -183,7 +183,7 @@ class CountryController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteCountryCommand($countryId));
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (CountryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -218,12 +218,12 @@ class CountryController extends FrameworkBundleAdminController
     {
         return [
             CountryNotFoundException::class => $this->trans(
-                'This country does not exist',
+                'This country does not exist.',
                 'Admin.International.Feature'
             ),
             CannotEditCountryException::class => [
                 CannotEditCountryException::FAILED_TO_UPDATE_COUNTRY => $this->trans(
-                    'Failed to update country',
+                    'Failed to update country.',
                     'Admin.International.Feature'
                 ),
                 CannotEditCountryException::UNKNOWN_EXCEPTION => $this->trans(
@@ -232,11 +232,11 @@ class CountryController extends FrameworkBundleAdminController
                 ),
             ],
             CountryConstraintException::class => $this->trans(
-                'Country contains invalid field values',
+                'Country contains invalid field values.',
                 'Admin.International.Feature'
             ),
             DeleteCountryException::class => $this->trans(
-                'Country cannot be deleted',
+                'Country cannot be deleted.',
                 'Admin.International.Feature'
             ),
         ];
