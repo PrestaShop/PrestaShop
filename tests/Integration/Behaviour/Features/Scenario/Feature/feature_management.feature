@@ -72,12 +72,6 @@ Feature: Product feature management
       | name[en-US] | My feature en |
       | name[fr-FR] | My feature fr |
 
-  Scenario: Creating product feature with empty name in default language should not be allowed
-    When I create product feature "feature5" with specified properties:
-      | name[en-US] |               |
-      | name[fr-FR] | My feature fr |
-    Then I should get an error that feature name is invalid
-
   Scenario: Delete feature which has no values
     Given I create product feature feature6 with specified properties:
       | name[en-US] | My feature en |

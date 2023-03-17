@@ -574,12 +574,12 @@ Feature: Duplicate product from Back Office (BO).
 
   Scenario: I duplicate product features
     Given I create product feature "element" with specified properties:
-      | name | Nature Element |
+      | name[en-US] | Nature Element |
     And I create feature value "fire" for feature "element" with following properties:
       | value[en-US] | Fire |
       | value[fr-FR] | Feu  |
     And I create product feature "emotion" with specified properties:
-      | name | Emotion |
+      | name[en-US] | Emotion |
     And I create feature value "anger" for feature "emotion" with following properties:
       | value[en-US] | Anger  |
       | value[fr-FR] | Colère |

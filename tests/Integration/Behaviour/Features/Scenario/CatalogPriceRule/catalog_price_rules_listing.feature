@@ -1,7 +1,7 @@
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s catalog_price_rule --tags catalog-price-rule-listing
 @restore-products-before-feature
 @clear-cache-before-feature
-@catalog_price_rule
+@catalog-price-rule
 @catalog-price-rule-listing
 
 Feature: List catalog price rules for product in Back Office (BO)
