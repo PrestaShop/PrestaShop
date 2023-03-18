@@ -63,6 +63,11 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
+  prestashop.core.form.identifiable_object.data_handler.store_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StoreFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
   prestashop.core.form.identifiable_object.data_handler.cms_page_category_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageCategoryFormDataHandler'
     arguments:
