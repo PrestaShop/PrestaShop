@@ -8,4 +8,9 @@ type CurrencyCreator = {
   enabled?: boolean
 };
 
-export default CurrencyCreator;
+type CurrencyFormat = 'leftWithSpace' | 'leftWithoutSpace' | 'rightWithSpace' | 'rightWithoutSpace';
+
+export {
+  CurrencyCreator,
+  CurrencyFormat,
+};

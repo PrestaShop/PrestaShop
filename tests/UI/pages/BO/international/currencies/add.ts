@@ -1,6 +1,7 @@
 import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
 
 import type CurrencyData from '@data/faker/currency';
+import {CurrencyFormat} from '@data/types/currency';
 
 import type {Page} from 'playwright';
 
@@ -50,7 +51,13 @@ class AddCurrency extends LocalizationBasePage {
 
   private readonly currencyFormatEditSymbolInput: string;
 
+  private readonly currencyFormatEditFormatRadio: (format: string) => string;
+
   private readonly currencyFormatEditSubmit: string;
+
+  private readonly restoreDefaultSettingsButton: string;
+
+  private readonly restoreDefaultSettingsModal: string;
 
   /**
    * @constructs
@@ -88,9 +95,13 @@ class AddCurrency extends LocalizationBasePage {
       + 'div.btn-group-action button';
 
     // Currency Format Modal
-    this.currencyFormatEditModal = 'div[data-role="currency-format-edit-modal"] .modal.show';
+    this.currencyFormatEditModal = 'div[data-role="currency-format-edit-modal"] .modal';
     this.currencyFormatEditSymbolInput = `${this.currencyFormatEditModal} input[data-role="custom-symbol"]`;
+    this.currencyFormatEditFormatRadio = (format: string) => `${this.currencyFormatEditModal} div#${format} label`;
     this.currencyFormatEditSubmit = `${this.currencyFormatEditModal} footer button.btn-primary`;
+
+    this.restoreDefaultSettingsButton = '#currency_reset_default_settings';
+    this.restoreDefaultSettingsModal = '#currency_loading_data_modal';
   }
 
   /*
@@ -219,9 +230,8 @@ class AddCurrency extends LocalizationBasePage {
    */
   async editCurrencyFormat(page: Page, row: number): Promise<boolean> {
     await page.click(this.currencyFormatEdit(row));
-    await this.waitForVisibleSelector(page, this.currencyFormatEditModal);
 
-    return this.elementVisible(page, this.currencyFormatEditModal);
+    return this.elementVisible(page, this.currencyFormatEditModal, 2000);
   }
 
   /**
@@ -243,7 +253,18 @@ class AddCurrency extends LocalizationBasePage {
    * @return {void}
    */
   async setCurrencyFormatSymbol(page: Page, symbol: string): Promise<void> {
+    await this.waitForVisibleSelector(page, this.currencyFormatEditSymbolInput, 2000);
     await this.setValue(page, this.currencyFormatEditSymbolInput, symbol);
+  }
+
+  /**
+   * Set the format for the currency format
+   * @param {Page} page
+   * @param {CurrencyFormat} format
+   * @return {void}
+   */
+  async setCurrencyFormatFormat(page: Page, format: CurrencyFormat): Promise<void> {
+    await page.click(this.currencyFormatEditFormatRadio(format));
   }
 
   /**
@@ -253,6 +274,20 @@ class AddCurrency extends LocalizationBasePage {
    */
   async saveCurrencyFormat(page: Page): Promise<void> {
     await page.click(this.currencyFormatEditSubmit);
+  }
+
+  /**
+   * Restore default settings and return if restore modal is displayed
+   * @param {Page} page
+   */
+  async restoreDefaultSettings(page: Page): Promise<boolean> {
+    await page.click(this.restoreDefaultSettingsButton);
+
+    const isVisible = this.elementVisible(page, `${this.restoreDefaultSettingsModal}.show`, 2000);
+
+    await this.elementVisible(page, `${this.restoreDefaultSettingsButton}:not(.spinner)`);
+
+    return isVisible;
   }
 }
 
