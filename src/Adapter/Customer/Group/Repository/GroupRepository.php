@@ -29,16 +29,51 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Repository;
 
 use Group as CustomerGroup;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotAddGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShopException;
 
 /**
  * Provides methods to access Group data storage
  */
 class GroupRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @param GroupId $customerGroupId
+     *
+     * @throws CoreException
+     * @throws GroupNotFoundException
+     *
+     * @return CustomerGroup
+     */
+    public function get(GroupId $customerGroupId): CustomerGroup
+    {
+        try {
+            $customerGroup = new CustomerGroup($customerGroupId->getValue());
+
+            if ($customerGroup->id !== $customerGroupId->getValue()) {
+                throw new GroupNotFoundException($customerGroup, sprintf('%s #%d was not found', Group::class, $customerGroupId->getValue()));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    CustomerGroup::class,
+                    $customerGroupId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
+
+        return $customerGroup;
+    }
+
     /**
      * @param GroupId $groupId
      *
@@ -53,13 +88,27 @@ class GroupRepository extends AbstractObjectModelRepository
         );
     }
 
-    public function create(array $localizedNames, DecimalNumber $reduction, bool $priceDisplayMethod, bool $showPrices): CustomerGroup
+    /**
+     * @param array $localizedNames
+     * @param DecimalNumber $reduction
+     * @param bool $priceDisplayMethod
+     * @param bool $showPrices
+     * @param ShopId[] $shopIds
+     *
+     * @throws CoreException
+     *
+     * @return CustomerGroup
+     */
+    public function create(array $localizedNames, DecimalNumber $reduction, bool $priceDisplayMethod, bool $showPrices, array $shopIds): CustomerGroup
     {
         $customerGroup = new CustomerGroup();
         $customerGroup->name = $localizedNames;
         $customerGroup->reduction = (string) $reduction;
         $customerGroup->price_display_method = (int) $priceDisplayMethod;
         $customerGroup->show_prices = $showPrices;
+        $customerGroup->id_shop_list = array_map(function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $shopIds);
 
         $this->addObjectModel($customerGroup, CannotAddGroupException::class);
 
