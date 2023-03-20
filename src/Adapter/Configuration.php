@@ -107,6 +107,10 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             $shopConstraint = $this->buildShopConstraintFromContext();
         }
 
+        if (isset($_ENV[$key])) {
+            return $_ENV($key);
+        }
+
         if (defined($key)) {
             return constant($key);
         }

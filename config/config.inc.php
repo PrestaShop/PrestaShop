@@ -37,6 +37,9 @@ require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
 $start_time = microtime(true);
 
+$dotenv = Dotenv\Dotenv::createImmutable(_PS_ROOT_DIR_);
+$dotenv->safeLoad();
+
 /* SSL configuration */
 define('_PS_SSL_PORT_', 443);
 

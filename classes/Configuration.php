@@ -224,6 +224,10 @@ class ConfigurationCore extends ObjectModel
             return false;
         }
 
+        if (isset($_ENV[$key])) {
+            return $_ENV[$key];
+        }
+
         // Init the cache on demand
         if (!self::$_initialized) {
             Configuration::loadConfiguration();
