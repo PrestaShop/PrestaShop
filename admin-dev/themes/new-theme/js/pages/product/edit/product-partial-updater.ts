@@ -242,7 +242,6 @@ export default class ProductPartialUpdater {
       ], false);
       // Disable type button permanently
       this.$productTypePreview.off('click');
-      this.$productTypePreview.addClass('disabled').prop('disabled', true);
     } else if (updatedData === null) {
       this.toggleButtonsState([
         this.$productFormSubmitButton,
@@ -265,10 +264,10 @@ export default class ProductPartialUpdater {
         this.$productFormPreviewButton,
         this.$productFormDuplicateButton,
         this.$productFormNewProductButton,
+        this.$productTypePreview,
       ], false);
       // Disable type button permanently
       this.$productTypePreview.off('click');
-      this.$productTypePreview.addClass('disabled').prop('disabled', true);
     }
   }
 

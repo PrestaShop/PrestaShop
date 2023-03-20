@@ -440,13 +440,18 @@ $product-page-padding-bottom: 80px !default;
     .dropdown-menu > .dropdown-item a.btn.disabled,
     .dropdown-menu > .dropdown-item button.btn.disabled {
       color: #b3c7cd;
-      pointer-events: auto;
-      cursor: not-allowed;
+      pointer-events: none;
       background-color: transparent;
 
       .material-icons {
         color: #b3c7cd;
       }
+    }
+
+    // Little hack to have the not-allowed cursor on buttons even though they ahev pointer-events to none
+    // The not-allowed is actually on the parent "under" the buttons that are disabled
+    #product_footer_actions {
+      cursor: not-allowed;
     }
   }
 
