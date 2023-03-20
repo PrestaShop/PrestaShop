@@ -21,6 +21,8 @@ class Category extends FOBasePage {
 
   private readonly productListDiv: string;
 
+  private readonly pagesList: string;
+
   private readonly productItemListDiv: string;
 
   private readonly paginationText: string;
@@ -32,6 +34,7 @@ class Category extends FOBasePage {
   private readonly sortByDiv: string;
 
   private readonly sortByButton: string;
+
   private readonly valueToSortBy: (sortBy: string) => string;
 
   private readonly productList: string;
@@ -69,9 +72,6 @@ class Category extends FOBasePage {
     this.productListTop = '#js-product-list-top';
     this.productListDiv = '#js-product-list';
     this.productItemListDiv = `${this.productListDiv} .products div.product`;
-    this.paginationText = `${this.productListDiv} .pagination div:nth-child(1)`;
-    this.paginationNext = '#js-product-list nav.pagination a[rel=\'next\']';
-    this.paginationPrevious = '#js-product-list nav.pagination a[rel=\'prev\']';
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
     this.valueToSortBy = (sortBy: string) => `${this.productListDiv} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
@@ -86,6 +86,12 @@ class Category extends FOBasePage {
     this.productImg = (number: number) => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = (number: number) => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = (number: number) => `${this.productArticle(number)} a.quick-view`;
+
+    // Pagination selectors
+    this.pagesList = '.page-list';
+    this.paginationText = `${this.productListDiv} .pagination div:nth-child(1)`;
+    this.paginationNext = '#js-product-list nav.pagination a[rel=\'next\']';
+    this.paginationPrevious = '#js-product-list nav.pagination a[rel=\'prev\']';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -181,6 +187,24 @@ class Category extends FOBasePage {
     }
 
     return allRowsContentTable;
+  }
+
+  /**
+   * Is pages list visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  isPagesListVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, '.page-list');
+  }
+
+  /**
+   * Get pages list
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getPagesList(page: Page): Promise<string> {
+    return this.getTextContent(page, '.page-list');
   }
 
   /**
