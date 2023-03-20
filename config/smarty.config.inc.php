@@ -177,7 +177,6 @@ function smartyCleanHtml($data)
 
 function smartyClassname(string $classname)
 {
-    
     $classname = Tools::replaceAccentedChars(strtolower($classname));
     $classname = preg_replace(['/[^A-Za-z0-9-_]/', '/-{3,}/', '/-+$/'], ['-', '-', ''] , $classname);
     return $classname;
