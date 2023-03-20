@@ -638,9 +638,8 @@ class AddProduct extends BOBasePage {
       this.waitForVisibleSelector(page, this.modalDialog),
       page.click(this.modalDialogYesButton),
     ]);
-    const growlMessageText = await this.getGrowlMessageContent(page, 30000);
 
-    return growlMessageText;
+    return this.getGrowlMessageContent(page, 30000);
   }
 
   /**

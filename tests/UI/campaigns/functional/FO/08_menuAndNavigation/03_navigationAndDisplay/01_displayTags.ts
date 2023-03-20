@@ -262,7 +262,7 @@ describe('FO - Navigation and display : Display tags', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
       const flagText = await productPage.getProductTag(page);
-      await expect(flagText).to.eq('-€10.00');
+      await expect(flagText).to.eq(`-€${specificPriceData.specificPrice.discount.toFixed(2)}`);
     });
   });
 

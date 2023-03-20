@@ -43,7 +43,7 @@ export default {
     name: 'Hummingbird printed sweater',
     summary: 'Regular fit, round neckline, long sleeves. 100% cotton, brushed inner side for extra comfort.',
     coverImage: 'brown-bear-printed-sweater.jpg',
-    thumbImage: 'brown-bear-printed-sweater.jp',
+    thumbImage: 'brown-bear-printed-sweater.jpg',
     reference: 'demo_3',
     category: 'Women',
     price: 35.90,
