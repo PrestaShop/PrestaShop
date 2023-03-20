@@ -34,14 +34,12 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonReposit
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use StockAvailable;
 
 /**
@@ -98,63 +96,11 @@ class CombinationStockUpdater
         ShopConstraint $shopConstraint
     ): void {
         $combination = $this->combinationRepository->getByShopConstraint($combinationId, $shopConstraint);
-        $this->combinationRepository->partialUpdate(
-            $combination,
-            $this->fillUpdatableProperties($combination, $properties),
-            $shopConstraint,
-            CannotUpdateCombinationException::FAILED_UPDATE_STOCK
-        );
-
         $this->updateStockByShopConstraint(
             $combination,
             $properties,
             $shopConstraint
         );
-    }
-
-    /**
-     * @param Combination $combination
-     * @param CombinationStockProperties $properties
-     *
-     * @return string[]
-     */
-    private function fillUpdatableProperties(Combination $combination, CombinationStockProperties $properties): array
-    {
-        $updatableProperties = [];
-
-        $localizedLaterLabels = $properties->getLocalizedAvailableLaterLabels();
-        if (null !== $localizedLaterLabels) {
-            $combination->available_later = $localizedLaterLabels;
-            $updatableProperties['available_later'] = array_keys($localizedLaterLabels);
-        }
-
-        $localizedNowLabels = $properties->getLocalizedAvailableNowLabels();
-        if (null !== $localizedNowLabels) {
-            $combination->available_now = $localizedNowLabels;
-            $updatableProperties['available_now'] = array_keys($localizedNowLabels);
-        }
-
-        if (null !== $properties->getAvailableDate()) {
-            $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
-            $updatableProperties[] = 'available_date';
-        }
-
-        if (null !== $properties->getLowStockThreshold()) {
-            $combination->low_stock_threshold = $properties->getLowStockThreshold();
-            $updatableProperties[] = 'low_stock_threshold';
-        }
-
-        if (null !== $properties->getMinimalQuantity()) {
-            $combination->minimal_quantity = $properties->getMinimalQuantity();
-            $updatableProperties[] = 'minimal_quantity';
-        }
-
-        if (null !== $properties->isLowStockAlertEnabled()) {
-            $combination->low_stock_alert = $properties->isLowStockAlertEnabled();
-            $updatableProperties[] = 'low_stock_alert';
-        }
-
-        return $updatableProperties;
     }
 
     /**

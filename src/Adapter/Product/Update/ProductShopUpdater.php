@@ -221,7 +221,6 @@ class ProductShopUpdater
                 $stockModification = StockModification::buildDeltaQuantity($deltaQuantity);
                 $stockProperties = new CombinationStockProperties(
                     $stockModification,
-                    null,
                     $sourceStock->location
                 );
                 $this->combinationStockUpdater->update($combinationId, $stockProperties, $targetConstraint);
