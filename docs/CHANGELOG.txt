@@ -59,6 +59,7 @@ Changelog for PrestaShop 8
     - #31241: Improved session availability test (by @Hlavtox)
     - #31006: Fix conversion of hex color codes (by @lmeyer1)
     - #30834: Fix SQL error introduced by da10f001 (by @lmeyer1)
+    - #GHSA-3g43-x7qr-96ph: Fix possible CSRF token fixation by (by @mflasquin )
 - Web Services:
   - Bug fix:
     - #31023: Backport #30309 : Fix broken result in webservices for 8.0.x (by @boubkerbribri)
