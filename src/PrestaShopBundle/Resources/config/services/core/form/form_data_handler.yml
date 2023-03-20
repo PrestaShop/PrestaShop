@@ -262,3 +262,9 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxRulesGroupFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartRuleFormDataHandler:
+    autowire: true
+    public: false
+    arguments:
+      - '@prestashop.core.command_bus'

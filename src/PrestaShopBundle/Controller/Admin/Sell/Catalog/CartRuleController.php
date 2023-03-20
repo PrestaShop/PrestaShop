@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -73,6 +75,13 @@ class CartRuleController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartRuleGrid' => $this->presentGrid($cartRuleGrid),
             'layoutTitle' => $this->trans('Cart rules', 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => [
+                'add_cart_rule' => [
+                    'href' => $this->generateUrl('admin_cart_rules_create'),
+                    'desc' => $this->trans('Add new cart rule', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
         ]);
     }
 
@@ -187,6 +196,31 @@ class CartRuleController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cart_rules_index');
     }
 
+    public function createAction(Request $request): Response
+    {
+        $form = $this->getFormBuilder()->getForm();
+        $form->handleRequest($request);
+
+        try {
+            $handlerResult = $this->getFormHandler()->handle($form);
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                //@todo: redirect to edition page
+                return $this->redirectToRoute('admin_cart_rules_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/CartRule/create.html.twig', [
+            'enableSidebar' => true,
+            'cartRuleForm' => $form->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'layoutTitle' => $this->trans('New cart rule', 'Admin.Navigation.Menu'),
+        ]);
+    }
+
     /**
      * Provides cart rule ids from request of bulk action
      *
@@ -281,5 +315,21 @@ class CartRuleController extends FrameworkBundleAdminController
                 $e instanceof BulkToggleCartRuleException ? implode(', ', $e->getCartRuleIds()) : ''
             ),
         ];
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.cart_rule_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    protected function getFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.cart_rule_form_builder');
     }
 }

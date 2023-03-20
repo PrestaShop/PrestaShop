@@ -299,3 +299,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRulesGroupFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.cart_rule_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\CartRule\CartRuleType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider'
