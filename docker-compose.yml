@@ -41,6 +41,6 @@ services:
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
-      - "8001:80"
+      - "${PS_PORT:-8001}:80"
     volumes:
       - ./:/var/www/html:delegated
