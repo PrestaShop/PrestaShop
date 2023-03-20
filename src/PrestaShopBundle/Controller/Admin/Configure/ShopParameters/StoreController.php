@@ -55,7 +55,7 @@ class StoreController extends FrameworkBundleAdminController
         $storeGridFactory = $this->get('prestashop.core.grid.grid_factory.store');
         $storeGrid = $storeGridFactory->getGrid($storeFilters);
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Store/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Stores/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'storeGrid' => $this->presentGrid($storeGrid),
