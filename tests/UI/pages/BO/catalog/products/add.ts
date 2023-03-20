@@ -93,6 +93,8 @@ class AddProduct extends BOBasePage {
 
   private readonly deleteSpecificPriceButton: (row: number) => string;
 
+  private readonly onSaleCheckbox: string;
+
   private readonly selectAttributeInput: string;
 
   private readonly generateCombinationsButton: string;
@@ -197,6 +199,7 @@ class AddProduct extends BOBasePage {
     this.reductionType = '#form_step2_specific_price_sp_reduction_type';
     this.applyButton = '#form_step2_specific_price_save';
     this.deleteSpecificPriceButton = (row: number) => `#js-specific-price-list tr:nth-child(${row}) td a.delete`;
+    this.onSaleCheckbox = '#form_step2_on_sale';
 
     // Selector of Step 3 : Combinations
     this.selectAttributeInput = '#form_step3_attributes-tokenfield';
@@ -630,7 +633,7 @@ class AddProduct extends BOBasePage {
   async deleteSpecificPrice(page: Page, row: number = 1): Promise<string | null> {
     // Go to pricing tab : id = 2
     await this.goToFormStep(page, 2);
-    await this.waitForSelectorAndClick(page, `#js-specific-price-list tr:nth-child(${row}) td a.delete`);
+    await this.waitForSelectorAndClick(page, this.deleteSpecificPriceButton(row));
     await Promise.all([
       this.waitForVisibleSelector(page, this.modalDialog),
       page.click(this.modalDialogYesButton),
@@ -638,6 +641,20 @@ class AddProduct extends BOBasePage {
     const growlMessageText = await this.getGrowlMessageContent(page, 30000);
 
     return growlMessageText;
+  }
+
+  /**
+   * Display on sale flag
+   * @param page {Page} Browser tab
+   * @param onSale {boolean} True if we need to display on sale flag
+   * @returns {Promise<string>}
+   */
+  async displayOnSaleFlag(page: Page, onSale: boolean = true): Promise<string | null> {
+    // Go to pricing tab : id = 2
+    await this.goToFormStep(page, 2);
+    await this.setChecked(page, this.onSaleCheckbox, onSale);
+
+    return this.saveProduct(page);
   }
 
   /**
