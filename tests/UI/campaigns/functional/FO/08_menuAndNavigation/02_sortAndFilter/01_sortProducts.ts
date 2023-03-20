@@ -20,6 +20,17 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_menuAndNavigation_sortAndFilter_sortProducts';
 
+/*
+Pre-condition:
+- Disable new product page
+- Get the number of active products
+- Change the number of products per page
+Scenario:
+- Sort products list by all options
+Post-condition:
+- Reset the number of products per page
+- Enable new product page
+ */
 describe('FO - Menu and navigation : Sort products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
@@ -181,7 +192,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
   });
 
   // Post-condition : Reset product per page by the number of all products
-  describe('PRE-TEST : Reset the number of products per page', async () => {
+  describe('POST-TEST : Reset the number of products per page', async () => {
     it('should close the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFo', baseContext);
 
@@ -199,6 +210,6 @@ describe('FO - Menu and navigation : Sort products', async () => {
     });
   });
 
-  // Pre-condition: Disable new product page
+  // Pre-condition: Enable new product page
   setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 });
