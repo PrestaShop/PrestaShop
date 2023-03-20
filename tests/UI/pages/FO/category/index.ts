@@ -195,7 +195,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   isPagesListVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, '.page-list');
+    return this.elementVisible(page, this.pagesList);
   }
 
   /**
@@ -204,7 +204,7 @@ class Category extends FOBasePage {
    * @return {Promise<string>}
    */
   getPagesList(page: Page): Promise<string> {
-    return this.getTextContent(page, '.page-list');
+    return this.getTextContent(page, this.pagesList);
   }
 
   /**

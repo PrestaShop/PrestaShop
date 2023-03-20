@@ -11,6 +11,10 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Product extends FOBasePage {
+  private readonly productFlags: string;
+
+  private readonly productFlag: string;
+
   private readonly productName: string;
 
   private readonly productCoverImg: string;
@@ -141,6 +145,8 @@ class Product extends FOBasePage {
     super();
 
     // Selectors for product page
+    this.productFlags = '#content ul.product-flags';
+    this.productFlag = '#content li.product-flag';
     this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
     this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
@@ -230,7 +236,7 @@ class Product extends FOBasePage {
    * @return {Promise<string>}
    */
   getProductTag(page: Page): Promise<string> {
-    return this.getTextContent(page, '#content ul.product-flags');
+    return this.getTextContent(page, this.productFlags);
   }
 
   /**
@@ -239,7 +245,7 @@ class Product extends FOBasePage {
    * @return {Promise<boolean>}
    */
   isProductTagVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, '#content li.product-flag');
+    return this.elementVisible(page, this.productFlag);
   }
 
   /**
