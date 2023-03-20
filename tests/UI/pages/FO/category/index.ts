@@ -32,6 +32,7 @@ class Category extends FOBasePage {
   private readonly sortByDiv: string;
 
   private readonly sortByButton: string;
+  private readonly valueToSortBy: (sortBy: string) => string;
 
   private readonly productList: string;
 
@@ -73,6 +74,7 @@ class Category extends FOBasePage {
     this.paginationPrevious = '#js-product-list nav.pagination a[rel=\'prev\']';
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
+    this.valueToSortBy = (sortBy: string) => `${this.productListDiv} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
 
     // Products list
     this.productList = '#js-product-list';
@@ -145,13 +147,25 @@ class Category extends FOBasePage {
     return this.elementVisible(page, this.sortByButton, 1000);
   }
 
+  /**
+   * Sort products list
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Value to sort by
+   * @return {Promise<void>}
+   */
   async sortProductsList(page: Page, sortBy: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.sortByButton);
     await this.waitForVisibleSelector(page, `${this.sortByButton}[aria-expanded="true"]`);
-    await this.waitForSelectorAndClick(page, `#js-product-list-top .products-sort-order .dropdown-menu a[href*='${sortBy}']`);
+    await this.waitForSelectorAndClick(page, this.valueToSortBy(sortBy));
     await page.waitForTimeout(3000);
   }
 
+  /**
+   * Get all products attribute
+   * @param page {Page} Browser tab
+   * @param attribute {string} Attribute to get
+   * @returns {Promise<string[]>}
+   */
   async getAllProductsAttribute(page: Page, attribute: string): Promise<string[]> {
     let rowContent: string;
     const rowsNumber: number = await this.getNumberOfProducts(page);
@@ -187,6 +201,11 @@ class Category extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationNext);
   }
 
+  /**
+   * Go to previous page
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async goToPreviousPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.paginationPrevious);
   }
