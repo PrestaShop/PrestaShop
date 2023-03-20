@@ -26,6 +26,24 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_menuAndNavigation_navigationAndDisplay_displayTags';
 
+/*
+Pre-condition:
+- Disable new product page
+Scenario:
+- Go to Fo and check the new tag
+- Edit 'Number of days for which the product is considered 'New''
+- Check that the new tag is no displayed in product page
+- Add specific price to the product demo_6 in BO
+- Check the discount tag in FO
+- Create a pack of products in BO
+- Check the pack tag in FO
+- Change the created product quantity to 0 in BO
+- Check the out-of-stock tag in FO
+Post-condition:
+- Reset number of days which product is considered new
+- Delete specific price
+- Enable new product page
+ */
 describe('FO - Navigation and display : Display tags', async () => {
   let browserContext: BrowserContext;
   let page: Page;
@@ -419,6 +437,6 @@ describe('FO - Navigation and display : Display tags', async () => {
   // Post-condition: Delete created product
   deleteProductTest(packOfProducts, `${baseContext}_deleteProduct`);
 
-  // Post-condition: Disable new product page
+  // Post-condition: Enable new product page
   setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 });

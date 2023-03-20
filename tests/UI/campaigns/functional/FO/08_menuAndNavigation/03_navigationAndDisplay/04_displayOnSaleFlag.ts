@@ -22,6 +22,15 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_menuAndNavigation_navigationAndDisplay_displayOnSaleFlag';
 
+/*
+Pre-condition:
+- Disable new product page
+- Create new product with enable 'On sale' flag
+- Preview product on check 'On sale' flag
+Post-condition:
+- Delete created product
+- Enable new product page
+ */
 describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
   let browserContext: BrowserContext;
   let page: Page;
@@ -101,6 +110,6 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
   // Post-condition: Delete created product
   deleteProductTest(onSaleProductData, `${baseContext}_deleteProduct`);
 
-  // Post-condition: Disable new product page
+  // Post-condition: Enable new product page
   setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 });

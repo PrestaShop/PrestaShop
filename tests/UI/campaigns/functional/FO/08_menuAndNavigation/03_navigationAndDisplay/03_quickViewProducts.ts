@@ -14,6 +14,11 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_menuAndNavigation_navigationAndDisplay_quickViewProducts';
 
+/*
+- Go to FO > quick view the product demo_3 and check information
+quick view the product demo_12 and check information
+quick view the product demo_14 and check information
+ */
 describe('FO - Navigation and display : Quick view products', async () => {
   let browserContext: BrowserContext;
   let page: Page;

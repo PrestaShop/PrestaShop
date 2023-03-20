@@ -16,6 +16,18 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_menuAndNavigation_navigationAndDisplay_pagination';
 
+/*
+Scenario:
+- Go to FO>All products page
+- Check the pagination in the bottom of the page
+- Click on next then on previous
+- Edit products per page number to 6 in BO
+- Check the new pagination in FO
+- Edit products per page number to 20
+- Check the new pagination
+Post-condition:
+- Reset 'Number of products per page'
+ */
 describe('FO - Navigation and display : Pagination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
