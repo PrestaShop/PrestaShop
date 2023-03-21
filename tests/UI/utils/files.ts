@@ -24,6 +24,29 @@ export default {
   },
 
   /**
+   * Delete files following pattern
+   * @param path {string} Path
+   * @param regex {RegExp} Pattern of files to remove
+   * @return {Promise<void>}
+   */
+  async deleteFilePattern(path: string, regex: RegExp): Promise<void> {
+    fs.readdirSync(path)
+      .filter((f) => regex.test(f))
+      .map((f) => fs.unlinkSync(path + f));
+  },
+
+  /**
+   * Return files following pattern
+   * @param path {string} Path
+   * @param regex {RegExp} Pattern of files to remove
+   * @return {Promise<void>}
+   */
+  async getFilesPattern(path: string, regex: RegExp): Promise<string[]> {
+    return fs.readdirSync(path)
+      .filter((f: string) => regex.test(f));
+  },
+
+  /**
    * Check if file was download in path
    * @param filePath {string} Filepath to check
    * @param attempt {number} Number of attempt to check for the file
@@ -245,12 +268,20 @@ export default {
   },
 
   /**
+   * Get the root path
+   * @returns {string}
+   */
+  getRootPath(): string {
+    return path.resolve(__dirname, '../../../');
+  },
+
+  /**
    * Get the path of the file automatically generated
    * @param folderPath {string} Path of the folder where the file exists
    * @param filename {string} Path of the file automatically created
    * @returns {Promise<string>}
    */
   async getFilePathAutomaticallyGenerated(folderPath: string, filename: string): Promise<string> {
-    return path.resolve(__dirname, '../../../', folderPath, filename);
+    return path.resolve(this.getRootPath(), folderPath, filename);
   },
 };

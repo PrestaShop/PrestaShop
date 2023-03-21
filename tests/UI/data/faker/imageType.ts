@@ -1,5 +1,5 @@
 import {faker} from '@faker-js/faker';
-import ImageTypeCreator from '@data/types/imageType';
+import {ImageTypeCreator} from '@data/types/imageType';
 
 /**
  * Create new image type to use on creation form on image type page on BO
