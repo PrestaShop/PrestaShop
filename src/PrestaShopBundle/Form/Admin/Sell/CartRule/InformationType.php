@@ -53,10 +53,18 @@ class InformationType extends TranslatorAwareType
         $builder
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
+                'help' => $this->trans(
+                    'This will be displayed in the cart summary, as well as on the invoice.',
+                    'Admin.Catalog.Help'
+                ),
             ])
             ->add('description', TextareaType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'required' => false,
+                'help' => $this->trans(
+                    'For your eyes only. This will never be displayed to the customer.',
+                    'Admin.Catalog.Help'
+                ),
             ])
             ->add('code', TextType::class, [
                 //@todo: implement some widget generating random code
@@ -67,17 +75,34 @@ class InformationType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
             ])
+            //@todo: highlight depends on code. When code is empty, highlight is not shown
             ->add('highlight', SwitchType::class, [
                 'label' => $this->trans('Highlight', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'help' => $this->trans(
+                    'If the voucher is not yet in the cart, it will be displayed in the cart summary.',
+                    'Admin.Catalog.Help'
+                ),
             ])
             ->add('partial_use', SwitchType::class, [
                 'label' => $this->trans('Partial use', 'Admin.Global'),
                 'required' => false,
+                'help' => $this->trans(
+                    'Only applicable if the voucher value is greater than the cart total.',
+                    'Admin.Catalog.Help'
+                    ) . ' ' .
+                    $this->trans(
+                        'If you do not allow partial use, the voucher value will be lowered to the total order amount. If you allow partial use, however, a new voucher will be created with the remainder.',
+                        'Admin.Catalog.Help'
+                    ),
             ])
             ->add('priority', NumberType::class, [
                 'label' => $this->trans('Priority', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'help' => $this->trans(
+                    'Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".',
+                    'Admin.Catalog.Help'
+                ),
             ])
             ->add('enabled', SwitchType::class, [
                 'label' => $this->trans('Status', 'Admin.Global'),
