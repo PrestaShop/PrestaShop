@@ -374,6 +374,16 @@ class CustomerType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $this->trans(
+            'Test.',
+            'Admin.Orderscustomers.Help'
+        );
+
+        $this->trans(
+            'This wording doesn\'t exist anywhere I\'m sure.',
+            'Admin.Orderscustomers.Help'
+        );
+
         $resolver
             ->setDefaults([
                 // password is configurable
