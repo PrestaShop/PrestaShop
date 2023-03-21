@@ -65,6 +65,13 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [];
+        return [
+            'information' => [
+                'highlight' => false,
+                'partial_use' => true,
+                'priority' => 1,
+                'enabled' => true,
+            ],
+        ];
     }
 }

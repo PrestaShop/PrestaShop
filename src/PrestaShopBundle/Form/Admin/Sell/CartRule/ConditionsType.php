@@ -67,6 +67,10 @@ class ConditionsType extends TranslatorAwareType
         $builder
             ->add('customer', EntitySearchInputType::class, [
                 'label' => $this->trans('Limit to single customer', 'Admin.Global'),
+                'help' => $this->trans(
+                    'Optional: The cart rule will be available to everyone if you leave this field blank.',
+                    'Admin.Catalog.Help'
+                ),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'entry_type' => SearchedCustomerType::class,
                 'entry_options' => [
@@ -86,16 +90,44 @@ class ConditionsType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('valid_date_range', DateRangeType::class, [
+                'label' => $this->trans('Valid', 'Admin.Catalog.Feature'),
+                //@todo: help label does not appear (probably missing in form theme)
+                'help' => $this->trans('The default period is one month.', 'Admin.Catalog.Help'),
+                'required' => false,
                 'date_format' => 'YYYY-MM-DD HH:mm:ss',
             ])
-            ->add('minimum_amount', NumberType::class)
+            ->add('minimum_amount', NumberType::class, [
+                'label' => $this->trans('Minimum amount', 'Admin.Catalog.Feature'),
+                'required' => false,
+                'help' => $this->trans(
+                    'You can choose a minimum amount for the cart either with or without the taxes and shipping.',
+                    'Admin.Catalog.Help'
+                ),
+            ])
             ->add('currency', ChoiceType::class, [
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
+                'label' => $this->trans('Currency', 'Admin.Global'),
             ])
-            ->add('tax_included', SwitchType::class)
-            ->add('shipping_included', SwitchType::class)
-            ->add('total_available', NumberType::class)
-            ->add('available_per_user', NumberType::class)
+            ->add('tax_included', SwitchType::class, [
+                'label' => $this->trans('Tax included', 'Admin.Catalog.Feature'),
+            ])
+            ->add('shipping_included', SwitchType::class, [
+                'label' => $this->trans('Shipping included', 'Admin.Catalog.Feature'),
+            ])
+            ->add('total_available', NumberType::class, [
+                'label' => $this->trans('Total available', 'Admin.Catalog.Feature'),
+                'help' => $this->trans(
+                    'The cart rule will be applied to the first "X" customers only.',
+                    'Admin.Catalog.Help'
+                ),
+            ])
+            ->add('available_per_user', NumberType::class, [
+                'label' => $this->trans('Total available for each user', 'Admin.Catalog.Feature'),
+                'help' => $this->trans(
+                    'A customer will only be able to use the cart rule "X" time(s).',
+                    'Admin.Catalog.Help'
+                ),
+            ])
             ->add('restrictions', RestrictionsType::class)
         ;
     }

@@ -79,7 +79,7 @@ class InformationType extends TranslatorAwareType
                 'label' => $this->trans('Priority', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
-            ->add('status', SwitchType::class, [
+            ->add('enabled', SwitchType::class, [
                 'label' => $this->trans('Status', 'Admin.Global'),
                 'required' => false,
             ])
