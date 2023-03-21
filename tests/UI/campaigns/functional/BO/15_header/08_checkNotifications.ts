@@ -14,6 +14,7 @@ import foLoginPage from '@pages/FO/login';
 import foMyAccountPage from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import orderDetails from '@pages/FO/myAccount/orderDetails';
+import customerServicePage from '@pages/BO/customerService/customerService';
 import viewOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import viewCustomerPage from '@pages/BO/customers/view';
@@ -211,8 +212,8 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.clickOnNotification(page, 'messages');
 
-      const pageTitle = await viewOrderMessagePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderMessagePage.pageTitleView);
+      const pageTitle = await customerServicePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
   });
 
