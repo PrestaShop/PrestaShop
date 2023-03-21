@@ -58,9 +58,8 @@
       v-else
     >
       <li
-        v-for="(item, index) in getItems()"
+        v-for="(item, index) in visibleItems"
         :key="index"
-        v-show="item.visible"
         class="item"
       >
         <PSTreeItem
@@ -116,6 +115,11 @@
           expand: this.trans('tree_expand'),
           reduce: this.trans('tree_reduce'),
         };
+      },
+      visibleItems(): Array<any> {
+        const items = this.getItems();
+
+        return items.filter((item) => item.visible);
       },
     },
     methods: {
