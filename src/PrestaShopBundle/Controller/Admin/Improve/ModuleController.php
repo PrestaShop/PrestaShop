@@ -217,13 +217,6 @@ class ModuleController extends ModuleAbstractController
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
             }
-            $systemCacheClearEnabled = filter_var(
-                $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
-                FILTER_VALIDATE_BOOLEAN
-            );
-            if (!$systemCacheClearEnabled) {
-                $moduleManager->disableSystemClearCache();
-            }
             $response[$module]['status'] = call_user_func([$moduleManager, $action], ...$args);
         } catch (Exception $e) {
             $response[$module]['status'] = false;
