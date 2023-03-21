@@ -52,14 +52,37 @@ class InformationType extends TranslatorAwareType
     {
         $builder
             ->add('name', TranslatableType::class, [
-                'label' => 'Name',
+                'label' => $this->trans('Name', 'Admin.Global'),
             ])
-            ->add('description', TextareaType::class)
-            ->add('code', TextType::class)
-            ->add('highlight', SwitchType::class)
-            ->add('partial_use', SwitchType::class)
-            ->add('priority', NumberType::class)
-            ->add('status', SwitchType::class)
+            ->add('description', TextareaType::class, [
+                'label' => $this->trans('Description', 'Admin.Global'),
+                'required' => false,
+            ])
+            ->add('code', TextType::class, [
+                //@todo: implement some widget generating random code
+                'label' => $this->trans('Code', 'Admin.Global'),
+                'required' => false,
+                'help' => $this->trans(
+                    'Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.',
+                    'Admin.Catalog.Help'
+                ),
+            ])
+            ->add('highlight', SwitchType::class, [
+                'label' => $this->trans('Highlight', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
+            ->add('partial_use', SwitchType::class, [
+                'label' => $this->trans('Partial use', 'Admin.Global'),
+                'required' => false,
+            ])
+            ->add('priority', NumberType::class, [
+                'label' => $this->trans('Priority', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
+            ->add('status', SwitchType::class, [
+                'label' => $this->trans('Status', 'Admin.Global'),
+                'required' => false,
+            ])
         ;
     }
 }

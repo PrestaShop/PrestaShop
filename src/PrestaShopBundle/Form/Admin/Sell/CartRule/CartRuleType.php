@@ -41,13 +41,13 @@ class CartRuleType extends TranslatorAwareType
     {
         $builder
             ->add('information', InformationType::class, [
-                'label' => 'Information',
+                'label' => $this->trans('Information', 'Admin.Catalog.Feature'),
             ])
             ->add('conditions', ConditionsType::class, [
-                'label' => 'Conditions',
+                'label' => $this->trans('Conditions', 'Admin.Catalog.Feature'),
             ])
             ->add('actions', ActionsType::class, [
-                'label' => 'Actions',
+                'label' => $this->trans('Actions', 'Admin.Catalog.Feature'),
             ])
         ;
     }
