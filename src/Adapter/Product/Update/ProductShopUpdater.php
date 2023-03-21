@@ -185,10 +185,8 @@ class ProductShopUpdater
         if ($deltaQuantity !== 0 || (int) $sourceStock->out_of_stock !== (int) $targetStock->out_of_stock || $sourceStock->location !== $targetStock->location) {
             $stockModification = StockModification::buildFixedQuantity((int) $sourceStock->quantity);
             $stockProperties = new ProductStockProperties(
-                null,
                 $stockModification,
                 $outOfStock,
-                null,
                 $sourceStock->location
             );
             $this->productStockUpdater->update($productId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
@@ -223,7 +221,6 @@ class ProductShopUpdater
                 $stockModification = StockModification::buildDeltaQuantity($deltaQuantity);
                 $stockProperties = new CombinationStockProperties(
                     $stockModification,
-                    null,
                     $sourceStock->location
                 );
                 $this->combinationStockUpdater->update($combinationId, $stockProperties, $targetConstraint);

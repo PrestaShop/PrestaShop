@@ -380,10 +380,8 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
 
             $stockModification = StockModification::buildFixedQuantity($productQuantity);
             $stockProperties = new ProductStockProperties(
-                null,
                 $stockModification,
                 $outOfStock,
-                null,
                 $location
             );
             $this->productStockUpdater->update($targetProductId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
@@ -431,7 +429,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $stockModification = StockModification::buildFixedQuantity($combinationQuantity);
             $stockProperties = new CombinationStockProperties(
                 $stockModification,
-                null,
                 $location
             );
             $this->combinationStockUpdater->update($newCombinationId, $stockProperties, $targetConstraint);

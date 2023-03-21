@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
-use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 class CombinationStockProperties
@@ -38,68 +37,20 @@ class CombinationStockProperties
     private $stockModification;
 
     /**
-     * @var int|null
-     */
-    private $minimalQuantity;
-
-    /**
      * @var string|null
      */
     private $location;
 
     /**
-     * @var int|null
-     */
-    private $lowStockThreshold;
-
-    /**
-     * @var bool|null
-     */
-    private $lowStockAlertEnabled;
-
-    /**
-     * @var string[]|null key value pairs where key is the id of language
-     */
-    private $localizedAvailableNowLabels;
-
-    /**
-     * @var string[]|null key value pairs where key is the id of language
-     */
-    private $localizedAvailableLaterLabels;
-
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $availableDate;
-
-    /**
      * @param StockModification|null $stockModification
-     * @param int|null $minimalQuantity
      * @param string|null $location
-     * @param int|null $lowStockThreshold
-     * @param bool|null $lowStockAlertEnabled
-     * @param DateTimeInterface|null $availableDate
-     * @param string[]|null $localizedAvailableNowLabels
-     * @param string[]|null $localizedAvailableLaterLabels
      */
     public function __construct(
         ?StockModification $stockModification = null,
-        ?int $minimalQuantity = null,
-        ?string $location = null,
-        ?int $lowStockThreshold = null,
-        ?bool $lowStockAlertEnabled = null,
-        ?DateTimeInterface $availableDate = null,
-        ?array $localizedAvailableNowLabels = null,
-        ?array $localizedAvailableLaterLabels = null
+        ?string $location = null
     ) {
         $this->stockModification = $stockModification;
-        $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
-        $this->lowStockThreshold = $lowStockThreshold;
-        $this->lowStockAlertEnabled = $lowStockAlertEnabled;
-        $this->availableDate = $availableDate;
-        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
-        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
     }
 
     /**
@@ -111,58 +62,10 @@ class CombinationStockProperties
     }
 
     /**
-     * @return int|null
-     */
-    public function getMinimalQuantity(): ?int
-    {
-        return $this->minimalQuantity;
-    }
-
-    /**
      * @return string|null
      */
     public function getLocation(): ?string
     {
         return $this->location;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getLowStockThreshold(): ?int
-    {
-        return $this->lowStockThreshold;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isLowStockAlertEnabled(): ?bool
-    {
-        return $this->lowStockAlertEnabled;
-    }
-
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getAvailableDate(): ?DateTimeInterface
-    {
-        return $this->availableDate;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedAvailableNowLabels(): ?array
-    {
-        return $this->localizedAvailableNowLabels;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedAvailableLaterLabels(): ?array
-    {
-        return $this->localizedAvailableLaterLabels;
     }
 }

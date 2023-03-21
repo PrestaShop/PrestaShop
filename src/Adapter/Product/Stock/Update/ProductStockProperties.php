@@ -27,18 +27,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
-use DateTimeInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 class ProductStockProperties
 {
-    /**
-     * @var PackStockType|null
-     */
-    private $packStockType;
-
     /**
      * @var StockModification|null
      */
@@ -50,82 +43,23 @@ class ProductStockProperties
     private $outOfStockType;
 
     /**
-     * @var int|null
-     */
-    private $minimalQuantity;
-
-    /**
      * @var string|null
      */
     private $location;
 
     /**
-     * @var int|null
-     */
-    private $lowStockThreshold;
-
-    /**
-     * @var bool|null
-     */
-    private $lowStockAlertEnabled;
-
-    /**
-     * @var string[]|null key value pairs where key is the id of language
-     */
-    private $localizedAvailableNowLabels;
-
-    /**
-     * @var string[]|null key value pairs where key is the id of language
-     */
-    private $localizedAvailableLaterLabels;
-
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $availableDate;
-
-    /**
-     * @param PackStockType|null $packStockType
      * @param StockModification|null $stockModification
      * @param OutOfStockType|null $outOfStockType
-     * @param int|null $minimalQuantity
      * @param string|null $location
-     * @param int|null $lowStockThreshold
-     * @param bool|null $lowStockAlertEnabled
-     * @param string[]|null $localizedAvailableNowLabels
-     * @param string[]|null $localizedAvailableLaterLabels
-     * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        ?PackStockType $packStockType = null,
         ?StockModification $stockModification = null,
         ?OutOfStockType $outOfStockType = null,
-        ?int $minimalQuantity = null,
-        ?string $location = null,
-        ?int $lowStockThreshold = null,
-        ?bool $lowStockAlertEnabled = null,
-        ?array $localizedAvailableNowLabels = null,
-        ?array $localizedAvailableLaterLabels = null,
-        ?DateTimeInterface $availableDate = null
+        ?string $location = null
     ) {
-        $this->packStockType = $packStockType;
         $this->stockModification = $stockModification;
         $this->outOfStockType = $outOfStockType;
-        $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
-        $this->lowStockThreshold = $lowStockThreshold;
-        $this->lowStockAlertEnabled = $lowStockAlertEnabled;
-        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
-        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
-        $this->availableDate = $availableDate;
-    }
-
-    /**
-     * @return PackStockType|null
-     */
-    public function getPackStockType(): ?PackStockType
-    {
-        return $this->packStockType;
     }
 
     /**
@@ -145,58 +79,10 @@ class ProductStockProperties
     }
 
     /**
-     * @return int|null
-     */
-    public function getMinimalQuantity(): ?int
-    {
-        return $this->minimalQuantity;
-    }
-
-    /**
      * @return string|null
      */
     public function getLocation(): ?string
     {
         return $this->location;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getLowStockThreshold(): ?int
-    {
-        return $this->lowStockThreshold;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isLowStockAlertEnabled(): ?bool
-    {
-        return $this->lowStockAlertEnabled;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedAvailableNowLabels(): ?array
-    {
-        return $this->localizedAvailableNowLabels;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedAvailableLaterLabels(): ?array
-    {
-        return $this->localizedAvailableLaterLabels;
-    }
-
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getAvailableDate(): ?DateTimeInterface
-    {
-        return $this->availableDate;
     }
 }
