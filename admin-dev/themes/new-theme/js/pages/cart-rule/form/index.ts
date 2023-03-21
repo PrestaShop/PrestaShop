@@ -23,6 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import GeneratableInput from '@components/generatable-input';
+import CartRuleMap from '@pages/cart-rule/cart-rule-map';
+import FormFieldToggler from '@components/form/form-field-toggler';
+
 $(() => {
   window.prestashop.component.initComponents([
     'TranslatableField',
@@ -30,4 +34,11 @@ $(() => {
     'EventEmitter',
     'DisablingSwitch',
   ]);
+
+  new GeneratableInput().attachOn(CartRuleMap.codeGeneratorBtn);
+  new FormFieldToggler({
+    disablingInputSelector: CartRuleMap.codeInput,
+    targetSelector: CartRuleMap.highlightSwitchContainer,
+    matchingValue: '',
+  });
 });

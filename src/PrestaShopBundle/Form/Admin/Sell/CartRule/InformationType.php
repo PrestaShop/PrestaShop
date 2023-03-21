@@ -27,17 +27,19 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
+use PrestaShopBundle\Form\Admin\Type\GeneratableTextType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InformationType extends TranslatorAwareType
 {
+    public const GENERATED_CODE_LENGTH = 8;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales
@@ -66,17 +68,26 @@ class InformationType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
             ])
-            ->add('code', TextType::class, [
-                //@todo: implement some widget generating random code
+            ->add('code', GeneratableTextType::class, [
                 'label' => $this->trans('Code', 'Admin.Global'),
+                'generated_value_length' => self::GENERATED_CODE_LENGTH,
+                'empty_data' => '',
                 'required' => false,
                 'help' => $this->trans(
                     'Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.',
                     'Admin.Catalog.Help'
                 ),
             ])
-            //@todo: highlight depends on code. When code is empty, highlight is not shown
             ->add('highlight', SwitchType::class, [
+                'row_attr' => [
+                    'class' => 'js-highlight-switch-container',
+                ],
+                'attr' => [
+                    // disabled by default, but correct state should be handled by js depending if field "code" is not empty
+                    // @todo: can be improved by adding form listener, but not sure if its worth it
+                    // @todo: also, in legacy form visibility was toggled (not availablility), is it ok this "new way"?
+                    'disabled' => true,
+                ],
                 'label' => $this->trans('Highlight', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'help' => $this->trans(
