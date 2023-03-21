@@ -83,7 +83,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
                 'highlight' => false,
                 'partial_use' => true,
                 'priority' => 1,
-                'enabled' => true,
+                'active' => true,
             ],
             'conditions' => [
                 'valid_date_range' => [

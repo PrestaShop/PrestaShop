@@ -115,8 +115,8 @@ class InformationType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
             ])
-            ->add('enabled', SwitchType::class, [
-                'label' => $this->trans('Status', 'Admin.Global'),
+            ->add('active', SwitchType::class, [
+                'label' => $this->trans('Active', 'Admin.Global'),
                 'required' => false,
             ])
         ;

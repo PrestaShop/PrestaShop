@@ -1,6 +1,8 @@
 services:
   _defaults:
     public: true
+    bind:
+      $commandBus: '@prestashop.core.command_bus'
 
   prestashop.core.form.identifiable_object.sql_request_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SqlRequestFormDataHandler'
@@ -266,5 +268,3 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartRuleFormDataHandler:
     autowire: true
     public: false
-    arguments:
-      - '@prestashop.core.command_bus'

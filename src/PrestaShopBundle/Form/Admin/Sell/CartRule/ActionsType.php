@@ -66,7 +66,12 @@ class ActionsType extends TranslatorAwareType
     {
         $builder
             ->add('free_shipping', SwitchType::class)
-            ->add('reduction', PriceReductionType::class)
+            ->add('reduction', PriceReductionType::class, [
+                'disabling_switch' => true,
+                'disabled_value' => static function (?array $data) {
+                    return empty($data['value']);
+                },
+            ])
             ->add('exclude_discounted_products', SwitchType::class)
             ->add('gift_product', EntitySearchInputType::class, [
                 'entry_type' => RelatedProductType::class,
