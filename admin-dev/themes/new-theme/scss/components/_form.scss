@@ -28,6 +28,14 @@
   .card-body {
     padding: 1.875rem $card-spacer-x;
   }
+  .navigation-tab-widget {
+    .tab-content {
+      flex: 0 0 83.33333%;
+      max-width: 83.33333%;
+      padding: 14px 0;
+      margin: auto;
+    }
+  }
 
   .form-wrapper {
     padding: 0 $spacer * 0.5;

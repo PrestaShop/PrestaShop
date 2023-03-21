@@ -27,8 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
+use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CartRuleType extends TranslatorAwareType
 {
@@ -38,9 +40,32 @@ class CartRuleType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('information', InformationType::class)
-            ->add('conditions', ConditionsType::class)
-            ->add('actions', ActionsType::class)
+            ->add('information', InformationType::class, [
+                'label' => 'Information',
+            ])
+            ->add('conditions', ConditionsType::class, [
+                'label' => 'Conditions',
+            ])
+            ->add('actions', ActionsType::class, [
+                'label' => 'Actions',
+            ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getParent(): string
+    {
+        return NavigationTabType::class;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
+        ]);
     }
 }

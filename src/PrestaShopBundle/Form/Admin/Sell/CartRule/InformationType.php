@@ -51,7 +51,9 @@ class InformationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TranslatableType::class)
+            ->add('name', TranslatableType::class, [
+                'label' => 'Name',
+            ])
             ->add('description', TextareaType::class)
             ->add('code', TextType::class)
             ->add('highlight', SwitchType::class)
