@@ -24,12 +24,30 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% block content_header %}
+{% endblock %}
+
 {% block content %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/CartRule/Blocks/form.html.twig' %}
+  <div id="cart-rule-create-page">
+    <div class="header-toolbar d-print-none">
+      {{ multistoreHeader() }}
+    </div>
+      {# @todo: create custom header and footer? So that forms with tabs could be similar to product like a new convention #}
+      {# @todo: could even move name and sattus to header (similarly as with product) #}
+      {% include '@PrestaShop/Admin/Sell/Catalog/CartRule/Blocks/form.html.twig' %}
+    <div class="card-footer">
+      <a href="{{ path('admin_cart_rules_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/catalog_price_rule_form.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/cart_rule_form.bundle.js') }}"></script>
 {% endblock %}

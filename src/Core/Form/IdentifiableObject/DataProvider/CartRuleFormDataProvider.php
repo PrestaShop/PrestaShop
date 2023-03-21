@@ -27,9 +27,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class CartRuleFormDataProvider implements FormDataProviderInterface
 {
@@ -38,10 +41,17 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
      */
     private $queryBus;
 
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        ConfigurationInterface $configuration
     ) {
         $this->queryBus = $queryBus;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -65,12 +75,27 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
+        //@todo: we should consider introducing some clockInterface so we can mock "now" in tests
+        $now = new DateTimeImmutable();
+
         return [
             'information' => [
                 'highlight' => false,
                 'partial_use' => true,
                 'priority' => 1,
                 'enabled' => true,
+            ],
+            'conditions' => [
+                'valid_date_range' => [
+                    'from' => $now->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                    'to' => $now->modify('+1 month')->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                ],
+                'minimum_amount' => [
+                    'amount' => 0,
+                    'currency' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT'),
+                    'tax_included' => false,
+                    'shipping_included' => false,
+                ],
             ],
         ];
     }

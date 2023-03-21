@@ -768,11 +768,9 @@ services:
   PrestaShopBundle\Form\Admin\Sell\CartRule\CartRuleType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\ActionsType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\ConditionsType:
-    arguments:
-      $currencyByIdChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
-
   PrestaShopBundle\Form\Admin\Sell\CartRule\InformationType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\RestrictionsType:
+  PrestaShopBundle\Form\Admin\Sell\CartRule\MinimumAmountType:
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:

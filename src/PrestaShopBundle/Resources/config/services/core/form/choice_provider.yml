@@ -18,10 +18,13 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
       - '@prestashop.adapter.data_provider.country'
 
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
+    autowire: true
+    public: false
+
   prestashop.core.form.choice_provider.currency_by_id:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
-    arguments:
-      - '@prestashop.adapter.data_provider.currency'
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider
+    deprecated: ~
 
   prestashop.core.form.choice_provider.timezone_by_name:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'

@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,14 +21,13 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{{ form_start(cartRuleForm, {'attr': {
-  'class': 'cart-rule-form',
-}}) }}
+ */
 
-{{ form_widget(cartRuleForm) }}
-
-{% block cart_rule_form_rest %}
-  {{ form_end(cartRuleForm) }}
-{% endblock %}
-
+$(() => {
+  window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TranslatableInput',
+    'EventEmitter',
+    'DisablingSwitch',
+  ]);
+});

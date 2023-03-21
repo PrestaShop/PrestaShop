@@ -217,7 +217,7 @@ class CartRuleController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'cartRuleForm' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'layoutTitle' => $this->trans('New cart rule', 'Admin.Navigation.Menu'),
+            'showContentHeader' => false,
         ]);
     }
 

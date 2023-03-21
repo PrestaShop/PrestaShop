@@ -27,13 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -42,11 +39,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ConditionsType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
-     */
-    private $currencyByIdChoiceProvider;
-
-    /**
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
@@ -54,11 +46,9 @@ class ConditionsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $currencyByIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator
     ) {
         parent::__construct($translator, $locales);
-        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
     }
 
@@ -80,7 +70,6 @@ class ConditionsType extends TranslatorAwareType
                 'limit' => 1,
                 'disabling_switch' => true,
                 'disabling_switch_event' => 'switchSpecificPriceCustomer',
-                'switch_state_on_disable' => 'on',
                 'disabled_value' => function ($data) {
                     return empty($data[0]['id_customer']);
                 },
@@ -96,23 +85,13 @@ class ConditionsType extends TranslatorAwareType
                 'required' => false,
                 'date_format' => 'YYYY-MM-DD HH:mm:ss',
             ])
-            ->add('minimum_amount', NumberType::class, [
+            ->add('minimum_amount', MinimumAmountType::class, [
                 'label' => $this->trans('Minimum amount', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'help' => $this->trans(
-                    'You can choose a minimum amount for the cart either with or without the taxes and shipping.',
-                    'Admin.Catalog.Help'
-                ),
-            ])
-            ->add('currency', ChoiceType::class, [
-                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
-                'label' => $this->trans('Currency', 'Admin.Global'),
-            ])
-            ->add('tax_included', SwitchType::class, [
-                'label' => $this->trans('Tax included', 'Admin.Catalog.Feature'),
-            ])
-            ->add('shipping_included', SwitchType::class, [
-                'label' => $this->trans('Shipping included', 'Admin.Catalog.Feature'),
+                'disabling_switch' => true,
+                'disabled_value' => static function (?array $data): bool {
+                    return empty($data['amount']);
+                },
             ])
             ->add('total_available', NumberType::class, [
                 'label' => $this->trans('Total available', 'Admin.Catalog.Feature'),

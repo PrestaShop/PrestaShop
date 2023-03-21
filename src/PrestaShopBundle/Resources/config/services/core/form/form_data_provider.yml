@@ -1,6 +1,9 @@
 services:
   _defaults:
     public: true
+    bind:
+      $queryBus: '@prestashop.core.query_bus'
+
 
   prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
@@ -231,5 +234,7 @@ services:
       - '@prestashop.core.query_bus'
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider:
+    autowire: true
+    public: false
     arguments:
-      - '@prestashop.core.query_bus'
+      $configuration: '@prestashop.adapter.legacy.configuration'
