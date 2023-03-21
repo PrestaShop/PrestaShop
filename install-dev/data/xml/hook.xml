@@ -4504,5 +4504,10 @@
       <title>Triggers after changing address on the cart</title>
       <description>This hook is called after address is changed on the cart</description>
     </hook>
+    <hook id="actionAdminMenuTabsModifier">
+      <name>actionAdminMenuTabsModifier</name>
+      <title>Modify back office menu</title>
+      <description>This hook allows modifying back office menu tabs</description>
+    </hook>
   </entities>
 </entity_hook>

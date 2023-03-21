@@ -49,6 +49,7 @@ jobs:
         BRANCH:
           - ${{ inputs.BRANCH }}
         CAMPAIGN:
+          - 'cldr'
           - 'sanity'
           - 'sanity:productV2'
           - 'regression'
@@ -70,6 +71,8 @@ jobs:
           - 'functional:FO'
           - 'functional:API'
         exclude:
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'cldr'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:BO:dashboard'
           - BRANCH: 8.0.x

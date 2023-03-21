@@ -23,7 +23,7 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_withAndWithoutCode';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_information_withAndWithoutCode';
 
 describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async () => {
   let browserContext: BrowserContext;

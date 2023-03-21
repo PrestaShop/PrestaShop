@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * Builder used to build SetAssociatedProductCategoriesCommand or RemoveAllAssociatedProductCategoriesCommand.
  */
-class ProductCategoriesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}

@@ -30,13 +30,14 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData): array
+    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (empty($formData['product_suppliers'])) {
             return [];

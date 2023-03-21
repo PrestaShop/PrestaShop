@@ -394,9 +394,9 @@ function runAdminTab($tab, $ajax_mode = false)
                 echo '<div class="multishop_info">';
                 if (Shop::getContext() == Shop::CONTEXT_GROUP) {
                     $shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
-                    printf(Translate::getAdminTranslation('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
+                    printf(Context::getContext()->getTranslator()->trans('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
                 } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                    printf(Translate::getAdminTranslation('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+                    printf(Context::getContext()->getTranslator()->trans('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
                 }
                 echo '</div>';
             }
@@ -470,7 +470,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         }
 
                         // we can display the correct url
-                        die(json_encode(Translate::getAdminTranslation('Invalid security token')));
+                        die(json_encode(Context::getContext()->getTranslator()->trans('Invalid security token')));
                     } else {
                         // If this is an XSS attempt, then we should only display a simple, secure page
                         if (ob_get_level() && ob_get_length() > 0) {
@@ -483,17 +483,17 @@ function runAdminTab($tab, $ajax_mode = false)
                             $url .= '&token='.$admin_obj->token;
                         }
 
-                        $message = Translate::getAdminTranslation('Invalid security token');
+                        $message = Context::getContext()->getTranslator()->trans('Invalid security token');
                         echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">
 							<div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
 								<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
 								'.$message.'
 							</div>';
                         echo '<a href="'.htmlentities($url).'" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
+								<input type="button" value="'.Tools::htmlentitiesUTF8(Context::getContext()->getTranslator()->trans('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
 							</a>
 							<a href="index.php" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('Take me out of here!')).'" style="height:40px" />
+								<input type="button" value="'.Tools::htmlentitiesUTF8(Context::getContext()->getTranslator()->trans('Take me out of here!')).'" style="height:40px" />
 							</a>
 						</body></html>';
                         die;

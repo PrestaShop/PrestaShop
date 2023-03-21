@@ -32,13 +32,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFrom
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class PackedProductsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $initialType = $formData['header']['initial_type'] ?? null;
         if ($initialType !== ProductType::TYPE_PACK || !isset($formData['stock']['packed_products'])) {

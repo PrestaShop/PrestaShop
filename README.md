@@ -92,7 +92,6 @@ Don't know where to start? Check the [good first issue](https://github.com/Prest
 
 If you want to help translate PrestaShop in your language, [join us on Crowdin][crowdin]!
 
-Current Crowdin status (for more than 75 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
 
 Reporting Issues
 --------
