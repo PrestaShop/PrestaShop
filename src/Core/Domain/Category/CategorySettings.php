@@ -44,5 +44,5 @@ class CategorySettings
     /**
      * Bellow constants define maximum allowed length of category properties
      */
-    public const MAX_TITLE_LENGTH = 255;
+    public const MAX_TITLE_LENGTH = 128;
 }

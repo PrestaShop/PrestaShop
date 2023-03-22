@@ -315,19 +315,19 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
                 'options' => [
                     'attr' => [
-                        'maxlength' => CategorySettings::MAX_TITLE_LENGTH,
+                        'maxlength' => SeoSettings::MAX_LINK_REWRITE_LENGTH,
                     ],
                     'constraints' => [
                         new TypedRegex([
                             'type' => TypedRegex::TYPE_LINK_REWRITE,
                         ]),
                         new Length([
-                            'max' => CategorySettings::MAX_TITLE_LENGTH,
+                            'max' => SeoSettings::MAX_LINK_REWRITE_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%limit%' => CategorySettings::MAX_TITLE_LENGTH,
+                                    '%limit%' => SeoSettings::MAX_LINK_REWRITE_LENGTH,
                                 ]
                             ),
                         ]),

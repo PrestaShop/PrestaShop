@@ -31,6 +31,11 @@ namespace PrestaShop\PrestaShop\Core\Category\Provider;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * This class is responsible for providing available category menu thumbnail keys.
+ * Category can only have 3 thumbnails (0,1,2).
+ * We check if thumbnails with those id's exist, if they do they are no longer available.
+ */
 class MenuThumbnailAvailableKeyProvider
 {
     /**
