@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class EditRootCategoryCommand edits given root category.
@@ -91,6 +92,21 @@ class EditRootCategoryCommand
      * @var int[]
      */
     private $associatedShopIds;
+
+    /**
+     * @var null|UploadedFile
+     */
+    private $coverImage;
+
+    /**
+     * @var null|UploadedFile
+     */
+    private $thumbnailImage;
+
+    /**
+     * @var array
+     */
+    private $menuThumbnailImages;
 
     /**
      * @param int $categoryId
@@ -324,5 +340,53 @@ class EditRootCategoryCommand
         $this->associatedShopIds = $associatedShopIds;
 
         return $this;
+    }
+
+    /**
+     * @return UploadedFile|null
+     */
+    public function getCoverImage(): ?UploadedFile
+    {
+        return $this->coverImage;
+    }
+
+    /**
+     * @param UploadedFile|null $coverImage
+     */
+    public function setCoverImage(?UploadedFile $coverImage): void
+    {
+        $this->coverImage = $coverImage;
+    }
+
+    /**
+     * @return UploadedFile|null
+     */
+    public function getThumbnailImage(): ?UploadedFile
+    {
+        return $this->thumbnailImage;
+    }
+
+    /**
+     * @param UploadedFile|null $thumbnailImage
+     */
+    public function setThumbnailImage(?UploadedFile $thumbnailImage): void
+    {
+        $this->thumbnailImage = $thumbnailImage;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenuThumbnailImages(): array
+    {
+        return $this->menuThumbnailImages;
+    }
+
+    /**
+     * @param array $menuThumbnailImages
+     */
+    public function setMenuThumbnailImages(array $menuThumbnailImages): void
+    {
+        $this->menuThumbnailImages = $menuThumbnailImages;
     }
 }

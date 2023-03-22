@@ -26,16 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Creates/updates root category from data submitted in category form
@@ -50,44 +45,12 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryCoverUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryThumbnailUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryMenuThumbnailUploader;
-
-    /**
-     * @var MenuThumbnailAvailableKeyProvider
-     */
-    private $menuThumbnailAvailableKeyProvider;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param ImageUploaderInterface $categoryCoverUploader
-     * @param ImageUploaderInterface $categoryThumbnailUploader
-     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
-     * @param MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
      */
     public function __construct(
-        CommandBusInterface $commandBus,
-        ImageUploaderInterface $categoryCoverUploader,
-        ImageUploaderInterface $categoryThumbnailUploader,
-        ImageUploaderInterface $categoryMenuThumbnailUploader,
-        MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
+        CommandBusInterface $commandBus
     ) {
         $this->commandBus = $commandBus;
-        $this->categoryCoverUploader = $categoryCoverUploader;
-        $this->categoryThumbnailUploader = $categoryThumbnailUploader;
-        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
-        $this->menuThumbnailAvailableKeyProvider = $menuThumbnailAvailableKeyProvider;
     }
 
     /**
@@ -95,24 +58,10 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        if (!isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
-            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
-        }
         $command = $this->createAddRootCategoryCommand($data);
 
         /** @var CategoryId $categoryId */
         $categoryId = $this->commandBus->handle($command);
-
-        /**
-         * In some cases in form menu_thumbnail_images can be disabled so value won't get here.
-         */
-        $menuThumbnailImages = $data['menu_thumbnail_images'] ?? [];
-        $this->uploadImages(
-            $categoryId,
-            $data['cover_image'],
-            $data['thumbnail_image'],
-            $menuThumbnailImages
-        );
 
         return $categoryId->getValue();
     }
@@ -122,26 +71,9 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      */
     public function update($categoryId, array $data)
     {
-        $categoryId = (int) $categoryId;
-        $availableKeys = $this->menuThumbnailAvailableKeyProvider->getAvailableKeys($categoryId);
-
-        if (isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count($availableKeys)) {
-            throw new MenuThumbnailsLimitException(sprintf('The maximum number of menu thumbnails has been reached for the %d category', $categoryId));
-        }
-        $command = $this->createEditRootCategoryCommand($categoryId, $data);
+        $command = $this->createEditRootCategoryCommand((int) $categoryId, $data);
 
         $this->commandBus->handle($command);
-        $categoryId = new CategoryId($categoryId);
-
-        // In some cases in form menu_thumbnail_images can be disabled so value won't get here.
-        $menuThumbnailImages = $data['menu_thumbnail_images'] ?? [];
-
-        $this->uploadImages(
-            $categoryId,
-            $data['cover_image'],
-            $data['thumbnail_image'],
-            $menuThumbnailImages
-        );
     }
 
     /**
@@ -167,6 +99,12 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedMetaDescriptions($data['meta_description']);
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
+        $command->setCoverImage($data['cover_image']);
+        $command->setThumbnailImage($data['thumbnail_image']);
+
+        if (isset($data['menu_thumbnail_images'])) {
+            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
+        }
         if (isset($data['shop_association'])) {
             $command->setAssociatedShopIds($data['shop_association']);
         }
@@ -179,6 +117,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      * @param array $data
      *
      * @return EditRootCategoryCommand
+     * @throws CategoryConstraintException
      */
     private function createEditRootCategoryCommand(int $rootCategoryId, array $data): EditRootCategoryCommand
     {
@@ -193,37 +132,16 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
 
+        $command->setCoverImage($data['cover_image']);
+        $command->setThumbnailImage($data['thumbnail_image']);
+
+        if (isset($data['menu_thumbnail_images'])) {
+            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
+        }
         if (isset($data['shop_association'])) {
             $command->setAssociatedShopIds($data['shop_association']);
         }
 
         return $command;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     * @param UploadedFile|null $coverImage
-     * @param UploadedFile|null $thumbnailImage
-     * @param UploadedFile[] $menuThumbnailImages
-     */
-    private function uploadImages(
-        CategoryId $categoryId,
-        UploadedFile $coverImage = null,
-        UploadedFile $thumbnailImage = null,
-        array $menuThumbnailImages = []
-    ): void {
-        if (null !== $coverImage) {
-            $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
-        }
-
-        if (null !== $thumbnailImage) {
-            $this->categoryThumbnailUploader->upload($categoryId->getValue(), $thumbnailImage);
-        }
-
-        if (!empty($menuThumbnailImages)) {
-            foreach ($menuThumbnailImages as $menuThumbnail) {
-                $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
-            }
-        }
     }
 }

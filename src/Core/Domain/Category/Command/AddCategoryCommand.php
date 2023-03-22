@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AddCategoryCommand adds new category.
@@ -89,6 +90,21 @@ class AddCategoryCommand
     private $associatedShopIds;
 
     /**
+     * @var null|UploadedFile
+     */
+    private $coverImage;
+
+    /**
+     * @var null|UploadedFile
+     */
+    private $thumbnailImage;
+
+    /**
+     * @var array
+     */
+    private $menuThumbnailImages;
+
+    /**
      * @param string[] $localizedNames
      * @param string[] $localizedLinkRewrites
      * @param bool $isActive
@@ -103,6 +119,7 @@ class AddCategoryCommand
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
             ->setIsActive($isActive)
             ->setParentCategoryId($parentCategoryId);
+        $this->menuThumbnailImages = [];
     }
 
     /**
@@ -347,5 +364,53 @@ class AddCategoryCommand
         $this->associatedShopIds = $associatedShopIds;
 
         return $this;
+    }
+
+    /**
+     * @return null|UploadedFile
+     */
+    public function getCoverImage(): ?UploadedFile
+    {
+        return $this->coverImage;
+    }
+
+    /**
+     * @param null|UploadedFile $coverImage
+     */
+    public function setCoverImage(?UploadedFile $coverImage): void
+    {
+        $this->coverImage = $coverImage;
+    }
+
+    /**
+     * @return null|UploadedFile
+     */
+    public function getThumbnailImage(): ?UploadedFile
+    {
+        return $this->thumbnailImage;
+    }
+
+    /**
+     * @param null|UploadedFile $thumbnailImage
+     */
+    public function setThumbnailImage(?UploadedFile $thumbnailImage): void
+    {
+        $this->thumbnailImage = $thumbnailImage;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenuThumbnailImages(): array
+    {
+        return $this->menuThumbnailImages;
+    }
+
+    /**
+     * @param array $menuThumbnailImages
+     */
+    public function setMenuThumbnailImages(array $menuThumbnailImages): void
+    {
+        $this->menuThumbnailImages = $menuThumbnailImages;
     }
 }

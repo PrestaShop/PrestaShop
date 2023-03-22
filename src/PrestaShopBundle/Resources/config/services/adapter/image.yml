@@ -14,6 +14,13 @@ services:
       - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
       - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
 
+  PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader:
+    autowire: true
+    arguments:
+      - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
+
   prestashop.adapter.image.uploader.employee_image_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\EmployeeImageUploader'
     arguments:

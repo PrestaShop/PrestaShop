@@ -28,11 +28,15 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 
 /**
  * Class EditCategoryHandler.
@@ -41,6 +45,25 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
  */
 final class EditCategoryHandler extends AbstractObjectModelHandler implements EditCategoryHandlerInterface
 {
+
+    /**
+     * @var CategoryImageUploader
+     */
+    private $categoryImageUploader;
+
+    /**
+     * @var MenuThumbnailAvailableKeyProvider
+     */
+    private $menuThumbnailAvailableKeyProvider;
+
+    public function __construct(
+        CategoryImageUploader $categoryImageUploader,
+        MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
+    ) {
+        $this->categoryImageUploader = $categoryImageUploader;
+        $this->menuThumbnailAvailableKeyProvider = $menuThumbnailAvailableKeyProvider;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -49,6 +72,11 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
      */
     public function handle(EditCategoryCommand $command)
     {
+        $availableKeys = $this->menuThumbnailAvailableKeyProvider->getAvailableKeys($command->getCategoryId()->getValue());
+
+        if (count($command->getMenuThumbnailImages()) > count($availableKeys)) {
+            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
+        }
         $category = new Category($command->getCategoryId()->getValue());
 
         if (!$category->id) {
@@ -60,6 +88,13 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         }
 
         $this->updateCategoryFromCommandData($category, $command);
+
+        $this->categoryImageUploader->uploadImages(
+            $command->getCategoryId(),
+            $command->getCoverImage(),
+            $command->getThumbnailImage(),
+            $command->getMenuThumbnailImages()
+        );
     }
 
     /**

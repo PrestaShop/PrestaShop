@@ -28,11 +28,17 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Adds new category using legacy object model.
@@ -42,6 +48,16 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
 {
     /**
+     * @var CategoryImageUploader
+     */
+    private $categoryImageUploader;
+
+    public function __construct(CategoryImageUploader $categoryImageUploader)
+    {
+        $this->categoryImageUploader = $categoryImageUploader;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @param AddCategoryCommand $command
@@ -50,9 +66,21 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      */
     public function handle(AddCategoryCommand $command)
     {
+        if (count($command->getMenuThumbnailImages()) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
+            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
+        }
         $category = $this->createCategoryFromCommand($command);
 
-        return new CategoryId((int) $category->id);
+        $categoryId = new CategoryId((int) $category->id);
+
+        $this->categoryImageUploader->uploadImages(
+            $categoryId,
+            $command->getCoverImage(),
+            $command->getThumbnailImage(),
+            $command->getMenuThumbnailImages()
+        );
+
+        return $categoryId;
     }
 
     /**
@@ -61,7 +89,9 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      * @return Category
      *
      * @throws CannotAddCategoryException
-     * @throws CategoryConstraintException
+     * @throws MenuThumbnailsLimitException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {
