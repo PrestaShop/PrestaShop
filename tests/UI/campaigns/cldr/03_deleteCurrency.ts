@@ -126,7 +126,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
   });
 
   it(`should filter by iso code of currency '${Currencies.usd.isoCode}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency0', baseContext);
 
     // Filter
     await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.usd.isoCode);
@@ -141,7 +141,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
   });
 
   it('should delete currency', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrencyUSD', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrencyUSDWithError', baseContext);
 
     const result = await currenciesPage.deleteCurrency(page, 1);
     await expect(result).to.be.equal(currenciesPage.cannotDeleteDefaultCurrencyMessage);
@@ -164,7 +164,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
   });
 
   it('should go to Currencies Tab', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesTab1', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesTab2', baseContext);
 
     await localizationPage.goToSubTabCurrencies(page);
 
@@ -173,7 +173,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
   });
 
   it(`should filter by iso code of currency '${Currencies.usd.isoCode}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'filterToUSDCurrency1', baseContext);
 
     // Filter
     await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.usd.isoCode);
@@ -205,6 +205,7 @@ describe('CLDR : Edit symbol / format currency', async () => {
 
     for (let numRow = 1; numRow <= numberOfCurrenciesAfterDelete; numRow++) {
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, numRow, 'iso_code');
+
       if (textColumn !== Currencies.euro.isoCode) {
         await currenciesPage.selectRow(page, numRow);
       }
