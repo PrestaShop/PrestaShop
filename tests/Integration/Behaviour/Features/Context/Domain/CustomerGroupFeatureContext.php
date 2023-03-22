@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCom
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
@@ -58,7 +59,9 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
             new DecimalNumber($data['reduction']),
             (bool) $data['displayPriceTaxExcluded'],
             (bool) $data['showPrice'],
-            explode(',', $data['shopIds'])
+            array_map(function (string $shopId) {
+                return new ShopId((int) $shopId);
+            }, explode(',', $data['shopIds']))
         );
 
         /** @var GroupId $id */

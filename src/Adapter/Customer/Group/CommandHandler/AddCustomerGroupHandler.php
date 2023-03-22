@@ -39,15 +39,10 @@ class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
      * @var GroupRepository
      */
     private $customerGroupRepository;
-    /**
-     * @var ShopRepository
-     */
-    private $shopRepository;
 
-    public function __construct(GroupRepository $customerGroupRepository, ShopRepository $shopRepository)
+    public function __construct(GroupRepository $customerGroupRepository)
     {
         $this->customerGroupRepository = $customerGroupRepository;
-        $this->shopRepository = $shopRepository;
     }
 
     public function handle(AddCustomerGroupCommand $command): GroupId
