@@ -182,7 +182,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
                 'can_be_deleted' => true,
                 'show_size' => true,
-                'csrf_delete_token' => 'delete-cover-image',
+                'csrf_delete_token_id' => 'delete-cover-image',
             ])
             ->add('thumbnail_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
@@ -204,7 +204,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         '%limit%' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                     ]
                 ),
-                'csrf_delete_token' => 'delete-menu-thumbnail',
+                'csrf_delete_token_id' => 'delete-menu-thumbnail',
             ])
             ->add('seo_preview', CategorySeoPreviewType::class,
                 [

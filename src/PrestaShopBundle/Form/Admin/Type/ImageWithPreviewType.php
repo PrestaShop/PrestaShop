@@ -45,10 +45,10 @@ class ImageWithPreviewType extends FileType
 
         /*
          * Indicates if image can be deleted.
-         * If image can be deleted you also need to have csrf_delete_token which is checked in delete action.
+         * If image can be deleted you also need to have csrf_delete_token_id which is checked in delete action.
          */
         $view->vars['can_be_deleted'] = $options['can_be_deleted'];
-        $view->vars['csrf_delete_token'] = $options['csrf_delete_token'];
+        $view->vars['csrf_delete_token_id'] = $options['csrf_delete_token_id'];
         $view->vars['show_size'] = $options['show_size'];
 
         /* A warning message that will be shown if field is disabled.*/
@@ -61,14 +61,14 @@ class ImageWithPreviewType extends FileType
         $resolver->setDefaults([
             'download_url' => null,
             'can_be_deleted' => false,
-            'csrf_delete_token' => null,
+            'csrf_delete_token_id' => null,
             'show_size' => false,
             'warning_message' => null,
             'data_class' => null,
         ])
             ->setAllowedTypes('can_be_deleted', ['bool'])
             ->setAllowedTypes('download_url', ['null', 'string'])
-            ->setAllowedTypes('csrf_delete_token', ['null', 'string'])
+            ->setAllowedTypes('csrf_delete_token_id', ['null', 'string'])
             ->setAllowedTypes('show_size', ['bool'])
             ->setAllowedTypes('warning_message', ['null', 'string'])
         ;
