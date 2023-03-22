@@ -27,56 +27,19 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
+use PrestaShopBundle\Form\Admin\Type\CustomerSearchType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConditionsType extends TranslatorAwareType
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        UrlGeneratorInterface $urlGenerator
-    ) {
-        parent::__construct($translator, $locales);
-        $this->urlGenerator = $urlGenerator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('customer', EntitySearchInputType::class, [
-                'label' => $this->trans('Limit to single customer', 'Admin.Global'),
-                'help' => $this->trans(
-                    'Optional: The cart rule will be available to everyone if you leave this field blank.',
-                    'Admin.Catalog.Help'
-                ),
-                'layout' => EntitySearchInputType::LIST_LAYOUT,
-                'entry_type' => SearchedCustomerType::class,
-                'entry_options' => [
-                    'block_prefix' => 'cart_rule_searched_customer',
-                ],
-                'allow_delete' => false,
-                'limit' => 1,
-                'disabling_switch' => true,
-                'disabling_switch_event' => 'switchSpecificPriceCustomer',
-                'disabled_value' => function ($data) {
-                    return empty($data[0]['id_customer']);
-                },
-                'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
-                'placeholder' => $this->trans('Search customer', 'Admin.Actions'),
-                'suggestion_field' => 'fullname_and_email',
-                'required' => false,
+            ->add('customer', CustomerSearchType::class, [
+                'disabling_switch_event' => 'switchCartRuleCustomer',
             ])
             ->add('valid_date_range', DateRangeType::class, [
                 'label' => $this->trans('Valid', 'Admin.Catalog.Feature'),

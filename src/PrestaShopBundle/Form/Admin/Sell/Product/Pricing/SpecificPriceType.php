@@ -37,9 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPr
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
-use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
+use PrestaShopBundle\Form\Admin\Type\CustomerSearchType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -123,25 +122,8 @@ class SpecificPriceType extends TranslatorAwareType
                 'label' => $this->trans('Apply to:', 'Admin.Global'),
                 'required' => false,
             ])
-            ->add('customer', EntitySearchInputType::class, [
-                'label' => $this->trans('Apply to all customers', 'Admin.Global'),
-                'layout' => EntitySearchInputType::LIST_LAYOUT,
-                'entry_type' => SearchedCustomerType::class,
-                'entry_options' => [
-                    'block_prefix' => 'searched_customer',
-                ],
-                'allow_delete' => false,
-                'limit' => 1,
-                'disabling_switch' => true,
+            ->add('customer', CustomerSearchType::class, [
                 'disabling_switch_event' => 'switchSpecificPriceCustomer',
-                'switch_state_on_disable' => 'on',
-                'disabled_value' => function ($data) {
-                    return empty($data[0]['id_customer']);
-                },
-                'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
-                'placeholder' => $this->trans('Search customer', 'Admin.Actions'),
-                'suggestion_field' => 'fullname_and_email',
-                'required' => false,
             ])
         ;
 

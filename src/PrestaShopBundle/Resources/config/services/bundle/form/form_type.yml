@@ -771,6 +771,9 @@ services:
   PrestaShopBundle\Form\Admin\Sell\CartRule\InformationType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\RestrictionsType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\MinimumAmountType:
+  PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
+    arguments:
+      $urlGenerator: '@prestashop.core.admin.url_generator'
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:

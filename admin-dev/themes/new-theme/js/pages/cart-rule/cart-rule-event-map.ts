@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
-
-{% block specific_price_impact_row %}
-  {{ form_label(form) }}
-  {{ form_errors(form) }}
-  {{ form_widget(form) }}
-{% endblock %}
+ */
+export default {
+  switchCustomer: 'switchCartRuleCustomer',
+};
