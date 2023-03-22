@@ -80,11 +80,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
         parent::init();
 
-<<<<<<< HEAD
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
-=======
         if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
->>>>>>> 661b9f82d1 (Update controllers/front/listing/CategoryController.php)
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->setTemplate('errors/404');
