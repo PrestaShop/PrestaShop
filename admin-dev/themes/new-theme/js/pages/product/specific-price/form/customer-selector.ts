@@ -23,7 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import SpecificPriceMap from '@pages/product/specific-price/specific-price-map';
-import EntitySearchInput from '@components/entity-search-input';
+import SpecificPriceEventMap from '@pages/product/specific-price/specific-price-event-map';
+import CustomerSearchInput from '@pages/customer/customer-search-input';
 
 export default class CustomerSelector {
   constructor() {
@@ -36,19 +37,12 @@ export default class CustomerSelector {
     this.getShopIdSelect().addEventListener('change', () => customerSearchInput.setValues([]));
   }
 
-  private initCustomerSearchInput(): EntitySearchInput {
-    return new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
-      extraQueryParams: () => ({
-        shopId: Number(this.getShopIdSelect().value) ?? null,
-      }),
-      responseTransformer: (response: any) => {
-        if (!response || response.customers.length === 0) {
-          return [];
-        }
-
-        return Object.values(response.customers);
-      },
-    });
+  private initCustomerSearchInput(): CustomerSearchInput {
+    return new CustomerSearchInput(
+      SpecificPriceMap.customerSearchContainer,
+      () => Number(this.getShopIdSelect().value) ?? null,
+      SpecificPriceEventMap.switchCustomer,
+    );
   }
 
   private getShopIdSelect(): HTMLSelectElement {

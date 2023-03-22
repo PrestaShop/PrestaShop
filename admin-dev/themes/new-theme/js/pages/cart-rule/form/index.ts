@@ -26,9 +26,8 @@
 import GeneratableInput from '@components/generatable-input';
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
 import FormFieldToggler from '@components/form/form-field-toggler';
-import EntitySearchInput from '@components/entity-search-input';
-import EventEmitter from '@components/event-emitter';
 import CartRuleEventMap from '@pages/cart-rule/cart-rule-event-map';
+import CustomerSearchInput from '@pages/customer/customer-search-input';
 
 $(() => {
   window.prestashop.component.initComponents([
@@ -38,8 +37,6 @@ $(() => {
     'DisablingSwitch',
   ]);
 
-  const eventEmitter = <typeof EventEmitter> window.prestashop.instance.eventEmitter;
-
   new GeneratableInput().attachOn(CartRuleMap.codeGeneratorBtn);
   new FormFieldToggler({
     disablingInputSelector: CartRuleMap.codeInput,
@@ -47,18 +44,10 @@ $(() => {
     matchingValue: '',
   });
 
-  new EntitySearchInput($(CartRuleMap.customerSearchContainer), {
-    responseTransformer: (response: any) => {
-      if (!response || response.customers.length === 0) {
-        return [];
-      }
-
-      return Object.values(response.customers);
-    },
-  });
-
-  // When customer search is disabled we also disable the selected item (if present)
-  eventEmitter.on(CartRuleEventMap.switchCustomer, (event: any) => {
-    $(CartRuleMap.customerItem).toggleClass('disabled', event.disable);
-  });
+  new CustomerSearchInput(
+    CartRuleMap.customerSearchContainer,
+    //@todo; get shop id (or null for all shops) from context using data attr.
+    () => null,
+    CartRuleEventMap.switchCustomer,
+  );
 });

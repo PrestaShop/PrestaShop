@@ -24,7 +24,6 @@
  */
 import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/product/specific-price/specific-price-map';
-import SpecificPriceEventMap from '@pages/product/specific-price/specific-price-event-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
 import CombinationSelector from '@pages/product/specific-price/form/combination-selector';
 import Router from '@components/router';
@@ -38,8 +37,6 @@ $(() => {
     'DisablingSwitch',
     'DateRange',
   ]);
-
-  const {eventEmitter} = window.prestashop.instance;
 
   new CurrencySymbolUpdater(
     SpecificPriceMap.currencyId,
@@ -95,11 +92,5 @@ $(() => {
   );
 
   new CustomerSelector();
-
-  // When customer search is disabled we also disable the selected item (if present)
-  eventEmitter.on(SpecificPriceEventMap.switchCustomer, (event: any) => {
-    $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
-  });
-
   new CombinationSelector(new Router(), Number($(SpecificPriceMap.productIdInput).val()));
 });
