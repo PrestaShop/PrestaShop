@@ -326,4 +326,13 @@ class StoreForEditing
     {
         return $this->active;
     }
+
+    /**
+     * Get the value of shopAssociation
+     * @return array
+     */
+    public function getShopAssociation()
+    {
+        return $this->shopAssociation;
+    }
 }
