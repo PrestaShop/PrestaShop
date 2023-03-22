@@ -108,7 +108,11 @@ export default class ProductPartialUpdater {
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit(() => this.updatePartialForm());
     // 'dp.change' event allows tracking datepicker input changes
-    this.$productForm.on('keyup change dp.change', ':input', () => this.updateFooterButtonStates());
+    this.$productForm.on('keyup change dp.change',
+      // listen for all inputs except combination filters
+      `:input[name!="${ProductMap.combinations.list.attributeFilterInputName}"]`,
+      () => this.updateFooterButtonStates(),
+    );
     this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateFooterButtonStates());
     this.eventEmitter.on(ProductEventMap.combinations.listEditionMode, (editionMode) => {
       this.listEditionMode = editionMode;

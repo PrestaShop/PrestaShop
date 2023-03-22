@@ -111,15 +111,23 @@ class ShippingType extends TranslatorAwareType
                 'modify_all_shops' => true,
             ])
             ->add('carriers', ChoiceType::class, [
+                'modify_all_shops' => true,
                 'choices' => $this->carrierChoiceProvider->getChoices(),
+                'label_attr' => [
+                    'class' => 'carrier-choice-label',
+                ],
+                'attr' => [
+                    'data-translations' => json_encode([
+                        'allCarriers.label' => $this->trans('All carriers', 'Admin.Actions'),
+                        'selectedCarriers.label' => $this->trans('Only selected carriers', 'Admin.Actions'),
+                        'modifyAllShops.label' => $this->trans('Apply changes to all stores', 'Admin.Global'),
+                    ]),
+                ],
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'alert_message' => $this->trans('If no carrier is selected then all the carriers will be available for customers orders.', 'Admin.Catalog.Notification'),
-                'alert_type' => 'warning',
-                'modify_all_shops' => true,
             ])
         ;
     }
