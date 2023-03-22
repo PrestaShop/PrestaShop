@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class AddCustomerGroupCommandTest extends TestCase
 {
-
     /**
      * @dataProvider getValidValues
      *
@@ -72,20 +71,23 @@ class AddCustomerGroupCommandTest extends TestCase
         );
     }
 
+    /**
+     * @return Generator
+     */
     public function getValidValues(): Generator
     {
-        yield [new DecimalNumber("-0.00")];
-        yield [new DecimalNumber("-0")];
-        yield [new DecimalNumber("0")];
-        yield [new DecimalNumber("0.001")];
-        yield [new DecimalNumber("0.01")];
-        yield [new DecimalNumber("1.23")];
-        yield [new DecimalNumber("12.34")];
-        yield [new DecimalNumber("99.99")];
-        yield [new DecimalNumber("99.999")];
-        yield [new DecimalNumber("100")];
-        yield [new DecimalNumber("100.0")];
-        yield [new DecimalNumber("100.00")];
+        yield [new DecimalNumber('-0.00')];
+        yield [new DecimalNumber('-0')];
+        yield [new DecimalNumber('0')];
+        yield [new DecimalNumber('0.001')];
+        yield [new DecimalNumber('0.01')];
+        yield [new DecimalNumber('1.23')];
+        yield [new DecimalNumber('12.34')];
+        yield [new DecimalNumber('99.99')];
+        yield [new DecimalNumber('99.999')];
+        yield [new DecimalNumber('100')];
+        yield [new DecimalNumber('100.0')];
+        yield [new DecimalNumber('100.00')];
     }
 
     /**
@@ -93,9 +95,9 @@ class AddCustomerGroupCommandTest extends TestCase
      */
     public function getInvalidValues(): Generator
     {
-        yield [new DecimalNumber("-0.001")];
-        yield [new DecimalNumber("-0.01")];
-        yield [new DecimalNumber("100.01")];
-        yield [new DecimalNumber("100.001")];
+        yield [new DecimalNumber('-0.001')];
+        yield [new DecimalNumber('-0.01')];
+        yield [new DecimalNumber('100.01')];
+        yield [new DecimalNumber('100.001')];
     }
 }

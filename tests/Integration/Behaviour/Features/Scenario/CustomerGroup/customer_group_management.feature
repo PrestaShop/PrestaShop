@@ -17,6 +17,7 @@ Feature: CustomerGroup Management
       | reduction               | 1.23    |
       | displayPriceTaxExcluded | true    |
       | showPrice               | true    |
+      | shopIds                 | 1, 2, 3 |
     # See CustomerGroupFeatureContext::transformEditableCustomerGroup
     When I query Customer Group "CustomerGroup1" I should get a Customer Group with properties:
       | customer group          | value   |

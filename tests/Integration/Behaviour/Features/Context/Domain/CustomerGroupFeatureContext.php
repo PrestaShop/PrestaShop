@@ -52,12 +52,14 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $this->localizeByRows($table);
         $commandBus = $this->getCommandBus();
+        var_dump($data);die();
 
         $command = new AddCustomerGroupCommand(
             $data['name'],
             new DecimalNumber($data['reduction']),
             $data['displayPriceTaxExcluded'],
-            $data['showPrice']
+            $data['showPrice'],
+            $data['shopIds']
         );
 
         /** @var GroupId $id */
