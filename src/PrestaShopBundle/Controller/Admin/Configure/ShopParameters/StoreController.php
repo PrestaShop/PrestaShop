@@ -61,14 +61,59 @@ class StoreController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'storeGrid' => $this->presentGrid($storeGrid),
-            // @todo: uncomment when add action is implemented
-            //'layoutHeaderToolbarBtn' => [
-            //'add_store' => [
-            //'href' => $this->generateUrl('admin_stores_add'),
-            //'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
-            //'icon' => 'add_circle_outline',
-            //],
-            //],
+            'layoutHeaderToolbarBtn' => [
+                'add_store' => [
+                'href' => $this->generateUrl('admin_stores_create'),
+                'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
+                'icon' => 'add_circle_outline',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Display the Contact creation form.
+     *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_stores_index",
+     *     message="You do not have permission to add this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        $storeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.store_form_builder');
+        $storeForm = $storeFormBuilder->getForm();
+        $storeForm->handleRequest($request);
+
+        try {
+            $storeFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.store_form_handler');
+            $result = $storeFormHandler->handle($storeForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_contacts_index');
+            }
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Stores/create.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'contactForm' => $storeForm->createView(),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New store', 'Admin.Navigation.Menu'),
         ]);
     }
 
