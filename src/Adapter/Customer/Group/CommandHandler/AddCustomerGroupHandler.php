@@ -56,7 +56,8 @@ class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
             $command->getLocalizedNames(),
             $command->getReduction(),
             $command->displayPriceTaxExcluded(),
-            $command->showPrice()
+            $command->showPrice(),
+            $command->getShopIds()
         );
 
         return new GroupId((int) $customerGroup->id);

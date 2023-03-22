@@ -56,7 +56,7 @@ class GroupRepository extends AbstractObjectModelRepository
             $customerGroup = new CustomerGroup($customerGroupId->getValue());
 
             if ($customerGroup->id !== $customerGroupId->getValue()) {
-                throw new GroupNotFoundException($customerGroup, sprintf('%s #%d was not found', Group::class, $customerGroupId->getValue()));
+                throw new GroupNotFoundException($customerGroup, sprintf('%s #%d was not found', CustomerGroup::class, $customerGroupId->getValue()));
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
@@ -106,9 +106,7 @@ class GroupRepository extends AbstractObjectModelRepository
         $customerGroup->reduction = (string) $reduction;
         $customerGroup->price_display_method = (int) $priceDisplayMethod;
         $customerGroup->show_prices = $showPrices;
-        $customerGroup->id_shop_list = array_map(function (ShopId $shopId) {
-            return $shopId->getValue();
-        }, $shopIds);
+        $customerGroup->id_shop_list = $shopIds;
 
         $this->addObjectModel($customerGroup, CannotAddGroupException::class);
 

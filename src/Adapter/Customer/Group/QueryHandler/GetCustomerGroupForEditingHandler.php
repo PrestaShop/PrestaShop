@@ -65,7 +65,8 @@ class GetCustomerGroupForEditingHandler implements GetCustomerGroupForEditingHan
             $customerGroup->name,
             new DecimalNumber($customerGroup->reduction),
             (bool) $customerGroup->price_display_method,
-            $customerGroup->show_prices
+            (bool) $customerGroup->show_prices,
+            $customerGroup->getAssociatedShops()
         );
     }
 }

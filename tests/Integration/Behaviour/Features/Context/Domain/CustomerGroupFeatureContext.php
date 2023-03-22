@@ -56,9 +56,9 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
         $command = new AddCustomerGroupCommand(
             $data['name'],
             new DecimalNumber($data['reduction']),
-            $data['displayPriceTaxExcluded'],
-            $data['showPrice'],
-            $data['shopIds']
+            (bool) $data['displayPriceTaxExcluded'],
+            (bool) $data['showPrice'],
+            explode(',', $data['shopIds'])
         );
 
         /** @var GroupId $id */
@@ -86,14 +86,15 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
         $dataRows = $tableNode->getRowsHash();
 
         return new EditableCustomerGroup(
-            $dataRows['id'],
+            (int) $dataRows['id'],
             [
                 1 => $dataRows['name[en-US]'],
                 2 => $dataRows['name[fr-FR]'],
             ],
             new DecimalNumber($dataRows['reduction']),
             (bool) $dataRows['displayPriceTaxExcluded'],
-            (bool) $dataRows['showPrice']
+            (bool) $dataRows['showPrice'],
+            explode(',', $dataRows['shopIds'])
         );
     }
 
