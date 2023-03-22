@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
-use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\CommandHandler\AddCustomerGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
