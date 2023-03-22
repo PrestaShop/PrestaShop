@@ -12,7 +12,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Home extends FOBasePage {
+class HomePage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly successAddToCartMessage: string;
@@ -827,4 +827,5 @@ class Home extends FOBasePage {
   }
 }
 
-export default new Home();
+const homePage = new HomePage();
+export {homePage, HomePage};
