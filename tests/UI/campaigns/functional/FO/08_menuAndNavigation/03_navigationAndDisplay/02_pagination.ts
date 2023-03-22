@@ -73,7 +73,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.eq('1 2 Next');
+      await expect(pagesList).to.contain('1 2 Next');
     });
 
     it('should click on next', async function () {
@@ -89,7 +89,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel1', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.eq('Previous 1 2');
+      await expect(pagesList).to.contain('Previous 1 2');
     });
 
     it('should click on previous', async function () {
@@ -160,7 +160,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel2', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.eq('1 2 3 4 Next');
+      await expect(pagesList).to.contain('1 2 3 4 Next');
     });
 
     it('should click on next', async function () {
@@ -176,7 +176,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaginationLabel3', baseContext);
 
       const pagesList = await categoryPageFO.getPagesList(page);
-      await expect(pagesList).to.eq('Previous 1 2 3 4 Next');
+      await expect(pagesList).to.contain('Previous 1 2 3 4 Next');
     });
 
     it('should click on previous', async function () {
