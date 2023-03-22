@@ -106,7 +106,9 @@ class GroupRepository extends AbstractObjectModelRepository
         $customerGroup->reduction = (string) $reduction;
         $customerGroup->price_display_method = (int) $priceDisplayMethod;
         $customerGroup->show_prices = $showPrices;
-        $customerGroup->id_shop_list = $shopIds;
+        $customerGroup->id_shop_list = array_map(function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $shopIds);
 
         $this->addObjectModel($customerGroup, CannotAddGroupException::class);
 
