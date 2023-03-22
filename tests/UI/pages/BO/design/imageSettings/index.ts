@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import {ImageTypeRegeneration, ImageTypeRegenerationSpecific} from '@data/types/imageType';
+
 import type {Page} from 'playwright';
 
 /**
@@ -11,6 +13,8 @@ class ImageSettings extends BOBasePage {
   public readonly pageTitle: string;
 
   public readonly messageThumbnailsRegenerated: string;
+
+  public readonly messageSettingsUpdated: string;
 
   private readonly newImageTypeLink: string;
 
@@ -92,6 +96,12 @@ class ImageSettings extends BOBasePage {
 
   private readonly formRegenerateThumbnails: string;
 
+  private readonly selectRegenerateThumbnailsImage: string;
+
+  private readonly selectRegenerateThumbnailsFormat: (imageFormat: string) => string;
+
+  private readonly checkboxRegenerateThumbnailsErasePreviousImages: (value: string) => string;
+
   private readonly submitRegenerateThumbnails: string;
 
   private readonly modalRegenerateThumbnails: string;
@@ -107,6 +117,7 @@ class ImageSettings extends BOBasePage {
 
     this.pageTitle = 'Image Settings • ';
     this.messageThumbnailsRegenerated = 'The thumbnails were successfully regenerated.';
+    this.messageSettingsUpdated = 'The settings have been successfully updated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -177,6 +188,11 @@ class ImageSettings extends BOBasePage {
 
     // Regenerate thumbnails
     this.formRegenerateThumbnails = '#display_regenerate_form';
+    this.selectRegenerateThumbnailsImage = `${this.formRegenerateThumbnails} select[name="type"]`;
+    this.selectRegenerateThumbnailsFormat = (imageFormat: string) => `${this.formRegenerateThumbnails} `
+      + `select[name="format_${imageFormat}"]`;
+    this.checkboxRegenerateThumbnailsErasePreviousImages = (value: string) => `${this.formRegenerateThumbnails} `
+      + `input#erase_${value}`;
     this.submitRegenerateThumbnails = `${this.formRegenerateThumbnails} button[type="submit"]`;
     this.modalRegenerateThumbnails = '#modalRegenerateThumbnails';
     this.modalSubmitRegenerateThumbnails = `${this.modalRegenerateThumbnails} .btn-regenerate-thumbnails`;
@@ -447,9 +463,25 @@ class ImageSettings extends BOBasePage {
   /**
    * Regenerate Thumbnails
    * @param page {Page} Browser tab
+   * @param image {ImageTypeRegeneration} Image
+   * @param format {string} Format
+   * @param erasePreviousImages {boolean} Erase previous images
    * @returns {Promise<string>}
    */
-  async regenerateThumbnails(page: Page): Promise<string> {
+  async regenerateThumbnails(
+    page: Page,
+    image: ImageTypeRegeneration = 'all',
+    format: string = 'All',
+    erasePreviousImages: boolean = false,
+  ): Promise<string> {
+    // Choose the type of image to regenerate thumbnails
+    await page.selectOption(this.selectRegenerateThumbnailsImage, image);
+    if (image !== 'all') {
+      // Choose the format of image to regenerate thumbnails
+      await page.selectOption(this.selectRegenerateThumbnailsFormat(image), {label: format});
+    }
+    // Erase previous images
+    await this.setChecked(page, this.checkboxRegenerateThumbnailsErasePreviousImages(erasePreviousImages ? 'on' : 'off'));
     // Click on Submit
     await page.click(this.submitRegenerateThumbnails);
 
@@ -465,7 +497,7 @@ class ImageSettings extends BOBasePage {
    * Returns if the image format is checked in Image Generation Options
    * @param page {Page} Browser tab
    * @param imageFormat {string} Image Format
-   * @returns {Promise<string>}
+   * @returns {Promise<boolean>}
    */
   async isImageFormatToGenerateChecked(page: Page, imageFormat: string): Promise<boolean> {
     return this.isChecked(page, this.checkboxImageFormat(imageFormat));
@@ -475,10 +507,54 @@ class ImageSettings extends BOBasePage {
    Returns if the image format is disabled in Image Generation Options
    * @param page {Page} Browser tab
    * @param imageFormat {string} Image Format
-   * @returns {Promise<string>}
+   * @returns {Promise<boolean>}
    */
   async isImageFormatToGenerateDisabled(page: Page, imageFormat: string): Promise<boolean> {
     return this.isDisabled(page, this.checkboxImageFormat(imageFormat));
+  }
+
+  /**
+   * Enable/Disable the image format in Image Generation Options
+   * @param page {Page} Browser tab
+   * @param imageFormat {string} Image Format
+   * @param valueWanted {boolean} Checked or not
+   * @returns {Promise<string>}
+   */
+  async setImageFormatToGenerateChecked(page: Page, imageFormat: string, valueWanted: boolean): Promise<string> {
+    await this.setChecked(page, this.checkboxImageFormat(imageFormat), valueWanted);
+    await page.click(this.submitImageGenerationOptions);
+
+    // Return successful message
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Returns the selected value of the select "Image" in "Regenerate thumbnails" form
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getRegenerateThumbnailsImage(page: Page): Promise<string> {
+    return page.$eval(this.selectRegenerateThumbnailsImage, (el: HTMLSelectElement) => el.value);
+  }
+
+  /**
+   * Returns values of the select "Format" in "Regenerate thumbnails" form
+   * @param page {Page} Browser tab
+   * @param image {ImageTypeRegeneration|ImageTypeRegenerationSpecific} Image
+   * @returns {Promise<string[]>}
+   */
+  async getRegenerateThumbnailsFormats(
+    page: Page,
+    image: ImageTypeRegeneration|ImageTypeRegenerationSpecific,
+  ): Promise<string[]> {
+    await this.waitForHiddenSelector(page, this.selectRegenerateThumbnailsFormat(image));
+
+    return page.$$eval(
+      `${this.selectRegenerateThumbnailsFormat(image)} option`,
+      (all: HTMLElement[]) => all
+        .map((el: HTMLElement) => el.textContent)
+        .filter((el: string|null): el is string => (el !== null && el !== 'All')),
+    );
   }
 }
 
