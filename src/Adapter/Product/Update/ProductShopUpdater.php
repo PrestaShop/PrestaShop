@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
@@ -73,9 +73,9 @@ class ProductShopUpdater
     private $shopRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
-    private $productImageMultiShopRepository;
+    private $productImageRepository;
 
     /**
      * @var ProductStockUpdater
@@ -111,7 +111,7 @@ class ProductShopUpdater
         ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         ShopRepository $shopRepository,
-        ProductImageMultiShopRepository $productImageMultiShopRepository,
+        ProductImageRepository $productImageRepository,
         ProductStockUpdater $productStockUpdater,
         CombinationRepository $combinationMultiShopRepository,
         CombinationStockUpdater $combinationStockUpdater,
@@ -122,7 +122,7 @@ class ProductShopUpdater
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->shopRepository = $shopRepository;
-        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->productStockUpdater = $productStockUpdater;
         $this->combinationRepository = $combinationMultiShopRepository;
         $this->combinationStockUpdater = $combinationStockUpdater;
@@ -260,17 +260,17 @@ class ProductShopUpdater
      */
     private function copyImageAssociations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
     {
-        $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        $imagesFromSourceShop = $this->productImageRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         $targetImageIds = array_map(static function (ImageId $imageId): int {
             return $imageId->getValue();
-        }, $this->productImageMultiShopRepository->getImageIds($productId, ShopConstraint::shop($targetShopId->getValue())));
+        }, $this->productImageRepository->getImageIds($productId, ShopConstraint::shop($targetShopId->getValue())));
 
         foreach ($imagesFromSourceShop as $image) {
             // skip image if it is already associated with the target shop
             if (in_array((int) $image->id, $targetImageIds, true)) {
                 continue;
             }
-            $this->productImageMultiShopRepository->associateImageToShop($image, $targetShopId);
+            $this->productImageRepository->associateImageToShop($image, $targetShopId);
         }
     }
 

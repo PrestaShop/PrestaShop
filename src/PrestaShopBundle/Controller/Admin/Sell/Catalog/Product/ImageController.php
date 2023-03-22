@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -232,7 +233,10 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function getProductImageJsonResponse(int $productImageId): JsonResponse
     {
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($productImageId));
+        $productImage = $this->getQueryBus()->handle(new GetProductImage(
+            $productImageId,
+            ShopConstraint::shop($this->getContextShopId())
+        ));
 
         return $this->json($this->formatImage($productImage));
     }

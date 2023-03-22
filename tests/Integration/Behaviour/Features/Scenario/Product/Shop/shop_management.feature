@@ -470,7 +470,7 @@ Feature: Copy product from shop to shop.
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
-    And product "product1" should have no combinations for shops "shop2"
+    And product "product1" is not associated to shop shop2
     When I set following shops for product "product1":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
@@ -479,13 +479,16 @@ Feature: Copy product from shop to shop.
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" is associated to shop shop2
+    And combinations "product1LWhite,product1LBlack,product1LBlue" are associated to shop "shop2"
     When I delete product "product1" from shops "shop2"
     Then product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
-    And product "product1" should have no combinations for shops "shop2"
+    And product "product1" is not associated to shop shop2
+    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop2"
 
   Scenario: Product images are copied/deleted when product is being copied/deleted to/from shop.
     Given I add product "product1" with following information:

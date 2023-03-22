@@ -667,7 +667,7 @@ Feature: Copy product from shop to shop.
       | carriers | [carrier1,carrier2] |
 
   Scenario: I duplicate a product its stock is copied
-    When I add product "productWithStock" to shop shop1 with following information:
+    Given I add product "productWithStock" to shop shop1 with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
@@ -899,9 +899,7 @@ Feature: Copy product from shop to shop.
       | id reference                     | combination name | reference | attributes   | impact on price | quantity | is default |
       | productWithCombinationsRedCopy1  | Color - Red      |           | [Color:Red]  | 0               | 1        | true       |
       | productWithCombinationsBlueCopy1 | Color - Blue     |           | [Color:Blue] | 0               | 11       | false      |
-    And product "productWithCombinationAndStockCopy1" should have no combinations for shops "shop2"
-    And product "productWithCombinationAndStockCopy1" should have no combinations for shops "shop3"
-    And product "productWithCombinationAndStockCopy1" should have no combinations for shops "shop4"
+    And product "productWithCombinationAndStockCopy1" is not associated to shops "shop2,shop3,shop4"
     And productWithCombinationsRed and productWithCombinationsRedCopy1 have different values
     And productWithCombinationsBlue and productWithCombinationsBlueCopy1 have different values
     And combination "productWithCombinationsRedCopy1" should have following stock details for shop shop1:
@@ -936,8 +934,7 @@ Feature: Copy product from shop to shop.
       | combination reference                     | combination name | reference | attributes   | impact on price | quantity | is default |
       | productWithCombinationsRedCopyShopGroup1  | Color - Red      |           | [Color:Red]  | 0               | 2        | true       |
       | productWithCombinationsBlueCopyShopGroup1 | Color - Blue     |           | [Color:Blue] | 0               | 12       | false      |
-    And product "productWithCombinationAndStockCopyShopGroup1" should have no combinations for shops "shop3"
-    And product "productWithCombinationAndStockCopyShopGroup1" should have no combinations for shops "shop4"
+    And product "productWithCombinationAndStockCopyShopGroup1" is not associated to shops "shop3,shop4"
     And productWithCombinationsRed and productWithCombinationsRedCopyShopGroup1 have different values
     And productWithCombinationsBlue and productWithCombinationsBlueCopyShopGroup1 have different values
     ## Check values for shop1
@@ -992,8 +989,7 @@ Feature: Copy product from shop to shop.
       | id reference                              | combination name | reference | attributes   | impact on price | quantity | is default |
       | productWithCombinationsRedCopyShopGroup2  | Color - Red      |           | [Color:Red]  | 0               | 3        | true       |
       | productWithCombinationsBlueCopyShopGroup2 | Color - Blue     |           | [Color:Blue] | 0               | 13       | false      |
-    And product "productWithCombinationAndStockCopyShopGroup2" should have no combinations for shops "shop1"
-    And product "productWithCombinationAndStockCopyShopGroup2" should have no combinations for shops "shop2"
+    And product "productWithCombinationAndStockCopyShopGroup2" is not associated to shops "shop1,shop2"
     And productWithCombinationsRed and productWithCombinationsRedCopyShopGroup2 have different values
     And productWithCombinationsBlue and productWithCombinationsBlueCopyShopGroup2 have different values
     ## Check values for shop3 and shop4
@@ -1191,14 +1187,27 @@ Feature: Copy product from shop to shop.
       | type        | combinations |
     And I add new image "image1" named "app_icon.png" to product "productWithImages" for shop "shop1"
     And I add new image "image2" named "logo.jpg" to product "productWithImages" for shop "shop1"
-    And I set following shops for product "productWithImages":
+    When I set following shops for product "productWithImages":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
-    And I add new image "image3" named "app_icon.png" to product "productWithImages" for shop "shop2"
-    And I set following shops for product "productWithImages":
+    Then product productWithImages is associated to shops "shop1,shop2"
+    And product "productWithImages" should have following images for shop "shop1,shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops        |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2 |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1, shop2 |
+    When I add new image "image3" named "app_icon.png" to product "productWithImages" for shop "shop2"
+    Then product "productWithImages" should have following images for shop "shop1,shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops        |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2 |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1, shop2 |
+      | image3          | false    |               |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg | shop2        |
+    When I set following shops for product "productWithImages":
       | source shop | shop2             |
       | shops       | shop1,shop2,shop3 |
-    And product "productWithImages" should have following images for shop "shop1,shop2,shop3":
+    Then product "productWithImages" is associated to shops "shop1"
+    # image1 and image2 was already associated to shop1 and shop2 and is now additionally associated to shop3 (so shop1,shop2,shop3)
+    # image3 was already associated ONLY TO shop2 and is now additionally associated to shop3 (so shop2,shop3)
+    Then product "productWithImages" should have following images for shop "shop1,shop2,shop3":
       | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops               |
       | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2, shop3 |
       | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg | shop1, shop2, shop3 |

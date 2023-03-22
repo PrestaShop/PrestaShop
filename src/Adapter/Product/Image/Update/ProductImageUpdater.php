@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\Update;
 
 use Image;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -68,9 +68,9 @@ class ProductImageUpdater
     private $positionUpdater;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
-    private $productImageMultiShopRepository;
+    private $productImageRepository;
 
     /**
      * @param ProductImageUploader $productImageUploader
@@ -83,13 +83,13 @@ class ProductImageUpdater
         PositionUpdateFactoryInterface $positionUpdateFactory,
         PositionDefinition $positionDefinition,
         GridPositionUpdaterInterface $positionUpdater,
-        ProductImageMultiShopRepository $productImageMultiShopRepository
+        ProductImageRepository $productImageRepository
     ) {
         $this->productImageUploader = $productImageUploader;
         $this->positionUpdateFactory = $positionUpdateFactory;
         $this->positionDefinition = $positionDefinition;
         $this->positionUpdater = $positionUpdater;
-        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productImageRepository = $productImageRepository;
     }
 
     /**
@@ -100,12 +100,12 @@ class ProductImageUpdater
      */
     public function deleteImage(ImageId $imageId)
     {
-        $image = $this->productImageMultiShopRepository->getImageById($imageId);
+        $image = $this->productImageRepository->getImageById($imageId);
 
         $this->productImageUploader->remove($image);
-        $this->productImageMultiShopRepository->delete($image);
+        $this->productImageRepository->delete($image);
 
-        $this->productImageMultiShopRepository->updateMissingCovers(new ProductId((int) $image->id_product));
+        $this->productImageRepository->updateMissingCovers(new ProductId((int) $image->id_product));
     }
 
     /**
@@ -118,21 +118,21 @@ class ProductImageUpdater
         if ($shopConstraint->getShopGroupId() !== null) {
             throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
         } elseif ($shopConstraint->forAllShops()) {
-            $shopIds = $this->productImageMultiShopRepository->getAssociatedShopIds(new ImageId((int) $newCover->id));
+            $shopIds = $this->productImageRepository->getAssociatedShopIds(new ImageId((int) $newCover->id));
         } else {
             $shopIds = [$shopConstraint->getShopId()];
         }
 
         $productId = new ProductId((int) $newCover->id_product);
         foreach ($shopIds as $shopId) {
-            $currentCover = $this->productImageMultiShopRepository->findCoverImageId($productId, $shopId);
+            $currentCover = $this->productImageRepository->findCoverImageId($productId, $shopId);
 
             if ($currentCover !== null && $currentCover->getValue() === (int) $newCover->id) {
                 continue;
             }
 
             if ($currentCover) {
-                $currentImage = $this->productImageMultiShopRepository->get($currentCover, $shopId);
+                $currentImage = $this->productImageRepository->get($currentCover, $shopId);
                 $this->updateCover($currentImage, false, $shopId);
             }
 
@@ -190,7 +190,7 @@ class ProductImageUpdater
     private function updateCover(Image $image, bool $isCover, ShopId $shopId): void
     {
         $image->cover = $isCover;
-        $this->productImageMultiShopRepository->partialUpdateForShops(
+        $this->productImageRepository->partialUpdateForShops(
             $image,
             ['cover'],
             [$shopId],

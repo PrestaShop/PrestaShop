@@ -73,6 +73,9 @@ Feature: Add product to pack from Back Office (BO)
       | source shop | shop1       |
       | shops       | shop1,shop2 |
     And I add new image "image3" named "logo.jpg" to product "product3"
+    And I apply the following matrix of images for product "product3":
+      | imageReference | shopReferences |
+      | image3         | shop1, shop2   |
     And I add product "product4" to shop shop1 with following information:
       | name[en-US] | winterstreet |
       | type        | virtual      |
@@ -80,6 +83,9 @@ Feature: Add product to pack from Back Office (BO)
       | source shop | shop1       |
       | shops       | shop1,shop2 |
     And I add new image "image4" named "logo.jpg" to product "product4"
+    And I apply the following matrix of images for product "product4":
+      | imageReference | shopReferences |
+      | image4         | shop1, shop2   |
     And product "product3" type should be virtual
     And product "product4" type should be virtual
     When I update pack "productPack2" with following product quantities:
@@ -282,7 +288,7 @@ Feature: Add product to pack from Back Office (BO)
       | name[en-US] | weird sunglasses box |
       | type        | pack                 |
     And product "productPack5" type should be pack for shop shop2
-    And I add product "product5" to shop shop1 with following information:
+    When I add product "product5" to shop shop1 with following information:
       | name[en-US] | work sunglasses |
       | type        | standard        |
     And I add product "product6" to shop shop3 with following information:
@@ -294,37 +300,37 @@ Feature: Add product to pack from Back Office (BO)
     And I set following shops for product "product7":
       | source shop | shop4       |
       | shops       | shop4,shop2 |
-    Given I update pack productPack5 with following product quantities:
+    And I update pack productPack5 with following product quantities:
       | product  | quantity |
       | product5 | 10       |
       | product6 | 11       |
       | product7 | 15       |
-    Then pack "productPack5" should contain products with following details for shops "shop1,shop2,shop4":
+    And pack "productPack5" should contain products with following details for shops "shop1,shop2,shop4":
       | product  | combination | name                | quantity | image url                                              | reference |
       | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
       | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
       | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-    Given I update product "product7" for shop "shop2" with following values:
+    And I update product "product7" for shop "shop2" with following values:
       | name[en-US] | casual sunglasses 2 |
     And I update product "product7" for shop "shop4" with following values:
       | name[en-US] | casual sunglasses 4 |
     Then product "product7" localized "name" for shops "shop4" should be:
       | locale | value               |
       | en-US  | casual sunglasses 4 |
-    Then product "product7" localized "name" for shops "shop2" should be:
+    And product "product7" localized "name" for shops "shop2" should be:
       | locale | value               |
       | en-US  | casual sunglasses 2 |
-    Then pack "productPack5" should contain products with following details for shops "shop1":
+    And pack "productPack5" should contain products with following details for shops "shop1":
       | product  | combination | name                | quantity | image url                                              | reference |
       | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
       | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
       | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-    Then pack "productPack5" should contain products with following details for shops "shop2":
+    And pack "productPack5" should contain products with following details for shops "shop2":
       | product  | combination | name                | quantity | image url                                              | reference |
       | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
       | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
       | product7 |             | casual sunglasses 2 | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-    Then pack "productPack5" should contain products with following details for shops "shop4":
+    And pack "productPack5" should contain products with following details for shops "shop4":
       | product  | combination | name                | quantity | image url                                              | reference |
       | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
       | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |

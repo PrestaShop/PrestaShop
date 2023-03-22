@@ -97,7 +97,6 @@ Feature: Bulk delete products when multishop feature is enabled
       | image reference | position | shops        |
       | image1          | 1        | shop3, shop4 |
       | image2          | 2        | shop3, shop4 |
-    And product productWithCombinations is not associated to shop "shop1,shop2"
     And product productWithCombinations is associated to shops "shop3,shop4"
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop3,shop4":
@@ -105,7 +104,7 @@ Feature: Bulk delete products when multishop feature is enabled
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
-    And product productWithCombinations should have no combinations for shops "shop1,shop2"
+    And product productWithCombinations is not associated to shops "shop1,shop2"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shops "shop1,shop2"
 
   Scenario: I can bulk delete product from second shop group
@@ -122,16 +121,15 @@ Feature: Bulk delete products when multishop feature is enabled
       | image reference | position | shops        |
       | image1          | 1        | shop1, shop2 |
       | image2          | 2        | shop1, shop2 |
-    And product productWithCombinations is associated to shops "shop1,shop2"
-    And product productWithCombinations is not associated to shop "shop3,shop4"
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
-    And product productWithCombinations should have no combinations for shops "shop3,shop4"
-    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3,shop4"
+    And product productWithCombinations is associated to shops "shop1,shop2"
+    And product productWithCombinations is not associated to shops "shop3,shop4"
+    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shops "shop3,shop4"
 
   Scenario: I can bulk delete product from shop shop2
     When I bulk delete following products from shop shop2:
@@ -147,15 +145,14 @@ Feature: Bulk delete products when multishop feature is enabled
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop3, shop4 |
       | image2          | 2        | shop1, shop3, shop4 |
-    And product productWithCombinations is not associated to shop shop2
-    And product productWithCombinations is associated to shops "shop1,shop3,shop4"
     And default shop for product productWithCombinations is shop3
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop3,shop4":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
-    And product productWithCombinations should have no combinations for shops "shop2"
+    And product productWithCombinations is associated to shops "shop1,shop3,shop4"
+    And product productWithCombinations is not associated to shop shop2
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop2"
 
   Scenario: I can bulk delete product from shop shop3
@@ -172,15 +169,14 @@ Feature: Bulk delete products when multishop feature is enabled
       | image reference | position | shops               |
       | image1          | 1        | shop1, shop2, shop4 |
       | image2          | 2        | shop1, shop2, shop4 |
-    And product productWithCombinations is associated to shops "shop1,shop2,shop4"
-    And product productWithCombinations is not associated to shop shop3
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop4":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
-    And product productWithCombinations should have no combinations for shops "shop3"
+    And product productWithCombinations is associated to shops "shop1,shop2,shop4"
+    And product productWithCombinations is not associated to shop shop3
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3"
 
   Scenario: I can bulk delete product from all shops
@@ -190,5 +186,4 @@ Feature: Bulk delete products when multishop feature is enabled
       | productWithCombinations |
     And product "standardProduct" should not exist anymore
     And product "productWithCombinations" should not exist anymore
-    And product productWithCombinations should have no combinations for shops "shop1,shop2,shop3,shop4"
     And combinations "product1LWhite,product1LBlack,product1LBlue" should not exist anymore

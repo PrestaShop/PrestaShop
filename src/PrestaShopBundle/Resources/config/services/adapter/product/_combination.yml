@@ -32,12 +32,10 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler:
+    autowire: true
+    public: false
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
-      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
-      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
+      $combinationQueryBuilder: '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList

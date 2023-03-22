@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAs
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -56,7 +57,7 @@ use Tests\Resources\DummyFileUploader;
 class ProductImageFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -67,7 +68,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
     public function __construct()
     {
-        $this->productImageRepository = $this->getContainer()->get(ProductImageMultiShopRepository::class);
+        $this->productImageRepository = $this->getContainer()->get(ProductImageRepository::class);
     }
 
     /**
@@ -183,7 +184,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $imageId = (int) $this->getSharedStorage()->get($imageReference);
 
         /** @var ProductImage $productImage */
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId));
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId, ShopConstraint::shop($this->getDefaultShopId())));
 
         // This was previously saved during image upload
         $generatedDummyMD5 = $this->getSharedStorage()->get($fileName);
@@ -564,6 +565,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     {
         $pathName = DummyFileUploader::upload($fileName);
 
+        /** @var ImageId $imageId */
         $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
             $this->getSharedStorage()->get($productReference),
             $pathName,
@@ -572,16 +574,12 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         $this->getSharedStorage()->set($imageReference, $imageId->getValue());
 
-        // Save uploaded file MD5 for future checks
         if ($this->getSharedStorage()->exists($fileName)) {
             return;
         }
 
-        /** @var ProductImage $productImage */
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
-
-        $imagePath = $this->getImagePath($productImage->getImageId());
-        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
+        // Save uploaded file MD5 for future checks
+        $this->getSharedStorage()->set($fileName, md5_file($this->getImagePath($imageId->getValue())));
     }
 
     /**

@@ -24,36 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Provider;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetShopProductImagesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
-
-/**
- * Handles @see GetShopProductImages query
- */
-final class GetShopProductImagesHandler implements GetShopProductImagesHandlerInterface
+interface ProductImageProviderInterface
 {
     /**
-     * @var ProductImageRepository
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return string
+     *
+     * @throws ShopAssociationNotFound
      */
-    private $productImageRepository;
-
-    public function __construct(
-        ProductImageRepository $productImageRepository
-    ) {
-        $this->productImageRepository = $productImageRepository;
-    }
+    public function getProductCoverUrl(ProductId $productId, ShopId $shopId): string;
 
     /**
-     * {@inheritDoc}
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return string
+     *
+     * @throws ShopAssociationNotFound
      */
-    public function handle(GetShopProductImages $query): ShopProductImagesCollection
-    {
-        return $this->productImageRepository->getImagesFromAllShop($query->getProductId());
-    }
+    public function getCombinationCoverUrl(CombinationId $combinationId, ShopId $shopId): string;
 }
