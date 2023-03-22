@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
  * Store information for editing
@@ -78,13 +78,13 @@ class StoreForEditing
     private $city;
 
     /**
-    * @var float
-    * */
+     * @var float
+     * */
     private $latitude;
 
     /**
-    * @var float
-    * */
+     * @var float
+     * */
     private $longitude;
 
     /**
@@ -157,7 +157,7 @@ class StoreForEditing
         float $longitude,
         string $hours,
         string $phone,
-        string  $fax,
+        string $fax,
         array $localisedNotes,
         string $email,
         bool $active,
@@ -181,10 +181,9 @@ class StoreForEditing
         $this->shopAssociation = $shopAssociation;
     }
 
-    
-
     /**
      * Get the value of storeId
+     *
      * @return StoreId
      */
     public function getStoreId()
@@ -194,6 +193,7 @@ class StoreForEditing
 
     /**
      * Get the value of countryId
+     *
      * @return CountryId
      */
     public function getCountryId()
@@ -203,6 +203,7 @@ class StoreForEditing
 
     /**
      * Get the value of stateId
+     *
      * @return StateId
      */
     public function getStateId()
@@ -212,6 +213,7 @@ class StoreForEditing
 
     /**
      * Get the value of localisedNames
+     *
      * @return array
      */
     public function getLocalisedNames()
@@ -221,6 +223,7 @@ class StoreForEditing
 
     /**
      * Get the value of localisedAddresses1
+     *
      * @return array
      */
     public function getLocalisedAddresses1()
@@ -230,6 +233,7 @@ class StoreForEditing
 
     /**
      * Get the value of localisedAddresses2
+     *
      * @return array
      */
     public function getLocalisedAddresses2()
@@ -239,6 +243,7 @@ class StoreForEditing
 
     /**
      * Get the value of postcode
+     *
      * @return string
      */
     public function getPostcode()
@@ -248,6 +253,7 @@ class StoreForEditing
 
     /**
      * Get the value of city
+     *
      * @return string
      */
     public function getCity()
@@ -257,6 +263,7 @@ class StoreForEditing
 
     /**
      * Get the value of latitude
+     *
      * @return float
      */
     public function getLatitude()
@@ -266,6 +273,7 @@ class StoreForEditing
 
     /**
      * Get the value of longitude
+     *
      * @return float
      */
     public function getLongitude()
@@ -275,6 +283,7 @@ class StoreForEditing
 
     /**
      * Get the value of hours
+     *
      * @return string
      */
     public function getHours()
@@ -284,6 +293,7 @@ class StoreForEditing
 
     /**
      * Get the value of phone
+     *
      * @return string
      */
     public function getPhone()
@@ -293,6 +303,7 @@ class StoreForEditing
 
     /**
      * Get the value of fax
+     *
      * @return string
      */
     public function getFax()
@@ -302,6 +313,7 @@ class StoreForEditing
 
     /**
      * Get the value of localisedNotes
+     *
      * @return array
      */
     public function getLocalisedNotes()
@@ -311,6 +323,7 @@ class StoreForEditing
 
     /**
      * Get the value of email
+     *
      * @return string
      */
     public function getEmail()
@@ -320,6 +333,7 @@ class StoreForEditing
 
     /**
      * Get the value of active
+     *
      * @return bool
      */
     public function getActive()
@@ -329,6 +343,7 @@ class StoreForEditing
 
     /**
      * Get the value of shopAssociation
+     *
      * @return array
      */
     public function getShopAssociation()

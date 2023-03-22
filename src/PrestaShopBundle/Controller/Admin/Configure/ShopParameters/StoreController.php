@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
@@ -63,9 +62,9 @@ class StoreController extends FrameworkBundleAdminController
             'storeGrid' => $this->presentGrid($storeGrid),
             'layoutHeaderToolbarBtn' => [
                 'add_store' => [
-                'href' => $this->generateUrl('admin_stores_create'),
-                'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
-                'icon' => 'add_circle_outline',
+                    'href' => $this->generateUrl('admin_stores_create'),
+                    'desc' => $this->trans('Add new store', 'Admin.Shopparameters.Feature'),
+                    'icon' => 'add_circle_outline',
                 ],
             ],
         ]);
@@ -102,7 +101,7 @@ class StoreController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_contacts_index');
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
@@ -128,7 +127,7 @@ class StoreController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new ToggleStoreStatusCommand($storeId));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -148,7 +147,7 @@ class StoreController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteStoreCommand($storeId));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -166,7 +165,7 @@ class StoreController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteStoreCommand($this->getBulkActionIds($request, 'store_bulk')));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -210,7 +209,7 @@ class StoreController extends FrameworkBundleAdminController
                 $newStatus,
                 $this->getBulkActionIds($request, 'store_bulk'))
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
