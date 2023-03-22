@@ -133,9 +133,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $this->commandBus->handle($command);
         $categoryId = new CategoryId($categoryId);
 
-        /**
-         * In some cases in form menu_thumbnail_images can be disabled so value won't get here.
-         */
+        // In some cases in form menu_thumbnail_images can be disabled so value won't get here.
         $menuThumbnailImages = $data['menu_thumbnail_images'] ?? [];
 
         $this->uploadImages(
