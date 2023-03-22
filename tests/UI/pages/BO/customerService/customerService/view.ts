@@ -1,6 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import type {Page} from 'playwright';
+import MessageData from "@data/faker/message";
 
 /**
  * View customer service page, contains selectors and functions for the page
@@ -10,13 +11,17 @@ import type {Page} from 'playwright';
 class ViewCustomer extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly forwardMessageSuccessMessage: string;
+
   private readonly threadBadge: string;
 
-  private readonly messagesThredDiv: string;
+  private readonly messagesThreadDiv: string;
 
   private readonly attachmentLink: string;
 
   private readonly statusButton: (statusID: number) => string;
+
+  private readonly forwardMessageButton: string;
 
   private readonly yourAnswerFormTitle: string;
 
@@ -31,16 +36,18 @@ class ViewCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Customer Service > View •';
+    this.pageTitle = `View • ${global.INSTALL.SHOP_NAME}`;
+    this.forwardMessageSuccessMessage = 'Message forwarded to';
 
     // Selectors
-    this.threadBadge = 'span.badge';
-    this.statusButton = (statusID: number) => `button[name='setstatus'][value='${statusID}']`;
-    this.messagesThredDiv = '#content div.message-item-initial';
-    this.yourAnswerFormTitle = '#reply-form-title';
-    this.yourAnswerFormTextarea = '#reply_message';
-    this.ordersAndMessagesBlock = '#orders-and-messages-block';
-    this.attachmentLink = `${this.messagesThredDiv} span.message-product a`;
+    this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
+    this.messagesThreadDiv = '#main-div div[data-role="messages-thread"]';
+    this.attachmentLink = `${this.messagesThreadDiv} a[href*='/upload']`;
+    this.statusButton = (statusName: string) => `${this.messagesThreadDiv} form input[value='${statusName}'] + button`;
+    this.forwardMessageButton = `${this.messagesThreadDiv} button[data-target='#forwardThreadModal']`;
+    this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
+    this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
+    this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
   }
 
   /*
@@ -63,7 +70,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<string>}
    */
   getCustomerMessage(page: Page): Promise<string> {
-    return this.getTextContent(page, this.messagesThredDiv);
+    return this.getTextContent(page, this.messagesThreadDiv);
   }
 
   /**
@@ -71,7 +78,7 @@ class ViewCustomer extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  getAttachedFileHref(page: Page): Promise<string|null> {
+  getAttachedFileHref(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.attachmentLink, 'href');
   }
 
@@ -140,6 +147,31 @@ class ViewCustomer extends BOBasePage {
       return this.getTextContent(page, this.statusButton(2));
     }
     return this.getTextContent(page, this.statusButton(1));
+  }
+
+  /**
+   * Click on forward message button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnForwardMessageButton(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.forwardMessageButton);
+
+    return this.elementVisible(page, '#forwardThreadModal > div > form', 2000);
+  }
+
+  /**
+   * Forward message
+   * @param page {Page} Browser tab
+   * @param messageData
+   */
+  async forwardMessage(page: Page, messageData: MessageData): Promise<string> {
+    await this.selectByVisibleText(page, '#forward_customer_thread_employee_id', messageData.employee);
+    await this.setValue(page, '#forward_customer_thread_comment', messageData.message);
+
+    await this.waitForSelectorAndClick(page, '#forwardThreadModal > div > form > div > div.modal-footer > button.btn.btn-primary');
+
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

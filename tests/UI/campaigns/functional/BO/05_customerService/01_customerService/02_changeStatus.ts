@@ -19,6 +19,7 @@ import {loginPage as foLoginPage} from '@pages/FO/login';
 // Import data
 import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
+import Employees from '@data/demo/employees';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -34,6 +35,11 @@ describe('BO - Customer Service : Change status', async () => {
   let page: Page;
 
   const contactUsData: MessageData = new MessageData({subject: 'Customer service', reference: 'OHSATSERP'});
+
+  const forwardMessageData: MessageData = new MessageData({
+    employee: `${Employees.DefaultEmployee.firstName.slice(0.1)}. ${Employees.DefaultEmployee.lastName}`,
+    message: 'Forward message',
+  });
 
   // before and after functions
   before(async function () {
@@ -155,6 +161,32 @@ describe('BO - Customer Service : Change status', async () => {
         const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.status);
         await expect(isChanged).to.be.true;
       });
+    });
+  });
+
+  describe('Forward the message to an existing employee', async () => {
+    it('should go to view message page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
+
+      await customerServicePage.goToViewMessagePage(page);
+
+      const pageTitle = await viewPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewPage.pageTitle);
+    });
+
+    it('should click on forward message button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton', baseContext);
+
+      const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
+      await expect(isModalVisible).to.be.true;
+    });
+
+    it('should forward the message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage', baseContext);
+
+      console.log(forwardMessageData.employee);
+      const successMessage = await viewPage.forwardMessage(page, forwardMessageData);
+      await expect(successMessage).to.eq(`${viewPage.forwardMessageSuccessMessage} demo@prestashop.com`);
     });
   });
 
