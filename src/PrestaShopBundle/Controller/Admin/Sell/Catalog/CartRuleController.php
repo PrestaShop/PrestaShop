@@ -196,6 +196,12 @@ class CartRuleController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cart_rules_index');
     }
 
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     *
+     * @return RedirectResponse
+     */
     public function createAction(Request $request): Response
     {
         $form = $this->getFormBuilder()->getForm();

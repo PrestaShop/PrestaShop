@@ -37,9 +37,9 @@ class CartRuleConstraintException extends CartRuleException
     public const INVALID_DISCOUNT_APPLICATION_TYPE = 1;
 
     /**
-     * Used when cart rule name is empty
+     * Used when cart rule name is invalid
      */
-    public const EMPTY_NAME = 2;
+    public const INVALID_NAME = 2;
 
     /**
      * Used when cart rule's priority is invalid

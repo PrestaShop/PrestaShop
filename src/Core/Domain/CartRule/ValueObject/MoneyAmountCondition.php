@@ -41,23 +41,23 @@ class MoneyAmountCondition
     /**
      * @var bool
      */
-    private $taxExcluded;
+    private $taxIncluded;
 
     /**
-     * @var bool|null
+     * @var bool
      */
-    private $shippingExcluded;
+    private $shippingIncluded;
 
     /**
      * @param Money $money
-     * @param bool $taxExcluded
-     * @param bool|null $shippingExcluded
+     * @param bool $taxIncluded
+     * @param bool $shippingIncluded
      */
-    public function __construct(Money $money, bool $taxExcluded, bool $shippingExcluded = null)
+    public function __construct(Money $money, bool $taxIncluded, bool $shippingIncluded)
     {
         $this->money = $money;
-        $this->taxExcluded = $taxExcluded;
-        $this->shippingExcluded = $shippingExcluded;
+        $this->taxIncluded = $taxIncluded;
+        $this->shippingIncluded = $shippingIncluded;
     }
 
     /**
@@ -71,16 +71,16 @@ class MoneyAmountCondition
     /**
      * @return bool
      */
-    public function isTaxExcluded(): bool
+    public function isTaxIncluded(): bool
     {
-        return $this->taxExcluded;
+        return $this->taxIncluded;
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function isShippingExcluded(): ?bool
+    public function isShippingIncluded(): bool
     {
-        return $this->shippingExcluded;
+        return $this->shippingIncluded;
     }
 }
