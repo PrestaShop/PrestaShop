@@ -37,7 +37,7 @@ describe('BO - Customer Service : Change status', async () => {
   const contactUsData: MessageData = new MessageData({subject: 'Customer service', reference: 'OHSATSERP'});
 
   const forwardMessageData: MessageData = new MessageData({
-    employee: `${Employees.DefaultEmployee.firstName.slice(0.1)}. ${Employees.DefaultEmployee.lastName}`,
+    employee: `${Employees.DefaultEmployee.firstName.slice(0, 1)}. ${Employees.DefaultEmployee.lastName}`,
     message: 'Forward message',
   });
 
@@ -184,9 +184,29 @@ describe('BO - Customer Service : Change status', async () => {
     it('should forward the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage', baseContext);
 
-      console.log(forwardMessageData.employee);
       const successMessage = await viewPage.forwardMessage(page, forwardMessageData);
-      await expect(successMessage).to.eq(`${viewPage.forwardMessageSuccessMessage} demo@prestashop.com`);
+      await expect(successMessage).to.eq(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.email}`);
+    });
+
+    it('should check the thread', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkThread', baseContext);
+
+      const messages = await viewPage.getCustomerMessage(page);
+      await expect(messages)
+        .to.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
+          + ` ${Employees.DefaultEmployee.lastName}`)
+        .and.contains(contactUsData.message)
+        .and.contains(forwardMessageData.message);
+    });
+
+    it('should check orders and messages timeline', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
+
+      const text = await viewPage.getOrdersAndMessagesTimeline(page);
+      await expect(text).to.contains('Orders and messages timeline')
+        .and.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
+        + ` ${Employees.DefaultEmployee.lastName}`)
+        .and.contains(`Comment: ${forwardMessageData.message}`);
     });
   });
 

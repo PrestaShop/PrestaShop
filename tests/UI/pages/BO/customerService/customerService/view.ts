@@ -1,7 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import type {Page} from 'playwright';
-import MessageData from "@data/faker/message";
+import MessageData from '@data/faker/message';
 
 /**
  * View customer service page, contains selectors and functions for the page
@@ -29,6 +29,14 @@ class ViewCustomer extends BOBasePage {
 
   private readonly ordersAndMessagesBlock: string;
 
+  private readonly forwardMessageModal: string;
+
+  private readonly forwardModalEmployeeIDSelect: string;
+
+  private readonly forwardModalCommentInput: string;
+
+  private readonly forwardModalSendButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on view customer service page
@@ -48,6 +56,11 @@ class ViewCustomer extends BOBasePage {
     this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
     this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
     this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
+    this.forwardMessageModal = '#forwardThreadModal div form';
+    this.forwardModalEmployeeIDSelect = '#forward_customer_thread_employee_id';
+    this.forwardModalCommentInput = '#forward_customer_thread_comment';
+    this.forwardModalSendButton = `${this.forwardMessageModal} div.modal-footer > button.btn.btn-primary`;
+
   }
 
   /*
@@ -157,7 +170,7 @@ class ViewCustomer extends BOBasePage {
   async clickOnForwardMessageButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.forwardMessageButton);
 
-    return this.elementVisible(page, '#forwardThreadModal > div > form', 2000);
+    return this.elementVisible(page, this.forwardMessageModal, 2000);
   }
 
   /**
@@ -166,12 +179,12 @@ class ViewCustomer extends BOBasePage {
    * @param messageData
    */
   async forwardMessage(page: Page, messageData: MessageData): Promise<string> {
-    await this.selectByVisibleText(page, '#forward_customer_thread_employee_id', messageData.employee);
-    await this.setValue(page, '#forward_customer_thread_comment', messageData.message);
+    await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employee);
+    await this.setValue(page, this.forwardModalCommentInput, messageData.message);
 
-    await this.waitForSelectorAndClick(page, '#forwardThreadModal > div > form > div > div.modal-footer > button.btn.btn-primary');
+    await this.waitForSelectorAndClick(page, this.forwardModalSendButton);
 
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
