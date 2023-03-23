@@ -748,21 +748,8 @@ class MediaCore
                     ];
 
                     foreach ($patterns as $pattern) {
-                        $matches = [];
-                        if (preg_match($pattern, $src, $matches)) {
-                            $minifier = $version = false;
-                            if (isset($matches[2]) && $matches[2]) {
-                                $minifier = (bool) $matches[2];
-                            }
-                            if (isset($matches[1]) && $matches[1]) {
-                                $version = $matches[1];
-                            }
-                            if ($version) {
-                                if ($version != _PS_JQUERY_VERSION_) {
-                                    Context::getContext()->controller->addJquery($version, null, $minifier);
-                                }
-                                Media::$inline_script_src[] = $src;
-                            }
+                        if (preg_match($pattern, $src)) {
+                            Media::$inline_script_src[] = $src;
                         }
                     }
                     if (!in_array($src, Media::$inline_script_src) && !$script->getAttribute(Media::$pattern_keepinline)) {
