@@ -103,10 +103,12 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
             ],
             'actions' => [
                 'free_shipping' => false,
-                'reduction' => [
-                    'value' => 0,
-                    'type' => Reduction::TYPE_AMOUNT,
-                    'tax_included' => true,
+                'discount' => [
+                    'reduction_type' => [
+                        'value' => 0,
+                        'type' => Reduction::TYPE_AMOUNT,
+                        'tax_included' => true,
+                    ],
                 ],
                 'exclude_discounted_products' => false,
                 'gift_product' => [],

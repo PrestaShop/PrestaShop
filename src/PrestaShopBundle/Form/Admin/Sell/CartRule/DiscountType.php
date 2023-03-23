@@ -27,35 +27,18 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Description\RelatedProductType;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ActionsType extends TranslatorAwareType
+class DiscountType extends TranslatorAwareType
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var string
-     */
-    private $employeeIsoCode;
-
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
-        RouterInterface $router,
-        string $employeeIsoCode
+        array $locales
     ) {
         parent::__construct($translator, $locales);
-        $this->router = $router;
-        $this->employeeIsoCode = $employeeIsoCode;
     }
 
     /**
@@ -64,25 +47,11 @@ class ActionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('free_shipping', SwitchType::class)
-            ->add('discount', DiscountType::class, [
-                'disabling_switch' => true,
-                'disabled_value' => static function (?array $data) {
-                    return empty($data['reduction_type']['value']);
-                },
-            ])
-            ->add('exclude_discounted_products', SwitchType::class)
-            ->add('gift_product', EntitySearchInputType::class, [
-                'entry_type' => RelatedProductType::class,
-                'entry_options' => [
-                    'block_prefix' => 'gift_product',
-                ],
-                'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
-                    'languageCode' => $this->employeeIsoCode,
-                    'query' => '__QUERY__',
-                ]),
-                'min_length' => 3,
-                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
+            ->add('reduction_type', PriceReductionType::class, [
+                'currency_select' => true,
+                'symbol_as_label' => false,
+                'label' => false,
+                'column_breaker' => true,
             ])
         ;
     }

@@ -41,6 +41,7 @@ services:
       $isCombinationsUsed: '@=service("prestashop.adapter.combination_feature").isUsed()'
       $availableLocales: "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
+      $translator: '@translator'
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
@@ -769,8 +770,8 @@ services:
   PrestaShopBundle\Form\Admin\Sell\CartRule\ActionsType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\ConditionsType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\InformationType:
-  PrestaShopBundle\Form\Admin\Sell\CartRule\RestrictionsType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\MinimumAmountType:
+  PrestaShopBundle\Form\Admin\Sell\CartRule\DiscountType:
   PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
     arguments:
       $urlGenerator: '@prestashop.core.admin.url_generator'

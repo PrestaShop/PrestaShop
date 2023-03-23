@@ -27,7 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ReductionTypeChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -55,23 +56,32 @@ class PriceReductionType extends CommonAbstractType
      */
     private $taxInclusionChoiceProvider;
 
+    /**
+     * @var CurrencyByIdChoiceProvider
+     */
+    private $currencyByIdChoiceProvider;
+
+    /**
+     * @var ReductionTypeChoiceProvider
+     */
+    private $reductionTypeChoiceProvider;
+
     public function __construct(
         Currency $defaultCurrency,
         EventSubscriberInterface $eventSubscriber,
-        FormChoiceProviderInterface $taxInclusionChoiceProvider
+        FormChoiceProviderInterface $taxInclusionChoiceProvider,
+        CurrencyByIdChoiceProvider $currencyByIdChoiceProvider,
+        ReductionTypeChoiceProvider $reductionTypeChoiceProvider
     ) {
         $this->defaultCurrency = $defaultCurrency;
         $this->eventSubscriber = $eventSubscriber;
         $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
+        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
+        $this->reductionTypeChoiceProvider = $reductionTypeChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $reductionTypeChoices = [
-            $this->defaultCurrency->symbol => Reduction::TYPE_AMOUNT,
-            '%' => Reduction::TYPE_PERCENTAGE,
-        ];
-
         $builder
             ->add('value', MoneyType::class, [
                 'scale' => $options['scale'],
@@ -87,17 +97,26 @@ class PriceReductionType extends CommonAbstractType
             ->add('type', ChoiceType::class, [
                 'placeholder' => false,
                 'required' => false,
-                'choices' => $reductionTypeChoices,
-            ])
-            ->add('include_tax', ChoiceType::class, [
-                'choices' => $this->taxInclusionChoiceProvider->getChoices(),
-                'placeholder' => false,
-                'required' => false,
-                'row_attr' => [
-                    'class' => 'js-include-tax-row',
-                ],
+                'choices' => $this->reductionTypeChoiceProvider->getChoices([
+                    'symbol_as_label' => $options['symbol_as_label'],
+                ]),
             ])
         ;
+
+        if ($options['currency_select']) {
+            $builder->add('currency', ChoiceType::class, [
+                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
+            ]);
+        }
+
+        $builder->add('include_tax', ChoiceType::class, [
+            'choices' => $this->taxInclusionChoiceProvider->getChoices(),
+            'placeholder' => false,
+            'required' => false,
+            'row_attr' => [
+                'class' => 'js-include-tax-row',
+            ],
+        ]);
 
         $builder->addEventSubscriber($this->eventSubscriber);
     }
@@ -107,8 +126,14 @@ class PriceReductionType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'scale' => 6,
-        ]);
+        $resolver
+            ->setDefaults([
+                'scale' => 6,
+                'currency_select' => false,
+                'symbol_as_label' => true,
+            ])
+            ->setAllowedTypes('currency_select', 'bool')
+            ->setAllowedTypes('symbol_as_label', 'bool')
+        ;
     }
 }

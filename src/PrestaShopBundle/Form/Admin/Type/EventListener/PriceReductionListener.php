@@ -74,6 +74,9 @@ class PriceReductionListener implements EventSubscriberInterface
                     'class' => 'price-reduction-value',
                 ],
             ]);
+
+            // and remove currency field if it exists when percentage type is selected
+            $form->remove('currency');
         }
     }
 }
