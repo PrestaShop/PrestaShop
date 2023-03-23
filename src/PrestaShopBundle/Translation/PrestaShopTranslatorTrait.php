@@ -48,14 +48,6 @@ trait PrestaShopTranslatorTrait
      */
     public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
-        if (isset($parameters['legacy'])) {
-            @trigger_error(
-                'The legacy parameter is deprecated and will be removed in the next major version.',
-                E_USER_DEPRECATED
-            );
-            unset($parameters['legacy']);
-        }
-
         $isSprintf = !empty($parameters) && $this->isSprintfString($id);
 
         if (empty($locale)) {

@@ -250,7 +250,7 @@ class AddressFormatCore extends ObjectModel
             if (!in_array($requiredField, $fieldList)) {
                 $this->_errorFormatList[] = $this->trans(
                     'The %s field (in tab %s) is required.',
-                    [$requiredField, $this->getFieldTabName($requiredField)],
+                    [htmlspecialchars($requiredField), htmlspecialchars($this->getFieldTabName($requiredField))],
                     'Admin.Notifications.Error');
             }
         }

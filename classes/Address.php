@@ -381,7 +381,7 @@ class AddressCore extends ObjectModel
 
             return $this->trans(
                 'Property %s is empty.',
-                [get_class($this) . '->' . $field],
+                [get_class($this) . '->' . htmlspecialchars($field)],
                 'Admin.Notifications.Error'
             );
         }

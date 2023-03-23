@@ -1219,7 +1219,7 @@ class AdminControllerCore extends Controller
                     ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
             } elseif (($_POST[$this->identifier] = $this->object->id /* voluntary do affectation here */) && $this->postImage($this->object->id) && count($this->errors) === 0 && $this->_redirect) {
                 PrestaShopLogger::addLog(
-                    $this->trans('%s addition', [$this->className]),
+                    $this->trans('%s addition', [htmlspecialchars($this->className)]),
                     1,
                     null,
                     $this->className,
@@ -1654,8 +1654,8 @@ class AdminControllerCore extends Controller
                             (is_array($obj->{$this->identifier_name})
                                 && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])
                             )
-                                ? $obj->{$this->identifier_name}[$this->context->employee->id_lang]
-                                : $obj->{$this->identifier_name},
+                                ? htmlspecialchars($obj->{$this->identifier_name}[$this->context->employee->id_lang])
+                                : htmlspecialchars($obj->{$this->identifier_name}),
                         ],
                         'Admin.Actions'
                     );
@@ -2739,29 +2739,6 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Translates a wording
-     *
-     * @deprecated Use $this->trans instead
-     *
-     * @param string $string Term or expression in english
-     * @param string|null $class Name of the class
-     * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-     * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
-     *
-     * @return string the translation if available, or the english default text
-     */
-    protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
-    {
-        @trigger_error(__FUNCTION__ . 'is deprecated. Use AdminController::trans instead.', E_USER_DEPRECATED);
-
-        if ($htmlentities === true) {
-            return htmlspecialchars($this->translator->trans($string, []), ENT_NOQUOTES);
-        }
-
-        return $this->translator->trans($string, []);
-    }
-
-    /**
      * Init context and dependencies, handles POST and GET.
      */
     public function init()
@@ -3652,7 +3629,7 @@ class AdminControllerCore extends Controller
                     if (!isset($value) || '' == $value) {
                         $this->errors[$field . '_' . $default_language->id] = $this->trans(
                             'The field %field_name% is required at least in %lang%.',
-                            ['%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name],
+                            ['%field_name%' => htmlspecialchars($object->displayFieldName($field, $class_name)), '%lang%' => htmlspecialchars($default_language->name)],
                             'Admin.Notifications.Error'
                         );
                     }
@@ -4007,7 +3984,7 @@ class AdminControllerCore extends Controller
 
                     if ($delete_ok) {
                         PrestaShopLogger::addLog(
-                            $this->trans('%s deletion', [$this->className]),
+                            $this->trans('%s deletion', [htmlspecialchars($this->className)]),
                             1,
                             null,
                             $this->className,
