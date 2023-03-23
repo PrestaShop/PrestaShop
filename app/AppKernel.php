@@ -130,8 +130,7 @@ class AppKernel extends Kernel
             return;
         }
 
-        flock(self::$lockStream, LOCK_UN);
-        fclose(self::$lockStream);
+        $this->unlockCacheStream(self::$lockStream);
         self::$lockStream = null;
     }
 
@@ -288,6 +287,11 @@ class AppKernel extends Kernel
         }
 
         $clearCacheLockPath = $this->getContainerClearCacheLockPath();
+        // No lock file no need to wait for its unlock
+        if (!file_exists($clearCacheLockPath)) {
+            return;
+        }
+
         $lockStream = fopen($clearCacheLockPath, 'w');
         if (false === $lockStream) {
             // Could not open writable lock for some reason
@@ -300,7 +304,21 @@ class AppKernel extends Kernel
 
         // Now that the file is unlocked it means the cache has been cleared we can safely continue the process as the container
         // has been rebuilt and is good to go.
+        $this->unlockCacheStream($lockStream);
+    }
+
+    /**
+     * @param resource $lockStream
+     */
+    protected function unlockCacheStream($lockStream): void
+    {
         flock($lockStream, LOCK_UN);
         fclose($lockStream);
+
+        // Also remove the lock file so that the lock check is ignored right away
+        $clearCacheLockPath = $this->getContainerClearCacheLockPath();
+        if (file_exists($clearCacheLockPath)) {
+            unlink($clearCacheLockPath);
+        }
     }
 }
