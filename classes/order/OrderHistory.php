@@ -124,7 +124,7 @@ class OrderHistoryCore extends ObjectModel
                     // If this virtual item has an associated file, we'll provide the link to download the file in the email
                     if ($product_download->display_filename != '') {
                         $assign[$key]['name'] = $product_download->display_filename;
-                        $dl_link = $product_download->getTextLink(false, $virtual_product['download_hash'])
+                        $dl_link = $product_download->getTextLink($virtual_product['download_hash'])
                             . '&id_order=' . (int) $order->id
                             . '&secure_key=' . $order->secure_key;
                         $assign[$key]['link'] = $dl_link;

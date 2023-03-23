@@ -195,7 +195,7 @@ class OrderLazyArray extends AbstractLazyArray
                 $product_download = new ProductDownload($id_product_download);
                 if ($product_download->display_filename != '') {
                     $orderProduct['download_link'] =
-                        $product_download->getTextLink(false, $orderProduct['download_hash'])
+                        $product_download->getTextLink($orderProduct['download_hash'])
                         . '&id_order=' . (int) $order->id
                         . '&secure_key=' . $order->secure_key;
                 }
