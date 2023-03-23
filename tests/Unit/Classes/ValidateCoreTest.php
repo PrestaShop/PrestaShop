@@ -40,16 +40,6 @@ class ValidateCoreTest extends TestCase
     }
 
     /**
-     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
-     *
-     * @return void
-     */
-    public function testIsAnything()
-    {
-        $this->assertTrue(Validate::isAnything());
-    }
-
-    /**
      * @dataProvider isEmailDataProvider
      */
     public function testIsEmail($expected, $input)

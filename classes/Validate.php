@@ -63,19 +63,6 @@ class ValidateCore
     }
 
     /**
-     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
-     */
-    public static function isAnything()
-    {
-        @trigger_error(
-            'This function is deprecated PrestaShop 8.1 and will be removed in Prestashop 9.0.',
-            E_USER_DEPRECATED
-        );
-
-        return true;
-    }
-
-    /**
      * Check for e-mail validity.
      *
      * @param string $email e-mail address to validate
