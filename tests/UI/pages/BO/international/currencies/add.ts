@@ -14,6 +14,7 @@ class AddCurrency extends LocalizationBasePage {
   public readonly pageTitle: string;
 
   public readonly editCurrencyPage: string;
+
   public readonly resetCurrencyFormatMessage: string;
 
   private readonly currencySelect: string;
