@@ -70,7 +70,7 @@ class ConditionsType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
             ])
-            ->add('restrictions', RestrictionsType::class)
+            //@todo: Restrictions not handled. Will be in separate PR.
         ;
     }
 }

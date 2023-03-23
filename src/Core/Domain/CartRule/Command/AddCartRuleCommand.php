@@ -66,36 +66,6 @@ class AddCartRuleCommand
     private $customerId;
 
     /**
-     * @var bool
-     */
-    private $hasCountryRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasCarrierRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasGroupRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasCartRuleRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasProductRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasShopRestriction = false;
-
-    /**
      * @var array
      */
     private $localizedNames;
@@ -263,54 +233,6 @@ class AddCartRuleCommand
     }
 
     /**
-     * @return bool
-     */
-    public function hasCountryRestriction(): bool
-    {
-        return $this->hasCountryRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasCarrierRestriction(): bool
-    {
-        return $this->hasCarrierRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasGroupRestriction(): bool
-    {
-        return $this->hasGroupRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasCartRuleRestriction(): bool
-    {
-        return $this->hasCartRuleRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasProductRestriction(): bool
-    {
-        return $this->hasProductRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasShopRestriction(): bool
-    {
-        return $this->hasShopRestriction;
-    }
-
-    /**
      * @return array
      */
     public function getLocalizedNames(): array
@@ -422,78 +344,6 @@ class AddCartRuleCommand
     public function setCustomerId(int $customerId): AddCartRuleCommand
     {
         $this->customerId = new CustomerId($customerId);
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasCountryRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasCountryRestriction(bool $hasCountryRestriction): AddCartRuleCommand
-    {
-        $this->hasCountryRestriction = $hasCountryRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasCarrierRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasCarrierRestriction(bool $hasCarrierRestriction): AddCartRuleCommand
-    {
-        $this->hasCarrierRestriction = $hasCarrierRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasGroupRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasGroupRestriction(bool $hasGroupRestriction): AddCartRuleCommand
-    {
-        $this->hasGroupRestriction = $hasGroupRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasCartRuleRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasCartRuleRestriction(bool $hasCartRuleRestriction): AddCartRuleCommand
-    {
-        $this->hasCartRuleRestriction = $hasCartRuleRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasProductRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasProductRestriction(bool $hasProductRestriction): AddCartRuleCommand
-    {
-        $this->hasProductRestriction = $hasProductRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasShopRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasShopRestriction(bool $hasShopRestriction): AddCartRuleCommand
-    {
-        $this->hasShopRestriction = $hasShopRestriction;
 
         return $this;
     }

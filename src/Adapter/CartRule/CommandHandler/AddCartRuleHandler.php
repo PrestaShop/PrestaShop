@@ -112,13 +112,6 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
 
         $cartRule->quantity = $command->getTotalQuantity();
         $cartRule->quantity_per_user = $command->getQuantityPerUser();
-
-        $cartRule->country_restriction = $command->hasCountryRestriction();
-        $cartRule->carrier_restriction = $command->hasCarrierRestriction();
-        $cartRule->group_restriction = $command->hasGroupRestriction();
-        $cartRule->cart_rule_restriction = $command->hasCartRuleRestriction();
-        $cartRule->product_restriction = $command->hasProductRestriction();
-        $cartRule->shop_restriction = $command->hasShopRestriction();
     }
 
     /**
