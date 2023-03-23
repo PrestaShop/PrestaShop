@@ -13,6 +13,8 @@ class ViewCustomer extends BOBasePage {
 
   public readonly forwardMessageSuccessMessage: string;
 
+  public readonly messageSuccessfullySend: string;
+
   private readonly threadBadge: string;
 
   private readonly messagesThreadDiv: string;
@@ -46,6 +48,7 @@ class ViewCustomer extends BOBasePage {
 
     this.pageTitle = `View • ${global.INSTALL.SHOP_NAME}`;
     this.forwardMessageSuccessMessage = 'Message forwarded to';
+    this.messageSuccessfullySend = 'The message was successfully sent to the customer.';
 
     // Selectors
     this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
@@ -93,35 +96,6 @@ class ViewCustomer extends BOBasePage {
    */
   getAttachedFileHref(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.attachmentLink, 'href');
-  }
-
-  // Your answer form
-  /**
-   * Get your answer form title
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  getYourAnswerFormTitle(page: Page): Promise<string> {
-    return this.getTextContent(page, this.yourAnswerFormTitle);
-  }
-
-  /**
-   * Get your answer form content
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  getYourAnswerFormContent(page: Page): Promise<string> {
-    return this.getTextContent(page, this.yourAnswerFormTextarea);
-  }
-
-  // Orders and messages timeline form
-  /**
-   * Get orders and messages form content
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  getOrdersAndMessagesTimeline(page: Page): Promise<string> {
-    return this.getTextContent(page, this.ordersAndMessagesBlock);
   }
 
   /**
@@ -176,7 +150,8 @@ class ViewCustomer extends BOBasePage {
   /**
    * Forward message
    * @param page {Page} Browser tab
-   * @param messageData
+   * @param messageData {MessageData} Message data to set
+   * @returns {Promise<string>}
    */
   async forwardMessage(page: Page, messageData: MessageData): Promise<string> {
     await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employee);
@@ -185,6 +160,48 @@ class ViewCustomer extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.forwardModalSendButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  // Your answer form
+  /**
+   * Get your answer form title
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getYourAnswerFormTitle(page: Page): Promise<string> {
+    return this.getTextContent(page, this.yourAnswerFormTitle);
+  }
+
+  /**
+   * Get your answer form content
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getYourAnswerFormContent(page: Page): Promise<string> {
+    return this.getTextContent(page, this.yourAnswerFormTextarea);
+  }
+
+  /**
+   * Add response to customer
+   * @param page {Page} Browser tab
+   * @param response {string} response to set to the customer
+   * @returns {Promise<string>}
+   */
+  async addResponse(page: Page, response: string): Promise<string> {
+    await this.setValue(page, this.yourAnswerFormTextarea, response);
+    await this.waitForSelectorAndClick(page, '#main-div > div > form > div > div.card-footer > div > button');
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  // Orders and messages timeline form
+  /**
+   * Get orders and messages form content
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getOrdersAndMessagesTimeline(page: Page): Promise<string> {
+    return this.getTextContent(page, this.ordersAndMessagesBlock);
   }
 }
 
