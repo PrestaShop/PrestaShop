@@ -2,8 +2,9 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.cart_rule.command_handler.add_cart_rule_handler:
-    class: PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\AddCartRuleHandler
+  PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\AddCartRuleHandler:
+    autowire: true
+    public: false
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand }
 
@@ -44,3 +45,11 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\BulkToggleCartRuleStatusHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand' }
+
+  PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository:
+    autowire: true
+    public: false

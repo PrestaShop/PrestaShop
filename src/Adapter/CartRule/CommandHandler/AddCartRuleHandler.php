@@ -28,10 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
+use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
@@ -40,25 +40,26 @@ use PrestaShopException;
 /**
  * Handles adding new cart rule using legacy logic.
  */
-final class AddCartRuleHandler implements AddCartRuleHandlerInterface
+class AddCartRuleHandler implements AddCartRuleHandlerInterface
 {
+    /**
+     * @var CartRuleRepository
+     */
+    private $cartRuleRepository;
+
+    public function __construct(
+        CartRuleRepository $cartRuleRepository
+    ) {
+        $this->cartRuleRepository = $cartRuleRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(AddCartRuleCommand $command): CartRuleId
     {
-        try {
-            $cartRule = $this->buildCartRuleFromCommandData($command);
-
-            if (false === $cartRule->validateFields(false) || false === $cartRule->validateFieldsLang(false)) {
-                throw new CartRuleConstraintException('Cart rule contains invalid field values');
-            }
-            if (false === $cartRule->add()) {
-                throw new CartRuleException('Failed to add new cart rule');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartRuleException('An error occurred when trying to add new cart rule');
-        }
+        //@todo: restrictions are missing. We should consider dedicated command for restrictions
+        $cartRule = $this->cartRuleRepository->create($this->buildCartRuleFromCommandData($command));
 
         return new CartRuleId((int) $cartRule->id);
     }
