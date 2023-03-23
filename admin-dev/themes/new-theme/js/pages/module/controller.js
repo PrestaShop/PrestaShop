@@ -956,30 +956,52 @@ class AdminModuleController {
       return;
     }
 
-    // Begin actions one after another
-    unstackModulesActions();
+    let modulesRequestedCountdown = actionMenuLinks.length - 1;
+    let spinnerObj = $('<button class="btn-primary-reverse onclick unbind spinner "></button>');
 
-    function requestModuleAction(actionMenuLink) {
-      if (self.moduleCardController.hasPendingRequest()) {
-        actionMenuLinks.push(actionMenuLink);
-        return;
-      }
+    if (actionMenuLinks.length > 1) {
+      // Loop through all the modules except the last one which waits for other
+      // requests and then call its request with cache clear enabled
+      $.each(actionMenuLinks, (index, actionMenuLink) => {
+        if (index >= actionMenuLinks.length - 1) {
+          return;
+        }
+        requestModuleAction(actionMenuLink, true, countdownModulesRequest);
+      });
+      // Display a spinner for the last module
+      const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
+      const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
+      actionMenuObj.hide();
+      actionMenuObj.after(spinnerObj);
+    } else {
+      requestModuleAction(actionMenuLinks[0]);
+    }
 
+    function requestModuleAction(actionMenuLink, disableCacheClear, requestEndCallback) {
       self.moduleCardController.requestToController(
         bulkModuleAction,
         actionMenuLink,
         forceDeletion,
-        unstackModulesActions,
+        disableCacheClear,
+        requestEndCallback,
       );
     }
 
-    function unstackModulesActions() {
-      if (actionMenuLinks.length <= 0) {
-        return;
-      }
+    function countdownModulesRequest() {
+      modulesRequestedCountdown -= 1;
+      // Now that all other modules have performed their action WITHOUT cache clear, we
+      // can request the last module request WITH cache clear
+      if (modulesRequestedCountdown <= 0) {
+        if (spinnerObj) {
+          spinnerObj.remove();
+          spinnerObj = null;
+        }
 
-      const actionMenuLink = actionMenuLinks.shift();
-      requestModuleAction(actionMenuLink);
+        const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
+        const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
+        actionMenuObj.fadeIn();
+        requestModuleAction(lastMenuLink);
+      }
     }
 
     function filterAllowedActions(actions) {

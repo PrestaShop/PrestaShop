@@ -44,6 +44,9 @@ class EventSubscriber implements EventSubscriberInterface
      */
     private $cacheClearer;
 
+    /** @var bool */
+    private $cleared = false;
+
     public function __construct(ModuleRepository $moduleRepository, SymfonyCacheClearer $cacheClearer)
     {
         $this->moduleRepository = $moduleRepository;
@@ -72,6 +75,9 @@ class EventSubscriber implements EventSubscriberInterface
     public function onModuleInstalledOrUninstalled(ModuleManagementEvent $event): void
     {
         $this->onModuleStateChanged($event);
-        $this->cacheClearer->clear();
+        if (!$this->cleared && $event->getSystemClearCache()) {
+            $this->cacheClearer->clear();
+            $this->cleared = true;
+        }
     }
 }

@@ -39,14 +39,6 @@ class AppKernel extends Kernel
     const RELEASE_VERSION = 2;
 
     /**
-     * Lock stream is saved as static field, this way if multiple AppKernel are instanciated (this can happen in
-     * test environment, they will be able to detect that a lock has already been made by the current process).
-     *
-     * @var resource|null
-     */
-    protected static $lockStream = null;
-
-    /**
      * {@inheritdoc}
      */
     public function registerBundles()
@@ -89,50 +81,8 @@ class AppKernel extends Kernel
      */
     public function boot()
     {
-        $this->waitUntilCacheClearIsOver();
         parent::boot();
         $this->cleanKernelReferences();
-    }
-
-    /**
-     * Perform a lock on a file before cache clear is performed, this lock will be unlocked once the cache has been cleared.
-     * Until then any other process will have to wait until the file is unlocked.
-     *
-     * @return bool Returns boolean indicating if the lock file was successfully locked.
-     */
-    public function locksCacheClear(): bool
-    {
-        $clearCacheLockPath = $this->getContainerClearCacheLockPath();
-        $lockStream = fopen($clearCacheLockPath, 'w');
-        if (false === $lockStream) {
-            // Could not open writable lock for some reason
-            return false;
-        }
-
-        // Non-blocking flock, if false is returned it means the file is already locked (meaning the cache is being cleared by another process)
-        $clearCacheLocked = flock($lockStream, LOCK_EX | LOCK_NB);
-        if (false === $clearCacheLocked) {
-            // Clear cache is already locked by another process, so we simply return
-            fclose($lockStream);
-            return false;
-        }
-
-        // Save the locked stream so that we can close it later and most importantly, the process doesn't block it self
-        // during the cache clear operation which reboots the app
-        self::$lockStream = $lockStream;
-
-        return true;
-    }
-
-    public function unlocksCacheClear(): void
-    {
-        if (null === self::$lockStream) {
-            return;
-        }
-
-        flock(self::$lockStream, LOCK_UN);
-        fclose(self::$lockStream);
-        self::$lockStream = null;
     }
 
     /**
@@ -269,38 +219,5 @@ class AppKernel extends Kernel
         }
 
         return $activeModules;
-    }
-
-    protected function getContainerClearCacheLockPath(): string
-    {
-        $class = $this->getContainerClass();
-        $cacheDir = $this->getCacheDir();
-
-        return sprintf('%s/%s.php.cache_clear.lock', $cacheDir, $class);
-    }
-
-    protected function waitUntilCacheClearIsOver(): void
-    {
-        if (null !== self::$lockStream) {
-            // If lockStream is not null it means we are actually in the process that locked it, we don't wait for anything
-            // or the cache clear will never happen
-            return;
-        }
-
-        $clearCacheLockPath = $this->getContainerClearCacheLockPath();
-        $lockStream = fopen($clearCacheLockPath, 'w');
-        if (false === $lockStream) {
-            // Could not open writable lock for some reason
-            return;
-        }
-
-        // Check if the lock file is currently locked (see locksCacheClear responsible for locking this file), this
-        // function call is blocking until the lock has been released.
-        flock($lockStream, LOCK_SH);
-
-        // Now that the file is unlocked it means the cache has been cleared we can safely continue the process as the container
-        // has been rebuilt and is good to go.
-        flock($lockStream, LOCK_UN);
-        fclose($lockStream);
     }
 }
