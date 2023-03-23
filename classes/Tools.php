@@ -954,23 +954,6 @@ class ToolsCore
     }
 
     /**
-     * @deprecated Since 8.0.0
-     */
-    public static function safePostVars()
-    {
-        @trigger_error(
-            'Tools::safePostVars() is deprecated since version 8.0.0.',
-            E_USER_DEPRECATED
-        );
-
-        if (!is_array($_POST)) {
-            $_POST = [];
-        } else {
-            $_POST = array_map(['Tools', 'htmlentitiesUTF8'], $_POST);
-        }
-    }
-
-    /**
      * Delete directory and subdirectories.
      *
      * @param string $dirname Directory name
@@ -1541,20 +1524,6 @@ class ToolsCore
         $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
 
         return mb_strlen($str, $encoding);
-    }
-
-    /**
-     * @deprecated Since 8.0.0
-     */
-    public static function stripslashes($string)
-    {
-        @trigger_error(
-            'Tools::stripslashes() is deprecated since version 8.0.0.'
-            . 'Use PHP\'s stripslashes instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $string;
     }
 
     public static function strtoupper($str)
