@@ -191,7 +191,7 @@ class ViewCustomer extends BOBasePage {
    */
   async addResponse(page: Page, response: string): Promise<string> {
     await this.setValue(page, this.yourAnswerFormTextarea, response);
-    await this.waitForSelectorAndClick(page, '#main-div > div > form > div > div.card-footer > div > button');
+    await this.waitForSelectorAndClick(page, this.sendMessageButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
