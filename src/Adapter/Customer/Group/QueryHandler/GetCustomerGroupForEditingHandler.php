@@ -56,8 +56,6 @@ class GetCustomerGroupForEditingHandler implements GetCustomerGroupForEditingHan
     public function handle(GetCustomerGroupForEditing $query): EditableCustomerGroup
     {
         $customerGroupId = $query->getCustomerGroupId();
-        $this->customerGroupRepository->assertGroupExists($customerGroupId);
-
         $customerGroup = $this->customerGroupRepository->get($customerGroupId);
 
         return new EditableCustomerGroup(
