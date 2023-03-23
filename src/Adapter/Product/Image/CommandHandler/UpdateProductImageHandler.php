@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
@@ -37,12 +37,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\UpdateProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
 {
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
@@ -62,13 +61,13 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
     private $imageValidator;
 
     /**
-     * @param ProductImageMultiShopRepository $productImageRepository
+     * @param ProductImageRepository $productImageRepository
      * @param ProductImageUpdater $productImageUpdater
      * @param ProductImageUploader $productImageUploader
      * @param ProductImageFileValidator $imageValidator
      */
     public function __construct(
-        ProductImageMultiShopRepository $productImageRepository,
+        ProductImageRepository $productImageRepository,
         ProductImageUpdater $productImageUpdater,
         ProductImageUploader $productImageUploader,
         ProductImageFileValidator $imageValidator

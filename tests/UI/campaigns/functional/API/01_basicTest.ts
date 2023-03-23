@@ -6,7 +6,7 @@ import {request, APIRequestContext} from 'playwright';
 
 const baseContext: string = 'functional_API_basicTest';
 
-describe('BO - API : Basic Test', async () => {
+describe('API : Basic Test', async () => {
   let apiContext: APIRequestContext;
 
   before(async () => {

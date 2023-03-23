@@ -10,4 +10,11 @@ type ImageTypeCreator = {
   storesStatus?: boolean
 };
 
-export default ImageTypeCreator;
+type ImageTypeRegenerationSpecific = 'categories'|'manufacturers'|'suppliers'|'products'|'stores';
+type ImageTypeRegeneration = 'categories'|'manufacturers'|'suppliers'|'products'|'stores'|'all';
+
+export {
+  ImageTypeCreator,
+  ImageTypeRegeneration,
+  ImageTypeRegenerationSpecific,
+};

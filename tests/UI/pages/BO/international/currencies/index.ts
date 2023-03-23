@@ -16,6 +16,8 @@ class Currencies extends LocalizationBasePage {
 
   public readonly cannotDisableDefaultCurrencyMessage: string;
 
+  public readonly cannotDeleteDefaultCurrencyMessage: string;
+
   private readonly newCurrencyLink: string;
 
   private readonly gridPanel: string;
@@ -23,6 +25,14 @@ class Currencies extends LocalizationBasePage {
   private readonly gridTable: string;
 
   private readonly gridHeaderTitle: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly enableSelectionButton: string;
+
+  private readonly disableSelectionButton: string;
+
+  private readonly deleteSelectionButton: string;
 
   private readonly filterColumn: (filterBy: string) => string;
 
@@ -37,6 +47,10 @@ class Currencies extends LocalizationBasePage {
   private readonly tableEmptyRow: string;
 
   private readonly tableColumn: (row: number, column: string) => string;
+
+  private readonly bulkSelectColumn: (row: number) => string;
+
+  private readonly bulkSelectColumnCheckbox: (row: number) => string;
 
   private readonly statusColumn: (row: number) => string;
 
@@ -82,6 +96,7 @@ class Currencies extends LocalizationBasePage {
     this.pageTitle = 'Currencies • ';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
     this.cannotDisableDefaultCurrencyMessage = 'You cannot disable the default currency';
+    this.cannotDeleteDefaultCurrencyMessage = 'You cannot delete the default currency';
 
     // Header Selectors
     this.newCurrencyLink = '#page-header-desc-configuration-add';
@@ -90,6 +105,12 @@ class Currencies extends LocalizationBasePage {
     this.gridPanel = '#currency_grid_panel';
     this.gridTable = '#currency_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+
+    // Bulk
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.enableSelectionButton = `${this.gridPanel} #currency_grid_bulk_action_enable_selection`;
+    this.disableSelectionButton = `${this.gridPanel} #currency_grid_bulk_action_disable_selection`;
+    this.deleteSelectionButton = `${this.gridPanel} #currency_grid_bulk_action_delete_selection`;
 
     // Filters
     this.filterColumn = (filterBy: string) => `${this.gridTable} #currency_${filterBy}`;
@@ -101,12 +122,14 @@ class Currencies extends LocalizationBasePage {
     this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
-    // enable column
+    // Column Bulk Select
+    this.bulkSelectColumn = (row: number) => this.tableColumn(row, 'currency_bulk');
+    this.bulkSelectColumnCheckbox = (row: number) => `${this.bulkSelectColumn(row)} .md-checkbox label`;
+    // Column Enabled
     this.statusColumn = (row: number) => `${this.tableColumn(row, 'active')} .ps-switch`;
     this.statusColumnToggleInput = (row: number) => `${this.statusColumn(row)} input`;
-
-    // Actions buttons in row
-    this.actionsColumn = (row: number) => `${this.tableRow(row)} td.column-actions`;
+    // Columns Actions
+    this.actionsColumn = (row: number) => this.tableColumn(row, 'actions');
     this.dropdownToggleButton = (row: number) => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (row: number) => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = (row: number) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
@@ -270,6 +293,45 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
+   * Select Row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to delete
+   * @returns {Promise<void>}
+   */
+  async selectRow(page: Page, row: number): Promise<void> {
+    await page.$eval(this.bulkSelectColumnCheckbox(row), (el: HTMLElement) => el.click());
+  }
+
+  /**
+   * Returns if the button for "Bulk Actions" is enabled
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async isBulkActionsEnabled(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.bulkActionsToggleButton}:not([disabled])`, 1000);
+  }
+
+  /**
+   * Delete all Taxes with Bulk Actions
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteCurrencies(page: Page): Promise<string> {
+    // Click on Button Bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteSelectionButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
    * Delete Row in table
    * @param page {Page} Browser tab
    * @param row {number} Row on table to delete
@@ -290,7 +352,10 @@ class Currencies extends LocalizationBasePage {
     ]);
     await this.confirmDeleteCurrency(page);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    if (await this.elementVisible(page, this.alertSuccessBlockParagraph, 2000)) {
+      return this.getAlertSuccessBlockParagraphContent(page);
+    }
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**

@@ -77,6 +77,7 @@ class ButtonCollectionType extends AbstractType
         $view->vars['justify_content'] = $options['justify_content'];
         $view->vars['inline_buttons_limit'] = $options['inline_buttons_limit'];
         $view->vars['use_inline_labels'] = $options['use_inline_labels'];
+        $view->vars['use_button_groups'] = $options['use_button_groups'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -88,6 +89,8 @@ class ButtonCollectionType extends AbstractType
                 'justify_content' => 'space-between',
                 'inline_buttons_limit' => null,
                 'use_inline_labels' => true,
+                // Use bootstrap buttons groups (buttons stick to each other as a group)
+                'use_button_groups' => false,
             ])
             ->setAllowedTypes('buttons', 'array')
             ->setAllowedTypes('inline_buttons_limit', ['int', 'null'])

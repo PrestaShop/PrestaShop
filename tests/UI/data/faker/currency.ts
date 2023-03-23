@@ -1,4 +1,4 @@
-import type CurrencyCreator from '@data/types/currency';
+import type {CurrencyCreator} from '@data/types/currency';
 
 import {faker} from '@faker-js/faker';
 

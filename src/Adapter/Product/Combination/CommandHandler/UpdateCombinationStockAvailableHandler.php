@@ -65,18 +65,9 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
             $stockModification = StockModification::buildFixedQuantity($command->getFixedQuantity());
         }
 
-        // Now we only fill the properties existing in StockAvailable object model.
-        // Other properties related to stock (which exists in Combination object model) should be taken care by a unified UpdateProductCommand.
-        // @todo: once the unification is done this should be refacto as the CombinationStockProperties contains too many fields now
         $properties = new CombinationStockProperties(
             $stockModification,
-            null,
-            $command->getLocation(),
-            null,
-            null,
-            null,
-            null,
-            null
+            $command->getLocation()
         );
 
         $this->combinationStockUpdater->update($command->getCombinationId(), $properties, $command->getShopConstraint());

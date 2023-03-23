@@ -44,7 +44,7 @@ export default {
     refreshPage: 'refreshPage',
     refreshCombinationList: 'refreshCombinationList',
     listEditionMode: 'listEditionMode',
-    updateAttributeGroups: 'updateAttributeGroups',
+    updateAttributeFilters: 'updateAttributeFilters',
     combinationGeneratorReady: 'combinationGeneratorReady',
     openCombinationsGenerator: 'openCombinationsGenerator',
     clearFilters: 'clearFilters',
@@ -57,7 +57,6 @@ export default {
     combinationDeleted: 'combinationDeleted',
     combinationSwitchDeltaQuantity: 'combinationSwitchDeltaQuantity',
     combinationSwitchFixedQuantity: 'combinationSwitchFixedQuantity',
-    clearAllCombinationFilters: 'clearAllCombinationFilters',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',

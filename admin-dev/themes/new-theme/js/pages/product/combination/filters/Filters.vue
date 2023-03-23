@@ -33,15 +33,15 @@
       class="combinations-filters-line"
       v-if="filters.length"
     >
-      <filter-dropdown
-        :key="filter.id"
+      <checkboxes-dropdown
         v-for="filter in filters"
-        :children="filter.attributes"
+        :key="filter.id"
         :parent-id="filter.id"
         :label="filter.name"
-        @addFilter="addFilter"
-        @removeFilter="removeFilter"
-        :event-emitter="eventEmitter"
+        :choices="filter.attributes"
+        :selected-choice-ids="selectedFilterIds[filter.id]"
+        @selectChoice="addFilter"
+        @unselectChoice="removeFilter"
       />
       <button
         type="button"
@@ -57,81 +57,109 @@
 </template>
 
 <script lang="ts">
-  import FilterDropdown from '@pages/product/combination/filters/FilterDropdown.vue';
-  import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
+  import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
+  import EventEmitter from '@components/event-emitter';
+  import ProductEventMap from '@pages/product/product-event-map';
+  import ProductMap from '@pages/product/product-map';
+  import {Attribute, AttributeGroup} from '@pages/product/combination/types';
+  import {Choice} from '@app/components/checkboxes-dropdown/types';
 
   const CombinationEvents = ProductEventMap.combinations;
 
+  interface Filter {
+    id: number;
+    name: string;
+    attributes: Choice[];
+  }
+
   export default defineComponent({
     name: 'Filters',
-    data(): {selectedFilters: Record<string, any>} {
+    data(): {
+      selectedFilterIds: Array<number[]>,
+      filters: Filter[],
+    } {
       return {
-        selectedFilters: {},
+        selectedFilterIds: [],
+        filters: [],
       };
     },
     props: {
-      filters: {
-        type: Array as PropType<Array<Record<string, any>>>,
+      attributeGroups: {
+        type: Array as PropType<AttributeGroup[]>,
         required: true,
       },
       eventEmitter: {
-        type: Object,
+        type: Object as PropType<typeof EventEmitter>,
         required: true,
       },
     },
     components: {
-      FilterDropdown,
+      CheckboxesDropdown,
     },
     computed: {
       selectedFiltersNumber(): number {
-        if (!this.selectedFilters) {
+        if (!this.selectedFilterIds) {
           return 0;
         }
 
-        return Object.values(this.selectedFilters).reduce<number>((total, attributes) => total + attributes.length, 0);
+        return this.selectedFilterIds.reduce<number>((total: number, ids: number[]) => total + ids.length, 0);
       },
     },
     mounted() {
       this.eventEmitter.on(CombinationEvents.clearFilters, () => this.clearAll());
+      // remap attribute groups to fit format for checkboxes-dropdown component
+      this.filters = this.attributeGroups.map((attributeGroup: AttributeGroup): Filter => ({
+        id: attributeGroup.id,
+        name: attributeGroup.name,
+        attributes: attributeGroup.attributes.map((attribute: Attribute): Choice => ({
+          id: attribute.id,
+          label: attribute.name,
+          // this name will be inserted as <input> name,
+          // so we can use it to exclude these checkboxes from listening onchange event when updating save button state
+          name: ProductMap.combinations.list.attributeFilterInputName,
+        })),
+      }));
     },
     methods: {
-      /**
-       * This methods is used to initialize product filters
-       */
-      addFilter(filter: Record<string, any>, parentId: number): void {
-        // If absent set new field with set method so that it's reactive
-        if (!this.selectedFilters[parentId]) {
-          this.selectedFilters[parentId] = [];
+      getSelectedIds(parentId: number): number[] {
+        if (this.selectedFilterIds[parentId]) {
+          return this.selectedFilterIds[parentId];
         }
 
-        this.selectedFilters[parentId].push(filter);
+        return [];
+      },
+      addFilter(filter: Choice, parentId: number): void {
+        // If absent set new field with set method so that it's reactive
+        if (!this.selectedFilterIds[parentId]) {
+          this.selectedFilterIds[parentId] = [];
+        }
+
+        this.selectedFilterIds[parentId].push(filter.id);
         this.updateFilters();
       },
-      removeFilter(filter: Record<string, any>, parentId: number): void {
-        if (!this.selectedFilters[parentId]) {
+      removeFilter(filter: Choice, parentId: number): void {
+        if (!this.selectedFilterIds[parentId]) {
           return;
         }
 
-        this.selectedFilters[parentId] = this.selectedFilters[parentId].filter(
-          (e: Record<string, any>) => filter.id !== e.id,
+        this.selectedFilterIds[parentId] = this.selectedFilterIds[parentId].filter(
+          (id: number) => filter.id !== id,
         );
 
-        if (this.selectedFilters[parentId].length === 0) {
+        if (this.selectedFilterIds[parentId].length === 0) {
           // remove parent array if it became empty after filters removal
-          this.selectedFilters.splice(parentId, 1);
+          delete this.selectedFilterIds[parentId];
         }
 
         this.updateFilters();
       },
       clearAll(): void {
-        this.selectedFilters = [];
-        this.$emit('clearAll');
-        this.eventEmitter.emit(CombinationEvents.clearAllCombinationFilters);
-        this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
+        this.selectedFilterIds = [];
+        this.eventEmitter.emit(CombinationEvents.updateAttributeFilters, []);
       },
       updateFilters(): void {
-        this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
+        this.eventEmitter.emit(CombinationEvents.updateAttributeFilters, this.selectedFilterIds);
       },
     },
   });

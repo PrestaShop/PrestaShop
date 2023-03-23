@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,6 +24,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
@@ -376,7 +378,8 @@ class FrontControllerCore extends Controller
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
-            } elseif ((int) (Configuration::get('PS_GEOLOCATION_ENABLED'))
+            } elseif (
+                (int) (Configuration::get('PS_GEOLOCATION_ENABLED'))
                 && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
                 && $cart->nbProducts()
                 && (int) (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
@@ -386,7 +389,11 @@ class FrontControllerCore extends Controller
                 /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart);
-            } elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency) {
+            } elseif (
+                $this->context->cookie->id_customer != $cart->id_customer
+                || $this->context->cookie->id_lang != $cart->id_lang
+                || $currency->id != $cart->id_currency
+            ) {
                 // update cart values
                 if ($this->context->cookie->id_customer) {
                     $cart->id_customer = (int) $this->context->cookie->id_customer;
@@ -396,8 +403,11 @@ class FrontControllerCore extends Controller
                 $cart->update();
             }
             /* Select an address if not set */
-            if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+            if (
+                isset($cart)
+                && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 || !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)
+                && $this->context->cookie->id_customer
+            ) {
                 $to_update = false;
                 if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
                     $to_update = true;
@@ -1436,6 +1446,8 @@ class FrontControllerCore extends Controller
     /**
      * Renders and adds color list HTML for each product in a list.
      *
+     * @deprecated since 8.1 and will be removed in next major version.
+     *
      * @param array $products
      */
     public function addColorsToProductList(&$products)
@@ -1473,6 +1485,8 @@ class FrontControllerCore extends Controller
 
     /**
      * Returns cache ID for product color list.
+     *
+     * @deprecated since 8.1 and will be removed in next major version.
      *
      * @param int $id_product
      *
@@ -2133,7 +2147,8 @@ class FrontControllerCore extends Controller
         $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
         $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
         foreach ($_GET as $key => $value) {
-            if (in_array($key, $excluded_key)
+            if (
+                in_array($key, $excluded_key)
                 || !Validate::isUrl($key)
                 || !$this->validateInputAsUrl($value)
             ) {

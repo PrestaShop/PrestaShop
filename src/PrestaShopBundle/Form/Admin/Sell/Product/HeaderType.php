@@ -82,11 +82,6 @@ class HeaderType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
-                'help' => $this->trans(
-                    'Invalid characters are: %invalidCharacters%',
-                    'Admin.Catalog.Feature',
-                    ['%invalidCharacters%' => '<>;=#{}']
-                ),
                 'constraints' => $options['active'] ? [new DefaultLanguage()] : [],
                 'options' => [
                     'constraints' => [

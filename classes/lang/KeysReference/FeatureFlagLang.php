@@ -80,10 +80,6 @@ trans('Enable / Disable the migrated titles page.', 'Admin.Advparameters.Help');
 trans('Permissions', 'Admin.Advaparameters.Feature');
 trans('Enable / Disable the migrated permissions page.', 'Admin.Advparameters.Help');
 
-// Features feature flag
-trans('Features', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated features page.', 'Admin.Advparameters.Help');
-
 // Tax rule groups feature flag
 trans('Tax rule groups', 'Admin.Advaparameters.Feature');
 trans('Enable / Disable the migrated tax rules page.', 'Admin.Advparameters.Help');

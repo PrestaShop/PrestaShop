@@ -1,19 +1,18 @@
 # To get started with security, check out the documentation:
-# http://symfony.com/doc/current/book/security.html
+# https://symfony.com/doc/current/security.html
 security:
 
-  # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
   providers:
     in_memory:
       memory: ~
     admin:
       id: prestashop.security.admin.provider
 
-    # Temporary provider & encoder to be able to use the new BO API in dev mode
+    # Empty provider until a real provider is developed
     oauth2:
       memory:
         users:
-          my_client_id: { password: 'prestashop' }
 
   encoders:
     Symfony\Component\Security\Core\User\User: plaintext

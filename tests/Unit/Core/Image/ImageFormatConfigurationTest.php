@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 class ImageFormatConfigurationTest extends TestCase
 {
     /**
-     * @dataProvider testGetGenerationFormatsProvider
+     * @dataProvider getGenerationFormatsProvider
      *
      * @param string $confData
      * @param array $expectedResult
@@ -117,7 +117,7 @@ class ImageFormatConfigurationTest extends TestCase
     /**
      * @return array[]
      */
-    public function testGetGenerationFormatsProvider(): array
+    public function getGenerationFormatsProvider(): array
     {
         return [
             ['jpg,png,webp', ['jpg', 'png', 'webp']],

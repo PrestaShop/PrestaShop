@@ -301,7 +301,7 @@ class Products extends BOBasePage {
   async getProductPriceFromList(page: Page, row: number, withTaxes: boolean): Promise<number> {
     const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPrice;
     const text = await this.getTextContent(page, selector(row));
-    const priceRegex: RegExpMatchArray|null = /\d+(\.\d+)?/g.exec(text);
+    const priceRegex: RegExpMatchArray | null = /\d+(\.\d+)?/g.exec(text);
     const price: string = priceRegex === null ? '0' : priceRegex.toString();
 
     return parseFloat(price);
@@ -354,7 +354,7 @@ class Products extends BOBasePage {
    * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
-  async filterProducts(page: Page, filterBy: string, value: object|string = '', filterType: string = 'input') {
+  async filterProducts(page: Page, filterBy: string, value: object | string = '', filterType: string = 'input') {
     switch (filterType) {
       case 'input':
         switch (filterBy) {
@@ -368,7 +368,7 @@ class Products extends BOBasePage {
             await this.filterQuantityProducts(page, value.min, value.max);
             break;
           default:
-            await page.type(this.productFilterInput(filterBy), value);
+            await this.setValue(page, this.productFilterInput(filterBy), value);
         }
         break;
       case 'select':

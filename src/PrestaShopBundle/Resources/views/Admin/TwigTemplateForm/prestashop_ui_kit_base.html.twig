@@ -1510,7 +1510,7 @@
   }) -%}
   <div {{ block('widget_attributes') }}>
     {% for group, buttons in button_groups %}
-      <div class="btn-group group-{{ group }}">
+      <div class="{% if use_button_groups %}btn-group {% endif %}group-{{ group }}">
         {# Render inline actions #}
         {% set inlineButtonsLimit = form.vars.inline_buttons_limit %}
         {% for action in form.children %}
@@ -1527,7 +1527,7 @@
 
         {# Render remaining actions in dropdown #}
         {% if inlineButtonsLimit is not same as(null) and form.children|length > inlineButtonsLimit %}
-          <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
+          <a id="{{ form.vars.id }}_dropdown" class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
              data-toggle="dropdown"
              aria-haspopup="true"
              aria-expanded="false"

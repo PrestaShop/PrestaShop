@@ -58,7 +58,7 @@ class FeatureFlag extends BOBasePage {
 
     switch (featureFlag) {
       case this.featureFlagMultipleImageFormats:
-        isStable = false;
+        isStable = true;
         break;
       case this.featureFlagProductPageV2:
         isStable = true;

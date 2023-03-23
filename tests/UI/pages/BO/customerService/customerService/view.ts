@@ -16,7 +16,7 @@ class ViewCustomer extends BOBasePage {
 
   private readonly attachmentLink: string;
 
-  private readonly statusButton: (statusName: string) => string;
+  private readonly statusButton: (statusID: number) => string;
 
   private readonly yourAnswerFormTitle: string;
 
@@ -111,35 +111,35 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setStatus(page: Page, status: string): Promise<string> {
-    let statusName: string;
+    let statusID: number = 0;
 
     switch (status) {
       case 'Re-open':
-        statusName = 'open';
+        statusID = 1;
         break;
 
       case 'Handled':
-        statusName = 'closed';
+        statusID = 2;
         break;
 
       case 'Pending 1':
-        statusName = 'pending1';
+        statusID = 3;
         break;
 
       case 'Pending 2':
-        statusName = 'pending2';
+        statusID = 4;
         break;
 
       default:
         throw new Error(`Status ${status} was not found`);
     }
 
-    await this.waitForSelectorAndClick(page, this.statusButton(statusName));
+    await this.waitForSelectorAndClick(page, this.statusButton(statusID));
 
     if (status === 'Re-open') {
-      return this.getTextContent(page, this.statusButton('closed'));
+      return this.getTextContent(page, this.statusButton(2));
     }
-    return this.getTextContent(page, this.statusButton('open'));
+    return this.getTextContent(page, this.statusButton(1));
   }
 }
 
