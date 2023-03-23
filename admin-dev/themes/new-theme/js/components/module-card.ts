@@ -86,6 +86,8 @@ export default class ModuleCard {
 
   forceDeletionOption: string;
 
+  private pendingRequest: boolean = false;
+
   constructor() {
     /* Selectors for module action links (uninstall, reset, etc...) to add a confirm popin */
     this.moduleActionMenuLinkSelector = 'button.module_action_menu_';
@@ -352,13 +354,24 @@ export default class ModuleCard {
     return event.result !== false; // explicit false must be set from handlers to stop propagation of the click event.
   }
 
+  hasPendingRequest(): boolean {
+    return this.pendingRequest;
+  }
+
   requestToController(
     action: string,
     element: JQuery,
     forceDeletion: string | boolean = false,
-    disableCacheClear: string | boolean = false,
     callback = () => true,
   ): boolean {
+    if (this.pendingRequest) {
+      $.growl.warning({
+        message: window.translate_javascripts['An action is already in progress please wait for it to finish.'],
+      });
+      return false;
+    }
+
+    this.pendingRequest = true;
     const self = this;
     let jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
@@ -371,12 +384,6 @@ export default class ModuleCard {
 
     if (forceDeletion === 'true' || forceDeletion === true) {
       actionParams.push({name: 'actionParams[deletion]', value: 'true'});
-    }
-    if (disableCacheClear === 'true' || disableCacheClear === true) {
-      actionParams.push({
-        name: 'actionParams[cacheClearEnabled]',
-        value: 'false',
-      });
     }
 
     $.ajax({
@@ -471,6 +478,8 @@ export default class ModuleCard {
         }
         jqElementObj.fadeIn();
         spinnerObj.remove();
+        this.pendingRequest = false;
+
         if (callback) {
           callback();
         }

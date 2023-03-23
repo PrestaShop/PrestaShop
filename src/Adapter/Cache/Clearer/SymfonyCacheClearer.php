@@ -26,13 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
+use AppKernel;
 use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Tools;
 
 /**
  * Class SymfonyCacheClearer clears Symfony cache directly from filesystem.
@@ -41,32 +40,27 @@ use Tools;
  */
 final class SymfonyCacheClearer implements CacheClearerInterface
 {
-    private $shutdownRegistered = false;
-
     /**
      * {@inheritdoc}
      */
     public function clear()
     {
-        /*  @var KernelInterface */
+        /* @var AppKernel */
         global $kernel;
-
-        if (empty($kernel)) {
-            Tools::clearSf2Cache();
-
+        if (!$kernel) {
             return;
         }
 
-        if ($this->shutdownRegistered) {
+        $cacheClearLocked = $kernel->locksCacheClear();
+        if (false === $cacheClearLocked) {
+            // The lock was not possible for some reason we should exit
             return;
         }
 
-        $this->shutdownRegistered = true;
+        // If we reach here it means the clear lock file is locked, we register a shutdown function that will clear the cache once
+        // the current process is over.
         register_shutdown_function(function () use ($kernel) {
-            // The cache may have been removed by Tools::clearSf2Cache, it happens during install
-            // process, in which case we don't run the cache:clear command because it is not only
-            // useless it will simply fail as the container caches classes have been removed
-            $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . _PS_ENV_ . '/';
+            $cacheDir = $kernel->getCacheDir();
             if (!file_exists($cacheDir)) {
                 return;
             }
@@ -78,13 +72,18 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             $input = new ArrayInput([
                 'command' => 'cache:clear',
                 '--no-optional-warmers' => true,
-                '--env' => _PS_ENV_,
+                '--env' => $kernel->getEnvironment(),
             ]);
 
             $output = new NullOutput();
             $application->run($input, $output);
 
             Hook::exec('actionClearSf2Cache');
+        });
+
+        // Unlock is registered in another separate function to make sure it will be called no matter what
+        register_shutdown_function(function () use ($kernel) {
+            $kernel->unlocksCacheClear();
         });
     }
 }
