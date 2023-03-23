@@ -53,11 +53,11 @@ class ProductDeleter
 
     public function __construct(
         ProductRepository $productRepository,
-        CombinationRepository $combinationMultiShopRepository,
+        CombinationRepository $combinationRepository,
         ProductImageRepository $productImageRepository
     ) {
         $this->productRepository = $productRepository;
-        $this->combinationRepository = $combinationMultiShopRepository;
+        $this->combinationRepository = $combinationRepository;
         $this->productImageRepository = $productImageRepository;
     }
 
