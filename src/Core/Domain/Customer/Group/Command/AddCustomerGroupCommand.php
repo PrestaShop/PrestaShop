@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\InvalidReductionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
@@ -41,7 +42,7 @@ class AddCustomerGroupCommand
     /**
      * @var DecimalNumber
      */
-    private $reduction;
+    private $reductionPercent;
 
     /**
      * @var bool
@@ -60,25 +61,25 @@ class AddCustomerGroupCommand
 
     /**
      * @param string[] $localizedNames
-     * @param DecimalNumber $reduction
+     * @param DecimalNumber $reductionPercent
      * @param bool $displayPriceTaxExcluded
      * @param bool $showPrice
      * @param ShopId[] $shopIds
      */
     public function __construct(
         array $localizedNames,
-        DecimalNumber $reduction,
+        DecimalNumber $reductionPercent,
         bool $displayPriceTaxExcluded,
         bool $showPrice,
         array $shopIds
     ) {
+        $this->assertReductionIsEqualOrGreaterThanZero($reductionPercent);
+
         $this->localizedNames = $localizedNames;
-        $this->reduction = $reduction;
+        $this->reductionPercent = $reductionPercent;
         $this->displayPriceTaxExcluded = $displayPriceTaxExcluded;
         $this->showPrice = $showPrice;
         $this->shopIds = $shopIds;
-
-        $this->assertIsCorrect();
     }
 
     /**
@@ -100,9 +101,9 @@ class AddCustomerGroupCommand
     /**
      * @return DecimalNumber
      */
-    public function getReduction(): DecimalNumber
+    public function getReductionPercent(): DecimalNumber
     {
-        return $this->reduction;
+        return $this->reductionPercent;
     }
 
     /**
@@ -121,31 +122,13 @@ class AddCustomerGroupCommand
         return $this->shopIds;
     }
 
-    private function assertIsCorrect()
+    private function assertReductionIsEqualOrGreaterThanZero(DecimalNumber $reductionPercent): void
     {
-        $this->assertReductionIsEqualOrGreaterThanZero();
-    }
-
-    private function assertReductionIsEqualOrGreaterThanZero()
-    {
-        $this->assertIsPrice($this->reduction);
-    }
-
-    private function assertIsPrice(DecimalNumber $price)
-    {
-        $regexCheck = preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', (string) $price);
-        if (0 === $regexCheck || false === $regexCheck) {
-            throw new InvalidReductionException();
-        }
-
-        if ($price->isNegative()) {
-            throw new InvalidReductionException();
-        }
-
-        $integerPart = (int) $price->getIntegerPart();
-        $fractionalPart = (int) $price->getFractionalPart();
-        if ($integerPart < 0 || $integerPart > 100 || ($integerPart === 100 && $fractionalPart > 0)) {
-            throw new InvalidReductionException();
+        if ($reductionPercent->isLowerThanZero() || $reductionPercent->isGreaterThan(new DecimalNumber('100'))) {
+            throw new GroupConstraintException(
+                'Reduction percent must be between 0 and 100',
+                GroupConstraintException::INVALID_REDUCTION
+            );
         }
     }
 }

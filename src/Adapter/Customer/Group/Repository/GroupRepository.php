@@ -34,13 +34,14 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotAddGroupExc
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 
 /**
  * Provides methods to access Group data storage
  */
-class GroupRepository extends AbstractObjectModelRepository
+class GroupRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @param GroupId $customerGroupId
@@ -85,21 +86,18 @@ class GroupRepository extends AbstractObjectModelRepository
      *
      * @throws CoreException
      *
-     * @return CustomerGroup
+     * @return GroupId
      */
-    public function create(array $localizedNames, DecimalNumber $reduction, bool $priceDisplayMethod, bool $showPrices, array $shopIds): CustomerGroup
+    public function create(array $localizedNames, DecimalNumber $reduction, bool $priceDisplayMethod, bool $showPrices, array $shopIds): GroupId
     {
         $customerGroup = new CustomerGroup();
         $customerGroup->name = $localizedNames;
         $customerGroup->reduction = (string) $reduction;
         $customerGroup->price_display_method = (int) $priceDisplayMethod;
         $customerGroup->show_prices = $showPrices;
-        $customerGroup->id_shop_list = array_map(function (ShopId $shopId) {
-            return $shopId->getValue();
-        }, $shopIds);
 
-        $this->addObjectModel($customerGroup, CannotAddGroupException::class);
+        $this->addObjectModelToShops($customerGroup, $shopIds, CannotAddGroupException::class);
 
-        return $customerGroup;
+        return new GroupId((int) $customerGroup->id);;
     }
 }

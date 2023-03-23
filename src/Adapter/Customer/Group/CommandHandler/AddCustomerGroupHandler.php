@@ -46,14 +46,12 @@ class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
 
     public function handle(AddCustomerGroupCommand $command): GroupId
     {
-        $customerGroup = $this->customerGroupRepository->create(
+        return $this->customerGroupRepository->create(
             $command->getLocalizedNames(),
-            $command->getReduction(),
+            $command->getReductionPercent(),
             $command->displayPriceTaxExcluded(),
             $command->showPrice(),
             $command->getShopIds()
         );
-
-        return new GroupId((int) $customerGroup->id);
     }
 }

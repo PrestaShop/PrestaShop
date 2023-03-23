@@ -36,4 +36,6 @@ class GroupConstraintException extends GroupException
      * When invalid groupId value is provided
      */
     public const INVALID_ID = 10;
+
+    public const INVALID_REDUCTION = 20;
 }
