@@ -107,6 +107,15 @@ function deleteProductTest(productData: ProductData, baseContext: string = 'comm
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+      await productsPage.resetFilter(page);
+
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
     it('should delete product from dropdown menu', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
