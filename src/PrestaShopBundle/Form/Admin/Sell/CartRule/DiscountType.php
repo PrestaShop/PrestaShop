@@ -55,6 +55,7 @@ class DiscountType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //@todo: missing js part to adapt fields and update choices when reduction type changes
         $builder
             ->add('reduction', PriceReductionType::class, [
                 'currency_select' => true,

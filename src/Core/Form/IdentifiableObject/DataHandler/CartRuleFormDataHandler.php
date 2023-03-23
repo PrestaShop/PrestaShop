@@ -76,6 +76,10 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             $this->buildCartRuleActionForCreate($data['actions'])
         );
 
+        if (isset($data['actions']['discount']['reduction']['value'])) {
+            $command->setDiscountApplicationType($data['actions']['discount']['discount_application']);
+        }
+
         if (!empty($conditionsData['minimum_amount']['amount'])) {
             $amountData = $conditionsData['minimum_amount'];
             $command->setMinimumAmountCondition(
@@ -101,25 +105,27 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
     {
         $actionBuilder = new CartRuleActionBuilder();
 
-        if (!empty($actionsData['reduction']['value'])) {
-            $reductionType = $actionsData['reduction']['type'];
-            if ($reductionType === Reduction::TYPE_AMOUNT) {
+        if (!empty($actionsData['discount']['reduction']['value'])) {
+            $reductionData = $actionsData['discount']['reduction'];
+            if ($reductionData['type'] === Reduction::TYPE_AMOUNT) {
                 $actionBuilder->setAmountDiscount(new MoneyAmountCondition(
                     new Money(
-                        new DecimalNumber((string) $actionsData['discount']['reduction']['value']),
-                        //@todo: hardcoded currencyId & shipping because the ReductioType doesn't fit 100%,
-                        //       need to make some adjustments to include currency selection and shipping
-                        new CurrencyId(1)
+                        new DecimalNumber((string) $reductionData['value']),
+                        new CurrencyId((int) $reductionData['currency'])
                     ),
-                    $actionsData['reduction']['include_tax'],
+                    (bool) $reductionData['include_tax'],
+                    //@todo: MoneyAmountCondition is reused in both minimum_amount field and here in discount,
+                    //       however I think it should be 2 different VO's (may extend one another)
+                    //       so that $shipping doesnt hang here when its unsed in handler
+                    //
                     true
                 ));
             } else {
                 $actionBuilder->setPercentageDiscount(new PercentageDiscount(
                     //@todo: use string and DecimalNumber inside PercentageDiscount instead of float
-                    (float) $actionsData['reduction']['value'],
-                    //@todo: also missing some fields for now so hardcoded false
-                    false
+                    (float) $actionsData['discount']['reduction']['value'],
+                    //@todo: check exclude_discounted_products field maybe
+                    (bool) $actionsData['exclude_discounted_products']
                 ));
             }
         }
