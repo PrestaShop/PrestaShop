@@ -96,7 +96,7 @@ class ObjectModelTest extends TestCase
     }
 
     /**
-     * Check if html in trans is not escaped when the _raw parameter is used
+     * Check if html in trans is not escaped by trans method but escaped with htmlspecialchars on parameters
      *
      * @return void
      *
@@ -107,11 +107,11 @@ class ObjectModelTest extends TestCase
         $newObject = new TestableObjectModel();
         $transMethod = new \ReflectionMethod($newObject, 'trans');
         $transMethod->setAccessible(true);
-        $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', ['_raw' => true, 10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
 
-        $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
-        $this->assertEquals('&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;', $trans);
+        $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', [10, htmlspecialchars('<b>stringTest</b>')], 'Admin.Notifications.Success');
+        $this->assertEquals('<a href="test">10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"</a>', $trans);
     }
 
     public function testAdd(): void
