@@ -329,3 +329,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ReductionTypeChoiceProvider:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DiscountApplicationChoiceProvider:
+    autowire: true
+    public: false

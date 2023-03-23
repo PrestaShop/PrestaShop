@@ -106,7 +106,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             if ($reductionType === Reduction::TYPE_AMOUNT) {
                 $actionBuilder->setAmountDiscount(new MoneyAmountCondition(
                     new Money(
-                        new DecimalNumber((string) $actionsData['reduction']['value']),
+                        new DecimalNumber((string) $actionsData['discount']['reduction']['value']),
                         //@todo: hardcoded currencyId & shipping because the ReductioType doesn't fit 100%,
                         //       need to make some adjustments to include currency selection and shipping
                         new CurrencyId(1)

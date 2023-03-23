@@ -68,7 +68,7 @@ class ActionsType extends TranslatorAwareType
             ->add('discount', DiscountType::class, [
                 'disabling_switch' => true,
                 'disabled_value' => static function (?array $data) {
-                    return empty($data['reduction_type']['value']);
+                    return empty($data['reduction']['value']);
                 },
             ])
             ->add('exclude_discounted_products', SwitchType::class)

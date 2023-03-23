@@ -63,7 +63,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
         /** @var EditableCartRule $editableCartRule */
         $editableCartRule = $this->queryBus->handle(new GetCartRuleForEditing($id));
 
-        //@todo: finish up
+        //@todo: finish up in a dedicated PR when EditCartRuleCommand is introduced
         return [
             'information' => [
                 'name' => $editableCartRule->getInformation()->getLocalizedNames(),
@@ -104,9 +104,9 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
             'actions' => [
                 'free_shipping' => false,
                 'discount' => [
-                    'reduction_type' => [
+                    'reduction' => [
                         'value' => 0,
-                        'type' => Reduction::TYPE_AMOUNT,
+                        'type' => Reduction::TYPE_PERCENTAGE,
                         'tax_included' => true,
                     ],
                 ],

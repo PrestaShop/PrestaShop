@@ -26,30 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ReductionTypeChoiceProvider implements ConfigurableFormChoiceProviderInterface
+class DiscountApplicationChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    /**
-     * @var CurrencyDataProviderInterface
-     */
-    private $currencyDataProvider;
-
     public function __construct(
-        TranslatorInterface $translator,
-        CurrencyDataProviderInterface $currencyDataProvider
+        TranslatorInterface $translator
     ) {
         $this->translator = $translator;
-        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
@@ -59,17 +52,17 @@ class ReductionTypeChoiceProvider implements ConfigurableFormChoiceProviderInter
     {
         $options = $this->configureOptions($options);
 
-        if ($options['symbol_as_label']) {
-            return [
-                $this->currencyDataProvider->getDefaultCurrency()->symbol => Reduction::TYPE_AMOUNT,
-                '%' => Reduction::TYPE_PERCENTAGE,
-            ];
+        $choices = [
+            $this->translator->trans('Order (without shipping)', [], 'Admin.Catalog.Feature') => DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
+            $this->translator->trans('Specific product', [], 'Admin.Catalog.Feature') => DiscountApplicationType::SPECIFIC_PRODUCT,
+        ];
+
+        if (Reduction::TYPE_PERCENTAGE === $options['reduction_type']) {
+            $choices[$this->translator->trans('Cheapest product', [], 'Admin.Catalog.Feature')] = DiscountApplicationType::CHEAPEST_PRODUCT;
+            $choices[$this->translator->trans('Selected product(s)', [], 'Admin.Catalog.Feature')] = DiscountApplicationType::SELECTED_PRODUCTS;
         }
 
-        return [
-            $this->translator->trans('Percent (%)', [], 'Admin.Global') => Reduction::TYPE_PERCENTAGE,
-            $this->translator->trans('Amount', [], 'Admin.Global') => Reduction::TYPE_AMOUNT,
-        ];
+        return $choices;
     }
 
     /**
@@ -81,8 +74,9 @@ class ReductionTypeChoiceProvider implements ConfigurableFormChoiceProviderInter
     {
         $resolver = new OptionsResolver();
         $resolver
-            ->setRequired(['symbol_as_label'])
-            ->setAllowedTypes('symbol_as_label', 'bool')
+            ->setRequired(['reduction_type'])
+            ->setAllowedTypes('reduction_type', 'string')
+            ->setAllowedValues('reduction_type', [Reduction::TYPE_AMOUNT, Reduction::TYPE_PERCENTAGE])
         ;
 
         return $resolver->resolve($options);

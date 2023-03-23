@@ -27,18 +27,27 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
+use PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener\DiscountListener;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscountType extends TranslatorAwareType
 {
+    /**
+     * @var DiscountListener
+     */
+    private $discountListener;
+
     public function __construct(
         TranslatorInterface $translator,
-        array $locales
+        array $locales,
+        DiscountListener $discountListener
     ) {
         parent::__construct($translator, $locales);
+        $this->discountListener = $discountListener;
     }
 
     /**
@@ -47,12 +56,18 @@ class DiscountType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('reduction_type', PriceReductionType::class, [
+            ->add('reduction', PriceReductionType::class, [
                 'currency_select' => true,
                 'symbol_as_label' => false,
                 'label' => false,
                 'column_breaker' => true,
             ])
+            ->add('discount_application', ChoiceType::class, [
+                // choices depends on reduction type data therefore are set in an event subscriber added bellow
+                'choices' => [],
+            ])
         ;
+
+        $builder->addEventSubscriber($this->discountListener);
     }
 }
