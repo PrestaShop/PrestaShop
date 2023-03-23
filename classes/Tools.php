@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
-use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -2094,60 +2093,6 @@ class ToolsCore
         return Tools::strtolower(
             preg_replace('/([a-z])([A-Z])/', '$1-$2', $string)
         );
-    }
-
-    /**
-     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
-     *
-     * @param string $hex
-     *
-     * @return float|int|string
-     */
-    public static function getBrightness($hex)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        if (Tools::strtolower($hex) == 'transparent') {
-            return '129';
-        }
-
-        $hex = str_replace('#', '', $hex);
-
-        if (Tools::strlen($hex) == 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
-        }
-
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-
-        return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
-    }
-
-    /**
-     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
-     */
-    public static function isBright($hex)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        if (null === self::$colorBrightnessCalculator) {
-            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
-        }
-
-        return self::$colorBrightnessCalculator->isBright($hex);
     }
 
     public static function parserSQL($sql)
