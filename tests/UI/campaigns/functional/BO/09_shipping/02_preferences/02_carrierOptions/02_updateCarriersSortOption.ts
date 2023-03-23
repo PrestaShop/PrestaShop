@@ -14,7 +14,7 @@ import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import foCartPage from '@pages/FO/cart';
 import foCheckoutPage from '@pages/FO/checkout';
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
 // Import data

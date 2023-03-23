@@ -12,7 +12,7 @@ import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCus
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 
 // Import data
 import Modules from '@data/demo/modules';

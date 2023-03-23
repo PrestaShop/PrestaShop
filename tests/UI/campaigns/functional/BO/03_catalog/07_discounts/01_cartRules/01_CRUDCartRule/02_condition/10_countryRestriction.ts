@@ -16,7 +16,7 @@ import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
 // Import data

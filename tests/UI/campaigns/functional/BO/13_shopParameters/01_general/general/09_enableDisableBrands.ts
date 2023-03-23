@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import generalPage from '@pages/BO/shopParameters/general';
 import brandsPage from '@pages/BO/catalog/brands';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import siteMapPage from '@pages/FO/siteMap';
 
 import {expect} from 'chai';

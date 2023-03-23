@@ -12,8 +12,8 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
-import foHomePage from '@pages/FO/home';
-import loginPage from '@pages/FO/login';
+import {homePage as foHomePage} from '@pages/FO/home';
+import {loginPage} from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
 
 // Import data

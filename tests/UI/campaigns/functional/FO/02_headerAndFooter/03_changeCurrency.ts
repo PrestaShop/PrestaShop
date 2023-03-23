@@ -13,7 +13,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import currenciesPage from '@pages/BO/international/currencies';
 import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data

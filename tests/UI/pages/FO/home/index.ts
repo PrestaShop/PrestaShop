@@ -553,7 +553,7 @@ class HomePage extends FOBasePage {
    * @param quantity {number} The attributes data (size, color, quantity)
    * @returns {Promise<void>}
    */
-  async changeAttributesAndAddToCart(page: Page, attributes: ProductAttribute[], quantity: number) {
+  async changeAttributesAndAddToCart(page: Page, attributes: ProductAttribute[], quantity: number): Promise<void> {
     for (let i: number = 0; i < attributes.length; i++) {
       await this.changeAttributes(page, attributes[i]);
     }
@@ -564,10 +564,19 @@ class HomePage extends FOBasePage {
   /**
    * Get product with discount details from quick view modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{discountPercentage: string, thumbImage: string, price: number, taxShippingDeliveryLabel: string,
-   * regularPrice: number, coverImage: string, name: string, shortDescription: string}>}
+   * @returns {Promise<{discountPercentage: string, thumbImage: string|null, price: number, taxShippingDeliveryLabel: string,
+   * regularPrice: number, coverImage: string|null, name: string, shortDescription: string}>}
    */
-  async getProductWithDiscountDetailsFromQuickViewModal(page: Page) {
+  async getProductWithDiscountDetailsFromQuickViewModal(page: Page): Promise<{
+    discountPercentage: string,
+    thumbImage: string|null,
+    price: number,
+    taxShippingDeliveryLabel: string,
+    regularPrice: number,
+    coverImage: string|null,
+    name: string,
+    shortDescription: string,
+  }> {
     return {
       name: await this.getTextContent(page, this.quickViewProductName),
       regularPrice: parseFloat((await this.getTextContent(page, this.quickViewRegularPrice)).replace('€', '')),
@@ -583,10 +592,17 @@ class HomePage extends FOBasePage {
   /**
    * Get product details from quick view modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{thumbImage: string, price: number, taxShippingDeliveryLabel: string,
-   * coverImage: string, name: string, shortDescription: string}>}
+   * @returns {Promise<{thumbImage: string|null, price: number, taxShippingDeliveryLabel: string,
+   * coverImage: string|null, name: string, shortDescription: string}>}
    */
-  async getProductDetailsFromQuickViewModal(page: Page) {
+  async getProductDetailsFromQuickViewModal(page: Page): Promise<{
+    thumbImage: string|null,
+    price: number,
+    taxShippingDeliveryLabel: string,
+    coverImage: string|null,
+    name: string,
+    shortDescription: string,
+  }> {
     return {
       name: await this.getTextContent(page, this.quickViewProductName),
       price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
