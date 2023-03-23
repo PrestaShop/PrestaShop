@@ -137,9 +137,15 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 ->setProducts($products)
                 ->setTotalProductsCount($count);
 
-            // We use only default set of sort orders
+            // We use default set of sort orders + option to sort by position (relevance), which makes sense only here and on category page
             $result->setAvailableSortOrders(
-                $this->sortOrdersCollection->getDefaults()
+                array_merge(
+                [
+                    (new SortOrder('product', 'position', 'asc'))->setLabel(
+                        $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
+                    ),
+                ],
+                $this->sortOrdersCollection->getDefaults())
             );
         }
 
