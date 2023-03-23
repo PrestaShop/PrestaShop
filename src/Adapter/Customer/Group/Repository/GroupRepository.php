@@ -53,11 +53,11 @@ class GroupRepository extends AbstractObjectModelRepository
     public function get(GroupId $customerGroupId): CustomerGroup
     {
         try {
-            $customerGroup = new CustomerGroup($customerGroupId->getValue());
-
-            if ($customerGroup->id !== $customerGroupId->getValue()) {
-                throw new GroupNotFoundException(sprintf('%s #%d was not found', CustomerGroup::class, $customerGroupId->getValue()));
-            }
+            $customerGroup = $this->getObjectModel(
+                $customerGroupId->getValue(),
+                CustomerGroup::class,
+                GroupNotFoundException::class
+            );
         } catch (PrestaShopException $e) {
             throw new CoreException(
                 sprintf(
