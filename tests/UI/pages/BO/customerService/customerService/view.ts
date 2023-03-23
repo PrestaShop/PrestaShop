@@ -29,6 +29,8 @@ class ViewCustomer extends BOBasePage {
 
   private readonly yourAnswerFormTextarea: string;
 
+  private readonly sendMessageButton: string;
+
   private readonly ordersAndMessagesBlock: string;
 
   private readonly forwardMessageModal: string;
@@ -58,12 +60,12 @@ class ViewCustomer extends BOBasePage {
     this.forwardMessageButton = `${this.messagesThreadDiv} button[data-target='#forwardThreadModal']`;
     this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
     this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
+    this.sendMessageButton = '#main-div div.card-footer button';
     this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
     this.forwardMessageModal = '#forwardThreadModal div form';
     this.forwardModalEmployeeIDSelect = '#forward_customer_thread_employee_id';
     this.forwardModalCommentInput = '#forward_customer_thread_comment';
     this.forwardModalSendButton = `${this.forwardMessageModal} div.modal-footer > button.btn.btn-primary`;
-
   }
 
   /*

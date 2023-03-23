@@ -55,7 +55,7 @@ describe('BO - Customer Service : Change status', async () => {
     await files.deleteFile(`${contactUsData.fileName}.jpg`);
   });
 
-  describe('Send message to customer service', async () => {
+  describe('FO : Send message to customer service', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
@@ -103,7 +103,7 @@ describe('BO - Customer Service : Change status', async () => {
     });
   });
 
-  describe('Change message status and check it', async () => {
+  describe('BO : Change message status and check it', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -164,7 +164,7 @@ describe('BO - Customer Service : Change status', async () => {
     });
   });
 
-  describe('Forward the message to an existing employee', async () => {
+  describe('BO : Forward the message to an existing employee', async () => {
     it('should go to view message page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
@@ -210,7 +210,7 @@ describe('BO - Customer Service : Change status', async () => {
     });
   });
 
-  describe('Delete the order message', async () => {
+  describe('BO : Delete the message', async () => {
     it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPageToDelete', baseContext);
 

@@ -21,7 +21,6 @@ import MessageData from '@data/faker/message';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-
 const baseContext: string = 'functional_BO_customerService_customerService_respondToMessage';
 
 /*
@@ -31,7 +30,6 @@ Respond to message in BO
 describe('BO - Customer Service : Respond to message', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let idCustomer: string = '0';
 
   const contactUsData: MessageData = new MessageData({subject: 'Customer service'});
   const answerMessage = 'My response';

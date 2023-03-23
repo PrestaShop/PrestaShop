@@ -23,9 +23,9 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_BO_customerService_customerService_contactOptions';
 
 /*
+Update default message
 Disable Allow file uploading
 Enable Allow file uploading
-Update default message
  */
 describe('BO - Customer Service : Contact options', async () => {
   let browserContext: BrowserContext;
@@ -47,11 +47,11 @@ describe('BO - Customer Service : Contact options', async () => {
     await files.deleteFile(`${contactUsData.fileName}.jpg`);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('BO : Update default message', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-  describe('Enable/Disable allow file uploading', async () => {
     it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerServicePage', baseContext);
 
@@ -65,6 +65,86 @@ describe('BO - Customer Service : Contact options', async () => {
       await expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
 
+    it('should update default message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateDefaultMessage', baseContext);
+
+      const result = await customerServicePage.setDefaultMessage(page, 'Test default message');
+      await expect(result).to.contains(customerServicePage.successfulUpdateMessage);
+    });
+  });
+
+  describe('FO : Send message', async () => {
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrder', baseContext);
+
+      page = await customerServicePage.viewMyShop(page);
+
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to contact us page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
+
+      // Go to contact us page
+      await homePage.goToFooterLink(page, 'Contact us');
+
+      const pageTitle = await contactUsPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    });
+
+    it('should send message to customer service then close the page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
+
+      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+
+      const validationMessage = await contactUsPage.getAlertSuccess(page);
+      await expect(validationMessage).to.equal(contactUsPage.validationMessage);
+
+      page = await contactUsPage.closePage(browserContext, page, 0);
+    });
+  });
+
+  describe('BO : Check default message', async () => {
+    it('should go to view message page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
+
+      await customerServicePage.reloadPage(page);
+      await customerServicePage.goToViewMessagePage(page);
+
+      const pageTitle = await viewPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewPage.pageTitle);
+    });
+
+    it('should check your answer form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkYourAnswerForm', baseContext);
+
+      const formContent = await viewPage.getYourAnswerFormContent(page);
+      expect(formContent).to.contains('Test default message');
+    });
+
+    it('should go to \'Customer Service > Customer Service\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customerServiceParentLink,
+        dashboardPage.customerServiceLink,
+      );
+
+      const pageTitle = await customerServicePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    });
+
+    it('should go back to default message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToDefaultMessage', baseContext);
+
+      const result = await customerServicePage.setDefaultMessage(page, 'Dear Customer,\n\n Regards,\nCustomer service');
+      await expect(result).to.contains(customerServicePage.successfulUpdateMessage);
+    });
+  });
+
+  describe('BO/FO : Enable/Disable allow file uploading and check in FO', async () => {
     [
       {args: {action: 'disable', enable: false}},
       {args: {action: 'enable', enable: true}},
@@ -112,82 +192,7 @@ describe('BO - Customer Service : Contact options', async () => {
     });
   });
 
-  describe('Update default message', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrder', baseContext);
-
-      page = await customerServicePage.viewMyShop(page);
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to contact us page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
-
-      // Go to contact us page
-      await homePage.goToFooterLink(page, 'Contact us');
-
-      const pageTitle = await contactUsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(contactUsPage.pageTitle);
-    });
-
-    it('should send message to customer service then close the page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
-
-      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
-
-      const validationMessage = await contactUsPage.getAlertSuccess(page);
-      await expect(validationMessage).to.equal(contactUsPage.validationMessage);
-
-      page = await contactUsPage.closePage(browserContext, page, 0);
-    });
-
-    it('should update default message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateDefaultMessage', baseContext);
-
-      const result = await customerServicePage.setDefaultMessage(page, 'test');
-      await expect(result).to.contains(customerServicePage.successfulUpdateMessage);
-    });
-
-    it('should go to view message page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
-
-      await customerServicePage.goToViewMessagePage(page);
-
-      const pageTitle = await viewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewPage.pageTitle);
-    });
-
-    it('should check your answer form', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkYourAnswerForm', baseContext);
-
-      const formContent = await viewPage.getYourAnswerFormContent(page);
-      expect(formContent).to.contains('test');
-    });
-
-    it('should go to \'Customer Service > Customer Service\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.customerServiceLink,
-      );
-
-      const pageTitle = await customerServicePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
-    });
-
-    it('should go back to default message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToDefaultMessage', baseContext);
-
-      const result = await customerServicePage.setDefaultMessage(page, 'Dear Customer\n\n Regards,\nCustomer service');
-      await expect(result).to.contains(customerServicePage.successfulUpdateMessage);
-    });
-  });
-
-  describe('Delete the order message', async () => {
+  describe('BO : Delete the order message', async () => {
     it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPageToDelete', baseContext);
 
