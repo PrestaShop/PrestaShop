@@ -124,7 +124,7 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 ->setProducts($products)
                 ->setTotalProductsCount($count);
 
-            // We use default set of sort orders + option to sort by position, which makes sense only here
+            // We use default set of sort orders + option to sort by position, which makes sense only here and on search page
             $result->setAvailableSortOrders(
                 array_merge(
                 [
