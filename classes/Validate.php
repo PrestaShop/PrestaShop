@@ -1331,7 +1331,7 @@ class ValidateCore
 
     public static function isPrestaShopVersion($version)
     {
-        return preg_match('/^[0-1]\.[0-9]{1,2}(\.[0-9]{1,2}){0,2}$/', $version) && ip2long($version);
+        return preg_match('/^[0-9]\.[0-9]{1,2}(\.[0-9]{1,2}){0,2}$/', $version) && ip2long($version);
     }
 
     public static function isOrderInvoiceNumber($id)
