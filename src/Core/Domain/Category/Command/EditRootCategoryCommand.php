@@ -114,6 +114,7 @@ class EditRootCategoryCommand
     public function __construct($categoryId)
     {
         $this->categoryId = new CategoryId($categoryId);
+        $this->menuThumbnailImages = [];
     }
 
     /**

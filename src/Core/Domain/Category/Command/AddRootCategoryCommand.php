@@ -112,6 +112,7 @@ class AddRootCategoryCommand
             ->setLocalizedNames($name)
             ->setLocalizedLinkRewrites($linkRewrite)
             ->setIsActive($isActive);
+        $this->menuThumbnailImages = [];
     }
 
     /**

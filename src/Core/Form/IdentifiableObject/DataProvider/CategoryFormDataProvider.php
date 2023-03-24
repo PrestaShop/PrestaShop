@@ -100,51 +100,46 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         /** @var EditableCategory $editableCategory */
         $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
 
-        $coverImages = $thumbnailImages = $menuThumbnailImagesEdited = null;
-        $disableMenuThumbnailsUpload = false;
-        if ($categoryId) {
-            $categoryId = (int) $categoryId;
-            $categoryUrl = $this->categoryProvider->getUrl($categoryId, '{friendly-url}');
-            $coverImage = $editableCategory->getCoverImage();
-            if ($coverImage) {
-                $coverImages[] = [
-                    'size' => $coverImage['size'],
-                    'image_path' => $coverImage['path'],
-                    'delete_path' => $this->router->generate(
-                        'admin_categories_delete_cover_image',
-                        [
-                            'categoryId' => $categoryId,
-                        ]
-                    ),
-                ];
-            }
-            $thumbnailImage = $editableCategory->getThumbnailImage();
-            if ($thumbnailImage) {
-                $thumbnailImages[] =
+        $coverImages = $thumbnailImages = null;
+        $categoryId = (int) $categoryId;
+        $categoryUrl = $this->categoryProvider->getUrl($categoryId, '{friendly-url}');
+        $coverImage = $editableCategory->getCoverImage();
+        if ($coverImage) {
+            $coverImages[] = [
+                'size' => $coverImage['size'],
+                'image_path' => $coverImage['path'],
+                'delete_path' => $this->router->generate(
+                    'admin_categories_delete_cover_image',
                     [
-                        'image_path' => $thumbnailImage['path'],
-                        'size' => $thumbnailImage['size'],
-                    ];
-            }
-            $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-            $menuThumbnailImagesEdited = [];
-            foreach ($menuThumbnailImages as $menuThumbnailImage) {
-                $menuThumbnailImagesEdited[] = [
-                    'id' => $menuThumbnailImage['id'],
-                    'image_path' => $menuThumbnailImage['path'],
-                    'delete_path' => $this->router->generate(
-                        'admin_categories_delete_menu_thumbnail',
-                        [
-                            'categoryId' => $categoryId,
-                            'menuThumbnailId' => $menuThumbnailImage['id'],
-                        ]
-                    ),
-                ];
-            }
-            $disableMenuThumbnailsUpload = !$editableCategory->canContainMoreMenuThumbnails();
-        } else {
-            $categoryUrl = $this->categoryProvider->getUrl(0, '{friendly-url}');
+                        'categoryId' => $categoryId,
+                    ]
+                ),
+            ];
         }
+        $thumbnailImage = $editableCategory->getThumbnailImage();
+        if ($thumbnailImage) {
+            $thumbnailImages[] =
+                [
+                    'image_path' => $thumbnailImage['path'],
+                    'size' => $thumbnailImage['size'],
+                ];
+        }
+        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+        $menuThumbnailImagesEdited = [];
+        foreach ($menuThumbnailImages as $menuThumbnailImage) {
+            $menuThumbnailImagesEdited[] = [
+                'id' => $menuThumbnailImage['id'],
+                'image_path' => $menuThumbnailImage['path'],
+                'delete_path' => $this->router->generate(
+                    'admin_categories_delete_menu_thumbnail',
+                    [
+                        'categoryId' => $categoryId,
+                        'menuThumbnailId' => $menuThumbnailImage['id'],
+                    ]
+                ),
+            ];
+        }
+        $disableMenuThumbnailsUpload = !$editableCategory->canContainMoreMenuThumbnails();
 
         return [
             'name' => $editableCategory->getName(),
@@ -161,7 +156,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'cover_image' => $coverImages,
             'thumbnail_image' => $thumbnailImages,
             'menu_thumbnail_images' => $menuThumbnailImagesEdited,
-            'category_url' => $categoryUrl,
+            'seo_preview' => $categoryUrl,
             'disabled_menu_thumbnail_upload' => $disableMenuThumbnailsUpload,
         ];
     }
@@ -178,6 +173,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'group_association' => $allGroupIds,
             'shop_association' => $this->contextShopId,
             'active' => true,
+            'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}')
         ];
     }
 }

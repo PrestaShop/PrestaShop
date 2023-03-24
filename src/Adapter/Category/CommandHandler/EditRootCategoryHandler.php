@@ -60,12 +60,17 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
         $this->categoryImageUploader = $categoryImageUploader;
         $this->menuThumbnailAvailableKeyProvider = $menuThumbnailAvailableKeyProvider;
     }
+
     /**
      * {@inheritdoc}
      *
+     * @param EditRootCategoryCommand $command
+     *
      * @throws CannotEditCategoryException
-     * @throws CategoryNotFoundException
      * @throws CannotEditRootCategoryException
+     * @throws CategoryException
+     * @throws CategoryNotFoundException
+     * @throws MenuThumbnailsLimitException
      */
     public function handle(EditRootCategoryCommand $command)
     {
@@ -98,6 +103,11 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
     /**
      * @param Category $category
      * @param EditRootCategoryCommand $command
+     *
+     * @throws CannotEditCategoryException
+     * @throws CategoryException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     private function updateRootCategoryFromCommandData(Category $category, EditRootCategoryCommand $command)
     {

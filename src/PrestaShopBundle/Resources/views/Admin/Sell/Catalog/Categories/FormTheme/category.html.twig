@@ -1,7 +1,7 @@
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block category_seo_preview_widget %}
-    <div id="serp-app" data-category-url="{{ category_url }}"></div>
+    <div id="serp-app" data-category-url="{{ data }}"></div>
     <small class="form-text">
       {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
     </small>

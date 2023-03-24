@@ -37,21 +37,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class CategorySeoPreviewType extends AbstractType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::buildView($view, $form, $options);
-        $view->vars['category_url'] = $options['category_url'];
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'category_url' => null,
-        ])
-            ->setAllowedTypes('category_url', ['null', 'string']);
-    }
-
     /**
      * Returns the block prefix of this type.
      *
