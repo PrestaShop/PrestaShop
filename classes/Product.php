@@ -5616,73 +5616,56 @@ class ProductCore extends ObjectModel
             $quantity = (int) $row['minimal_quantity'];
         }
 
-        // We save value in $priceTaxExcluded and $priceTaxIncluded before they may be rounded
-        $row['price_tax_exc'] = $priceTaxExcluded = Product::getPriceStatic(
-            (int) $row['id_product'],
-            false,
+        $specific_price_output = null;
+        $productId = (int) $row['id_product'];
+        $customizationId = key_exists('id_customization', $row) ? (int) $row['id_customization'] : null;
+
+        $getPrice = function (bool $useTax = true, int $decimals = 6, bool $useReduc = true) use (
+            $productId,
             $id_product_attribute,
-            (self::$_taxCalculationMethod == PS_TAX_EXC ? Context::getContext()->getComputingPrecision() : 6),
-            null,
+            $quantity,
+            $specific_price_output,
+            $customizationId
+        ): ?float {
+            return Product::getPriceStatic(
+                $productId,
+                $useTax,
+                $id_product_attribute,
+                $decimals,
+                null,
+                false,
+                $useReduc,
+                $quantity,
+                false,
+                null,
+                null,
+                null,
+                $specific_price_output,
+                true,
+                true,
+                null,
+                true,
+                $customizationId
+            );
+        };
+
+        // We save value in $priceTaxExcluded and $priceTaxIncluded before they may be rounded
+        $row['price_tax_exc'] = $priceTaxExcluded = $getPrice(
             false,
-            true,
-            $quantity
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? Context::getContext()->getComputingPrecision() : 6)
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
             $row['price_tax_exc'] = Tools::ps_round($priceTaxExcluded, Context::getContext()->getComputingPrecision());
-            $row['price'] = $priceTaxIncluded = Product::getPriceStatic(
-                (int) $row['id_product'],
-                true,
-                $id_product_attribute,
-                6,
-                null,
-                false,
-                true,
-                $quantity
-            );
+            $row['price'] = $priceTaxIncluded = $getPrice();
+
             $row['price_without_reduction'] =
-            $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
-                (int) $row['id_product'],
-                false,
-                $id_product_attribute,
-                2,
-                null,
-                false,
-                false,
-                $quantity
-            );
+            $row['price_without_reduction_without_tax'] = $getPrice(false, 2, false);
         } else {
-            $priceTaxIncluded = Product::getPriceStatic(
-                (int) $row['id_product'],
-                true,
-                $id_product_attribute,
-                6,
-                null,
-                false,
-                true,
-                $quantity
-            );
+            $priceTaxIncluded = $getPrice();
             $row['price'] = Tools::ps_round($priceTaxIncluded, Context::getContext()->getComputingPrecision());
-            $row['price_without_reduction'] = Product::getPriceStatic(
-                (int) $row['id_product'],
-                true,
-                $id_product_attribute,
-                6,
-                null,
-                false,
-                false,
-                $quantity
-            );
-            $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
-                (int) $row['id_product'],
-                false,
-                $id_product_attribute,
-                6,
-                null,
-                false,
-                false,
-                $quantity
-            );
+            $row['price_without_reduction'] = $getPrice(true, 6, false);
+            $row['price_without_reduction_without_tax'] = $getPrice(false, 6, false);
         }
 
         $row['reduction'] = Product::getPriceStatic(

@@ -1177,6 +1177,19 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['ecotax_tax_inc'] = $this->product->getEcotax(null, true, true);
         $product['ecotax'] = Tools::convertPrice($this->getProductEcotax($product), $this->context->currency, true, $this->context);
 
+        if ($product['customizable']) {
+            $customizations = $this->context->cart->getProductCustomization(
+                $product['id_product'],
+                null,
+                true
+            );
+
+            $product['id_customization'] = 0;
+            foreach ($customizations as $customization) {
+                $product['id_customization'] = $customization['id_customization'];
+            }
+        }
+
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
         $product_full = $this->addProductCustomizationData($product_full);
