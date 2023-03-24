@@ -33,37 +33,7 @@
   </h3>
   <div class="card-body">
     <div class="form-wrapper">
-      {{ form_errors(categoryForm) }}
-      {{ form_row(categoryForm.name) }}
-      {{ form_row(categoryForm.active) }}
-      {% if categoryForm.id_parent is defined %}
-        {{ form_row(categoryForm.id_parent) }}
-      {% endif %}
-      {{ form_row(categoryForm.description) }}
-      {{ form_row(categoryForm.additional_description) }}
-      {{ form_row(categoryForm.cover_image) }}
-      {{ form_row(categoryForm.thumbnail_image) }}
-      {{ form_row(categoryForm.menu_thumbnail_images) }}
-
-      {% if categoryUrl is not null %}
-        {% block category_tool_serp %}
-          <div class="form-group row">
-            <label class="form-control-label">{{ 'SEO preview'|trans({}, 'Admin.Global') }}</label>
-            <div class="col-sm">
-              <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
-              <small class="form-text">
-                {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
-              </small>
-            </div>
-          </div>
-        {% endblock %}
-      {% endif %}
-      {{ form_row(categoryForm.meta_title) }}
-      {{ form_row(categoryForm.meta_description) }}
-      {{ form_row(categoryForm.meta_keyword) }}
-      {{ form_row(categoryForm.link_rewrite) }}
-      {{ form_row(categoryForm.group_association) }}
-
+      {{ form_widget(categoryForm) }}
       <div class="form-group row">
         <label class="form-control-label"></label>
         <div class="col-sm">
@@ -78,9 +48,6 @@
           </div>
         </div>
       </div>
-
-      {{ form_widget(categoryForm) }}
-
     </div>
   </div>
   <div class="card-footer">

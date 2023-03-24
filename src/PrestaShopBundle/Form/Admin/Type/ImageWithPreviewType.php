@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form type is used as a container of sub forms, each sub form will be rendered as a part of an accordion.
+ * This form is used to show file type with preview images
  */
 class ImageWithPreviewType extends FileType
 {
