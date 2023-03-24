@@ -6,19 +6,25 @@ Feature: Title management
 
   Background:
     Given I define an uncreated title "titleNotFound"
+    And language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
 
   Scenario: Adding new title
     When I add a new title "3rdTitle" with the following properties:
-      | name    | Third Title    |
-      | type    | Other          |
-    Then the title "3rdTitle" name should be "Third Title"
+      | name[en-US] | Third Title EN |
+      | name[fr-FR] | Third Title FR |
+      | type        | Other          |
+    Then the title "3rdTitle" name should be "Third Title EN" in locale "en-US"
+    Then the title "3rdTitle" name should be "Third Title FR" in locale "fr-FR"
     And the title "3rdTitle" gender type should be "Other"
 
   Scenario: Editing title
     When I edit title "3rdTitle" with following properties:
-      | name    | Fourth Title   |
-      | type    | Female         |
-    Then the title "3rdTitle" name should be "Fourth Title"
+      | name[en-US] | Fourth Title EN |
+      | name[fr-FR] | Fourth Title FR |
+      | type        | Female          |
+    Then the title "3rdTitle" name should be "Fourth Title EN" in locale "en-US"
+    Then the title "3rdTitle" name should be "Fourth Title FR" in locale "fr-FR"
     And the title "3rdTitle" gender type should be "Female"
 
   Scenario: Deleting title
@@ -31,26 +37,30 @@ Feature: Title management
 
   Scenario: Deleting multiple titles in bulk action
     When I add a new title "4thTitle" with the following properties:
-      | name    | Fourth  Title  |
-      | type    | Other          |
+      | name[en-US] | Fourth Title EN |
+      | name[fr-FR] | Fourth Title FR |
+      | type        | Other           |
     And I add a new title "5thTitle" with the following properties:
-      | name    | Fifth Title    |
-      | type    | Other          |
+      | name[en-US] | Fifth Title EN |
+      | name[fr-FR] | Fifth Title FR |
+      | type        | Other          |
     When I delete titles "4thTitle, 5thTitle" using bulk action
     Then titles "4thTitle, 5thTitle" should be deleted
 
   Scenario: Deleting multiple titles in bulk action with existing in first
     When I add a new title "6thTitle" with the following properties:
-      | name    | Sixth  Title   |
-      | type    | Other          |
+      | name[en-US] | Sixth Title EN |
+      | name[fr-FR] | Sixth Title FR |
+      | type        | Other          |
     When I delete titles "6thTitle, titleNotFound" using bulk action
     Then I should get an error that the title has not been found
     And the title "6thTitle" should be deleted
 
   Scenario: Deleting multiple titles in bulk action with existing in last
     When I add a new title "7thTitle" with the following properties:
-      | name    | Seventh  Title |
-      | type    | Other          |
+      | name[en-US] | Seventh Title EN |
+      | name[fr-FR] | Seventh Title FR |
+      | type        | Other            |
     When I delete titles "titleNotFound, 7thTitle" using bulk action
     Then I should get an error that the title has not been found
     And the title "7thTitle" should not be deleted

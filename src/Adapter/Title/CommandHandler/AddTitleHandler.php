@@ -50,7 +50,7 @@ class AddTitleHandler extends AbstractTitleHandler implements AddTitleHandlerInt
     {
         $title = new Gender();
         $title->name = $command->getLocalizedNames();
-        $title->type = $command->getGenderType();
+        $title->type = $command->getGender()->getValue();
 
         $titleId = $this->titleRepository->add($title);
 
@@ -69,15 +69,15 @@ class AddTitleHandler extends AbstractTitleHandler implements AddTitleHandlerInt
      */
     protected function uploadTitleImage(TitleId $titleId, AddTitleCommand $command): void
     {
-        if (!$command->getImagePathname()) {
+        if (!$command->getImageFile()) {
             return;
         }
 
-        $this->uploadImage(
+        $this->titleImageUploader->setImageHeight($command->getImageHeight());
+        $this->titleImageUploader->setImageWidth($command->getImageWidth());
+        $this->titleImageUploader->upload(
             $titleId->getValue(),
-            $command->getImagePathname(),
-            $command->getImageWidth(),
-            $command->getImageHeight()
+            $command->getImageFile()
         );
     }
 }

@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Title\Repository;
 use Gender;
 use PrestaShop\PrestaShop\Adapter\Title\Validate\TitleValidator;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotAddTitleException;
+use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotUpdateTitleException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
@@ -77,21 +78,6 @@ class TitleRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param TitleId $titleId
-     *
-     * @throws CoreException
-     * @throws TitleNotFoundException
-     */
-    public function assertTitleExists(TitleId $titleId): void
-    {
-        $this->assertObjectModelExists(
-            $titleId->getValue(),
-            'gender',
-            TitleNotFoundException::class
-        );
-    }
-
-    /**
      * @param Gender $title
      * @param int $errorCode
      *
@@ -111,18 +97,6 @@ class TitleRepository extends AbstractObjectModelRepository
 
     /**
      * @param Gender $title
-     */
-    public function update(Gender $title): void
-    {
-        $this->titleValidator->validate($title);
-        $this->updateObjectModel(
-            $title,
-            CannotUpdateTitleException::class
-        );
-    }
-
-    /**
-     * @param Gender $title
      * @param array $propertiesToUpdate
      * @param int $errorCode
      */
@@ -136,6 +110,19 @@ class TitleRepository extends AbstractObjectModelRepository
             $propertiesToUpdate,
             CannotUpdateTitleException::class,
             $errorCode
+        );
+    }
+
+    /**
+     * @param Gender $title
+     *
+     * @throws CannotDeleteTitleException
+     */
+    public function delete(Gender $title): void
+    {
+        $this->deleteObjectModel(
+            $title,
+            CannotDeleteTitleException::class
         );
     }
 }

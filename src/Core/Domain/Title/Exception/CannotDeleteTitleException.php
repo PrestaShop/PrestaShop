@@ -26,44 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title;
+namespace PrestaShop\PrestaShop\Core\Domain\Title\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\TitleImageUploader;
-use PrestaShop\PrestaShop\Adapter\Title\Repository\TitleRepository;
-
-class AbstractTitleHandler
+/**
+ * Thrown on failure to delete title
+ */
+class CannotDeleteTitleException extends TitleException
 {
-    /**
-     * @var TitleRepository
-     */
-    protected $titleRepository;
-
-    /**
-     * @var TitleImageUploader
-     */
-    protected $titleImageUploader;
-
-    /**
-     * @var string
-     */
-    protected $tmpImageDir;
-
-    /**
-     * @var string
-     */
-    protected $genderDir;
-
-    /**
-     * @param TitleRepository $titleRepository
-     * @param TitleImageUploader $titleImageUploader
-     * @param string $tmpImageDir
-     * @param string $genderDir
-     */
-    public function __construct(TitleRepository $titleRepository, TitleImageUploader $titleImageUploader, string $tmpImageDir, string $genderDir)
-    {
-        $this->titleRepository = $titleRepository;
-        $this->titleImageUploader = $titleImageUploader;
-        $this->tmpImageDir = $tmpImageDir;
-        $this->genderDir = $genderDir;
-    }
 }

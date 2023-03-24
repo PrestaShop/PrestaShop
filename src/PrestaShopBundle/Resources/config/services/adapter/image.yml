@@ -53,3 +53,5 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory'
     arguments:
       - '@=service("prestashop.adapter.shop.url.category_image_folder_provider").getUrl()'
+
+  PrestaShop\PrestaShop\Adapter\Image\Uploader\TitleImageUploader: ~

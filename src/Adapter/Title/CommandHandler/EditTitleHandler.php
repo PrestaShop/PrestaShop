@@ -51,8 +51,8 @@ class EditTitleHandler extends AbstractTitleHandler implements EditTitleHandlerI
             $title->name = $command->getLocalizedNames();
             $updatableProperties['name'] = array_keys($command->getLocalizedNames());
         }
-        if (null !== $command->getGenderType()) {
-            $title->type = $command->getGenderType();
+        if (null !== $command->getGender()) {
+            $title->type = $command->getGender()->getValue();
             $updatableProperties[] = 'type';
         }
 
@@ -75,17 +75,15 @@ class EditTitleHandler extends AbstractTitleHandler implements EditTitleHandlerI
      */
     private function uploadTitleImage(Gender $title, EditTitleCommand $command): void
     {
-        if (null === $command->getImagePathname()) {
+        if (!$command->getImageFile()) {
             return;
         }
 
-        $title->deleteImage();
-
-        $this->uploadImage(
+        $this->titleImageUploader->setImageHeight($command->getImageHeight());
+        $this->titleImageUploader->setImageWidth($command->getImageWidth());
+        $this->titleImageUploader->upload(
             (int) $title->id,
-            $command->getImagePathname(),
-            $command->getImageWidth(),
-            $command->getImageHeight()
+            $command->getImageFile()
         );
     }
 }

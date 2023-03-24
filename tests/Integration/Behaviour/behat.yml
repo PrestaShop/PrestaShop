@@ -36,6 +36,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TitleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\TitleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         store:
             paths:
                 - "%paths.base%/Features/Scenario/Store"

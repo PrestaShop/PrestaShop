@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\EditTitleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -63,8 +64,8 @@ class TitleFormDataHandler implements FormDataHandlerInterface
         /** @var TitleId $titleId */
         $titleId = $this->commandBus->handle(new AddTitleCommand(
             $data['name'],
-            $data['genderType'],
-            $uploadedImage instanceof UploadedFile ? $uploadedImage->getPathname() : null,
+            new Gender($data['genderType']),
+            $uploadedImage,
             $data['img_width'],
             $data['img_height']
         ));
@@ -80,13 +81,13 @@ class TitleFormDataHandler implements FormDataHandlerInterface
         $command = new EditTitleCommand((int) $id);
         $command
             ->setLocalizedNames($data['name'])
-            ->setGenderType($data['genderType']);
+            ->setGender(new Gender($data['genderType']));
 
         /** @var UploadedFile|null $uploadedImage */
         $uploadedImage = $data['image'];
         if ($uploadedImage instanceof UploadedFile) {
             $command
-                ->setImagePathname($uploadedImage->getPathname())
+                ->setImageFile($uploadedImage)
                 ->setImageWidth($data['img_width'])
                 ->setImageHeight($data['img_height']);
         }

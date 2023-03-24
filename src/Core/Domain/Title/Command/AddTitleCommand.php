@@ -28,25 +28,28 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Title\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 /**
  * Creates title with provided data
  */
 class AddTitleCommand
 {
     /**
-     * @var array<string>
+     * @var array<int, string>
      */
     protected $localizedNames;
 
     /**
-     * @var int
+     * @var Gender
      */
-    protected $genderType;
+    protected $gender;
 
     /**
-     * @var string|null
+     * @var UploadedFile|null
      */
-    protected $imgPathname;
+    protected $imgFile;
 
     /**
      * @var int|null
@@ -60,27 +63,27 @@ class AddTitleCommand
 
     /**
      * @param array<string> $localizedNames
-     * @param int $genderType
-     * @param string|null $imgPathname
+     * @param Gender $gender
+     * @param UploadedFile|null $imgFile
      * @param int|null $imgWidth
      * @param int|null $imgHeight
      */
     public function __construct(
         array $localizedNames,
-        int $genderType,
-        ?string $imgPathname,
+        Gender $gender,
+        ?UploadedFile $imgFile,
         ?int $imgWidth,
         ?int $imgHeight
     ) {
         $this->localizedNames = $localizedNames;
-        $this->genderType = $genderType;
-        $this->imgPathname = $imgPathname;
+        $this->gender = $gender;
+        $this->imgFile = $imgFile;
         $this->imgWidth = $imgWidth;
         $this->imgHeight = $imgHeight;
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getLocalizedNames(): array
     {
@@ -88,19 +91,19 @@ class AddTitleCommand
     }
 
     /**
-     * @return int
+     * @return Gender
      */
-    public function getGenderType(): int
+    public function getGender(): Gender
     {
-        return $this->genderType;
+        return $this->gender;
     }
 
     /**
-     * @return string|null
+     * @return UploadedFile|null
      */
-    public function getImagePathname(): ?string
+    public function getImageFile(): ?UploadedFile
     {
-        return $this->imgPathname;
+        return $this->imgFile;
     }
 
     /**

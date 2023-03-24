@@ -26,44 +26,47 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title;
+namespace Tests\Unit\Core\Domain\Title\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\TitleImageUploader;
-use PrestaShop\PrestaShop\Adapter\Title\Repository\TitleRepository;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 
-class AbstractTitleHandler
+class GenderTest extends TestCase
 {
-    /**
-     * @var TitleRepository
-     */
-    protected $titleRepository;
-
-    /**
-     * @var TitleImageUploader
-     */
-    protected $titleImageUploader;
-
-    /**
-     * @var string
-     */
-    protected $tmpImageDir;
-
-    /**
-     * @var string
-     */
-    protected $genderDir;
-
-    /**
-     * @param TitleRepository $titleRepository
-     * @param TitleImageUploader $titleImageUploader
-     * @param string $tmpImageDir
-     * @param string $genderDir
-     */
-    public function __construct(TitleRepository $titleRepository, TitleImageUploader $titleImageUploader, string $tmpImageDir, string $genderDir)
+    public function testItThrowsExceptionWhenTypeIsNotGood(): void
     {
-        $this->titleRepository = $titleRepository;
-        $this->titleImageUploader = $titleImageUploader;
-        $this->tmpImageDir = $tmpImageDir;
-        $this->genderDir = $genderDir;
+        $this->expectException(TitleConstraintException::class);
+        $gender = new Gender(4);
+    }
+
+    /**
+     * @dataProvider dataProviderGender
+     *
+     * @param int $gender
+     *
+     * @return void
+     *
+     * @throws TitleConstraintException
+     */
+    public function testGoodValues(int $gender): void
+    {
+        $genderId = new Gender($gender);
+        $this->assertEquals($genderId->getValue(), $gender);
+    }
+
+    public function dataProviderGender(): array
+    {
+        return [
+            [
+                Gender::TYPE_MALE,
+            ],
+            [
+                Gender::TYPE_FEMALE,
+            ],
+            [
+                Gender::TYPE_OTHER,
+            ],
+        ];
     }
 }

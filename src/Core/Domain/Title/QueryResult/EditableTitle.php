@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Title\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 
 /**
@@ -45,23 +46,23 @@ class EditableTitle
     protected $localizedNames;
 
     /**
-     * @var int
+     * @var Gender
      */
-    protected $genderType;
+    protected $gender;
 
     /**
      * @param TitleId $titleId
      * @param array<string> $localizedNames
-     * @param int $genderType
+     * @param Gender $gender
      */
     public function __construct(
         TitleId $titleId,
         array $localizedNames,
-        int $genderType
+        Gender $gender
     ) {
         $this->titleId = $titleId;
         $this->localizedNames = $localizedNames;
-        $this->genderType = $genderType;
+        $this->gender = $gender;
     }
 
     /**
@@ -81,10 +82,10 @@ class EditableTitle
     }
 
     /**
-     * @return int
+     * @return Gender
      */
-    public function getGenderType(): int
+    public function getGender(): Gender
     {
-        return $this->genderType;
+        return $this->gender;
     }
 }

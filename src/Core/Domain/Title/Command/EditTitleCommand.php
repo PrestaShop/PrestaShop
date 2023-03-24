@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Title\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Edits title with provided data
@@ -47,14 +49,14 @@ class EditTitleCommand
     protected $localizedNames;
 
     /**
-     * @var int|null
+     * @var Gender|null
      */
-    protected $genderType;
+    protected $gender;
 
     /**
-     * @var string|null
+     * @var UploadedFile|null
      */
-    protected $imgPathname;
+    protected $imgFile;
 
     /**
      * @var int|null
@@ -105,41 +107,41 @@ class EditTitleCommand
     }
 
     /**
-     * @return int|null
+     * @return Gender|null
      */
-    public function getGenderType(): ?int
+    public function getGender(): ?Gender
     {
-        return $this->genderType;
+        return $this->gender;
     }
 
     /**
-     * @param int $genderType
+     * @param Gender $gender
      *
      * @return self
      */
-    public function setGenderType(int $genderType): self
+    public function setGender(Gender $gender): self
     {
-        $this->genderType = $genderType;
+        $this->gender = $gender;
 
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return UploadedFile|null
      */
-    public function getImagePathname(): ?string
+    public function getImageFile(): ?UploadedFile
     {
-        return $this->imgPathname;
+        return $this->imgFile;
     }
 
     /**
-     * @param string $imagePathname
+     * @param UploadedFile $imageFile
      *
      * @return self
      */
-    public function setImagePathname(string $imagePathname): self
+    public function setImageFile(UploadedFile $imageFile): self
     {
-        $this->imgPathname = $imagePathname;
+        $this->imgFile = $imageFile;
 
         return $this;
     }

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Language;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Title\QueryResult\EditableTitle;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use RuntimeException;
@@ -70,7 +72,7 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
      */
     public function createTitle(string $titleReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         /** @var FormChoiceProviderInterface $provider */
         $provider = CommonFeatureContext::getContainer()->get('prestashop.core.form.choice_provider.gender_choice_provider');
@@ -82,10 +84,8 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
         try {
             /** @var TitleId $titleId */
             $titleId = $this->getCommandBus()->handle(new AddTitleCommand(
-                [
-                    $this->defaultLangId => $data['name'],
-                ],
-                (int) $availableGendersTypes[$data['type']],
+                $data['name'],
+                new Gender((int) $availableGendersTypes[$data['type']]),
                 null,
                 null,
                 null
@@ -109,11 +109,9 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
 
         $command = new EditTitleCommand($editableTitle->getTitleId()->getValue());
 
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
         if (isset($data['name'])) {
-            $command->setLocalizedNames([
-                $this->defaultLangId => $data['name'],
-            ]);
+            $command->setLocalizedNames($data['name']);
         }
         if (isset($data['type'])) {
             /** @var FormChoiceProviderInterface $provider */
@@ -123,7 +121,7 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
                 throw new RuntimeException(sprintf('Gender type "%s" is not available.', $data['type']));
             }
 
-            $command->setGenderType((int) $availableGendersTypes[$data['type']]);
+            $command->setGender(new Gender((int) $availableGendersTypes[$data['type']]));
         }
 
         try {
@@ -178,39 +176,45 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the title :titleReference name should be :name
+     * @Then the title :titleReference name should be :name in locale :locale
      */
-    public function assertTitleName(string $titleReference, string $name): void
+    public function assertTitleName(string $titleReference, string $name, string $locale): void
     {
         $editableTitle = $this->getTitleForEdition($titleReference);
 
+        $langId = (int) Language::getIdByLocale($locale, true);
+
+        if (!$langId) {
+            throw new RuntimeException(sprintf('Language by locale "%s" was not found', $locale));
+        }
+
         Assert::assertEquals(
             $name,
-            $editableTitle->getLocalizedNames()[$this->defaultLangId]
+            $editableTitle->getLocalizedNames()[$langId]
         );
     }
 
     /**
-     * @Then the title :titleReference gender type should be :genderType
+     * @Then the title :titleReference gender type should be :gender
      */
-    public function assertTitleGenderType(string $titleReference, string $genderType): void
+    public function assertTitleGender(string $titleReference, string $gender): void
     {
         /** @var FormChoiceProviderInterface $provider */
         $provider = CommonFeatureContext::getContainer()->get('prestashop.core.form.choice_provider.gender_choice_provider');
         $availableGendersTypes = $provider->getChoices();
-        if (!isset($availableGendersTypes[$genderType])) {
-            throw new RuntimeException(sprintf('Gender type "%s" is not available.', $genderType));
+        if (!isset($availableGendersTypes[$gender])) {
+            throw new RuntimeException(sprintf('Gender type "%s" is not available.', $gender));
         }
 
         $editableTitle = $this->getTitleForEdition($titleReference);
 
         Assert::assertEquals(
-            $availableGendersTypes[$genderType],
-            $editableTitle->getGenderType(),
+            $availableGendersTypes[$gender],
+            $editableTitle->getGender()->getValue(),
             sprintf(
                 'Failed asserting that "%s" matches expected "%s".',
-                array_flip($availableGendersTypes)[$editableTitle->getGenderType()],
-                $genderType
+                array_flip($availableGendersTypes)[$editableTitle->getGender()->getValue()],
+                $gender
             )
         );
     }
