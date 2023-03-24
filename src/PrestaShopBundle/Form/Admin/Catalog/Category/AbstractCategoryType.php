@@ -169,20 +169,20 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Displayed', 'Admin.Global'),
-                /** IMO help here is not exactly clear. I don't understand what click on "displayed" means, maybe previously it was clickable but now isin't? */
+                /* IMO help here is not exactly clear. I don't understand what click on "displayed" means, maybe previously it was clickable but now isin't? */
                 'help' => $this->trans(
                         'Click on "%displayed_label%" to index the category on your shop.',
                         'Admin.Catalog.Help',
                         [
-                            '%displayed_label%' => $this->trans('Displayed', 'Admin.Global')
+                            '%displayed_label%' => $this->trans('Displayed', 'Admin.Global'),
                         ]
                     ) . '<br>' .
                     $this->trans(
                         'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.',
                         'Admin.Catalog.Help',
                         [
-                            '[1]' => '<a href="' . $this->router->generate('admin_module_manage') .  '" target="_blank" rel="noopener noreferrer nofollow">',
-                            '[/1]' => '</a>'
+                            '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
+                            '[/1]' => '</a>',
                         ]
                     ),
                 'required' => false,
@@ -202,7 +202,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'help' => $this->trans('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.', 'Admin.Catalog.Help'),
                 'multiple' => true,
                 'required' => false,
-                'disabled' => $disableMenuThumbnailsUpload
+                'disabled' => $disableMenuThumbnailsUpload,
             ])
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Global'),
