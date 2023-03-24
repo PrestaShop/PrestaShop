@@ -711,6 +711,8 @@ services:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType:
 
+  PrestaShopBundle\Form\Admin\Improve\International\Locations\AddressFormatType:
+
   PrestaShopBundle\Form\Admin\Type\EntitySearchInputType:
   PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Options\AttachedFileType:

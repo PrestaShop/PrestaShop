@@ -41,6 +41,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -88,7 +89,9 @@ class CountryType extends AbstractType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->translator->trans('Country', [], 'Admin.Global'),
                 'options' => [
+                    'help' => $this->translator->trans('Country name - Invalid characters: <>;=#{}'),
                     'constraints' => [
                         new Length([
                             'max' => 64,
@@ -108,6 +111,8 @@ class CountryType extends AbstractType
                 ],
             ])
             ->add('iso_code', TextType::class, [
+                'label' => $this->translator->trans('ISO code', [], 'Admin.Global'),
+                'help' => $this->translator->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).'),
                 'required' => true,
                 'constraints' => [
                     new TypedRegex([
@@ -116,15 +121,20 @@ class CountryType extends AbstractType
                 ],
             ])
             ->add('call_prefix', TextType::class, [
+                'label' => $this->translator->trans('Call prefix', [], 'Admin.Global'),
                 'required' => true,
+                'help' => $this->translator->trans('International call prefix, (e.g. 1 for United States).'),
             ])
             ->add('default_currency', ChoiceType::class, [
+                'label' => $this->translator->trans('Default currency', [], 'Admin.Global'),
                 'required' => false,
                 'choices' => $this->currencyChoiceProvider->getChoices(),
                 'placeholder' => $this->translator->trans('Default store currency', [], 'Admin.International.Feature'),
             ])
             ->add('zone', ChoiceType::class, [
+                'label' => $this->translator->trans('Zone', [], 'Admin.Global'),
                 'required' => false,
+                'help' => $this->translator->trans('Geographical region.'),
                 'choices' => $this->zoneChoiceProvider->getChoices(
                     [
                         'active' => false,
@@ -134,9 +144,12 @@ class CountryType extends AbstractType
                 'placeholder' => false,
             ])
             ->add('need_zip_code', SwitchType::class, [
+                'label' => $this->translator->trans('Does it need Zip/postal code?', [], 'Admin.Global'),
                 'required' => false,
+                'help' => $this->translator->trans("Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank."),
             ])
             ->add('zip_code_format', TextType::class, [
+                'label' => $this->translator->trans('Zip/postal code format', [], 'Admin.Global'),
                 'required' => true,
                 'constraints' => [
                     new TypedRegex([
@@ -144,29 +157,48 @@ class CountryType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('address_format', TextareaType::class, [
+            ->add('address_format', AddressFormatType::class, [
+                'label' => $this->translator->trans('Address format', [], 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new AddressFormat(),
                 ],
             ])
             ->add('is_enabled', SwitchType::class, [
+                'label' => $this->translator->trans('Active', [], 'Admin.Global'),
                 'required' => false,
+                'help' => $this->translator->trans('Display this country to your customers (the selected country will always be displayed in the back office).'),
             ])
             ->add('contains_states', SwitchType::class, [
+                'label' => $this->translator->trans('Contains states', [], 'Admin.Global'),
                 'required' => false,
             ])
             ->add('need_identification_number', SwitchType::class, [
+                'label' => $this->translator->trans('Do you need a tax identification number?', [], 'Admin.Global'),
                 'required' => false,
             ])
             ->add('display_tax_label', SwitchType::class, [
+                'label' => $this->translator->trans('', [], 'Admin.Global'),
                 'required' => false,
             ]);
 
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->translator->trans('Display tax label (e.g. "Tax incl.")', [], 'Admin.Global'),
                 'required' => false,
             ]);
         }
     }
+
+//    public function configureOptions(OptionsResolver $resolver)
+//    {
+//        parent::configureOptions($resolver);
+//        $resolver
+//            ->setDefaults([
+//                'label' => false,
+//                'required' => false,
+//                'form_theme' => '@PrestaShop/Admin/Improve/International/Country/FormTheme/country.html.twig',
+//            ])
+//        ;
+//    }
 }

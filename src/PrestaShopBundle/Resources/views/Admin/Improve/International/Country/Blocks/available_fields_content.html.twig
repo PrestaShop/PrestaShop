@@ -23,31 +23,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<ul class="nav nav-pills address-format-tabs" id="custom-address-fields">
-  <small class="form-text">
-  {{ 'Some countries require different elements than others. Click on the button below to get the valid default address format for this country.'|trans({}, 'Admin.International.Feature') }}
-  </small>
-  {% for key, rows in availableFields %}
-    <li class="nav-item">
-      <a href="#availableListFieldsFor_{{ key }}" class="nav-link  {{ loop.index == 1 ? 'active show' : '' }}">
-        {{ key }}
-      </a>
-    </li>
-  {% endfor %}
-</ul>
-<div class="tab-content address-format-tabs-content" >
-  {% for key, rows in availableFields %}
-    <div class="tab-pane availableFieldsList panel {% if loop.index == 1 %} active {% endif %}" id="availableListFieldsFor_{{ key }}">
-      {% for row in rows %}
-        {% set value = row %}
-        {% if row|split(':')|length > 1 %}
-          {% set value = row|split(':')|last %}
-        {% endif %}
-        <a href="javascript:void(0);" class="add-pattern btn btn-default btn-xs" id={{ row }}>
-          <i class="material-icons">add_circle_outline</i>
-          {{ value }}
-        </a>
-      {% endfor %}
+
+<div class="form-group row">
+  <label class="form-control-label col-lg-4">
+    {{ 'Address format'|trans({}, 'Admin.International.Feature') }}
+  </label>
+  <div class="col-lg-8">
+    <div class="form-group row">
+      <div class="col-lg-4">
+        {{ form_widget(countryForm.address_format, {'attr': {'style': 'min-height: 200px'}}) }}
+        {{ form_errors(countryForm.address_format) }}
+      </div>
+      <div class="col-lg-8">
+        <ul class="nav nav-pills address-format-tabs" id="custom-address-fields">
+          <small class="form-text">
+            {{ 'Some countries require different elements than others. Click on the button below to get the valid default address format for this country.'|trans({}, 'Admin.International.Feature') }}
+          </small>
+          {% for key, rows in availableFields %}
+            <li class="nav-item">
+              <a href="#availableListFieldsFor_{{ key }}" class="nav-link  {{ loop.index == 1 ? 'active show' : '' }}">
+                {{ key }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="tab-content address-format-tabs-content" >
+          {% for key, rows in availableFields %}
+            <div class="tab-pane availableFieldsList panel {% if loop.index == 1 %} active {% endif %}" id="availableListFieldsFor_{{ key }}">
+              {% for row in rows %}
+                {% set value = row %}
+                {% if row|split(':')|length > 1 %}
+                  {% set value = row|split(':')|last %}
+                {% endif %}
+                <a href="javascript:void(0);" class="add-pattern btn btn-default btn-xs" id={{ row }}>
+                  <i class="material-icons">add_circle_outline</i>
+                  {{ value }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-  {% endfor %}
+  </div>
+</div>
+<div class="form-group row justify-content-end">
+  {% include '@PrestaShop/Admin/Improve/International/Country/Blocks/format_actions.html.twig' %}
 </div>
