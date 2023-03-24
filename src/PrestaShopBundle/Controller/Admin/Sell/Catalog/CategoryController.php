@@ -169,6 +169,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        $configuration = $this->getConfiguration();
         $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
         $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
 
@@ -178,9 +179,9 @@ class CategoryController extends FrameworkBundleAdminController
          * Parent category can be root category only if you specifically click to add root category.
          * In all other cases it should be at least home category(Or one of it's children).
          */
-        $configRootCategory = $this->configuration->getInt('PS_ROOT_CATEGORY');
+        $configRootCategory = $configuration->getInt('PS_ROOT_CATEGORY');
         if ($parentId === $configRootCategory) {
-            $parentId = $this->configuration->getInt('PS_HOME_CATEGORY');
+            $parentId = $configuration->getInt('PS_HOME_CATEGORY');
         }
 
         $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
