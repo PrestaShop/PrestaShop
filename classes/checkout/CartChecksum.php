@@ -41,6 +41,13 @@ class CartChecksumCore implements ChecksumInterface
      */
     public function generateChecksum($cart)
     {
+        $addressValidator = new AddressValidator();
+        $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
+
+        if (!empty($invalidAddressIds)) {
+            return false;
+        }
+
         $uniq_id = '';
         $uniq_id .= $cart->id_shop;
         $uniq_id .= $this->separator;
