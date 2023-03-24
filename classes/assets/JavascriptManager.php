@@ -68,6 +68,9 @@ class JavascriptManagerCore extends AbstractAssetManager
     ) {
         if ('remote' === $server) {
             $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server, $version);
+        } elseif ($inline) {
+            $fullPath = _PS_CORE_DIR_ . $this->getFullPath($relativePath);
+            $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server);
         } elseif ($fullPath = $this->getFullPath($relativePath)) {
             $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server, $version);
         }
