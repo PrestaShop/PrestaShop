@@ -518,7 +518,7 @@ class AdminCountriesControllerCore extends AdminController
 
             foreach (AddressFormat::getValidateFields($class_name) as $name) {
                 $fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="' . ($class_name == 'Address' ? $name : $class_name . ':' . $name) . '">
-					<i class="icon-plus-sign"></i>&nbsp;' . ObjectModel::displayFieldName($name, $class_name) . '</a>';
+					<i class="icon-plus-sign"></i>&nbsp;' . $name . '</a>';
             }
             $html_tabcontent .= '
 				<div class="tab-pane availableFieldsList panel ' . $class_tab_active . '" id="availableListFieldsFor_' . $class_name . '">

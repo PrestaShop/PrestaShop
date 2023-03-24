@@ -1805,7 +1805,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 $this->errors[] = sprintf(
                     Tools::displayError('The %s field is required.'),
-                    call_user_func([$className, 'displayFieldName'], $field, $className)
+                    $field
                 );
             }
         }
@@ -1813,7 +1813,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->isProductFieldUpdated($fieldLang, $default_language->id) && !Tools::getValue($fieldLang . '_' . $default_language->id)) {
                 $this->errors[] = sprintf(
                     Tools::displayError('This %1$s field is required at least in %2$s'),
-                    call_user_func([$className, 'displayFieldName'], $fieldLang, $className),
+                    $fieldLang,
                     $default_language->name
                 );
             }
@@ -1822,7 +1822,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)) && Tools::strlen($value) > $maxLength) {
                 $this->errors[] = sprintf(
                     Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-                    call_user_func([$className, 'displayFieldName'], $field, $className),
+                    $field,
                     $maxLength
                 );
             }
@@ -1840,7 +1840,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (Tools::strlen(strip_tags($value)) > $limit) {
                     $this->errors[] = sprintf(
                         Tools::displayError('This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).'),
-                        call_user_func([$className, 'displayFieldName'], 'description_short'),
+                        'description_short',
                         $language['name'],
                         $limit,
                         Tools::strlen(strip_tags($value))
@@ -1854,7 +1854,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if ($value && Tools::strlen($value) > $maxLength) {
                     $this->errors[] = sprintf(
                         Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-                        call_user_func([$className, 'displayFieldName'], $fieldLang, $className),
+                        $fieldLang,
                         $maxLength
                     );
                 }
@@ -1876,7 +1876,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (!$res) {
                     $this->errors[] = sprintf(
                         Tools::displayError('The %s field is invalid.'),
-                        call_user_func([$className, 'displayFieldName'], $field, $className)
+                        $field
                     );
                 }
             }
@@ -1887,7 +1887,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     if (!Validate::$function($value, (int) Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The %1$s field (%2$s) is invalid.'),
-                            call_user_func([$className, 'displayFieldName'], $fieldLang, $className),
+                            $fieldLang,
                             $language['name']
                         );
                     }

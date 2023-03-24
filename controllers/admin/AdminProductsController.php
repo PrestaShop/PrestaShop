@@ -2048,7 +2048,7 @@ class AdminProductsControllerCore extends AdminController
                 if (Tools::getValue('id_' . $this->table) && $field == 'passwd') {
                     continue;
                 }
-                $this->errors[] = $this->trans('The %name% field is required.', ['%name%' => call_user_func([$this->className, 'displayFieldName'], $field, $this->className)], 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('The %name% field is required.', ['%name%' => $field], 'Admin.Notifications.Error');
             }
         }
 
@@ -2058,7 +2058,7 @@ class AdminProductsControllerCore extends AdminController
                 $this->errors[] = $this->trans(
                     'This %1$s field is required at least in %2$s',
                     [
-                        call_user_func([$this->className, 'displayFieldName'], $fieldLang, $this->className),
+                        $fieldLang,
                         $default_language->name,
                     ],
                     'Admin.Catalog.Notification'
@@ -2072,7 +2072,7 @@ class AdminProductsControllerCore extends AdminController
                 $this->errors[] = $this->trans(
                     'The %1$s field is too long (%2$d chars max).',
                     [
-                        call_user_func([$this->className, 'displayFieldName'], $field, $this->className),
+                        $field,
                         $maxLength,
                     ],
                     'Admin.Catalog.Notification'
@@ -2107,7 +2107,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).',
                         [
-                            call_user_func([$this->className, 'displayFieldName'], 'description_short'),
+                            'description_short',
                             $language['name'],
                             $limit,
                             Tools::strlen(strip_tags($value)),
@@ -2126,7 +2126,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'The %1$s field is too long (%2$d chars max).',
                         [
-                            call_user_func([$this->className, 'displayFieldName'], $fieldLang, $this->className),
+                            $fieldLang,
                             $maxLength,
                         ],
                         'Admin.Catalog.Notification'
@@ -2155,7 +2155,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'The %s field is invalid.',
                         [
-                            call_user_func([$this->className, 'displayFieldName'], $field, $this->className),
+                            $field,
                         ],
                         'Admin.Notifications.Error'
                     );
@@ -2170,7 +2170,7 @@ class AdminProductsControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             'The %1$s field (%2$s) is invalid.',
                             [
-                                call_user_func([$this->className, 'displayFieldName'], $fieldLang, $this->className),
+                                $fieldLang,
                                 $language['name'],
                             ],
                             'Admin.Notifications.Error'

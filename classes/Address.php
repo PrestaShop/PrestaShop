@@ -374,7 +374,7 @@ class AddressCore extends ObjectModel
             if ($human_errors) {
                 return $this->trans(
                     'The %s field is required.',
-                    [$this->displayFieldName($field, get_class($this))],
+                    [$field],
                     'Admin.Notifications.Error'
                 );
             }

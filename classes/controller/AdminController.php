@@ -3650,7 +3650,7 @@ class AdminControllerCore extends Controller
                     if (!isset($value) || '' == $value) {
                         $this->errors[$field . '_' . $default_language->id] = $this->trans(
                             'The field %field_name% is required at least in %lang%.',
-                            ['%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name],
+                            ['%field_name%' => $field, '%lang%' => $default_language->name],
                             'Admin.Notifications.Error'
                         );
                     }
