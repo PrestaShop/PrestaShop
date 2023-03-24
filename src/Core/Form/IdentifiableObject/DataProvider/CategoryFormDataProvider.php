@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -65,7 +64,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $categoryProvider;
 
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     private $router;
 

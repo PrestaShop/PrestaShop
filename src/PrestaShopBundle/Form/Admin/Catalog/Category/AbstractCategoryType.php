@@ -45,10 +45,10 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -74,7 +74,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     protected $configuration;
 
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     private $router;
 
@@ -84,7 +84,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
      * @param ConfigurationInterface $configuration
-     * @param Router $router
+     * @param UrlGeneratorInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -92,7 +92,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
         ConfigurationInterface $configuration,
-        Router $router
+        UrlGeneratorInterface $router
     ) {
         parent::__construct($translator, $locales);
 
