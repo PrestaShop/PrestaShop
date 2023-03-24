@@ -435,6 +435,11 @@ class CustomerType extends TranslatorAwareType
             'Admin.Orderscustomers.Help'
         );
 
+        $this->trans(
+            'This wording doesn\'t exist anywhere I\'m sure of sure.',
+            'Admin.Orderscustomers.Help'
+        );
+
         $resolver
             ->setDefaults([
                 // password is configurable
