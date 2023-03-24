@@ -1,0 +1,74 @@
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+import CartRuleMap from '@pages/cart-rule/cart-rule-map';
+
+export default class DiscountApplicationManager {
+  private reductionTypeSelector: string;
+
+  constructor(
+    reductionTypeSelector: string,
+  ) {
+    this.reductionTypeSelector = reductionTypeSelector;
+    this.init();
+  }
+
+  private init(): void {
+    this.toggleDiscountApplicationChoices();
+  }
+
+  private toggleDiscountApplicationChoices(): void {
+    const reductionTypeSelect = <HTMLSelectElement> document.querySelector(this.reductionTypeSelector);
+    const discountApplicationSelect = <HTMLSelectElement> document.querySelector(CartRuleMap.discountApplicationSelect);
+
+    reductionTypeSelect.addEventListener('change', (e: Event) => {
+      const currentTarget = <HTMLSelectElement> e.currentTarget;
+
+      if (currentTarget.value === 'percentage') {
+        this.updateChoices(
+          discountApplicationSelect,
+          JSON.parse(<string> discountApplicationSelect.dataset.percentageChoices),
+        );
+      } else {
+        this.updateChoices(
+          discountApplicationSelect,
+          JSON.parse(<string> discountApplicationSelect.dataset.amountChoices),
+        );
+      }
+    });
+  }
+
+  private updateChoices(selectElement: HTMLSelectElement, choices: Record<string, string>): void {
+    $(selectElement).empty();
+
+    Object.entries(choices).forEach(([label, value]) => {
+      const newOption = document.createElement('option');
+
+      newOption.label = label;
+      newOption.value = value;
+
+      selectElement.add(newOption);
+    });
+  }
+}

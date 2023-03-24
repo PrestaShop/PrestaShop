@@ -30,6 +30,7 @@ export default {
   currencySelect: '#cart_rule_actions_discount_reduction_currency',
   customerItem: '#cart_rule_conditions_customer_list .entity-item',
   customerSearchContainer: '#cart_rule_conditions_customer',
+  discountApplicationSelect: '#cart_rule_actions_discount_discount_application',
   discountContainer,
   highlightSwitchContainer: '.js-highlight-switch-container',
   includeTaxInput: '#cart_rule_actions_discount_reduction_include_tax',

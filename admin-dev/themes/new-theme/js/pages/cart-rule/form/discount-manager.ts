@@ -25,6 +25,7 @@
 
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
 import PriceReductionManager from '@components/form/price-reduction-manager';
+import DiscountApplicationManager from "@pages/cart-rule/form/discount-application-manager";
 
 export default class DiscountManager {
   private discountContainer: HTMLDivElement;
@@ -42,5 +43,6 @@ export default class DiscountManager {
       CartRuleMap.reductionValueSymbol,
       true,
     );
+    new DiscountApplicationManager(CartRuleMap.reductionTypeSelect);
   }
 }
