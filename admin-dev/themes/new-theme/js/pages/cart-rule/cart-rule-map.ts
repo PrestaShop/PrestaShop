@@ -32,6 +32,7 @@ export default {
   customerSearchContainer: '#cart_rule_conditions_customer',
   discountApplicationSelect: '#cart_rule_actions_discount_discount_application',
   discountContainer,
+  excludeDiscountedProductsContainer: '.exclude-discounted-products',
   highlightSwitchContainer: '.js-highlight-switch-container',
   includeTaxInput: '#cart_rule_actions_discount_reduction_include_tax',
   reductionTypeSelect: '#cart_rule_actions_discount_reduction_type',

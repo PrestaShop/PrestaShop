@@ -25,7 +25,7 @@
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
 
 export default class DiscountApplicationManager {
-  private reductionTypeSelector: string;
+  private readonly reductionTypeSelector: string;
 
   constructor(
     reductionTypeSelector: string,
@@ -35,32 +35,32 @@ export default class DiscountApplicationManager {
   }
 
   private init(): void {
-    this.toggleDiscountApplicationChoices();
+    this.updateChoices(this.getReductionTypeSelect().value);
+    this.toggleExcludeDiscountedProducts(this.getReductionTypeSelect().value);
+
+    this.listenReductionTypeChanges();
   }
 
-  private toggleDiscountApplicationChoices(): void {
-    const reductionTypeSelect = <HTMLSelectElement> document.querySelector(this.reductionTypeSelector);
-    const discountApplicationSelect = <HTMLSelectElement> document.querySelector(CartRuleMap.discountApplicationSelect);
+  private listenReductionTypeChanges(): void {
+    const reductionTypeSelect = this.getReductionTypeSelect();
 
     reductionTypeSelect.addEventListener('change', (e: Event) => {
       const currentTarget = <HTMLSelectElement> e.currentTarget;
-
-      if (currentTarget.value === 'percentage') {
-        this.updateChoices(
-          discountApplicationSelect,
-          JSON.parse(<string> discountApplicationSelect.dataset.percentageChoices),
-        );
-      } else {
-        this.updateChoices(
-          discountApplicationSelect,
-          JSON.parse(<string> discountApplicationSelect.dataset.amountChoices),
-        );
-      }
+      this.updateChoices(currentTarget.value);
+      this.toggleExcludeDiscountedProducts(currentTarget.value);
     });
   }
 
-  private updateChoices(selectElement: HTMLSelectElement, choices: Record<string, string>): void {
-    $(selectElement).empty();
+  private updateChoices(reductionType: string): void {
+    const discountApplicationSelect = <HTMLSelectElement> document.querySelector(CartRuleMap.discountApplicationSelect);
+
+    $(discountApplicationSelect).empty();
+
+    let choices: Record<string, string> = JSON.parse(<string> discountApplicationSelect.dataset.amountChoices);
+
+    if (reductionType === 'percentage') {
+      choices = JSON.parse(<string> discountApplicationSelect.dataset.percentageChoices);
+    }
 
     Object.entries(choices).forEach(([label, value]) => {
       const newOption = document.createElement('option');
@@ -68,7 +68,21 @@ export default class DiscountApplicationManager {
       newOption.label = label;
       newOption.value = value;
 
-      selectElement.add(newOption);
+      discountApplicationSelect.add(newOption);
     });
+  }
+
+  private toggleExcludeDiscountedProducts(reductionType: string): void {
+    const excludeDiscountedProductsEl = <HTMLDivElement> document.querySelector(CartRuleMap.excludeDiscountedProductsContainer);
+
+    if (reductionType === 'percentage') {
+      $(excludeDiscountedProductsEl).fadeIn();
+    } else {
+      $(excludeDiscountedProductsEl).fadeOut();
+    }
+  }
+
+  private getReductionTypeSelect(): HTMLSelectElement {
+    return <HTMLSelectElement> document.querySelector(this.reductionTypeSelector);
   }
 }

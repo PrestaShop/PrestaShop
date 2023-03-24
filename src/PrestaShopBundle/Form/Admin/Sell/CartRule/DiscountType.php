@@ -67,6 +67,9 @@ class DiscountType extends TranslatorAwareType
             ])
             ->add('exclude_discounted_products', SwitchType::class, [
                 'label' => $this->trans('Exclude discounted products', 'Admin.Catalog.Feature'),
+                'row_attr' => [
+                    'class' => 'exclude-discounted-products',
+                ],
             ])
         ;
 
