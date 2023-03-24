@@ -74,7 +74,7 @@ class Category extends FOBasePage {
     this.productItemListDiv = `${this.productListDiv} .products div.product`;
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
-    this.valueToSortBy = (sortBy: string) => `${this.productListDiv} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
+    this.valueToSortBy = (sortBy: string) => `${this.productListTop} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
 
     // Products list
     this.productList = '#js-product-list';
