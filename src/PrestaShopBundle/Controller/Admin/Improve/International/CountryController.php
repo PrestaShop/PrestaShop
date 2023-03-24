@@ -29,14 +29,19 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -160,6 +165,35 @@ class CountryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes country.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_countries_index",
+     *     message="You need permission to delete this."
+     * )
+     *
+     * @DemoRestricted(redirectRoute="admin_countries_index")
+     *
+     * @param int $countryId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(int $countryId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCountryCommand($countryId));
+            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_countries_index');
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    /**
      * @return array
      */
     protected function getCountryToolbarButtons(): array
@@ -184,12 +218,12 @@ class CountryController extends FrameworkBundleAdminController
     {
         return [
             CountryNotFoundException::class => $this->trans(
-                'This country does not exist',
+                'This country does not exist.',
                 'Admin.International.Feature'
             ),
             CannotEditCountryException::class => [
                 CannotEditCountryException::FAILED_TO_UPDATE_COUNTRY => $this->trans(
-                    'Failed to update country',
+                    'Failed to update country.',
                     'Admin.International.Feature'
                 ),
                 CannotEditCountryException::UNKNOWN_EXCEPTION => $this->trans(
@@ -198,7 +232,11 @@ class CountryController extends FrameworkBundleAdminController
                 ),
             ],
             CountryConstraintException::class => $this->trans(
-                'Country contains invalid field values',
+                'Country contains invalid field values.',
+                'Admin.International.Feature'
+            ),
+            DeleteCountryException::class => $this->trans(
+                'Country cannot be deleted.',
                 'Admin.International.Feature'
             ),
         ];

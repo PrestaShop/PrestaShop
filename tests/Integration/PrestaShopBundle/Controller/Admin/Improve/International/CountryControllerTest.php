@@ -174,6 +174,22 @@ phone';
     }
 
     /**
+     * @depends testFilters
+     *
+     * @param int $countryId
+     */
+    public function testDelete(int $countryId): void
+    {
+        $countries = $this->getEntitiesFromGrid();
+        $initialEntityCount = $countries->count();
+
+        $this->deleteEntityFromPage('admin_countries_delete', ['countryId' => $countryId]);
+
+        $newCountries = $this->getEntitiesFromGrid();
+        $this->assertCount($initialEntityCount - 1, $newCountries);
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function generateCreateUrl(): string

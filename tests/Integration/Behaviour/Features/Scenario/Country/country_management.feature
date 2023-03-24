@@ -68,3 +68,7 @@ Feature: country management
       | needIdNumber          | true      |
       | displayTaxLabel       | false     |
       | shopAssociation       | 1         |
+
+  Scenario: Delete country
+    When I delete country "test"
+    Then country "test" should be deleted

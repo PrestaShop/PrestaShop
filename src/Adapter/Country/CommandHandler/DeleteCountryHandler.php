@@ -30,14 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
-use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\DeleteCountryHandlerInterface;
 
 /**
- * Handles creation of country and address format
+ * Handles country deletion
  */
-class AddCountryHandler implements AddCountryHandlerInterface
+class DeleteCountryHandler implements DeleteCountryHandlerInterface
 {
     /**
      * @var CountryRepository
@@ -52,34 +51,8 @@ class AddCountryHandler implements AddCountryHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(AddCountryCommand $command): CountryId
+    public function handle(DeleteCountryCommand $command): void
     {
-        $country = new Country();
-
-        $country->name = $command->getLocalizedNames();
-        $country->iso_code = $command->getIsoCode();
-        $country->call_prefix = $command->getCallPrefix();
-        $country->need_zip_code = $command->needZipCode();
-        $country->active = $command->isEnabled();
-        $country->need_identification_number = $command->needIdNumber();
-        $country->display_tax_label = $command->displayTaxLabel();
-        $country->id_shop_list = $command->getShopAssociation();
-        $country->contains_states = $command->containsStates();
-
-        if (null !== $command->getZipCodeFormat()) {
-            $country->zip_code_format = $command->getZipCodeFormat()->getValue();
-        }
-
-        if (null !== $command->getDefaultCurrency()) {
-            $country->id_currency = $command->getDefaultCurrency();
-        }
-
-        if (null !== $command->getZoneId()) {
-            $country->id_zone = $command->getZoneId()->getValue();
-        }
-
-        $this->countryRepository->add($country);
-
-        return new CountryId((int) $country->id);
+        $this->countryRepository->delete($command->getCountryId());
     }
 }
