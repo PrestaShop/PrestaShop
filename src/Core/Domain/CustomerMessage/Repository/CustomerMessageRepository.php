@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository;
 use PrestaShop\PrestaShop\Core\Customer\CustomerMessageInterface;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
+/**
+ * @experimental Refacto needed once the new model architecture is defined.
+ */
 class CustomerMessageRepository extends AbstractObjectModelRepository
 {
     /**

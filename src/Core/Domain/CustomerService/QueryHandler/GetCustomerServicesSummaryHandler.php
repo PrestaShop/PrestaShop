@@ -38,6 +38,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
+ * @experimental Refacto needed once the new model architecture is defined.
  */
 class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHandlerInterface
 {

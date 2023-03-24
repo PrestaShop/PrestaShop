@@ -26,15 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\Repository;
 
+/**
+ * @experimental Refacto needed once the new model architecture is defined.
+ */
 interface ContactRepositoryInterface
 {
     /**
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{id_contact: int, id_lang: int, name: string, description: string}>
      */
     public function getCategoriesContacts(): array;
 
     /**
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{id_contact: int, id_lang: int, name: string, description: string, total: int, id_customer_thread: int}>
      */
     public function getContacts(): array;
 }
