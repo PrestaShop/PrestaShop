@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServic
 interface GetCustomerServicesSummaryHandlerInterface
 {
     /**
-     * @return CustomerServiceSummary[]
+     * @return array{summaries: CustomerServiceSummary[], statistics: string}
      */
     public function handle(GetCustomerServiceSummary $query): array;
 }
