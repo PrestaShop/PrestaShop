@@ -82,12 +82,13 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
     }
 
     /**
-     * @return array{summaries?: array<int,CustomerServiceSummary>, statistics: array<string, (float|int)>}
+     * @return array{summaries: array<int,CustomerServiceSummary>, statistics: array<string, (float|int)>}
      */
     public function handle(GetCustomerServiceSummary $query): array
     {
         $contacts = $this->contactRepository->getContacts();
         $customerServicesSummary = [];
+        $customerServicesSummary['summaries'] = [];
         foreach ($this->contactRepository->getCategoriesContacts() as $categoriesContact) {
             $customerThreadId = 0;
             $totalThreads = 0;
