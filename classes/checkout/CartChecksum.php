@@ -45,7 +45,7 @@ class CartChecksumCore implements ChecksumInterface
         $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
 
         if (!empty($invalidAddressIds)) {
-            return "";
+            return '';
         }
 
         $uniq_id = '';
