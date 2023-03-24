@@ -84,6 +84,7 @@ class CategoryControllerCore extends ProductListingFrontController
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->setTemplate('errors/404');
+            $this->category = new Category();
             $this->notFound = true;
 
             return;
