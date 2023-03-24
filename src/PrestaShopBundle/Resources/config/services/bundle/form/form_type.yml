@@ -552,6 +552,7 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType:
     arguments:
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+  PrestaShopBundle\Form\Admin\Improve\International\Locations\AddressFormatType:
 
   PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType:
 

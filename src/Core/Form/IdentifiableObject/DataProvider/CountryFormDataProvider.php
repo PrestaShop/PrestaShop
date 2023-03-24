@@ -87,7 +87,9 @@ class CountryFormDataProvider implements FormDataProviderInterface
             'zone' => $editableCountry->getZone(),
             'need_zip_code' => $editableCountry->isNeedZipCode(),
             'zip_code_format' => null !== $editableCountry->getZipCodeFormat() ? $editableCountry->getZipCodeFormat()->getValue() : null,
-            'address_format' => $editableCountry->getAddressFormat(),
+            'address_format' => [
+                'address_format' => $editableCountry->getAddressFormat(),
+            ],
             'is_enabled' => $editableCountry->isEnabled(),
             'contains_states' => $editableCountry->isContainsStates(),
             'need_identification_number' => $editableCountry->isNeedIdNumber(),
@@ -115,7 +117,9 @@ class CountryFormDataProvider implements FormDataProviderInterface
             'contains_states' => false,
             'need_identification_number' => false,
             'display_tax_label' => true,
-            'address_format' => $addressFormat->getDefaultFormat(),
+            'address_format' => [
+                'address_format' => $addressFormat->getAddressFormat(),
+            ],
         ];
 
         if ($this->multistoreEnabled) {

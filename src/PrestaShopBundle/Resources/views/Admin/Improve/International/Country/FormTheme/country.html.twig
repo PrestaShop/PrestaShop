@@ -1,0 +1,74 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% block _country_address_format_widget %}
+  <div class="form-group row">
+    <label class="form-control-label col-lg-4">
+      {{ 'Address format'|trans({}, 'Admin.International.Feature') }}
+    </label>
+    <div class="col-lg-8">
+      <div class="form-group row">
+        <div class="col-lg-4">
+          {{ form_widget(form, {'attr': {'style': 'min-height: 200px'}}) }}
+          {{ form_errors(form) }}
+        </div>
+        <div class="col-lg-8">
+          <ul class="nav nav-pills address-format-tabs" id="custom-address-fields">
+            <small class="form-text">
+              {{ 'Some countries require different elements than others. Click on the button below to get the valid default address format for this country.'|trans({}, 'Admin.International.Feature') }}
+            </small>
+            {% for key, rows in available_fields %}
+              <li class="nav-item">
+                <a href="#availableListFieldsFor_{{ key }}" class="nav-link  {{ loop.index == 1 ? 'active show' : '' }}">
+                  {{ key }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="tab-content address-format-tabs-content" >
+            {% for key, rows in available_fields %}
+              <div class="tab-pane availableFieldsList panel {% if loop.index == 1 %} active {% endif %}" id="availableListFieldsFor_{{ key }}">
+                {% for row in rows %}
+                  {% set value = row %}
+                  {% if row|split(':')|length > 1 %}
+                    {% set value = row|split(':')|last %}
+                  {% endif %}
+                  <a href="javascript:void(0);" class="add-pattern btn btn-default btn-xs" id={{ row }}>
+                    <i class="material-icons">add_circle_outline</i>
+                    {{ value }}
+                  </a>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row justify-content-end">
+    {% include '@PrestaShop/Admin/Improve/International/Country/Blocks/format_actions.html.twig' with {'address_format': address_format, 'default_format': default_format} %}
+  </div>
+{% endblock %}

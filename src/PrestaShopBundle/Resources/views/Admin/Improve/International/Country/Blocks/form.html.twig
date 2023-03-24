@@ -24,7 +24,7 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-{% form_theme countryForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{#{% form_theme countryForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}#}
 
 {{ form_start(countryForm) }}
 <div class="card">
@@ -34,91 +34,10 @@
   </div>
   <div class="card-body">
     <div class="form-wrapper">
-      <div class="card-block row">
-        <div class="card-text">
-
-          {{ form_errors(countryForm) }}
-
-          {{ ps.form_group_row(countryForm.name, {}, {
-            'label': 'Country'|trans({}, 'Admin.Global'),
-            'help' : 'Country name'|trans({}, 'Admin.International.Feature') ~ ' - ' ~ 'Invalid characters:'|trans({}, 'Admin.Global') ~ ' <>;=#{} '
-          }) }}
-
-          {{ ps.form_group_row(countryForm.iso_code, {}, {
-            'label': 'ISO code'|trans({}, 'Admin.International.Feature'),
-            'help' : 'Two -- or three -- letter ISO code (e.g. "us" for United States).'|trans({}, 'Admin.International.Help')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.call_prefix, {}, {
-            'label': 'Call prefix'|trans({}, 'Admin.International.Feature'),
-            'help' : 'International call prefix, (e.g. 1 for United States).'|trans({}, 'Admin.International.Help')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.default_currency, {}, {
-            'label': 'Default currency'|trans({}, 'Admin.International.Feature')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.zone, {}, {
-            'label': 'Zone'|trans({}, 'Admin.Global'),
-            'help' : 'Geographical region.'|trans({}, 'Admin.International.Help')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.need_zip_code, {}, {
-            'label': 'Does it need Zip/postal code?'|trans({}, 'Admin.International.Feature')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.zip_code_format, {}, {
-            'label': 'Zip/postal code format'|trans({}, 'Admin.International.Feature'),
-            'help' : 'Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.'|trans({}, 'Admin.International.Help')
-          }) }}
-
-          <div class="form-group row">
-            <label class="form-control-label col-lg-4">
-              {{ 'Address format'|trans({}, 'Admin.International.Feature') }}
-            </label>
-            <div class="col-lg-8">
-              <div class="form-group row">
-                <div class="col-lg-4">
-                  {{ form_widget(countryForm.address_format, {'attr': {'style': 'min-height: 200px'}}) }}
-                  {{ form_errors(countryForm.address_format) }}
-                </div>
-                <div class="col-lg-8">
-                  {% include '@PrestaShop/Admin/Improve/International/Country/Blocks/available_fields_content.html.twig' %}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group row justify-content-end">
-            {% include '@PrestaShop/Admin/Improve/International/Country/Blocks/format_actions.html.twig' %}
-          </div>
-
-          {{ ps.form_group_row(countryForm.is_enabled, {}, {
-            'label': 'Active'|trans({}, 'Admin.Global'),
-            'help' : 'Display this country to your customers (the selected country will always be displayed in the back office).'|trans({}, 'Admin.International.Help')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.contains_states, {}, {
-            'label': 'Contains states'|trans({}, 'Admin.International.Feature')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.need_identification_number, {}, {
-            'label': 'Do you need a tax identification number?'|trans({}, 'Admin.International.Feature')
-          }) }}
-
-          {{ ps.form_group_row(countryForm.display_tax_label, {}, {
-            'label': 'Display tax label (e.g. "Tax incl.")'|trans({}, 'Admin.International.Feature')
-          }) }}
-
-          {% if countryForm.shop_association is defined %}
-            {{ ps.form_group_row(countryForm.shop_association, {}, {
-              'label': 'Shop association'|trans({}, 'Admin.Global')
-            }) }}
-          {% endif %}
-
-          {{ form_widget(countryForm) }}
-        </div>
-      </div>
+      {{ form_errors(countryForm) }}
+      {% block form_zone_widget %}
+        {{ form_widget(countryForm) }}
+      {% endblock %}
     </div>
   </div>
   <div class="card-footer">
