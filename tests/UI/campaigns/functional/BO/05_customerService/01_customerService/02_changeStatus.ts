@@ -181,21 +181,15 @@ describe('BO - Customer Service : Change status', async () => {
       await expect(isModalVisible).to.be.true;
     });
 
-    it('should forward the message', async function () {
+    it('should forward the message and check the thread', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage', baseContext);
 
-      const successMessage = await viewPage.forwardMessage(page, forwardMessageData);
-      await expect(successMessage).to.eq(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.email}`);
-    });
+      await viewPage.forwardMessage(page, forwardMessageData);
 
-    it('should check the thread', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkThread', baseContext);
-
-      const messages = await viewPage.getCustomerMessage(page);
+      const messages = await viewPage.getThreadMessages(page);
       await expect(messages)
         .to.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
           + ` ${Employees.DefaultEmployee.lastName}`)
-        .and.contains(contactUsData.message)
         .and.contains(forwardMessageData.message);
     });
 

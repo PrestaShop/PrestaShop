@@ -17,7 +17,9 @@ class ViewCustomer extends BOBasePage {
 
   private readonly threadBadge: string;
 
-  private readonly messagesThreadDiv: string;
+  private readonly messageInitialThreadDiv: string;
+
+  private readonly messageThreadDiv: string;
 
   private readonly attachmentLink: string;
 
@@ -53,19 +55,20 @@ class ViewCustomer extends BOBasePage {
     this.messageSuccessfullySend = 'The message was successfully sent to the customer.';
 
     // Selectors
-    this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
-    this.messagesThreadDiv = '#main-div div[data-role="messages-thread"]';
-    this.attachmentLink = `${this.messagesThreadDiv} a[href*='/upload']`;
-    this.statusButton = (statusName: string) => `${this.messagesThreadDiv} form input[value='${statusName}'] + button`;
-    this.forwardMessageButton = `${this.messagesThreadDiv} button[data-target='#forwardThreadModal']`;
-    this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
-    this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
-    this.sendMessageButton = '#main-div div.card-footer button';
-    this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
-    this.forwardMessageModal = '#forwardThreadModal div form';
-    this.forwardModalEmployeeIDSelect = '#forward_customer_thread_employee_id';
-    this.forwardModalCommentInput = '#forward_customer_thread_comment';
-    this.forwardModalSendButton = `${this.forwardMessageModal} div.modal-footer > button.btn.btn-primary`;
+    this.threadBadge = 'span.badge';
+    this.messageInitialThreadDiv = '#content div.message-item-initial';
+    this.attachmentLink = `${this.messageInitialThreadDiv} span.message-product a`;
+    this.messageThreadDiv = '#content div[data-role="thread-messages"]';
+    this.statusButton = (statusID: number) => `button[name='setstatus'][value='${statusID}']`;
+    this.forwardMessageButton = 'button[data-target="#myModal"]';
+    this.yourAnswerFormTitle = '#reply-form-title';
+    this.yourAnswerFormTextarea = '#reply_message';
+    this.sendMessageButton = '#content div.panel-footer button';
+    this.ordersAndMessagesBlock = '#orders-and-messages-block';
+    this.forwardMessageModal = '#myModal';
+    this.forwardModalEmployeeIDSelect = `${this.forwardMessageModal} select[name='id_employee_forward']`;
+    this.forwardModalCommentInput = `${this.forwardMessageModal} textarea[name='message_forward']`;
+    this.forwardModalSendButton = `${this.forwardMessageModal} div.modal-footer button.btn.btn-primary`;
   }
 
   /*
@@ -88,7 +91,16 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<string>}
    */
   getCustomerMessage(page: Page): Promise<string> {
-    return this.getTextContent(page, this.messagesThreadDiv);
+    return this.getTextContent(page, this.messageInitialThreadDiv);
+  }
+
+  /**
+   * Get thread messages
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getThreadMessages(page: Page): Promise<string> {
+    return this.getTextContent(page, this.messageThreadDiv);
   }
 
   /**
@@ -153,15 +165,13 @@ class ViewCustomer extends BOBasePage {
    * Forward message
    * @param page {Page} Browser tab
    * @param messageData {MessageData} Message data to set
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async forwardMessage(page: Page, messageData: MessageData): Promise<string> {
+  async forwardMessage(page: Page, messageData: MessageData): Promise<void> {
     await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employee);
     await this.setValue(page, this.forwardModalCommentInput, messageData.message);
 
     await this.waitForSelectorAndClick(page, this.forwardModalSendButton);
-
-    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Your answer form
@@ -187,13 +197,11 @@ class ViewCustomer extends BOBasePage {
    * Add response to customer
    * @param page {Page} Browser tab
    * @param response {string} response to set to the customer
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async addResponse(page: Page, response: string): Promise<string> {
+  async addResponse(page: Page, response: string): Promise<void> {
     await this.setValue(page, this.yourAnswerFormTextarea, response);
     await this.waitForSelectorAndClick(page, this.sendMessageButton);
-
-    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Orders and messages timeline form

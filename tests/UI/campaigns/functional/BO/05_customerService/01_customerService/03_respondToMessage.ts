@@ -105,17 +105,12 @@ describe('BO - Customer Service : Respond to message', async () => {
       await expect(pageTitle).to.contains(viewPage.pageTitle);
     });
 
-    it('should respond to message', async function () {
+    it('should add a response and check the thread', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'respondToMessage', baseContext);
 
-      const successMessage = await viewPage.addResponse(page, answerMessage);
-      await expect(successMessage).to.eq(viewPage.messageSuccessfullySend);
-    });
+      await viewPage.addResponse(page, answerMessage);
 
-    it('should check the thread', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkThread', baseContext);
-
-      const messages = await viewPage.getCustomerMessage(page);
+      const messages = await viewPage.getThreadMessages(page);
       await expect(messages).to.contains(answerMessage);
     });
 
