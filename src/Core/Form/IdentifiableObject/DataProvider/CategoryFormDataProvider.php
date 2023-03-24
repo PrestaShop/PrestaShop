@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShopBundle\Service\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provides data for category add/edit category forms
@@ -74,7 +75,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      * @param int $contextShopRootCategoryId
      * @param GroupDataProvider $groupDataProvider
      * @param CategoryProvider $categoryProvider
-     * @param Router $router
+     * @param UrlGeneratorInterface $router
      */
     public function __construct(
         CommandBusInterface $queryBus,
@@ -82,7 +83,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         $contextShopRootCategoryId,
         GroupDataProvider $groupDataProvider,
         CategoryProvider $categoryProvider,
-        Router $router
+        UrlGeneratorInterface $router
     ) {
         $this->queryBus = $queryBus;
         $this->contextShopId = $contextShopId;

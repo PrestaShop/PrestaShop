@@ -47,7 +47,7 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.getCategory()'
       - '@prestashop.adapter.group.group_data_provider'
       - '@prestashop.adapter.shop.url.category_provider'
-      - '@prestashop.router'
+      - '@router.default'
 
   prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ContactFormDataProvider'
