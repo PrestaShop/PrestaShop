@@ -28,8 +28,13 @@ import CartRuleMap from '@pages/cart-rule/cart-rule-map';
 import FormFieldToggler from '@components/form/form-field-toggler';
 import CartRuleEventMap from '@pages/cart-rule/cart-rule-event-map';
 import CustomerSearchInput from '@pages/customer/customer-search-input';
+import DiscountManager from '@pages/cart-rule/form/discount-manager';
 
 $(() => {
+  // It is important that discountManager is initialized before DisablingSwitch
+  // or else it won't find reduction type value when it is disabled therefore not toggling some inputs correctly on init
+  new DiscountManager();
+
   window.prestashop.component.initComponents([
     'TranslatableField',
     'TranslatableInput',

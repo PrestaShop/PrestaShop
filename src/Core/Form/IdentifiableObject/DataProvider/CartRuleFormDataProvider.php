@@ -107,6 +107,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
                     'reduction' => [
                         'value' => 0,
                         'type' => Reduction::TYPE_PERCENTAGE,
+                        'currency' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT'),
                         'tax_included' => true,
                     ],
                 ],

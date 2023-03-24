@@ -27,26 +27,31 @@ const {$} = window;
 
 /**
  * Shows/hides 'include_tax' field depending from 'reduction_type' field value
+ * @todo: class should be renamed, its not focued on tax field anymore but handles many dynamics in PriceReductionType
  */
 export default class ReductionTaxFieldToggle {
   $reductionTypeSelector: JQuery;
 
   $taxInclusionInputs: JQuery;
 
-  currencySymbolSelect: string;
+  currencySelect: string;
 
   reductionAmountSymbolSelector: string;
+
+  hideCurrencyOnPercentageType: boolean;
 
   constructor(
     reductionTypeSelector: string,
     taxInclusionInputs: string,
-    currencySymbolSelect: string,
+    currencySelect: string,
     reductionAmountSymbolSelector:string,
+    hideCurrencyOnPercentageType: boolean = false,
   ) {
     this.$reductionTypeSelector = $(reductionTypeSelector);
     this.$taxInclusionInputs = $(taxInclusionInputs);
-    this.currencySymbolSelect = currencySymbolSelect;
+    this.currencySelect = currencySelect;
     this.reductionAmountSymbolSelector = reductionAmountSymbolSelector;
+    this.hideCurrencyOnPercentageType = hideCurrencyOnPercentageType;
     this.handle();
     this.$reductionTypeSelector.on('change', () => this.handle());
   }
@@ -59,8 +64,14 @@ export default class ReductionTaxFieldToggle {
 
     if (isPercentage) {
       this.$taxInclusionInputs.fadeOut();
+      if (this.hideCurrencyOnPercentageType) {
+        $(this.currencySelect).fadeOut();
+      }
     } else {
       this.$taxInclusionInputs.fadeIn();
+      if (this.hideCurrencyOnPercentageType) {
+        $(this.currencySelect).fadeIn();
+      }
     }
 
     if (this.reductionAmountSymbolSelector !== '') {
@@ -76,7 +87,7 @@ export default class ReductionTaxFieldToggle {
   }
 
   private getSymbol(defaultValue: string): string {
-    const select = document.querySelector<HTMLSelectElement>(this.currencySymbolSelect);
+    const select = document.querySelector<HTMLSelectElement>(this.currencySelect);
 
     if (!select) {
       return defaultValue;

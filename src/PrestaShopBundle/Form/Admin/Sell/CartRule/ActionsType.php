@@ -66,14 +66,14 @@ class ActionsType extends TranslatorAwareType
         $builder
             ->add('free_shipping', SwitchType::class)
             ->add('discount', DiscountType::class, [
+                'row_attr' => [
+                    'class' => 'discount-container',
+                ],
                 'disabling_switch' => true,
                 'disabled_value' => static function (?array $data) {
                     return empty($data['reduction']['value']);
                 },
             ])
-            //@todo: this field should only be shown when discount percentage is selected
-            //       (it will probably have to go inside DiscountType)
-            ->add('exclude_discounted_products', SwitchType::class)
             ->add('gift_product', EntitySearchInputType::class, [
                 'entry_type' => RelatedProductType::class,
                 'entry_options' => [

@@ -106,6 +106,7 @@ class PriceReductionType extends CommonAbstractType
         if ($options['currency_select']) {
             $builder->add('currency', ChoiceType::class, [
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
+                'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
             ]);
         }
 

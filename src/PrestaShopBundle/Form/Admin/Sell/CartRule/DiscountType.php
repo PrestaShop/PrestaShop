@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
 use PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener\DiscountListener;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -61,11 +62,13 @@ class DiscountType extends TranslatorAwareType
                 'currency_select' => true,
                 'symbol_as_label' => false,
                 'label' => false,
-                'column_breaker' => true,
             ])
             ->add('discount_application', ChoiceType::class, [
                 // choices depends on reduction type data therefore are set in an event subscriber added bellow
                 'choices' => [],
+            ])
+            ->add('exclude_discounted_products', SwitchType::class, [
+                'label' => $this->trans('Exclude discounted products', 'Admin.Catalog.Feature'),
             ])
         ;
 

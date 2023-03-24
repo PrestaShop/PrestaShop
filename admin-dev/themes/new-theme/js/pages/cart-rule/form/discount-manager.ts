@@ -22,18 +22,25 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-const discountContainer = '.discount-container';
 
-export default {
-  codeGeneratorBtn: '#cart_rule_information .js-generator-btn',
-  codeInput: '#cart_rule_information_code',
-  currencySelect: '#cart_rule_actions_discount_reduction_currency',
-  customerItem: '#cart_rule_conditions_customer_list .entity-item',
-  customerSearchContainer: '#cart_rule_conditions_customer',
-  discountContainer,
-  highlightSwitchContainer: '.js-highlight-switch-container',
-  includeTaxInput: '#cart_rule_actions_discount_reduction_include_tax',
-  reductionTypeSelect: '#cart_rule_actions_discount_reduction_type',
-  // eslint-disable-next-line max-len
-  reductionValueSymbol: `${discountContainer} .price-reduction-value .input-group .input-group-append .input-group-text, .price-reduction-value .input-group .input-group-prepend .input-group-text`,
-};
+import CartRuleMap from '@pages/cart-rule/cart-rule-map';
+import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
+
+export default class DiscountManager {
+  private discountContainer: HTMLDivElement;
+
+  constructor() {
+    this.discountContainer = <HTMLDivElement> document.querySelector(CartRuleMap.discountContainer);
+    this.init();
+  }
+
+  private init(): void {
+    new ReductionTaxFieldToggle(
+      CartRuleMap.reductionTypeSelect,
+      CartRuleMap.includeTaxInput,
+      CartRuleMap.currencySelect,
+      CartRuleMap.reductionValueSymbol,
+      true,
+    );
+  }
+}
