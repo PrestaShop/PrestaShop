@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
@@ -82,6 +83,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
+     * @param ConfigurationInterface $configuration
      * @param Router $router
      */
     public function __construct(
@@ -89,12 +91,14 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
+        ConfigurationInterface $configuration,
         Router $router
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multiStoreFeature = $multiStoreFeature;
+        $this->configuration = $configuration;
         $this->router = $router;
     }
 
