@@ -24,7 +24,7 @@
  */
 import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/product/specific-price/specific-price-map';
-import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
+import PriceReductionManager from '@components/form/price-reduction-manager';
 import CombinationSelector from '@pages/product/specific-price/form/combination-selector';
 import Router from '@components/router';
 import CustomerSelector from '@pages/product/specific-price/form/customer-selector';
@@ -84,7 +84,7 @@ $(() => {
       }
     }),
   );
-  new ReductionTaxFieldToggle(
+  new PriceReductionManager(
     SpecificPriceMap.reductionTypeSelect,
     SpecificPriceMap.includeTaxInputContainer,
     SpecificPriceMap.currencyId,

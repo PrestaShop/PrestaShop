@@ -23,8 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
-import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
+import PriceReductionManager from '@components/form/price-reduction-manager';
 import PriceFieldAvailabilityHandler from './price-field-availability-handler';
 
 import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
@@ -36,7 +35,7 @@ $(() => {
     CatalogPriceRuleFormMap.initialPrice,
     CatalogPriceRuleFormMap.price,
   );
-  new ReductionTaxFieldToggle(
+  new PriceReductionManager(
     CatalogPriceRuleFormMap.reductionTypeSelect,
     CatalogPriceRuleFormMap.includeTax,
     CatalogPriceRuleFormMap.currencyId,

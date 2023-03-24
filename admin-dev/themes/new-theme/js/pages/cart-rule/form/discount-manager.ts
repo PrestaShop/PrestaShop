@@ -24,7 +24,7 @@
  */
 
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
-import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
+import PriceReductionManager from '@components/form/price-reduction-manager';
 
 export default class DiscountManager {
   private discountContainer: HTMLDivElement;
@@ -35,7 +35,7 @@ export default class DiscountManager {
   }
 
   private init(): void {
-    new ReductionTaxFieldToggle(
+    new PriceReductionManager(
       CartRuleMap.reductionTypeSelect,
       CartRuleMap.includeTaxInput,
       CartRuleMap.currencySelect,

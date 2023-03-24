@@ -29,7 +29,7 @@ const {$} = window;
 /**
  * Handles dynamics (shows/hides fields, changes currency symbols) of price reduction form fields
  */
-export default class ReductionTaxFieldToggle {
+export default class PriceReductionManager {
   reductionTypeSelector: string;
 
   $reductionTypeSelect: JQuery;
