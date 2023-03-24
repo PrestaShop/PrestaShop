@@ -42,7 +42,7 @@
       {% endfor %}
     </div>
   {% endif %}
-  {% if disabled|default(false) %}
+  {% if form.parent.vars.data.disabled_menu_thumbnail_upload and warning_message is not null %}
     <div class="d-none">
       {{ block('file_widget') }}
     </div>

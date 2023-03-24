@@ -64,6 +64,7 @@ class ImageWithPreviewType extends FileType
             'csrf_delete_token' => null,
             'show_size' => false,
             'warning_message' => null,
+            'data_class' => null,
         ])
             ->setAllowedTypes('can_be_deleted', ['bool'])
             ->setAllowedTypes('download_url', ['null', 'string'])

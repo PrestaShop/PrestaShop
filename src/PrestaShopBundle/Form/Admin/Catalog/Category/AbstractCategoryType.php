@@ -26,15 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
-use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
-use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
-use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
@@ -82,32 +78,24 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $router;
 
     /**
-     * @var TacticianCommandBusAdapter
-     */
-    private $queryBus;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
      * @param Router $router
-     * @param TacticianCommandBusAdapter $queryBus
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
-        Router $router,
-        TacticianCommandBusAdapter $queryBus
+        Router $router
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multiStoreFeature = $multiStoreFeature;
         $this->router = $router;
-        $this->queryBus = $queryBus;
     }
 
     /**
@@ -115,13 +103,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $disableMenuThumbnailsUpload = false;
-        if ($options['id_category']) {
-            /** @var EditableCategory $editableCategory */
-            $editableCategory = $this->queryBus->handle(new GetCategoryForEditing((int) $options['id_category']));
-            $disableMenuThumbnailsUpload = !$editableCategory->canContainMoreMenuThumbnails();
-        }
-
         $genericCharactersHint = $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::CATALOG_CHARS]);
         /* @var EditableCategory $editableCategory */
         $builder
@@ -211,7 +192,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'help' => $this->trans('It will display a thumbnail representing the category in the menu, if the theme allows it.', 'Admin.Catalog.Help'),
                 'multiple' => true,
                 'required' => false,
-                'disabled' => $disableMenuThumbnailsUpload,
                 'can_be_deleted' => true,
                 'warning_message' => $this->trans(
                     'You have reached the limit (%limit%) of files to upload, please remove files to continue uploading',

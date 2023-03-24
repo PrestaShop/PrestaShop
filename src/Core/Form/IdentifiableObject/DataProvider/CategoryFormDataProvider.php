@@ -98,6 +98,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
 
         $coverImages = $thumbnailImages = $menuThumbnailImagesEdited = null;
+        $disableMenuThumbnailsUpload = false;
         if ($categoryId) {
             $categoryId = (int) $categoryId;
             $categoryUrl = $this->categoryProvider->getUrl($categoryId, '{friendly-url}');
@@ -135,6 +136,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
                     ),
                 ];
             }
+            $disableMenuThumbnailsUpload = !$editableCategory->canContainMoreMenuThumbnails();
         } else {
             $categoryUrl = $this->categoryProvider->getUrl(0, '{friendly-url}');
         }
@@ -154,6 +156,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'thumbnail_image' => $thumbnailImages,
             'menu_thumbnail_images' => $menuThumbnailImagesEdited,
             'category_url' => $categoryUrl,
+            'disabled_menu_thumbnail_upload' => $disableMenuThumbnailsUpload,
         ];
     }
 
