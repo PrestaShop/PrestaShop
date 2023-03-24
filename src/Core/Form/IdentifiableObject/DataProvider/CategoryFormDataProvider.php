@@ -27,9 +27,11 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
+use PrestaShopBundle\Service\Routing\Router;
 
 /**
  * Provides data for category add/edit category forms
@@ -57,6 +59,15 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $groupDataProvider;
 
     /**
+     * @var CategoryProvider
+     */
+    private $categoryProvider;
+    /**
+     * @var Router
+     */
+    private $router;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param int $contextShopId
      * @param int $contextShopRootCategoryId
@@ -66,12 +77,16 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         CommandBusInterface $queryBus,
         $contextShopId,
         $contextShopRootCategoryId,
-        GroupDataProvider $groupDataProvider
+        GroupDataProvider $groupDataProvider,
+        CategoryProvider $categoryProvider,
+        Router $router
     ) {
         $this->queryBus = $queryBus;
         $this->contextShopId = $contextShopId;
         $this->contextShopRootCategoryId = $contextShopRootCategoryId;
         $this->groupDataProvider = $groupDataProvider;
+        $this->categoryProvider = $categoryProvider;
+        $this->router = $router;
     }
 
     /**
@@ -82,6 +97,47 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         /** @var EditableCategory $editableCategory */
         $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
 
+        $coverImages = $thumbnailImages = $menuThumbnailImagesEdited = null;
+        if ($categoryId) {
+            $categoryId = (int) $categoryId;
+            $categoryUrl = $this->categoryProvider->getUrl($categoryId, '{friendly-url}');
+            $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
+            $coverImage = $editableCategory->getCoverImage();
+            if ($coverImage) {
+                $coverImageEdited = [
+                    'size' => $coverImage['size'],
+                    'image_path' => $coverImage['path'],
+                    'delete_path' => $this->router->generate(
+                        'admin_categories_delete_cover_image',
+                        [
+                            'categoryId' => $categoryId,
+                        ]
+                    ),
+                ];
+                $coverImages = [$coverImageEdited];
+            }
+            $thumbnailImage = $editableCategory->getThumbnailImage();
+            if ($thumbnailImage) {
+                $thumbnailImages = [$thumbnailImage];
+            }
+            $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+            $menuThumbnailImagesEdited = [];
+            foreach ($menuThumbnailImages as $menuThumbnailImage) {
+                $menuThumbnailImagesEdited[] = [
+                    'id' => $menuThumbnailImage['id'],
+                    'image_path' => $menuThumbnailImage['path'],
+                    'delete_path' => $this->router->generate(
+                        'admin_categories_delete_menu_thumbnail',
+                        [
+                            'categoryId' => $categoryId,
+                            'menuThumbnailId' => $menuThumbnailImage['id'],
+                        ]
+                    ),
+                ];
+            }
+        } else {
+            $categoryUrl = $this->categoryProvider->getUrl(0, '{friendly-url}');
+        }
         return [
             'name' => $editableCategory->getName(),
             'active' => $editableCategory->isActive(),
@@ -94,6 +150,10 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'link_rewrite' => $editableCategory->getLinkRewrite(),
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),
+            'cover_image' => $coverImages,
+            'thumbnail_image' => $thumbnailImages,
+            'menu_thumbnail_images' => $menuThumbnailImagesEdited,
+            'category_url' => $categoryUrl,
         ];
     }
 

@@ -52,10 +52,8 @@ use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -87,37 +85,29 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      * @var TacticianCommandBusAdapter
      */
     private $queryBus;
-    /**
-     * @var CategoryProvider
-     */
-    private $categoryProvider;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
-     * @param ConfigurationInterface $configuration
      * @param Router $router
+     * @param TacticianCommandBusAdapter $queryBus
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
-        ConfigurationInterface $configuration,
         Router $router,
-        TacticianCommandBusAdapter $queryBus,
-        CategoryProvider $categoryProvider
+        TacticianCommandBusAdapter $queryBus
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multiStoreFeature = $multiStoreFeature;
-        $this->configuration = $configuration;
         $this->router = $router;
         $this->queryBus = $queryBus;
-        $this->categoryProvider = $categoryProvider;
     }
 
     /**
@@ -125,49 +115,13 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $coverImages = $thumbnailImages = $menuThumbnailImagesEdited = null;
         $disableMenuThumbnailsUpload = false;
-        if (isset($options['id_category'])) {
-            $categoryId = (int) $options['id_category'];
-            $categoryUrl = $this->categoryProvider->getUrl($categoryId, '{friendly-url}');
-            $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
-            $coverImage = $editableCategory->getCoverImage();
-            if ($coverImage) {
-                $coverImageEdited = [
-                    'size' => $coverImage['size'],
-                    'image_path' => $coverImage['path'],
-                    'delete_path' => $this->router->generate(
-                        'admin_categories_delete_cover_image',
-                        [
-                            'categoryId' => $categoryId,
-                        ]
-                    ),
-                ];
-                $coverImages = [$coverImageEdited];
-            }
-            $thumbnailImage = $editableCategory->getThumbnailImage();
-            if ($thumbnailImage) {
-                $thumbnailImages = [$thumbnailImage];
-            }
-            $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-            $menuThumbnailImagesEdited = [];
-            foreach ($menuThumbnailImages as $menuThumbnailImage) {
-                $menuThumbnailImagesEdited[] = [
-                    'id' => $menuThumbnailImage['id'],
-                    'image_path' => $menuThumbnailImage['path'],
-                    'delete_path' => $this->router->generate(
-                        'admin_categories_delete_menu_thumbnail',
-                        [
-                            'categoryId' => $categoryId,
-                            'menuThumbnailId' => $menuThumbnailImage['id'],
-                        ]
-                    ),
-                ];
-            }
+        if ($options['id_category']) {
+            /** @var EditableCategory $editableCategory */
+            $editableCategory = $this->queryBus->handle(new GetCategoryForEditing((int) $options['id_category']));
             $disableMenuThumbnailsUpload = !$editableCategory->canContainMoreMenuThumbnails();
-        } else {
-            $categoryUrl = $this->categoryProvider->getUrl(0, '{friendly-url}');
         }
+
         $genericCharactersHint = $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::CATALOG_CHARS]);
         /* @var EditableCategory $editableCategory */
         $builder
@@ -244,14 +198,12 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'can_be_deleted' => true,
                 'show_size' => true,
                 'csrf_delete_token' => 'delete-cover-image',
-                'preview_images' => $coverImages,
             ])
             ->add('thumbnail_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('It will display a thumbnail on the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'can_be_deleted' => false,
-                'preview_images' => $thumbnailImages,
                 'show_size' => true,
             ])
             ->add('menu_thumbnail_images', ImageWithPreviewType::class, [
@@ -259,7 +211,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'help' => $this->trans('It will display a thumbnail representing the category in the menu, if the theme allows it.', 'Admin.Catalog.Help'),
                 'multiple' => true,
                 'required' => false,
-                'preview_images' => $menuThumbnailImagesEdited,
                 'disabled' => $disableMenuThumbnailsUpload,
                 'can_be_deleted' => true,
                 'warning_message' => $this->trans(
@@ -275,7 +226,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 [
                     'label' => $this->trans('SEO preview', 'Admin.Global'),
                     'required' => false,
-                    'category_url' => $categoryUrl,
                 ]
             )
             ->add('meta_title', TranslatableType::class, [

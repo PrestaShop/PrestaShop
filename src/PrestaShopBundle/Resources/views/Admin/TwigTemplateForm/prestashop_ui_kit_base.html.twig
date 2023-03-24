@@ -1597,56 +1597,6 @@
   </div>
 {% endblock %}
 
-{% block image_with_preview_widget %}
-  {% if preview_images is defined and preview_images is not empty %}
-    <div>
-      {% for preview_image in preview_images %}
-        {% if can_be_deleted %}
-          <figure class="figure">
-            <img src="{{ preview_image.image_path }}" class="figure-img img-fluid img-thumbnail">
-            <figcaption class="figure-caption">
-              {% if show_size %}
-                <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ preview_image.size }}</p>
-              {% endif %}
-              <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
-                      data-form-submit-url="{{ preview_image.delete_path }}"
-                      data-form-csrf-token="{{ csrf_token(csrf_delete_token) }}"
-              >
-                <i class="material-icons">
-                  delete_forever
-                </i>
-                {{ 'Delete'|trans({}, 'Admin.Actions') }}
-              </button>
-            </figcaption>
-          </figure>
-        {% else %}
-          {% for preview_image in preview_images %}
-            <figure class="figure">
-              <img src="{{ preview_image.path }}" class="figure-img img-fluid img-thumbnail">
-              {% if show_size %}
-                <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ preview_image.size }}</figcaption>
-              {% endif %}
-            </figure>
-          {% endfor %}
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endif %}
-  {% if disabled|default(false) %}
-    <div class="d-none">
-      {{ block('file_widget') }}
-    </div>
-
-    <div class="alert alert-warning" role="alert">
-      <p class="alert-text">
-        {{ warning_message }}
-      </p>
-    </div>
-  {% else %}
-    {{ block('file_widget') }}
-  {% endif %}
-{% endblock image_with_preview_widget %}
-
 {%- block price_reduction_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' reduction-widget row')|trim}) %}
   <div {{ block('widget_attributes') }}>
