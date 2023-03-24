@@ -32,43 +32,6 @@ import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
 const {$} = window;
 
 $(() => {
-  new CurrencySymbolUpdater(
-    CatalogPriceRuleFormMap.currencyId,
-    ((symbol: string): void => {
-      if (symbol === '') {
-        return;
-      }
-
-      // Reduction Amount
-      const reductionTypeSelect = document.querySelector<HTMLSelectElement>(CatalogPriceRuleFormMap.reductionTypeSelect);
-
-      if (reductionTypeSelect) {
-        // Update the amount option innerHTML
-        for (let i = 0; i < reductionTypeSelect.options.length; i += 1) {
-          const reductionOption = reductionTypeSelect.options[i];
-
-          if (reductionOption.value === 'amount') {
-            reductionOption.innerHTML = symbol;
-          }
-        }
-
-        const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
-
-        if (selectedReduction === 'amount') {
-          const reductionTypeAmountSymbols = document.querySelectorAll(
-            CatalogPriceRuleFormMap.reductionTypeAmountSymbol,
-          );
-
-          if (reductionTypeAmountSymbols.length) {
-            reductionTypeAmountSymbols.forEach((value: Element) => {
-              const elt = value;
-              elt.innerHTML = symbol;
-            });
-          }
-        }
-      }
-    }),
-  );
   new PriceFieldAvailabilityHandler(
     CatalogPriceRuleFormMap.initialPrice,
     CatalogPriceRuleFormMap.price,

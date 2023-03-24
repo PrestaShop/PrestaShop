@@ -22,45 +22,56 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 
 const {$} = window;
 
 /**
- * Shows/hides 'include_tax' field depending from 'reduction_type' field value
- * @todo: class should be renamed, its not focued on tax field anymore but handles many dynamics in PriceReductionType
+ * Handles dynamics (shows/hides fields, changes currency symbols) of price reduction form fields
  */
 export default class ReductionTaxFieldToggle {
-  $reductionTypeSelector: JQuery;
+  reductionTypeSelector: string;
+
+  $reductionTypeSelect: JQuery;
 
   $taxInclusionInputs: JQuery;
 
   currencySelect: string;
 
-  reductionAmountSymbolSelector: string;
+  reductionValueSymbolSelector: string;
 
   hideCurrencyOnPercentageType: boolean;
+
+  updateCurrencySymbol: boolean;
 
   constructor(
     reductionTypeSelector: string,
     taxInclusionInputs: string,
     currencySelect: string,
-    reductionAmountSymbolSelector:string,
+    reductionValueSymbolSelector: string,
     hideCurrencyOnPercentageType: boolean = false,
+    updateCurrencySymbol = true,
   ) {
-    this.$reductionTypeSelector = $(reductionTypeSelector);
+    this.reductionTypeSelector = reductionTypeSelector;
+    this.$reductionTypeSelect = $(reductionTypeSelector);
     this.$taxInclusionInputs = $(taxInclusionInputs);
     this.currencySelect = currencySelect;
-    this.reductionAmountSymbolSelector = reductionAmountSymbolSelector;
+    this.reductionValueSymbolSelector = reductionValueSymbolSelector;
     this.hideCurrencyOnPercentageType = hideCurrencyOnPercentageType;
+    this.updateCurrencySymbol = updateCurrencySymbol;
     this.handle();
-    this.$reductionTypeSelector.on('change', () => this.handle());
+    this.$reductionTypeSelect.on('change', () => this.handle());
   }
 
   /**
    * When source value is 'percentage', target field is shown, else hidden
    */
   private handle(): void {
-    const isPercentage = this.$reductionTypeSelector.val() === 'percentage';
+    if (this.updateCurrencySymbol) {
+      this.initCurrencySymbolUpdater();
+    }
+
+    const isPercentage = this.$reductionTypeSelect.val() === 'percentage';
 
     if (isPercentage) {
       this.$taxInclusionInputs.fadeOut();
@@ -74,13 +85,13 @@ export default class ReductionTaxFieldToggle {
       }
     }
 
-    if (this.reductionAmountSymbolSelector !== '') {
-      const reductionTypeAmountSymbols = document.querySelectorAll(this.reductionAmountSymbolSelector);
+    if (this.reductionValueSymbolSelector !== '') {
+      const reductionTypeAmountSymbols = document.querySelectorAll(this.reductionValueSymbolSelector);
 
       if (reductionTypeAmountSymbols.length) {
         reductionTypeAmountSymbols.forEach((value: Element) => {
-          const elt = value;
-          elt.innerHTML = isPercentage ? '%' : this.getSymbol(value.innerHTML);
+          // eslint-disable-next-line no-param-reassign
+          value.innerHTML = isPercentage ? '%' : this.getSymbol(value.innerHTML);
         });
       }
     }
@@ -100,5 +111,43 @@ export default class ReductionTaxFieldToggle {
       return defaultCurrencySymbol;
     }
     return selectItem.getAttribute('symbol') ?? defaultCurrencySymbol;
+  }
+
+  private initCurrencySymbolUpdater(): void {
+    new CurrencySymbolUpdater(
+      this.currencySelect,
+      ((symbol: string): void => {
+        if (symbol === '') {
+          return;
+        }
+
+        const reductionTypeSelect = <HTMLSelectElement> document.querySelector(this.reductionTypeSelector);
+
+        if (reductionTypeSelect) {
+          for (let i = 0; i < reductionTypeSelect.options.length; i += 1) {
+            const reductionOption = reductionTypeSelect.options[i];
+
+            if (reductionOption.value === 'amount') {
+              // Update reduction amount choice symbol
+              reductionOption.innerHTML = symbol;
+            }
+          }
+
+          const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
+
+          if (selectedReduction === 'amount') {
+            const reductionTypeAmountSymbols = document.querySelectorAll(this.reductionValueSymbolSelector);
+
+            if (reductionTypeAmountSymbols.length) {
+              // Update reduction value field symbol when "amount" type is selected
+              reductionTypeAmountSymbols.forEach((value: Element) => {
+                // eslint-disable-next-line no-param-reassign
+                value.innerHTML = symbol;
+              });
+            }
+          }
+        }
+      }),
+    );
   }
 }
