@@ -47,7 +47,7 @@ class ContactOptionsConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         return [
             'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => $this->configuration->get('PS_CUSTOMER_SERVICE_FILE_UPLOAD'),

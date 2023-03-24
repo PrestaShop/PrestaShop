@@ -90,7 +90,7 @@ class ConfigurationKPICore extends Configuration
      * @param null $idShop Shop ID
      * @param bool $default Default value
      *
-     * @return string
+     * @return string|false
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
