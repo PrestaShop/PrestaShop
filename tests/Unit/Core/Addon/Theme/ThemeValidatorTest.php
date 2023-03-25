@@ -90,7 +90,7 @@ class ThemeValidatorTest extends TestCase
         }
         $themeDir = __DIR__ . '/../../../../Resources/themes/minimal-' . $name . '-theme/';
         $themeConfigFile = $themeDir . 'config/theme.yml';
-        
+
         try {
             $themeConfigContent = file_get_contents($themeConfigFile);
         } catch (\Throwable $exception) {
