@@ -515,6 +515,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_price_raw' => $product['rounded_display_price'],
             'product_price_tax_exc_raw' => $product['price_tax_exc'],
+            'product_cover_raw' => $product['default_image']['large']['url'],
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
                 'catalog/_partials/product-customization',
