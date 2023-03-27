@@ -430,3 +430,13 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
+
+  prestashop.core.grid.definition.factory.cart:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+      - '@prestashop.core.grid.action.row.accessibility_checker.delete_cart'
+      - '@prestashop.adapter.shop.context'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+    public: true
