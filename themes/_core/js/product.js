@@ -262,6 +262,10 @@ function updateProduct(event, eventType, updateUrl) {
 
         document.dispatchEvent(updateRatingEvent);
 
+        // Update metadata price
+        document.querySelector('meta[property="product:price:amount"]').setAttribute('content', data.product_price_raw);
+        document.querySelector('meta[property="product:pretax_price:amount"]').setAttribute('content', data.product_price_tax_exc_raw);
+
         // Prevent quantity input from blinking with classic theme.
         if (
           !isNaN(minimalProductQuantity)
