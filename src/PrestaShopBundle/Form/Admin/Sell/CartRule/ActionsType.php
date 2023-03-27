@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Description\RelatedProductType;
+use PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -64,8 +64,11 @@ class ActionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('free_shipping', SwitchType::class)
+            ->add('free_shipping', SwitchType::class, [
+                'required' => false,
+            ])
             ->add('discount', DiscountType::class, [
+                'required' => false,
                 'row_attr' => [
                     'class' => 'discount-container',
                 ],
@@ -75,15 +78,19 @@ class ActionsType extends TranslatorAwareType
                 },
             ])
             ->add('gift_product', EntitySearchInputType::class, [
-                'entry_type' => RelatedProductType::class,
-                'entry_options' => [
-                    'block_prefix' => 'gift_product',
-                ],
-                'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
+                'required' => false,
+                'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),
+                'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
                 ]),
+                'entry_type' => SearchedProductType::class,
+                'attr' => [
+                    'data-reference-label' => $this->trans('Ref: %s', 'Admin.Catalog.Feature'),
+                ],
                 'min_length' => 3,
+                'limit' => 1,
+                'identifier_field' => 'unique_identifier',
                 'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             ])
         ;

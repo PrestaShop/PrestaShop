@@ -201,6 +201,7 @@ class CombinationController extends FrameworkBundleAdminController
     {
         $productsData = [];
         foreach ($combinationsForAssociation as $productForAssociation) {
+            //@todo: should be camelCase
             $productsData[] = [
                 'product_id' => $productForAssociation->getProductId(),
                 'unique_identifier' => $productForAssociation->getProductId() . '_' . $productForAssociation->getCombinationId(),

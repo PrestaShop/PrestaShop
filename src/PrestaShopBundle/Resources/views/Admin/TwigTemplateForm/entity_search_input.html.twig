@@ -129,6 +129,8 @@
       <i class="material-icons entity-item-delete">clear</i>
     </div>
     {{ form_widget(form.id) }}
+    {# this allows rendering rest of the form inputs without alternating the theme #}
+    {{ form_rest(form) }}
   </li>
 {% endblock %}
 

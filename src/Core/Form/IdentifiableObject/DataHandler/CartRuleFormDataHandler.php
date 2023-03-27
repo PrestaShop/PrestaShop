@@ -132,10 +132,11 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         $actionBuilder->setFreeShipping((bool) $actionsData['free_shipping']);
 
-        if (!empty($actionsData['gift_product'])) {
+        if (!empty($actionsData['gift_product'][0])) {
+            $giftProductData = $actionsData['gift_product'][0];
             $actionBuilder->setGiftProduct(new GiftProduct(
-                $actionsData['gift_product']['product_id'],
-                $actionsData['gift_product']['combination_id'] ?? null
+                (int) $giftProductData['product_id'],
+                (int) $giftProductData['combination_id'] ?: null
             ));
         }
 

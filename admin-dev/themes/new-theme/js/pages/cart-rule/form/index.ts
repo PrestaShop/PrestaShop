@@ -29,6 +29,7 @@ import FormFieldToggler from '@components/form/form-field-toggler';
 import CartRuleEventMap from '@pages/cart-rule/cart-rule-event-map';
 import CustomerSearchInput from '@pages/customer/customer-search-input';
 import DiscountManager from '@pages/cart-rule/form/discount-manager';
+import ProductSearchInput from '@pages/product/product-search-input';
 
 $(() => {
   // It is important that discountManager is initialized before DisablingSwitch
@@ -55,4 +56,7 @@ $(() => {
     () => null,
     CartRuleEventMap.switchCustomer,
   );
+
+  const searchInputContainer = <HTMLElement> document.querySelector(CartRuleMap.giftProductSearchContainer);
+  new ProductSearchInput(CartRuleMap.giftProductSearchContainer, searchInputContainer.dataset.referenceLabel);
 });

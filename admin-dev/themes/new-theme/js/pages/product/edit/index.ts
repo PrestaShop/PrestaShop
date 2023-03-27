@@ -112,7 +112,7 @@ $(() => {
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
   if (productType === ProductConst.PRODUCT_TYPE.PACK) {
-    new PackedProductsManager(eventEmitter);
+    new PackedProductsManager();
   }
   new PriceSummary(productFormModel);
 

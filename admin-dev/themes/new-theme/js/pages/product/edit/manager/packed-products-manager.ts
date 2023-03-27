@@ -23,46 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import EntitySearchInput from '@components/entity-search-input';
 import ProductMap from '@pages/product/product-map';
-import ProductEventMap from '@pages/product/product-event-map';
-import {EventEmitter} from 'events';
+import ProductSearchInput from '@pages/product/product-search-input';
 
 export default class PackedProductsManager {
-  private eventEmitter: EventEmitter;
+  constructor() {
+    const searchInputContainer = <HTMLElement> document.querySelector(ProductMap.packedProducts.searchInput);
 
-  private entitySearchInput: EntitySearchInput;
-
-  constructor(eventEmitter: EventEmitter) {
-    this.eventEmitter = eventEmitter;
-    const $searchInput = $(ProductMap.packedProducts.searchInput);
-    const referenceLabel = $searchInput.data('referenceLabel') ?? '(Ref: %s)';
-    this.entitySearchInput = new EntitySearchInput($searchInput, {
-      onRemovedContent: () => this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
-      onSelectedContent: () => this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
-      suggestionTemplate: (combination: any) => {
-        let reference = '';
-
-        if (combination.reference) {
-          reference = `<span class="combination-reference">(${combination.reference})</span>`;
-        }
-
-        return `<div class="search-suggestion"><img src="${combination.image}" /> ${combination.name}${reference}</div>`;
-      },
-      responseTransformer: (response: any) => {
-        Object.keys(response).forEach((key) => {
-          if (Object.prototype.hasOwnProperty.call(response, key)) {
-            const combination = response[key];
-
-            if (combination.reference) {
-              // eslint-disable-next-line no-param-reassign
-              response[key].reference = referenceLabel.replace('%s', combination.reference);
-            }
-          }
-        });
-
-        return response;
-      },
-    });
+    new ProductSearchInput(
+      ProductMap.packedProducts.searchInput,
+      searchInputContainer.dataset.referenceLabel,
+    );
   }
 }

@@ -511,6 +511,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType:
   PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
   PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
+  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductType: ~
 
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
