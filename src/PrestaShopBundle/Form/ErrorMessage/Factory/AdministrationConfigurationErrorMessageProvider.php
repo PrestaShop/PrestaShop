@@ -72,7 +72,7 @@ class AdministrationConfigurationErrorMessageProvider implements ConfigurationEr
                 );
             case AdministrationConfigurationError::ERROR_COOKIE_SAMESITE_NONE:
                 return $this->translator->trans(
-                    'The SameSite=None is only available in secure mode.',
+                    'The SameSite=None attribute is only available in a secure context (HTTPS).',
                     [],
                     'Admin.Advparameters.Notification'
                 );
