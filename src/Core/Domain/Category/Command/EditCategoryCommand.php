@@ -96,12 +96,12 @@ class EditCategoryCommand
     private $associatedShopIds;
 
     /**
-     * @var null|UploadedFile
+     * @var UploadedFile|null
      */
     private $coverImage;
 
     /**
-     * @var null|UploadedFile
+     * @var UploadedFile|null
      */
     private $thumbnailImage;
 
@@ -376,7 +376,7 @@ class EditCategoryCommand
     }
 
     /**
-     * @return null|UploadedFile
+     * @return UploadedFile|null
      */
     public function getCoverImage(): ?UploadedFile
     {
@@ -384,7 +384,7 @@ class EditCategoryCommand
     }
 
     /**
-     * @param null|UploadedFile $coverImage
+     * @param UploadedFile|null $coverImage
      */
     public function setCoverImage(?UploadedFile $coverImage): void
     {
@@ -392,7 +392,7 @@ class EditCategoryCommand
     }
 
     /**
-     * @return null|UploadedFile
+     * @return UploadedFile|null
      */
     public function getThumbnailImage(): ?UploadedFile
     {
@@ -400,7 +400,7 @@ class EditCategoryCommand
     }
 
     /**
-     * @param null|UploadedFile $thumbnailImage
+     * @param UploadedFile|null $thumbnailImage
      */
     public function setThumbnailImage(?UploadedFile $thumbnailImage): void
     {

@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryExcep
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 
 /**
  * Class EditCategoryHandler.
@@ -45,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
  */
 final class EditCategoryHandler extends AbstractObjectModelHandler implements EditCategoryHandlerInterface
 {
-
     /**
      * @var CategoryImageUploader
      */

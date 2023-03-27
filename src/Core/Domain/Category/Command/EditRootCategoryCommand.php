@@ -94,12 +94,12 @@ class EditRootCategoryCommand
     private $associatedShopIds;
 
     /**
-     * @var null|UploadedFile
+     * @var UploadedFile|null
      */
     private $coverImage;
 
     /**
-     * @var null|UploadedFile
+     * @var UploadedFile|null
      */
     private $thumbnailImage;
 
