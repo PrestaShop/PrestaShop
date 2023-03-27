@@ -543,3 +543,14 @@ services:
       $languageId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
+
+  prestashop.core.grid.query.builder.cart:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CartQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - '@translator'
+      - '@prestashop.adapter.shop.context'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextShopGroupId()"
+    public: true
