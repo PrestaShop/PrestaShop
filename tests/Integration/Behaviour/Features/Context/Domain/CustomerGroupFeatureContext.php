@@ -91,7 +91,9 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
             new DecimalNumber($data['reduction']),
             (bool) $data['displayPriceTaxExcluded'],
             (bool) $data['showPrice'],
-            explode(',', $data['shopIds'])
+            array_map(function (string $shopId) {
+                return (int) $shopId;
+            }, explode(',', $data['shopIds']))
         );
     }
 

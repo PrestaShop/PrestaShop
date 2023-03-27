@@ -32,7 +32,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class AddCustomerGroupCommandTest extends TestCase
 {

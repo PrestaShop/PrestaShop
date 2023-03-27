@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\CommandHandler\AddCustomerGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
 {

@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Validate;
 use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class CustomerGroupValidator extends AbstractObjectModelValidator
 {
