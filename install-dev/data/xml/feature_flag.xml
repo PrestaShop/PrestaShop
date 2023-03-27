@@ -2,7 +2,6 @@
 <entity_feature_flag>
   <fields id="name" class="FeatureFlag">
     <field name="name"/>
-    <field name="type"/>
     <field name="label_wording"/>
     <field name="label_domain"/>
     <field name="description_wording"/>
@@ -26,5 +25,6 @@
     <feature_flag id="customer_threads" name="customer_threads" type="env,dotenv,db" label_wording="Customer threads" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated customer threads page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="order_state" name="order_state" type="env,dotenv,db" label_wording="Order states" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated order states page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="feature" name="feature" type="env,dotenv,db" label_wording="Features" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated features page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
+    <feature_flag id="carts_index" name="carts_index" type="env,dotenv,db" label_wording="Carts index" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated carts index page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
   </entities>
 </entity_feature_flag>
