@@ -29,7 +29,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
@@ -39,7 +41,11 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCom
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkDeleteCartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
@@ -55,14 +61,137 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\Customizat
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Search\Filters\CartFilter;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends FrameworkBundleAdminController
 {
+    /**
+     * Shows list of carts
+     *
+     * @param Request $request
+     * @param CartFilter $filters
+     *
+     * @return Response
+     */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    public function indexAction(Request $request, CartFilter $filters)
+    {
+        $cartsKpiFactory = $this->get('prestashop.core.kpi_row.factory.carts');
+        $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
+        $cartGrid = $cartGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_carts_export'),
+                    'desc' => $this->trans('Export carts', 'Admin.Orderscustomers.Feature'),
+                    'icon' => 'cloud_download',
+                ],
+            ],
+            'cartGrid' => $this->presentGrid($cartGrid),
+            'cartsKpi' => $cartsKpiFactory->build(),
+        ]);
+    }
+
+    /**
+     * Delete given cart
+     *
+     * @param int $cartId
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    public function deleteCartAction(int $cartId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCartCommand($cartId));
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
+    /**
+     * Deletes carts on bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    public function bulkDeleteCartAction(Request $request): RedirectResponse
+    {
+        $cartIds = $this->getBulkCartsFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
+    /**
+     * Export carts in CSV
+     *
+     * @param Request $request
+     * @param CartFilter $filters
+     *
+     * @return CsvResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function exportCartAction(Request $request, CartFilter $filters): CsvResponse
+    {
+        $filters = new CartFilter(['limit' => null] + $filters->all());
+        $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
+        $cartGrid = $cartGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_cart' => $this->trans('ID', 'Admin.Global'),
+            'id_order' => $this->trans('Order ID', 'Admin.Orderscustomers.Feature'),
+            'customer_name' => $this->trans('Customer', 'Admin.Global'),
+            'cart_total' => $this->trans('Total', 'Admin.Global'),
+            'carrier_name' => $this->trans('Carrier', 'Admin.Global'),
+            'date_add' => $this->trans('Date', 'Admin.Global'),
+            'customer_online' => $this->trans('Online', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($cartGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_cart' => $record['id_cart'],
+                'id_order' => $record['id_order'],
+                'customer_name' => $record['customer_name'],
+                'cart_total' => $record['cart_total'],
+                'carrier_name' => $record['carrier_name'],
+                'date_add' => $record['date_add'],
+                'customer_online' => $record['customer_online_id'] > 0 ? 1 : 0,
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('cart_' . date('Y-m-d_His') . '.csv');
+    }
+
     /**
      * @param Request $request
      * @param int $cartId
@@ -595,6 +724,22 @@ class CartController extends FrameworkBundleAdminController
                     $minimalQuantity,
                 ]
             ),
+            CannotDeleteCartException::class => $this->trans(
+                'Invalid selection',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteOrderedCartException::class => $this->trans(
+                'An order has already been placed with this cart.',
+                'Admin.Catalog.Notification'
+            ),
+            BulkDeleteCartException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteCartException ? implode(', ', $e->getCartIds()) : ''
+            ),
         ];
     }
 
@@ -642,5 +787,23 @@ class CartController extends FrameworkBundleAdminController
         }
 
         return $giftedQuantity;
+    }
+
+     /**
+     * Provides cart ids from request of bulk action
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkCartsFromRequest(Request $request): array
+    {
+        $cartIds = $request->request->get('cart_bulk');
+
+        if (!is_array($cartIds)) {
+            return [];
+        }
+
+        return array_map('intval', $cartIds);
     }
 }
