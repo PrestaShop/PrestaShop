@@ -66,7 +66,7 @@ describe('FO - Home Page : Check slider', async () => {
 
     const currentURL = await homePage.clickOnSlider(page, 2);
     await expect(currentURL)
-      .to.contains('https://www.prestashop.com/en')
+      .to.contains('www.prestashop-project.org')
       .and.to.contains('homeslider&utm_campaign=back-office-EN&utm_content=download');
   });
 });
