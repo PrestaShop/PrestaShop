@@ -5962,16 +5962,16 @@
         },
         {
             "name": "prestashop/ps_bestsellers",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_bestsellers.git",
-                "reference": "be00d63fc565f10dea000e0177bd7a5f58507030"
+                "reference": "bd1e97fa82c9953bdca738946aa624a5667c6a27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_bestsellers/zipball/be00d63fc565f10dea000e0177bd7a5f58507030",
-                "reference": "be00d63fc565f10dea000e0177bd7a5f58507030",
+                "url": "https://api.github.com/repos/PrestaShop/ps_bestsellers/zipball/bd1e97fa82c9953bdca738946aa624a5667c6a27",
+                "reference": "bd1e97fa82c9953bdca738946aa624a5667c6a27",
                 "shasum": ""
             },
             "require": {
@@ -5994,9 +5994,9 @@
             "description": "PrestaShop - Best Sellers",
             "homepage": "https://github.com/PrestaShop/ps_bestsellers",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_bestsellers/tree/v1.0.5"
+                "source": "https://github.com/PrestaShop/ps_bestsellers/tree/v1.0.6"
             },
-            "time": "2023-02-03T14:47:18+00:00"
+            "time": "2023-02-28T10:35:02+00:00"
         },
         {
             "name": "prestashop/ps_brandlist",
