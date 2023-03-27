@@ -23,9 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<div class="text-right">
+<div class="text-{{ column.options.alignment }}">
 {% if record[column.options.field] is not empty and column.options.badge_type is not empty %}
   <span class="badge rounded badge-{{ column.options.badge_type }}">
+    {{ record[column.options.field] }}
+  </span>
+{% elseif record[column.options.field] is not empty and record[column.options.badge_type_field] is not empty %}
+  <span class="badge rounded badge-{{ record[column.options.badge_type_field] }}">
     {{ record[column.options.field] }}
   </span>
 {% elseif record[column.options.field] is not empty and column.options.color_field in record|keys and record[column.options.color_field] is not empty %}
