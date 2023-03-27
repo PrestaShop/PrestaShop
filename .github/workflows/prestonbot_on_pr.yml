@@ -1,0 +1,41 @@
+name: Prestonbot actions on PR
+
+on: [ pull_request ]
+
+env:
+  prestonbot_repository: PrestaShop/prestonbot
+  GH_TOKEN: ${{ secrets.JARVIS_TOKEN }}
+  GH_SECURED_TOKEN: ${{ secrets.JARVIS_TOKEN }}
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dispatch_pr_in_prestonbot:
+    name: Dispatch PR in prestonbot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout PrestonBot
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.prestonbot_repository }}
+          path: 'prestonbot/'
+          token: ${{ secrets.PS_GITHUB_TOKEN }}
+          ref: 'master'
+
+      - name: Composer install in prestashop
+        run: |
+          cd prestonbot/
+          composer install --no-interaction --no-progress --no-dev
+      - name: Dispatch event in prestonbot
+        run: |
+          cd prestonbot/
+          php bin/console prestonbot:event:dispatch ${{ github.event_path }}
