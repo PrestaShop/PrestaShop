@@ -8,7 +8,7 @@ services:
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   prestashop.adapter.product.attribute_group.attribute_group_view_data_provider:
-    alias: PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AttributeGroupViewDataProvider
+    alias: PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider
     deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
