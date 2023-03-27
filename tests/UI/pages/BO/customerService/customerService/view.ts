@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class ViewCustomer extends BOBasePage {
-  public readonly pageTitle: (threadNumber: string) => string;
+  public readonly pageTitle: string;
 
   private readonly threadBadge: string;
 
@@ -31,16 +31,16 @@ class ViewCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = (threadNumber: string) => `Customer thread #${threadNumber} • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = 'Customer Service > View •';
 
     // Selectors
-    this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header';
-    this.messagesThredDiv = '#main-div div[data-role="messages-thread"]';
+    this.threadBadge = 'span.badge';
+    this.statusButton = (statusID: number) => `button[name='setstatus'][value='${statusID}']`;
+    this.messagesThredDiv = '#content div.message-item-initial';
+    this.yourAnswerFormTitle = '#reply-form-title';
+    this.yourAnswerFormTextarea = '#reply_message';
+    this.ordersAndMessagesBlock = '#orders-and-messages-block';
     this.attachmentLink = `${this.messagesThredDiv} a[href*='/upload']`;
-    this.statusButton = (statusName: string) => `${this.messagesThredDiv} form input[value='${statusName}'] + button`;
-    this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
-    this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
-    this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
   }
 
   /*
