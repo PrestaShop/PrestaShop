@@ -42,7 +42,7 @@
       <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
         <source>Message successfully sent</source>
         <target>Message successfully sent</target>
-        <note>Line: 185</note>
+        <note>Line: 186</note>
       </trans-unit>
     </body>
   </file>
@@ -57,6 +57,11 @@
         <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>
         <target>Your password has been successfully reset and a confirmation has been sent to your email address: %s</target>
         <note>Line: 215</note>
+      </trans-unit>
+      <trans-unit id="bb6b5a34b7623ca921968d9181a1066b">
+        <source>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</source>
+        <target>If this email address has been registered in our store, you will receive a link to reset your password at %email%.</target>
+        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>

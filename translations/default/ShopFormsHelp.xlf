@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/Tools.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="350bfcb1e3cfb28ddff48ce525d4f139">
+        <source>DD</source>
+        <target>DD</target>
+        <note>Line: 938</note>
+      </trans-unit>
+      <trans-unit id="ad05f78187c942f9dd521605fa81f1ba">
+        <source>MM</source>
+        <target>MM</target>
+        <note>Line: 939</note>
+      </trans-unit>
+      <trans-unit id="8df34bb962577b90d574a51ed2ca757f">
+        <source>YYYY</source>
+        <target>YYYY</target>
+        <note>Line: 940</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">

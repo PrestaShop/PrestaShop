@@ -5,7 +5,7 @@
       <trans-unit id="729a51874fe901b092899e9e8b31c97a">
         <source>Are you sure?</source>
         <target>Are you sure?</target>
-        <note>Line: 126</note>
+        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>
@@ -42,7 +42,16 @@
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
         <source>Are you sure you want to uninstall this module?</source>
         <target>Are you sure you want to uninstall this module?</target>
-        <note>Line: 53</note>
+        <note>Line: 64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/src/Core/Grid/Definition/Factory/LinkBlockDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 123</note>
       </trans-unit>
     </body>
   </file>
@@ -51,25 +60,7 @@
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>Line: 86</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CatalogPriceRuleGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Line: 343</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CurrencyGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Line: 153</note>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>
@@ -91,6 +82,38 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Line: 234</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
+        <source>You can't change the value of this configuration field in the context of this shop.</source>
+        <target>You can't change the value of this configuration field in the context of this shop.</target>
+        <note>Line: 71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationItemType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="400555f6e34160c3f31e229d1f7c88a6">
+        <source>Delete selected item from current store?</source>
+        <target>Delete selected item from current store?</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="4304f7a01c82c28f5a42a5f0d4c7bcc7">
+        <source>Delete selected item from all stores?</source>
+        <target>Delete selected item from all stores?</target>
+        <note>Line: 138</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
@@ -100,12 +123,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Type/NumberMinMaxFilterType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
-        <source>You can't change the value of this configuration field in the context of this shop.</source>
-        <target>You can't change the value of this configuration field in the context of this shop.</target>
-        <note>Line: 72</note>
+      <trans-unit id="c65196ecfecdada5e94d8d6ed8749789">
+        <source>Maximum value must be higher than minimum value.</source>
+        <target>Maximum value must be higher than minimum value.</target>
+        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>
@@ -114,8 +137,7 @@
       <trans-unit id="043f2b6920e5c8a140301051d18d8618">
         <source>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</source>
         <target>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
@@ -129,7 +151,7 @@ Comment: Stable feature flags form</note>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
-        <note>Line: 251</note>
+        <note>Line: 252</note>
       </trans-unit>
     </body>
   </file>

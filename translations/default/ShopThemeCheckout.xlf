@@ -29,7 +29,7 @@
       <trans-unit id="61f1667518c8516a8a4fe18686a4e6fc">
         <source>Personal Information</source>
         <target>Personal Information</target>
-        <note>Line: 100</note>
+        <note>Line: 106</note>
       </trans-unit>
     </body>
   </file>
@@ -61,7 +61,7 @@
       <trans-unit id="0bf3928d84fde940f6feafac75062280">
         <source>My Address</source>
         <target>My Address</target>
-        <note>Line: 161</note>
+        <note>Line: 164</note>
       </trans-unit>
     </body>
   </file>
@@ -98,7 +98,7 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 295</note>
+        <note>Line: 297</note>
       </trans-unit>
     </body>
   </file>
@@ -185,7 +185,7 @@
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
-        <note>Line: 249</note>
+        <note>Line: 254</note>
       </trans-unit>
     </body>
   </file>
@@ -279,12 +279,12 @@
       <trans-unit id="4c4cfffa1e5022b41e4871b27ede1f25">
         <source>%productName% product quantity field</source>
         <target>%productName% product quantity field</target>
-        <note>Line: 139</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
         <source>Gift</source>
         <target>Gift</target>
-        <note>Line: 147</note>
+        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -352,6 +352,11 @@
         <target>Total products</target>
         <note>Line: 31</note>
       </trans-unit>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 30</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/checkout/_partials/order-final-summary-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -390,15 +395,15 @@
         <target>Your Delivery Address</target>
         <note>Line: 44</note>
       </trans-unit>
+      <trans-unit id="baa63a898921164abe2d1d532ab27e79">
+        <source>Your Invoice Address</source>
+        <target>Your Invoice Address</target>
+        <note>Line: 52</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/checkout/_partials/steps/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="baa63a898921164abe2d1d532ab27e79">
-        <source>Your Invoice Address</source>
-        <target>Your Invoice Address</target>
-        <note>Line: 90</note>
-      </trans-unit>
       <trans-unit id="dc024b376ebf01abd90cf4d5e4dca1c7">
         <source>The selected address will be used as your personal address (for invoice).</source>
         <target>The selected address will be used as your personal address (for invoice).</target>
@@ -592,6 +597,11 @@
         <target>Expiration date</target>
         <note>Line: 88</note>
       </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Line: 37</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/customer/history.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -664,15 +674,6 @@
         <source>Tracking number</source>
         <target>Tracking number</target>
         <note>Line: 202</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/order-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>

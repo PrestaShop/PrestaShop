@@ -144,11 +144,6 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/create.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
-        <source>Wishlist name</source>
-        <target>Wishlist name</target>
-        <note>Line: 24</note>
-      </trans-unit>
       <trans-unit id="2f745c01f53c6a617fbff3bc18028e33">
         <source>Create wishlist</source>
         <target>Create wishlist</target>
@@ -168,11 +163,6 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="a1cfe7cbeafd513db812282da3f01704">
         <source>Remove product from wishlist</source>
         <target>Remove product from wishlist</target>
@@ -216,6 +206,11 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/rename.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="972d48662f3cf5d0514a3cbba209837a">
+        <source>Wishlist name</source>
+        <target>Wishlist name</target>
+        <note>Line: 24</note>
+      </trans-unit>
       <trans-unit id="3f122c673ce2e03b7ed71889b17ec119">
         <source>Rename wishlist</source>
         <target>Rename wishlist</target>
@@ -225,6 +220,11 @@
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/share.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 26</note>
+      </trans-unit>
       <trans-unit id="8f02ed5e74022ada127d2bd206049a36">
         <source>Share wishlist</source>
         <target>Share wishlist</target>

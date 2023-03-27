@@ -5,7 +5,7 @@
       <trans-unit id="ee653ade5f520037ef95e9dc2a42364c">
         <source>Dashboard Trends</source>
         <target>Dashboard Trends</target>
-        <note>Line: 59</note>
+        <note>Line: 51</note>
       </trans-unit>
       <trans-unit id="f2d0efa68eb71bfd5209abeb9f4b0943">
         <source>Adds a block with a graphical representation of the development of your store(s) based on selected key data.</source>
@@ -15,22 +15,27 @@
       <trans-unit id="2d125dc25b158f28a1960bd96a9fa8d1">
         <source>%s points</source>
         <target>%s points</target>
-        <note>Line: 209</note>
+        <note>Line: 200</note>
       </trans-unit>
       <trans-unit id="8c804960da61b637c548c951652b0cac">
         <source>Average Cart Value</source>
         <target>Average Cart Value</target>
-        <note>Line: 326</note>
+        <note>Line: 317</note>
       </trans-unit>
       <trans-unit id="e4c3da18c66c0147144767efeb59198f">
         <source>Conversion Rate</source>
         <target>Conversion Rate</target>
-        <note>Line: 328</note>
+        <note>Line: 319</note>
       </trans-unit>
       <trans-unit id="46418a037045b91e6715c4da91a2a269">
         <source>%s (previous period)</source>
         <target>%s (previous period)</target>
-        <note>Line: 349</note>
+        <note>Line: 340</note>
+      </trans-unit>
+      <trans-unit id="c3589c1fa565aa3045bec012e24ff538">
+        <source>Enrich your dashboard: display a graphical representation of your store’s development.</source>
+        <target>Enrich your dashboard: display a graphical representation of your store’s development.</target>
+        <note>Line: 52</note>
       </trans-unit>
     </body>
   </file>

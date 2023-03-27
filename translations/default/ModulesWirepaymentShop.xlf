@@ -9,12 +9,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_wirepayment/controllers/front/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_wirepayment/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
         <source>This payment method is not available.</source>
         <target>This payment method is not available.</target>
-        <note>Line: 47</note>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>
