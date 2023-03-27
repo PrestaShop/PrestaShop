@@ -117,6 +117,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      * @param array $data
      *
      * @return EditRootCategoryCommand
+     *
      * @throws CategoryConstraintException
      */
     private function createEditRootCategoryCommand(int $rootCategoryId, array $data): EditRootCategoryCommand

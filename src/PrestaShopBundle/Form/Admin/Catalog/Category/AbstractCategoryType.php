@@ -348,7 +348,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
 
         if ($this->multiStoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Store association', 'Admin.Global')
+                'label' => $this->trans('Store association', 'Admin.Global'),
             ]);
         }
     }

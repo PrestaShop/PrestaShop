@@ -173,7 +173,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'group_association' => $allGroupIds,
             'shop_association' => $this->contextShopId,
             'active' => true,
-            'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}')
+            'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}'),
         ];
     }
 }

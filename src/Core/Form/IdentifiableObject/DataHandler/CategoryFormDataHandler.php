@@ -62,6 +62,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
 
         /** @var CategoryId $categoryId */
         $categoryId = $this->commandBus->handle($command);
+
         return $categoryId->getValue();
     }
 
