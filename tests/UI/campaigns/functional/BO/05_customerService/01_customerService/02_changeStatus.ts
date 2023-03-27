@@ -125,10 +125,8 @@ describe('BO - Customer Service : Change status', async () => {
 
         await customerServicePage.goToViewMessagePage(page);
 
-        const threadNumber = await viewPage.getThreadNumber(page);
-
         const pageTitle = await viewPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewPage.pageTitle(threadNumber.toString()));
+        await expect(pageTitle).to.contains(viewPage.pageTitle);
       });
 
       it(`should change the order status to '${test.args.status}'`, async function () {

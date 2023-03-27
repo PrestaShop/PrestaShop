@@ -162,10 +162,9 @@ describe('FO - Contact us : Add attachment', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
     await customerServicePage.goToViewMessagePage(page);
-    const threadNumber = await viewPage.getThreadNumber(page);
 
     const pageTitle = await viewPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(viewPage.pageTitle(threadNumber.toString()));
+    await expect(pageTitle).to.contains(viewPage.pageTitle);
   });
 
   it('should check the thread form', async function () {
