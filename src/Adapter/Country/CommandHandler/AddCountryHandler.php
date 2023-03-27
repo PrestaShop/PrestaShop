@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Handles creation of country and address format for it
+ * Handles creation of country and address format
  */
 class AddCountryHandler implements AddCountryHandlerInterface
 {

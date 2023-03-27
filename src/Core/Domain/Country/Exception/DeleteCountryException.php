@@ -24,38 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Product\Search;
-
-use Symfony\Contracts\Translation\TranslatorInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * This class is not a factory but a provider of default Sort Orders.
- *
- * @deprecated since 1.7.6 and to be removed in the next major: use SortOrdersCollection:getDefaults instead.
+ * Is thrown on failure to delete country
  */
-class SortOrderFactory
+class DeleteCountryException extends CountryException
 {
     /**
-     * @var TranslatorInterface the translator
+     * When fails to delete single country
      */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        @trigger_error(
-            'This class is deprecated since 1.7.6, use SortOrdersCollection::getDefaults instead.',
-            E_USER_DEPRECATED
-        );
-        $this->translator = $translator;
-    }
+    public const FAILED_DELETE = 1;
 
     /**
-     * @return array
-     *
-     * @throws \Exception
+     * When fails to delete countries in bulk actions
      */
-    public function getDefaultSortOrders()
-    {
-        return (new SortOrdersCollection($this->translator))->getDefaults();
-    }
+    public const FAILED_BULK_DELETE = 2;
 }

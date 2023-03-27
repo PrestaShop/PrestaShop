@@ -24,18 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as ValueObjectEmail;
+namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
+
+use Country;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\DeleteCountryHandlerInterface;
 
 /**
- * @deprecated since version 1.7.6.4 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email instead
+ * Handles country deletion
  */
-class Email extends ValueObjectEmail
+class DeleteCountryHandler implements DeleteCountryHandlerInterface
 {
-    public function __construct($email)
+    /**
+     * @var CountryRepository
+     */
+    private $countryRepository;
+
+    public function __construct(CountryRepository $countryRepository)
     {
-        @trigger_error(self::class . ' is deprecated. Use ' . ValueObjectEmail::class . ' instead', E_USER_DEPRECATED);
-        parent::__construct($email);
+        $this->countryRepository = $countryRepository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(DeleteCountryCommand $command): void
+    {
+        $this->countryRepository->delete($command->getCountryId());
     }
 }

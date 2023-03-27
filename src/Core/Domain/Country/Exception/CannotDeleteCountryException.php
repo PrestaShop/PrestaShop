@@ -26,43 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Product\Search;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Product\Search\URLFragmentSerializer;
-
-class URLFragmentSerializerTest extends Testcase
+/**
+ * Is thrown when adding new country fails
+ */
+class CannotDeleteCountryException extends CountryException
 {
-    private $serializer;
-
-    protected function setUp(): void
-    {
-        $this->serializer = new URLFragmentSerializer();
-    }
-
-    private function doTest($expected, array $fragment)
-    {
-        $this->assertEquals($expected, $this->serializer->serialize($fragment));
-        $this->assertEquals($fragment, $this->serializer->unserialize($expected));
-    }
-
-    public function testSerializeSingleMonovaluedFragment()
-    {
-        $this->doTest('a-b', ['a' => ['b']]);
-    }
-
-    public function testSerializeSingleMultivaluedFragment()
-    {
-        $this->doTest('a-b-c', ['a' => ['b', 'c']]);
-    }
-
-    public function testSerializeMultipleMultivaluedFragments()
-    {
-        $this->doTest('a-b-c/x-y-z', ['a' => ['b', 'c'], 'x' => ['y', 'z']]);
-    }
-
-    public function testSerializeSingleMonovaluedFragmentWithDashInName()
-    {
-        $this->doTest('a-b--c', ['a' => ['b-c']]);
-    }
 }

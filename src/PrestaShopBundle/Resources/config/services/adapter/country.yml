@@ -24,23 +24,26 @@ services:
   PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository:
     autowire: true
 
-  prestashop.adapter.country.command_handler.add_country_handler:
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\AddCountryHandler:
     public: true
-    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\AddCountryHandler'
     autowire: true
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand' }
 
-  prestashop.adapter.country.command_handler.edit_country_handler:
-    public: true
-    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\EditCountryHandler'
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\DeleteCountryHandler:
+    public: false
+    autowire: true
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand' }
+
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\EditCountryHandler:
+    public: false
     autowire: true
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand' }
 
-  prestashop.adapter.country.query_handler.get_country_for_editing_handler:
-    public: true
-    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryForEditingHandler'
+  PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryForEditingHandler:
+    public: false
     autowire: true
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing' }

@@ -123,6 +123,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
             )
             ->setParameter('contextLangId', $this->contextLangId)
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+            ->groupBy('c.id_country')
         ;
 
         $this->applyFilters($qb, $searchCriteria);

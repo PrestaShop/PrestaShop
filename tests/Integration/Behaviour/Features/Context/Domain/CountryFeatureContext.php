@@ -31,6 +31,7 @@ use Behat\Gherkin\Node\TableNode;
 use Country;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CountryFeatureContext extends AbstractDomainFeatureContext
@@ -219,5 +221,35 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $data;
+    }
+
+    /**
+     * @When I delete country :countryReference
+     *
+     * @param string $countryReference
+     */
+    public function deleteCountry(string $countryReference): void
+    {
+        $countryId = SharedStorage::getStorage()->get($countryReference);
+
+        $this->getCommandBus()->handle(new DeleteCountryCommand((int) $countryId));
+    }
+
+    /**
+     * @Then country :countryReference should be deleted
+     *
+     * @param string $countryReference
+     */
+    public function assertCountryIsDeleted(string $countryReference): void
+    {
+        $countryId = SharedStorage::getStorage()->get($countryReference);
+
+        try {
+            $this->getQueryBus()->handle(new GetCountryForEditing($countryId));
+
+            throw new NoExceptionAlthoughExpectedException(sprintf('Country %s exists, but it was expected to be deleted', $countryReference));
+        } catch (CountryNotFoundException $e) {
+            SharedStorage::getStorage()->clear($countryReference);
+        }
     }
 }

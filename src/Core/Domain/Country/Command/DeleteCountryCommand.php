@@ -24,14 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Product;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter
- *
- * Class ProductListingPresenter
+ * Deletes country
  */
-class ProductListingPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter
+class DeleteCountryCommand
 {
+    /**
+     * @var CountryId
+     */
+    private $countryId;
+
+    /**
+     * @param int $countryId
+     */
+    public function __construct(int $countryId)
+    {
+        $this->countryId = new CountryId($countryId);
+    }
+
+    /**
+     * @return CountryId
+     */
+    public function getCountryId(): CountryId
+    {
+        return $this->countryId;
+    }
 }

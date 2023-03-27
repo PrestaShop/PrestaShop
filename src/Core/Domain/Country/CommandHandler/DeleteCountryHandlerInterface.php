@@ -24,14 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 
 /**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter
- *
- * Class ProductPresenter
+ * Interface for service that deletes country
  */
-class ProductPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter
+interface DeleteCountryHandlerInterface
 {
+    /**
+     * @param DeleteCountryCommand $command
+     */
+    public function handle(DeleteCountryCommand $command): void;
 }

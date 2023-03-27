@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Country\Repository;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotDeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
@@ -117,5 +118,10 @@ class CountryRepository extends AbstractObjectModelRepository
         $this->updateObjectModel($country, CannotEditCountryException::class);
 
         return $country;
+    }
+
+    public function delete(CountryId $countryId): void
+    {
+        $this->deleteObjectModel($this->get($countryId), CannotDeleteCountryException::class);
     }
 }
