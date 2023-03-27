@@ -40,7 +40,7 @@ class ViewCustomer extends BOBasePage {
     this.yourAnswerFormTitle = '#reply-form-title';
     this.yourAnswerFormTextarea = '#reply_message';
     this.ordersAndMessagesBlock = '#orders-and-messages-block';
-    this.attachmentLink = `${this.messagesThredDiv} a[href*='/upload']`;
+    this.attachmentLink = `${this.messagesThredDiv} span.message-product a`;
   }
 
   /*
