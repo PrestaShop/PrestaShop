@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
-use ConfigurationKPI;
-use Context;
 use HelperKpi;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -37,30 +37,57 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 final class AverageOrderValueKpi implements KpiInterface
 {
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @var string
+     */
+    private $sourceLink;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param ConfigurationInterface $configuration
+     * @param string $sourceLink
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        ConfigurationInterface $configuration,
+        string $sourceLink
+    ) {
+        $this->translator = $translator;
+        $this->configuration = $configuration;
+        $this->sourceLink = $sourceLink;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render()
     {
-        $translator = Context::getContext()->getTranslator();
-
         $helper = new HelperKpi();
         $helper->id = 'box-average-order';
         $helper->icon = 'account_balance_wallet';
-        $helper->color = 'color1';
-        $helper->title = $translator->trans('Average Order Value', [], 'Admin.Global');
-        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
+        $helper->color = 'color4';
+        $helper->title = $this->translator->trans('Average Order Value', [], 'Admin.Global');
+        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
 
-        if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
-            $helper->value = $translator->trans(
+        if ($this->configuration->get('AVG_ORDER_VALUE') !== false) {
+            $helper->value = $this->translator->trans(
                 '%amount% tax excl.',
-                ['%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')],
+                ['%amount%' => $this->configuration->get('AVG_ORDER_VALUE')],
                 'Admin.Orderscustomers.Feature'
             );
         }
 
-        $helper->source = Context::getContext()->link->getAdminLink('AdminStats')
-            . '&ajax=1&action=getKpi&kpi=average_order_value';
-        $helper->refresh = (bool) (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < time());
+        $helper->source = $this->sourceLink;
+        $helper->refresh = (bool) ($this->configuration->get('AVG_ORDER_VALUE_EXPIRE') < time());
 
         return $helper->generate();
     }

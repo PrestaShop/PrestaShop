@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
-use ConfigurationKPI;
-use Context;
 use HelperKpi;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -37,26 +37,53 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 final class NetProfitPerVisitKpi implements KpiInterface
 {
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @var string
+     */
+    private $sourceLink;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param ConfigurationInterface $configuration
+     * @param string $sourceLink
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        ConfigurationInterface $configuration,
+        string $sourceLink
+    ) {
+        $this->translator = $translator;
+        $this->configuration = $configuration;
+        $this->sourceLink = $sourceLink;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render()
     {
-        $translator = Context::getContext()->getTranslator();
-
         $helper = new HelperKpi();
         $helper->id = 'box-net-profit-visit';
         $helper->icon = 'account_box';
-        $helper->color = 'color1';
-        $helper->title = $translator->trans('Net Profit per Visit', [], 'Admin.Orderscustomers.Feature');
-        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Orderscustomers.Feature');
+        $helper->color = 'color3';
+        $helper->title = $this->translator->trans('Net Profit per Visit', [], 'Admin.Orderscustomers.Feature');
+        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Orderscustomers.Feature');
 
-        if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false) {
-            $helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
+        if ($this->configuration->get('NETPROFIT_VISIT') !== false) {
+            $helper->value = $this->configuration->get('NETPROFIT_VISIT');
         }
 
-        $helper->source = Context::getContext()->link->getAdminLink('AdminStats')
-            . '&ajax=1&action=getKpi&kpi=netprofit_visit';
-        $helper->refresh = (bool) (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < time());
+        $helper->source = $this->sourceLink;
+        $helper->refresh = (bool) ($this->configuration->get('NETPROFIT_VISIT_EXPIRE') < time());
 
         return $helper->generate();
     }

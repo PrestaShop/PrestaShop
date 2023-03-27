@@ -87,14 +87,35 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\ShoppingCartTotalKpi'
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
+
   prestashop.adapter.kpi.abandoned_cart:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\AbandonedCartKpi'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.kpi_configuration'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminCarts", true, {"action": "filterOnlyAbandonedCarts"})'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "abandoned_cart"})'
+      - '@router'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
+      - '@prestashop.core.admin.feature_flag.repository'
 
   prestashop.adapter.kpi.average_order_value:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\AverageOrderValueKpi'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.kpi_configuration'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "average_order_value"})'
 
   prestashop.adapter.kpi.conversion_rate:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\ConversionRateKpi'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.kpi_configuration'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "conversion_rate"})'
 
   prestashop.adapter.kpi.net_profit_per_visit:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.kpi_configuration'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "netprofit_visit"})'

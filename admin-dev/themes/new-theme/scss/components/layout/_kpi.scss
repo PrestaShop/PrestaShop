@@ -91,6 +91,13 @@
     }
   }
 
+  &.-color4 {
+    .value,
+    > .material-icons {
+      color: #9e5ba1;
+    }
+  }
+
   .title,
   .subtitle,
   .value {
