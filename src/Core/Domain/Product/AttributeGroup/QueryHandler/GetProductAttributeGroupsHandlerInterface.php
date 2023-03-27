@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 
 /**
  * Handles @see GetProductAttributeGroups query
