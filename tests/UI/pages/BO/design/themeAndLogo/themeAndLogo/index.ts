@@ -32,9 +32,9 @@ class ThemeAndLogo extends themeAndLogoBasePage {
     this.pageTitle = `Theme & Logo > Theme • ${global.INSTALL.SHOP_NAME}`;
     this.addNewThemeButton = '#page-header-desc-configuration-add';
     this.themeCardContainer = '#themes-logo-page .theme-card-container';
-    this.useSpecificThemeButton = (name: string) => `${this.themeCardContainer}[data-test-name="${name}"] `
+    this.useSpecificThemeButton = (name: string) => `${this.themeCardContainer}[data-role="${name}"] `
       + 'button.js-display-use-theme-modal';
-    this.removeSpecificThemeButton = (name: string) => `${this.themeCardContainer}[data-test-name="${name}"] `
+    this.removeSpecificThemeButton = (name: string) => `${this.themeCardContainer}[data-role="${name}"] `
       + 'button.js-display-delete-theme-modal';
     this.removeThemeModalDialog = '#delete_theme_modal .modal-dialog';
     this.removeThemeModalDialogYesButton = `${this.removeThemeModalDialog} .js-submit-delete-theme`;
