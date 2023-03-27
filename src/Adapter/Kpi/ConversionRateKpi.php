@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
-use ConfigurationKPI;
-use Context;
 use HelperKpi;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -37,30 +37,57 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 final class ConversionRateKpi implements KpiInterface
 {
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @var string
+     */
+    private $sourceLink;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param ConfigurationInterface $configuration
+     * @param string $sourceLink
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        ConfigurationInterface $configuration,
+        string $sourceLink
+    ) {
+        $this->translator = $translator;
+        $this->configuration = $configuration;
+        $this->sourceLink = $sourceLink;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render()
     {
-        $translator = Context::getContext()->getTranslator();
-
         $helper = new HelperKpi();
         $helper->id = 'box-conversion-rate';
         $helper->icon = 'assessment';
         $helper->color = 'color1';
-        $helper->title = $translator->trans('Conversion Rate', [], 'Admin.Global');
-        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
+        $helper->title = $this->translator->trans('Conversion Rate', [], 'Admin.Global');
+        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
 
-        if (ConfigurationKPI::get('CONVERSION_RATE') !== false) {
-            $helper->value = ConfigurationKPI::get('CONVERSION_RATE');
+        if ($this->configuration->get('CONVERSION_RATE') !== false) {
+            $helper->value = $this->configuration->get('CONVERSION_RATE');
         }
 
-        if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false) {
-            $helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
+        if ($this->configuration->get('CONVERSION_RATE_CHART') !== false) {
+            $helper->data = $this->configuration->get('CONVERSION_RATE_CHART');
         }
 
-        $helper->source = Context::getContext()->link->getAdminLink('AdminStats')
-            . '&ajax=1&action=getKpi&kpi=conversion_rate';
-        $helper->refresh = (bool) (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < time());
+        $helper->source = $this->sourceLink;
+        $helper->refresh = (bool) ($this->configuration->get('CONVERSION_RATE_EXPIRE') < time());
 
         return $helper->generate();
     }

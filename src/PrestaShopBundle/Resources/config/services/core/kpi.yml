@@ -52,3 +52,13 @@ services:
         - '@prestashop.adapter.kpi.net_profit_per_visit'
       - '@prestashop.core.hook.dispatcher'
       - 'orders'
+
+  prestashop.core.kpi_row.factory.carts:
+    class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
+    arguments:
+      - - '@prestashop.adapter.kpi.conversion_rate'
+        - '@prestashop.adapter.kpi.abandoned_cart'
+        - '@prestashop.adapter.kpi.average_order_value'
+        - '@prestashop.adapter.kpi.net_profit_per_visit'
+      - '@prestashop.core.hook.dispatcher'
+      - 'orders'
