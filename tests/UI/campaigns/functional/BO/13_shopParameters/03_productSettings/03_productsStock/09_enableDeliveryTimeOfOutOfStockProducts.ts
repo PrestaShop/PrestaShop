@@ -17,7 +17,7 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import foProductPage from '@pages/FO/product';
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data

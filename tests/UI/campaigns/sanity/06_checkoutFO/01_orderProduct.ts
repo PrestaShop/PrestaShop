@@ -6,8 +6,8 @@ import helper from '@utils/helpers';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import homePage from '@pages/FO/home';
-import loginPage from '@pages/FO/login';
+import {homePage} from '@pages/FO/home';
+import {loginPage} from '@pages/FO/login';
 
 // Import data
 import Customers from '@data/demo/customers';

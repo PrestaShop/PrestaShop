@@ -83,7 +83,8 @@
       <div class="card-body">
         <div class="row">
           {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-            'themeName': currentlyUsedTheme.get('display_name'),
+            'themeName': theme.get('name'),
+            'themeDisplayName': theme.get('display_name'),
             'themeVersion': currentlyUsedTheme.get('version'),
             'themeAuthor': currentlyUsedTheme.get('author.name'),
             'themeAuthorUrl': theme.get('author.url'),
@@ -103,7 +104,8 @@
           {% if notUsedThemes is not empty %}
             {% for theme in notUsedThemes %}
               {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-                'themeName': theme.get('display_name'),
+                'themeName': theme.get('name'),
+                'themeDisplayName': theme.get('display_name'),
                 'themeVersion': theme.get('version'),
                 'themeAuthor': theme.get('author.name'),
                 'themeAuthorUrl': theme.get('author.url'),

@@ -3,9 +3,9 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import homePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
-import foCreateAccountPage from '@pages/FO/myAccount/add';
+import {homePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
+import {createAccountPage as foCreateAccountPage} from '@pages/FO/myAccount/add';
 import foMyAccountPage from '@pages/FO/myAccount';
 import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foAddAddressesPage from '@pages/FO/myAccount/addAddress';

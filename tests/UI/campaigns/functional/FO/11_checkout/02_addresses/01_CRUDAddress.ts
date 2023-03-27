@@ -7,7 +7,7 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
 
 // Import pages
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import Products from '@data/demo/products';
 import foCartPage from '@pages/FO/cart';

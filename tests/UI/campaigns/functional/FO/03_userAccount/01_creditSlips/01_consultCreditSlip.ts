@@ -21,8 +21,8 @@ import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
-import homePage from '@pages/FO/home';
-import loginPage from '@pages/FO/login';
+import {homePage} from '@pages/FO/home';
+import {loginPage} from '@pages/FO/login';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';

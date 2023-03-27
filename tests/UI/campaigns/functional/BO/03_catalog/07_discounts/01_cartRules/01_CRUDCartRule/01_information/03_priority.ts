@@ -13,7 +13,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
 // Import data

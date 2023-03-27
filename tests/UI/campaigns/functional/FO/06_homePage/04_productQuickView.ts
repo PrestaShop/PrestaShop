@@ -10,7 +10,7 @@ import {
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import categoryPage from '@pages/FO/category';
 
 // Import data

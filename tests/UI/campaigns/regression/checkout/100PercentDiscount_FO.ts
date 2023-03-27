@@ -14,7 +14,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 
 // Import data
 import CartRuleData from '@data/faker/cartRule';

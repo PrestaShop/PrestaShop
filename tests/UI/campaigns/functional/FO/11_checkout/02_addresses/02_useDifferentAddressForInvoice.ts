@@ -12,7 +12,7 @@ import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import FO pages
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import foCartPage from '@pages/FO/cart';
 import foCheckoutPage from '@pages/FO/checkout';
