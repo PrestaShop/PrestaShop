@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup;
+namespace PrestaShop\PrestaShop\Adapter\AttributeGroup;
 
 use AttributeGroup;
 use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProviderInterface;

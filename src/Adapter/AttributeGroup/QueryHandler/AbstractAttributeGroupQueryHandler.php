@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler;
 
 use AttributeGroup as AttributeGroupObjectModel;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;

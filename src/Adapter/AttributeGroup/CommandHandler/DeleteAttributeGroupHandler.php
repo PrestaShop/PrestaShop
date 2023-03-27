@@ -25,9 +25,9 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AbstractAttributeGroupHandler;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\AbstractAttributeGroupHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\DeleteAttributeGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
