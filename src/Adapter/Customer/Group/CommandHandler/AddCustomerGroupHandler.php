@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -27,31 +27,43 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler;
 
+use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\CommandHandler\AddCustomerGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
 {
+    /**
+     * @var CustomerGroupValidator
+     */
+    private $customerGroupValidator;
+
     /**
      * @var GroupRepository
      */
     private $customerGroupRepository;
 
-    public function __construct(GroupRepository $customerGroupRepository)
+    public function __construct(CustomerGroupValidator $customerGroupValidator, GroupRepository $customerGroupRepository)
     {
+        $this->customerGroupValidator = $customerGroupValidator;
         $this->customerGroupRepository = $customerGroupRepository;
     }
 
     public function handle(AddCustomerGroupCommand $command): GroupId
     {
-        return $this->customerGroupRepository->create(
-            $command->getLocalizedNames(),
-            $command->getReductionPercent(),
-            $command->displayPriceTaxExcluded(),
-            $command->showPrice(),
-            $command->getShopIds()
-        );
+        $customerGroup = new CustomerGroup();
+        $customerGroup->name = $command->getLocalizedNames();
+        $customerGroup->reduction = (string) $command->getReductionPercent();
+        $customerGroup->price_display_method = (int) $command->displayPriceTaxExcluded();
+        $customerGroup->show_prices = $command->showPrice();
+        $customerGroup->id_shop_list = $command->getShopIds();
+
+        $this->customerGroupValidator->validateCreation($customerGroup);
+
+        return $this->customerGroupRepository->create($customerGroup);
     }
 }

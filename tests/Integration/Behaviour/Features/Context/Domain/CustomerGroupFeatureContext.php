@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCom
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
@@ -45,13 +44,13 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
      * @When /^I create a Customer Group "(.+)" with the following details:$/
      *
      * @param string $customerGroupReference
-     * @param TableNode $table
+     * @param TableNode $tableNode
      *
      * @throws Exception
      */
-    public function createCustomerUsingCommand(string $customerGroupReference, TableNode $table)
+    public function createCustomerUsingCommand(string $customerGroupReference, TableNode $tableNode)
     {
-        $data = $this->localizeByRows($table);
+        $data = $this->localizeByRows($tableNode);
         $commandBus = $this->getCommandBus();
 
         $command = new AddCustomerGroupCommand(
@@ -59,9 +58,7 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
             new DecimalNumber($data['reduction']),
             (bool) $data['displayPriceTaxExcluded'],
             (bool) $data['showPrice'],
-            array_map(function (string $shopId) {
-                return new ShopId((int) $shopId);
-            }, explode(',', $data['shopIds']))
+            $this->referencesToIds($data['shopIds'])
         );
 
         /** @var GroupId $id */
@@ -86,18 +83,15 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
      */
     public function transformEditableCustomerGroup(TableNode $tableNode): EditableCustomerGroup
     {
-        $dataRows = $tableNode->getRowsHash();
+        $data = $this->localizeByRows($tableNode);
 
         return new EditableCustomerGroup(
-            (int) $dataRows['id'],
-            [
-                1 => $dataRows['name[en-US]'],
-                2 => $dataRows['name[fr-FR]'],
-            ],
-            new DecimalNumber($dataRows['reduction']),
-            (bool) $dataRows['displayPriceTaxExcluded'],
-            (bool) $dataRows['showPrice'],
-            explode(',', $dataRows['shopIds'])
+            (int) $data['id'],
+            $data['name'],
+            new DecimalNumber($data['reduction']),
+            (bool) $data['displayPriceTaxExcluded'],
+            (bool) $data['showPrice'],
+            explode(',', $data['shopIds'])
         );
     }
 

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\InvalidReductionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class AddCustomerGroupCommand
@@ -64,7 +63,7 @@ class AddCustomerGroupCommand
      * @param DecimalNumber $reductionPercent
      * @param bool $displayPriceTaxExcluded
      * @param bool $showPrice
-     * @param ShopId[] $shopIds
+     * @param array<int> $shopIds
      */
     public function __construct(
         array $localizedNames,
@@ -73,13 +72,15 @@ class AddCustomerGroupCommand
         bool $showPrice,
         array $shopIds
     ) {
-        $this->assertReductionIsEqualOrGreaterThanZero($reductionPercent);
+        $this->assertReductionIsValid($reductionPercent);
 
         $this->localizedNames = $localizedNames;
         $this->reductionPercent = $reductionPercent;
         $this->displayPriceTaxExcluded = $displayPriceTaxExcluded;
         $this->showPrice = $showPrice;
-        $this->shopIds = $shopIds;
+        $this->shopIds = array_map(function (int $shopId) {
+            return new ShopId($shopId);
+        }, $shopIds);
     }
 
     /**
@@ -122,7 +123,7 @@ class AddCustomerGroupCommand
         return $this->shopIds;
     }
 
-    private function assertReductionIsEqualOrGreaterThanZero(DecimalNumber $reductionPercent): void
+    private function assertReductionIsValid(DecimalNumber $reductionPercent): void
     {
         if ($reductionPercent->isLowerThanZero() || $reductionPercent->isGreaterThan(new DecimalNumber('100'))) {
             throw new GroupConstraintException(

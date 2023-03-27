@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class EditableCustomerGroup
 {
@@ -58,7 +57,7 @@ class EditableCustomerGroup
     private $showPrice;
 
     /**
-     * @var ShopId[]
+     * @var array<int>
      */
     private $shopIds;
 
@@ -68,7 +67,7 @@ class EditableCustomerGroup
      * @param DecimalNumber $reduction
      * @param bool $displayPriceTaxExcluded
      * @param bool $showPrice
-     * @param array $shopIds
+     * @param array<int> $shopIds
      */
     public function __construct(
         int $id,
@@ -127,7 +126,7 @@ class EditableCustomerGroup
     }
 
     /**
-     * @return ShopId[]
+     * @return array<int>
      */
     public function getShopIds(): array
     {

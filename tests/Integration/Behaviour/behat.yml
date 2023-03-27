@@ -59,6 +59,7 @@ default:
                 - "%paths.base%/Features/Scenario/CustomerGroup"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CustomerGroupFeatureContext

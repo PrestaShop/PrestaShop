@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -28,15 +28,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Repository;
 
 use Group as CustomerGroup;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotAddGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
-use PrestaShopException;
 
 /**
  * Provides methods to access Group data storage
@@ -78,26 +75,14 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * @param array $localizedNames
-     * @param DecimalNumber $reduction
-     * @param bool $priceDisplayMethod
-     * @param bool $showPrices
-     * @param ShopId[] $shopIds
+     * @param CustomerGroup $customerGroup
      *
      * @throws CoreException
      *
      * @return GroupId
      */
-    public function create(array $localizedNames, DecimalNumber $reduction, bool $priceDisplayMethod, bool $showPrices, array $shopIds): GroupId
+    public function create(CustomerGroup $customerGroup): GroupId
     {
-        $customerGroup = new CustomerGroup();
-        $customerGroup->name = $localizedNames;
-        $customerGroup->reduction = (string) $reduction;
-        $customerGroup->price_display_method = (int) $priceDisplayMethod;
-        $customerGroup->show_prices = $showPrices;
-
-        $this->addObjectModelToShops($customerGroup, $shopIds, CannotAddGroupException::class);
-
-        return new GroupId((int) $customerGroup->id);;
+        return new GroupId($this->addObjectModelToShops($customerGroup, $customerGroup->id_shop_list, CannotAddGroupException::class));
     }
 }

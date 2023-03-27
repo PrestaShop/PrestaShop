@@ -31,3 +31,7 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing'
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator:
+    public: false
+    autowire: true

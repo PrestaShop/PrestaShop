@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -32,7 +32,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\InvalidReductionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class AddCustomerGroupCommandTest extends TestCase
@@ -40,16 +39,16 @@ class AddCustomerGroupCommandTest extends TestCase
     /**
      * @dataProvider getValidValues
      *
-     * @param DecimalNumber $value
+     * @param DecimalNumber $reductionPercent
      */
-    public function testItWorksWhenProvidingValidReduction(DecimalNumber $value): void
+    public function testItWorksWhenProvidingValidReduction(DecimalNumber $reductionPercent): void
     {
         new AddCustomerGroupCommand(
             ['toto', 'tata'],
-            $value,
+            $reductionPercent,
             false,
             true,
-            [new ShopId(1)]
+            [1]
         );
         $this->assertTrue(true);
     }
@@ -57,18 +56,18 @@ class AddCustomerGroupCommandTest extends TestCase
     /**
      * @dataProvider getInvalidValues
      *
-     * @param DecimalNumber $value
+     * @param DecimalNumber $reductionPercent
      */
-    public function testItThrowsExceptionWhenProvidingInvalidReduction(DecimalNumber $value): void
+    public function testItThrowsExceptionWhenProvidingInvalidReduction(DecimalNumber $reductionPercent): void
     {
         $this->expectException(GroupConstraintException::class);
 
         new AddCustomerGroupCommand(
             ['toto', 'tata'],
-            $value,
+            $reductionPercent,
             false,
             true,
-            [new ShopId(1)]
+            [1]
         );
     }
 
