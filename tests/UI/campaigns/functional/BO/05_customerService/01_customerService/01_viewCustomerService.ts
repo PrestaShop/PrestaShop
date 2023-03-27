@@ -111,7 +111,7 @@ describe('BO - Customer Service : View messages', async () => {
     const threadNumber = await viewPage.getThreadNumber(page);
 
     const pageTitle = await viewPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(viewPage.pageTitle(threadNumber.toString()));
+    await expect(pageTitle).to.contains(viewPage.pageTitle);
   });
 
   it('should check the thread form', async function () {
