@@ -110,8 +110,9 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
                         'currency' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT'),
                         'tax_included' => true,
                     ],
+                    'specific_product' => [],
+                    'exclude_discounted_products' => false,
                 ],
-                'exclude_discounted_products' => false,
                 'gift_product' => [],
             ],
         ];

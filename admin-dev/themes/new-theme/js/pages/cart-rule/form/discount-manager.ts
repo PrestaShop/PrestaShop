@@ -26,9 +26,10 @@
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
 import PriceReductionManager from '@components/form/price-reduction-manager';
 import DiscountApplicationManager from '@pages/cart-rule/form/discount-application-manager';
+import EventEmitter from '@components/event-emitter';
 
 export default class DiscountManager {
-  private discountContainer: HTMLDivElement;
+  private readonly discountContainer: HTMLDivElement;
 
   constructor() {
     this.discountContainer = <HTMLDivElement> document.querySelector(CartRuleMap.discountContainer);
@@ -36,7 +37,7 @@ export default class DiscountManager {
   }
 
   private init(): void {
-    new DiscountApplicationManager(CartRuleMap.reductionTypeSelect);
+    new DiscountApplicationManager();
     new PriceReductionManager(
       CartRuleMap.reductionTypeSelect,
       CartRuleMap.includeTaxInput,

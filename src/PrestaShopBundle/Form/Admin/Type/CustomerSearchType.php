@@ -70,7 +70,6 @@ class CustomerSearchType extends EntitySearchInputType
             'placeholder' => $this->trans('Search customer', 'Admin.Actions'),
             'suggestion_field' => 'fullname_and_email',
             'required' => false,
-            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/FormTheme/specific_price.html.twig', ]
-        );
+        ]);
     }
 }

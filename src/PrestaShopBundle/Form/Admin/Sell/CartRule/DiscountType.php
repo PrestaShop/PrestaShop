@@ -28,11 +28,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
 use PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener\DiscountListener;
+use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscountType extends TranslatorAwareType
@@ -42,13 +44,27 @@ class DiscountType extends TranslatorAwareType
      */
     private $discountListener;
 
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var string
+     */
+    private $employeeIsoCode;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        DiscountListener $discountListener
+        DiscountListener $discountListener,
+        RouterInterface $router,
+        string $employeeIsoCode
     ) {
         parent::__construct($translator, $locales);
         $this->discountListener = $discountListener;
+        $this->router = $router;
+        $this->employeeIsoCode = $employeeIsoCode;
     }
 
     /**
@@ -64,6 +80,20 @@ class DiscountType extends TranslatorAwareType
             ->add('discount_application', ChoiceType::class, [
                 // choices depends on reduction type data therefore are set in an event subscriber added bellow
                 'choices' => [],
+            ])
+            ->add('specific_product', EntitySearchInputType::class, [
+                'row_attr' => [
+                    'class' => 'specific-product-search-container',
+                ],
+                'required' => false,
+                'limit' => 1,
+                'min_length' => 3,
+                'label' => $this->trans('Search for specific product', 'Admin.Catalog.Feature'),
+                'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
+                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             ])
             ->add('exclude_discounted_products', SwitchType::class, [
                 'label' => $this->trans('Exclude discounted products', 'Admin.Catalog.Feature'),

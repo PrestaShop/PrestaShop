@@ -32,14 +32,17 @@ import DiscountManager from '@pages/cart-rule/form/discount-manager';
 import ProductSearchInput from '@pages/product/product-search-input';
 
 $(() => {
+  window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TranslatableInput',
+    'EventEmitter',
+  ]);
+
   // It is important that discountManager is initialized before DisablingSwitch
   // or else it won't find reduction type value when it is disabled therefore not toggling some inputs correctly on init
   new DiscountManager();
 
   window.prestashop.component.initComponents([
-    'TranslatableField',
-    'TranslatableInput',
-    'EventEmitter',
     'DisablingSwitch',
   ]);
 

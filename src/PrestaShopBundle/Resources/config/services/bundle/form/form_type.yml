@@ -511,7 +511,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType:
   PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
   PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
-  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductType: ~
+  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
@@ -767,6 +767,7 @@ services:
 
   PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
+
   PrestaShopBundle\Form\Admin\Sell\CartRule\CartRuleType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\ActionsType:
   PrestaShopBundle\Form\Admin\Sell\CartRule\ConditionsType:

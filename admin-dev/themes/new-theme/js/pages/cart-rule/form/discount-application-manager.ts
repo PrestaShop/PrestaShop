@@ -23,22 +23,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
+import EntitySearchInput from '@components/entity-search-input';
+import ProductEventMap from '@pages/product/product-event-map';
+import EventEmitter from '@components/event-emitter';
 
 export default class DiscountApplicationManager {
   private readonly reductionTypeSelector: string;
 
-  constructor(
-    reductionTypeSelector: string,
-  ) {
-    this.reductionTypeSelector = reductionTypeSelector;
+  private readonly applicationSelect: string;
+
+  constructor() {
+    this.reductionTypeSelector = CartRuleMap.reductionTypeSelect;
+    this.applicationSelect = CartRuleMap.discountApplicationSelect;
     this.init();
   }
 
   private init(): void {
+    const eventEmitter = <typeof EventEmitter> window.prestashop.instance.eventEmitter;
+
+    new EntitySearchInput($(CartRuleMap.specificProductSearchComponent), {
+      onRemovedContent: () => eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
+      onSelectedContent: () => eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
+    });
     this.updateChoices(this.getReductionTypeSelect().value);
     this.toggleExcludeDiscountedProducts(this.getReductionTypeSelect().value);
+    this.toggleSpecificProductsSearch(this.getApplicationSelect().value);
 
     this.listenReductionTypeChanges();
+    this.listenDiscountApplicationChanges();
   }
 
   private listenReductionTypeChanges(): void {
@@ -48,6 +60,15 @@ export default class DiscountApplicationManager {
       const currentTarget = <HTMLSelectElement> e.currentTarget;
       this.updateChoices(currentTarget.value);
       this.toggleExcludeDiscountedProducts(currentTarget.value);
+    });
+  }
+
+  private listenDiscountApplicationChanges(): void {
+    const applicationSelect = this.getApplicationSelect();
+
+    applicationSelect.addEventListener('change', (e: Event) => {
+      const currentTarget = <HTMLSelectElement> e.currentTarget;
+      this.toggleSpecificProductsSearch(currentTarget.value);
     });
   }
 
@@ -82,7 +103,21 @@ export default class DiscountApplicationManager {
     }
   }
 
+  private toggleSpecificProductsSearch(applicationChoice: string): void {
+    const specificProductSearchContainer = <HTMLDivElement> document.querySelector(CartRuleMap.specificProductSearchContainer);
+
+    if (applicationChoice === 'specific_product') {
+      $(specificProductSearchContainer).fadeIn();
+    } else {
+      $(specificProductSearchContainer).fadeOut();
+    }
+  }
+
   private getReductionTypeSelect(): HTMLSelectElement {
     return <HTMLSelectElement> document.querySelector(this.reductionTypeSelector);
+  }
+
+  private getApplicationSelect(): HTMLSelectElement {
+    return <HTMLSelectElement> document.querySelector(this.applicationSelect);
   }
 }

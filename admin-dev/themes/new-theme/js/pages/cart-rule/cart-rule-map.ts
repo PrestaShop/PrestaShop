@@ -39,4 +39,6 @@ export default {
   reductionTypeSelect: '#cart_rule_actions_discount_reduction_type',
   // eslint-disable-next-line max-len
   reductionValueSymbol: `${discountContainer} .price-reduction-value .input-group .input-group-append .input-group-text, .price-reduction-value .input-group .input-group-prepend .input-group-text`,
+  specificProductSearchComponent: '#cart_rule_actions_discount_specific_product',
+  specificProductSearchContainer: '.specific-product-search-container',
 };

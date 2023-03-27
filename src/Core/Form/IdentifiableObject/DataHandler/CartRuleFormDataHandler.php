@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
@@ -78,6 +79,12 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         if (isset($data['actions']['discount']['reduction']['value'])) {
             $command->setDiscountApplicationType($data['actions']['discount']['discount_application']);
+            if (
+                $data['actions']['discount']['discount_application'] === DiscountApplicationType::SPECIFIC_PRODUCT &&
+                !empty($data['actions']['discount']['specific_product'][0]['id'])
+            ) {
+                $command->setDiscountProductId((int) $data['actions']['discount']['specific_product'][0]['id']);
+            }
         }
 
         if (!empty($conditionsData['minimum_amount']['amount'])) {
