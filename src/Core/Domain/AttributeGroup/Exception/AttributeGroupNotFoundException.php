@@ -24,20 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetProductAttributeGroups;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Is thrown when required attribute group cannot be found
  */
-interface GetProductAttributeGroupsHandlerInterface
+class AttributeGroupNotFoundException extends AttributeGroupException
 {
-    /**
-     * @param GetProductAttributeGroups $query
-     *
-     * @return AttributeGroup[]
-     */
-    public function handle(GetProductAttributeGroups $query): array;
 }

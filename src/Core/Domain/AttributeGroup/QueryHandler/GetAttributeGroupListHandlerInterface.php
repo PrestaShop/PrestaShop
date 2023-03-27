@@ -24,35 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler\GetAttributeGroupListHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Handles the query GetAttributeGroupList using Doctrine repository
+ * Defines contract to handle @see GetAttributeGroupList
  */
-class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler implements GetAttributeGroupListHandlerInterface
+interface GetAttributeGroupListHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * @param GetAttributeGroupList $query
+     *
+     * @return array
      */
-    public function handle(GetAttributeGroupList $query): array
-    {
-        $shopConstraint = $query->getShopConstraint();
-        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
-
-        return $this->formatAttributeGroupsList(
-            $attributeGroups,
-            $this->attributeRepository->getGroupedAttributes(
-                $shopConstraint,
-                array_map(static function (int $id): AttributeGroupId {
-                    return new AttributeGroupId($id);
-                }, array_keys($attributeGroups))
-            )
-        );
-    }
+    public function handle(GetAttributeGroupList $query): array;
 }

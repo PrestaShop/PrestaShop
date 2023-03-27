@@ -23,31 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AbstractAttributeGroupHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\DeleteAttributeGroupException;
 
 /**
- * Handles command which deletes multiple attribute groups using legacy object model
+ * Interface for handling command which deletes mutliple attribute groups
  */
-final class BulkDeleteAttributeGroupHandler extends AbstractAttributeGroupHandler implements BulkDeleteAttributeGroupHandlerInterface
+interface BulkDeleteAttributeGroupHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param BulkDeleteAttributeGroupCommand $command
      */
-    public function handle(BulkDeleteAttributeGroupCommand $command)
-    {
-        foreach ($command->getAttributeGroupIds() as $attributeGroupId) {
-            $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
-
-            if (false === $this->deleteAttributeGroup($attributeGroup)) {
-                throw new DeleteAttributeGroupException(sprintf('Failed to delete attribute group with id "%s"', $attributeGroupId->getValue()), DeleteAttributeGroupException::FAILED_BULK_DELETE);
-            }
-        }
-    }
+    public function handle(BulkDeleteAttributeGroupCommand $command);
 }

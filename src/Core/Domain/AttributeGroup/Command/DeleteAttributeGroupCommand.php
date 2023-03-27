@@ -24,35 +24,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler\GetAttributeGroupListHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Handles the query GetAttributeGroupList using Doctrine repository
+ * Deletes attribute group by provided id
  */
-class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler implements GetAttributeGroupListHandlerInterface
+final class DeleteAttributeGroupCommand
 {
     /**
-     * {@inheritDoc}
+     * @var AttributeGroupId
      */
-    public function handle(GetAttributeGroupList $query): array
-    {
-        $shopConstraint = $query->getShopConstraint();
-        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
+    private $attributeGroupId;
 
-        return $this->formatAttributeGroupsList(
-            $attributeGroups,
-            $this->attributeRepository->getGroupedAttributes(
-                $shopConstraint,
-                array_map(static function (int $id): AttributeGroupId {
-                    return new AttributeGroupId($id);
-                }, array_keys($attributeGroups))
-            )
-        );
+    /**
+     * @param int $attributeGroupId
+     *
+     * @throws AttributeGroupConstraintException
+     */
+    public function __construct($attributeGroupId)
+    {
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
+    }
+
+    /**
+     * @return AttributeGroupId
+     */
+    public function getAttributeGroupId()
+    {
+        return $this->attributeGroupId;
     }
 }

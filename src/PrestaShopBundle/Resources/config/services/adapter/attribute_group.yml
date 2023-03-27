@@ -14,12 +14,12 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand'
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandler:
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandler:
     arguments:
@@ -27,14 +27,14 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList'
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandler:
     autowire: true
     public: false
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetProductAttributeGroups'
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository:
     arguments:

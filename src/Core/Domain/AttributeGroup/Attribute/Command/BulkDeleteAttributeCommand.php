@@ -24,20 +24,48 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetProductAttributeGroups;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Deletes attributes in bulk action
  */
-interface GetProductAttributeGroupsHandlerInterface
+final class BulkDeleteAttributeCommand
 {
     /**
-     * @param GetProductAttributeGroups $query
-     *
-     * @return AttributeGroup[]
+     * @var AttributeId[]
      */
-    public function handle(GetProductAttributeGroups $query): array;
+    private $attributeIds;
+
+    /**
+     * @param int[] $attributeIds
+     *
+     * @throws AttributeConstraintException
+     */
+    public function __construct(array $attributeIds)
+    {
+        $this->setAttributeIds($attributeIds);
+    }
+
+    /**
+     * @return AttributeId[]
+     */
+    public function getAttributeIds()
+    {
+        return $this->attributeIds;
+    }
+
+    /**
+     * @param array $attributeIds
+     *
+     * @throws AttributeConstraintException
+     */
+    private function setAttributeIds(array $attributeIds)
+    {
+        foreach ($attributeIds as $attributeId) {
+            $this->attributeIds[] = new AttributeId($attributeId);
+        }
+    }
 }

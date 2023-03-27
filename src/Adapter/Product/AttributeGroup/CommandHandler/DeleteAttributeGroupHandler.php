@@ -28,10 +28,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AbstractAttributeGroupHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\CommandHandler\DeleteAttributeGroupHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\DeleteAttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\DeleteAttributeGroupHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\DeleteAttributeGroupException;
 
 /**
  * Handles command which deletes attribute group using legacy object model

@@ -24,20 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetProductAttributeGroups;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Get list of Attribute groups in the shop with their associated attributes
  */
-interface GetProductAttributeGroupsHandlerInterface
+class GetAttributeGroupList
 {
     /**
-     * @param GetProductAttributeGroups $query
-     *
-     * @return AttributeGroup[]
+     * @var ShopConstraint
      */
-    public function handle(GetProductAttributeGroups $query): array;
+    private $shopConstraint;
+
+    /**
+     * @param ShopConstraint $shopConstraint
+     */
+    public function __construct(ShopConstraint $shopConstraint)
+    {
+        $this->shopConstraint = $shopConstraint;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
 }

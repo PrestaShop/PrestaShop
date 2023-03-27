@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 use AttributeGroup as AttributeGroupObjectModel;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\Attribute;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
 use ProductAttribute as AttributeObjectModel;
 
 abstract class AbstractAttributeGroupQueryHandler

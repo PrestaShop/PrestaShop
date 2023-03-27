@@ -26,53 +26,77 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-
-/**
- * Query which provides attributes of a Product by group
- */
-class GetProductAttributeGroups
+class Attribute
 {
     /**
-     * @var ProductId
+     * @var int
      */
-    private $productId;
+    private $attributeId;
 
     /**
-     * @var ShopConstraint
+     * @var int
      */
-    private $shopConstraint;
+    private $position;
 
     /**
-     * @param int $productId
-     *
-     * @throws ProductConstraintException
+     * @var string
+     */
+    private $color;
+
+    /**
+     * @var string[] key => value pairs where each key represents language id
+     */
+    private $localizedNames;
+
+    /**
+     * @param int $attributeId
+     * @param int $position
+     * @param string $color
+     * @param string[] $localizedNames key => value pairs where each key represents language id
      */
     public function __construct(
-        int $productId,
-        ShopConstraint $shopConstraint
+        int $attributeId,
+        int $position,
+        string $color,
+        array $localizedNames
     ) {
-        $this->productId = new ProductId($productId);
-        $this->shopConstraint = $shopConstraint;
+        $this->attributeId = $attributeId;
+        $this->position = $position;
+        $this->color = $color;
+        $this->localizedNames = $localizedNames;
     }
 
     /**
-     * @return ProductId
+     * @return int
      */
-    public function getProductId(): ProductId
+    public function getAttributeId(): int
     {
-        return $this->productId;
+        return $this->attributeId;
     }
 
     /**
-     * @return ShopConstraint
+     * @return int
      */
-    public function getShopConstraint(): ShopConstraint
+    public function getPosition(): int
     {
-        return $this->shopConstraint;
+        return $this->position;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
     }
 }

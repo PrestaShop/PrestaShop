@@ -24,55 +24,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject;
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
 
 /**
- * Query which provides attributes of a Product by group
+ * Provides identification data of Attribute
  */
-class GetProductAttributeGroups
+final class AttributeId
 {
     /**
-     * @var ProductId
+     * @var int
      */
-    private $productId;
+    private $attributeId;
 
     /**
-     * @var ShopConstraint
-     */
-    private $shopConstraint;
-
-    /**
-     * @param int $productId
+     * @param int $attributeId
      *
-     * @throws ProductConstraintException
+     * @throws AttributeConstraintException
      */
-    public function __construct(
-        int $productId,
-        ShopConstraint $shopConstraint
-    ) {
-        $this->productId = new ProductId($productId);
-        $this->shopConstraint = $shopConstraint;
+    public function __construct($attributeId)
+    {
+        $this->assertIsIntegerGreaterThanZero($attributeId);
+        $this->attributeId = $attributeId;
     }
 
     /**
-     * @return ProductId
+     * @return int
      */
-    public function getProductId(): ProductId
+    public function getValue()
     {
-        return $this->productId;
+        return $this->attributeId;
     }
 
     /**
-     * @return ShopConstraint
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param int $value
+     *
+     * @throws AttributeConstraintException
      */
-    public function getShopConstraint(): ShopConstraint
+    private function assertIsIntegerGreaterThanZero($value)
     {
-        return $this->shopConstraint;
+        if (!is_int($value) || 0 >= $value) {
+            throw new AttributeConstraintException(sprintf('Invalid attribute id "%s".', var_export($value, true)), AttributeConstraintException::INVALID_ID);
+        }
     }
 }

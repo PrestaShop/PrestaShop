@@ -28,9 +28,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup;
 
 use AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShopException;
 
 /**

@@ -24,35 +24,48 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler\GetAttributeGroupListHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Handles the query GetAttributeGroupList using Doctrine repository
+ * Deletes attribute groups in bulk action by provided ids
  */
-class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler implements GetAttributeGroupListHandlerInterface
+final class BulkDeleteAttributeGroupCommand
 {
     /**
-     * {@inheritDoc}
+     * @var AttributeGroupId[]
      */
-    public function handle(GetAttributeGroupList $query): array
-    {
-        $shopConstraint = $query->getShopConstraint();
-        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
+    private $attributeGroupIds;
 
-        return $this->formatAttributeGroupsList(
-            $attributeGroups,
-            $this->attributeRepository->getGroupedAttributes(
-                $shopConstraint,
-                array_map(static function (int $id): AttributeGroupId {
-                    return new AttributeGroupId($id);
-                }, array_keys($attributeGroups))
-            )
-        );
+    /**
+     * @param int[] $attributeGroupIds
+     *
+     * @throws AttributeGroupConstraintException
+     */
+    public function __construct(array $attributeGroupIds)
+    {
+        $this->setAttributeGroupIds($attributeGroupIds);
+    }
+
+    /**
+     * @return AttributeGroupId[]
+     */
+    public function getAttributeGroupIds()
+    {
+        return $this->attributeGroupIds;
+    }
+
+    /**
+     * @param array $attributeGroupIds
+     *
+     * @throws AttributeGroupConstraintException
+     */
+    private function setAttributeGroupIds(array $attributeGroupIds)
+    {
+        foreach ($attributeGroupIds as $attributeGroupId) {
+            $this->attributeGroupIds[] = new AttributeGroupId($attributeGroupId);
+        }
     }
 }

@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup;
 use AttributeGroup;
 use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProviderInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShopException;
 
 /**
