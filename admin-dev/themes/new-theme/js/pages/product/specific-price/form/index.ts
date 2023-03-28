@@ -38,6 +38,7 @@ $(() => {
     'DateRange',
   ]);
 
+  // this handles retail price symbols, other price inputs are handled by PriceReductionManager
   new CurrencySymbolUpdater(
     SpecificPriceMap.currencyId,
     ((symbol: string): void => {
@@ -53,34 +54,6 @@ $(() => {
           const elt = value;
           elt.innerHTML = symbol;
         });
-      }
-
-      // Reduction Amount
-      const reductionTypeSelect = document.querySelector<HTMLSelectElement>(SpecificPriceMap.reductionTypeSelect);
-
-      if (reductionTypeSelect) {
-        // Update the amount option innerHTML
-        for (let i = 0; i < reductionTypeSelect.options.length; i += 1) {
-          const reductionOption = reductionTypeSelect.options[i];
-
-          if (reductionOption.value === 'amount') {
-            reductionOption.innerHTML = symbol;
-          }
-        }
-
-        const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
-
-        // If amount reduction type is selected update the reduction value symbol
-        if (selectedReduction === 'amount') {
-          const reductionTypeAmountSymbols = document.querySelectorAll(SpecificPriceMap.reductionTypeAmountSymbol);
-
-          if (reductionTypeAmountSymbols.length) {
-            reductionTypeAmountSymbols.forEach((value: Element) => {
-              const elt = value;
-              elt.innerHTML = symbol;
-            });
-          }
-        }
       }
     }),
   );
