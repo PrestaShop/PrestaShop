@@ -45,7 +45,7 @@ class ActionsType extends TranslatorAwareType
     /**
      * @var string
      */
-    private $employeeIsoCode;
+    private $languageIsoCode;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -55,7 +55,7 @@ class ActionsType extends TranslatorAwareType
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
-        $this->employeeIsoCode = $employeeIsoCode;
+        $this->languageIsoCode = $employeeIsoCode;
     }
 
     /**
@@ -81,7 +81,7 @@ class ActionsType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),
                 'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
-                    'languageCode' => $this->employeeIsoCode,
+                    'languageCode' => $this->languageIsoCode,
                     'query' => '__QUERY__',
                 ]),
                 'entry_type' => SearchedProductType::class,

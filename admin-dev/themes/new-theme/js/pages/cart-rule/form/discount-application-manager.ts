@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
-import EntitySearchInput from '@components/entity-search-input';
+import ProductSearchInput from '@components/form/product-search-input';
 
 export default class DiscountApplicationManager {
   private readonly reductionTypeSelector: string;
@@ -37,7 +37,7 @@ export default class DiscountApplicationManager {
   }
 
   private init(): void {
-    new EntitySearchInput($(CartRuleMap.specificProductSearchComponent), {});
+    new ProductSearchInput(CartRuleMap.specificProductSearchComponent);
 
     this.updateChoices(this.getReductionTypeSelect().value);
     this.toggleExcludeDiscountedProducts(this.getReductionTypeSelect().value);
