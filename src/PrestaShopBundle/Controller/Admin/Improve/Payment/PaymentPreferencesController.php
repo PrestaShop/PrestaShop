@@ -50,22 +50,16 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-
-        $paymentModulesListProvider = $this->get('prestashop.adapter.module.payment_module_provider');
         $shopContext = $this->get('prestashop.adapter.shop.context');
-
         $isSingleShopContext = $shopContext->isSingleShopContext();
 
         $paymentModulesCount = 0;
-        if ($isSingleShopContext) {
-            $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
-        }
-
         $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
         if ($isSingleShopContext) {
+            $paymentModulesListProvider = $this->get('prestashop.adapter.module.payment_module_provider');
             $carrierRestrictionsView = $this->getPaymentCarrierRestrictionsFormHandler()->getForm()->createView();
             $countryRestrictionsView = $this->getPaymentCountryRestrictionsFormHandler()->getForm()->createView();
             $currencyRestrictionsView = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm()->createView();
