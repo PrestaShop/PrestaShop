@@ -879,11 +879,11 @@ class CustomerCore extends ObjectModel
 
         if ($shopConstraint) {
             if ($shopConstraint->getShopGroupId()) {
-                throw new InvalidShopConstraintException('Shop group constraint is not supported');
-            }
-
-            if ($shopConstraint->getShopId()) {
-                // filter by shop_id if its not all shops constraint
+                //@todo: missing share_customer handling if its group constraint
+                // filter by shop group
+                $sql .= sprintf(' AND c.id_shop_group = %d', $shopConstraint->getShopGroupId()->getValue());
+            } else if ($shopConstraint->getShopId()) {
+                // filter by shop_id
                 $sql .= sprintf(' AND c.id_shop = %d', $shopConstraint->getShopId()->getValue());
             }
         }

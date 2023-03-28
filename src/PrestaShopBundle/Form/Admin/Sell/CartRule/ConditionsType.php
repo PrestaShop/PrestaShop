@@ -27,19 +27,45 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use PrestaShopBundle\Form\Admin\Type\CustomerSearchType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConditionsType extends TranslatorAwareType
 {
+    /**
+     * @var ShopConstraintContextInterface
+     */
+    private $shopConstraintContext;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ShopConstraintContextInterface $shopConstraintContext
+    ) {
+        parent::__construct($translator, $locales);
+        $this->shopConstraintContext = $shopConstraintContext;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $shopConstraint = $this->shopConstraintContext->getShopConstraint();
+        // @todo: missing shop group and handling. Endpoint doesn't support it yet
+        $shopId = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
+
         $builder
             ->add('customer', CustomerSearchType::class, [
                 'disabling_switch_event' => 'switchCartRuleCustomer',
+                'attr' => [
+                    'data-shop-id' => $shopId,
+                ],
             ])
             ->add('valid_date_range', DateRangeType::class, [
                 'label' => $this->trans('Valid', 'Admin.Catalog.Feature'),

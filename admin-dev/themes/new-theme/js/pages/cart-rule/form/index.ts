@@ -53,10 +53,10 @@ $(() => {
     matchingValue: '',
   });
 
+  const customerSearchContainer = <HTMLElement> document.querySelector(CartRuleMap.customerSearchContainer);
   new CustomerSearchInput(
     CartRuleMap.customerSearchContainer,
-    //@todo; get shop id (or null for all shops) from context using data attr.
-    () => null,
+    () => Number(customerSearchContainer.dataset.shopId),
     CartRuleEventMap.switchCustomer,
   );
 

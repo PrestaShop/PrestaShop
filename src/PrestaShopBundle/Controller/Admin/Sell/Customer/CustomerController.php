@@ -508,6 +508,7 @@ class CustomerController extends AbstractAdminController
         $phrases = explode(' OR ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
+        //@todo: for cart rules, it must also handle shop group
         if (!$request->query->has('shopId')) {
             // this is important for keeping backwards compatibility, null acts different compared to AllShops constraint.
             $shopConstraint = null;

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use Context as LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
@@ -205,6 +206,11 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     public function getShopName()
     {
         return LegacyContext::getContext()->shop->name;
+    }
+
+    public function getShopId(): ShopId
+    {
+        return new ShopId((int) LegacyContext::getContext()->shop->id);
     }
 
     /**

@@ -212,7 +212,7 @@ class CartRuleController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
-                //@todo: redirect to edition page
+                //@todo: redirect to edition page when it is implemented
                 return $this->redirectToRoute('admin_cart_rules_index');
             }
         } catch (Exception $e) {
