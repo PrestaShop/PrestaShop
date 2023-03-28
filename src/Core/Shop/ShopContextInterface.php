@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Shop;
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-
 /**
  * Interface ShopContextInterface
  */
@@ -39,6 +37,4 @@ interface ShopContextInterface
      * @return string
      */
     public function getShopName();
-
-    public function getShopId(): ShopId;
 }
