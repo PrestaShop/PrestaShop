@@ -67,8 +67,9 @@ class MinimumAmountType extends TranslatorAwareType
                 ),
             ])
             ->add('currency', CurrencyChoiceType::class)
-            //@todo: should this kind of option become switch everywhere? Is it worth having a select list for a boolean (also same in PriceReductionType)?
             ->add('tax_included', TaxInclusionChoiceType::class)
+            // @todo: shipping_included should become choice type
+            //        and this whole component should become similar as reduction type and shown in one line
             ->add('shipping_included', SwitchType::class, [
                 'label' => $this->trans('Shipping included', 'Admin.Catalog.Feature'),
             ])

@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DiscountApplicationChoiceProvider;
 use PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener\DiscountListener;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
@@ -54,17 +56,24 @@ class DiscountType extends TranslatorAwareType
      */
     private $languageIsoCode;
 
+    /**
+     * @var DiscountApplicationChoiceProvider
+     */
+    private $discountApplicationChoiceProvider;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         DiscountListener $discountListener,
         RouterInterface $router,
-        string $employeeIsoCode
+        string $employeeIsoCode,
+        DiscountApplicationChoiceProvider $discountApplicationChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->discountListener = $discountListener;
         $this->router = $router;
         $this->languageIsoCode = $employeeIsoCode;
+        $this->discountApplicationChoiceProvider = $discountApplicationChoiceProvider;
     }
 
     /**
@@ -80,6 +89,11 @@ class DiscountType extends TranslatorAwareType
             ->add('discount_application', ChoiceType::class, [
                 // choices depends on reduction type data therefore are set in an event subscriber added bellow
                 'choices' => [],
+                'attr' => [
+                    // these attributes are needed for js to change choices when reduction type changes
+                    'data-amount-choices' => json_encode($this->getChoicesByType(Reduction::TYPE_AMOUNT)),
+                    'data-percentage-choices' => json_encode($this->getChoicesByType(Reduction::TYPE_PERCENTAGE)),
+                ],
             ])
             ->add('specific_product', EntitySearchInputType::class, [
                 'row_attr' => [
@@ -104,5 +118,12 @@ class DiscountType extends TranslatorAwareType
         ;
 
         $builder->addEventSubscriber($this->discountListener);
+    }
+
+    private function getChoicesByType(string $reductionType): array
+    {
+        return $this->discountApplicationChoiceProvider->getChoices([
+            'reduction_type' => $reductionType,
+        ]);
     }
 }

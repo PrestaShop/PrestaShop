@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener;
 
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DiscountApplicationChoiceProvider;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -78,24 +77,13 @@ class DiscountListener implements EventSubscriberInterface
         $form = $event->getForm();
         $discountApplicationField = $form->get('discount_application');
         // adjust discount application choices depending on reduction type data
-        $choices = $this->getChoicesByType($data['reduction']['type']);
         $newDiscountApplicationField = $this->formCloner->cloneForm($discountApplicationField, [
-            'choices' => $choices,
-            'attr' => [
-                // these attributes are needed for js to change choices when reduction type changes
-                'data-amount-choices' => json_encode($this->getChoicesByType(Reduction::TYPE_AMOUNT)),
-                'data-percentage-choices' => json_encode($this->getChoicesByType(Reduction::TYPE_PERCENTAGE)),
-            ],
+            'choices' => $this->discountApplicationChoiceProvider->getChoices([
+                'reduction_type' => $data['reduction']['type'],
+            ]),
         ]);
 
         // replace previous form with the new one, containing updated options
         $form->add($newDiscountApplicationField);
-    }
-
-    private function getChoicesByType(string $reductionType): array
-    {
-        return $this->discountApplicationChoiceProvider->getChoices([
-            'reduction_type' => $reductionType,
-        ]);
     }
 }
