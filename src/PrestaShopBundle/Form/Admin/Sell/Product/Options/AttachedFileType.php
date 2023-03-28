@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
+use PrestaShopBundle\Form\Admin\Type\EntityItemType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -50,5 +51,13 @@ class AttachedFileType extends TranslatorAwareType
                 'label' => $this->trans('Type', 'Admin.Global'),
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getParent(): string
+    {
+        return EntityItemType::class;
     }
 }

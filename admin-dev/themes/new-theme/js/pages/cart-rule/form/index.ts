@@ -53,11 +53,11 @@ $(() => {
     matchingValue: '',
   });
 
-  const customerSearchContainer = <HTMLElement> document.querySelector(CartRuleMap.customerSearchContainer);
   new CustomerSearchInput(
     CartRuleMap.customerSearchContainer,
     CartRuleMap.customerItem,
-    () => Number(customerSearchContainer.dataset.shopId),
+    // use all shops constraint
+    () => null,
     CartRuleEventMap.switchCustomer,
   );
 

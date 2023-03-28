@@ -27,10 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
-use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use PrestaShopBundle\Form\Admin\Type\CustomerSearchType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;

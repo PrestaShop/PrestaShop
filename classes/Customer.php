@@ -25,7 +25,6 @@
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /***
@@ -882,7 +881,7 @@ class CustomerCore extends ObjectModel
                 //@todo: missing share_customer handling if its group constraint
                 // filter by shop group
                 $sql .= sprintf(' AND c.id_shop_group = %d', $shopConstraint->getShopGroupId()->getValue());
-            } else if ($shopConstraint->getShopId()) {
+            } elseif ($shopConstraint->getShopId()) {
                 // filter by shop_id
                 $sql .= sprintf(' AND c.id_shop = %d', $shopConstraint->getShopId()->getValue());
             }

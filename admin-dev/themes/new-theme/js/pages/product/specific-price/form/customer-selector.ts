@@ -34,19 +34,24 @@ export default class CustomerSelector {
   private init(): void {
     const customerSearchInput = this.initCustomerSearchInput();
     // clear selected customers whenever shop is changed, because customers may differ between shops
-    this.getShopIdSelect().addEventListener('change', () => customerSearchInput.setValues([]));
+    this.getShopIdSelect()?.addEventListener('change', () => customerSearchInput.setValues([]));
   }
 
   private initCustomerSearchInput(): CustomerSearchInput {
     return new CustomerSearchInput(
       SpecificPriceMap.customerSearchContainer,
       SpecificPriceMap.customerItem,
-      () => Number(this.getShopIdSelect().value) ?? null,
+      () => Number(this.getShopIdSelect()?.value) ?? null,
       SpecificPriceEventMap.switchCustomer,
     );
   }
 
-  private getShopIdSelect(): HTMLSelectElement {
+  /**
+   * ShopIdSelector might not exist in some forms, and it is legit. In that case it returns null.
+   *
+   * @private
+   */
+  private getShopIdSelect(): HTMLSelectElement|null {
     return <HTMLSelectElement> document.querySelector(
       `${SpecificPriceMap.formContainer} ${SpecificPriceMap.shopIdSelect}`,
     );
