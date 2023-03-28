@@ -219,17 +219,6 @@ services:
     arguments:
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_iso_code").getChoices()'
 
-  PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType:
-    arguments:
-      $paymentModules: '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
-      $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
-      $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-      $carrierChoices: '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
-      $currencyChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
-      $countryDataProvider: '@prestashop.adapter.data_provider.country'
-    tags:
-      - { name: form.type }
-
   PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleRestrictionsParentType:
     arguments:
       $paymentModules: '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'

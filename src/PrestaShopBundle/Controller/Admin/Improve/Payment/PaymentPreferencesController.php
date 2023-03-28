@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -74,7 +73,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/Zpayment_preferences.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'paymentCurrencyRestrictionsForm' => $currencyRestrictionsView,
@@ -216,13 +215,5 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     private function getPaymentGroupRestrictionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.payment_group_restrictions.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getPaymentPreferencesFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.payment_preferences.form_handler');
     }
 }

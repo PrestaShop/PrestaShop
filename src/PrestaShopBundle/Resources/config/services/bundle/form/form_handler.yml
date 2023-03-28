@@ -387,15 +387,6 @@ services:
       - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType'
       - 'PaymentModuleGroupRestrictions'
 
-  prestashop.admin.payment_preferences.form_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
-    arguments:
-      - '@form.factory'
-      - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.admin.payment_preferences.form_data_provider'
-      - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
-      - 'PaymentPreferences'
-
   prestashop.admin.email_configuration.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:
