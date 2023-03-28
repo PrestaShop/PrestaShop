@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -53,7 +53,6 @@ final class ProfileGridDataFactoryDecorator implements GridDataFactoryInterface
     public function __construct(
         GridDataFactoryInterface $profileGridDataFactory,
         Security $security
-
     ) {
         $this->profileGridDataFactory = $profileGridDataFactory;
         $this->security = $security;
@@ -86,6 +85,10 @@ final class ProfileGridDataFactoryDecorator implements GridDataFactoryInterface
 
         /** @var Employee $user */
         $user = $this->security->getUser();
+        if (!$user) {
+            return new RecordCollection($modifiedProfiles);
+        }
+
         $currentUserIdProfile = $user->getData()->id_profile;
         foreach ($profiles as $profile) {
             if ($profile['id_profile'] === $currentUserIdProfile) {
