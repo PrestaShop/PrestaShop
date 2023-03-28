@@ -42,7 +42,16 @@ export default class DiscountManager {
       CartRuleMap.includeTaxInput,
       CartRuleMap.currencySelect,
       CartRuleMap.reductionValueSymbol,
-      true,
     );
+    this.toggleCurrency();
+    document.querySelector(CartRuleMap.reductionTypeSelect)?.addEventListener('change', this.toggleCurrency);
+  }
+
+  private toggleCurrency(): void {
+    if ($(CartRuleMap.reductionTypeSelect).val() === 'percentage') {
+      $(CartRuleMap.currencySelect).fadeOut();
+    } else {
+      $(CartRuleMap.currencySelect).fadeIn();
+    }
   }
 }

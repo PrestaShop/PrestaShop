@@ -30,35 +30,27 @@ const {$} = window;
  * Handles dynamics (shows/hides fields, changes currency symbols) of price reduction form fields
  */
 export default class PriceReductionManager {
-  reductionTypeSelector: string;
+  private readonly reductionTypeSelector: string;
 
-  $reductionTypeSelect: JQuery;
+  private readonly $reductionTypeSelect: JQuery;
 
-  $taxInclusionInputs: JQuery;
+  private readonly $taxInclusionInputs: JQuery;
 
-  currencySelect: string;
+  private readonly currencySelect: string;
 
-  reductionValueSymbolSelector: string;
-
-  hideCurrencyOnPercentageType: boolean;
-
-  updateCurrencySymbol: boolean;
+  private readonly reductionValueSymbolSelector: string;
 
   constructor(
     reductionTypeSelector: string,
     taxInclusionInputs: string,
     currencySelect: string,
     reductionValueSymbolSelector: string,
-    hideCurrencyOnPercentageType: boolean = false,
-    updateCurrencySymbol = true,
   ) {
     this.reductionTypeSelector = reductionTypeSelector;
     this.$reductionTypeSelect = $(reductionTypeSelector);
     this.$taxInclusionInputs = $(taxInclusionInputs);
     this.currencySelect = currencySelect;
     this.reductionValueSymbolSelector = reductionValueSymbolSelector;
-    this.hideCurrencyOnPercentageType = hideCurrencyOnPercentageType;
-    this.updateCurrencySymbol = updateCurrencySymbol;
     this.handle();
     this.$reductionTypeSelect.on('change', () => this.handle());
   }
@@ -67,22 +59,14 @@ export default class PriceReductionManager {
    * When source value is 'percentage', target field is shown, else hidden
    */
   private handle(): void {
-    if (this.updateCurrencySymbol) {
-      this.initCurrencySymbolUpdater();
-    }
+    this.initCurrencySymbolUpdater();
 
     const isPercentage = this.$reductionTypeSelect.val() === 'percentage';
 
     if (isPercentage) {
       this.$taxInclusionInputs.fadeOut();
-      if (this.hideCurrencyOnPercentageType) {
-        $(this.currencySelect).fadeOut();
-      }
     } else {
       this.$taxInclusionInputs.fadeIn();
-      if (this.hideCurrencyOnPercentageType) {
-        $(this.currencySelect).fadeIn();
-      }
     }
 
     if (this.reductionValueSymbolSelector !== '') {
