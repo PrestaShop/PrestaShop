@@ -23,34 +23,43 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ReductionTypeChoiceProvider implements FormChoiceProviderInterface
+class TaxInclusionChoiceType extends ChoiceType
 {
     /**
-     * @var CurrencyDataProviderInterface
+     * @var TaxInclusionChoiceProvider
      */
-    private $currencyDataProvider;
+    private $taxInclusionChoiceProvider;
 
     public function __construct(
-        CurrencyDataProviderInterface $currencyDataProvider
+        TaxInclusionChoiceProvider $taxInclusionChoiceProvider
     ) {
-        $this->currencyDataProvider = $currencyDataProvider;
+        parent::__construct();
+        $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
     }
 
     /**
-     * @return array<string, string>
+     * {@inheritDoc}
      */
-    public function getChoices(): array
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        return [
-            $this->currencyDataProvider->getDefaultCurrency()->symbol => Reduction::TYPE_AMOUNT,
-            '%' => Reduction::TYPE_PERCENTAGE,
-        ];
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'label' => false,
+            'choices' => $this->taxInclusionChoiceProvider->getChoices(),
+            'placeholder' => false,
+            'required' => false,
+            'row_attr' => [
+                'class' => 'js-include-tax-row',
+            ],
+        ]);
     }
 }

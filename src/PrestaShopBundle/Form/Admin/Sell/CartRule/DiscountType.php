@@ -52,7 +52,7 @@ class DiscountType extends TranslatorAwareType
     /**
      * @var string
      */
-    private $employeeIsoCode;
+    private $languageIsoCode;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -64,7 +64,7 @@ class DiscountType extends TranslatorAwareType
         parent::__construct($translator, $locales);
         $this->discountListener = $discountListener;
         $this->router = $router;
-        $this->employeeIsoCode = $employeeIsoCode;
+        $this->languageIsoCode = $employeeIsoCode;
     }
 
     /**
@@ -90,7 +90,7 @@ class DiscountType extends TranslatorAwareType
                 'min_length' => 3,
                 'label' => $this->trans('Search for specific product', 'Admin.Catalog.Feature'),
                 'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
-                    'languageCode' => $this->employeeIsoCode,
+                    'languageCode' => $this->languageIsoCode,
                     'query' => '__QUERY__',
                 ]),
                 'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),

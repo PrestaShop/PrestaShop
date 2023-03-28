@@ -28,9 +28,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
+use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -65,13 +66,9 @@ class MinimumAmountType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
             ])
-            ->add('currency', ChoiceType::class, [
-                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
-                'label' => false,
-            ])
-            ->add('tax_included', SwitchType::class, [
-                'label' => $this->trans('Tax included', 'Admin.Catalog.Feature'),
-            ])
+            ->add('currency', CurrencyChoiceType::class)
+            //@todo: should this kind of option become switch everywhere? Is it worth having a select list for a boolean (also same in PriceReductionType)?
+            ->add('tax_included', TaxInclusionChoiceType::class)
             ->add('shipping_included', SwitchType::class, [
                 'label' => $this->trans('Shipping included', 'Admin.Catalog.Feature'),
             ])

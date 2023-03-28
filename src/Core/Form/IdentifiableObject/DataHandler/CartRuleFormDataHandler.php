@@ -90,7 +90,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
         if (!empty($conditionsData['minimum_amount']['amount'])) {
             $amountData = $conditionsData['minimum_amount'];
             $command->setMinimumAmountCondition(
-                $amountData['amount'],
+                (string) $amountData['amount'],
                 (int) $amountData['currency'],
                 (bool) $amountData['tax_included'],
                 (bool) $amountData['shipping_included']

@@ -34,18 +34,10 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InformationType extends TranslatorAwareType
 {
     public const GENERATED_CODE_LENGTH = 8;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales
-    ) {
-        parent::__construct($translator, $locales);
-    }
 
     /**
      * {@inheritDoc}

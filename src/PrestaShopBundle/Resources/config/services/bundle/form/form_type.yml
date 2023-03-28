@@ -427,7 +427,6 @@ services:
   PrestaShopBundle\Form\Admin\Type\PriceReductionType:
     arguments:
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
-      $taxInclusionChoiceProvider: '@prestashop.core.form.choice_provider.tax_inclusion'
 
   PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType:
@@ -772,6 +771,8 @@ services:
     resource: "%kernel.root_dir%/../src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
 
   PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
+  PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType:
+  PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType:
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:
