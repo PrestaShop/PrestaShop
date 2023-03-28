@@ -1635,6 +1635,16 @@ class AdminImportControllerCore extends AdminController
 
         $product = new Product($id_product);
 
+        if (!$product->id && empty($info['name'])) {
+            $this->errors[] = sprintf(
+                $this->trans('Product with reference %1$s (ID: %2$s) could not be saved because the product name is missing.', [], 'Admin.Advparameters.Notification'),
+                (!empty($info['reference'])) ? Tools::htmlentitiesUTF8($info['reference']) : 'null',
+                !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
+            );
+
+            return;
+        }
+
         $update_advanced_stock_management_value = false;
         if (isset($product->id) && $product->id && Product::existsInDatabase((int) $product->id, 'product')) {
             $product->loadStockData();
