@@ -46,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 use StockAvailable;
 
@@ -111,12 +110,15 @@ class ProductStockUpdater
         // Use the shop matching the Product instance (either the specified ShopId from constraint or the Product default shop)
         $stockAvailable = $this->stockAvailableRepository->getForProduct($productId, new ShopId($product->getShopId()));
 
-        $this->productRepository->partialUpdate(
-            $product,
-            $this->fillUpdatableProperties($product, $stockAvailable, $properties),
-            $shopConstraint,
-            CannotUpdateProductException::FAILED_UPDATE_STOCK
-        );
+        $productUpdates = $this->fillUpdatableProperties($product, $stockAvailable, $properties);
+        if (!empty($productUpdates)) {
+            $this->productRepository->partialUpdate(
+                $product,
+                $productUpdates,
+                $shopConstraint,
+                CannotUpdateProductException::FAILED_UPDATE_STOCK
+            );
+        }
 
         $this->updateStockByShopConstraint($stockAvailable, $properties, $shopConstraint);
 
@@ -203,40 +205,13 @@ class ProductStockUpdater
     ): array {
         $updatableProperties = [];
 
-        $localizedLaterLabels = $properties->getLocalizedAvailableLaterLabels();
-        if (null !== $localizedLaterLabels) {
-            $product->available_later = $localizedLaterLabels;
-            $updatableProperties['available_later'] = array_keys($localizedLaterLabels);
-        }
-
-        $localizedNowLabels = $properties->getLocalizedAvailableNowLabels();
-        if (null !== $localizedNowLabels) {
-            $product->available_now = $localizedNowLabels;
-            $updatableProperties['available_now'] = array_keys($localizedNowLabels);
-        }
         if (null !== $properties->getLocation()) {
             $product->location = $properties->getLocation();
             $updatableProperties[] = 'location';
         }
-        if (null !== $properties->isLowStockAlertEnabled()) {
-            $product->low_stock_alert = $properties->isLowStockAlertEnabled();
-            $updatableProperties[] = 'low_stock_alert';
-        }
-        if (null !== $properties->getLowStockThreshold()) {
-            $product->low_stock_threshold = $properties->getLowStockThreshold();
-            $updatableProperties[] = 'low_stock_threshold';
-        }
-        if (null !== $properties->getMinimalQuantity()) {
-            $product->minimal_quantity = $properties->getMinimalQuantity();
-            $updatableProperties[] = 'minimal_quantity';
-        }
         if (null !== $properties->getOutOfStockType()) {
             $product->out_of_stock = $properties->getOutOfStockType()->getValue();
             $updatableProperties[] = 'out_of_stock';
-        }
-        if (null !== $properties->getPackStockType()) {
-            $product->pack_stock_type = $properties->getPackStockType()->getValue();
-            $updatableProperties[] = 'pack_stock_type';
         }
         if (null !== $properties->getStockModification()) {
             $product->quantity = $properties->getStockModification()->getDeltaQuantity() !== null ?
@@ -244,10 +219,6 @@ class ProductStockUpdater
                 $properties->getStockModification()->getFixedQuantity()
             ;
             $updatableProperties[] = 'quantity';
-        }
-        if (null !== $properties->getAvailableDate()) {
-            $product->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
-            $updatableProperties[] = 'available_date';
         }
 
         return $updatableProperties;

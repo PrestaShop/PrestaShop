@@ -154,10 +154,9 @@ describe('BO - Customer Service : Contact options', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
       await customerServicePage.goToViewMessagePage(page);
-      const threadNumber = await viewPage.getThreadNumber(page);
 
       const pageTitle = await viewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewPage.pageTitle(threadNumber.toString()));
+      await expect(pageTitle).to.contains(viewPage.pageTitle);
     });
 
     it('should check your answer form', async function () {

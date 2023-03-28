@@ -217,8 +217,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
      */
     protected function extractPackedProducts(int $productId, ShopConstraint $shopConstraint): array
     {
-        /** @var PackedProductDetails[] $packedProductsDetails
-         */
+        /** @var PackedProductDetails[] $packedProductsDetails */
         $packedProductsDetails = $this->queryBus->handle(
             new GetPackedProducts(
                 $productId,

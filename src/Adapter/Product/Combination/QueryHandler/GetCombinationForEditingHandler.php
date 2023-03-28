@@ -161,7 +161,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      */
     public function handle(GetCombinationForEditing $query): CombinationForEditing
     {
-        $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $query->getShopConstraint());
+        $shopConstraint = $query->getShopConstraint();
+        $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $shopConstraint);
         $productId = new ProductId((int) $combination->id_product);
         $product = $this->productRepository->getByShopConstraint($productId, $query->getShopConstraint());
         $images = $this->getImages($combination);
@@ -174,7 +175,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getPrices($combination, $product),
             $this->getStock($combination),
             $images,
-            $this->getCoverUrl($images, $productId),
+            $this->getCoverUrl($images, $productId, $shopConstraint),
             (bool) $combination->default_on
         );
     }
@@ -303,7 +304,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     {
         $combinationIdValue = (int) $combination->id;
         $combinationId = new CombinationId($combinationIdValue);
-        $combinationImageIds = $this->productImageRepository->getImagesIdsForCombinations([$combinationId]);
+        $combinationImageIds = $this->productImageRepository->getImageIdsForCombinations([$combinationId]);
 
         if (empty($combinationImageIds[$combinationIdValue])) {
             return [];
@@ -320,13 +321,13 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      *
      * @return string
      */
-    private function getCoverUrl(array $imageIds, ProductId $productId): string
+    private function getCoverUrl(array $imageIds, ProductId $productId, ShopConstraint $shopConstraint): string
     {
         if (!empty($imageIds)) {
             return $this->productImageUrlFactory->getPathByType(new ImageId((int) $imageIds[0]), ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
         }
 
-        $productImageIds = $this->productImageRepository->getImagesIds($productId);
+        $productImageIds = $this->productImageRepository->getImageIds($productId, $shopConstraint);
         if (!empty($productImageIds)) {
             return $this->productImageUrlFactory->getPathByType($productImageIds[0], ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
         }

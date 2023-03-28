@@ -184,7 +184,6 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       ]);
 
       const productAttributes = await foProductPage.getProductAttributes(page);
-      console.log(result);
       await Promise.all([
         // color
         await expect(productAttributes[0].value).to.equal(newProductData.attributes[1].values.join(' ')),

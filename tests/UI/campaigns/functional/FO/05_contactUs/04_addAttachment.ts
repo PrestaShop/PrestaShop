@@ -162,10 +162,9 @@ describe('FO - Contact us : Add attachment', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
     await customerServicePage.goToViewMessagePage(page);
-    const threadNumber = await viewPage.getThreadNumber(page);
 
     const pageTitle = await viewPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(viewPage.pageTitle(threadNumber.toString()));
+    await expect(pageTitle).to.contains(viewPage.pageTitle);
   });
 
   it('should check the thread form', async function () {
@@ -175,7 +174,7 @@ describe('FO - Contact us : Add attachment', async () => {
     expect(text)
       .to.contains(contactUsData.emailAddress)
       .and.to.contains(contactUsData.subject)
-      .and.to.contains(`${messageDateTime.substr(0, 10)} access_time - ${messageDateTime.substr(11, 5)}`)
+      .and.to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`)
       .and.to.contains('Attachment')
       .and.to.contains(contactUsData.message);
   });

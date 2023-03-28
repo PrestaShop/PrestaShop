@@ -12,10 +12,10 @@ type ProductCreator = {
   id?: number
   name?: string
   nameFR?: string
-  defaultImage?: string|null
-  coverImage?: string|null
-  thumbImage?: string|null
-  thumbImageFR?: string|null
+  defaultImage?: string | null
+  coverImage?: string | null
+  thumbImage?: string | null
+  thumbImageFR?: string | null
   category?: string
   type?: string
   status?: boolean
@@ -28,6 +28,7 @@ type ProductCreator = {
   retailPrice?: number
   finalPrice?: number
   priceTaxExcluded?: number
+  onSale?: boolean
   productHasCombinations?: boolean
   attributes?: ProductAttributes[]
   pack?: ProductPackItem[]
@@ -60,7 +61,7 @@ type ProductCustomization = {
 };
 
 type ProductDetails = {
-  image:string
+  image: string
   name: string
   price: number
   quantity: number
@@ -82,7 +83,7 @@ type ProductReviewCreator = {
 };
 
 type ProductSpecificPrice = {
-  attributes: string|null
+  attributes: string | null
   discount: number
   startingAt: number
   reductionType: string

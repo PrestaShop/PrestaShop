@@ -1,8 +1,8 @@
 # To get started with security, check out the documentation:
-# http://symfony.com/doc/current/book/security.html
+# https://symfony.com/doc/current/security.html
 security:
 
-  # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
   providers:
     in_memory:
       memory: ~

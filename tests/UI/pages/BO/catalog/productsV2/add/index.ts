@@ -36,6 +36,8 @@ class CreateProduct extends BOBasePage {
 
   private readonly productHeaderReference: string;
 
+  private readonly footerProductDropDown: string;
+
   private readonly previewProductButton: string;
 
   private readonly saveProductButton: string;
@@ -77,16 +79,17 @@ class CreateProduct extends BOBasePage {
     this.productHeaderReference = '.product-header-references';
 
     // Footer selectors
-    this.previewProductButton = '#product_footer_preview';
+    this.footerProductDropDown = '#product_footer_actions_dropdown';
+    this.previewProductButton = '#product_footer_actions_preview';
     this.saveProductButton = '#product_footer_save';
-    this.deleteProductButton = '#product_footer_delete';
+    this.deleteProductButton = '#product_footer_actions_delete';
 
     // Footer modal
     this.deleteProductFooterModal = '#delete-product-footer-modal';
     this.deleteProductSubmitButton = `${this.deleteProductFooterModal} button.btn-confirm-submit`;
-    this.newProductButton = '#product_footer_new_product';
-    this.goToCatalogButton = '#product_footer_catalog';
-    this.duplicateProductButton = '#product_footer_duplicate_product';
+    this.newProductButton = '#product_footer_actions_new_product';
+    this.goToCatalogButton = '#product_footer_actions_catalog';
+    this.duplicateProductButton = '#product_footer_actions_duplicate_product';
     this.duplicateProductFooterModal = '#duplicate-product-footer-modal';
     this.duplicateProductFooterModalConfirmSubmit = `${this.duplicateProductFooterModal} button.btn-confirm-submit`;
   }
@@ -174,6 +177,7 @@ class CreateProduct extends BOBasePage {
    * @return {Promise<Page>}
    */
   async previewProduct(page: Page): Promise<Page> {
+    await this.waitForSelectorAndClick(page, this.footerProductDropDown);
     const newPage = await this.openLinkWithTargetBlank(page, this.previewProductButton, 'body a');
     const textBody = await this.getTextContent(newPage, 'body');
 
@@ -189,6 +193,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteProduct(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.footerProductDropDown);
     await this.waitForSelectorAndClick(page, this.deleteProductButton);
     await this.waitForVisibleSelector(page, this.deleteProductFooterModal);
     await this.clickAndWaitForNavigation(page, this.deleteProductSubmitButton);
@@ -211,6 +216,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async clickOnNewProductButton(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.footerProductDropDown);
     await this.waitForSelectorAndClick(page, this.newProductButton);
 
     return this.elementVisible(page, productsPage.modalCreateProduct, 1000);
@@ -222,6 +228,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async duplicateProduct(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.footerProductDropDown);
     await this.waitForSelectorAndClick(page, this.duplicateProductButton);
 
     await this.waitForSelectorAndClick(page, this.duplicateProductFooterModalConfirmSubmit);

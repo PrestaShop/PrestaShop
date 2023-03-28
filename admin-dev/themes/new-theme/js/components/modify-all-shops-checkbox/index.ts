@@ -68,12 +68,18 @@ export default class ModifyAllShopsCheckbox {
 
         if (multiShopField) {
           const $multiShopField = $(multiShopField);
-          // Toggle element when field (or its children inputs) is focused/unfocused
+
+          // Toggle element when field (or its children inputs) is focused/unfocused except when it is dropdown toggling element
           $multiShopField.on('focus', () => {
             widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
           });
-          $multiShopField.on('focus', ':input', () => {
-            widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
+          $multiShopField.on('focus', ':input', (event) => {
+            const {currentTarget} = <any> event;
+
+            // ignore focus event if target is dropdown (so that the checkbox doesn't mess with the dropdown selection)
+            if (currentTarget instanceof HTMLElement && currentTarget.dataset.toggle !== 'dropdown') {
+              widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
+            }
           });
 
           // Search tiny mce editors and store them, we need to wait for the component to be initialized to listen to its events

@@ -228,10 +228,9 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMessageView', baseContext);
 
       await customerServiceMainPage.goToViewMessagePage(page);
-      const threadNumber = await customerServiceMessageViewPage.getThreadNumber(page);
 
       const pageTitle = await customerServiceMessageViewPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerServiceMessageViewPage.pageTitle(threadNumber.toString()));
+      await expect(pageTitle).to.contains(customerServiceMessageViewPage.pageTitle);
     });
 
     it('should check the message content and uploaded file', async function () {

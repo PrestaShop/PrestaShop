@@ -352,6 +352,16 @@ export default class CommonPage {
   }
 
   /**
+   * Check if checkbox is disabled
+   * @param page {Page} Browser tab
+   * @param selector {string} String to locate the checkbox
+   * @return {Promise<boolean>}
+   */
+  isDisabled(page: Page, selector: string): Promise<boolean> {
+    return page.isDisabled(selector);
+  }
+
+  /**
    * Check if checkbox is selected
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the checkbox

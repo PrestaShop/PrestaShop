@@ -53,6 +53,8 @@ export default class ProductData {
 
   public finalPrice: number;
 
+  public onSale: boolean;
+
   public productHasCombinations: boolean;
 
   public attributes: ProductAttributes[];
@@ -156,6 +158,9 @@ export default class ProductData {
 
     /** @type {number} Final Price of the product */
     this.finalPrice = productToCreate.finalPrice || this.price;
+
+    /** @type {boolean} True to enable on sale flag */
+    this.onSale = productToCreate.onSale || false;
 
     /** @type {boolean} True to create product with combination */
     this.productHasCombinations = productToCreate.productHasCombinations || false;

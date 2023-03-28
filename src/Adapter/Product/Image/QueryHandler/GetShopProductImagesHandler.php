@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetShopProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
@@ -39,14 +39,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProduct
 final class GetShopProductImagesHandler implements GetShopProductImagesHandlerInterface
 {
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
-    private $productImageMultiShopRepository;
+    private $productImageRepository;
 
     public function __construct(
-        ProductImageMultiShopRepository $productImageMultiShopRepository
+        ProductImageRepository $productImageRepository
     ) {
-        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productImageRepository = $productImageRepository;
     }
 
     /**
@@ -54,6 +54,6 @@ final class GetShopProductImagesHandler implements GetShopProductImagesHandlerIn
      */
     public function handle(GetShopProductImages $query): ShopProductImagesCollection
     {
-        return $this->productImageMultiShopRepository->getImagesFromAllShop($query->getProductId());
+        return $this->productImageRepository->getImagesFromAllShop($query->getProductId());
     }
 }

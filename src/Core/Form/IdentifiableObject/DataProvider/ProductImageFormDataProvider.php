@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Provides the data that is used to prefill the Product image form
@@ -43,11 +44,16 @@ class ProductImageFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var int
      */
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    private $contextShopId;
+
+    public function __construct(
+        CommandBusInterface $queryBus,
+        int $contextShopId
+    ) {
         $this->queryBus = $queryBus;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -56,7 +62,10 @@ class ProductImageFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         /** @var ProductImage $productImage */
-        $productImage = $this->queryBus->handle(new GetProductImage((int) $id));
+        $productImage = $this->queryBus->handle(new GetProductImage(
+            (int) $id,
+            ShopConstraint::shop($this->contextShopId)
+        ));
 
         return [
             'legend' => $productImage->getLocalizedLegends(),

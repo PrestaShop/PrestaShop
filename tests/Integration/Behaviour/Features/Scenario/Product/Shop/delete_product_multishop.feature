@@ -105,7 +105,6 @@ Feature: Delete product when multishop feature is enabled
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
-    And product productWithCombinations should have no combinations for shops "shop3,shop4"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shops "shop3,shop4"
 
   Scenario: I can delete product from specific shop
@@ -122,15 +121,14 @@ Feature: Delete product when multishop feature is enabled
       | image2          | 2        | shop1, shop3, shop4 |
     # delete from shop3
     When I delete product "productWithCombinations" from shops "shop3"
-    And product productWithCombinations is not associated to shop shop3
-    Then product productWithCombinations is associated to shops "shop1,shop2,shop4"
+    Then product productWithCombinations is not associated to shop shop3
+    And product productWithCombinations is associated to shops "shop1,shop2,shop4"
     And default shop for product productWithCombinations is shop1
     And product "productWithCombinations" should have the following combinations for shops "shop1,shop2,shop4":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
-    And product productWithCombinations should have no combinations for shops "shop3"
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3"
 
   Scenario: I can delete product from all shops
@@ -138,5 +136,4 @@ Feature: Delete product when multishop feature is enabled
     And I delete product "productWithCombinations" from all shops
     Then product "standardProduct" should not exist anymore
     And product "productWithCombinations" should not exist anymore
-    And product productWithCombinations should have no combinations for shops "shop1,shop2,shop3,shop4"
     And combinations "product1LWhite,product1LBlack,product1LBlue" should not exist anymore

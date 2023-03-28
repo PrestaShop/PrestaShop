@@ -226,12 +226,9 @@ services:
       $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
       $commandsBuilder: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
 
-  prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
-      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler:
+    autowire: true
+    public: false
 
   prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ZoneFormDataHandler'

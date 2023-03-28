@@ -109,4 +109,22 @@ export default {
     decimals: 0,
     enabled: true,
   }),
+  gbp: new CurrencyData({
+    name: 'British Pound',
+    frName: 'livre sterling',
+    symbol: 'GBP',
+    isoCode: 'GBP',
+    exchangeRate: 0.87,
+    decimals: 2,
+    enabled: true,
+  }),
+  jpy: new CurrencyData({
+    name: 'Japanese Yen',
+    frName: 'yen japonais',
+    symbol: 'JPY',
+    isoCode: 'JPY',
+    exchangeRate: 140.59,
+    decimals: 0,
+    enabled: true,
+  }),
 };

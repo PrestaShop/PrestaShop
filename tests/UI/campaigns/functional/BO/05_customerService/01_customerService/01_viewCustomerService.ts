@@ -108,10 +108,8 @@ describe('BO - Customer Service : View messages', async () => {
 
     await customerServicePage.goToViewMessagePage(page);
 
-    const threadNumber = await viewPage.getThreadNumber(page);
-
     const pageTitle = await viewPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(viewPage.pageTitle(threadNumber.toString()));
+    await expect(pageTitle).to.contains(viewPage.pageTitle);
   });
 
   it('should check the thread form', async function () {
@@ -120,7 +118,7 @@ describe('BO - Customer Service : View messages', async () => {
     const text = await viewPage.getCustomerMessage(page);
     expect(text).to.contains(contactUsData.emailAddress);
     expect(text).to.contains(contactUsData.subject);
-    expect(text).to.contains(`${messageDateTime.substr(0, 10)} access_time - ${messageDateTime.substr(11, 5)}`);
+    expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
     expect(text).to.contains('Attachment');
     expect(text).to.contains(contactUsData.message);
   });
@@ -142,7 +140,7 @@ describe('BO - Customer Service : View messages', async () => {
 
     const text = await viewPage.getOrdersAndMessagesTimeline(page);
     expect(text).to.contains('Orders and messages timeline');
-    expect(text).to.contains(`${messageDateTime.substr(0, 10)} access_time ${messageDateTime.substr(11, 5)}`);
+    expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
     expect(text).to.contains(`Message to: ${contactUsData.subject}`);
     expect(text).to.contains(contactUsData.message);
   });

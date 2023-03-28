@@ -162,6 +162,7 @@ export default {
       deleteButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delete`,
     },
     list: {
+      attributeFilterInputName: 'combination-attribute-filter',
       combinationRow: '.combination-list-row',
       priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
       priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',
@@ -246,6 +247,9 @@ export default {
   shipping: {
     deliveryTimeTypeInput: 'input[name="product[shipping][delivery_time_note_type]"]',
     deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
+    carrierSelectorContainer: '#product_shipping_carriers',
+    carrierChoiceLabel: '.carrier-choice-label',
+    carrierCheckboxesDropdownId: 'carrier-checkboxes-dropdown',
   },
   seo: {
     container: '#product_seo_serp',

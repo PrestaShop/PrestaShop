@@ -167,7 +167,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $caughtException = null;
         try {
             $this->getProductForEditing($reference);
-            throw new RuntimeException(sprintf('Product "%s" was not expected to exist, but it was found', $reference));
         } catch (ProductNotFoundException $e) {
             $caughtException = $e;
         }

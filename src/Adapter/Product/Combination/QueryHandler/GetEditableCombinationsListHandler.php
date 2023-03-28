@@ -136,8 +136,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
             $query->getLanguageId()
         );
 
-        $productImageIds = $this->productImageRepository->getImagesIds($query->getProductId());
-        $imageIdsByCombinationIds = $this->productImageRepository->getImagesIdsForCombinations($combinationIds);
+        $productImageIds = $this->productImageRepository->getImageIds($query->getProductId(), $query->getShopConstraint());
+        $imageIdsByCombinationIds = $this->productImageRepository->getImageIdsForCombinations($combinationIds);
 
         return $this->formatEditableCombinationsForListing(
             $combinations,

@@ -24,44 +24,44 @@
  *-->
 
 <template>
-  <div class="combinations-filters-dropdown">
+  <div class="ps-checkboxes-dropdown">
     <div class="dropdown">
       <button
         :class="[
           'btn',
           'dropdown-toggle',
-          selectedFilters.length > 0 ? 'btn-primary' : 'btn-outline-secondary',
+          selectedChoiceIds.length > 0 ? 'btn-primary' : 'btn-outline-secondary',
           'btn',
+          {disabled: this.disabled}
         ]"
         type="button"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        id="form_invoice_prefix"
         :data-role="`filter-by-${label.toLowerCase()}`"
       >
         {{ label }} {{ nbFiles }}
       </button>
       <div
         class="dropdown-menu"
-        aria-labelledby="form_invoice_prefix"
-        @click="preventClose($event)"
+        @click="preventClose"
       >
         <div
           class="md-checkbox"
-          v-for="filter in children"
-          :key="filter.id"
-          :data-role="`${label.toLowerCase()}-${filter.id}`"
+          v-for="choice in choices"
+          :key="choice.id"
         >
           <label class="dropdown-item">
             <div class="md-checkbox-container">
               <input
+                :value="choice.id"
+                :name="choice.name"
                 type="checkbox"
-                :checked="isChecked(filter)"
-                @change="toggleFilter(filter)"
+                :checked="isSelected(choice)"
+                @change="toggleSelection(choice)"
               >
               <i class="md-checkbox-control" />
-              {{ filter.name }}
+              {{ choice.label }}
             </div>
           </label>
         </div>
@@ -72,65 +72,51 @@
 
 <script lang="ts">
   import {defineComponent, PropType} from 'vue';
-  import ProductEventMap from '@pages/product/product-event-map';
-
-  const CombinationEvents = ProductEventMap.combinations;
+  import {Choice} from '@app/components/checkboxes-dropdown/types';
 
   export default defineComponent({
-    name: 'FilterDropdown',
-    data(): {selectedFilters: Array<Record<string, any>>} {
-      return {
-        selectedFilters: [],
-      };
-    },
     props: {
       parentId: {
         type: Number,
+        default: 1,
+      },
+      choices: {
+        type: Array as PropType<Choice[]>,
         required: true,
       },
-      children: {
-        type: Array as PropType<Array<Record<string, any>>>,
-        required: true,
+      selectedChoiceIds: {
+        type: Array as PropType<number[]>,
+        default: () => [],
       },
       label: {
         type: String,
         required: true,
       },
-      eventEmitter: {
-        type: Object,
-        required: true,
+      disabled: {
+        type: Boolean,
+        default: false,
       },
-    },
-    mounted() {
-      this.eventEmitter.on(CombinationEvents.clearAllCombinationFilters, this.clear);
     },
     computed: {
       nbFiles(): string | null {
-        return this.selectedFilters.length > 0
-          ? `(${this.selectedFilters.length})`
+        return this.selectedChoiceIds.length > 0
+          ? `(${this.selectedChoiceIds.length})`
           : null;
       },
     },
     methods: {
-      isChecked(filter: Record<string, any>): boolean {
-        return this.selectedFilters.some((e) => filter.id === e.id);
+      isSelected(choice: Choice): boolean {
+        return this.selectedChoiceIds.some((id) => choice.id === id);
       },
-      toggleFilter(filter: Record<string, any>): void {
-        if (this.selectedFilters.some((e) => filter.id === e.id)) {
-          this.$emit('removeFilter', filter, this.parentId);
-          this.selectedFilters = this.selectedFilters.filter(
-            (item) => item.id !== filter.id,
-          );
+      toggleSelection(choice: Choice): void {
+        if (this.selectedChoiceIds.some((id) => choice.id === id)) {
+          this.$emit('unselectChoice', choice, this.parentId);
         } else {
-          this.$emit('addFilter', filter, this.parentId);
-          this.selectedFilters.push(filter);
+          this.$emit('selectChoice', choice, this.parentId);
         }
       },
       preventClose(event: Event): void {
         event.stopPropagation();
-      },
-      clear(): void {
-        this.selectedFilters = [];
       },
     },
   });
@@ -140,7 +126,7 @@
 @import "~@scss/config/_settings.scss";
 @import "~@scss/config/_bootstrap.scss";
 
-.combinations-filters-dropdown {
+.ps-checkboxes-dropdown {
   margin: 0 0.35rem;
 
   @include media-breakpoint-down(xs) {
@@ -148,8 +134,7 @@
   }
 
   .dropdown-item {
-    padding: 0.438rem 0.938rem;
-    padding-right: 1rem;
+    padding: 0.438rem 1rem 0.438rem 0.938rem;
     line-height: normal;
     color: inherit;
     border-bottom: 0;

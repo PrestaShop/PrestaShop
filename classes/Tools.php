@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -522,8 +524,12 @@ class ToolsCore
         }
 
         /* Automatically detect language if not already defined, detect_language is set in Cookie::update */
-        if (!Tools::getValue('isolang') && !Tools::getValue('id_lang') && (!$cookie->id_lang || isset($cookie->detect_language))
-            && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        if (
+            !Tools::getValue('isolang') &&
+            !Tools::getValue('id_lang') &&
+            (!$cookie->id_lang || isset($cookie->detect_language))
+            && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+        ) {
             $array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
             $string = $array[0];
 
@@ -600,7 +606,8 @@ class ToolsCore
     public static function getCountry($address = null)
     {
         $countryId = Tools::getValue('id_country');
-        if (Validate::isInt($countryId)
+        if (
+            Validate::isInt($countryId)
             && (int) $countryId > 0
             && !empty(Country::getIsoById((int) $countryId))
         ) {
@@ -672,8 +679,7 @@ class ToolsCore
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
         @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.6.0. '
-            . 'Use ' . Locale::class . '::formatPrice() instead.',
+            'Tools::displayPrice() is deprecated since version 1.7.6.0. Use ' . Locale::class . '::formatPrice() instead.',
             E_USER_DEPRECATED
         );
 
@@ -742,8 +748,7 @@ class ToolsCore
     public static function displayNumber($number, $currency = null)
     {
         @trigger_error(
-            'Tools::displayNumber() is deprecated since version 1.7.5.0. '
-            . 'Use ' . Locale::class . ' instead.',
+            'Tools::displayNumber() is deprecated since version 1.7.5.0. Use ' . Locale::class . ' instead.',
             E_USER_DEPRECATED
         );
 
@@ -1706,17 +1711,21 @@ class ToolsCore
         if ($value >= 0.0) {
             $tmp_value = floor($value + 0.5);
 
-            if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value)) ||
+            if (
+                ($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value)) ||
                 ($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))) {
+                ($mode == PS_ROUND_HALF_ODD && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))
+            ) {
                 $tmp_value = $tmp_value - 1.0;
             }
         } else {
             $tmp_value = ceil($value - 0.5);
 
-            if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value)) ||
+            if (
+                ($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value)) ||
                 ($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))) {
+                ($mode == PS_ROUND_HALF_ODD && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))
+            ) {
                 $tmp_value = $tmp_value + 1.0;
             }
         }
@@ -1873,7 +1882,8 @@ class ToolsCore
             $content = curl_exec($curl);
 
             if (false === $content && _PS_MODE_DEV_) {
-                $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
+                $errorMessage = sprintf(
+                    'file_get_contents_curl failed to download %s : (error code %d) %s',
                     $url,
                     curl_errno($curl),
                     curl_error($curl)
@@ -2064,6 +2074,60 @@ class ToolsCore
         );
     }
 
+    /**
+     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
+     *
+     * @param string $hex
+     *
+     * @return float|int|string
+     */
+    public static function getBrightness($hex)
+    {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. Use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
+        if (Tools::strtolower($hex) == 'transparent') {
+            return '129';
+        }
+
+        $hex = str_replace('#', '', $hex);
+
+        if (Tools::strlen($hex) == 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+    }
+
+    /**
+     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead
+     */
+    public static function isBright($hex)
+    {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. Use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator::isBright function instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
+        if (null === self::$colorBrightnessCalculator) {
+            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
+        }
+
+        return self::$colorBrightnessCalculator->isBright($hex);
+    }
+
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
@@ -2161,7 +2225,8 @@ class ToolsCore
 
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
-        if (defined('_PS_IN_TEST_')
+        if (
+            defined('_PS_IN_TEST_')
             || (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)
         ) {
             return true;
@@ -2234,7 +2299,9 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+        if (
+            !$medias
+            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         ) {
@@ -3144,6 +3211,8 @@ exit;
     }
 
     /**
+     * @deprecated since 8.1 and will be removed in next major version.
+     *
      * @param int|bool $id_product
      */
     public static function clearColorListCache($id_product = false)
@@ -3708,11 +3777,8 @@ exit;
      * highest $sort_column.
      *
      * E.g.:
-     *
      * $rows = [['a' => 5.1], ['a' => 8.2]];
-     *
      * spreadAmount(0.3, 1, $rows, 'a');
-     *
      * => $rows is [['a' => 8.4], ['a' => 5.2]]
      *
      * @param float $amount The amount to spread across the rows
@@ -3729,7 +3795,9 @@ exit;
             return;
         }
 
-        $sort_function = function ($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
+        $sort_function = function ($a, $b) use ($column) {
+            return $b[$column] > $a[$column] ? 1 : -1;
+        };
 
         uasort($rows, $sort_function);
 
@@ -3798,10 +3866,10 @@ exit;
                     $index_link = Context::getContext()->link->getAdminLink('AdminCategories', true, $link_params);
                     $edit = '<a href="' . Tools::safeOutput($edit_link) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
                     $full_path .= $edit .
-                                  ($n < $n_categories ? '<a href="' . Tools::safeOutput($index_link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
-                                  (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">' . htmlentities($highlight, ENT_NOQUOTES, 'UTF-8') . '</span>', $category['name']) : $category['name']) .
-                                  ($n < $n_categories ? '</a>' : '') .
-                                  (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
+                        ($n < $n_categories ? '<a href="' . Tools::safeOutput($index_link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
+                        (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">' . htmlentities($highlight, ENT_NOQUOTES, 'UTF-8') . '</span>', $category['name']) : $category['name']) .
+                        ($n < $n_categories ? '</a>' : '') .
+                        (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
                 }
 
                 return $full_path . $path;

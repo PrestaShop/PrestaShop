@@ -11,6 +11,10 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Product extends FOBasePage {
+  private readonly productFlags: string;
+
+  private readonly productFlag: string;
+
   private readonly productName: string;
 
   private readonly productCoverImg: string;
@@ -141,6 +145,8 @@ class Product extends FOBasePage {
     super();
 
     // Selectors for product page
+    this.productFlags = '#content ul.product-flags';
+    this.productFlag = '#content li.product-flag';
     this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
     this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
@@ -222,6 +228,24 @@ class Product extends FOBasePage {
    */
   getProductPageURL(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.metaLink, 'content');
+  }
+
+  /**
+   * Get product tag
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getProductTag(page: Page): Promise<string> {
+    return this.getTextContent(page, this.productFlags);
+  }
+
+  /**
+   * Is product tag visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  isProductTagVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.productFlag);
   }
 
   /**
@@ -368,6 +392,11 @@ class Product extends FOBasePage {
     return this.getTextContent(page, this.discountPercentageSpan);
   }
 
+  /**
+   * Get product availability label
+   * @param page {Page} Browser tab
+   * @return {promise<string>}
+   */
   getProductAvailabilityLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.productAvailability, false);
   }
