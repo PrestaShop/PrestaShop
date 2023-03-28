@@ -29,22 +29,22 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerSearchType extends EntitySearchInputType
 {
     /**
-     * @var UrlGeneratorInterface
+     * @var RouterInterface
      */
-    protected $urlGenerator;
+    private $router;
 
     public function __construct(
         TranslatorInterface $translator,
-        UrlGeneratorInterface $urlGenerator
+        RouterInterface $router
     ) {
         parent::__construct($translator);
-        $this->urlGenerator = $urlGenerator;
+        $this->router = $router;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -66,7 +66,7 @@ class CustomerSearchType extends EntitySearchInputType
             'disabled_value' => function ($data) {
                 return empty($data[0]['id_customer']);
             },
-            'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
+            'remote_url' => $this->router->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
             'placeholder' => $this->trans('Search customer', 'Admin.Actions'),
             'suggestion_field' => 'fullname_and_email',
             'required' => false,

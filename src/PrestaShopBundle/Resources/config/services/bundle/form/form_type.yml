@@ -768,17 +768,10 @@ services:
   PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
 
-  PrestaShopBundle\Form\Admin\Sell\CartRule\CartRuleType:
-  PrestaShopBundle\Form\Admin\Sell\CartRule\ActionsType:
-  PrestaShopBundle\Form\Admin\Sell\CartRule\ConditionsType:
-  PrestaShopBundle\Form\Admin\Sell\CartRule\InformationType:
-  PrestaShopBundle\Form\Admin\Sell\CartRule\MinimumAmountType:
-  PrestaShopBundle\Form\Admin\Sell\CartRule\DiscountType:
-  PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
-    arguments:
-      $urlGenerator: '@prestashop.core.admin.url_generator'
+  PrestaShopBundle\Form\Admin\Sell\CartRule\:
+    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
 
-  PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener\DiscountListener:
+  PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:
