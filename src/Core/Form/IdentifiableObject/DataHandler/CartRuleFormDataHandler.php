@@ -89,7 +89,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         if (!empty($conditionsData['minimum_amount']['amount'])) {
             $amountData = $conditionsData['minimum_amount'];
-            $command->setMinimumAmountCondition(
+            $command->setMinimumAmount(
                 (string) $amountData['amount'],
                 (int) $amountData['currency'],
                 (bool) $amountData['tax_included'],
@@ -120,12 +120,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
                         new DecimalNumber((string) $reductionData['value']),
                         new CurrencyId((int) $reductionData['currency'])
                     ),
-                    (bool) $reductionData['include_tax'],
-                    //@todo: MoneyAmountCondition is reused in both minimum_amount field and here in discount,
-                    //       however I think it should be 2 different VO's (may extend one another)
-                    //       so that $shipping doesnt hang here when its unsed in handler
-                    //
-                    true
+                    (bool) $reductionData['include_tax']
                 ));
             } else {
                 $actionBuilder->setPercentageDiscount(new PercentageDiscount(

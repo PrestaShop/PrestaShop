@@ -58,7 +58,12 @@ class AddCartRuleCommand
     /**
      * @var MoneyAmountCondition|null
      */
-    private $minimumAmountCondition;
+    private $minimumAmount;
+
+    /**
+     * @var bool|null
+     */
+    private $minimumAmountShippingIncluded;
 
     /**
      * @var CustomerId|null
@@ -348,24 +353,29 @@ class AddCartRuleCommand
         return $this;
     }
 
-    public function setMinimumAmountCondition(
+    public function setMinimumAmount(
         string $minimumAmount,
         int $currencyId,
         bool $taxIncluded,
         bool $shippingIncluded
     ): AddCartRuleCommand {
-        $this->minimumAmountCondition = new MoneyAmountCondition(
+        $this->minimumAmount = new MoneyAmountCondition(
             new Money(new DecimalNumber($minimumAmount), new CurrencyId($currencyId)),
-            $taxIncluded,
-            $shippingIncluded
+            $taxIncluded
         );
+        $this->minimumAmountShippingIncluded = $shippingIncluded;
 
         return $this;
     }
 
-    public function getMinimumAmountCondition(): ?MoneyAmountCondition
+    public function getMinimumAmount(): ?MoneyAmountCondition
     {
-        return $this->minimumAmountCondition;
+        return $this->minimumAmount;
+    }
+
+    public function isMinimumAmountShippingIncluded(): ?bool
+    {
+        return $this->minimumAmountShippingIncluded;
     }
 
     /**

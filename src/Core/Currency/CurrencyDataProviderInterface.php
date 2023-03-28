@@ -119,5 +119,5 @@ interface CurrencyDataProviderInterface
      */
     public function getDefaultCurrencyIsoCode();
 
-    public function getDefaultCurrency(): Currency;
+    public function getDefaultCurrencySymbol(): string;
 }

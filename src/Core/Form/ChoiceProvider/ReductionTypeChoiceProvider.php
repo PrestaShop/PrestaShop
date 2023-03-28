@@ -49,7 +49,7 @@ class ReductionTypeChoiceProvider implements FormChoiceProviderInterface
     public function getChoices(): array
     {
         return [
-            $this->currencyDataProvider->getDefaultCurrency()->symbol => Reduction::TYPE_AMOUNT,
+            $this->currencyDataProvider->getDefaultCurrencySymbol() => Reduction::TYPE_AMOUNT,
             '%' => Reduction::TYPE_PERCENTAGE,
         ];
     }

@@ -170,4 +170,9 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
 
         return $this->defaultCurrency;
     }
+
+    public function getDefaultCurrencySymbol(): string
+    {
+        return $this->getDefaultCurrency()->symbol;
+    }
 }

@@ -44,20 +44,13 @@ class MoneyAmountCondition
     private $taxIncluded;
 
     /**
-     * @var bool
-     */
-    private $shippingIncluded;
-
-    /**
      * @param Money $money
      * @param bool $taxIncluded
-     * @param bool $shippingIncluded
      */
-    public function __construct(Money $money, bool $taxIncluded, bool $shippingIncluded)
+    public function __construct(Money $money, bool $taxIncluded)
     {
         $this->money = $money;
         $this->taxIncluded = $taxIncluded;
-        $this->shippingIncluded = $shippingIncluded;
     }
 
     /**
@@ -74,13 +67,5 @@ class MoneyAmountCondition
     public function isTaxIncluded(): bool
     {
         return $this->taxIncluded;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShippingIncluded(): bool
-    {
-        return $this->shippingIncluded;
     }
 }

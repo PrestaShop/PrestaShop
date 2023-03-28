@@ -102,11 +102,11 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->date_from = $command->getValidFrom()->format('Y-m-d H:i:s');
         $cartRule->date_to = $command->getValidTo()->format('Y-m-d H:i:s');
 
-        $minimumAmount = $command->getMinimumAmountCondition();
+        $minimumAmount = $command->getMinimumAmount();
         if ($minimumAmount) {
             $cartRule->minimum_amount = (string) $minimumAmount->getMoneyAmount()->getAmount();
             $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
-            $cartRule->minimum_amount_shipping = $minimumAmount->isShippingIncluded();
+            $cartRule->minimum_amount_shipping = $command->isMinimumAmountShippingIncluded();
             $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();
         }
 
