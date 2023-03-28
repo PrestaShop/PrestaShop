@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import categoryPageFO from '@pages/FO/category';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
