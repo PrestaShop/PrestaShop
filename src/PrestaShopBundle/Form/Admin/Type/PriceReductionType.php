@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Currency;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ReductionTypeChoiceProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -40,11 +40,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PriceReductionType extends CommonAbstractType
 {
     /**
-     * @var Currency
-     */
-    private $defaultCurrency;
-
-    /**
      * @var EventSubscriberInterface
      */
     private $eventSubscriber;
@@ -54,14 +49,19 @@ class PriceReductionType extends CommonAbstractType
      */
     private $reductionTypeChoiceProvider;
 
+    /**
+     * @var CurrencyDataProviderInterface
+     */
+    private $currencyDataProvider;
+
     public function __construct(
-        Currency $defaultCurrency,
         EventSubscriberInterface $eventSubscriber,
-        ReductionTypeChoiceProvider $reductionTypeChoiceProvider
+        ReductionTypeChoiceProvider $reductionTypeChoiceProvider,
+        CurrencyDataProviderInterface $currencyDataProvider
     ) {
-        $this->defaultCurrency = $defaultCurrency;
         $this->eventSubscriber = $eventSubscriber;
         $this->reductionTypeChoiceProvider = $reductionTypeChoiceProvider;
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -69,9 +69,9 @@ class PriceReductionType extends CommonAbstractType
         $builder
             ->add('value', MoneyType::class, [
                 'scale' => $options['scale'],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->currencyDataProvider->getDefaultCurrencyIsoCode(),
                 'attr' => [
-                    'data-currency' => $this->defaultCurrency->symbol,
+                    'data-currency' => $this->currencyDataProvider->getDefaultCurrencySymbol(),
                 ],
                 'row_attr' => [
                     'class' => 'price-reduction-value',
