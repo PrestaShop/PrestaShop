@@ -73,7 +73,7 @@ export default class GeneratableInput {
           document.querySelector(`#${targetInputId}`)
         );
         targetInput.value = this.generateValue(generatedValueLength);
-        targetInput.dispatchEvent(new Event('change'));
+        targetInput.dispatchEvent(new CustomEvent('change', {bubbles: true}));
       });
     }
   }

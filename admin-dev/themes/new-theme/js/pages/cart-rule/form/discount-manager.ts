@@ -28,10 +28,7 @@ import PriceReductionManager from '@components/form/price-reduction-manager';
 import DiscountApplicationManager from '@pages/cart-rule/form/discount-application-manager';
 
 export default class DiscountManager {
-  private readonly discountContainer: HTMLDivElement;
-
   constructor() {
-    this.discountContainer = <HTMLDivElement> document.querySelector(CartRuleMap.discountContainer);
     this.init();
   }
 
