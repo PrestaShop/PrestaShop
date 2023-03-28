@@ -200,7 +200,7 @@ class CartRuleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function createAction(Request $request): Response
     {
