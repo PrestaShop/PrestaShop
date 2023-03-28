@@ -93,7 +93,7 @@ describe('CLDR : Reset symbol / format settings', async () => {
     await currenciesPage.goToEditCurrencyPage(page, 1);
 
     const pageTitle = await addCurrencyPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    await expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(Currencies.euro.name));
   });
 
   it('should have multiples currencies formats', async function () {
@@ -136,7 +136,7 @@ describe('CLDR : Reset symbol / format settings', async () => {
     await currenciesPage.goToEditCurrencyPage(page, 1);
 
     const pageTitle = await addCurrencyPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    await expect(pageTitle).to.contains(addCurrencyPage.pageTitleEdit(Currencies.euro.name));
   });
 
   // @todo : Enable when https://github.com/PrestaShop/PrestaShop/issues/31759 is fixed
