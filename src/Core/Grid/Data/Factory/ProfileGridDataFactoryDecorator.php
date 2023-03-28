@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -83,9 +83,9 @@ final class ProfileGridDataFactoryDecorator implements GridDataFactoryInterface
     {
         $modifiedProfiles = [];
 
-        /** @var Employee $user */
+        /** @var Employee|null $user */
         $user = $this->security->getUser();
-        if (!$user) {
+        if (null === $user) {
             return new RecordCollection($modifiedProfiles);
         }
 
