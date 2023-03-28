@@ -24,15 +24,15 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import ProductSearchInput from '@pages/product/product-search-input';
+import ProductSearchInput from '@components/form/product-search-input';
+import EventEmitter from '@components/event-emitter';
+import ProductEventMap from '@pages/product/product-event-map';
 
 export default class PackedProductsManager {
-  constructor() {
-    const searchInputContainer = <HTMLElement> document.querySelector(ProductMap.packedProducts.searchInput);
-
-    new ProductSearchInput(
-      ProductMap.packedProducts.searchInput,
-      searchInputContainer.dataset.referenceLabel,
-    );
+  constructor(eventEmitter: typeof EventEmitter) {
+    new ProductSearchInput(ProductMap.packedProducts.searchInput, {
+      onRemovedContent: () => eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
+      onSelectedContent: () => eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
+    });
   }
 }

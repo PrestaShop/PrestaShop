@@ -24,7 +24,7 @@
  */
 import SpecificPriceMap from '@pages/product/specific-price/specific-price-map';
 import SpecificPriceEventMap from '@pages/product/specific-price/specific-price-event-map';
-import CustomerSearchInput from '@pages/customer/customer-search-input';
+import CustomerSearchInput from '@components/form/customer-search-input';
 
 export default class CustomerSelector {
   constructor() {
