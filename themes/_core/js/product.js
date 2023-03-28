@@ -262,10 +262,7 @@ function updateProduct(event, eventType, updateUrl) {
 
         document.dispatchEvent(updateRatingEvent);
 
-        // Update metadata
-        document.querySelector('meta[property="product:price:amount"]').setAttribute('content', data.product_price_raw);
-        document.querySelector('meta[property="product:pretax_price:amount"]').setAttribute('content', data.product_price_tax_exc_raw);
-        document.querySelector('meta[property="og:image"]').setAttribute('content', e.product_cover_raw);
+        document.querySelector('head').innerHTML = data.product_page_head;
 
         // Prevent quantity input from blinking with classic theme.
         if (
