@@ -40,6 +40,7 @@ export default class CustomerSelector {
   private initCustomerSearchInput(): CustomerSearchInput {
     return new CustomerSearchInput(
       SpecificPriceMap.customerSearchContainer,
+      SpecificPriceMap.customerItem,
       () => Number(this.getShopIdSelect().value) ?? null,
       SpecificPriceEventMap.switchCustomer,
     );

@@ -56,6 +56,7 @@ $(() => {
   const customerSearchContainer = <HTMLElement> document.querySelector(CartRuleMap.customerSearchContainer);
   new CustomerSearchInput(
     CartRuleMap.customerSearchContainer,
+    CartRuleMap.customerItem,
     () => Number(customerSearchContainer.dataset.shopId),
     CartRuleEventMap.switchCustomer,
   );

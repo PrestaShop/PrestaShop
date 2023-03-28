@@ -1,8 +1,3 @@
-import EntitySearchInput from '@components/entity-search-input';
-import SpecificPriceMap from '@pages/product/specific-price/specific-price-map';
-import SpecificPriceEventMap from '@pages/product/specific-price/specific-price-event-map';
-import EventEmitter from '@components/event-emitter';
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,11 +22,17 @@ import EventEmitter from '@components/event-emitter';
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import EntitySearchInput from '@components/entity-search-input';
+import EventEmitter from '@components/event-emitter';
+
 export default class CustomerSearchInput extends EntitySearchInput {
   private readonly disablingSwitchEvent: string | undefined;
 
+  private readonly customerItemSelector: string;
+
   constructor(
     customerSearchContainer: string,
+    customerItemSelector: string,
     shopIdCallback: () => number|null,
     disablingSwitchEvent?: string|undefined,
   ) {
@@ -49,6 +50,7 @@ export default class CustomerSearchInput extends EntitySearchInput {
 
     });
     this.disablingSwitchEvent = disablingSwitchEvent;
+    this.customerItemSelector = customerItemSelector;
     this.listenDisablingSwitch();
   }
 
@@ -61,7 +63,7 @@ export default class CustomerSearchInput extends EntitySearchInput {
 
     // When customer search is disabled we also disable the selected item (if present)
     eventEmitter.on(this.disablingSwitchEvent, (event: any) => {
-      $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
+      $(this.customerItemSelector).toggleClass('disabled', event.disable);
     });
   }
 }

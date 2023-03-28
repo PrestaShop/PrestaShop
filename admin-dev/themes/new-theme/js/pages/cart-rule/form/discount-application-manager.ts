@@ -24,8 +24,6 @@
  */
 import CartRuleMap from '@pages/cart-rule/cart-rule-map';
 import EntitySearchInput from '@components/entity-search-input';
-import ProductEventMap from '@pages/product/product-event-map';
-import EventEmitter from '@components/event-emitter';
 
 export default class DiscountApplicationManager {
   private readonly reductionTypeSelector: string;
@@ -39,12 +37,8 @@ export default class DiscountApplicationManager {
   }
 
   private init(): void {
-    const eventEmitter = <typeof EventEmitter> window.prestashop.instance.eventEmitter;
+    new EntitySearchInput($(CartRuleMap.specificProductSearchComponent), {});
 
-    new EntitySearchInput($(CartRuleMap.specificProductSearchComponent), {
-      onRemovedContent: () => eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
-      onSelectedContent: () => eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
-    });
     this.updateChoices(this.getReductionTypeSelect().value);
     this.toggleExcludeDiscountedProducts(this.getReductionTypeSelect().value);
     this.toggleSpecificProductsSearch(this.getApplicationSelect().value);
