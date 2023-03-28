@@ -111,7 +111,7 @@ jobs:
       # Workaround until https://github.com/PrestaShop/PrestaShop/issues/29813 is fixed
       - name: PrestaShop Configuration (Copy of Config API)
         if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
-        run: cp ./app/config/security_dev.yml ./app/config/security_prod.yml
+        run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
 
       - name: Setup Node
         uses: actions/setup-node@v3
