@@ -201,17 +201,6 @@ final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
     }
 
     /**
-     * Function aim to define if we need to add Shop Name column in grid.
-     * (Only if we are on Multistore mode and All ou Group context)
-     *
-     * @return bool
-     */
-    private function needShopNameColumn(): bool
-    {
-        return $this->isMultiStoreFeatureUsed && !$this->multistoreContextChecker->isSingleShopContext();
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getGridActions()
@@ -341,5 +330,16 @@ final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
                     ]
                 )
             );
+    }
+
+    /**
+     * Function aim to define if we need to add Shop Name column in grid.
+     * (Only if we are on Multistore mode and All ou Group context)
+     *
+     * @return bool
+     */
+    private function needShopNameColumn(): bool
+    {
+        return $this->isMultiStoreFeatureUsed && !$this->multistoreContextChecker->isSingleShopContext();
     }
 }
