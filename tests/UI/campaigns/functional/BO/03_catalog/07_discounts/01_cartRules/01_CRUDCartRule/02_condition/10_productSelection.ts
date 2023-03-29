@@ -109,7 +109,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
     });
   });
 
-  describe('FO : Check the created cart rule in FO', async () => {
+  describe('FO : Check the created cart rule', async () => {
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 

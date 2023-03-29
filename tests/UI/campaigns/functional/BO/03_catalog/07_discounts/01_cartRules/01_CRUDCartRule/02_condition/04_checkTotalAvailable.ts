@@ -29,12 +29,12 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_checkTotalAvailable';
 
-describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () => {
+describe('BO - Catalog - Cart rules : Check Total available', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
   const cartRuleCode: CartRuleData = new CartRuleData({
-    name: 'addCartRuleName',
+    name: 'New cart rule',
     code: '4QABV6L3',
     discountType: 'Percent',
     discountPercent: 20,
@@ -50,7 +50,7 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Create a Cart rules', async () => {
+  describe('BO : Create cart rule', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -100,7 +100,7 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
     {args: {testIdentifier: 'cartRuleAccepted', testTitle: 'for the first time'}},
     {args: {testIdentifier: 'cartRuleNotAccepted', testTitle: 'for the second time'}},
   ].forEach((test) => {
-    describe(`Use Cart Rule ${test.args.testTitle}`, async () => {
+    describe(`FO : Check the created cart rule '${test.args.testTitle}'`, async () => {
       it('should go to the first product page', async function () {
         await testContext.addContextItem(
           this,
@@ -180,7 +180,7 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
           await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
         });
 
-        it('should confirm adress after signIn', async function () {
+        it('should confirm address after signIn', async function () {
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -244,6 +244,6 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
     });
   });
 
-  // post condition : delete cart rule
+  // post condition : Delete cart rule
   deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
 });
