@@ -53,7 +53,7 @@ class AdminCartsControllerCore extends AdminController
             o.id_order,
             IF (
 		        IFNULL(o.id_order, \'' . $this->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') . '\') = \'' . $this->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') . '\',
-		        IF(TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', a.`date_add`)) > 86400, \'' . $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') . '\',
+		        IF(a.`date_add` > date_add(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', interval 1 day), \'' . $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') . '\',
 		        \'' . $this->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') . '\'),
 		        o.id_order
             ) AS status,
@@ -67,8 +67,7 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN (
             SELECT DISTINCT `id_guest`
             FROM `' . _DB_PREFIX_ . 'connections`
-            WHERE
-                TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < 1800
+            WHERE `date_add` > date_add(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', interval -30 minute)
        ) AS co ON co.`id_guest` = a.`id_guest`';
 
         if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts') {
