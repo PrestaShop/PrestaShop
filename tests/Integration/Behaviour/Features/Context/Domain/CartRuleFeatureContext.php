@@ -49,12 +49,16 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationTy
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CartRuleFeatureContext extends AbstractDomainFeatureContext
 {
@@ -194,9 +198,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $isTaxIncluded,
         $discountApplicationType
     ) {
-        $properties['reduction_amount'] = (float) $reductionAmount;
+        $properties['reduction_amount'] = $reductionAmount;
         $properties['reduction_currency'] = $currency->id;
-        $properties['reduction_tax'] = $isTaxIncluded;
+        $properties['reduction_tax'] = PrimitiveUtils::castStringBooleanIntoBoolean($isTaxIncluded);
         $properties['discount_application_type'] = $discountApplicationType;
         $this->setCartRuleProperties($properties);
     }
@@ -384,7 +388,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ((bool) $cartRule->reduction_tax !== $isTaxIncluded) {
-            throw new RuntimeException(sprintf('Cart rule reduction tax flag "%s" is not expected', var_export($isTaxIncluded)));
+            throw new RuntimeException(sprintf('Cart rule reduction tax flag "%s" is not expected', var_export($isTaxIncluded, true)));
         }
 
         $this->assertDiscountApplicationTypeIsValid($cartRule, $discountApplicationType);
@@ -418,8 +422,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      * @throws DomainConstraintException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function createCartRuleWithReference(string $cartRuleReference, TableNode $node): void
     {
@@ -437,8 +441,6 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['gift_product_attribute_id'] ?? null
         );
 
-        $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
-
         $command = new AddCartRuleCommand(
             [$defaultLanguageId => $data['name_in_default_language']],
             $data['highlight'],
@@ -449,12 +451,18 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             new DateTime($data['valid_to']),
             $data['total_quantity'],
             $data['quantity_per_user'],
-            $cartRuleAction,
-            $data['minimum_amount'],
-            $currencyId,
-            $data['minimum_amount_tax_included'],
-            $data['minimum_amount_shipping_included']
+            $cartRuleAction
         );
+
+        if (!empty($data['minimum_amount'])) {
+            $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
+            $command->setMinimumAmount(
+                $data['minimum_amount'],
+                $currencyId,
+                $data['minimum_amount_tax_included'],
+                $data['minimum_amount_shipping_included']
+            );
+        }
 
         $command->setDescription($data['description'] ?? '');
         $command->setCode($data['code'] ?? '');
@@ -736,7 +744,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         int $totalQuantity,
         int $quantityPerUser,
         CartRuleActionInterface $cartRuleAction,
-        float $minimumAmount,
+        string $minimumAmount,
         int $minimumAmountCurrencyId,
         bool $minimumAmountTaxIncluded,
         bool $minimumAmountShippingIncluded,
@@ -758,11 +766,14 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $validTo,
             $totalQuantity,
             $quantityPerUser,
-            $cartRuleAction,
+            $cartRuleAction
+        );
+
+        $command->setMinimumAmount(
             $minimumAmount,
             $minimumAmountCurrencyId,
-            !$minimumAmountTaxIncluded,
-            !$minimumAmountShippingIncluded
+            $minimumAmountTaxIncluded,
+            $minimumAmountShippingIncluded
         );
 
         if (null !== $code) {
@@ -804,13 +815,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      * @throws DomainConstraintException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException
+     * @throws CurrencyException
      */
     private function createCartRuleAction(
         bool $isFreeShipping,
-        float $percentage = null,
+        string $percentage = null,
         bool $percentageAppliesToDiscountedProducts = null,
-        float $amount = null,
+        string $amount = null,
         int $amountCurrencyId = null,
         bool $amountTaxIncluded = null,
         int $giftProductId = null,
@@ -830,7 +841,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $builder->setAmountDiscount(
                 new MoneyAmountCondition(
                     new Money(new DecimalNumber((string) $amount), new CurrencyId($amountCurrencyId)),
-                    !$amountTaxIncluded
+                    $amountTaxIncluded
                 )
             );
         }

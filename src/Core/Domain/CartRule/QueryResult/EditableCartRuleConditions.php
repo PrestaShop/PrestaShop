@@ -59,7 +59,7 @@ class EditableCartRuleConditions
     private $quantityPerUser;
 
     /**
-     * @var EditableCartRuleMinimum
+     * @var EditableCartRuleMinimum|null
      */
     private $minimum;
 
@@ -74,7 +74,7 @@ class EditableCartRuleConditions
         ?DateTime $dateTo,
         int $quantity,
         int $quantityPerUser,
-        EditableCartRuleMinimum $minimum,
+        ?EditableCartRuleMinimum $minimum,
         EditableCartRuleRestrictions $restrictions
     ) {
         $this->customerId = $customerId;
@@ -127,9 +127,9 @@ class EditableCartRuleConditions
     }
 
     /**
-     * @return EditableCartRuleMinimum
+     * @return EditableCartRuleMinimum|null
      */
-    public function getMinimum(): EditableCartRuleMinimum
+    public function getMinimum(): ?EditableCartRuleMinimum
     {
         return $this->minimum;
     }

@@ -124,9 +124,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
                 ));
             } else {
                 $actionBuilder->setPercentageDiscount(new PercentageDiscount(
-                    //@todo: use string and DecimalNumber inside PercentageDiscount instead of float
                     (float) $actionsData['discount']['reduction']['value'],
-                    //@todo: check exclude_discounted_products field maybe
                     (bool) $actionsData['discount']['exclude_discounted_products']
                 ));
             }

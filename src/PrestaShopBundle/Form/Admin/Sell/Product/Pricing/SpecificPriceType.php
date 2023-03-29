@@ -46,18 +46,12 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SpecificPriceType extends TranslatorAwareType
 {
     private const COMBINATION_RESULTS_LIMIT = 20;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
 
     /**
      * @var ProductRepository
@@ -84,16 +78,9 @@ class SpecificPriceType extends TranslatorAwareType
      */
     private $languageId;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param ProductRepository $productRepository
-     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        UrlGeneratorInterface $urlGenerator,
         ProductRepository $productRepository,
         AttributeRepository $attributeRepository,
         EventSubscriberInterface $specificPriceCombinationListener,
@@ -101,7 +88,6 @@ class SpecificPriceType extends TranslatorAwareType
         int $contextLanguageId
     ) {
         parent::__construct($translator, $locales);
-        $this->urlGenerator = $urlGenerator;
         $this->productRepository = $productRepository;
         $this->attributeRepository = $attributeRepository;
         $this->specificPriceCombinationListener = $specificPriceCombinationListener;

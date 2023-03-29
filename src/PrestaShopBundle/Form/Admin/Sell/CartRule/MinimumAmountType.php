@@ -27,31 +27,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MinimumAmountType extends TranslatorAwareType
 {
-    /**
-     * @var CurrencyByIdChoiceProvider
-     */
-    private $currencyByIdChoiceProvider;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        CurrencyByIdChoiceProvider $currencyByIdChoiceProvider
-    ) {
-        parent::__construct($translator, $locales);
-        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
-    }
-
     /**
      * {@inheritDoc}
      */

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler;
 
 use CartRule;
 use DateTime;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
@@ -102,14 +103,16 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
         $customerId = (int) $cartRule->id_customer !== NoCustomerId::NO_CUSTOMER_ID_VALUE ? new CustomerId((int) $cartRule->id_customer) : new NoCustomerId();
         $dateFrom = $cartRule->date_from;
         $dateTo = $cartRule->date_to;
-        $minimumAmountCurrencyId = $cartRule->minimum_amount_currency ? new CurrencyId((int) $cartRule->minimum_amount_currency) : null;
 
-        $cartRuleMinimum = new EditableCartRuleMinimum(
-            new Number($cartRule->minimum_amount),
-            (bool) $cartRule->minimum_amount_tax,
-            $minimumAmountCurrencyId,
-            (bool) $cartRule->minimum_amount_shipping
-        );
+        $cartRuleMinimum = null;
+        if (!empty($cartRule->minimum_amount)) {
+            $cartRuleMinimum = new EditableCartRuleMinimum(
+                new DecimalNumber($cartRule->minimum_amount),
+                (bool) $cartRule->minimum_amount_tax,
+                new CurrencyId((int) $cartRule->minimum_amount_currency),
+                (bool) $cartRule->minimum_amount_shipping
+            );
+        }
 
         $cartRuleRestrictions = new EditableCartRuleRestrictions(
             (bool) $cartRule->country_restriction,

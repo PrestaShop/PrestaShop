@@ -140,7 +140,7 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         // Legacy reduction_tax property is true when it's tax included, false when tax excluded.
         $cartRule->reduction_tax = null !== $amountDiscount ? $amountDiscount->isTaxIncluded() : null;
 
-        $cartRule->reduction_percent = null !== $percentageDiscount ? $percentageDiscount->getPercentage() : null;
+        $cartRule->reduction_percent = null !== $percentageDiscount ? (string) $percentageDiscount->getPercentage() : null;
         $cartRule->reduction_exclude_special = null !== $percentageDiscount ?
             !$percentageDiscount->appliesToDiscountedProducts() :
             null;
