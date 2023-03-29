@@ -72,7 +72,7 @@ abstract class AbstractPaymentModuleRestrictionsType extends TranslatorAwareType
     /**
      * Sort payment modules by display name.
      *
-     * @param array $paymentModules
+     * @param array<string, ModuleInterface> $paymentModules
      *
      * @return array
      */
