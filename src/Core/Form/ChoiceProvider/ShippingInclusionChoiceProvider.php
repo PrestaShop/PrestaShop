@@ -23,43 +23,38 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class TaxInclusionChoiceType extends ChoiceType
+/**
+ * Provides choices for shipping inclusion
+ */
+final class ShippingInclusionChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var TaxInclusionChoiceProvider
+     * @var TranslatorInterface
      */
-    private $taxInclusionChoiceProvider;
+    private $translator;
 
-    public function __construct(
-        TaxInclusionChoiceProvider $shippingInclusionChoiceProvider
-    ) {
-        parent::__construct();
-        $this->taxInclusionChoiceProvider = $shippingInclusionChoiceProvider;
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver): void
+    public function getChoices(): array
     {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefaults([
-            'label' => false,
-            'choices' => $this->taxInclusionChoiceProvider->getChoices(),
-            'placeholder' => false,
-            'required' => false,
-            'row_attr' => [
-                'class' => 'js-include-tax-row',
-            ],
-        ]);
+        return [
+            $this->translator->trans('Shipping included', [], 'Admin.Global') => 1,
+            $this->translator->trans('Shipping excluded', [], 'Admin.Global') => 0,
+        ];
     }
 }

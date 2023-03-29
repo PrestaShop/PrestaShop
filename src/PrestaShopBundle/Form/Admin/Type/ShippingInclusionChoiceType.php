@@ -27,22 +27,22 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShippingInclusionChoiceProvider;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TaxInclusionChoiceType extends ChoiceType
+class ShippingInclusionChoiceType extends ChoiceType
 {
     /**
-     * @var TaxInclusionChoiceProvider
+     * @var ShippingInclusionChoiceProvider
      */
-    private $taxInclusionChoiceProvider;
+    private $shippingInclusionChoiceProvider;
 
     public function __construct(
-        TaxInclusionChoiceProvider $shippingInclusionChoiceProvider
+        ShippingInclusionChoiceProvider $shippingInclusionChoiceProvider
     ) {
         parent::__construct();
-        $this->taxInclusionChoiceProvider = $shippingInclusionChoiceProvider;
+        $this->shippingInclusionChoiceProvider = $shippingInclusionChoiceProvider;
     }
 
     /**
@@ -54,12 +54,9 @@ class TaxInclusionChoiceType extends ChoiceType
 
         $resolver->setDefaults([
             'label' => false,
-            'choices' => $this->taxInclusionChoiceProvider->getChoices(),
+            'choices' => $this->shippingInclusionChoiceProvider->getChoices(),
             'placeholder' => false,
             'required' => false,
-            'row_attr' => [
-                'class' => 'js-include-tax-row',
-            ],
         ]);
     }
 }

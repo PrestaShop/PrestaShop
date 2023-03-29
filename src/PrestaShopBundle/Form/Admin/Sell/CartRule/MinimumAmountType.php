@@ -28,11 +28,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
 use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\ShippingInclusionChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MinimumAmountType extends TranslatorAwareType
 {
@@ -52,11 +53,19 @@ class MinimumAmountType extends TranslatorAwareType
             ])
             ->add('currency', CurrencyChoiceType::class)
             ->add('tax_included', TaxInclusionChoiceType::class)
-            // @todo: shipping_included should become choice type
-            //        and this whole component should become similar as reduction type and shown in one line
-            ->add('shipping_included', SwitchType::class, [
-                'label' => $this->trans('Shipping included', 'Admin.Catalog.Feature'),
-            ])
+            ->add('shipping_included', ShippingInclusionChoiceType::class)
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/CartRule/FormTheme/minimum_amount.html.twig',
+        ]);
     }
 }

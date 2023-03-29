@@ -773,6 +773,7 @@ services:
   PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
   PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType:
   PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType:
+  PrestaShopBundle\Form\Admin\Type\ShippingInclusionChoiceType:
   PrestaShopBundle\Form\Admin\Type\SearchProductType:
 
   # Deprecated

@@ -323,6 +323,10 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShippingInclusionChoiceProvider:
+    autowire: true
+    public: false
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
     autowire: true
     public: false
