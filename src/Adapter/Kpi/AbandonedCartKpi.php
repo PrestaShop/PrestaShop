@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
@@ -112,7 +113,7 @@ final class AbandonedCartKpi implements KpiInterface
 
         if ($this->featureFlag->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CARTS_INDEX)) {
             $helper->href = $this->router->generate('admin_carts_index', [
-                'cart[filters][id_order]' => $this->translator->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature'),
+                'cart[filters][status]' => CartStatusType::ABANDONED_CART,
             ]);
         }
 

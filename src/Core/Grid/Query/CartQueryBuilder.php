@@ -33,7 +33,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
-use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
  * Builds search & count queries for cart grid.
@@ -44,11 +43,6 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
     private $searchCriteriaApplicator;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
 
     /**
      * @var MultistoreContextCheckerInterface
@@ -72,7 +66,6 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param TranslatorInterface $translator
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param int $contextShopId
      * @param int|null $contextShopGroupId
@@ -81,14 +74,12 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        TranslatorInterface $translator,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         int $contextShopId,
         ?int $contextShopGroupId
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->translator = $translator;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->contextShopId = $contextShopId;
         $this->contextShopGroupId = $contextShopGroupId;
@@ -228,6 +219,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         $allowedFilters = [
             'id_cart',
             'id_order',
+            'status',
             'customer_name',
             'carrier_name',
             'date_add',
@@ -246,24 +238,16 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_order' === $filterName) {
-                $filterValue = strtolower($filterValue);
-                $strNonOrdered = strtolower($this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature'));
-                $strAbandonedCart = strtolower($this->translator->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature'));
+                $qb->andWhere('o.id_order = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
+                continue;
+            }
 
-                if (str_contains($strNonOrdered, $filterValue)) {
-                    $qb->andWhere($this->getCartStatusQuery() . ' = "not_ordered"');
-                    $qb->setParameter('current_date', date('Y-m-d H:i:00', time()));
-                    $qb->setParameter('cart_expiration_time', CartStatusType::ABANDONED_CART_EXPIRATION_TIME);
-                    continue;
-                } elseif (str_contains($strAbandonedCart, $filterValue)) {
-                    $qb->andWhere($this->getCartStatusQuery() . ' = "abandoned_cart"');
-                    $qb->setParameter('current_date', date('Y-m-d H:i:00', time()));
-                    $qb->setParameter('cart_expiration_time', CartStatusType::ABANDONED_CART_EXPIRATION_TIME);
-                    continue;
-                } else {
-                    $qb->andWhere('o.id_order = :' . $filterName);
-                    $qb->setParameter($filterName, $filterValue);
-                }
+            if ('status' === $filterName) {
+                $qb->andWhere($this->getCartStatusQuery() . ' = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
+                $qb->setParameter('current_date', date('Y-m-d H:i:00', time()));
+                $qb->setParameter('cart_expiration_time', CartStatusType::ABANDONED_CART_EXPIRATION_TIME);
                 continue;
             }
 
