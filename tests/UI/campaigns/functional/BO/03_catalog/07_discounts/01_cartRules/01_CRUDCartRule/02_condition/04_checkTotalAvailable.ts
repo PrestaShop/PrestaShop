@@ -26,9 +26,20 @@ import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import basicHelper from "@utils/basicHelper";
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_checkTotalAvailable';
 
+/*
+Scenario:
+- Create cart rule with total available = 1
+- Go to FO, Add product to cart
+- Add promo code and check total after discount
+- Complete the order
+- Try to use a second time the same promo code anc check the error message
+Post-condition:
+- Delete the created cart rule
+*/
 describe('BO - Catalog - Cart rules : Check Total available', async () => {
   let browserContext: BrowserContext;
   let page: Page;
@@ -150,13 +161,13 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           );
 
           const discountedPrice = Products.demo_1.finalPrice
-            - ((Products.demo_1.finalPrice * cartRuleCode.discountPercent) / 100);
+            - await basicHelper.percentage(Products.demo_1.finalPrice, cartRuleCode.discountPercent);
 
-          const priceATI = await cartPage.getATIPrice(page);
-          await expect(priceATI).to.equal(parseFloat(discountedPrice.toFixed(2)));
+          const totalAfterDiscount = await cartPage.getATIPrice(page);
+          await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
-        it('should proceed to checkouts', async function () {
+        it('should proceed to checkout', async function () {
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -171,7 +182,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await expect(isCheckout).to.be.true;
         });
 
-        it('should checkout by signIn', async function () {
+        it('should sign in by default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}SignInFO`, baseContext);
 
           await checkoutPage.clickOnSignIn(page);
@@ -180,11 +191,11 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
         });
 
-        it('should confirm address after signIn', async function () {
+        it('should go to delivery address step', async function () {
           await testContext.addContextItem(
             this,
             'testIdentifier',
-            `${test.args.testIdentifier}ConfirmAdressStep`,
+            `${test.args.testIdentifier}ConfirmAddressStep`,
             baseContext,
           );
 
@@ -244,6 +255,6 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
     });
   });
 
-  // post condition : Delete cart rule
-  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
+  // Post-condition : Delete the created cart rule
+  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest`);
 });

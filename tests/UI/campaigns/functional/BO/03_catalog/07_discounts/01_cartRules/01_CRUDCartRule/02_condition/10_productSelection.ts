@@ -234,6 +234,6 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
     });
   });
 
-  // post condition : Delete cart rule
-  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_1`);
+  // Post-condition: Delete the created cart rule
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest`);
 });

@@ -250,9 +250,7 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       const totalAfterDiscount = await checkoutPage.getATIPrice(page);
       await expect(totalAfterDiscount).to.eq(Products.demo_6.price - cartRule.discountAmount.value + Carriers.myCarrier.price);
     });
-  });
 
-  describe('FO : Delete the shopping cart', async () => {
     it('should remove the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
@@ -280,6 +278,6 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     });
   });
 
-  // post condition : delete cart rule
-  deleteCartRuleTest(cartRule.name, `${baseContext}_postTest_1`);
+  // Post-condition : Delete the created cart rule
+  deleteCartRuleTest(cartRule.name, `${baseContext}_postTest`);
 });

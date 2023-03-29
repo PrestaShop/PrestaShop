@@ -26,14 +26,28 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_carrierRestriction';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_carrierSelection';
 
-describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () => {
+/*
+Scenario:
+- Create cart rule with restricted carrier
+- Go to FO, Add product to cart
+- Try to add promo code and check error message
+- Proceed to checkout and login with default customer
+- Choose an address and continue
+- Choose the not selected carrier, set promo code and check the error message
+- Choose the restricted carrier
+- Add promo code and check the total after discount
+- Delete product from the cart
+Post-condition:
+- Delete the created cart rule
+ */
+describe('BO - Catalog - Cart rules : Carrier Restriction', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const cartRuleCode: CartRuleData = new CartRuleData({
-    name: 'addCartRuleName',
+  const newCartRuleData: CartRuleData = new CartRuleData({
+    name: 'Cart rule carrier selection',
     code: '4QABV6L3',
     carrierRestriction: true,
     discountType: 'Amount',
@@ -54,18 +68,13 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Create a Cart Rules', async () => {
+  describe('BO : Create new cart rule with carrier restriction', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToDiscountsPage',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -78,12 +87,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
     });
 
     it('should go to new cart rule page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToNewCartRulePage',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
 
       await cartRulesPage.goToAddNewCartRulesPage(page);
 
@@ -92,24 +96,14 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
     });
 
     it('should create cart rule', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'createCartRule',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
-      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleCode);
+      const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
       await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'viewMyShop1',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
       page = await addCartRulePage.viewMyShop(page);
       await foHomePage.changeLanguage(page, 'en');
@@ -119,28 +113,18 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
     });
   });
 
-  describe('Use Cart Rule', async () => {
-    it('should go to the first product page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToFirstProductPage',
-        baseContext,
-      );
+  describe('FO : Check the created cart rule', async () => {
+    it('should go to the third product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 1);
+      await foHomePage.goToProductPage(page, 3);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addProductToCart',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foProductPage.addProductToTheCart(page);
 
@@ -148,28 +132,17 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await expect(notificationsNumber).to.be.equal(1);
     });
 
-    it('should add the promo code and get "You must choose a carrier before applying this voucher" error message',
-      async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'addPromoCodeAndGetErrorMessage',
-          baseContext,
-        );
+    it('should add the promo code and check the error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
 
-        await cartPage.addPromoCode(page, cartRuleCode.code);
+      await cartPage.addPromoCode(page, newCartRuleData.code);
 
-        const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-        await expect(alertMessage).to.equal(cartPage.cartRuleChooseCarrierAlertMessageText);
-      });
+      const alertMessage = await cartPage.getCartRuleErrorMessage(page);
+      await expect(alertMessage).to.equal(cartPage.cartRuleChooseCarrierAlertMessageText);
+    });
 
-    it('should proceed to checkouts', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'proceedToCheckoutAndSignIn',
-        baseContext,
-      );
+    it('should proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -177,13 +150,8 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await expect(isCheckout).to.be.true;
     });
 
-    it('should be authentificated', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'signInFO',
-        baseContext,
-      );
+    it('should sign in by default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await checkoutPage.clickOnSignIn(page);
 
@@ -191,78 +159,53 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should confirm adress after signIn', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'confirmAddressStep',
-        baseContext,
-      );
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
       const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
       await expect(isDeliveryStep, 'Delivery Step block is not displayed').to.be.true;
     });
 
     it('should set the promo code and choose the wrong shipping method', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addPromoCodeAndChooseWrongShippingMethod',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseWrongShippingMethod', baseContext);
 
-      await checkoutPage.chooseShippingMethodAndAddComment(page, 1);
-      await checkoutPage.addPromoCode(page, cartRuleCode.code);
+      await checkoutPage.chooseShippingMethodAndAddComment(page, Carriers.default.id);
+      await checkoutPage.addPromoCode(page, newCartRuleData.code);
 
       const errorShippingMessage = await checkoutPage.getCartRuleErrorMessage(page);
       await expect(errorShippingMessage).to.equal(cartPage.cartRuleCannotUseVoucherAlertMessageText);
     });
 
-    it('should set the promo code for second time and check total after discount', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addPromoCodeAndVerifyTotalAfterDiscount',
-        baseContext,
-      );
+    it('should choose the restricted shipping method and continue', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseShippingMethod', baseContext);
 
       await checkoutPage.goToShippingStep(page);
-      await checkoutPage.chooseShippingMethodAndAddComment(page, 2);
-      await checkoutPage.addPromoCode(page, cartRuleCode.code);
 
-      let discountedPrice = cartRuleCode.discountAmount.value;
+      const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(page, Carriers.myCarrier.id);
+      await expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.be.true;
+    });
 
-      if (discountedPrice >= Products.demo_1.finalPrice) {
-        discountedPrice = Products.demo_1.finalPrice;
-      }
+    it('should set the promo code for second time and check total after discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'setPromoCode', baseContext);
+
+      await checkoutPage.addPromoCode(page, newCartRuleData.code);
+
+      const totalAfterDiscount = Products.demo_6.combinations[0].price
+        - newCartRuleData.discountAmount.value + Carriers.myCarrier.priceTTC;
 
       const priceATI = await checkoutPage.getATIPrice(page);
-      await expect(priceATI).to.equal(parseFloat(
-        (Products.demo_1.finalPrice - discountedPrice + Carriers.myCarrier.priceTTC)
-          .toFixed(2),
-      ),
-      );
+      await expect(priceATI.toFixed(2)).to.equal(totalAfterDiscount.toFixed(2));
     });
 
     it('should remove the discount', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'removeTheDiscount',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
       const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
       await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
     });
 
-    it('should click on the logo of the shop', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'checkLogoLink',
-        baseContext,
-      );
+    it('should go to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
       await foHomePage.clickOnHeaderLink(page, 'Logo');
 
@@ -270,24 +213,10 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
-    it('should click on the cart link', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'clickOnCartLink',
-        baseContext,
-      );
+    it('should click go to cart page and delete the product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       await foHomePage.goToCartPage(page);
-    });
-
-    it('should remove product from shopping cart', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'removeProduct1',
-        baseContext,
-      );
 
       await cartPage.deleteProduct(page, 1);
 
@@ -296,6 +225,6 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
     });
   });
 
-  // post condition : delete cart rule
-  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
+  // Post-condition : Delete the created cart rule
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest`);
 });
