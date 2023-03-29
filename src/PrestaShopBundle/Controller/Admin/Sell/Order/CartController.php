@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCom
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkDeleteCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
@@ -731,14 +730,6 @@ class CartController extends FrameworkBundleAdminController
             CannotDeleteOrderedCartException::class => $this->trans(
                 'An order has already been placed with this cart.',
                 'Admin.Catalog.Notification'
-            ),
-            BulkDeleteCartException::class => sprintf(
-                '%s: %s',
-                $this->trans(
-                    'An error occurred while deleting this selection.',
-                    'Admin.Notifications.Error'
-                ),
-                $e instanceof BulkDeleteCartException ? implode(', ', $e->getCartIds()) : ''
             ),
         ];
     }

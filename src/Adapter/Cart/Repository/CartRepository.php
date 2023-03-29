@@ -26,45 +26,60 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Cart\Repository;
 
-use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
-use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\DeleteCartHandlerInterface;
+use Cart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
-/**
- * Handles deletion of cart using legacy object model
- */
-final class DeleteCartHandler extends AbstractCartHandler implements DeleteCartHandlerInterface
+class CartRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var CartRepository
-     */
-    private $cartRepository;
-
-    /**
-     * @param CartRepository $cartRepository
-     */
-    public function __construct(CartRepository $cartRepository)
-    {
-        $this->cartRepository = $cartRepository;
-    }
-
-    /**
-     * {@inheritdoc}
+     * Retrieve Cart by CartId.
      *
-     * @throws CannotDeleteCartException
-     * @throws CannotDeleteOrderedCartException
+     * @param CartId $cartId
+     *
+     * @return Cart
+     *
      * @throws CartException
      * @throws CoreException
      */
-    public function handle(DeleteCartCommand $command): void
+    public function get(CartId $cartId): Cart
     {
-        $this->cartRepository->delete($command->getCartId());
+        /** @var Cart $cart */
+        $cart = $this->getObjectModel(
+            $cartId->getValue(),
+            Cart::class,
+            CartNotFoundException::class
+        );
+
+        return $cart;
+    }
+
+    /**
+     * Delete Cart by CartId.
+     *
+     * @param CartId $cartId
+     *
+     * @return void
+     *
+     * @throws CoreException
+     * @throws CartException
+     * @throws CannotDeleteOrderedCartException
+     */
+    public function delete(CartId $cartId): void
+    {
+        $cart = $this->get($cartId);
+
+        if ($cart->orderExists()) {
+            throw new CannotDeleteOrderedCartException(sprintf('Cart "%s" with order cannot be deleted.', $cart->id));
+        }
+
+        $this->deleteObjectModel($cart, CannotDeleteCartException::class);
     }
 }

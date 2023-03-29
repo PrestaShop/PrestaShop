@@ -28,40 +28,40 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\BulkDeleteCartHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkDeleteCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Deletes cart in bulk action using legacy object model
  */
-final class BulkDeleteCartHandler extends AbstractCartHandler implements BulkDeleteCartHandlerInterface
+final class BulkDeleteCartHandler implements BulkDeleteCartHandlerInterface
 {
+    /**
+     * @var CartRepository
+     */
+    private $cartRepository;
+
+    /**
+     * @param CartRepository $cartRepository
+     */
+    public function __construct(CartRepository $cartRepository)
+    {
+        $this->cartRepository = $cartRepository;
+    }
+
     /**
      * @inerhitDoc
      *
-     * @throws BulkDeleteCartException
+     * @throws CartException
+     * @throws CoreException
      */
     public function handle(BulkDeleteCartCommand $command): void
     {
-        $errors = [];
         foreach ($command->getCartIds() as $cartId) {
-            try {
-                $cart = $this->getCart($cartId);
-
-                if ($cart->orderExists() || !$cart->delete()) {
-                    $errors[] = $cartId->getValue();
-                }
-            } catch (CartException|PrestaShopException $e) {
-                $errors[] = $cartId->getValue();
-            }
-        }
-
-        if (!empty($errors)) {
-            throw new BulkDeleteCartException($errors, 'Failed to delete all of selected cart');
+            $this->cartRepository->delete($cartId);
         }
     }
 }
