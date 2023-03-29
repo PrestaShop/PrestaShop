@@ -71,10 +71,10 @@ class Category extends FOBasePage {
     this.productsSection = '#products';
     this.productListTop = '#js-product-list-top';
     this.productListDiv = '#js-product-list';
-    this.productItemListDiv = `${this.productListDiv} .products div.product`;
+    this.productItemListDiv = `${this.productListTop} .products div.product`;
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
-    this.valueToSortBy = (sortBy: string) => `${this.productListDiv} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
+    this.valueToSortBy = (sortBy: string) => `${this.productListTop} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
 
     // Products list
     this.productList = '#js-product-list';
@@ -160,6 +160,7 @@ class Category extends FOBasePage {
    * @return {Promise<void>}
    */
   async sortProductsList(page: Page, sortBy: string): Promise<void> {
+    await this.scrollTo(page, this.sortByButton);
     await this.waitForSelectorAndClick(page, this.sortByButton);
     await this.waitForVisibleSelector(page, `${this.sortByButton}[aria-expanded="true"]`);
     await this.waitForSelectorAndClick(page, this.valueToSortBy(sortBy));
