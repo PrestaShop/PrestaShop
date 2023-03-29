@@ -25,16 +25,17 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\SearchProductType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductItemType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ActionsType extends TranslatorAwareType
+/**
+ * Initiates input with ability to search for any type of product
+ */
+class SearchProductType extends EntitySearchInputType
 {
     /**
      * @var RouterInterface
@@ -48,11 +49,10 @@ class ActionsType extends TranslatorAwareType
 
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
         RouterInterface $router,
         string $employeeIsoCode
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator);
         $this->router = $router;
         $this->languageIsoCode = $employeeIsoCode;
     }
@@ -60,25 +60,25 @@ class ActionsType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $builder
-            ->add('free_shipping', SwitchType::class, [
-                'required' => false,
-            ])
-            ->add('discount', DiscountType::class, [
-                'required' => false,
-                'row_attr' => [
-                    'class' => 'discount-container',
-                ],
-                'disabling_switch' => true,
-                'disabled_value' => static function (?array $data) {
-                    return empty($data['reduction']['value']);
-                },
-            ])
-            ->add('gift_product', SearchProductType::class, [
-                'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),
-            ])
-        ;
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'required' => false,
+            'label' => false,
+            'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
+                'languageCode' => $this->languageIsoCode,
+                'query' => '__QUERY__',
+            ]),
+            'entry_type' => SearchedProductItemType::class,
+            'attr' => [
+                'data-reference-label' => $this->trans('Ref: %s', 'Admin.Catalog.Feature'),
+            ],
+            'min_length' => 3,
+            'limit' => 1,
+            'identifier_field' => 'unique_identifier',
+            'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
+        ]);
     }
 }

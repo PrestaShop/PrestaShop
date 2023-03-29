@@ -510,7 +510,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType:
   PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
   PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
-  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductType:
+  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductItemType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
@@ -773,6 +773,7 @@ services:
   PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
   PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType:
   PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType:
+  PrestaShopBundle\Form\Admin\Type\SearchProductType:
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:
