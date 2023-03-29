@@ -31,32 +31,9 @@ use PrestaShopBundle\Form\Admin\Type\SearchProductType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ActionsType extends TranslatorAwareType
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var string
-     */
-    private $languageIsoCode;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        RouterInterface $router,
-        string $employeeIsoCode
-    ) {
-        parent::__construct($translator, $locales);
-        $this->router = $router;
-        $this->languageIsoCode = $employeeIsoCode;
-    }
-
     /**
      * {@inheritDoc}
      */

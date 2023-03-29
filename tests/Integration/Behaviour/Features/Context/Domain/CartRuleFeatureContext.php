@@ -718,7 +718,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @param int $totalQuantity
      * @param int $quantityPerUser
      * @param CartRuleActionInterface $cartRuleAction
-     * @param float $minimumAmount
+     * @param string $minimumAmount
      * @param int $minimumAmountCurrencyId
      * @param bool $minimumAmountTaxIncluded
      * @param bool $minimumAmountShippingIncluded
@@ -729,9 +729,6 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @param int|null $discountProductId
      *
      * @return CartRuleId
-     *
-     * @throws CartRuleConstraintException
-     * @throws DomainConstraintException
      */
     private function createCartRule(
         string $nameInDefaultLanguage,
@@ -803,9 +800,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * Create a cart rule action that can be used for cart rule creation.
      *
      * @param bool $isFreeShipping
-     * @param float|null $percentage
+     * @param string|null $percentage
      * @param bool|null $percentageAppliesToDiscountedProducts
-     * @param float|null $amount
+     * @param string|null $amount
      * @param int|null $amountCurrencyId
      * @param bool|null $amountTaxIncluded
      * @param int|null $giftProductId
@@ -819,13 +816,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     private function createCartRuleAction(
         bool $isFreeShipping,
-        string $percentage = null,
-        bool $percentageAppliesToDiscountedProducts = null,
-        string $amount = null,
-        int $amountCurrencyId = null,
-        bool $amountTaxIncluded = null,
-        int $giftProductId = null,
-        int $giftProductAttributeId = null
+        ?string $percentage = null,
+        ?bool $percentageAppliesToDiscountedProducts = null,
+        ?string $amount = null,
+        ?int $amountCurrencyId = null,
+        ?bool $amountTaxIncluded = null,
+        ?int $giftProductId = null,
+        ?int $giftProductAttributeId = null
     ): CartRuleActionInterface {
         $builder = new CartRuleActionBuilder();
 

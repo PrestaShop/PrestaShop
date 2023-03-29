@@ -58,7 +58,7 @@ class CartRuleActionBuilderTest extends TestCase
                     true
                 )
             )
-            ->setPercentageDiscount(new PercentageDiscount(10, true))
+            ->setPercentageDiscount(new PercentageDiscount('10', true))
             ->build();
     }
 
@@ -87,7 +87,7 @@ class CartRuleActionBuilderTest extends TestCase
     public function testItCorrectlyBuildsPercentageDiscountAction()
     {
         $action = (new CartRuleActionBuilder())
-            ->setPercentageDiscount(new PercentageDiscount(10, true))
+            ->setPercentageDiscount(new PercentageDiscount('10', true))
             ->build();
 
         $this->assertInstanceOf(PercentageDiscountAction::class, $action);
@@ -145,7 +145,7 @@ class CartRuleActionBuilderTest extends TestCase
             new Money(new DecimalNumber('100'), new CurrencyId(1)),
             true
         );
-        $percentage = new PercentageDiscount(30.5, true);
+        $percentage = new PercentageDiscount('30.5', true);
         $giftProduct = new GiftProduct(1);
 
         // [Amount, Percentage, Is free shipping, Expected result]
