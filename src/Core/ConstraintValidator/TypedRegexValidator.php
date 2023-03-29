@@ -210,7 +210,7 @@ class TypedRegexValidator extends ConstraintValidator
         return $match;
     }
 
-    private function buildViolation(Constraint $constraint, string $value): void
+    private function buildViolation(TypedRegex $constraint, string $value): void
     {
         $this->context->buildViolation($constraint->message)
             ->setTranslationDomain('Admin.Notifications.Error')

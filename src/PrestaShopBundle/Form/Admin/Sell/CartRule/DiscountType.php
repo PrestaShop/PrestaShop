@@ -82,7 +82,6 @@ class DiscountType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            //@todo: PriceReductionType missing percentage constraint globally.
             ->add('reduction', PriceReductionType::class, [
                 'currency_select' => true,
                 'label' => false,
