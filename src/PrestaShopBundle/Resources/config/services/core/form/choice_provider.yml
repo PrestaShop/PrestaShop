@@ -1,8 +1,6 @@
 services:
   _defaults:
     public: true
-    bind:
-      $translator: '@translator'
 
   prestashop.core.form.choice_provider.language_by_id:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
