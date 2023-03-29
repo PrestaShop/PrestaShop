@@ -27,6 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleSettings;
 use PrestaShopBundle\Form\Admin\Type\GeneratableTextType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -34,6 +37,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class InformationType extends TranslatorAwareType
 {
@@ -51,6 +55,14 @@ class InformationType extends TranslatorAwareType
                     'This will be displayed in the cart summary, as well as on the invoice.',
                     'Admin.Catalog.Help'
                 ),
+                'options' => [
+                    'constraints' => [
+                        new Length(['max' => CartRuleSettings::NAME_MAX_LENGTH]),
+                    ],
+                ],
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
             ])
             ->add('description', TextareaType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
@@ -59,6 +71,10 @@ class InformationType extends TranslatorAwareType
                     'For your eyes only. This will never be displayed to the customer.',
                     'Admin.Catalog.Help'
                 ),
+                'constraints' => [
+                    new TypedRegex(TypedRegex::CLEAN_HTML_NO_IFRAME),
+                    new Length(['max' => CartRuleSettings::DESCRIPTION_MAX_LENGTH]),
+                ],
             ])
             ->add('code', GeneratableTextType::class, [
                 'label' => $this->trans('Code', 'Admin.Global'),
@@ -69,6 +85,10 @@ class InformationType extends TranslatorAwareType
                     'Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.',
                     'Admin.Catalog.Help'
                 ),
+                'constraints' => [
+                    new TypedRegex(TypedRegex::CLEAN_HTML_NO_IFRAME),
+                    new Length(['max' => CartRuleSettings::CODE_MAX_LENGTH]),
+                ],
             ])
             ->add('highlight', SwitchType::class, [
                 'row_attr' => [
@@ -76,8 +96,6 @@ class InformationType extends TranslatorAwareType
                 ],
                 'attr' => [
                     // disabled by default, but correct state should be handled by js depending if field "code" is not empty
-                    // @todo: can be improved by adding form listener, but not sure if its worth it
-                    // @todo: also, in legacy form visibility was toggled (not availablility), is it ok this "new way"?
                     'disabled' => true,
                 ],
                 'label' => $this->trans('Highlight', 'Admin.Catalog.Feature'),

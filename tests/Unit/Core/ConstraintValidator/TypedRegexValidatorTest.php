@@ -407,6 +407,66 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @dataProvider getDataForTestHTMLType
+     *
+     * @param string $value
+     * @param bool $expectSuccess
+     */
+    public function testHTMLType(string $value, bool $allowIframe, bool $expectSuccess): void
+    {
+        if ($allowIframe) {
+            $type = TypedRegex::CLEAN_HTML_ALLOW_IFRAME;
+        } else {
+            $type = TypedRegex::CLEAN_HTML_NO_IFRAME;
+        }
+
+        $constraint = new TypedRegex($type);
+
+        $this->validator->validate($value, $constraint);
+
+        if ($expectSuccess) {
+            $this->assertNoViolation();
+        } else {
+            $this->buildViolation($constraint->message)
+                ->setParameter('%s', '"' . $value . '"')
+                ->assertRaised();
+        }
+    }
+
+    public function getDataForTestHTMLType(): iterable
+    {
+        yield ['whatever', false, true];
+        yield ['whatever', true, true];
+        yield ['<html></html>', true, true];
+        yield ['<html></html>', false, true];
+        yield ['<div></div>', true, true];
+        yield ['<div></div>', false, true];
+        yield ['<iframe>', true, true];
+        yield ['<iframe>', false, false];
+        yield ['<script>', true, false];
+        yield ['<script>', false, false];
+
+        $events = [
+            'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus',
+            'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter',
+            'onmouseleave', 'onerror', 'onselect', 'onreset', 'onabort', 'ondragdrop', 'onresize', 'onactivate', 'onafterprint',
+            'onmoveend', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy' . 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus',
+            'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onmove', 'onbounce', 'oncellchange',
+            'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete',
+            'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'onmousewheel', 'ondragleave', 'ondragover', 'ondragstart',
+            'ondrop', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocusin', 'onfocusout', 'onhashchange', 'onhelp',
+            'oninput', 'onlosecapture', 'onmessage', 'onmouseup', 'onmovestart', 'onoffline', 'ononline', 'onpaste', 'onpropertychange',
+            'onreadystatechange', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted',
+            'onscroll', 'onsearch', 'onselectionchange', 'onselectstart', 'onstart',
+        ];
+
+        foreach ($events as $event) {
+            yield ["<div $event=\"whatever\">", true, false];
+            yield ["<div $event=\"whatever\">", false, false];
+        }
+    }
+
+    /**
      * @return array[]
      */
     public function getDataForLinkRewriteTest(): array
