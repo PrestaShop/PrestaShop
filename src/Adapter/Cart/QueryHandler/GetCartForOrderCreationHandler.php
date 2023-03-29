@@ -390,7 +390,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private function fetchCartDeliveryOptions(array $deliveryOptionsByAddress, int $deliveryAddressId)
     {
         $deliveryOptions = [];
-        if(empty($deliveryOptionsByAddress)){
+        if (empty($deliveryOptionsByAddress)) {
             return $deliveryOptions;
         }
         // legacy multishipping feature allowed to split cart shipping to multiple addresses.
