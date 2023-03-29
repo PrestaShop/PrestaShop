@@ -368,15 +368,24 @@ class AddCartRule extends BOBasePage {
     // Set product selection
     if (cartRuleData.productSelection) {
       await this.setChecked(page, this.productSelectionCheckboxButton);
-      await this.waitForSelectorAndClick(page, this.productSelectionButton);
 
       for (let i = 0; i < cartRuleData.productSelectionNumber; i++) {
         const selectorIndex = i + 1;
+        console.log(selectorIndex);
+        await this.waitForSelectorAndClick(page, this.productSelectionButton);
         await this.setValue(page, this.productSelectionGroupQuantity(selectorIndex), cartRuleData.productRestriction[i].quantity);
-        await this.selectByVisibleText(page, this.productSelectionRuleType(selectorIndex), cartRuleData.productRestriction[i].ruleType);
+        await this.selectByVisibleText(
+          page,
+          this.productSelectionRuleType(selectorIndex),
+          cartRuleData.productRestriction[i].ruleType,
+        );
         await this.waitForSelectorAndClick(page, this.productSelectionAddButton(selectorIndex));
         await this.waitForSelectorAndClick(page, this.productSelectionChooseButton(selectorIndex));
-        await this.selectByValue(page, this.productSelectionSelectButton(selectorIndex), cartRuleData.productRestriction[i].value);
+        await this.selectByValue(
+          page,
+          this.productSelectionSelectButton(selectorIndex),
+          cartRuleData.productRestriction[i].value,
+        );
         await this.waitForSelectorAndClick(page, this.productRestrictionSelectAddButton(selectorIndex));
         await this.waitForSelectorAndClick(page, this.closeFancyBoxButton);
       }

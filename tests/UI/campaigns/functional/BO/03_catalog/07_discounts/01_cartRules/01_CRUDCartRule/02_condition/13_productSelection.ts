@@ -27,8 +27,19 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_productRestriction';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_productSelection';
 
+/*
+Scenario:
+- Create cart rule with product restricted
+- Go to FO > Add 3 products to the cart (the product selected in the Cart rule + 2 other products)
+- Add the discount and check the total after discount
+- Remove one product from the cart and check the total after discount
+- Remove the product restriction and check that the discount is deleted
+- Remove the last product from the cart
+Post-condition:
+- Delete the created cart rule
+ */
 describe('BO - Catalog - Cart rules : Restrictions - Product selection', async () => {
   let browserContext: BrowserContext;
   let page: Page;
@@ -167,7 +178,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
     });
 
     it('should check the discount value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue1', baseContext);
 
       const total = Products.demo_8.finalPrice + Products.demo_1.finalPrice + Products.demo_3.finalPrice;
 
@@ -187,7 +198,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
     });
 
     it('should check the discount value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue2', baseContext);
 
       const total = Products.demo_8.finalPrice + Products.demo_3.finalPrice;
 
@@ -223,6 +234,6 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
     });
   });
 
-  // post condition : delete cart rule
+  // post condition : Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_1`);
 });

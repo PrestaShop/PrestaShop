@@ -1,6 +1,5 @@
 import type CustomerData from '@data/faker/customer';
 import type ProductData from '@data/faker/product';
-import type CartRuleProductSelectionData from '@data/faker/cartRuleProductSelection';
 
 type CartRuleCreator = {
   name?: string

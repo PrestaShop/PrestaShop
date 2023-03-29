@@ -146,10 +146,10 @@ export default class CartRuleData {
     /** @type {boolean} True to enable product selection on the cart rule */
     this.productSelection = cartRuleToCreate.productSelection || false;
 
-    /** @type {number} True to enable product selection on the cart rule */
+    /** @type {number} Number of product selection */
     this.productSelectionNumber = cartRuleToCreate.productSelectionNumber || 1;
 
-    /** @type {CartRuleProductSelection[]} Minimum amount parameters */
+    /** @type {CartRuleProductSelection[]} Values of product restriction */
     this.productRestriction = cartRuleToCreate.productRestriction || [];
 
     // Actions
