@@ -1,5 +1,6 @@
 import type CustomerData from '@data/faker/customer';
 import type ProductData from '@data/faker/product';
+import type CartRuleProductSelectionData from '@data/faker/cartRuleProductSelection';
 
 type CartRuleCreator = {
   name?: string
@@ -10,9 +11,9 @@ type CartRuleCreator = {
   partialUse?: boolean
   priority?: number
   status?: boolean
-  customer?: CustomerData|null
-  dateFrom?: string|null
-  dateTo?: string|null
+  customer?: CustomerData | null
+  dateFrom?: string | null
+  dateTo?: string | null
   minimumAmount?: CartRuleMinimalAmount
   quantity?: number
   quantityPerUser?: number
@@ -20,15 +21,18 @@ type CartRuleCreator = {
   countrySelection?: boolean
   countryIDToRemove?: number
   customerGroupSelection?: boolean
+  productSelection?: boolean
+  productSelectionNumber?: number
+  productRestriction?: CartRuleProductSelection[]
   freeShipping?: boolean
   discountType?: string
   discountPercent?: number
   discountAmount?: CartRuleDiscountAmount
   applyDiscountTo?: string
-  product?: string|null
+  product?: string | null
   excludeDiscountProducts?: boolean
   freeGift?: boolean
-  freeGiftProduct?: ProductData|null
+  freeGiftProduct?: ProductData | null
 };
 
 type CartRuleDiscountAmount = {
@@ -43,8 +47,15 @@ type CartRuleMinimalAmount = {
   shipping: string,
 }
 
+type CartRuleProductSelection = {
+  quantity: number,
+  ruleType: string,
+  value: number,
+}
+
 export {
   CartRuleCreator,
   CartRuleDiscountAmount,
   CartRuleMinimalAmount,
+  CartRuleProductSelection,
 };

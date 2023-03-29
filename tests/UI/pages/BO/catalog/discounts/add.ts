@@ -90,6 +90,28 @@ class AddCartRule extends BOBasePage {
 
   private readonly customerGroupAddButton: string;
 
+  private readonly productSelectionCheckboxButton: string;
+
+  private readonly productSelectionButton: string;
+
+  private readonly productRuleGroupTable: string;
+
+  private readonly productSelectionGroup: (groupNumber: number) => string;
+
+  private readonly productSelectionGroupQuantity: (groupNumber: number) => string;
+
+  private readonly productSelectionRuleType: (groupNumber: number) => string;
+
+  private readonly productSelectionAddButton: (groupNumber: number) => string;
+
+  private readonly productSelectionChooseButton: (groupNumber: number) => string;
+
+  private readonly productSelectionSelectButton: (groupNumber: number) => string;
+
+  private readonly productRestrictionSelectAddButton: (groupNumber: number) => string;
+
+  private readonly closeFancyBoxButton: string;
+
   private readonly actionsTabLink: string;
 
   private readonly freeShippingToggle: (toggle: string) => string;
@@ -190,7 +212,7 @@ class AddCartRule extends BOBasePage {
     this.countryGroupRemoveButton = '#country_select_remove';
     this.countryGroupAddButton = '#country_select_add';
 
-    // ---Carrier Restriction
+    // Carrier Restriction
     this.carrierRestriction = '#carrier_restriction';
     this.carrierRestrictionPickUpInStore = '#carrier_select_2 > option:nth-child(1)';
     this.carrierRestrictionDeliveryNextDay = '#carrier_select_2 > option:nth-child(2)';
@@ -205,6 +227,21 @@ class AddCartRule extends BOBasePage {
     this.customerGroupVisitor = `${this.customerGroupSelection} option:nth-child(3)`;
     this.customerGroupRemoveButton = '#group_select_remove';
     this.customerGroupAddButton = '#group_select_add';
+
+    // Product selection
+    this.productSelectionCheckboxButton = '#product_restriction';
+    this.productSelectionButton = '#product_restriction_div a.btn-default ';
+    this.productRuleGroupTable = '#product_rule_group_table';
+    this.productSelectionGroup = (groupNumber: number) => `#product_rule_group_${groupNumber}_tr`;
+    this.productSelectionGroupQuantity = (groupNumber: number) => `${this.productSelectionGroup(groupNumber)}`
+      + ` input[name='product_rule_group_${groupNumber}_quantity']`;
+    this.productSelectionRuleType = (groupNumber: number) => `#product_rule_type_${groupNumber}`;
+    this.productSelectionAddButton = (groupNumber: number) => `${this.productSelectionGroup(groupNumber)}`
+      + ' a[href*=addProductRule]';
+    this.productSelectionChooseButton = (groupNumber: number) => `#product_rule_1_${groupNumber}_choose_link`;
+    this.productSelectionSelectButton = (groupNumber: number) => `#product_rule_select_1_${groupNumber}_1`;
+    this.productRestrictionSelectAddButton = (groupNumber: number) => `#product_rule_select_1_${groupNumber}_add`;
+    this.closeFancyBoxButton = 'body div.fancybox-overlay.fancybox-overlay-fixed a.fancybox-close';
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
@@ -326,6 +363,23 @@ class AddCartRule extends BOBasePage {
       await this.setChecked(page, this.customerGroupRestriction);
       await page.click(this.customerGroupCustomer);
       await page.click(this.customerGroupRemoveButton);
+    }
+
+    // Set product selection
+    if (cartRuleData.productSelection) {
+      await this.setChecked(page, this.productSelectionCheckboxButton);
+      await this.waitForSelectorAndClick(page, this.productSelectionButton);
+
+      for (let i = 0; i < cartRuleData.productSelectionNumber; i++) {
+        const selectorIndex = i + 1;
+        await this.setValue(page, this.productSelectionGroupQuantity(selectorIndex), cartRuleData.productRestriction[i].quantity);
+        await this.selectByVisibleText(page, this.productSelectionRuleType(selectorIndex), cartRuleData.productRestriction[i].ruleType);
+        await this.waitForSelectorAndClick(page, this.productSelectionAddButton(selectorIndex));
+        await this.waitForSelectorAndClick(page, this.productSelectionChooseButton(selectorIndex));
+        await this.selectByValue(page, this.productSelectionSelectButton(selectorIndex), cartRuleData.productRestriction[i].value);
+        await this.waitForSelectorAndClick(page, this.productRestrictionSelectAddButton(selectorIndex));
+        await this.waitForSelectorAndClick(page, this.closeFancyBoxButton);
+      }
     }
 
     // Fill minimum amount values
