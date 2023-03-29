@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CartStatusesChoiceProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
@@ -47,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -81,24 +83,32 @@ final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
     private $isMultiStoreFeatureUsed;
 
     /**
+     * @var CartStatusesChoiceProvider
+     */
+    private $cartStatusesChoiceProvider;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param string $contextDateFormat
      * @param AccessibilityCheckerInterface $deleteCartAccessibilityChecker
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param bool $isMultiStoreFeatureUsed
+     * @param CartStatusesChoiceProvider $cartStatusesChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         string $contextDateFormat,
         AccessibilityCheckerInterface $deleteCartAccessibilityChecker,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        bool $isMultiStoreFeatureUsed
+        bool $isMultiStoreFeatureUsed,
+        CartStatusesChoiceProvider $cartStatusesChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->contextDateFormat = $contextDateFormat;
         $this->deleteCartAccessibilityChecker = $deleteCartAccessibilityChecker;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->isMultiStoreFeatureUsed = $isMultiStoreFeatureUsed;
+        $this->cartStatusesChoiceProvider = $cartStatusesChoiceProvider;
     }
 
     /**
@@ -136,13 +146,20 @@ final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
                 'alignment' => 'center',
             ])
             )
-            ->add((new BadgeColumn('id_order'))
+            ->add((new DataColumn('id_order'))
             ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
             ->setOptions([
                 'field' => 'id_order',
                 'alignment' => 'center',
+            ])
+            )
+            ->add((new BadgeColumn('status'))
+            ->setName($this->trans('Status', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'status',
+                'alignment' => 'center',
                 'badge_type' => '',
-                'badge_type_field' => 'id_order_badge_color',
+                'badge_type_field' => 'status_badge_color',
             ])
             )
             ->add((new DataColumn('customer_name'))
@@ -245,6 +262,17 @@ final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
                     ->setAssociatedColumn('id_order')
                     ->setTypeOptions([
                         'required' => false,
+                    ])
+            )
+            ->add(
+                (new Filter('status', ChoiceType::class))
+                    ->setAssociatedColumn('status')
+                    ->setTypeOptions([
+                        'choices' => $this->cartStatusesChoiceProvider->getChoices(),
+                        'expanded' => false,
+                        'multiple' => false,
+                        'required' => false,
+                        'choice_translation_domain' => false,
                     ])
             )
             ->add(

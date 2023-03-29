@@ -542,7 +542,6 @@ services:
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - '@translator'
       - '@prestashop.adapter.shop.context'
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextShopGroupId()"

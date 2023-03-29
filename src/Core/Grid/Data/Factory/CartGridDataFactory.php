@@ -135,10 +135,10 @@ class CartGridDataFactory implements GridDataFactoryInterface
             $cartForViewing->getCartSummary()['total_products'],
             $this->contextCurrencyIsoCode
         );
-        $record['id_order_badge_color'] = $record['status'] === CartStatusType::ORDERED ? 'success' : 'danger';
-        $record['id_order'] = $this->getOrderLabel($record);
 
         $record['unremovable'] = $record['status'] === CartStatusType::ORDERED;
+        $record['status_badge_color'] = $record['status'] === CartStatusType::ORDERED ? 'success' : 'danger';
+        $record['status'] = $this->getOrderLabel($record);
 
         $record['customer_online_id'] = $record['customer_online'];
         $record['customer_online'] = $record['customer_online_id'] > 0 ?
@@ -159,7 +159,7 @@ class CartGridDataFactory implements GridDataFactoryInterface
     {
         switch ($record['status']) {
             case CartStatusType::ORDERED:
-                return $record['id_order'];
+                return $this->translator->trans('Ordered', [], 'Admin.Orderscustomers.Feature');
             case CartStatusType::NOT_ORDERED:
                 return $this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature');
             case CartStatusType::ABANDONED_CART:
