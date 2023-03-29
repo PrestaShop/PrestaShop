@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShopBundle\Translation\TranslatorInterface;
@@ -47,23 +48,23 @@ final class AverageOrderValueKpi implements KpiInterface
     private $configuration;
 
     /**
-     * @var string
+     * @var LegacyContext
      */
-    private $sourceLink;
+    private $contextAdapter;
 
     /**
      * @param TranslatorInterface $translator
      * @param ConfigurationInterface $configuration
-     * @param string $sourceLink
+     * @param LegacyContext $contextAdapter
      */
     public function __construct(
         TranslatorInterface $translator,
         ConfigurationInterface $configuration,
-        string $sourceLink
+        LegacyContext $contextAdapter
     ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
-        $this->sourceLink = $sourceLink;
+        $this->contextAdapter = $contextAdapter;
     }
 
     /**
@@ -86,7 +87,11 @@ final class AverageOrderValueKpi implements KpiInterface
             );
         }
 
-        $helper->source = $this->sourceLink;
+        $helper->source = $this->contextAdapter->getAdminLink('AdminStats', true, [
+            'ajax' => 1,
+            'action' => 'getKpi',
+            'kpi' => 'average_order_value',
+        ]);
         $helper->refresh = (bool) ($this->configuration->get('AVG_ORDER_VALUE_EXPIRE') < time());
 
         return $helper->generate();
