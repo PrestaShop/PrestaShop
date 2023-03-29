@@ -191,13 +191,21 @@ describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
       await cartPage.addPromoCode(page, cartRuleCode.code);
 
       const totalAfterDiscount = await cartPage.getATIPrice(page);
-      await expect(totalAfterDiscount).to.equal((Products.demo_1.finalPrice - Products.demo_1.finalPrice).toFixed(2));
+      await expect(totalAfterDiscount).to.equal(0);
+    });
+
+    it('should go to Home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
+
+      await foHomePage.clickOnHeaderLink(page, 'Logo');
+
+      const pageTitle = await foHomePage.getPageTitle(page);
+      await expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
     it('should go to cart page and delete the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      await foHomePage.clickOnHeaderLink(page, 'Logo');
       await foHomePage.goToCartPage(page);
 
       await cartPage.deleteProduct(page, 1);

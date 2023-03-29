@@ -371,7 +371,6 @@ class AddCartRule extends BOBasePage {
 
       for (let i = 0; i < cartRuleData.productSelectionNumber; i++) {
         const selectorIndex = i + 1;
-        console.log(selectorIndex);
         await this.waitForSelectorAndClick(page, this.productSelectionButton);
         await this.setValue(page, this.productSelectionGroupQuantity(selectorIndex), cartRuleData.productRestriction[i].quantity);
         await this.selectByVisibleText(

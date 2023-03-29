@@ -26,7 +26,7 @@ import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import basicHelper from "@utils/basicHelper";
+import basicHelper from '@utils/basicHelper';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_checkTotalAvailable';
 

@@ -42,7 +42,7 @@ Scenario:
 Post-condition:
 - Delete the created cart rule
  */
-describe('BO - Catalog - Cart rules : Carrier Restriction', async () => {
+describe('BO - Catalog - Cart rules : Carrier selection', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -181,8 +181,11 @@ describe('BO - Catalog - Cart rules : Carrier Restriction', async () => {
 
       await checkoutPage.goToShippingStep(page);
 
-      const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(page, Carriers.myCarrier.id);
-      await expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.be.true;
+      await checkoutPage.chooseShippingMethodAndAddComment(page, Carriers.myCarrier.id);
+
+      const priceATI = await checkoutPage.getATIPrice(page);
+      await expect(priceATI.toFixed(2))
+        .to.equal((Products.demo_6.combinations[0].price + Carriers.myCarrier.priceTTC).toFixed(2));
     });
 
     it('should set the promo code for second time and check total after discount', async function () {
@@ -197,15 +200,8 @@ describe('BO - Catalog - Cart rules : Carrier Restriction', async () => {
       await expect(priceATI.toFixed(2)).to.equal(totalAfterDiscount.toFixed(2));
     });
 
-    it('should remove the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
-
-      const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
-      await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
-    });
-
-    it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
+    it('should go to Home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
       await foHomePage.clickOnHeaderLink(page, 'Logo');
 
@@ -213,7 +209,7 @@ describe('BO - Catalog - Cart rules : Carrier Restriction', async () => {
       await expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
-    it('should click go to cart page and delete the product', async function () {
+    it('should go to cart page and delete the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       await foHomePage.goToCartPage(page);
