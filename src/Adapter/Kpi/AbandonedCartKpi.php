@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
@@ -50,14 +51,9 @@ final class AbandonedCartKpi implements KpiInterface
     private $configuration;
 
     /**
-     * @var string
+     * @var LegacyContext
      */
-    private $clickLink;
-
-    /**
-     * @var string
-     */
-    private $sourceLink;
+    private $contextAdapter;
 
     /**
      * @var string
@@ -77,27 +73,23 @@ final class AbandonedCartKpi implements KpiInterface
     /**
      * @param TranslatorInterface $translator
      * @param ConfigurationInterface $configuration
-     * @param string $clickLink
-     * @param string $sourceLink
+     * @param LegacyContext $contextAdapter
      * @param UrlGeneratorInterface $router
-     * @param string $dateFormat
+     * @param FeatureFlagRepository $featureFlag
      */
     public function __construct(
         TranslatorInterface $translator,
         ConfigurationInterface $configuration,
-        string $clickLink,
-        string $sourceLink,
+        LegacyContext $contextAdapter,
         UrlGeneratorInterface $router,
-        string $dateFormat,
         FeatureFlagRepository $featureFlag
     ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
-        $this->clickLink = $clickLink;
-        $this->sourceLink = $sourceLink;
+        $this->contextAdapter = $contextAdapter;
         $this->router = $router;
-        $this->dateFormat = $dateFormat;
         $this->featureFlag = $featureFlag;
+        $this->dateFormat = $this->contextAdapter->getLanguage()->date_format_lite;
     }
 
     /**
@@ -114,7 +106,9 @@ final class AbandonedCartKpi implements KpiInterface
             '%date1%' => date($this->dateFormat, strtotime('-2 day')),
             '%date2%' => date($this->dateFormat, strtotime('-1 day')),
         ], 'Admin.Orderscustomers.Feature');
-        $helper->href = $this->clickLink;
+        $helper->href = $this->contextAdapter->getAdminLink('AdminCarts', true, [
+            'action' => 'filterOnlyAbandonedCarts',
+        ]);
 
         if ($this->featureFlag->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CARTS_INDEX)) {
             $helper->href = $this->router->generate('admin_carts_index', [
@@ -126,7 +120,11 @@ final class AbandonedCartKpi implements KpiInterface
             $helper->value = $this->configuration->get('ABANDONED_CARTS');
         }
 
-        $helper->source = $this->sourceLink;
+        $helper->source = $this->contextAdapter->getAdminLink('AdminStats', true, [
+            'ajax' => 1,
+            'action' => 'getKpi',
+            'kpi' => 'abandoned_cart',
+        ]);
         $helper->refresh = (bool) ($this->configuration->get('ABANDONED_CARTS_EXPIRE') < time());
 
         return $helper->generate();
