@@ -51,7 +51,6 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
     public function createCustomerUsingCommand(string $customerGroupReference, TableNode $tableNode)
     {
         $data = $this->localizeByRows($tableNode);
-        $commandBus = $this->getCommandBus();
 
         $command = new AddCustomerGroupCommand(
             $data['name'],
@@ -62,7 +61,7 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
         );
 
         /** @var GroupId $id */
-        $id = $commandBus->handle($command);
+        $id = $this->getCommandBus()->handle($command);
         $this->getSharedStorage()->set($customerGroupReference, $id->getValue());
     }
 
@@ -91,9 +90,7 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
             new DecimalNumber($data['reduction']),
             (bool) $data['displayPriceTaxExcluded'],
             (bool) $data['showPrice'],
-            array_map(function (string $shopId) {
-                return (int) $shopId;
-            }, explode(',', $data['shopIds']))
+            $this->referencesToIds($data['shopIds'])
         );
     }
 

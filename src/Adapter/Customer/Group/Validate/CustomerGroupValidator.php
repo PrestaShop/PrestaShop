@@ -42,12 +42,12 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
         $this->shopRepository = $shopRepository;
     }
 
-    public function validateCreation(CustomerGroup $customerGroup)
+    public function validate(CustomerGroup $customerGroup): void
     {
         $this->validateShopsExists($customerGroup->id_shop_list);
     }
 
-    public function validateShopsExists(array $shopIds)
+    private function validateShopsExists(array $shopIds): void
     {
         foreach ($shopIds as $shopId) {
             $this->shopRepository->assertShopExists($shopId);

@@ -69,7 +69,6 @@ Feature: Search combinations to associate them in the BO
       | ean13     | 978020137962      |
       | mpn       | mpn1              |
       | reference | ref1              |
-    # See DetailsAssertionFeatureContext::transformDetails
     Then product "champaign_bottle" should have following details:
       | product detail | value             |
       | isbn           | 978-3-16-148410-0 |
@@ -145,7 +144,6 @@ Feature: Search combinations to associate them in the BO
     # General reference on product will be used for pink wine which has no reference on the combination
     When I update product "wine_bottle" with following values:
       | reference | ref3wine |
-    # See DetailsAssertionFeatureContext::transformDetails
     Then product "wine_bottle" should have following details:
       | product detail | value    |
       | isbn           |          |

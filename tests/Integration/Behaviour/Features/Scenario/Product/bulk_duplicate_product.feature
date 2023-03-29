@@ -218,7 +218,6 @@ Feature: Duplicate product from Back Office (BO).
       | condition           | used         |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
-    # See DetailsAssertionFeatureContext::transformDetails
     And product "copy_of_product2" should have following details:
       | product detail | value             |
       | isbn           | 978-3-16-148410-1 |
@@ -310,7 +309,6 @@ Feature: Duplicate product from Back Office (BO).
       | condition           | new          |
       | show_condition      | false        |
       | manufacturer        | studioDesign |
-    # See DetailsAssertionFeatureContext::transformDetails
     And product "copy_of_product2" should have following details:
       | product detail | value             |
       | isbn           | 978-3-16-148410-1 |

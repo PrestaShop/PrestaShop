@@ -35,4 +35,4 @@ Feature: CustomerGroup Management
       | reduction               | 1.23              |
       | displayPriceTaxExcluded | true              |
       | showPrice               | true              |
-      | shopIds                 | 1,2,3 |
+      | shopIds                 | shop1,shop2,shop3 |

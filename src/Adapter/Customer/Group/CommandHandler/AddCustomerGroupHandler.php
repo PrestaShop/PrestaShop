@@ -61,7 +61,7 @@ class AddCustomerGroupHandler implements AddCustomerGroupHandlerInterface
         $customerGroup->show_prices = $command->showPrice();
         $customerGroup->id_shop_list = $command->getShopIds();
 
-        $this->customerGroupValidator->validateCreation($customerGroup);
+        $this->customerGroupValidator->validate($customerGroup);
 
         return $this->customerGroupRepository->create($customerGroup);
     }
