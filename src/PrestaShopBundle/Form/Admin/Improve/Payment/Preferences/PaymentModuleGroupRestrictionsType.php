@@ -34,9 +34,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class PaymentModuleGroupRestrictionsType defines Group Restriction form in "Improve > Payment > Preferences" page.
+ * Defines Group Restriction form in "Improve > Payment > Preferences" page.
  */
-class PaymentModuleGroupRestrictionsType extends PaymentModuleRestrictionsParentType
+class PaymentModuleGroupRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
      * @var array

@@ -35,9 +35,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class PaymentModuleCurrencyRestrictionsType defines Currency Restriction form in "Improve > Payment > Preferences" page.
+ * Defines Currency Restriction form in "Improve > Payment > Preferences" page.
  */
-class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsParentType
+class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
      * @var array

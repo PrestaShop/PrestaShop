@@ -35,9 +35,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class PaymentModuleCountryRestrictionsType defines Country Restriction form in "Improve > Payment > Preferences" page.
+ * Defines Country Restriction form in "Improve > Payment > Preferences" page.
  */
-class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsParentType
+class PaymentModuleCountryRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
      * @var array

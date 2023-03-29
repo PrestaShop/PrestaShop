@@ -28,14 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
-use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class PaymentModuleRestrictionsParentType defines is parent for all restriction forms in Payment Preferences
+ * Defines is abstract for all restriction forms in Payment Preferences
  */
-class PaymentModuleRestrictionsParentType extends TranslatorAwareType
+abstract class AbstractPaymentModuleRestrictionsType extends TranslatorAwareType
 {
     /**
      * @var array
@@ -55,6 +56,17 @@ class PaymentModuleRestrictionsParentType extends TranslatorAwareType
         parent::__construct($translator, $locales);
 
         $this->paymentModules = $this->sortPaymentModules($paymentModules);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
+        ]);
     }
 
     /**

@@ -34,9 +34,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class PaymentModuleCarrierRestrictionsType defines Carrier Restriction form in "Improve > Payment > Preferences" page.
+ * Defines Carrier Restriction form in "Improve > Payment > Preferences" page.
  */
-class PaymentModuleCarrierRestrictionsType extends PaymentModuleRestrictionsParentType
+class PaymentModuleCarrierRestrictionsType extends AbstractPaymentModuleRestrictionsType
 {
     /**
      * @var array
