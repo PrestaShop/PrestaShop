@@ -1632,8 +1632,8 @@ class LinkCore
      * @param int|null $idShop
      *
      * @return array<string>
-     * 0 => Secure domain name of the shop
-     * 1 => Unsecured domain name of the shop
+     *                       0 => Secure domain name of the shop
+     *                       1 => Unsecured domain name of the shop
      */
     private function getShopDomainActive(Shop $shop, ?int $idShop): array
     {
