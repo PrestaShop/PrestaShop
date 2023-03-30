@@ -1,10 +1,13 @@
 <!-----------------------------------------------------------------------------
-Thank you for contributing to the PrestaShop project! 
+Thank you for contributing to the PrestaShop project!
 
 Please take the time to edit the "Answers" rows below with the necessary information.
 
 Check out our contribution guidelines to find out how to complete it:
 https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/#pull-requests
+
+For type and category see:
+https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/pull-requests/#type--category
 ------------------------------------------------------------------------------>
 
 | Questions         | Answers
