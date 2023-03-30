@@ -37,7 +37,7 @@ describe('BO - Customer Service : Change status', async () => {
   const contactUsData: MessageData = new MessageData({subject: 'Customer service', reference: 'OHSATSERP'});
 
   const forwardMessageData: MessageData = new MessageData({
-    employee: `${Employees.DefaultEmployee.firstName.slice(0, 1)}. ${Employees.DefaultEmployee.lastName}`,
+    employeeName: `${Employees.DefaultEmployee.firstName.slice(0, 1)}. ${Employees.DefaultEmployee.lastName}`,
     message: 'Forward message',
   });
 

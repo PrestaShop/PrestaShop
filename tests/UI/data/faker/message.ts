@@ -15,7 +15,7 @@ export default class MessageData {
 
   public readonly lastName: string;
 
-  public readonly employee: string;
+  public readonly employeeName: string;
 
   public readonly emailAddress: string;
 
@@ -40,7 +40,7 @@ export default class MessageData {
     this.lastName = messageToCreate.lastName || faker.name.lastName();
 
     /** @type {string} employee to forward the message */
-    this.employee = messageToCreate.employee || `${this.firstName.slice(0.1)}. ${this.lastName}`;
+    this.employeeName = messageToCreate.employeeName || `${this.firstName.slice(0.1)}. ${this.lastName}`;
 
     /** @type {string} Email of the customer */
     this.emailAddress = messageToCreate.emailAddress === undefined

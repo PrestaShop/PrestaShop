@@ -168,7 +168,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<void>}
    */
   async forwardMessage(page: Page, messageData: MessageData): Promise<void> {
-    await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employee);
+    await this.selectByVisibleText(page, this.forwardModalEmployeeIDSelect, messageData.employeeName);
     await this.setValue(page, this.forwardModalCommentInput, messageData.message);
 
     await this.waitForSelectorAndClick(page, this.forwardModalSendButton);

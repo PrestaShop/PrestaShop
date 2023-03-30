@@ -2,7 +2,7 @@ type MessageCreator = {
   subject?: string
   firstName?: string
   lastName?: string
-  employee?: string
+  employeeName?: string
   emailAddress?: string
   reference?: string
   fileName?: string
