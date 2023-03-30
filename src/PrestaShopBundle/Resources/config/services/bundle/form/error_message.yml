@@ -3,7 +3,7 @@ services:
 
   PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory:
     autowire: true
-    public: false
+    public: true
     arguments:
       - !tagged core.configuration_error_factory
       - '@PrestaShopBundle\Form\ErrorMessage\LabelProvider'
