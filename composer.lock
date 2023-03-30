@@ -5962,16 +5962,16 @@
         },
         {
             "name": "prestashop/ps_bestsellers",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_bestsellers.git",
-                "reference": "be00d63fc565f10dea000e0177bd7a5f58507030"
+                "reference": "bd1e97fa82c9953bdca738946aa624a5667c6a27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_bestsellers/zipball/be00d63fc565f10dea000e0177bd7a5f58507030",
-                "reference": "be00d63fc565f10dea000e0177bd7a5f58507030",
+                "url": "https://api.github.com/repos/PrestaShop/ps_bestsellers/zipball/bd1e97fa82c9953bdca738946aa624a5667c6a27",
+                "reference": "bd1e97fa82c9953bdca738946aa624a5667c6a27",
                 "shasum": ""
             },
             "require": {
@@ -5994,9 +5994,9 @@
             "description": "PrestaShop - Best Sellers",
             "homepage": "https://github.com/PrestaShop/ps_bestsellers",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_bestsellers/tree/v1.0.5"
+                "source": "https://github.com/PrestaShop/ps_bestsellers/tree/v1.0.6"
             },
-            "time": "2023-02-03T14:47:18+00:00"
+            "time": "2023-02-28T10:35:02+00:00"
         },
         {
             "name": "prestashop/ps_brandlist",
@@ -6498,16 +6498,16 @@
         },
         {
             "name": "prestashop/ps_distributionapiclient",
-            "version": "v1.0.3",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_distributionapiclient.git",
-                "reference": "5fe5081807c0807d99fb1316392eedb540a74d5d"
+                "reference": "f1d479ff7a4b94657883b988a4b21498460806c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/5fe5081807c0807d99fb1316392eedb540a74d5d",
-                "reference": "5fe5081807c0807d99fb1316392eedb540a74d5d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/f1d479ff7a4b94657883b988a4b21498460806c1",
+                "reference": "f1d479ff7a4b94657883b988a4b21498460806c1",
                 "shasum": ""
             },
             "require": {
@@ -6543,9 +6543,9 @@
             "homepage": "https://github.com/PrestaShop/ps_distributionapiclient",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_distributionapiclient/issues",
-                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.0.3"
+                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.1.0"
             },
-            "time": "2023-02-28T14:27:55+00:00"
+            "time": "2023-03-23T16:51:38+00:00"
         },
         {
             "name": "prestashop/ps_emailalerts",
@@ -6814,16 +6814,16 @@
         },
         {
             "name": "prestashop/ps_imageslider",
-            "version": "v3.1.1",
+            "version": "v3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "ffc08180dc69d114cbc4b6b66af80796c664937c"
+                "reference": "c5980fe4e99ba6aa5139b4e0755540be42c52b88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/ffc08180dc69d114cbc4b6b66af80796c664937c",
-                "reference": "ffc08180dc69d114cbc4b6b66af80796c664937c",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/c5980fe4e99ba6aa5139b4e0755540be42c52b88",
+                "reference": "c5980fe4e99ba6aa5139b4e0755540be42c52b88",
                 "shasum": ""
             },
             "require": {
@@ -6851,9 +6851,9 @@
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_imageslider/tree/v3.1.1"
+                "source": "https://github.com/PrestaShop/ps_imageslider/tree/v3.1.2"
             },
-            "time": "2022-04-27T09:46:05+00:00"
+            "time": "2023-03-15T17:45:19+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
@@ -7265,16 +7265,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "f9e401ed96a4f4f7f60811a7110d6fe5127d9305"
+                "reference": "e421bfdc27f247c2e6361dd5eb8983e806f52459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/f9e401ed96a4f4f7f60811a7110d6fe5127d9305",
-                "reference": "f9e401ed96a4f4f7f60811a7110d6fe5127d9305",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/e421bfdc27f247c2e6361dd5eb8983e806f52459",
+                "reference": "e421bfdc27f247c2e6361dd5eb8983e806f52459",
                 "shasum": ""
             },
             "require": {
@@ -7304,9 +7304,9 @@
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_themecusto/tree/v1.2.1"
+                "source": "https://github.com/PrestaShop/ps_themecusto/tree/v1.2.2"
             },
-            "time": "2021-01-19T08:41:00+00:00"
+            "time": "2023-03-08T22:14:35+00:00"
         },
         {
             "name": "prestashop/ps_viewedproduct",
