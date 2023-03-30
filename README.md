@@ -65,10 +65,10 @@ MySQL credentials can also be found and modified in this file if needed.
 If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data`
 has write access to the whole workspace.
 
-To fully reset your repo and get a frest start run (CAREFUL: this removes all your extra files):
+To fully reset your repo and get a fresh start, run (be careful: this removes all your extra files):
 
 ```
-# clean everything not in repo (node_modules etc)
+# clean everything that is not part of the original repository (node_modules, etc.)
 git fetch origin
 git reset --hard origin/develop
 git clean -dfx
