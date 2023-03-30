@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
@@ -204,7 +206,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $form = $this->getFormBuilder()->getForm();
+        $form = $this->getFormBuilder()->getForm($this->prefillFormData($request));
         $form->handleRequest($request);
 
         try {
@@ -225,24 +227,6 @@ class CartRuleController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'showContentHeader' => false,
         ]);
-    }
-
-    /**
-     * Provides cart rule ids from request of bulk action
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getBulkCartRulesFromRequest(Request $request): array
-    {
-        $cartRuleIds = $request->request->get('cart_rule_bulk');
-
-        if (!is_array($cartRuleIds)) {
-            return [];
-        }
-
-        return array_map('intval', $cartRuleIds);
     }
 
     /**
@@ -301,6 +285,55 @@ class CartRuleController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cart_rules_index');
     }
 
+    /**
+     * This just prefills form fields that depends on query parameter like customer search input (if id is provided),
+     * all remaining data should be set in related form data provider
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function prefillFormData(Request $request): array
+    {
+        $formData = [];
+
+        $customerId = $request->query->getInt('customerId');
+        if ($customerId) {
+            /** @var ViewableCustomer $customer */
+            $customer = $this->getQueryBus()->handle(new GetCustomerForViewing($customerId));
+            $customerInfo = $customer->getPersonalInformation();
+            $formData['conditions']['customer'][] = [
+                'id_customer' => $customerId,
+                'fullname_and_email' => sprintf(
+                    '%s %s - %s',
+                    $customerInfo->getFirstname(),
+                    $customerInfo->getLastname(),
+                    $customerInfo->getEmail()
+                ),
+            ];
+        }
+
+        return $formData;
+    }
+
+    /**
+     * Provides cart rule ids from request of bulk action
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkCartRulesFromRequest(Request $request): array
+    {
+        $cartRuleIds = $request->request->get('cart_rule_bulk');
+
+        if (!is_array($cartRuleIds)) {
+            return [];
+        }
+
+        return array_map('intval', $cartRuleIds);
+    }
+
     private function getErrorMessages(Exception $e): array
     {
         return [
@@ -326,7 +359,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    protected function getFormHandler(): FormHandlerInterface
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.cart_rule_form_handler');
     }
@@ -334,7 +367,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * @return FormBuilderInterface
      */
-    protected function getFormBuilder(): FormBuilderInterface
+    private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.cart_rule_form_builder');
     }

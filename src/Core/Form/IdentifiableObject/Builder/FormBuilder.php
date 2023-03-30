@@ -102,7 +102,7 @@ final class FormBuilder implements FormBuilderInterface
         $defaultData = $this->dataProvider->getDefaultData();
         // Merge initial data in default data
         if (is_array($defaultData)) {
-            $data = array_merge($defaultData, $data);
+            $data = array_merge_recursive($defaultData, $data);
         }
 
         if (null !== $this->optionsProvider) {

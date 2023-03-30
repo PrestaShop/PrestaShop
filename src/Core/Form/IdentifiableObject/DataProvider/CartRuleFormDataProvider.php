@@ -100,6 +100,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
                 'total_available' => 1,
                 'available_per_user' => 1,
                 'restrictions' => [],
+                'customer' => [],
             ],
             'actions' => [
                 'free_shipping' => false,
