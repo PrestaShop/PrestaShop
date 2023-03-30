@@ -53,10 +53,10 @@
           type="button"
           class="btn btn-secondary btn-close"
           @click.prevent.stop="tryClose"
-          :aria-label="$t('modal.close')"
+          :aria-label="cancelLabel"
           :disabled="submittingCombinationForm"
         >
-          {{ $t('modal.cancel') }}
+          {{ cancelLabel }}
         </button>
 
         <button
@@ -214,6 +214,11 @@
       this.watchEditButtons();
       this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds());
       this.eventEmitter.on(CombinationEvents.listRendered, () => this.initCombinationIds());
+    },
+    computed: {
+      cancelLabel(): string {
+        return this.isFormUpdated ? this.$t('modal.cancel') : this.$t('modal.close');
+      },
     },
     methods: {
       watchEditButtons(): void {
@@ -445,7 +450,7 @@
     .modal-content {
       height: 100%;
       padding: 0;
-      margin: 0 1rem;
+      margin: 0;
       overflow: hidden;
 
       .modal-body {
@@ -492,16 +497,6 @@
         }
       }
     }
-  }
-
-  .history {
-    max-width: 400px;
-    width: 100%;
-    min-height: calc(100% - 3.5rem);
-    top: 50%;
-    transform: translateY(-50%);
-    height: 95%;
-    margin-right: 1rem;
   }
 }
 </style>

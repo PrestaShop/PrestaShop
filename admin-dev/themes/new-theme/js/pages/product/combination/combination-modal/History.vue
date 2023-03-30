@@ -25,6 +25,7 @@
 <template>
   <div
     class="card history"
+    :class="{ collapsed: isCollapsed, expanded: !isCollapsed }"
     @click="preventClose"
   >
     <div class="card-header">
@@ -70,6 +71,11 @@
         @paginated="constructDatas"
       />
     </div>
+
+    <div
+      class="history-handle"
+      @click="togglePanel"
+    />
   </div>
 </template>
 
@@ -82,6 +88,7 @@
   interface HistoryStates {
     paginatedDatas: Array<Record<string, any>>;
     currentPage: number;
+    forcedCollapsed: boolean | null;
   }
 
   const CombinationsEventMap = ProductEventMap.combinations;
@@ -92,6 +99,7 @@
       return {
         paginatedDatas: [],
         currentPage: 1,
+        forcedCollapsed: null,
       };
     },
     components: {
@@ -114,6 +122,14 @@
     computed: {
       areCombinationsNotEmpty(): boolean {
         return this.combinationsList.length > 0;
+      },
+      isCollapsed(): boolean {
+        // Null indicates initial state, collapsed by default, unless history has more than one combination
+        if (this.forcedCollapsed === null) {
+          return this.combinationsList.length <= 1;
+        }
+
+        return this.forcedCollapsed;
       },
     },
     methods: {
@@ -151,6 +167,15 @@
           ? 'selected'
           : null;
       },
+      togglePanel(): void {
+        // Null is initial state, collapsed by default, we toggle the panel
+        if (this.forcedCollapsed === null) {
+          // The expected toggle depends on the current state, which is this case depends on the history length
+          this.forcedCollapsed = this.combinationsList.length > 1;
+        } else {
+          this.forcedCollapsed = !this.forcedCollapsed;
+        }
+      },
     },
   });
 </script>
@@ -159,6 +184,15 @@
 @import "~@scss/config/_settings.scss";
 
 .history {
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  min-height: calc(100% - 3.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  height: 95%;
+  margin: 0 1rem;
+
   &-list {
     padding: 0;
     margin: 0;
@@ -215,6 +249,52 @@
       i {
         opacity: 1;
       }
+    }
+  }
+
+  .history-handle {
+    position: absolute;
+    top: 50%;
+    right: -2rem;
+    transform: translateY(-50%);
+    background-color: #fff;
+    width: 2rem;
+    height: 4rem;
+    border: 1px solid #dbe6e9;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: none;
+    cursor: pointer;
+
+    &::after {
+      position: absolute;
+      top: 50%;
+      right: 0.25rem;
+      transform: translateY(-50%);
+      font-family: "Material Icons",Arial,Verdana,Tahoma,sans-serif;
+      font-size: 1.5rem;
+      content: 'keyboard_arrow_left';
+    }
+  }
+
+  transition: width 500ms linear;
+
+  &.collapsed {
+    margin-left: 0;
+    width: 0;
+    border: none;
+
+    .history-handle {
+      right: -2rem;
+      &::after {
+        content: 'history';
+      }
+    }
+
+    .card-header,
+    .card-block,
+    .card-footer {
+      display: none;
     }
   }
 }
