@@ -76,7 +76,6 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        //@todo: we should consider introducing some clockInterface so we can mock "now" in tests
         $now = new DateTimeImmutable();
 
         return [

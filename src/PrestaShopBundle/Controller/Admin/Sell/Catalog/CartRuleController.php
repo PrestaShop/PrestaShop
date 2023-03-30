@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -206,7 +207,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $form = $this->getFormBuilder()->getForm($this->prefillFormData($request));
+        $form = $this->getFormBuilder()->getForm($this->prefillFormDataForCreation($request));
         $form->handleRequest($request);
 
         try {
@@ -293,12 +294,16 @@ class CartRuleController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function prefillFormData(Request $request): array
+    private function prefillFormDataForCreation(Request $request): array
     {
         $formData = [];
 
         $customerId = $request->query->getInt('customerId');
         if ($customerId) {
+            $cartRuleFormDataProvider = $this->get(CartRuleFormDataProvider::class);
+            // form data is multidimensional, so we need to get all of it and override only customer,
+            // or else the remaining data from data provider 'conditions' tab will be lost
+            $formData = $cartRuleFormDataProvider->getDefaultData();
             /** @var ViewableCustomer $customer */
             $customer = $this->getQueryBus()->handle(new GetCustomerForViewing($customerId));
             $customerInfo = $customer->getPersonalInformation();

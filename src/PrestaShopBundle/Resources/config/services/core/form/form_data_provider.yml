@@ -235,4 +235,3 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider:
     autowire: true
-    public: false

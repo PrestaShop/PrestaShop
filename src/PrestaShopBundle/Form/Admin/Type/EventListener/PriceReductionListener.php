@@ -87,6 +87,7 @@ class PriceReductionListener implements EventSubscriberInterface
                     // Do not forget the row class which is important for JS
                     'class' => 'price-reduction-value',
                 ],
+                'default_empty_data' => 0,
             ]);
         // It is possible to have different values in same request, but different events, so if/else is essential
         // to make sure the form is built as expected during all events
