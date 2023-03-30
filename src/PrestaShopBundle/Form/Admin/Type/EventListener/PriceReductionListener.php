@@ -35,26 +35,17 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\Range;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PriceReductionListener implements EventSubscriberInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     /**
      * @var CurrencyDataProviderInterface
      */
     private $currencyDataProvider;
 
     public function __construct(
-        TranslatorInterface $translator,
         CurrencyDataProviderInterface $currencyDataProvider
     ) {
-        $this->translator = $translator;
         $this->currencyDataProvider = $currencyDataProvider;
     }
 
@@ -95,19 +86,6 @@ class PriceReductionListener implements EventSubscriberInterface
                 'row_attr' => [
                     // Do not forget the row class which is important for JS
                     'class' => 'price-reduction-value',
-                ],
-                'constraints' => [
-                    new Range([
-                        'min' => 0,
-                        'max' => 100,
-                        'notInRangeMessage' => $this->translator->trans(
-                            'This value should be between %min% and %max%.',
-                            [
-                                '%min%' => 0,
-                                '%max%' => 100,
-                            ]
-                        ),
-                    ]),
                 ],
             ]);
         // It is possible to have different values in same request, but different events, so if/else is essential

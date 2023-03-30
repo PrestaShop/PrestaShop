@@ -26,18 +26,21 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ReductionTypeChoiceProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Responsible for creating form for price reduction
  */
-class PriceReductionType extends CommonAbstractType
+class PriceReductionType extends TranslatorAwareType
 {
     /**
      * @var EventSubscriberInterface
@@ -55,10 +58,13 @@ class PriceReductionType extends CommonAbstractType
     private $currencyDataProvider;
 
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         EventSubscriberInterface $eventSubscriber,
         ReductionTypeChoiceProvider $reductionTypeChoiceProvider,
         CurrencyDataProviderInterface $currencyDataProvider
     ) {
+        parent::__construct($translator, $locales);
         $this->eventSubscriber = $eventSubscriber;
         $this->reductionTypeChoiceProvider = $reductionTypeChoiceProvider;
         $this->currencyDataProvider = $currencyDataProvider;
@@ -103,6 +109,19 @@ class PriceReductionType extends CommonAbstractType
             ->setDefaults([
                 'scale' => 6,
                 'currency_select' => false,
+                'constraints' => [
+                    new Reduction([
+                        'invalidPercentageValueMessage' => $this->trans(
+                            'Reduction value "%value%" is invalid. It must be greater than 0 and maximum %max%.',
+                            'Admin.Notifications.Error',
+                            ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%']
+                        ),
+                        'invalidAmountValueMessage' => $this->trans(
+                            'Reduction value "%value%" is invalid. It must be greater than 0.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
             ])
             ->setAllowedTypes('currency_select', 'bool')
         ;
