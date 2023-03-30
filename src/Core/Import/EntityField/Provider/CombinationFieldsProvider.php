@@ -60,7 +60,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('attribute', $this->trans('Value (Value:Position)', 'Admin.Advparameters.Feature'), '', true),
             new EntityField('supplier_reference', $this->trans('Supplier reference', 'Admin.Advparameters.Feature')),
             new EntityField('reference', $this->trans('Reference', 'Admin.Global')),
-            new EntityField('ean13', $this->trans('EAN13', 'Admin.Advparameters.Feature')),
+            new EntityField('ean13', $this->trans('EAN-13', 'Admin.Advparameters.Feature')),
             new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
             new EntityField('mpn', $this->trans('MPN', 'Admin.Catalog.Feature')),
             new EntityField('wholesale_price', $this->trans('Cost price', 'Admin.Catalog.Feature')),
@@ -81,13 +81,13 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('image_alt', $this->trans('Image alt texts (x,y,z...)', 'Admin.Advparameters.Feature')),
             new EntityField(
                 'shop',
-                $this->trans('ID / Name of shop', 'Admin.Advparameters.Feature'),
-                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
+                $this->trans('ID / Name of the store', 'Admin.Advparameters.Feature'),
+                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', 'Admin.Advparameters.Help')
             ),
             new EntityField(
                 'advanced_stock_management',
-                $this->trans('Advanced Stock Management', 'Admin.Advparameters.Feature'),
-                $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes)', 'Admin.Advparameters.Help')
+                $this->trans('Advanced stock management', 'Admin.Advparameters.Feature'),
+                $this->trans('Enable Advanced stock management on product (0 = No, 1 = Yes)', 'Admin.Advparameters.Help')
             ),
             new EntityField(
                 'depends_on_stock',

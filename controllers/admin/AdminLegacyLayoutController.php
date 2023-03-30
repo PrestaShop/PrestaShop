@@ -87,7 +87,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $useRegularH1Structure = true
     ) {
         // Compatibility with legacy behavior.
-        // Some controllers can only be used in "All shops" context.
+        // Some controllers can only be used in "All stores" context.
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
         $controllers = [

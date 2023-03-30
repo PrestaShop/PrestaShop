@@ -99,7 +99,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             )
             ->add((new DataColumn('shop'))
-            ->setName($this->trans('Shop', [], 'Admin.Global'))
+            ->setName($this->trans('Store', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'shop',
             ])
@@ -215,7 +215,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->trans('Shop', [], 'Admin.Global'),
+                    'placeholder' => $this->trans('Store', [], 'Admin.Global'),
                 ],
             ])
             ->setAssociatedColumn('shop')

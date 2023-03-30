@@ -68,7 +68,7 @@ class AdminShopUrlControllerCore extends AdminController
                 'class' => 'fixed-width-xs',
             ],
             'shop_name' => [
-                'title' => $this->trans('Shop name', [], 'Admin.Advparameters.Feature'),
+                'title' => $this->trans('Store name', [], 'Admin.Advparameters.Feature'),
                 'filter_key' => 's!name',
             ],
             'url' => [
@@ -153,7 +153,7 @@ class AdminShopUrlControllerCore extends AdminController
                     'input' => [
                         [
                             'type' => 'select',
-                            'label' => $this->trans('Shop', [], 'Admin.Global'),
+                            'label' => $this->trans('Store', [], 'Admin.Global'),
                             'name' => 'id_shop',
                             'onchange' => 'checkMainUrlInfo(this.value);',
                             'options' => [

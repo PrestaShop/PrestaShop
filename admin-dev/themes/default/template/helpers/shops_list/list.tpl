@@ -29,7 +29,7 @@
 <div class="dropdown-menu dropdown-menu-right">
     <ul class="list-dropdown-menu">
         <li{if !isset($current_shop_value) || $current_shop_value == ''} class="active"{/if}>
-            <a href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a>
+            <a href="{$url|escape:'html':'UTF-8'}">{l s='All stores'}</a>
         </li>
         {foreach key=group_id item=group_data from=$tree}
             {if !isset($multishop_context) || $is_group_context}

@@ -61,7 +61,7 @@ class AdminShopControllerCore extends AdminController
                 'class' => 'fixed-width-xs',
             ],
             'name' => [
-                'title' => $this->trans('Shop name', [], 'Admin.Shopparameters.Feature'),
+                'title' => $this->trans('Store name', [], 'Admin.Shopparameters.Feature'),
                 'filter_key' => 'a!name',
                 'width' => 200,
             ],
@@ -395,14 +395,14 @@ class AdminShopControllerCore extends AdminController
 
         $this->fields_form = [
             'legend' => [
-                'title' => $this->trans('Shop', [], 'Admin.Global'),
+                'title' => $this->trans('Store', [], 'Admin.Global'),
                 'icon' => 'icon-shopping-cart',
             ],
             'identifier' => 'shop_id',
             'input' => [
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Shop name', [], 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Store name', [], 'Admin.Shopparameters.Feature'),
                     'desc' => [
                         $this->trans('This field does not refer to the shop name visible in the front office.', [], 'Admin.Shopparameters.Help'),
                         $this->trans('Follow [1]this link[/1] to edit the shop name used on the front office.', [

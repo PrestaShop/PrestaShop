@@ -141,7 +141,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'name',
                 'shop_name',
                 [
-                    'title' => $this->trans('Shop', [], 'Admin.Global'),
+                    'title' => $this->trans('Store', [], 'Admin.Global'),
                     'filter_key' => 's!name',
                 ]
             );
@@ -204,7 +204,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ],
                 [
                     'type' => 'select',
-                    'label' => $this->trans('Shop', [], 'Admin.Global'),
+                    'label' => $this->trans('Store', [], 'Admin.Global'),
                     'name' => 'shop_id',
                     'options' => [
                         'query' => Shop::getShops(),

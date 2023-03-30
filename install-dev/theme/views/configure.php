@@ -29,7 +29,7 @@
   <h2><?php echo $this->translator->trans('Information about your Store', [], 'Install'); ?></h2>
 
   <div class="field clearfix">
-	<label for="infosShop" class="aligned"><?php echo $this->translator->trans('Shop name', [], 'Install'); ?> </label>
+	<label for="infosShop" class="aligned"><?php echo $this->translator->trans('Store name', [], 'Install'); ?> </label>
 	<div class="contentinput">
 	  <input class="text required" type="text" id="infosShop" name="shop_name" value="<?php echo htmlspecialchars($this->session->shop_name ?? ''); ?>" /> <sup class="required">*</sup>
 	</div>
