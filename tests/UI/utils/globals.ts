@@ -15,10 +15,10 @@ global.URLHasPort = (global.FO.URL).match(/:\d+.+/) !== null;
 
 global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
-  EMAIL: process.env.LOGIN || Employees.DefaultEmployee.email,
-  PASSWD: process.env.PASSWD || Employees.DefaultEmployee.password,
-  FIRSTNAME: process.env.FIRSTNAME || Employees.DefaultEmployee.firstName,
-  LASTNAME: process.env.LASTNAME || Employees.DefaultEmployee.lastName,
+  EMAIL: process.env.LOGIN || 'demo@prestashop.com',
+  PASSWD: process.env.PASSWD || 'Correct Horse Battery Staple',
+  FIRSTNAME: process.env.FIRSTNAME || 'Marc',
+  LASTNAME: process.env.LASTNAME || 'Beier',
 };
 
 global.PSConfig = {
