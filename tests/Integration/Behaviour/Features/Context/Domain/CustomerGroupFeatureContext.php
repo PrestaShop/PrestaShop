@@ -31,12 +31,10 @@ use Behat\Gherkin\Node\TableNode;
 use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
 {
@@ -92,14 +90,6 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
             (bool) $data['showPrice'],
             $this->referencesToIds($data['shopIds'])
         );
-    }
-
-    /**
-     * @return CommandBusInterface
-     */
-    protected function getCommandBus(): CommandBusInterface
-    {
-        return CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
     }
 
     /**

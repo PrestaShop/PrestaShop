@@ -38,4 +38,12 @@ class GroupConstraintException extends GroupException
     public const INVALID_ID = 10;
 
     public const INVALID_REDUCTION = 20;
+
+    public const EMPTY_SHOP_LIST = 30;
+
+    public const EMPTY_NAME = 40;
+
+    public const INVALID_NAME = 50;
+
+    public const INVALID_PRICE_DISPLAY_METHOD = 60;
 }
