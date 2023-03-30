@@ -219,7 +219,7 @@ services:
     arguments:
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_iso_code").getChoices()'
 
-  PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleRestrictionsParentType:
+  PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\AbstractPaymentModuleRestrictionsType:
     arguments:
       $paymentModules: '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
     tags:
