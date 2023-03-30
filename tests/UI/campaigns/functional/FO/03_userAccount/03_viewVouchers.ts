@@ -9,8 +9,8 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
-import homePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import {homePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import foMyAccountPage from '@pages/FO/myAccount';
 import foVouchersPage from '@pages/FO/myAccount/vouchers';
 

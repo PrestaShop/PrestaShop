@@ -13,7 +13,7 @@ import addCategoryPage from '@pages/BO/catalog/categories/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import categoryPage from '@pages/FO/category';
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import siteMapPage from '@pages/FO/siteMap';
 
 // Import data

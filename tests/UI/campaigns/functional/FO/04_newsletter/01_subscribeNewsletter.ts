@@ -12,8 +12,8 @@ import moduleManagerPage from '@pages/BO/modules/moduleManager';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
-import foHomePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import {homePage as foHomePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import foMyAccountPage from '@pages/FO/myAccount';
 import foAccountIdentityPage from '@pages/FO/myAccount/identity';
 

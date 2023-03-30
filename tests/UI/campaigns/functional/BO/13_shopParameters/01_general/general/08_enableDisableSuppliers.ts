@@ -12,7 +12,7 @@ import generalPage from '@pages/BO/shopParameters/general';
 import brandsPage from '@pages/BO/catalog/brands';
 import suppliersPage from '@pages/BO/catalog/suppliers';
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import siteMapPage from '@pages/FO/siteMap';
 
 import {expect} from 'chai';

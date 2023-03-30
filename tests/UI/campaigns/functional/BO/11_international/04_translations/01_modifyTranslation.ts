@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import translationsPage from '@pages/BO/international/translations';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 
 // Import data
 import Languages from '@data/demo/languages';

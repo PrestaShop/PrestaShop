@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data

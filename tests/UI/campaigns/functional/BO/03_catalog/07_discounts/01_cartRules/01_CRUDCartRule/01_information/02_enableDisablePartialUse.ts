@@ -11,7 +11,7 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 import cartPage from '@pages/FO/cart';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import foMyAccountPage from '@pages/FO/myAccount';

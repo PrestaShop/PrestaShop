@@ -19,7 +19,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
 
   private readonly useThemeModalDialog: string;
 
-  private readonly useThemeModalDialogYesButton: string;
+  protected readonly useThemeModalDialogYesButton: string;
 
   private readonly deleteThemeButton: string;
 

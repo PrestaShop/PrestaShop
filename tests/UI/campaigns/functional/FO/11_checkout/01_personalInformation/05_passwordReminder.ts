@@ -9,7 +9,7 @@ import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advanced
 import {createAccountTest} from '@commonTests/FO/account';
 
 // Import pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';

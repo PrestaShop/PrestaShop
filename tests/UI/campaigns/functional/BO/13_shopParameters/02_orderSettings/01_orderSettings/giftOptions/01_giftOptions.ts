@@ -13,11 +13,11 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
-import foLoginPage from '@pages/FO/login';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data

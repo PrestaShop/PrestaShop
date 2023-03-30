@@ -12,7 +12,7 @@ import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules
 import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data

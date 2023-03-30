@@ -8,8 +8,8 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 // Import FO pages
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import foHomePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import {homePage as foHomePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import foMyAccountPage from '@pages/FO/myAccount';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';

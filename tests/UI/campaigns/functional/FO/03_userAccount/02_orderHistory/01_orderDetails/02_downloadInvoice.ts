@@ -8,8 +8,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
-import foHomePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import {homePage as foHomePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import foMyAccountPage from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';

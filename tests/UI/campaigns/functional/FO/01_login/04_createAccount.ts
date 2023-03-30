@@ -6,9 +6,9 @@ import testContext from '@utils/testContext';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 // Import FO pages
-import homePage from '@pages/FO/home';
-import loginPage from '@pages/FO/login';
-import createAccountPage from '@pages/FO/myAccount/add';
+import {homePage} from '@pages/FO/home';
+import {loginPage} from '@pages/FO/login';
+import {createAccountPage} from '@pages/FO/myAccount/add';
 
 // Import data
 import CustomerData from '@data/faker/customer';
