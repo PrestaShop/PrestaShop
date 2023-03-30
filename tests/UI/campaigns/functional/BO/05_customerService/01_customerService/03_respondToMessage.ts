@@ -13,7 +13,7 @@ import viewPage from '@pages/BO/customerService/customerService/view';
 import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import contactUsPage from '@pages/FO/contactUs';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 
 // Import data
 import MessageData from '@data/faker/message';
