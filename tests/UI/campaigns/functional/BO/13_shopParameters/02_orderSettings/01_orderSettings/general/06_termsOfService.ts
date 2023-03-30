@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import productPage from '@pages/FO/product';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 

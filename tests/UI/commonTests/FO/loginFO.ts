@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import loginPage from '@pages/FO/login';
+import {loginPage} from '@pages/FO/login';
 import myAccountPage from '@pages/FO/myAccount';
 
 // Import data

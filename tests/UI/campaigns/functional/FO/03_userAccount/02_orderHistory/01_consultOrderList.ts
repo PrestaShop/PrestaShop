@@ -10,8 +10,8 @@ import {createAccountTest} from '@commonTests/FO/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import FO pages
-import foHomePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import {homePage as foHomePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import foMyAccountPage from '@pages/FO/myAccount';
 

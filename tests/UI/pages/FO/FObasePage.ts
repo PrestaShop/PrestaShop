@@ -123,6 +123,10 @@ export default class FOBasePage extends CommonPage {
 
   protected readonly notificationsBlock: string;
 
+  protected readonly userMenuDropdown: string;
+
+  protected theme: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on all FO pages
@@ -140,7 +144,7 @@ export default class FOBasePage extends CommonPage {
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
     this.accountLink = `${this.userInfoLink} .user-info a.account`;
-    this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
+    this.logoutLink = `${this.userInfoLink} .user-info a[href*="/?mylogout="]`;
     this.contactLink = '#contact-link';
     this.categoryMenu = (id) => `#category-${id} a`;
     this.languageSelectorDiv = '#_desktop_language_selector';
@@ -203,6 +207,11 @@ export default class FOBasePage extends CommonPage {
     // Alert block selectors
     this.alertSuccessBlock = '.alert-success ul li';
     this.notificationsBlock = '#notifications';
+
+    // Hummingbird
+    this.userMenuDropdown = '#userMenuButton';
+
+    this.theme = 'classic';
   }
 
   // Header methods
@@ -274,6 +283,12 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async logout(page: Page): Promise<void> {
+    if (this.theme === 'hummingbird') {
+      await page.click(this.userMenuDropdown);
+      await this.clickAndWaitForNavigation(page, this.logoutLink);
+
+      return;
+    }
     await this.clickAndWaitForNavigation(page, this.logoutLink);
   }
 
@@ -283,7 +298,7 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isCustomerConnected(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.logoutLink, 1000);
+    return this.elementVisible(page, this.theme === 'hummingbird' ? this.userMenuDropdown : this.logoutLink, 1000);
   }
 
   /**

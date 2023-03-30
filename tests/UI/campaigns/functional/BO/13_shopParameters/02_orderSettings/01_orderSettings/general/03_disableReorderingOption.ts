@@ -10,8 +10,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import foLoginPage from '@pages/FO/login';
-import homePage from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
+import {homePage} from '@pages/FO/home';
 import myAccountPage from '@pages/FO/myAccount';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 

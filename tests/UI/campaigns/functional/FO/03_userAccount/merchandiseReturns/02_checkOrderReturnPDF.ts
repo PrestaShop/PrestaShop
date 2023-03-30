@@ -17,8 +17,8 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages
-import homePage from '@pages/FO/home';
-import loginPage from '@pages/FO/login';
+import {homePage} from '@pages/FO/home';
+import {loginPage} from '@pages/FO/login';
 import myAccountPage from '@pages/FO/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';

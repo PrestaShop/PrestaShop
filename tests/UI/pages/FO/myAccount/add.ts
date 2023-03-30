@@ -11,12 +11,12 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class CreateAccount extends FOBasePage {
+class CreateAccountPage extends FOBasePage {
   private readonly pageTitle: string;
 
   public readonly formTitle: string;
 
-  private readonly pageHeaderTitle: string;
+  protected pageHeaderTitle: string;
 
   private readonly createAccountForm: string;
 
@@ -144,4 +144,5 @@ class CreateAccount extends FOBasePage {
   }
 }
 
-export default new CreateAccount();
+const createAccountPage = new CreateAccountPage();
+export {createAccountPage, CreateAccountPage};

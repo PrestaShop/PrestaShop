@@ -12,8 +12,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
-import foHomePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import {homePage as foHomePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import foMyAccountPage from '@pages/FO/myAccount';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';

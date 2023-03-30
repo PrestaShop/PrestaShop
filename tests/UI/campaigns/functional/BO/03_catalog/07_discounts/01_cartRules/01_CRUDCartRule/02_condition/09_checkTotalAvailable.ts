@@ -15,7 +15,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import foHomePage from '@pages/FO/home';
+import {homePage as foHomePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
 // Import data

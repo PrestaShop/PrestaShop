@@ -11,7 +11,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class Login extends FOBasePage {
+class LoginPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly loginErrorText: string;
@@ -26,7 +26,7 @@ class Login extends FOBasePage {
 
   private readonly signInButton: string;
 
-  private readonly displayRegisterFormLink: string;
+  protected displayRegisterFormLink: string;
 
   private readonly passwordReminderLink: string;
 
@@ -125,4 +125,5 @@ class Login extends FOBasePage {
   }
 }
 
-export default new Login();
+const loginPage = new LoginPage();
+export {loginPage, LoginPage};

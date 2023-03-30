@@ -16,7 +16,7 @@ import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 

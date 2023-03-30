@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -62,7 +62,7 @@ describe('FO - Home Page : Check slider', async () => {
 
     const currentURL = await homePage.getSliderURL(page);
     await expect(currentURL)
-      .to.contains('http://www.prestashop.com/')
+      .to.contains('www.prestashop-project.org')
       .and.to.contains('homeslider&utm_campaign=back-office-EN&utm_content=download');
   });
 });

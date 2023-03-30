@@ -11,9 +11,9 @@ import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 // Import FO pages
-import foHomePage from '@pages/FO/home';
-import loginFOPage from '@pages/FO/login';
-import foCreateAccountPage from '@pages/FO/myAccount/add';
+import {homePage as foHomePage} from '@pages/FO/home';
+import {loginPage as loginFOPage} from '@pages/FO/login';
+import {createAccountPage as foCreateAccountPage} from '@pages/FO/myAccount/add';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

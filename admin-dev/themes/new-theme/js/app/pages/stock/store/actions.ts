@@ -39,11 +39,16 @@ export const getStock = async ({commit}: {commit: Commit}, payload: Record<strin
     page_size: payload.page_size,
     page_index: payload.page_index,
     keywords: payload.keywords,
-    supplier_id: payload.suppliers,
-    category_id: payload.categories,
     active: payload.active,
     low_stock: payload.low_stock,
   }, isParamInvalid));
+
+  if (payload.suppliers) {
+    payload.suppliers.forEach((v: string) => params.append('supplier_id[]', v));
+  }
+  if (payload.categories) {
+    payload.categories.forEach((v: string) => params.append('category_id[]', v));
+  }
   const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
 
   try {

@@ -9,7 +9,7 @@ import {createAccountTest} from '@commonTests/FO/account';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data

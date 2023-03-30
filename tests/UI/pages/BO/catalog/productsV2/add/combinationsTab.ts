@@ -481,7 +481,7 @@ class CombinationsTab extends BOBasePage {
     const combinationFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
-    if (await this.elementVisible(page, this.editCombinationModalDiscardButton)) {
+    if (await this.elementVisible(page, this.editCombinationModalDiscardButton, 2000)) {
       await this.waitForSelectorAndClick(page, this.editCombinationModalDiscardButton);
     }
 

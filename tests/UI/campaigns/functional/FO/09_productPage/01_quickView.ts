@@ -12,7 +12,7 @@ import {
 
 // Import pages
 // FO
-import homePage from '@pages/FO/home';
+import {homePage} from '@pages/FO/home';
 import cartPage from '@pages/FO/cart';
 import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';

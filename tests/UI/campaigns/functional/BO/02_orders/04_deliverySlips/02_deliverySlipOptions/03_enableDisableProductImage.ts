@@ -10,8 +10,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import homePage from '@pages/FO/home';
-import foLoginPage from '@pages/FO/login';
+import {homePage} from '@pages/FO/home';
+import {loginPage as foLoginPage} from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 // Import BO pages
