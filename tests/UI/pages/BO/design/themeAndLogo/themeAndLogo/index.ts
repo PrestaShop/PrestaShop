@@ -29,7 +29,7 @@ class ThemeAndLogo extends themeAndLogoBasePage {
   constructor() {
     super();
 
-    this.pageTitle = `Theme & Logo > Theme • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = `Theme & Logo • ${global.INSTALL.SHOP_NAME}`;
     this.addNewThemeButton = '#page-header-desc-configuration-add';
     this.themeCardContainer = '#themes-logo-page .theme-card-container';
     this.useSpecificThemeButton = (name: string) => `${this.themeCardContainer}[data-role="${name}"] `
