@@ -48,6 +48,10 @@ $product-page-padding-bottom: 80px !default;
 .product-page {
   padding-bottom: $product-page-padding-bottom;
 
+  &.combination-edition-mode {
+    padding-bottom: 1rem;
+  }
+
   > #field-disabled {
     display: flex;
     flex-wrap: wrap;
@@ -1251,6 +1255,12 @@ $product-page-padding-bottom: 80px !default;
         margin: 0 0.156rem;
       }
     }
+
+    .nav-link.active.disabled {
+      color: #bbcdd2;
+      background-color: transparent;
+      border-color: transparent;
+    }
   }
 
   #product-tabs-content {
@@ -1879,9 +1889,11 @@ $product-page-padding-bottom: 80px !default;
   }
 
   #combinations-paginated-list {
-    &.edition-mode {
+    position: relative;
+
+    &.combination-edition-mode {
       #combinations-list-form-container {
-        background-color: rgba(37, 185, 215, 0.1);
+        background-color: #ecf8fb;
         @include border-radius(0.5rem 0.5rem 0 0);
       }
 
@@ -1889,12 +1901,19 @@ $product-page-padding-bottom: 80px !default;
         display: none;
       }
 
+      #combination_list {
+        border-bottom: none;
+      }
+
       #combinations-list-footer {
+        position: sticky;
+        bottom: 0;
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
         padding: 1.25rem;
-        background-color: rgba(37, 185, 215, 0.1);
+        background-color: #ecf8fb;
+        border-top: 1px solid #bbcdd2;
         @include border-radius(0 0 0.5rem 0.5rem);
 
         &-buttons {

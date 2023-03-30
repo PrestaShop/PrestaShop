@@ -107,6 +107,9 @@ class CombinationAvailabilityType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
                 'required' => false,
                 'columns_number' => 3,
+                'row_attr' => [
+                    'class' => 'combination-availability',
+                ],
             ])
         ;
     }
