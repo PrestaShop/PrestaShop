@@ -96,7 +96,7 @@ class ToolsCore
      * @param int $length Desired length (optional)
      * @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
      *
-     * @return bool|string Password
+     * @return string|false Password
      */
     public static function passwdGen($length = 8, $flag = self::PASSWORDGEN_FLAG_ALPHANUMERIC)
     {
@@ -1845,7 +1845,7 @@ class ToolsCore
      * @param int $curl_timeout
      * @param array $opts
      *
-     * @return bool|string
+     * @return string|false
      *
      * @throws Exception
      */
@@ -1921,7 +1921,7 @@ class ToolsCore
      * @param int $curl_timeout
      * @param bool $fallback whether or not to use the fallback if the main solution fails
      *
-     * @return bool|string false or the string content
+     * @return string|false false or the file content
      */
     public static function file_get_contents(
         $url,
