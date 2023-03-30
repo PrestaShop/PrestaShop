@@ -41,6 +41,14 @@ class Checkout extends FOBasePage {
 
   private readonly shippingValueSpan: string;
 
+  private readonly blockPromoDiv: string;
+
+  private readonly cartSummaryLine: (line: number) => string;
+
+  private readonly cartRuleName: (line: number) => string;
+
+  private readonly discountValue: (line: number) => string;
+
   private readonly noPaymentNeededElement: string;
 
   private readonly itemsNumber: string;
@@ -348,6 +356,10 @@ class Checkout extends FOBasePage {
     this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
     this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
+    this.blockPromoDiv = '.block-promo';
+    this.cartSummaryLine = (line: number) => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
+    this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.label`;
+    this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span`;
 
     // Cart details selectors
     this.itemsNumber = `${this.checkoutSummary} div.cart-summary-products.js-cart-summary-products p:nth-child(1)`;
@@ -1042,6 +1054,16 @@ class Checkout extends FOBasePage {
     }
     await this.setValue(page, this.checkoutHavePromoInputArea, code);
     await page.click(this.checkoutPromoCodeAddButton);
+  }
+
+  /**
+   * Get cart rule name
+   * @param page {Page} Browser tab
+   * @param line {number} Cart rule line
+   * @return {string}
+   */
+  getCartRuleName(page: Page, line: number = 1): Promise<string> {
+    return this.getTextContent(page, this.cartRuleName(line));
   }
 
   /**

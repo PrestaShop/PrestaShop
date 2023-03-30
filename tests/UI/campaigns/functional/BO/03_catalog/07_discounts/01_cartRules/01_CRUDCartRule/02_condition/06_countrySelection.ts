@@ -23,24 +23,43 @@ import foProductPage from '@pages/FO/product';
 import Countries from '@data/demo/countries';
 import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
+import Carriers from '@data/demo/carriers';
 import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_countryRestriction';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_countrySelection';
 
-describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () => {
+/*
+Pre-condition:
+- Enable the country US
+Scenario:
+- Create cart rule with restricted country US
+- Go to FO, Add product to cart
+- Try to add promo code and check error message
+- Proceed to checkout and login with default customer
+- Choose the US address and continue
+- Add promo code and check the total after discount
+- Delete product from the cart
+Post-condition:
+- Delete the created cart rule
+ */
+describe('BO - Catalog - Cart rules : Country selection', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
   const cartRule: CartRuleData = new CartRuleData({
-    name: 'addCartRuleName',
+    name: 'Cart rule country selection',
     code: '4QABV6L3',
     countrySelection: true,
     countryIDToRemove: Countries.france.id,
     discountType: 'Amount',
-    discountPercent: 100,
+    discountAmount: {
+      value: 15,
+      currency: 'EUR',
+      tax: 'Tax included',
+    },
   });
 
   // before and after functions
@@ -57,7 +76,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     await loginCommon.loginBO(this, page);
   });
 
-  describe(`Enable the country '${Countries.unitedStates.name}'`, async () => {
+  describe(`BO : Enable the country '${Countries.unitedStates.name}'`, async () => {
     it('should go to \'International > Locations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
@@ -119,7 +138,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
   });
 
-  describe('Create new cart rule with country restriction', async () => {
+  describe('BO : Create new cart rule with country restriction', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
@@ -150,7 +169,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
   });
 
-  describe('Check the created discount in FO', async () => {
+  describe('FO : Check the created cart rule', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
@@ -161,27 +180,17 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
 
-    it('should go to the first product page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToFirstProductPage',
-        baseContext,
-      );
+    it('should go to the third product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage', baseContext);
 
-      await foHomePage.goToProductPage(page, 1);
+      await foHomePage.goToProductPage(page, 3);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_6.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addProductToCart',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foProductPage.addProductToTheCart(page);
 
@@ -190,12 +199,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
 
     it('should set the promo code and verify the error message', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addPromoCode',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode1', baseContext);
 
       await cartPage.addPromoCode(page, cartRule.code);
 
@@ -204,12 +208,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
 
     it('should proceed to checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'proceedToCheckoutAndSignIn',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckoutAndSignIn', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -218,7 +217,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(isCheckout).to.be.true;
     });
 
-    it('should checkout by signIn', async function () {
+    it('should sign in by the default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await checkoutPage.clickOnSignIn(page);
@@ -227,13 +226,8 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should confirm address after signIn', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'chooseAndConfirmAddressStep',
-        baseContext,
-      );
+    it('should choose the delivery address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStep', baseContext);
 
       await checkoutPage.chooseDeliveryAddress(page, 2);
 
@@ -241,41 +235,31 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(isDeliveryStep, 'Delivery Step block is not displayed').to.be.true;
     });
 
-    it('should set the promo code for second time and check total after discount', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'addPromoCodeAndVerifyTotalAfterDiscount',
-        baseContext,
-      );
+    it('should set the promo code', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode2', baseContext);
 
       await checkoutPage.addPromoCode(page, cartRule.code);
 
-      const cartRuleName = await cartPage.getCartRuleName(page, 1);
+      const cartRuleName = await checkoutPage.getCartRuleName(page, 1);
       await expect(cartRuleName).to.equal(cartRule.name);
     });
-  });
 
-  describe('Delete the shopping cart', async () => {
+    it('should check the total after discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
+
+      const totalAfterDiscount = await checkoutPage.getATIPrice(page);
+      await expect(totalAfterDiscount).to.eq(Products.demo_6.price - cartRule.discountAmount.value + Carriers.myCarrier.price);
+    });
+
     it('should remove the discount', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'removeTheDiscount',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'removeTheDiscount', baseContext);
 
       const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
       await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
     });
 
     it('should go to Home page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'checkLogoLink',
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
       await foHomePage.clickOnHeaderLink(page, 'Logo');
 
@@ -283,25 +267,10 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
 
-    it('should click on the cart link', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'clickOnCartLink',
-        baseContext,
-      );
+    it('should go to cart page and remove product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
       await foHomePage.goToCartPage(page);
-    });
-
-    it('should remove product from shopping cart', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'removeProduct1',
-        baseContext,
-      );
-
       await cartPage.deleteProduct(page, 1);
 
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
@@ -309,6 +278,6 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
   });
 
-  // post condition : delete cart rule
-  deleteCartRuleTest(cartRule.name, `${baseContext}_postTest_1`);
+  // Post-condition : Delete the created cart rule
+  deleteCartRuleTest(cartRule.name, `${baseContext}_postTest`);
 });
