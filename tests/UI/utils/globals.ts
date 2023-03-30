@@ -1,4 +1,3 @@
-import Employees from '@data/demo/employees';
 import {config} from 'dotenv';
 import path from 'path';
 
