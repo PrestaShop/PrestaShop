@@ -174,12 +174,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute(
-            'admin_order_returns_edit',
-            [
-                'orderReturnId' => $orderReturnId,
-            ]
-        );
+        return $this->redirectToRoute('admin_order_returns_edit', ['orderReturnId' => $orderReturnId]);
     }
 
     /**

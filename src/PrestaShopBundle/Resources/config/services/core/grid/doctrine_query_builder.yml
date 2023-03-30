@@ -517,7 +517,7 @@ services:
   PrestaShop\PrestaShop\Core\Grid\Query\OrderReturnProductsQueryBuilder:
     autowire: true
     parent: 'prestashop.core.grid.abstract_query_builder'
-    public: true
+    public: false
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"

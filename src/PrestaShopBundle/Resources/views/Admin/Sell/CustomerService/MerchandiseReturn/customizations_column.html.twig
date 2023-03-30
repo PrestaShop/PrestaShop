@@ -23,23 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<div class="text-nowrap">
-  <div class="text-nowrap">
-    {% for customizations in [record['customizations']] %}
-      {% if customizations is  not null %}
-        {% for customization in customizations.orderDetailCustomizations %}
-          <div class="row">
-            <span class="col-lg-12"><strong>{{ customization.name }}</strong></span>
-            <div class="col-lg-12">
-              {% if customization.image is not null %}
-                <img class="img-thumbnail" src="{{ customization.image }}" alt="{{ customization.value }}">
-              {% else %}
-                {{ customization.value }}
-              {% endif %}
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
-  </div>
+<div>
+  {% for customizations in [record['customizations']] %}
+    {% if customizations is  not null %}
+      {% for customization in customizations.orderDetailCustomizations %}
+        <div><strong>{{ customization.name }}</strong></div>
+        <div>
+          {% if customization.image is not null %}
+            <img class="img-thumbnail" src="{{ customization.image }}" alt="{{ customization.value }}">
+          {% else %}
+            {{ customization.value }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
 </div>

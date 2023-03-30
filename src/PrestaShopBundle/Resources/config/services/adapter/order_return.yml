@@ -30,6 +30,7 @@ services:
 
   prestashop.adapter.order_return.repository.order_return_repository:
     alias: PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository
+    deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator:
 

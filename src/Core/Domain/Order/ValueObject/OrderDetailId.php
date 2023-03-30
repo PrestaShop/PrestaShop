@@ -43,7 +43,7 @@ class OrderDetailId
      *
      * @throws OrderException
      */
-    public function __construct($orderDetailId)
+    public function __construct(int $orderDetailId)
     {
         $this->assertIntegerIsGreaterThanZero($orderDetailId);
 
@@ -53,7 +53,7 @@ class OrderDetailId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->orderDetailId;
     }
@@ -61,9 +61,9 @@ class OrderDetailId
     /**
      * @param int $orderId
      */
-    private function assertIntegerIsGreaterThanZero($orderId)
+    private function assertIntegerIsGreaterThanZero(int $orderId): void
     {
-        if (!is_int($orderId) || 0 > $orderId) {
+        if (0 > $orderId) {
             throw new OrderException(sprintf('Order detail id %s is invalid. Order detail id must be number that is greater than zero.', var_export($orderId, true)));
         }
     }

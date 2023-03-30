@@ -289,3 +289,4 @@ services:
 
   prestashop.adapter.order.repository.order_repository:
     alias: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository
+    deprecated: ~

@@ -50,7 +50,7 @@ class BulkDeleteProductFromOrderReturnCommand
 
     /**
      * @param int $orderReturnId
-     * @param array $orderReturnDetailIds
+     * @param int[] $orderReturnDetailIds
      *
      * @throws OrderReturnConstraintException
      * @throws OrderReturnException
@@ -64,7 +64,7 @@ class BulkDeleteProductFromOrderReturnCommand
     }
 
     /**
-     * @param array $orderReturnDetailIds
+     * @param int[] $orderReturnDetailIds
      *
      * @throws OrderReturnConstraintException
      */

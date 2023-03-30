@@ -294,7 +294,7 @@ services:
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDefinitionFactory:
     autowire: true
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    public: true
+    public: false
 
   prestashop.core.grid.definition.factory.outstanding:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
