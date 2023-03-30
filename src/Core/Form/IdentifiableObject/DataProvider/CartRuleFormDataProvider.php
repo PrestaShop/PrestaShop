@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
@@ -43,13 +43,13 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var ConfigurationInterface
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
     public function __construct(
         CommandBusInterface $queryBus,
-        ConfigurationInterface $configuration
+        ShopConfigurationInterface $configuration
     ) {
         $this->queryBus = $queryBus;
         $this->configuration = $configuration;
