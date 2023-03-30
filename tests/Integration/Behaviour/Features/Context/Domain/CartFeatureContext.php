@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Cart;
 use CartRule;
 use Configuration;
@@ -39,10 +40,13 @@ use DateInterval;
 use DateTime;
 use Exception;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
@@ -51,8 +55,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
@@ -1154,5 +1160,76 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     private function getCurrency(string $reference): Currency
     {
         return new Currency(SharedStorage::getStorage()->get($reference));
+    }
+
+    /**
+     * @When I delete cart :cartReference
+     */
+    public function iDeleteCart(string $cartReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        try {
+            $this->getCommandBus()->handle(new DeleteCartCommand($cartId));
+        } catch (CartException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then cart :cartReference should be deleted
+     */
+    public function cartShouldBeDeleted(string $cartReference): void
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $repository = new CartRepository();
+
+        try {
+            $repository->get(new CartId($cartId));
+        } catch (CartException $e) {
+            $this->setLastException($e);
+        }
+
+        $this->assertLastErrorIs(CartNotFoundException::class);
+    }
+
+    /**
+     * @Then cart :cartReference should not be deleted because cart is already ordered
+     */
+    public function cartShouldNotBeDeletedBecauseCartIsAlreadyOrdered(string $cartReference)
+    {
+        $this->assertLastErrorIs(CannotDeleteOrderedCartException::class);
+        $this->cartShouldNotBeDeleted($cartReference);
+    }
+
+    /**
+     * @When I bulk delete following carts:
+     */
+    public function iBulkDeleteFollowingCarts(TableNode $table)
+    {
+        $cartIds = [];
+        foreach ($table->getRows() as $row) {
+            $cartIds[] = (int) SharedStorage::getStorage()->get($row[0]);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
+        } catch (CartException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Given cart :cartReference should not be deleted
+     */
+    public function cartShouldNotBeDeleted(string $cartReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $repository = new CartRepository();
+
+        try {
+            $repository->get(new CartId($cartId));
+        } catch (CartException $e) {
+            throw new RuntimeException(sprintf('cart %s should exist', $cartReference));
+        }
     }
 }
