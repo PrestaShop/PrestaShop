@@ -42,9 +42,9 @@ class ConditionsType extends TranslatorAwareType
                 'disabling_switch_event' => 'switchCartRuleCustomer',
             ])
             ->add('valid_date_range', DateRangeType::class, [
-                'label' => $this->trans('Valid', 'Admin.Catalog.Feature'),
-                //@todo: help label does not appear (probably missing in form theme)
-                'help' => $this->trans('The default period is one month.', 'Admin.Catalog.Help'),
+                'label' => false,
+                'label_from' => $this->trans('Valid from', 'Admin.Catalog.Feature'),
+                'label_to' => $this->trans('Valid to', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'date_format' => 'YYYY-MM-DD HH:mm:ss',
             ])
