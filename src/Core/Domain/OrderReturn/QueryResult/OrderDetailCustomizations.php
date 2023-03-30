@@ -50,9 +50,11 @@ class OrderDetailCustomizations
     /**
      * @param OrderProductCustomizationForViewing $orderDetailCustomization
      */
-    private function addOrderDetailCustomization(OrderProductCustomizationForViewing $orderDetailCustomization): void
+    private function setOrderDetailCustomizations(array $orderDetailCustomizations): void
     {
-        $this->orderDetailCustomizations[] = $orderDetailCustomization;
+        foreach ($orderDetailCustomizations as $orderDetailCustomization) {
+            $this->orderDetailCustomizations[] = $orderDetailCustomization;
+        }
     }
 
     /**
