@@ -39,7 +39,7 @@ services:
       PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
-      PS_LANGUAGE: ${PS_LANGUAGE:-fr}
+      PS_LANGUAGE: ${PS_LANGUAGE:-en}
       PS_DEV_MODE: ${PS_DEV_MODE:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
