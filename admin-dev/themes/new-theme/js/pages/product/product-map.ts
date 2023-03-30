@@ -127,7 +127,7 @@ export default {
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
     deleteCombinationAllShopsSelector: '.delete-combination-all-shops',
-    combinationName: 'form .combination-name-row .text-preview',
+    combinationName: 'form .combination-name-row .text-preview-value',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     impactOnPriceInputWrapper: '.combination-impact-on-price',

@@ -1298,13 +1298,15 @@
       {{ prefix|raw }}
     {% endif %}
 
-    {% if  form.vars.allow_html %}
-      {# This outputs raw value #}
-      {{ value|raw }}
-    {% else %}
-      {# This just outputs the value #}
-      {{ value|e('html') }}
-    {% endif %}
+    <span class="text-preview-value">
+      {% if  form.vars.allow_html %}
+        {# This outputs raw value #}
+        {{ value|raw }}
+      {% else %}
+        {# This just outputs the value #}
+        {{ value|e('html') }}
+      {% endif %}
+    </span>
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
