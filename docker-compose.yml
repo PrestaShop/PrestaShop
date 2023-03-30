@@ -10,7 +10,7 @@ volumes:
 
 services:
   mysql:
-    image: mysql:5
+    image: mysql:8
     ports:
       - "3306"
     volumes:
@@ -18,7 +18,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: prestashop
       MYSQL_DATABASE: prestashop
-    restart: always
+    restart: unless-stopped
+
   prestashop-git:
     build:
       dockerfile: .docker/Dockerfile
@@ -47,3 +48,5 @@ services:
       - "8001:80"
     volumes:
       - ./:/var/www/html:delegated
+    depends_on:
+        - mysql
