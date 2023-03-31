@@ -145,16 +145,31 @@ class EditCartRuleCommand
         return $this->cartRuleId;
     }
 
-    public function getMinimumAmountShippingIncluded(): ?bool
+    public function setLocalizedNames(array $localizedNames): EditCartRuleCommand
     {
-        return $this->minimumAmountShippingIncluded;
-    }
-
-    public function setMinimumAmountShippingIncluded(bool $minimumAmountShippingIncluded): EditCartRuleCommand
-    {
-        $this->minimumAmountShippingIncluded = $minimumAmountShippingIncluded;
+        $this->localizedNames = $localizedNames;
 
         return $this;
+    }
+
+    /**
+     * @return array<int, string>|null
+     */
+    public function getLocalizedNames(): ?array
+    {
+        return $this->localizedNames;
+    }
+
+    public function setDescription(string $description): EditCartRuleCommand
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     public function highlightInCart(): ?bool
@@ -193,38 +208,16 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getDiscountApplicationType(): ?DiscountApplicationType
-    {
-        return $this->discountApplicationType;
-    }
-
-    public function setDiscountApplicationType(string $discountApplicationType): EditCartRuleCommand
-    {
-        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
-
-        return $this;
-    }
-
-    public function getDiscountProductId(): ?ProductId
-    {
-        return $this->discountProductId;
-    }
-
-    public function setDiscountProductId(int $discountProductId): EditCartRuleCommand
-    {
-        $this->discountProductId = new ProductId($discountProductId);
-
-        return $this;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
     public function getCode(): string
     {
         return $this->code;
+    }
+
+    public function setCode(string $code): EditCartRuleCommand
+    {
+        $this->code = $code;
+
+        return $this;
     }
 
     public function getCustomerId(): ?CustomerId
@@ -232,17 +225,36 @@ class EditCartRuleCommand
         return $this->customerId;
     }
 
-    /**
-     * @return array<int, string>|null
-     */
-    public function getLocalizedNames(): ?array
+    public function setCustomerId(int $customerId): EditCartRuleCommand
     {
-        return $this->localizedNames;
+        $this->customerId = new CustomerId($customerId);
+
+        return $this;
     }
 
     public function getPriority(): int
     {
         return $this->priority;
+    }
+
+    public function setPriority(int $priority): EditCartRuleCommand
+    {
+        if (0 >= $priority) {
+            throw new CartRuleConstraintException(sprintf('Invalid cart rule priority "%s". Must be a positive integer.', var_export($priority, true)), CartRuleConstraintException::INVALID_PRIORITY);
+        }
+
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    public function setValidDateRange(DateTimeImmutable $validFrom, DateTimeImmutable $validTo): EditCartRuleCommand
+    {
+        $this->assertDateRangeIsValid($validFrom, $validTo);
+        $this->validFrom = $validFrom;
+        $this->validTo = $validTo;
+
+        return $this;
     }
 
     public function getValidFrom(): ?DateTimeImmutable
@@ -260,35 +272,36 @@ class EditCartRuleCommand
         return $this->totalQuantity;
     }
 
+    public function setTotalQuantity(int $quantity): EditCartRuleCommand
+    {
+        if (0 > $quantity) {
+            throw new CartRuleConstraintException(sprintf('Quantity cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY);
+        }
+
+        $this->totalQuantity = $quantity;
+
+        return $this;
+    }
+
     public function getQuantityPerUser(): int
     {
         return $this->quantityPerUser;
     }
 
+    public function setQuantityPerUser(int $quantity): EditCartRuleCommand
+    {
+        if (0 > $quantity) {
+            throw new CartRuleConstraintException(sprintf('Quantity per user cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY_PER_USER);
+        }
+
+        $this->quantityPerUser = $quantity;
+
+        return $this;
+    }
+
     public function getCartRuleAction(): ?CartRuleActionInterface
     {
         return $this->cartRuleAction;
-    }
-
-    public function setDescription(string $description): EditCartRuleCommand
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function setCode(string $code): EditCartRuleCommand
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    public function setCustomerId(int $customerId): EditCartRuleCommand
-    {
-        $this->customerId = new CustomerId($customerId);
-
-        return $this;
     }
 
     public function setMinimumAmount(
@@ -316,53 +329,27 @@ class EditCartRuleCommand
         return $this->minimumAmountShippingIncluded;
     }
 
-    public function setLocalizedNames(array $localizedNames): EditCartRuleCommand
+    public function setDiscountApplication(string $discountApplicationType, ?int $productId = null): EditCartRuleCommand
     {
-        $this->localizedNames = $localizedNames;
-
-        return $this;
-    }
-
-    public function setPriority(int $priority): EditCartRuleCommand
-    {
-        if (0 >= $priority) {
-            throw new CartRuleConstraintException(sprintf('Invalid cart rule priority "%s". Must be a positive integer.', var_export($priority, true)), CartRuleConstraintException::INVALID_PRIORITY);
+        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
+        if (DiscountApplicationType::SPECIFIC_PRODUCT === $discountApplicationType) {
+            if (!$productId) {
+                throw new CartRuleConstraintException('ProductId is required for discount application "specific_product"');
+            }
+            $this->discountProductId = new ProductId($productId);
         }
 
-        $this->priority = $priority;
-
         return $this;
     }
 
-    public function setTotalQuantity(int $quantity): EditCartRuleCommand
+    public function getDiscountProductId(): ?ProductId
     {
-        if (0 > $quantity) {
-            throw new CartRuleConstraintException(sprintf('Quantity cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY);
-        }
-
-        $this->totalQuantity = $quantity;
-
-        return $this;
+        return $this->discountProductId;
     }
 
-    public function setQuantityPerUser(int $quantity): EditCartRuleCommand
+    public function getDiscountApplicationType(): ?DiscountApplicationType
     {
-        if (0 > $quantity) {
-            throw new CartRuleConstraintException(sprintf('Quantity per user cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY_PER_USER);
-        }
-
-        $this->quantityPerUser = $quantity;
-
-        return $this;
-    }
-
-    public function setDateRange(DateTimeImmutable $validFrom, DateTimeImmutable $validTo): EditCartRuleCommand
-    {
-        $this->assertDateRangeIsValid($validFrom, $validTo);
-        $this->validFrom = $validFrom;
-        $this->validTo = $validTo;
-
-        return $this;
+        return $this->discountApplicationType;
     }
 
     public function setCartRuleAction(CartRuleActionInterface $cartRuleAction): EditCartRuleCommand

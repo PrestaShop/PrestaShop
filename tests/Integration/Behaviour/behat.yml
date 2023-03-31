@@ -109,7 +109,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRUle\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
@@ -150,7 +150,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderCartFeatureContext
@@ -247,7 +247,7 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext

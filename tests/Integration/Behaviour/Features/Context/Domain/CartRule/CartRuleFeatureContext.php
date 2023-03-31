@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
 use Behat\Gherkin\Node\TableNode;
 use CartRule;
@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
