@@ -84,6 +84,10 @@ export default class CountryForm {
    * @param pattern
    */
   addFieldsToCursorPosition(pattern) {
+    if (pattern === undefined) {
+      return;
+    }
+
     const $element = $(countryFormMap.addressFormat.formatTextAreaField).get(0);
     let position = 0;
 
