@@ -63,20 +63,20 @@ class AddTitleCommand
 
     /**
      * @param array<string> $localizedNames
-     * @param Gender $gender
+     * @param int $gender
      * @param UploadedFile|null $imgFile
      * @param int|null $imgWidth
      * @param int|null $imgHeight
      */
     public function __construct(
         array $localizedNames,
-        Gender $gender,
+        int $gender,
         ?UploadedFile $imgFile,
         ?int $imgWidth,
         ?int $imgHeight
     ) {
         $this->localizedNames = $localizedNames;
-        $this->gender = $gender;
+        $this->gender = new Gender($gender);
         $this->imgFile = $imgFile;
         $this->imgWidth = $imgWidth;
         $this->imgHeight = $imgHeight;

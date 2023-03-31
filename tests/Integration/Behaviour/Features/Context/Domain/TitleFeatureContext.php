@@ -85,7 +85,7 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
             /** @var TitleId $titleId */
             $titleId = $this->getCommandBus()->handle(new AddTitleCommand(
                 $data['name'],
-                new Gender((int) $availableGendersTypes[$data['type']]),
+                (int) $availableGendersTypes[$data['type']],
                 null,
                 null,
                 null
@@ -121,7 +121,7 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
                 throw new RuntimeException(sprintf('Gender type "%s" is not available.', $data['type']));
             }
 
-            $command->setGender(new Gender((int) $availableGendersTypes[$data['type']]));
+            $command->setGender((int) $availableGendersTypes[$data['type']]);
         }
 
         try {

@@ -115,13 +115,13 @@ class EditTitleCommand
     }
 
     /**
-     * @param Gender $gender
+     * @param int $gender
      *
      * @return self
      */
-    public function setGender(Gender $gender): self
+    public function setGender(int $gender): self
     {
-        $this->gender = $gender;
+        $this->gender = new Gender($gender);
 
         return $this;
     }
