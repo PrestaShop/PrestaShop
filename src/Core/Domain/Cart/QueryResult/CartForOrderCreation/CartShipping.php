@@ -69,7 +69,7 @@ class CartShipping
     /**
      * @var bool
      */
-    private $isVirtual;    
+    private $isVirtual;
 
     /**
      * @param string $shippingPrice
@@ -163,5 +163,5 @@ class CartShipping
     public function isVirtual(): bool
     {
         return $this->isVirtual;
-    }    
+    }
 }
