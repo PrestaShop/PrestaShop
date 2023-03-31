@@ -79,4 +79,4 @@ services:
     autowire: true
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServicesSummary

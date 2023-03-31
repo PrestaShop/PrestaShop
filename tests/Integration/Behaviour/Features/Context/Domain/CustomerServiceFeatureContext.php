@@ -37,10 +37,10 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThre
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServicesSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadServices;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerServicesSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -239,12 +239,12 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $contactId = $this->referenceToId($contactReference);
 
-        /** @var CustomerThreadServices $customerServiceSummaries */
+        /** @var CustomerServicesSummary $customerServiceSummaries */
         $customerServiceSummaries = $this->getQueryBus()->handle(
-            new GetCustomerServiceSummary()
+            new GetCustomerServicesSummary()
         );
 
-        foreach ($customerServiceSummaries->contacts as $contact) {
+        foreach ($customerServiceSummaries->getContacts() as $contact) {
             if ($contact->getContactId() !== $contactId) {
                 continue;
             }
@@ -254,7 +254,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
-        if (count($customerServiceSummaries->statistics) !== 6) {
+        if (count($customerServiceSummaries->getStatistics()) !== 6) {
             throw new NoExceptionAlthoughExpectedException(sprintf('Statistics expect to have 6 different text rows but it has %s', count($customerServiceSummaries['statistics'])));
         }
     }

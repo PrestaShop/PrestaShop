@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCust
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServicesSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
@@ -76,7 +76,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
 
         /** @var CustomerServiceSummary[] $customerServiceSummary */
         $customerServiceSummary = $this->getQueryBus()->handle(
-            new GetCustomerServiceSummary()
+            new GetCustomerServicesSummary()
         );
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [

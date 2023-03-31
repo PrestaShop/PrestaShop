@@ -29,6 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Query;
 /**
  * Gets signature for replying in customer thread
  */
-class GetCustomerServiceSummary
+class GetCustomerServicesSummary
 {
 }

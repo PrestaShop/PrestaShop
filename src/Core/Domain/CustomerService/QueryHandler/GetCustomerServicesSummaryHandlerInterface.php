@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadServices;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServicesSummary;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerServicesSummary;
 
 /**
  * Interface for service that gets summary of customer services threads
  */
 interface GetCustomerServicesSummaryHandlerInterface
 {
-    public function handle(GetCustomerServiceSummary $query): CustomerThreadServices;
+    public function handle(GetCustomerServicesSummary $query): CustomerServicesSummary;
 }

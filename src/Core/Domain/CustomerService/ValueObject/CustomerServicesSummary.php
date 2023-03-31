@@ -30,25 +30,37 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 
-class CustomerThreadServices
+class CustomerServicesSummary
 {
     /** @var array<string, float> */
-    public $statistics = [];
+    private $statistics;
 
     /** @var array<int, CustomerServiceSummary> */
-    public $contacts = [];
+    private $contacts;
 
-    public function addStatistic(string $statistics, int $results): self
+    /**
+     * @param float[] $statistics
+     * @param CustomerServiceSummary[] $contacts
+     */
+    public function __construct(array $statistics, array $contacts)
     {
-        $this->statistics[$statistics] = $results;
-
-        return $this;
+        $this->statistics = $statistics;
+        $this->contacts = $contacts;
     }
 
-    public function addContact(CustomerServiceSummary $customerServiceSummary): self
+    /**
+     * @return float[]
+     */
+    public function getStatistics(): array
     {
-        $this->contacts[$customerServiceSummary->getContactId()] = $customerServiceSummary;
+        return $this->statistics;
+    }
 
-        return $this;
+    /**
+     * @return CustomerServiceSummary[]
+     */
+    public function getContacts(): array
+    {
+        return $this->contacts;
     }
 }
