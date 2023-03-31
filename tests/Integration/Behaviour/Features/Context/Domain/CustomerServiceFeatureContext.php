@@ -308,11 +308,11 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateContactOptions(TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         $contactOptionsHandler = CommonFeatureContext::getContainer()->get('prestashop.adapter.customer_service.contact_options.form_handler');
 
-        $defaultLangMessage = [$this->configuration->get('PS_LANG_DEFAULT'), $data['defaultMessage']];
+        $defaultLangMessage = $data['defaultMessage'];
 
         $contactOptionsHandler->save(
             [
@@ -329,7 +329,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertIsCorrectContactOptions(TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         $defaultMessage = $this->configuration->get('PS_CUSTOMER_SERVICE_SIGNATURE');
         $isFileUploadingAllowed = (bool) $this->configuration->get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
@@ -337,10 +337,12 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $expectedMessage = $data['defaultMessage'];
         $expectedIsFileUploadingAllowed = PrimitiveUtils::castStringBooleanIntoBoolean($data['allowFileUploading']);
 
-        if ($defaultMessage[$this->configuration->get('PS_LANG_DEFAULT')] !== $expectedMessage) {
-            throw new NoExceptionAlthoughExpectedException(
-                sprintf('Default contact message is expected to be %s , but it is %s', $defaultMessage, $expectedMessage)
-            );
+        foreach ($expectedMessage as $langId => $message) {
+            if ($defaultMessage[$langId] !== $message) {
+                throw new NoExceptionAlthoughExpectedException(
+                    sprintf('Default contact message is expected to be %s , but it is %s', $message, $defaultMessage[$langId])
+                );
+            }
         }
 
         if ($isFileUploadingAllowed !== $expectedIsFileUploadingAllowed) {

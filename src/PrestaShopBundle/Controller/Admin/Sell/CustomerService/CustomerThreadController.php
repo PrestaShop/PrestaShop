@@ -69,7 +69,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CustomerThreadFilter $filters): Response
     {
-        $customerThreadKpiFactory = $this->get(HookableKpiRowFactory::class);
+        $customerThreadKpiFactory = $this->get('prestashop.core.kpi_row.factory.customer_threads');
         $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
         $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
 

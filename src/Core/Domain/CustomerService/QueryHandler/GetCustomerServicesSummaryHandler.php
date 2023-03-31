@@ -119,12 +119,16 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
             $customerServicesSummary['summaries'][$customerServiceSummary->getContactId()] = $customerServiceSummary;
         }
 
+        $all = $this->customerThreadRepository->getTotalCustomerThreads();
+        $pending = $this->customerThreadRepository->getTotalCustomerThreads('status LIKE "%pending%"');
+        $unread = $this->customerThreadRepository->getTotalCustomerThreads('status = "open"');
+
         $customerServicesSummary['statistics'] = [
-            $this->translator->trans('Total threads', [], 'Admin.Catalog.Feature') => $all = $this->customerThreadRepository->getTotalCustomerThreads(),
-            $this->translator->trans('Threads pending', [], 'Admin.Catalog.Feature') => $pending = $this->customerThreadRepository->getTotalCustomerThreads('status LIKE "%pending%"'),
+            $this->translator->trans('Total threads', [], 'Admin.Catalog.Feature') => $all,
+            $this->translator->trans('Threads pending', [], 'Admin.Catalog.Feature') => $pending,
             $this->translator->trans('Total number of customer messages', [], 'Admin.Catalog.Feature') => $this->customerMessageRepository->getTotalCustomerMessages('id_employee = 0'),
             $this->translator->trans('Total number of employee messages', [], 'Admin.Catalog.Feature') => $this->customerMessageRepository->getTotalCustomerMessages('id_employee != 0'),
-            $this->translator->trans('Unread threads', [], 'Admin.Catalog.Feature') => $unread = $this->customerThreadRepository->getTotalCustomerThreads('status = "open"'),
+            $this->translator->trans('Unread threads', [], 'Admin.Catalog.Feature') => $unread,
             $this->translator->trans('Closed threads', [], 'Admin.Catalog.Feature') => $all - ($unread + $pending),
         ];
 
