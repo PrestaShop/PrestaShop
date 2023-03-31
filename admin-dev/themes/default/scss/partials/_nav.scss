@@ -28,29 +28,52 @@
   background: $gray-dark-menu;
   transition: all 0.5s ease-out;
 
+  .logo-container {
+    display: none;
+  }
+
   .material-icons {
     font-size: 1.188rem;
     line-height: inherit;
     color: #fff;
+
+    &.close-btn {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
   }
 
   &.mobile-nav {
     width: 70%;
     margin-left: -100%;
 
-    &::before {
-      position: fixed;
-      top: 5rem;
-      left: 75%;
-      display: none;
-      font-family: "Material Icons", sans-serif;
-      font-size: 1.5rem;
-      color: #fff;
-      pointer-events: none;
-      content: "\e5cd";
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem;
+      border-bottom: 1px solid #bebebe;
 
-      @include media-breakpoint-only(md) {
-        left: 50%;
+      &__close {
+        line-height: 0.6;
+      }
+
+      &__header {
+        display: flex;
+        align-items: center;
+      }
+
+      .logo {
+        width: 8rem;
+        height: 1.25rem;
+        background: url("#{$img-path}/ps-logo-white.svg") no-repeat;
+        background-size: contain;
+      }
+
+      .header-version {
+        margin-left: 0.75rem;
+        font-size: 1rem;
+        color: #fff;
       }
     }
 

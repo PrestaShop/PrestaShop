@@ -5,7 +5,16 @@
 	</span>
 
   <div class="nav-bar-overflow">
-      <ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
+    <div class="logo-container">
+      <div class="logo-container__header">
+        <a id="header_logo" class="logo" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
+        <span id="shop_version" class="header-version">{$ps_version}</span>
+      </div>
+      <div class="logo-container__close js-mobile-menu">
+        <i class="material-icons close-btn">close</i>
+      </div>
+    </div>
+    <ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
       {foreach $tabs as $level_1}
         {if $level_1.active}
           {* Dashboard exception *}
@@ -74,4 +83,4 @@
     </ul>
     {hook h='displayAdminNavBarBeforeEnd'}
   </div>
-	</nav>
+</nav>
