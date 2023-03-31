@@ -120,7 +120,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ inputs.TESTS_DIR }}
-        run: npm install
+        run: npm ci
 
       # Run tests (if error, we continue for uploading report)
       - name: Run tests
@@ -186,7 +186,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ env.TESTS_DIR }}
-        run: npm install
+        run: npm ci
 
       - name: Combine reports
         working-directory: ${{ env.TESTS_DIR }}

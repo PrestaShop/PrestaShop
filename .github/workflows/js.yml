@@ -38,5 +38,5 @@ jobs:
           restore-keys: ${{ runner.os }}-node-
 
       - name: Run tests
-        run: npm install && npm run test
+        run: npm ci && npm run test
         working-directory: ./admin-dev/themes/new-theme

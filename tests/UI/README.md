@@ -2,7 +2,7 @@
 
 ## Requirement
 
-Before begin working on tests, make sure you have installed 
+Before begin working on tests, make sure you have installed
 
 * [nodejs](https://nodejs.org/) v10.x or newer
 * [npm](https://www.npmjs.com/) v6.x or newer
@@ -14,7 +14,7 @@ Before begin working on tests, make sure you have installed
 git clone https://github.com/PrestaShop/PrestaShop/
 # Install dependencies in UI folder
 cd tests/UI/
-npm install
+npm ci
 ```
 
 ## Available command line parameters
@@ -55,7 +55,7 @@ npm install
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`test:specific` command](README.md#specific-test).
 
-## Sanity tests 
+## Sanity tests
 
 This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
 
@@ -69,7 +69,7 @@ npm run test:sanity
 ```
 
 #### With custom values
-You can add parameters that you need in the beginning of your command 
+You can add parameters that you need in the beginning of your command
 ```bash
 HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run test:sanity
 ```
@@ -81,15 +81,15 @@ If you want to run all sanity tests "safely", you can use the Travis-specific co
 npm run test:sanity:fast-fail
 ```
 
-## Functional tests 
-This campaign verifies that each function of the software application operate in conformance with the functional requirements. 
+## Functional tests
+This campaign verifies that each function of the software application operate in conformance with the functional requirements.
 Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing the actual results with the expected results.
 
 ```bash
 URL_FO="Your_Shop_URL_FO" npm run test:functional
 ```
 
-## Specific test 
+## Specific test
 If you want to run only one test from a campaign or a couple of tests in the same folder, you can use **`test:specific`** command.
 
 To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
@@ -97,7 +97,7 @@ To specify which test to run, you can add the **`TEST_PATH`** parameter in the b
 ```bash
 # To run the **Filter Products** test from sanity campaign
 TEST_PATH="sanity/03_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run test:specific
-# To run all **Products BO** tests 
+# To run all **Products BO** tests
 TEST_PATH="sanity/03_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run test:specific
 ```
 
@@ -112,7 +112,7 @@ You **must** disable the Security Token before running this script ! Add this li
 
 ```bash
 SetEnv _TOKEN_ disabled
-``` 
+```
 
 #### With default values
 
@@ -135,7 +135,7 @@ To help contributors find more documentation about UI tests, [JS-DOC](https://js
 To install `jsdoc-to-markdown` :
 ```shell
 cd tests/UI
-npm install
+npm ci
 ```
 
 ### Generate documentation

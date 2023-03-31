@@ -10,7 +10,7 @@ It you need to work on it to add some features or to debug, you need to follow t
 - Edit your `/app/config/config.yml` to set `twig > globals > webpack_server` to `true`
 - Clean your Symfony cache (`app:console cache:clear` in the project root folder)
 - Go to `/admin-dev/themes/new-theme/`
-- Run `npm install`
+- Run `npm ci`
 - Run `npm run start-dev-server`
 
 Then, you can edit the files and you'll see your modifications live.
