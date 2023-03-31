@@ -49,9 +49,9 @@ class GetTitleForEditingHandler extends AbstractTitleHandler implements GetTitle
         $title = $this->titleRepository->get($query->getTitleId());
 
         return new EditableTitle(
-            $query->getTitleId(),
+            $query->getTitleId()->getValue(),
             $title->name,
-            new Gender((int) $title->type)
+            (int) $title->type
         );
     }
 }

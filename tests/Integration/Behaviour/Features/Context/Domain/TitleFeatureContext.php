@@ -107,7 +107,7 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
     {
         $editableTitle = $this->getTitleForEdition($titleReference);
 
-        $command = new EditTitleCommand($editableTitle->getTitleId()->getValue());
+        $command = new EditTitleCommand($editableTitle->getTitleId());
 
         $data = $this->localizeByRows($table);
         if (isset($data['name'])) {
@@ -210,10 +210,10 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
 
         Assert::assertEquals(
             $availableGendersTypes[$gender],
-            $editableTitle->getGender()->getValue(),
+            $editableTitle->getGender(),
             sprintf(
                 'Failed asserting that "%s" matches expected "%s".',
-                array_flip($availableGendersTypes)[$editableTitle->getGender()->getValue()],
+                array_flip($availableGendersTypes)[$editableTitle->getGender()],
                 $gender
             )
         );

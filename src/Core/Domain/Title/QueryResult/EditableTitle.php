@@ -27,16 +27,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Title\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
-use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
-
 /**
  * Transfers state data for editing
  */
 class EditableTitle
 {
     /**
-     * @var TitleId
+     * @var int
      */
     protected $titleId;
 
@@ -46,19 +43,19 @@ class EditableTitle
     protected $localizedNames;
 
     /**
-     * @var Gender
+     * @var int
      */
     protected $gender;
 
     /**
-     * @param TitleId $titleId
+     * @param int $titleId
      * @param array<string> $localizedNames
-     * @param Gender $gender
+     * @param int $gender
      */
     public function __construct(
-        TitleId $titleId,
+        int $titleId,
         array $localizedNames,
-        Gender $gender
+        int $gender
     ) {
         $this->titleId = $titleId;
         $this->localizedNames = $localizedNames;
@@ -66,9 +63,9 @@ class EditableTitle
     }
 
     /**
-     * @return TitleId
+     * @return int
      */
-    public function getTitleId(): TitleId
+    public function getTitleId(): int
     {
         return $this->titleId;
     }
@@ -82,9 +79,9 @@ class EditableTitle
     }
 
     /**
-     * @return Gender
+     * @return int
      */
-    public function getGender(): Gender
+    public function getGender(): int
     {
         return $this->gender;
     }
