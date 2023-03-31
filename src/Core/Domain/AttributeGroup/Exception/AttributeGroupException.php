@@ -24,20 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Base exception for attribute group subdomain
  */
-interface GetProductAttributeGroupsHandlerInterface
+class AttributeGroupException extends DomainException
 {
-    /**
-     * @param GetProductAttributeGroups $query
-     *
-     * @return AttributeGroup[]
-     */
-    public function handle(GetProductAttributeGroups $query): array;
 }

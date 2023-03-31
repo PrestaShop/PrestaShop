@@ -24,70 +24,61 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Combines value objects into a valid structure for generating combinations
+ * Provides attribute group identification data
  */
-class GroupedAttributeIds
+final class AttributeGroupId
 {
     /**
-     * @var AttributeGroupId
+     * @var int
      */
     private $attributeGroupId;
 
     /**
-     * @var AttributeId[]
-     */
-    private $attributeIds = [];
-
-    /**
      * @param int $attributeGroupId
-     * @param array $attributeIds
      *
-     * @throws AttributeConstraintException
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(
-        int $attributeGroupId,
-        array $attributeIds
-    ) {
-        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->setAttributeIds($attributeIds);
+    public function __construct($attributeGroupId)
+    {
+        $this->assertIsIntegerGreaterThanZero($attributeGroupId);
+        $this->attributeGroupId = $attributeGroupId;
     }
 
     /**
-     * @return AttributeGroupId
+     * @deprecated
+     * @see getValue()
+     *
+     * @return int
      */
-    public function getAttributeGroupId(): AttributeGroupId
+    public function getAttributeGroupId()
     {
         return $this->attributeGroupId;
     }
 
     /**
-     * @return AttributeId[]
+     * @return int
      */
-    public function getAttributeIds(): array
+    public function getValue()
     {
-        return $this->attributeIds;
+        return $this->attributeGroupId;
     }
 
     /**
-     * @param int[] $attributeIds
+     * Validates that the value is integer and is greater than zero
      *
-     * @throws AttributeConstraintException
+     * @param int $value
+     *
+     * @throws AttributeGroupConstraintException
      */
-    private function setAttributeIds(array $attributeIds): void
+    private function assertIsIntegerGreaterThanZero($value)
     {
-        foreach ($attributeIds as $attributeId) {
-            $this->attributeIds[] = new AttributeId($attributeId);
+        if (!is_int($value) || 0 >= $value) {
+            throw new AttributeGroupConstraintException(sprintf('Invalid attribute group id "%s".', var_export($value, true)), AttributeGroupConstraintException::INVALID_ID);
         }
     }
 }

@@ -24,20 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Is thrown when deleting attribute group fails
  */
-interface GetProductAttributeGroupsHandlerInterface
+class DeleteAttributeGroupException extends AttributeGroupException
 {
     /**
-     * @param GetProductAttributeGroups $query
-     *
-     * @return AttributeGroup[]
+     * When trying to delete single attribute group fails
      */
-    public function handle(GetProductAttributeGroups $query): array;
+    public const FAILED_DELETE = 10;
+
+    /**
+     * When deleting in bulk action fails
+     */
+    public const FAILED_BULK_DELETE = 20;
 }

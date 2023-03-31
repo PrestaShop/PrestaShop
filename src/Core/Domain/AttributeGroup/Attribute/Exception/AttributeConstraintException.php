@@ -24,20 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Is thrown when attribute constraints are violated
  */
-interface GetProductAttributeGroupsHandlerInterface
+class AttributeConstraintException extends AttributeException
 {
     /**
-     * @param GetProductAttributeGroups $query
-     *
-     * @return AttributeGroup[]
+     * When attribute id contains invalid values
      */
-    public function handle(GetProductAttributeGroups $query): array;
+    public const INVALID_ID = 10;
 }

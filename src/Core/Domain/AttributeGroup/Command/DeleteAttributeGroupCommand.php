@@ -24,19 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Combines value objects into a valid structure for generating combinations
+ * Deletes attribute group by provided id
  */
-class GroupedAttributeIds
+final class DeleteAttributeGroupCommand
 {
     /**
      * @var AttributeGroupId
@@ -44,50 +40,20 @@ class GroupedAttributeIds
     private $attributeGroupId;
 
     /**
-     * @var AttributeId[]
-     */
-    private $attributeIds = [];
-
-    /**
      * @param int $attributeGroupId
-     * @param array $attributeIds
      *
-     * @throws AttributeConstraintException
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(
-        int $attributeGroupId,
-        array $attributeIds
-    ) {
+    public function __construct($attributeGroupId)
+    {
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->setAttributeIds($attributeIds);
     }
 
     /**
      * @return AttributeGroupId
      */
-    public function getAttributeGroupId(): AttributeGroupId
+    public function getAttributeGroupId()
     {
         return $this->attributeGroupId;
-    }
-
-    /**
-     * @return AttributeId[]
-     */
-    public function getAttributeIds(): array
-    {
-        return $this->attributeIds;
-    }
-
-    /**
-     * @param int[] $attributeIds
-     *
-     * @throws AttributeConstraintException
-     */
-    private function setAttributeIds(array $attributeIds): void
-    {
-        foreach ($attributeIds as $attributeId) {
-            $this->attributeIds[] = new AttributeId($attributeId);
-        }
     }
 }

@@ -24,70 +24,48 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Combines value objects into a valid structure for generating combinations
+ * Deletes attribute groups in bulk action by provided ids
  */
-class GroupedAttributeIds
+final class BulkDeleteAttributeGroupCommand
 {
     /**
-     * @var AttributeGroupId
+     * @var AttributeGroupId[]
      */
-    private $attributeGroupId;
+    private $attributeGroupIds;
 
     /**
-     * @var AttributeId[]
-     */
-    private $attributeIds = [];
-
-    /**
-     * @param int $attributeGroupId
-     * @param array $attributeIds
+     * @param int[] $attributeGroupIds
      *
-     * @throws AttributeConstraintException
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(
-        int $attributeGroupId,
-        array $attributeIds
-    ) {
-        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->setAttributeIds($attributeIds);
-    }
-
-    /**
-     * @return AttributeGroupId
-     */
-    public function getAttributeGroupId(): AttributeGroupId
+    public function __construct(array $attributeGroupIds)
     {
-        return $this->attributeGroupId;
+        $this->setAttributeGroupIds($attributeGroupIds);
     }
 
     /**
-     * @return AttributeId[]
+     * @return AttributeGroupId[]
      */
-    public function getAttributeIds(): array
+    public function getAttributeGroupIds()
     {
-        return $this->attributeIds;
+        return $this->attributeGroupIds;
     }
 
     /**
-     * @param int[] $attributeIds
+     * @param array $attributeGroupIds
      *
-     * @throws AttributeConstraintException
+     * @throws AttributeGroupConstraintException
      */
-    private function setAttributeIds(array $attributeIds): void
+    private function setAttributeGroupIds(array $attributeGroupIds)
     {
-        foreach ($attributeIds as $attributeId) {
-            $this->attributeIds[] = new AttributeId($attributeId);
+        foreach ($attributeGroupIds as $attributeGroupId) {
+            $this->attributeGroupIds[] = new AttributeGroupId($attributeGroupId);
         }
     }
 }

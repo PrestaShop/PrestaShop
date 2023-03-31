@@ -24,30 +24,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Attribute\AbstractAttributeHandler;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\DeleteAttributeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\DeleteAttributeException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
 
 /**
- * Handles command which deletes the Attribute using legacy object model
+ * Provides identification data of Attribute
  */
-final class DeleteAttributeHandler extends AbstractAttributeHandler implements DeleteAttributeHandlerInterface
+final class AttributeId
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws AttributeException
+     * @var int
      */
-    public function handle(DeleteAttributeCommand $command)
-    {
-        $attribute = $this->getAttributeById($command->getAttributeId());
+    private $attributeId;
 
-        if (false === $this->deleteAttribute($attribute)) {
-            throw new DeleteAttributeException(sprintf('Failed to delete attribute with id "%s".', $attribute->id), DeleteAttributeException::FAILED_DELETE);
+    /**
+     * @param int $attributeId
+     *
+     * @throws AttributeConstraintException
+     */
+    public function __construct($attributeId)
+    {
+        $this->assertIsIntegerGreaterThanZero($attributeId);
+        $this->attributeId = $attributeId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->attributeId;
+    }
+
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param int $value
+     *
+     * @throws AttributeConstraintException
+     */
+    private function assertIsIntegerGreaterThanZero($value)
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new AttributeConstraintException(sprintf('Invalid attribute id "%s".', var_export($value, true)), AttributeConstraintException::INVALID_ID);
         }
     }
 }

@@ -2,32 +2,32 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AttributeGroupViewDataProvider:
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider:
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   prestashop.adapter.product.attribute_group.attribute_group_view_data_provider:
-    alias: PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AttributeGroupViewDataProvider
+    alias: PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider
     deprecated: ~
 
-  PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand'
 
-  PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandler:
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandler:
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
 
-  PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandler:
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\GetAttributeGroupListHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList'
+        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList'
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandler:
     autowire: true

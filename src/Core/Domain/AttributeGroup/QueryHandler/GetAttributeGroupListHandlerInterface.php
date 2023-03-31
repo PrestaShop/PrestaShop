@@ -24,20 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Defines contract to handle @see GetAttributeGroupList
  */
-interface GetProductAttributeGroupsHandlerInterface
+interface GetAttributeGroupListHandlerInterface
 {
     /**
-     * @param GetProductAttributeGroups $query
+     * @param GetAttributeGroupList $query
      *
-     * @return AttributeGroup[]
+     * @return array
      */
-    public function handle(GetProductAttributeGroups $query): array;
+    public function handle(GetAttributeGroupList $query): array;
 }

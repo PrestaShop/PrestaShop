@@ -24,20 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
 
 /**
- * Handles @see GetProductAttributeGroups query
+ * Interface for handling command which deletes attribute group
  */
-interface GetProductAttributeGroupsHandlerInterface
+interface DeleteAttributeGroupHandlerInterface
 {
     /**
-     * @param GetProductAttributeGroups $query
-     *
-     * @return AttributeGroup[]
+     * @param DeleteAttributeGroupCommand $command
      */
-    public function handle(GetProductAttributeGroups $query): array;
+    public function handle(DeleteAttributeGroupCommand $command);
 }
