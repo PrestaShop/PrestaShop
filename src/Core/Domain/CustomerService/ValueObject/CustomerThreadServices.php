@@ -24,15 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadServices;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject;
 
-/**
- * Interface for service that gets summary of customer services threads
- */
-interface GetCustomerServicesSummaryHandlerInterface
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
+
+class CustomerThreadServices
 {
-    public function handle(GetCustomerServiceSummary $query): CustomerThreadServices;
+    /** @var array<string, float> */
+    public $statistics = [];
+
+    /** @var array<int, CustomerServiceSummary> */
+    public $contacts = [];
+
+    public function addStatistic(string $statistics, int $results): self
+    {
+        $this->statistics[$statistics] = $results;
+
+        return $this;
+    }
+
+    public function addContact(CustomerServiceSummary $customerServiceSummary): self
+    {
+        $this->contacts[$customerServiceSummary->getContactId()] = $customerServiceSummary;
+
+        return $this;
+    }
 }

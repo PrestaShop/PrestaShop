@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository\CustomerMessage
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadServices;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -82,13 +83,12 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
     }
 
     /**
-     * @return array{summaries: array<int,CustomerServiceSummary>, statistics: array<string, (float|int)>}
+     * Collect information about customer thread contacts and statistics
      */
-    public function handle(GetCustomerServiceSummary $query): array
+    public function handle(GetCustomerServiceSummary $query): CustomerThreadServices
     {
+        $customerThreadServices = new CustomerThreadServices();
         $contacts = $this->contactRepository->getContacts();
-        $customerServicesSummary = [];
-        $customerServicesSummary['summaries'] = [];
         foreach ($this->contactRepository->getCategoriesContacts() as $categoriesContact) {
             $customerThreadId = 0;
             $totalThreads = 0;
@@ -116,22 +116,23 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
                 $viewUrl
             );
 
-            $customerServicesSummary['summaries'][$customerServiceSummary->getContactId()] = $customerServiceSummary;
+            $customerThreadServices->addContact($customerServiceSummary);
         }
 
         $all = $this->customerThreadRepository->getTotalCustomerThreads();
         $pending = $this->customerThreadRepository->getTotalCustomerThreads('status LIKE "%pending%"');
         $unread = $this->customerThreadRepository->getTotalCustomerThreads('status = "open"');
+        $pendingThreads = $this->customerMessageRepository->getTotalCustomerMessages('id_employee = 0');
+        $totalNumberOfCustomerMessages = $this->customerMessageRepository->getTotalCustomerMessages('id_employee != 0');
 
-        $customerServicesSummary['statistics'] = [
-            $this->translator->trans('Total threads', [], 'Admin.Catalog.Feature') => $all,
-            $this->translator->trans('Threads pending', [], 'Admin.Catalog.Feature') => $pending,
-            $this->translator->trans('Total number of customer messages', [], 'Admin.Catalog.Feature') => $this->customerMessageRepository->getTotalCustomerMessages('id_employee = 0'),
-            $this->translator->trans('Total number of employee messages', [], 'Admin.Catalog.Feature') => $this->customerMessageRepository->getTotalCustomerMessages('id_employee != 0'),
-            $this->translator->trans('Unread threads', [], 'Admin.Catalog.Feature') => $unread,
-            $this->translator->trans('Closed threads', [], 'Admin.Catalog.Feature') => $all - ($unread + $pending),
-        ];
+        $customerThreadServices
+            ->addStatistic($this->translator->trans('Total threads', [], 'Admin.Catalog.Feature'), $all)
+            ->addStatistic($this->translator->trans('Threads pending', [], 'Admin.Catalog.Feature'), $pending)
+            ->addStatistic($this->translator->trans('Total number of customer messages', [], 'Admin.Catalog.Feature'), $pendingThreads)
+            ->addStatistic($this->translator->trans('Total number of employee messages', [], 'Admin.Catalog.Feature'), $totalNumberOfCustomerMessages)
+            ->addStatistic($this->translator->trans('Unread threads', [], 'Admin.Catalog.Feature'), $unread)
+            ->addStatistic($this->translator->trans('Closed threads', [], 'Admin.Catalog.Feature'), $all - ($unread + $pending));
 
-        return $customerServicesSummary;
+        return $customerThreadServices;
     }
 }

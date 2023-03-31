@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServic
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
