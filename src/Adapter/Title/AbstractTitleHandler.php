@@ -44,26 +44,12 @@ class AbstractTitleHandler
     protected $titleImageUploader;
 
     /**
-     * @var string
-     */
-    protected $tmpImageDir;
-
-    /**
-     * @var string
-     */
-    protected $genderDir;
-
-    /**
      * @param TitleRepository $titleRepository
      * @param TitleImageUploader $titleImageUploader
-     * @param string $tmpImageDir
-     * @param string $genderDir
      */
-    public function __construct(TitleRepository $titleRepository, TitleImageUploader $titleImageUploader, string $tmpImageDir, string $genderDir)
+    public function __construct(TitleRepository $titleRepository, TitleImageUploader $titleImageUploader)
     {
         $this->titleRepository = $titleRepository;
         $this->titleImageUploader = $titleImageUploader;
-        $this->tmpImageDir = $tmpImageDir;
-        $this->genderDir = $genderDir;
     }
 }
