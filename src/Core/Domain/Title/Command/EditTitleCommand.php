@@ -155,11 +155,11 @@ class EditTitleCommand
     }
 
     /**
-     * @param int $imageWidth
+     * @param int|null $imageWidth
      *
      * @return self
      */
-    public function setImageWidth(int $imageWidth): self
+    public function setImageWidth(?int $imageWidth): self
     {
         $this->imgWidth = $imageWidth;
 
@@ -175,11 +175,11 @@ class EditTitleCommand
     }
 
     /**
-     * @param int $imageHeight
+     * @param int|null $imageHeight
      *
      * @return self
      */
-    public function setImageHeight(int $imageHeight): self
+    public function setImageHeight(?int $imageHeight): self
     {
         $this->imgHeight = $imageHeight;
 

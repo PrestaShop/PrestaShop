@@ -79,11 +79,11 @@ class EditTitleHandler extends AbstractTitleHandler implements EditTitleHandlerI
             return;
         }
 
-        $this->titleImageUploader->setImageHeight($command->getImageHeight());
-        $this->titleImageUploader->setImageWidth($command->getImageWidth());
         $this->titleImageUploader->upload(
             (int) $title->id,
-            $command->getImageFile()
+            $command->getImageFile(),
+            $command->getImageWidth(),
+            $command->getImageHeight()
         );
     }
 }

@@ -73,11 +73,11 @@ class AddTitleHandler extends AbstractTitleHandler implements AddTitleHandlerInt
             return;
         }
 
-        $this->titleImageUploader->setImageHeight($command->getImageHeight());
-        $this->titleImageUploader->setImageWidth($command->getImageWidth());
         $this->titleImageUploader->upload(
             $titleId->getValue(),
-            $command->getImageFile()
+            $command->getImageFile(),
+            $command->getImageWidth(),
+            $command->getImageHeight()
         );
     }
 }

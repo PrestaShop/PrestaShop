@@ -31,7 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Gender;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleImageUploadingException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -42,35 +44,31 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class TitleImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
-     * @var int|null
-     */
-    protected $imageHeight;
-    /**
-     * @var int|null
-     */
-    protected $imageWidth;
-
-    /**
      * {@inheritdoc}
+     * @param int|null $imageWidth
+     * @param int|null $imageHeight
      *
-     * @throws UploadedImageConstraintException
      * @throws ImageUploadException
+     * @throws TitleImageUploadingException
+     * @throws UploadedImageConstraintException
+     * @throws ImageOptimizationException
+     * @throws MemoryLimitException
      */
-    public function upload($titleId, UploadedFile $image)
+    public function upload($entityId, UploadedFile $uploadedImage, ?int $imageWidth = null, ?int $imageHeight = null)
     {
-        $this->checkImageIsAllowedForUpload($image);
-        $tempImageName = $this->createTemporaryImage($image);
-        $this->deleteOldImage($titleId);
+        $this->checkImageIsAllowedForUpload($uploadedImage);
+        $tempImageName = $this->createTemporaryImage($uploadedImage);
+        $this->deleteOldImage($entityId);
 
-        $destination = _PS_GENDERS_DIR_ . $titleId . '.jpg';
+        $destination = _PS_GENDERS_DIR_ . $entityId . '.jpg';
         $this->uploadFromTemp($tempImageName, $destination);
 
         // Copy new image
         if (!ImageManager::resize(
             $destination,
             $destination,
-            $this->imageWidth,
-            $this->imageHeight
+            $imageWidth,
+            $imageHeight
         )) {
             throw new TitleImageUploadingException(
                 'An error occurred while uploading the image. Check your directory permissions.',
@@ -97,19 +95,5 @@ class TitleImageUploader extends AbstractImageUploader implements ImageUploaderI
                 unlink($currentFile);
             }
         }
-    }
-
-    public function setImageHeight(?int $height): self
-    {
-        $this->imageHeight = $height;
-
-        return $this;
-    }
-
-    public function setImageWidth(?int $width): self
-    {
-        $this->imageWidth = $width;
-
-        return $this;
     }
 }
