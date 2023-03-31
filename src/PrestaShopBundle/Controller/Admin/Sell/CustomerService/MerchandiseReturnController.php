@@ -191,6 +191,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     public function bulkDeleteProductAction(int $orderReturnId, Request $request): RedirectResponse
     {
         $orderReturnDetails = $this->getBulkOrderReturnDetailsFromRequest($request);
+        $orderReturnDetails = array_map('intval', $orderReturnDetails);
 
         try {
             $this->getCommandBus()->handle(
@@ -220,7 +221,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return OrderReturnDetailId[]
+     * @return int[]
      */
     private function getBulkOrderReturnDetailsFromRequest(Request $request): array
     {

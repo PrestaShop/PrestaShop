@@ -71,7 +71,7 @@ class BulkDeleteProductFromOrderReturnCommand
     private function setOrderReturnDetails(array $orderReturnDetailIds): void
     {
         foreach ($orderReturnDetailIds as $orderReturnDetailId) {
-            $this->orderReturnDetailIds[] = new OrderReturnDetailId((int) $orderReturnDetailId);
+            $this->orderReturnDetailIds[] = new OrderReturnDetailId($this->orderReturnId->getValue(), $orderReturnDetailId);
         }
     }
 

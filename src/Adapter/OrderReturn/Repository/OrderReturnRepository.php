@@ -32,7 +32,9 @@ use Doctrine\DBAL\Connection;
 use Exception;
 use Order;
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnDetailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
@@ -62,18 +64,26 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param OrderReturnValidator $orderReturnValidator
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        OrderReturnValidator $orderReturnValidator
+        OrderReturnValidator $orderReturnValidator,
+        OrderRepository $orderRepository
     ) {
         $this->orderReturnValidator = $orderReturnValidator;
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -181,7 +191,12 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             ->setParameter('orderReturnId', $orderReturnDetailId->getOrderReturnId()->getValue())
             ->execute()->fetchAssociative();
         if (!$result) {
-            throw new OrderReturnDetailNotFoundException(sprintf('Order return detail with id "%s" not found', $orderDetailId));
+            throw new OrderReturnDetailNotFoundException(
+                sprintf(
+                    'Order return detail with id "%s" not found',
+                    $orderReturnDetailId->getOrderDetailId()->getValue()
+                )
+            );
         }
 
         return new OrderReturnDetail(
@@ -194,15 +209,16 @@ class OrderReturnRepository extends AbstractObjectModelRepository
 
     /**
      * @param OrderReturnId $orderReturnId
-     * @param Order $order
-     *
      * @return array<OrderReturnDetail>
      *
      * @throws OrderReturnException
+     * @throws OrderReturnNotFoundException
      */
-    public function getOrderReturnDetails(OrderReturnId $orderReturnId, Order $order): array
+    public function getOrderReturnDetails(OrderReturnId $orderReturnId): array
     {
+        $orderId = $this->getOrderId($orderReturnId);
         try {
+            $order = $this->orderRepository->get(new OrderId($orderId));
             $details = OrderReturn::getOrdersReturnProducts($orderReturnId->getValue(), $order);
         } catch (Exception $e) {
             throw new OrderReturnException($e->getMessage());
@@ -219,5 +235,25 @@ class OrderReturnRepository extends AbstractObjectModelRepository
         }
 
         return $return;
+    }
+
+    public function getOrderId(OrderReturnId $orderReturnId): int
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('id_order')
+            ->from($this->dbPrefix . 'order_return')
+            ->where('id_order_return = :orderReturnId')
+            ->setParameter('orderReturnId', $orderReturnId->getValue())
+            ->execute()->fetchOne();
+        if (!$result) {
+            throw new OrderReturnNotFoundException(
+                sprintf(
+                    'Order return with id %d not found',
+                    $orderReturnId->getValue()
+                )
+            );
+        }
+
+        return (int) $result;
     }
 }

@@ -46,17 +46,8 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
      */
     private $orderReturnRepository;
 
-    /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    public function __construct(
-        OrderReturnRepository $orderReturnRepository,
-        OrderRepository $orderRepository
-    ) {
+    public function __construct(OrderReturnRepository $orderReturnRepository) {
         $this->orderReturnRepository = $orderReturnRepository;
-        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -68,11 +59,10 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
         foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
             try {
                 $this->orderReturnRepository->deleteOrderReturnProduct(
-                    $command->getOrderReturnId(),
                     $orderReturnDetailId
                 );
             } catch (OrderReturnException $e) {
-                $errors[] = $orderReturnDetailId->getValue();
+                $errors[] = $orderReturnDetailId->getOrderDetailId()->getValue();
             }
         }
 
@@ -91,22 +81,19 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
      *
      * @throws BulkDeleteOrderReturnProductException
      * @throws OrderReturnException
-     * @throws OrderException
      * @throws CoreException
      */
     private function validate(OrderReturnId $orderReturnId, array $orderReturnDetailIds): void
     {
         $errors = [];
-        $orderReturn = $this->orderReturnRepository->get($orderReturnId);
-        $order = $this->orderRepository->get(new OrderId((int) $orderReturn->id_order));
-        $details = $this->orderReturnRepository->getOrderReturnDetails($orderReturnId, $order);
+        $details = $this->orderReturnRepository->getOrderReturnDetails($orderReturnId);
 
         /* Check if products exist in order return */
         foreach ($orderReturnDetailIds as $orderReturnDetailId) {
-            if (isset($details[$orderReturnDetailId->getValue()])) {
-                unset($details[$orderReturnDetailId->getValue()]);
+            if (isset($details[$orderReturnDetailId->getOrderDetailId()->getValue()])) {
+                unset($details[$orderReturnDetailId->getOrderDetailId()->getValue()]);
             } else {
-                $errors[] = $orderReturnDetailId->getValue();
+                $errors[] = $orderReturnDetailId->getOrderDetailId()->getValue();
             }
         }
 
