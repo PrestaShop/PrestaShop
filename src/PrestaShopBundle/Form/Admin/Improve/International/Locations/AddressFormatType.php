@@ -35,10 +35,13 @@ class AddressFormatType extends TranslatorAwareType
     {
         $builder
             ->add('address_format', TextareaType::class, [
-                'label' => $this->trans('Address format', 'Admin.Global'),
+                'label' => false,
                 'required' => false,
                 'constraints' => [
                     new AddressFormat(),
+                ],
+                'attr' => [
+                    'rows' => 10,
                 ],
             ]);
     }
