@@ -39,8 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThre
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadServices;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -238,22 +238,23 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertContactHasThreads(string $contactReference, int $expectedThreads): void
     {
         $contactId = $this->referenceToId($contactReference);
+
+        /** @var CustomerThreadServices $customerServiceSummaries */
         $customerServiceSummaries = $this->getQueryBus()->handle(
             new GetCustomerServiceSummary()
         );
 
-        /** @var CustomerServiceSummary $customerServiceSummary */
-        foreach ($customerServiceSummaries['summaries'] as $customerServiceSummary) {
-            if ($customerServiceSummary->getContactId() !== $contactId) {
+        foreach ($customerServiceSummaries->contacts as $contact) {
+            if ($contact->getContactId() !== $contactId) {
                 continue;
             }
 
-            if ($customerServiceSummary->getTotalThreads() !== $expectedThreads) {
-                throw new NoExceptionAlthoughExpectedException(sprintf('Contact expected to have %s threads, but it had %s', $expectedThreads, $customerServiceSummary->getTotalThreads()));
+            if ($contact->getTotalThreads() !== $expectedThreads) {
+                throw new NoExceptionAlthoughExpectedException(sprintf('Contact expected to have %s threads, but it had %s', $expectedThreads, $contact->getTotalThreads()));
             }
         }
 
-        if (count($customerServiceSummaries['statistics']) !== 6) {
+        if (count($customerServiceSummaries->statistics) !== 6) {
             throw new NoExceptionAlthoughExpectedException(sprintf('Statistics expect to have 6 different text rows but it has %s', count($customerServiceSummaries['statistics'])));
         }
     }
