@@ -116,7 +116,8 @@ class TitleRepository extends AbstractObjectModelRepository
     /**
      * @param Gender $title
      *
-     * @throws CannotDeleteTitleException
+     * @throws CoreException
+     * @throws TitleNotFoundException
      */
     public function delete(Gender $title): void
     {

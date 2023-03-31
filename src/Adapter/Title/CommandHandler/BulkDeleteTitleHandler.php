@@ -44,11 +44,9 @@ class BulkDeleteTitleHandler extends AbstractTitleHandler implements BulkDeleteT
     public function handle(BulkDeleteTitleCommand $command): void
     {
         foreach ($command->getTitleIds() as $titleId) {
-            $title = $this->titleRepository->get($titleId);
-
-            if (!$title->delete()) {
-                throw DeleteTitleException::createBulkDeleteFailure($titleId);
-            }
+            $this->titleRepository->delete(
+                $this->titleRepository->get($titleId)
+            );
         }
     }
 }

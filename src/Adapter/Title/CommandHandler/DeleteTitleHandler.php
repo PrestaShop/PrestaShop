@@ -45,8 +45,8 @@ class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHand
      */
     public function handle(DeleteTitleCommand $command): void
     {
-        $title = $this->titleRepository->get($command->getTitleId());
-
-        $this->titleRepository->delete($title);
+        $this->titleRepository->delete(
+            $this->titleRepository->get($command->getTitleId())
+        );
     }
 }
