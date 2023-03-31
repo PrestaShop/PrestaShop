@@ -185,24 +185,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * This hook can be used to flag a feature for database hard reset
      *
-     * @deprecated since 8.0.0 and will be removed in next major.
-     *
-     * @BeforeFeature @reset-database-before-feature
-     */
-    public static function cleanDatabaseHardPrepareFeature()
-    {
-        @trigger_error(
-            'The @reset-database-before-feature tag is deprecated because there is a more optimized alternative use the @restore-all-tables-before-feature tag instead ',
-            E_USER_DEPRECATED
-        );
-
-        self::restoreTestDB();
-        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
-    }
-
-    /**
-     * This hook can be used to flag a feature for database hard reset
-     *
      * @BeforeFeature @restore-all-tables-before-feature
      */
     public static function restoreAllTablesBeforeFeature()
