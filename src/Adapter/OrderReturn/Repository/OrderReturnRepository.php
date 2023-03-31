@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
-use PrestaShopException;
 
 class OrderReturnRepository extends AbstractObjectModelRepository
 {
@@ -63,6 +62,8 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @param Connection $connection
+     * @param string $dbPrefix
      * @param OrderReturnValidator $orderReturnValidator
      */
     public function __construct(
@@ -112,18 +113,19 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param OrderReturnId $orderReturnId
      * @param OrderReturnDetailId $orderReturnDetailId
      *
      * @throws CoreException
      * @throws DeleteOrderReturnProductException
+     * @throws OrderReturnDetailNotFoundException
      * @throws OrderReturnException
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     public function deleteOrderReturnProduct(
-        OrderReturnId $orderReturnId,
         OrderReturnDetailId $orderReturnDetailId
     ): void {
-        $orderReturn = $this->get($orderReturnId);
+        $orderReturn = $this->get($orderReturnDetailId->getOrderReturnId());
 
         if ((int) ($orderReturn->countProduct()) <= 1) {
             throw new DeleteOrderReturnProductException(
@@ -131,48 +133,36 @@ class OrderReturnRepository extends AbstractObjectModelRepository
                 DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT
             );
         }
-        $orderReturnDetail = $this->getOrderReturnDetailByOrderDetailId($orderReturnDetailId->getValue());
+        $orderReturnDetail = $this->getOrderReturnDetailByOrderDetailId($orderReturnDetailId);
 
         $this->deleteOrderReturnDetail(
-            $orderReturnDetail->getOrderReturnId(),
             $orderReturnDetailId,
             $orderReturnDetail->getCustomizationId()
         );
     }
 
     /**
-     * @param OrderReturnId $orderReturnId
      * @param OrderReturnDetailId $orderReturnDetailId
      * @param CustomizationId|null $customizationId
      *
-     * @throws DeleteOrderReturnProductException
+     * @throws \Doctrine\DBAL\Exception
      */
     public function deleteOrderReturnDetail(
-        OrderReturnId $orderReturnId,
         OrderReturnDetailId $orderReturnDetailId,
         ?CustomizationId $customizationId = null
     ): void {
-        try {
-            if (!OrderReturn::deleteOrderReturnDetail(
-                $orderReturnId->getValue(),
-                $orderReturnDetailId->getValue(),
-                $customizationId ? $customizationId->getValue() : 0
-            )) {
-                throw new DeleteOrderReturnProductException(
-                    'Failed to delete merchandise return detail',
-                    DeleteOrderReturnProductException::UNEXPECTED_ERROR
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new DeleteOrderReturnProductException(
-                'Failed to delete merchandise return detail',
-                DeleteOrderReturnProductException::UNEXPECTED_ERROR
-            );
-        }
+        $this->connection->delete(
+            $this->dbPrefix . 'order_return_detail',
+            [
+                'id_order_detail' => $orderReturnDetailId->getOrderDetailId()->getValue(),
+                'id_order_return' =>$orderReturnDetailId->getOrderReturnId()->getValue(),
+                'id_customization' => $customizationId ? $customizationId->getValue() : 0
+            ]
+        );
     }
 
     /**
-     * @param int $orderDetailId
+     * @param OrderReturnDetailId $orderReturnDetailId
      *
      * @return OrderReturnDetail
      *
@@ -180,13 +170,15 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      * @throws \Doctrine\DBAL\Driver\Exception
      * @throws \Doctrine\DBAL\Exception
      */
-    public function getOrderReturnDetailByOrderDetailId(int $orderDetailId): OrderReturnDetail
+    public function getOrderReturnDetailByOrderDetailId(OrderReturnDetailId $orderReturnDetailId): OrderReturnDetail
     {
         $result = $this->connection->createQueryBuilder()
             ->select('id_order_return, id_order_detail, id_customization, product_quantity')
             ->from($this->dbPrefix . 'order_return_detail')
             ->where('id_order_detail = :orderDetailId')
-            ->setParameter('orderDetailId', $orderDetailId)
+            ->where('id_order_return = :orderReturnId')
+            ->setParameter('orderDetailId', $orderReturnDetailId->getOrderDetailId()->getValue())
+            ->setParameter('orderReturnId', $orderReturnDetailId->getOrderReturnId()->getValue())
             ->execute()->fetchAssociative();
         if (!$result) {
             throw new OrderReturnDetailNotFoundException(sprintf('Order return detail with id "%s" not found', $orderDetailId));

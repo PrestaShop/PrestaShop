@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 
 /**
@@ -36,19 +37,27 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstrain
 class OrderReturnDetailId
 {
     /**
-     * @var int
+     * @var OrderReturnId
      */
-    private $id;
+    private $orderReturnId;
 
     /**
-     * @param int $id
-     *
+     * @var OrderDetailId
+     */
+    private $orderDetailId;
+
+    /**
+     * @param int $orderReturnId
+     * @param int $orderDetailId
      * @throws OrderReturnConstraintException
      */
-    public function __construct(int $id)
+    public function __construct(int $orderReturnId, int $orderDetailId)
     {
-        $this->assertIsIntegerGreaterThanZero($id);
-        $this->id = $id;
+        $this->assertIsIntegerGreaterThanZero($orderReturnId);
+        $this->assertIsIntegerGreaterThanZero($orderDetailId);
+
+        $this->orderReturnId = new OrderReturnId($orderReturnId);
+        $this->orderDetailId = new OrderDetailId($orderDetailId);
     }
 
     /**
@@ -62,17 +71,25 @@ class OrderReturnDetailId
     {
         if (0 >= $value) {
             throw new OrderReturnConstraintException(
-                sprintf('Invalid order return detail id "%s".', $value),
+                sprintf('Invalid id "%s".', $value),
                 OrderReturnConstraintException::INVALID_ID
             );
         }
     }
 
     /**
-     * @return int
+     * @return OrderReturnId
      */
-    public function getValue(): int
+    public function getOrderReturnId(): OrderReturnId
     {
-        return $this->id;
+        return $this->orderReturnId;
+    }
+
+    /**
+     * @return OrderDetailId
+     */
+    public function getOrderDetailId(): OrderDetailId
+    {
+        return $this->orderDetailId;
     }
 }

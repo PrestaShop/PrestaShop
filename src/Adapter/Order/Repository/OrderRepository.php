@@ -91,13 +91,13 @@ class OrderRepository extends AbstractObjectModelRepository
     {
         $orderDetail = new OrderDetail($detailId->getValue());
         $order = new Order($orderDetail->id_order);
-        $customizations = [];
         $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $languageId->getValue(), true, $order->id_shop, $orderDetail->id_customization);
         $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id] ?? null;
         if (!is_array($customizedDatas)) {
             return null;
         }
 
+        $customizations = [];
         foreach ($customizedDatas as $customizationPerAddress) {
             foreach ($customizationPerAddress as $customization) {
                 foreach ($customization['datas'] as $datas) {

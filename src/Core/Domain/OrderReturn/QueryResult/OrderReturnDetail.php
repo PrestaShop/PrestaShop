@@ -56,8 +56,7 @@ class OrderReturnDetail
 
     public function __construct(int $orderReturnId, int $orderDetailId, int $productQuantity, ?int $customizationId = null)
     {
-        $this->orderReturnId = new OrderReturnId($orderReturnId);
-        $this->orderDetailId = new OrderReturnDetailId($orderDetailId);
+        $this->orderDetailId = new OrderReturnDetailId($orderReturnId, $orderDetailId);
         $this->productQuantity = $productQuantity;
         if ($customizationId) {
             $this->customizationId = new CustomizationId($customizationId);

@@ -42,13 +42,11 @@ class OrderDetailCustomizations
      */
     public function __construct(array $orderDetailCustomizations)
     {
-        foreach ($orderDetailCustomizations as $orderDetailCustomization) {
-            $this->addOrderDetailCustomization($orderDetailCustomization);
-        }
+        $this->setOrderDetailCustomizations($orderDetailCustomizations);
     }
 
     /**
-     * @param OrderProductCustomizationForViewing $orderDetailCustomization
+     * @param array $orderDetailCustomizations
      */
     private function setOrderDetailCustomizations(array $orderDetailCustomizations): void
     {

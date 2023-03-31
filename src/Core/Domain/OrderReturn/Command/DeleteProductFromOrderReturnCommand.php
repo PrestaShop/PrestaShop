@@ -38,11 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 class DeleteProductFromOrderReturnCommand
 {
     /**
-     * @var OrderReturnId
-     */
-    private $orderReturnId;
-
-    /**
      * @var OrderReturnDetailId
      */
     private $orderReturnDetailId;
@@ -57,16 +52,7 @@ class DeleteProductFromOrderReturnCommand
      */
     public function __construct(int $orderReturnId, int $orderReturnDetailId)
     {
-        $this->orderReturnId = new OrderReturnId($orderReturnId);
-        $this->orderReturnDetailId = new OrderReturnDetailId($orderReturnDetailId);
-    }
-
-    /**
-     * @return OrderReturnId
-     */
-    public function getOrderReturnId(): OrderReturnId
-    {
-        return $this->orderReturnId;
+        $this->orderReturnDetailId = new OrderReturnDetailId($orderReturnId, $orderReturnDetailId);
     }
 
     /**
