@@ -68,3 +68,7 @@ services:
   PrestaShopBundle\Command\UpdateLicensesCommand:
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\ShopCreatorCommand:
+    autowire: true
+    autoconfigure: true

@@ -276,6 +276,7 @@ parameters:
             allowIn:
                 - src/Adapter/*
                 - src/PrestaShopBundle/Install/*
+                - src/PrestaShopBundle/Command/ShopCreatorCommand.php
         -
             class: 'Symfony\Component\Translation\TranslatorInterface'
             message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
