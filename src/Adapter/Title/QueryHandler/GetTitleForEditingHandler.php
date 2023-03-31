@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
 use PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Title\QueryHandler\GetTitleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Title\QueryResult\EditableTitle;
-use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 
 /**
  * Handles command that gets title for editing

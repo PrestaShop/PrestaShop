@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\BulkDeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\DeleteTitleException;
 
 /**
  * Handles command that bulk delete titles

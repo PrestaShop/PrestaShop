@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\EditTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

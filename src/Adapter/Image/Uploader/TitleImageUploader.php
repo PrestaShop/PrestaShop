@@ -45,6 +45,7 @@ class TitleImageUploader extends AbstractImageUploader implements ImageUploaderI
 {
     /**
      * {@inheritdoc}
+     *
      * @param int|null $imageWidth
      * @param int|null $imageHeight
      *
