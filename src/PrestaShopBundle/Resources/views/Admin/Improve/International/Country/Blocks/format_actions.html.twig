@@ -25,52 +25,44 @@
 
 {% set confirmation = 'Are you sure you want to restore the default address format for this country?'|trans({},'Admin.International.Notification') %}
 <div class="address-format-actions">
-  <span title=""
-        class="label-tooltip"
+  <span class="label-tooltip"
         data-toggle="pstooltip"
         data-placement="top"
         data-original-title="{{ 'This will restore your last registered address format.'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-    <a href="javascript:void(0)"
-       data-confirmation-message="{{ confirmation }}"
+    <a data-confirmation-message="{{ confirmation }}"
        data-default-layout="{{ address_format }}"
        class="btn btn-outline-secondary modify-address-layout">
       {{ 'Use the last registered format'|trans({}, 'Admin.International.Feature') }}
     </a>
   </span>
-  <span title=""
-        class="label-tooltip"
+  <span class="label-tooltip"
         data-toggle="pstooltip"
         data-placement="top"
         data-original-title="{{ 'This will restore the default address format for this country'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-        <a href="javascript:void(0)"
-           data-confirmation-message="{{ confirmation }}"
+        <a data-confirmation-message="{{ confirmation }}"
            data-default-layout="{{ default_format }}"
            class="btn btn-outline-secondary modify-address-layout">
           {{ 'Use the default format'|trans({}, 'Admin.International.Feature') }}
         </a>
   </span>
-  <span title=""
-        class="label-tooltip"
+  <span class="label-tooltip"
         data-toggle="pstooltip"
         data-placement="top"
         data-original-title="{{ 'This will restore your current address format.'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-            <a href="javascript:void(0)"
-               data-confirmation-message="{{ confirmation }}"
+            <a data-confirmation-message="{{ confirmation }}"
                class="btn btn-outline-secondary modify-address-layout">
               {{ 'Use my current modified format'|trans({}, 'Admin.International.Feature') }}
             </a>
   </span>
-  <span title=""
-        class="label-tooltip"
+  <span class="label-tooltip"
         data-toggle="pstooltip"
         data-placement="top"
         data-original-title="{{ 'This will delete the current address format'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-            <a href="javascript:void(0)"
-               data-confirmation-message="{{ confirmation }}"
+            <a data-confirmation-message="{{ confirmation }}"
                data-default-layout=" "
                class="btn btn-outline-secondary modify-address-layout">
               <i class="material-icons">delete_sweep</i>  {{ 'Clear format'|trans({}, 'Admin.International.Feature') }}
