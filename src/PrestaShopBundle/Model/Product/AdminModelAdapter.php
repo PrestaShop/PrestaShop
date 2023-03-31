@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Model\Product;
 
 use Attachment;
-use Configuration as ConfigurationLegacy;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
@@ -75,12 +75,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $productPricePriority;
     /** @var WarehouseDataProvider */
     private $warehouseAdapter;
+    /** @var Configuration */
+    private $configuration;
     /** @var Router */
     private $router;
-
-    /**
-     * @var FloatParser
-     */
+    /** @var FloatParser */
     private $floatParser;
 
     /** @var array */
@@ -183,6 +182,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
+     * @param Configuration $configuration
      * @param Router $router
      * @param FloatParser|null $floatParser
      */
@@ -197,6 +197,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         PackDataProvider $packDataProvider,
         ShopContext $shopContext,
         TaxRuleDataProvider $taxRuleDataProvider,
+        Configuration $configuration,
         Router $router,
         FloatParser $floatParser = null
     ) {
@@ -212,6 +213,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->packAdapter = $packDataProvider;
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
+        $this->configuration = $configuration;
         $this->router = $router;
         $this->floatParser = $floatParser ?? new FloatParser();
     }
@@ -337,7 +339,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['combinations'][$k]['attribute_unity'] = abs(
                 $this->floatParser->fromString($combination['attribute_unity'])
             );
-            $form_data['combinations'][$k]['attribute_quantity'] = $this->floatParser->fromString($combination['attribute_quantity']);
+            if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
+                $form_data['combinations'][$k]['attribute_quantity'] = $this->floatParser->fromString($combination['attribute_quantity']);
+            }
 
             $form_data['combinations'][$k]['attribute_wholesale_price'] = abs(
                 $this->floatParser->fromString($combination['attribute_wholesale_price'])
@@ -711,7 +715,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getVirtualProductData(Product $product)
     {
         //force virtual product feature
-        ConfigurationLegacy::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+        $this->configuration->set('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 
         $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         if ($id_product_download) {

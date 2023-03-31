@@ -1285,6 +1285,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.pack'),
             $this->get('prestashop.adapter.shop.context'),
             $this->get('prestashop.adapter.data_provider.tax'),
+            $this->get('prestashop.adapter.legacy.configuration'),
             $this->get('router')
         );
         $form = $this->createFormBuilder($modelMapper->getFormData($product));
