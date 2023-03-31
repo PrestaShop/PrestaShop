@@ -71,9 +71,9 @@ class AddTitleCommand
     public function __construct(
         array $localizedNames,
         int $gender,
-        ?UploadedFile $imgFile,
-        ?int $imgWidth,
-        ?int $imgHeight
+        ?UploadedFile $imgFile = null,
+        ?int $imgWidth = null,
+        ?int $imgHeight = null
     ) {
         $this->localizedNames = $localizedNames;
         $this->gender = new Gender($gender);

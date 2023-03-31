@@ -85,10 +85,7 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
             /** @var TitleId $titleId */
             $titleId = $this->getCommandBus()->handle(new AddTitleCommand(
                 $data['name'],
-                (int) $availableGendersTypes[$data['type']],
-                null,
-                null,
-                null
+                (int) $availableGendersTypes[$data['type']]
             ));
 
             SharedStorage::getStorage()->set($titleReference, $titleId->getValue());
