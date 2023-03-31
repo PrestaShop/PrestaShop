@@ -27,17 +27,13 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
  * This class should not be used as a Grid query builder. @see LogQueryBuilder
  */
-class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
+class LogRepository implements RepositoryInterface
 {
     /**
      * @var Connection
@@ -52,20 +48,13 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      */
     private $logTable;
 
-    /**
-     * @var DoctrineSearchCriteriaApplicatorInterface
-     */
-    private $searchCriteriaApplicator;
-
     public function __construct(
         Connection $connection,
-        $databasePrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+        $databasePrefix
     ) {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
         $this->logTable = $this->databasePrefix . 'log';
-        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
