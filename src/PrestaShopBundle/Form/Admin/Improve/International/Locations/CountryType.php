@@ -159,7 +159,7 @@ class CountryType extends AbstractType
             ])
             ->add('address_format', AddressFormatType::class, [
                 'required' => false,
-                'label' => false,
+                'label' => $this->translator->trans('Address format', [], 'Admin.International.Feature'),
             ])
             ->add('is_enabled', SwitchType::class, [
                 'label' => $this->translator->trans('Active', [], 'Admin.Global'),
