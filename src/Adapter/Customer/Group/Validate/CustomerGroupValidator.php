@@ -109,31 +109,45 @@ class CustomerGroupValidator extends AbstractObjectModelValidator
     }
 
     /**
-     * @param string|string[] $names
+     * @param string[] $names
      *
      * @throws GroupConstraintException
      *
      * @return void
      */
-    private function validateGroupNames($names): void
+    private function validateGroupNames(array $names): void
     {
-        if (is_array($names)) {
-            if (empty($names)) {
-                throw new GroupConstraintException(
-                    'Customer group name cannot be empty',
-                    GroupConstraintException::EMPTY_NAME
-                );
-            }
-            foreach ($names as $name) {
-                $this->validateGroupNames($name);
-            }
-        } else {
-            if (strlen($names) > 32 || false === preg_match('/^[^<>={}]*$/u', $names)) {
-                throw new GroupConstraintException(
-                    'Customer group name cannot contain the following characters: <>={}',
-                    GroupConstraintException::INVALID_NAME
-                );
-            }
+        if (empty($names)) {
+            throw new GroupConstraintException(
+                'Customer group name cannot be empty',
+                GroupConstraintException::EMPTY_NAME
+            );
+        }
+        foreach ($names as $name) {
+            $this->validateGroupName($name);
+        }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @throws GroupConstraintException
+     *
+     * @return void
+     */
+    private function validateGroupName(string $name): void
+    {
+        if (strlen($name) > 32) {
+            throw new GroupConstraintException(
+                sprintf('Customer group name cannot be longer than 32 characters. Got "%s"', $name),
+                GroupConstraintException::NAME_TOO_LONG
+            );
+        }
+        if (false === preg_match('/^[^<>={}]*$/u', $name)) {
+            throw new GroupConstraintException(
+                'Customer group name cannot contain these characters: < > = { }',
+                GroupConstraintException::INVALID_NAME
+            );
         }
     }
 }

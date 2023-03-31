@@ -43,7 +43,9 @@ class GroupConstraintException extends GroupException
 
     public const EMPTY_NAME = 40;
 
-    public const INVALID_NAME = 50;
+    public const NAME_TOO_LONG = 50;
 
-    public const INVALID_PRICE_DISPLAY_METHOD = 60;
+    public const INVALID_NAME = 60;
+
+    public const INVALID_PRICE_DISPLAY_METHOD = 70;
 }
