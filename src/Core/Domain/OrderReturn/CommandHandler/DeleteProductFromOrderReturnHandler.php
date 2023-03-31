@@ -30,9 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class DeleteProductFromOrderReturnHandler implements DeleteProductFromOrderReturnHandlerInterface
 {
@@ -49,17 +46,11 @@ class DeleteProductFromOrderReturnHandler implements DeleteProductFromOrderRetur
 
     /**
      * {@inheritdoc}
-     *
-     * @throws DeleteOrderReturnProductException|CoreException
      */
     public function handle(DeleteProductFromOrderReturnCommand $command): void
     {
-        try {
-            $this->orderReturnRepository->deleteOrderReturnProduct(
-                $command->getOrderReturnDetailId()
-            );
-        } catch (OrderReturnException $e) {
-            throw new DeleteOrderReturnProductException($e->getMessage(), $e->getCode());
-        }
+        $this->orderReturnRepository->deleteOrderReturnProduct(
+            $command->getOrderReturnDetailId()
+        );
     }
 }

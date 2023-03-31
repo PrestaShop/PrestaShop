@@ -85,7 +85,7 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
      */
     private function validate(OrderReturnId $orderReturnId, array $orderReturnDetailIds): void
     {
-        $errors = [];
+        $unknownDetails = [];
         $details = $this->orderReturnRepository->getOrderReturnDetails($orderReturnId);
 
         /* Check if products exist in order return */
@@ -93,13 +93,13 @@ class BulkDeleteProductFromOrderReturnHandler implements BulkDeleteProductFromOr
             if (isset($details[$orderReturnDetailId->getOrderDetailId()->getValue()])) {
                 unset($details[$orderReturnDetailId->getOrderDetailId()->getValue()]);
             } else {
-                $errors[] = $orderReturnDetailId->getOrderDetailId()->getValue();
+                $unknownDetails[] = $orderReturnDetailId->getOrderDetailId()->getValue();
             }
         }
 
-        if (!empty($errors)) {
+        if (!empty($unknownDetails)) {
             throw new BulkDeleteOrderReturnProductException(
-                $errors,
+                $unknownDetails,
                 'Some order details don\'t exist in order return',
                 BulkDeleteOrderReturnProductException::CANT_DELETE_PRODUCT_NOT_PART_OF_ORDER_RETURN
             );
