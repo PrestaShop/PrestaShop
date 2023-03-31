@@ -51,43 +51,43 @@ trans('Enable or disable the authorization server page.', 'Admin.Advparameters.H
 
 // Cart rules feature flag
 trans('Cart rules', 'Admin.Advparameters.Feature');
-trans('Enable / Disable the migrated cart rules page.', 'Admin.Advparameters.Help');
+trans('Enable or disable the migrated cart rules page.', 'Admin.Advparameters.Help');
 
 // Catalog price rules feature flag
 trans('Catalog price rules', 'Admin.Advparameters.Feature');
-trans('Enable / Disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
+trans('Enable or disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
 
 // Multiple image formats feature flags
 trans('Enable / Disable having more than one image format (jpg, webp, avif, png, etc.)', 'Admin.Advparameters.Feature');
 
 // Countries feature flag
-trans('Countries', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated countries page.', 'Admin.Advparameters.Help');
+trans('Countries', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated countries page.', 'Admin.Advparameters.Help');
 
 // States feature flag
-trans('States', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated states page.', 'Admin.Advparameters.Help');
+trans('States', 'Admin.Advaprameters.Feature');
+trans('Enable or disable the migrated states page.', 'Admin.Advparameters.Help');
 
 // Carriers feature flag
-trans('Carriers', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated carriers page.', 'Admin.Advparameters.Help');
+trans('Carriers', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated carriers page.', 'Admin.Advparameters.Help');
 
 // Titles feature flag
-trans('Titles', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated titles page.', 'Admin.Advparameters.Help');
+trans('Titles', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated titles page.', 'Admin.Advparameters.Help');
 
 // Permissions feature flag
-trans('Permissions', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated permissions page.', 'Admin.Advparameters.Help');
+trans('Permissions', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated permissions page.', 'Admin.Advparameters.Help');
 
 // Tax rule groups feature flag
-trans('Tax rule groups', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated tax rules page.', 'Admin.Advparameters.Help');
+trans('Tax rule groups', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated tax rules page.', 'Admin.Advparameters.Help');
 
 // Customer threads feature flag
-trans('Customer threads', 'Admin.Advaparameters.Feature');
-trans('Enable / Disable the migrated customer threads page.', 'Admin.Advparameters.Help');
+trans('Customer threads', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated customer threads page.', 'Admin.Advparameters.Help');
 
 // Order states feature flag
-trans('Order states', 'Admin.Advaparameters.Feature');
+trans('Order states', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated order states page.', 'Admin.Advparameters.Help');

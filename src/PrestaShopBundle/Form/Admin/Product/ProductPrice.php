@@ -253,7 +253,7 @@ class ProductPrice extends CommonAbstractType
 
         //generates fields for price priority
         $specificPricePriorityChoices = [
-            $this->translator->trans('Shop', [], 'Admin.Global') => 'id_shop',
+            $this->translator->trans('Store', [], 'Admin.Global') => 'id_shop',
             $this->translator->trans('Currency', [], 'Admin.Global') => 'id_currency',
             $this->translator->trans('Country', [], 'Admin.Global') => 'id_country',
             $this->translator->trans('Group', [], 'Admin.Global') => 'id_group',

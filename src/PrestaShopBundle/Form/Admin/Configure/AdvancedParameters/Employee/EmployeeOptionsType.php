@@ -68,7 +68,7 @@ class EmployeeOptionsType extends TranslatorAwareType
                 'disabled' => true,
                 'alert_type' => 'warning',
                 'alert_message' => $this->trans(
-                    'You can\'t change the value of this configuration field in the context of this shop.',
+                    'You can\'t change the value of this configuration field in this store\'s context.',
                     'Admin.Notifications.Warning'
                 ),
                 'block_prefix' => 'employee_options',

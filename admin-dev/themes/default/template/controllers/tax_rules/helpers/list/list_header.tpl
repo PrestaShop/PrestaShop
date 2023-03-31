@@ -68,7 +68,7 @@
 						{if $shop_link_type}
 							<th>
 								{if $shop_link_type == 'shop'}
-									{l s='Shop' d='Admin.Global'}
+									{l s='Store' d='Admin.Global'}
 								{else}
 									{l s='Shop group' d='Admin.Global'}
 								{/if}

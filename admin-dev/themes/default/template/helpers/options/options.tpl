@@ -332,7 +332,7 @@
 								{if $field['is_invisible']}
 								<div class="col-lg-9 col-lg-offset-3">
 									<p class="alert alert-warning row-margin-top">
-										{l s='You can\'t change the value of this configuration field in the context of this shop.'}
+										{l s='You can\'t change the value of this configuration field in this store\'s context.'}
 									</p>
 								</div>
 								{/if}

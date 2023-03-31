@@ -195,7 +195,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('shopName'))
-                    ->setName($this->trans('Shop', [], 'Admin.Global'))
+                    ->setName($this->trans('Store', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'shopName',
                     ])

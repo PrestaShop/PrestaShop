@@ -142,7 +142,7 @@ class AdminImportControllerCore extends AdminController
                     ],
                     'supplier_reference' => ['label' => $this->trans('Supplier reference', [], 'Admin.Advparameters.Feature')],
                     'reference' => ['label' => $this->trans('Reference', [], 'Admin.Global')],
-                    'ean13' => ['label' => $this->trans('EAN13', [], 'Admin.Advparameters.Feature')],
+                    'ean13' => ['label' => $this->trans('EAN-13', [], 'Admin.Advparameters.Feature')],
                     'upc' => ['label' => $this->trans('UPC', [], 'Admin.Advparameters.Feature')],
                     'mpn' => ['label' => $this->trans('MPN', [], 'Admin.Catalog.Feature')],
                     'wholesale_price' => ['label' => $this->trans('Cost price', [], 'Admin.Catalog.Feature')],
@@ -161,8 +161,8 @@ class AdminImportControllerCore extends AdminController
                     'image_url' => ['label' => $this->trans('Image URLs (x,y,z...)', [], 'Admin.Advparameters.Feature')],
                     'image_alt' => ['label' => $this->trans('Image alt texts (x,y,z...)', [], 'Admin.Advparameters.Feature')],
                     'shop' => [
-                        'label' => $this->trans('ID / Name of shop', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', [], 'Admin.Advparameters.Help'),
+                        'label' => $this->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
                     'advanced_stock_management' => [
                         'label' => $this->trans('Advanced Stock Management', [], 'Admin.Advparameters.Feature'),
@@ -218,8 +218,8 @@ class AdminImportControllerCore extends AdminController
                     'link_rewrite' => ['label' => $this->trans('Rewritten URL', [], 'Admin.Shopparameters.Feature')],
                     'image' => ['label' => $this->trans('Image URL', [], 'Admin.Advparameters.Feature')],
                     'shop' => [
-                        'label' => $this->trans('ID / Name of shop', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', [], 'Admin.Advparameters.Help'),
+                        'label' => $this->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
                 ];
 
@@ -256,7 +256,7 @@ class AdminImportControllerCore extends AdminController
                     'supplier_reference' => ['label' => $this->trans('Supplier reference #', [], 'Admin.Advparameters.Feature')],
                     'supplier' => ['label' => $this->trans('Supplier', [], 'Admin.Global')],
                     'manufacturer' => ['label' => $this->trans('Brand', [], 'Admin.Global')],
-                    'ean13' => ['label' => $this->trans('EAN13', [], 'Admin.Advparameters.Feature')],
+                    'ean13' => ['label' => $this->trans('EAN-13', [], 'Admin.Advparameters.Feature')],
                     'upc' => ['label' => $this->trans('UPC', [], 'Admin.Advparameters.Feature')],
                     'mpn' => ['label' => $this->trans('MPN', [], 'Admin.Catalog.Feature')],
                     'ecotax' => ['label' => $this->trans('Ecotax', [], 'Admin.Catalog.Feature')],
@@ -323,8 +323,8 @@ class AdminImportControllerCore extends AdminController
                         'help' => $this->trans('Number of days this file can be accessed by customers. Set to zero for unlimited access.', [], 'Admin.Catalog.Help'),
                     ],
                     'shop' => [
-                        'label' => $this->trans('ID / Name of shop', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', [], 'Admin.Advparameters.Help'),
+                        'label' => $this->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
                     'advanced_stock_management' => [
                         'label' => $this->trans('Advanced Stock Management', [], 'Admin.Advparameters.Feature'),
@@ -395,8 +395,8 @@ class AdminImportControllerCore extends AdminController
                     'group' => ['label' => $this->trans('Groups (x,y,z...)', [], 'Admin.Advparameters.Feature')],
                     'id_default_group' => ['label' => $this->trans('Default group ID', [], 'Admin.Advparameters.Feature')],
                     'id_shop' => [
-                        'label' => $this->trans('ID / Name of shop', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', [], 'Admin.Advparameters.Help'),
+                        'label' => $this->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
                 ];
 
@@ -476,7 +476,7 @@ class AdminImportControllerCore extends AdminController
                     'image' => ['label' => $this->trans('Image URL', [], 'Admin.Advparameters.Feature')],
                     'shop' => [
                         'label' => $this->trans('ID / Name of group shop', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', [], 'Admin.Advparameters.Help'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
                 ];
 
@@ -539,8 +539,8 @@ class AdminImportControllerCore extends AdminController
                     'hours' => ['label' => $this->trans('Hours (x,y,z...)', [], 'Admin.Advparameters.Feature')],
                     'image' => ['label' => $this->trans('Image URL', [], 'Admin.Advparameters.Feature')],
                     'shop' => [
-                        'label' => $this->trans('ID / Name of shop', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', [], 'Admin.Advparameters.Help'),
+                        'label' => $this->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
                 ];
                 self::$default_values = [
@@ -2665,7 +2665,7 @@ class AdminImportControllerCore extends AdminController
 
                     if (!Validate::isEan13($info['ean13'])) {
                         $this->warnings[] = $this->trans(
-                            'EAN13 "%ean13%" has incorrect value for product with id %id%.',
+                            'EAN-13 "%ean13%" has incorrect value for product with id %id%.',
                             [
                                 '%ean13%' => Tools::htmlentitiesUTF8($info['ean13']),
                                 '%id%' => Tools::htmlentitiesUTF8($product->id),

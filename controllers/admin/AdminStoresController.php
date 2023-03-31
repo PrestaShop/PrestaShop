@@ -455,7 +455,7 @@ class AdminStoresControllerCore extends AdminController
 
         $formFields = [
             'PS_SHOP_NAME' => [
-                'title' => $this->trans('Shop name', [], 'Admin.Shopparameters.Feature'),
+                'title' => $this->trans('Store name', [], 'Admin.Shopparameters.Feature'),
                 'hint' => $this->trans('Displayed in emails and page titles.', [], 'Admin.Shopparameters.Feature'),
                 'validation' => 'isGenericName',
                 'required' => true,

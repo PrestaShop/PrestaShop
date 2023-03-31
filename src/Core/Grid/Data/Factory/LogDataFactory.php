@@ -125,11 +125,11 @@ final class LogDataFactory implements GridDataFactoryInterface
     private function ShopContextFormatted(array $record): string
     {
         if (!empty($record['in_all_shops'])) {
-            return $this->translator->trans('All shops', [], 'Admin.Global');
+            return $this->translator->trans('All stores', [], 'Admin.Global');
         }
 
         if (!empty($record['id_shop']) && empty($record['id_shop_group'])) {
-            $shop_name = $this->translator->trans('Shop', [], 'Admin.Global');
+            $shop_name = $this->translator->trans('Store', [], 'Admin.Global');
             $shop_name .= ' ' . $record['shop_name'] . ' (id : ' . $record['id_shop'] . ')';
 
             return $shop_name;
