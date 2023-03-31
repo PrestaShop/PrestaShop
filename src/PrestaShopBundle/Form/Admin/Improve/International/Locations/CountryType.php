@@ -150,11 +150,8 @@ class CountryType extends AbstractType
                 ],
             ])
             ->add('address_format', AddressFormatType::class, [
-                'label' => $this->translator->trans('Address format', [], 'Admin.Global'),
                 'required' => false,
-                'constraints' => [
-                    new AddressFormat(),
-                ],
+                'label' => false,
             ])
             ->add('is_enabled', SwitchType::class, [
                 'label' => $this->translator->trans('Active', [], 'Admin.Global'),
@@ -182,15 +179,4 @@ class CountryType extends AbstractType
         }
     }
 
-//    public function configureOptions(OptionsResolver $resolver)
-//    {
-//        parent::configureOptions($resolver);
-//        $resolver
-//            ->setDefaults([
-//                'label' => false,
-//                'required' => false,
-//                'form_theme' => '@PrestaShop/Admin/Improve/International/Country/FormTheme/country.html.twig',
-//            ])
-//        ;
-//    }
 }
