@@ -25,27 +25,17 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryHandler;
 
-/**
- * Is thrown when Group constraints are violated
- */
-class GroupConstraintException extends GroupException
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
+
+interface GetCustomerGroupForEditingHandlerInterface
 {
     /**
-     * When invalid groupId value is provided
+     * @param GetCustomerGroupForEditing $customerForEditingQuery
+     *
+     * @return EditableCustomerGroup
      */
-    public const INVALID_ID = 10;
-
-    public const INVALID_REDUCTION = 20;
-
-    public const EMPTY_SHOP_LIST = 30;
-
-    public const EMPTY_NAME = 40;
-
-    public const NAME_TOO_LONG = 50;
-
-    public const INVALID_NAME = 60;
-
-    public const INVALID_PRICE_DISPLAY_METHOD = 70;
+    public function handle(GetCustomerGroupForEditing $customerForEditingQuery): EditableCustomerGroup;
 }

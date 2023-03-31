@@ -17,3 +17,21 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Feature\GroupFeature'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\AddCustomerGroupHandler:
+    public: false
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand'
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\QueryHandler\GetCustomerGroupForEditingHandler:
+    public: false
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing'
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator:
+    public: false
+    autowire: true
