@@ -66,7 +66,6 @@ class CartRuleType extends TranslatorAwareType
 
         $resolver->setDefaults([
             'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig',
-            'use_default_themes' => false,
         ]);
     }
 }
