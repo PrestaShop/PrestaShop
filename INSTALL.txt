@@ -46,29 +46,25 @@
 
 === Requirements
 
-To install PrestaShop 8, you need a web server running PHP 7.2+ and any flavor of MySQL 5.6+ (MySQL, MariaDB, Percona Server, etc.).
+Greetings!
 
-You can find more information on our System requirements (https://devdocs.prestashop.com/8/basics/installation/system-requirements/) page and on the System Administrator Guide (https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide).
+In order to successfully install PrestaShop 8, it is imperative that you possess a web server that operates on PHP version 7.2 or above and any variant of MySQL version 5.6 or higher, which may include MySQL, MariaDB, Percona Server, among others.
+
+For a more comprehensive understanding of the system requirements, kindly refer to our System Requirements page (https://devdocs.prestashop.com/8/basics/installation/system-requirements/) and the System Administrator Guide (https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide).
 
 === Installing PrestaShop
 
-Since you are reading this file, you have already downloaded the latest PrestaShop Zip archive and unzipped.
+Considering that you are currently perusing this document, it can be presumed that you have already downloaded the latest PrestaShop Zip archive and successfully unzipped it. The contents of this archive comprise of the prestashop.zip archive containing all necessary files, the index.php file, which is responsible for automatically unzipping the prestashop.zip archive and the Install_PrestaShop.html file that will redirect you to https://docs.prestashop-project.org/v.8-documentation/v/english/getting-started/installing-prestashop.
 
-Here is the content of this archive:
+Proceed to follow these instructions:
 
-* The prestashop.zip archive, which contains all the necessary files.
-* The index.php file, which will automatically unzip the prestashop.zip archive for you.
-* The Install_PrestaShop.html file, which redirects you to https://docs.prestashop-project.org/1.7-documentation/getting-started/installing-prestashop
+1. Upload, at the very minimum, the index.php and prestashop.zip files on your web server.
+2. Using your web browser, navigate to the directory where you have uploaded the index.php and prestashop.zip files and browse the index.php file. The Zip archive should automatically unzip itself.
+3. After unzipping the archive, you will be redirected to the PrestaShop installer. Please adhere to the instructions provided.
 
-From there on, follow these instructions:
+Upon successful installation, kindly proceed to delete the /install/ folder from your server.
 
-1. Upload at least index.php and prestashop.zip on your web server.
-2. From your web browser, go to the folder where index.php and prestashop.zip have been uploaded and browse index.php. The Zip archive should unzip automatically.
-3. You are redirected to the PrestaShop installer. Follow the instructions.
-
-After PrestaShop has successfully been installed, delete the /install/ folder from your server.
-
-Enjoy your store :)
+We hope that you enjoy your new store :)
 
 
 
