@@ -4254,10 +4254,5 @@
       <title>Modify title grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for title grid</description>
     </hook>
-    <hook id="actionJsAfterModuleImport">
-      <name>actionJsAfterModuleImport</name>
-      <title>Add JS after module import</title>
-      <description>This hook allows to add a JS function to execute after a module import. This will help to perform actions after module upgrade in a different process</description>
-    </hook>
   </entities>
 </entity_hook>

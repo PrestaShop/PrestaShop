@@ -360,9 +360,13 @@ class ModuleController extends ModuleAbstractController
 
             $moduleName = $zipSource->getModuleName($fileUploaded->getPathname());
 
+            $moduleWasAlreadyInstalled = $moduleManager->isInstalled($moduleName);
+            $installationResult = $moduleManager->install($moduleName, $fileUploaded->getPathname());
+
             // Install the module
             $installationResponse = [
-                'status' => $moduleManager->install($moduleName, $fileUploaded->getPathname()),
+                'status' => $installationResult,
+                'upgraded' => $installationResult && $moduleWasAlreadyInstalled,
                 'msg' => '',
                 'module_name' => $moduleName,
             ];

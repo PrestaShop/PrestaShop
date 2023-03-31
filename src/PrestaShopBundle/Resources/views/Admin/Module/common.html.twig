@@ -46,7 +46,6 @@
 
     // Need to come from the backend
     var isShopMaintenance = !{{ 'PS_SHOP_ENABLE'|configuration|intCast }};
-    var postModuleImportActions = '{{ renderhook('actionJsAfterModuleImport') }}';
   </script>
   <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/module.bundle.js') }}"></script>
