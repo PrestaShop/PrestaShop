@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\TranslationFinder;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Finder\TranslationFinder;
 use PrestaShopLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
