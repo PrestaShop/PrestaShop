@@ -1,7 +1,0 @@
-admin_shops_search:
-  path: /search/{searchTerm}
-  methods: [ GET ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::searchAction'
-  options:
-    expose: true

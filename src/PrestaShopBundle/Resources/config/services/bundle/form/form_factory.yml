@@ -1,6 +1,0 @@
-# This file will be removed in next version, do not add any service here
-services:
-  prestashop.bundle.form.admin.improve.design.theme.page_layout_customization_form_factory:
-    alias: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationFormFactory'
-    deprecated: ~
-    public: true

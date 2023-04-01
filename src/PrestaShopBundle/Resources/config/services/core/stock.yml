@@ -1,5 +1,0 @@
-services:
-  _defaults:
-    public: false
-
-  PrestaShop\PrestaShop\Core\Stock\StockManager: ~

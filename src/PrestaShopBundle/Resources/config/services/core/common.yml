@@ -1,2 +1,0 @@
-imports:
-  - { resource: ./circuit_breaker.yml }

@@ -1,7 +1,0 @@
-*****************************
-**   D E P R E C A T E D   **
-*****************************
-
-This folder has been deprecated since PrestaShop 1.7.
-Make sure your code uses `var/cache/ENV` folder, please use the
-constant `_PS_CACHE_DIR_` which is available everywhere.

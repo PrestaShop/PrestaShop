@@ -1,3 +1,0 @@
-{foreach $list as $product}
-  [{$product.text}]({$product.url}) {$product.complementary_text}
-{/foreach}

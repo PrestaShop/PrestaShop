@@ -1,9 +1,0 @@
-services:
-  _defaults:
-    public: false
-
-  PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository'
-      - '@PrestaShop\PrestaShop\Adapter\LegacyContext'

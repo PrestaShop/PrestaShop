@@ -1,6 +1,0 @@
-@mixin notification_container($height) {
-  @include single-line-block($height);
-  position: relative;
-  color: $medium-gray;
-  cursor: pointer;
-}
