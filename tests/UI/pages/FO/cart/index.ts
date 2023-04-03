@@ -16,6 +16,8 @@ class Cart extends FOBasePage {
 
   public readonly cartRuleAlreadyUsedErrorText: string;
 
+  public readonly cartRuleLimitUsageErrorText: string;
+
   public readonly cartRuleAlertMessageText: string;
 
   public readonly alertChooseDeliveryAddressWarningText: string;
@@ -99,6 +101,7 @@ class Cart extends FOBasePage {
 
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
+    this.cartRuleLimitUsageErrorText = 'You cannot use this voucher anymore (usage limit reached)';
     this.cartRuleAlertMessageText = 'You cannot use this voucher';
     this.alertChooseDeliveryAddressWarningText = 'You must choose a delivery address'
       + ' before applying this voucher to your order';
