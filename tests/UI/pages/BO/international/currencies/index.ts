@@ -233,6 +233,15 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
+   * Get text for empty table
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getTextForEmptyTable(page: Page): Promise<string> {
+    return this.getTextContent(page, this.tableEmptyRow);
+  }
+
+  /**
    * Get exchange rate value
    * @param page {Page} Browser tab
    * @param row {number} Row on table
