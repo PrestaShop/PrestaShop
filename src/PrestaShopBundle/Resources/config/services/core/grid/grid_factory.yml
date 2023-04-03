@@ -479,3 +479,11 @@ services:
       - '@prestashop.core.grid.data.factory.customer_groups'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.search_alias:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.search_aliases'
+      - '@prestashop.core.grid.data.factory.search_aliases'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'

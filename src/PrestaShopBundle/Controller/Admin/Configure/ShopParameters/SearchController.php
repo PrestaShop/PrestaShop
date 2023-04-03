@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\SearchAliasesFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,11 +45,16 @@ class SearchController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
-     *
+     * @param SearchAliasesFilters $filters
      * @return Response
      */
-    public function indexAction(Request $request): Response
+    public function indexAction(Request $request, SearchAliasesFilters $filters): Response
     {
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/index.html.twig');
+        $searchAliasesGridFactory = $this->get('prestashop.core.grid.factory.search_alias');
+        $searchAliasesGrid = $searchAliasesGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/index.html.twig', [
+            'searchAliasesGrid' => $this->presentGrid($searchAliasesGrid),
+        ]);
     }
 }

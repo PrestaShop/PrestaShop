@@ -5,4 +5,4 @@ admin_search:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::indexAction'
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf
-    _legacy_feature_flag: search
+#    _legacy_feature_flag: search
