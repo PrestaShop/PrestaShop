@@ -2584,6 +2584,105 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+// Product page V2 mobile special display
+@include media-breakpoint-down(lg) {
+  #main-div {
+    padding-top: 2.6rem;
+  }
+
+  .content-div {
+    padding: 0;
+  }
+
+  .product-page {
+    .product-header-v2 {
+      position: relative;
+      flex-wrap: wrap;
+      padding: 1rem;
+      margin: 0 0 0.5rem;
+      box-shadow: none;
+
+      $product-cover-mobile-size: 68px;
+
+      .product-header-cover {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+
+        min-width: $product-cover-mobile-size;
+        max-width: $product-cover-mobile-size;
+
+        .form-group {
+          margin-bottom: 0;
+
+          img {
+            @include border-radius(0.375rem);
+          }
+        }
+      }
+
+      .product-header-form {
+        padding: 0;
+      }
+
+      .header-name {
+        margin-left: calc($product-cover-mobile-size + 0.5rem);
+      }
+
+      .product-header-details {
+        padding: 0;
+
+        .product-header-summary {
+          flex-wrap: nowrap;
+
+          > * {
+            flex-grow: 1;
+          }
+
+          .product-field-preview {
+            flex-direction: column;
+            max-height: none;
+
+            .product-field-value {
+              width: fit-content;
+              margin: 0 auto;
+            }
+
+            .product-field-label {
+              margin: 0 auto;
+              font-weight: 400;
+            }
+          }
+
+          &::after {
+            display: none;
+            content: "";
+          }
+        }
+
+        .product-header-references {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .product-page {
+    .product-header-v2 {
+      .product-header-details {
+        .product-header-summary {
+          .product-field-label {
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+
+}
+
 
 // Create product modal
 @import "create_product_modal";
