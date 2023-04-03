@@ -1535,7 +1535,7 @@
              aria-expanded="false"
           >
           </a>
-          <div class="dropdown-menu dropdown-menu-right">
+          <div class="dropdown-menu">
             {% for action in form.children|slice(inlineButtonsLimit) %}
               {{ form_widget(action, {'attr': {
                 'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim

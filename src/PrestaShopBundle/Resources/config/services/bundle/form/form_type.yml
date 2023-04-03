@@ -1396,6 +1396,7 @@ services:
     arguments:
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
+      - '@form.type.sell.product.toolbar_buttons_provider'
     tags:
       - { name: form.type }
 

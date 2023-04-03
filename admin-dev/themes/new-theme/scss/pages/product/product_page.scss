@@ -295,6 +295,10 @@ $product-page-padding-bottom: 80px !default;
         }
       }
     }
+
+    .header-mobile-toolbar {
+      display: none;
+    }
   }
 
   .product-header {
@@ -2623,10 +2627,12 @@ $product-page-padding-bottom: 80px !default;
 
       .product-header-form {
         padding: 0;
-      }
 
-      .header-name {
-        margin-left: calc($product-cover-mobile-size + 0.5rem);
+        #product_header {
+          .header-name {
+            margin-left: calc($product-cover-mobile-size + 0.5rem);
+          }
+        }
       }
 
       .product-header-details {
@@ -2664,6 +2670,26 @@ $product-page-padding-bottom: 80px !default;
           display: none;
         }
       }
+
+      .header-mobile-toolbar {
+        display: block;
+
+        .dropdown-toggle {
+          padding: 0.1rem 0.5rem;
+        }
+
+        .dropdown-menu {
+          margin-top: 0.8rem;
+
+          .dropdown-item {
+            width: fit-content;
+          }
+        }
+      }
+    }
+
+    #product__toolbar_buttons {
+      display: none;
     }
   }
 }
