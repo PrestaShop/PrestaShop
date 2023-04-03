@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler;
 use CartRule;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
@@ -142,8 +141,8 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
         $giftProductProductAttributeId = $cartRule->gift_product_attribute ? new CombinationId((int) $cartRule->gift_product_attribute) : null;
 
         $reduction = new EditableCartRuleReduction(
-            new Number($cartRule->reduction_percent),
-            new Number($cartRule->reduction_amount),
+            new DecimalNumber($cartRule->reduction_percent),
+            new DecimalNumber($cartRule->reduction_amount),
             (bool) $cartRule->reduction_tax,
             $reductionCurrencyId,
             $reductionProductId,
