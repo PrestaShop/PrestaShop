@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\BulkDeleteCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\BulkToggleCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
@@ -357,6 +358,12 @@ class CartRuleController extends FrameworkBundleAdminController
                 ),
                 $e instanceof BulkToggleCartRuleException ? implode(', ', $e->getCartRuleIds()) : ''
             ),
+            CartRuleConstraintException::class => [
+                CartRuleConstraintException::MISSING_ACTION => $this->trans(
+                    'Cart rule must have at least one action',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 

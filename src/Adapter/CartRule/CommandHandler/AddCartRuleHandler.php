@@ -129,7 +129,7 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
 
         $cartRule->gift_product = null !== $giftProduct ? $giftProduct->getProductId()->getValue() : null;
-        $cartRule->gift_product_attribute = null !== $giftProduct ? $giftProduct->getProductAttributeId() : null;
+        $cartRule->gift_product_attribute = null !== $giftProduct ? $giftProduct->getCombinationId() : null;
         $cartRule->reduction_amount = null !== $amountDiscount ?
             (float) (string) $amountDiscount->getMoneyAmount()->getAmount() :
             null;

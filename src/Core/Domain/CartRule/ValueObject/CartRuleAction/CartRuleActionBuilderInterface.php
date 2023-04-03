@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
  * Describes a builder which builds cart rule actions.
@@ -56,11 +56,11 @@ interface CartRuleActionBuilderInterface
     /**
      * Set amount discount for cart rule action.
      *
-     * @param MoneyAmountCondition $amount
+     * @param Money $amount
      *
      * @return CartRuleActionBuilderInterface
      */
-    public function setAmountDiscount(MoneyAmountCondition $amount): CartRuleActionBuilderInterface;
+    public function setAmountDiscount(Money $amount): CartRuleActionBuilderInterface;
 
     /**
      * Set the gift product for cart rule action.

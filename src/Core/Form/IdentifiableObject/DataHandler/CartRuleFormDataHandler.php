@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRu
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -77,7 +76,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             $this->buildCartRuleActionForCreate($data['actions'])
         );
 
-        if (isset($data['actions']['discount']['reduction']['value'])) {
+        if (!empty($data['actions']['discount']['reduction']['value'])) {
             $command->setDiscountApplicationType($data['actions']['discount']['discount_application']);
             if (
                 $data['actions']['discount']['discount_application'] === DiscountApplicationType::SPECIFIC_PRODUCT &&
@@ -115,13 +114,13 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
         if (!empty($actionsData['discount']['reduction']['value'])) {
             $reductionData = $actionsData['discount']['reduction'];
             if ($reductionData['type'] === Reduction::TYPE_AMOUNT) {
-                $actionBuilder->setAmountDiscount(new MoneyAmountCondition(
+                $actionBuilder->setAmountDiscount(
                     new Money(
                         new DecimalNumber((string) $reductionData['value']),
-                        new CurrencyId((int) $reductionData['currency'])
-                    ),
-                    (bool) $reductionData['include_tax']
-                ));
+                        new CurrencyId((int) $reductionData['currency']),
+                        (bool) $reductionData['include_tax']
+                    )
+                );
             } else {
                 $actionBuilder->setPercentageDiscount(new PercentageDiscount(
                     (string) $actionsData['discount']['reduction']['value'],

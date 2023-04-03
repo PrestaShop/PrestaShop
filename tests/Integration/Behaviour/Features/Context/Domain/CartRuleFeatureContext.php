@@ -47,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRu
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -836,8 +835,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         if (null !== $amount) {
             $builder->setAmountDiscount(
-                new MoneyAmountCondition(
-                    new Money(new DecimalNumber((string) $amount), new CurrencyId($amountCurrencyId)),
+                new Money(
+                    new DecimalNumber((string) $amount),
+                    new CurrencyId($amountCurrencyId),
                     $amountTaxIncluded
                 )
             );
