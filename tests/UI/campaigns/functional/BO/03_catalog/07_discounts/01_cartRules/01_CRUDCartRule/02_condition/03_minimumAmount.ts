@@ -28,12 +28,12 @@ const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartR
 
 /*
 Scenario:
-- Create new cart rule with limit to single customer
+- Create new cart rule with minimum amount
 - Go to FO > Login by default customer
-- Go to Vouchers page and check the voucher
-- Sign out
 - Add product to cart and proceed to checkout
 - Check that no discount is applied
+- Add 2 products to cart
+- Check that the discount is applied
 Post-condition:
 - Delete the created cart rule
  */
@@ -140,7 +140,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
     });
 
     it('should add the promo code and check the total', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
       await cartPage.addPromoCode(page, newCartRuleData.code);
 

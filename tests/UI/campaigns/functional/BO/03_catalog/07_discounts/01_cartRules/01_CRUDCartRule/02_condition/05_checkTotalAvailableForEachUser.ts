@@ -233,6 +233,15 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           const totalAfterDiscount = await cartPage.getATIPrice(page);
           await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
+
+        it('should delete the last product from the cart', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
+
+          await cartPage.deleteProduct(page, 1);
+
+          const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+          await expect(notificationNumber).to.eq(0);
+        });
       }
     });
   });

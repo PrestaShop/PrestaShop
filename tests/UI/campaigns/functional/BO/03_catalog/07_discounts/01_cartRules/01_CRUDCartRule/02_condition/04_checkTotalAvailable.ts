@@ -47,6 +47,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
   const cartRuleCode: CartRuleData = new CartRuleData({
     name: 'New cart rule',
     code: '4QABV6L3',
+    quantity: 1,
     discountType: 'Percent',
     discountPercent: 20,
   });
@@ -110,15 +111,10 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
   [
     {args: {testIdentifier: 'cartRuleAccepted', testTitle: 'for the first time'}},
     {args: {testIdentifier: 'cartRuleNotAccepted', testTitle: 'for the second time'}},
-  ].forEach((test) => {
+  ].forEach((test, index) => {
     describe(`FO : Check the created cart rule '${test.args.testTitle}'`, async () => {
       it('should go to the first product page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `${test.args.testIdentifier}GoToFirstProductPage`,
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
         await foHomePage.goToProductPage(page, 1);
 
@@ -127,12 +123,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
       });
 
       it('should add product to cart and proceed to checkout', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `${test.args.testIdentifier}AddProductToCart`,
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
         await foProductPage.addProductToTheCart(page);
 
@@ -141,11 +132,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
       });
 
       it('should set the promo code', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `${test.args.testIdentifier}AddPromoCode`,
-          baseContext,
+        await testContext.addContextItem(this, 'testIdentifier', `addPromoCode${index}`, baseContext,
         );
 
         await cartPage.addPromoCode(page, cartRuleCode.code);
@@ -153,12 +140,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
       if (test.args.testIdentifier === 'cartRuleAccepted') {
         it('should verify the total after discount', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}VerifyTotalAfterDiscount`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
           const discountedPrice = Products.demo_1.finalPrice
             - await basicHelper.percentage(Products.demo_1.finalPrice, cartRuleCode.discountPercent);
@@ -168,12 +150,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         });
 
         it('should proceed to checkout', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}ProceedToCheckoutAndSignIn`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
           // Proceed to checkout the shopping cart
           await cartPage.clickOnProceedToCheckout(page);
@@ -183,7 +160,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         });
 
         it('should sign in by default customer', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}SignInFO`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
           await checkoutPage.clickOnSignIn(page);
 
@@ -192,36 +169,21 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         });
 
         it('should go to delivery address step', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}ConfirmAddressStep`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', 'confirmAddressStep', baseContext);
 
           const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
           await expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.be.true;
         });
 
         it('should choose the shipping method', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}ShippingMethodStep`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', 'shippingMethodStep', baseContext);
 
           const isPaymentStep = await checkoutPage.goToPaymentStep(page);
           await expect(isPaymentStep, 'Payment Step bloc is not displayed').to.be.true;
         });
 
         it('should choose the payment type and confirm the order', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}PaymentTypeStep`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', 'choosePaymentMethod', baseContext);
 
           await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
@@ -231,12 +193,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
         });
 
         it('should click on the logo of the shop', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}CheckLogoLink`,
-            baseContext,
-          );
+          await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
           await foHomePage.clickOnHeaderLink(page, 'Logo');
 

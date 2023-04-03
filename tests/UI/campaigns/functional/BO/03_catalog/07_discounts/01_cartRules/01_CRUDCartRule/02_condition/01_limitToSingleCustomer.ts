@@ -166,7 +166,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
     });
 
     it('should add the first product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signOut', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
       await foLoginPage.goToHomePage(page);
       await homePage.addProductToCartByQuickView(page, 1);

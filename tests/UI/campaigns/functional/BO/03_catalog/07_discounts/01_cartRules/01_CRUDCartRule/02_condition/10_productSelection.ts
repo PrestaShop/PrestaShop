@@ -168,7 +168,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
       await expect(notificationsNumber).to.eq(3);
     });
 
-    it('should add the promo code and  error message', async function () {
+    it('should add the promo code and check the cart rule name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode', baseContext);
 
       await cartPage.addPromoCode(page, newCartRuleData.code);
