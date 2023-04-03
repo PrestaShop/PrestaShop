@@ -80,6 +80,8 @@ class Cart extends FOBasePage {
 
   public readonly cartRuleCannotUseVoucherAlertMessageText: string;
 
+  public readonly minimumAmountErrorMessage: string;
+
   private readonly alertWarning: string;
 
   private readonly proceedToCheckoutButton: string;
@@ -103,6 +105,7 @@ class Cart extends FOBasePage {
     this.noItemsInYourCartMessage = 'There are no more items in your cart';
     this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
+    this.minimumAmountErrorMessage = 'The minimum amount to benefit from this promo code is';
 
     // Selectors for cart page
     // Shopping cart block selectors
