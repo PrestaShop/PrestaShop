@@ -45,7 +45,7 @@ jobs:
           key: ${{ runner.os }}-browsers
 
       - name: Run tests
-        run: npm install && npm run test:sanity:productV2:fast-fail
+        run: npm ci && npm run test:sanity:productV2:fast-fail
         env:
           URL_FO: http://localhost/
           DB_NAME: prestashop

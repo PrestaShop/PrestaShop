@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###
-# This script rebuilds all the static assets, running npm install as needed
+# This script rebuilds all the static assets, running npm install-clean as needed
 #
 
 #http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -25,7 +25,7 @@ function build {
     rm -rf node_modules
   fi
 
-  npm install
+  npm ci
   npm run build
   popd
 }
