@@ -72,7 +72,7 @@ class HelperShopCore extends Helper
 
         $current_shop_name = '';
         if ($this->noShopSelection()) {
-            $current_shop_name = Context::getContext()->getTranslator()->trans('All shops');
+            $current_shop_name = Context::getContext()->getTranslator()->trans('All stores');
         } elseif ($shop_context == Shop::CONTEXT_GROUP) {
             $current_shop_name = sprintf(Context::getContext()->getTranslator()->trans('%s group'), $tree[Shop::getContextShopGroupID()]['name']);
         } else {

@@ -65,7 +65,7 @@ final class SupplierFieldsProvider implements EntityFieldsProviderInterface
             new EntityField(
                 'shop',
                 $this->trans('ID / Name of group shop', 'Admin.Advparameters.Feature'),
-                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
+                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', 'Admin.Advparameters.Help')
             ),
         ];
 

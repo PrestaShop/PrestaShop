@@ -159,7 +159,7 @@ class ProductSpecificPrice extends CommonAbstractType
                     'choices' => $this->shops,
                     'required' => false,
                     'label' => false,
-                    'placeholder' => $this->translator->trans('All shops', [], 'Admin.Global'),
+                    'placeholder' => $this->translator->trans('All stores', [], 'Admin.Global'),
                 ]
             );
         }

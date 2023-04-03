@@ -249,7 +249,7 @@ class AdministrationController extends FrameworkBundleAdminController
                 );
             case FormDataProvider::ERROR_COOKIE_SAMESITE_NONE:
                 return $this->trans(
-                    'The SameSite=None is only available in secure mode.',
+                    'The SameSite=None attribute is only available in secure mode.',
                     'Admin.Advparameters.Notification'
                 );
         }
