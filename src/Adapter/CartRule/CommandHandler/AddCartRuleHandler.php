@@ -104,7 +104,7 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
 
         $minimumAmount = $command->getMinimumAmount();
         if ($minimumAmount) {
-            $cartRule->minimum_amount = (string) $minimumAmount->getMoneyAmount()->getAmount();
+            $cartRule->minimum_amount = (float) (string) $minimumAmount->getMoneyAmount()->getAmount();
             $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
             $cartRule->minimum_amount_shipping = $command->isMinimumAmountShippingIncluded();
             $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();
@@ -131,7 +131,7 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->gift_product = null !== $giftProduct ? $giftProduct->getProductId()->getValue() : null;
         $cartRule->gift_product_attribute = null !== $giftProduct ? $giftProduct->getProductAttributeId() : null;
         $cartRule->reduction_amount = null !== $amountDiscount ?
-            (string) $amountDiscount->getMoneyAmount()->getAmount() :
+            (float) (string) $amountDiscount->getMoneyAmount()->getAmount() :
             null;
         $cartRule->reduction_currency = null !== $amountDiscount ?
             $amountDiscount->getMoneyAmount()->getCurrencyId()->getValue() :
@@ -140,7 +140,7 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         // Legacy reduction_tax property is true when it's tax included, false when tax excluded.
         $cartRule->reduction_tax = null !== $amountDiscount ? $amountDiscount->isTaxIncluded() : null;
 
-        $cartRule->reduction_percent = null !== $percentageDiscount ? (string) $percentageDiscount->getPercentage() : null;
+        $cartRule->reduction_percent = null !== $percentageDiscount ? (float) (string) $percentageDiscount->getPercentage() : null;
         $cartRule->reduction_exclude_special = null !== $percentageDiscount ?
             !$percentageDiscount->appliesToDiscountedProducts() :
             null;
