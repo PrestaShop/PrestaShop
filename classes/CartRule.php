@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleSettings;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\CartRuleSettings;
 
 /**
  * Class CartRuleCore.

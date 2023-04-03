@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule;
 
 /**
  * Class contains various constants representing cart rule constraints

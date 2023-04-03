@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleSettings;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\CartRuleSettings;
 use PrestaShopBundle\Form\Admin\Type\GeneratableTextType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
