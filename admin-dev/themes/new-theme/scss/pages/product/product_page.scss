@@ -2589,9 +2589,11 @@ $product-page-padding-bottom: 80px !default;
 }
 
 // Product page V2 mobile special display
+$mobile-menu-height: 2.6rem !default;
+
 @include media-breakpoint-down(lg) {
   #main-div {
-    padding-top: 2.6rem;
+    padding-top: $mobile-menu-height;
   }
 
   .content-div {
@@ -2715,6 +2717,11 @@ $product-page-padding-bottom: 80px !default;
       padding-bottom: 10px;
 
       .tabs {
+        position: sticky;
+        top: $mobile-menu-height;
+        z-index: 100;
+        background-color: #eaebec;
+
         .nav-tabs {
           position: static;
           left: auto;
