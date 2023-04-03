@@ -2631,7 +2631,13 @@ $mobile-menu-height: 2.6rem !default;
         padding: 0;
 
         #product_header {
+          position: relative;
+          flex-wrap: nowrap;
+          padding-top: calc($product-cover-mobile-size + 0.5rem);
+
           .header-name {
+            position: absolute;
+            top: 0;
             margin-left: calc($product-cover-mobile-size + 0.5rem);
           }
         }
@@ -2685,6 +2691,7 @@ $mobile-menu-height: 2.6rem !default;
 
           .dropdown-item {
             width: fit-content;
+            padding: 0.438rem;
           }
         }
       }
