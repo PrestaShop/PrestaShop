@@ -104,6 +104,14 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
         if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
             throw $e;
         }
+    } catch (\Symfony\Component\DependencyInjection\Exception\RuntimeException $e) {
+        if (strpos($e->getMessage(), 'You have requested a non-existent parameter') === 0) {
+            die(sprintf('Error: %s', $e->getMessage())
+                .PHP_EOL.'A missing parameter was detected, which may be caused by old configuration files.'
+                .PHP_EOL.'Try clearing the /var/cache directory and deleting parameters.php and parameters.yml in the /app/config/ directory.'
+            );
+        }
+        throw $e;
     }
 }
 
