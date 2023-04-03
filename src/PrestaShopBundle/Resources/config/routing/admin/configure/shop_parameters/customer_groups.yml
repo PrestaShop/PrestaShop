@@ -4,7 +4,7 @@ admin_customer_groups_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::indexAction'
     _legacy_controller: AdminGroups
-    _legacy_link: AdminGroups
+    # _legacy_link: AdminGroups
 
 admin_customer_groups_search:
   path: /
