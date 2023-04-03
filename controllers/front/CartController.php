@@ -106,7 +106,7 @@ class CartControllerCore extends FrontController
             $this->checkCartProductsMinimalQuantities();
         }
         $presenter = new CartPresenter();
-        $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
+        $presented_cart = $presenter->present($this->context->cart, true);
 
         $this->context->smarty->assign([
             'cart' => $presented_cart,
