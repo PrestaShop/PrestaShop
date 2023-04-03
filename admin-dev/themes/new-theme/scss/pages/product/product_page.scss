@@ -2706,7 +2706,53 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
+}
 
+@media only screen and (min-width: 320px) and (max-width: 1450px) {
+  // No more arrows in tabs
+  .product-page-v2 {
+    .product-page {
+      padding-bottom: 10px;
+
+      .tabs {
+        .nav-tabs {
+          position: static;
+          left: auto;
+          flex-wrap: nowrap;
+          width: 100%;
+          overflow-x: scroll;
+          overflow-y: hidden;
+
+          -ms-overflow-style: none;
+
+          &::-webkit-scrollbar {
+            display: none;
+            height: 0;
+          }
+
+          .nav-item {
+            margin-bottom: 0;
+
+            .nav-link {
+              padding: 0.8rem 0.5rem;
+              margin: 0 0.75rem;
+            }
+          }
+
+          .nav-item.show .nav-link,
+          .nav-link.active {
+            background: transparent;
+            border-top: none;
+            border-bottom: solid 0.1875rem #25b9d7;
+          }
+        }
+
+        .arrow {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 

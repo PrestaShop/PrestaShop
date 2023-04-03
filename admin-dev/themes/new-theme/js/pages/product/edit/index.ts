@@ -45,7 +45,6 @@ import PackedProductsManager from '@pages/product/edit/manager/packed-products-m
 import SpecificPricesManager from '@pages/product/edit/manager/specific-prices-manager';
 import initDropzone from '@pages/product/image/dropzone';
 import initImagesShopAssociation from '@pages/product/image/images-shop-association';
-import initTabs from '@pages/product/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
 import ProductOptionsManager from '@pages/product/edit/manager/product-options-manager';
 import ProductShippingManager from '@pages/product/edit/manager/product-shipping-manager';
@@ -84,8 +83,6 @@ $(() => {
     new SummaryQuantityUpdater(eventEmitter, productId, shopId);
   }
 
-  // Responsive navigation tabs
-  initTabs();
   const navbar = new NavbarHandler($(ProductMap.navigationBar));
 
   // When combination page is opened on quantity tab we automatically switch to the combination one which replaces it for product with combinations
