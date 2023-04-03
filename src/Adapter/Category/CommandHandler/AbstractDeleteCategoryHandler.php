@@ -72,52 +72,6 @@ abstract class AbstractDeleteCategoryHandler
     }
 
     /**
-     * @deprecated since 8.1.0 and will be removed in next major version.
-     * @see updateProductCategories instead
-     *
-     * Handle products category after its deletion.
-     *
-     * @param int $parentCategoryId
-     * @param CategoryDeleteMode $mode
-     */
-    protected function handleProductsUpdate($parentCategoryId, CategoryDeleteMode $mode)
-    {
-        @trigger_error(
-            __FUNCTION__ . 'is deprecated. Use AbstractDeleteCategoryHandler::updateProductCategories instead.',
-            E_USER_DEPRECATED
-        );
-
-        $productsWithoutCategory = \Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (
-			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
-			)
-		');
-
-        foreach ($productsWithoutCategory as $productWithoutCategory) {
-            $product = new Product((int) $productWithoutCategory['id_product']);
-
-            if ($product->id) {
-                if (0 === $parentCategoryId || $mode->shouldRemoveProducts()) {
-                    $product->delete();
-
-                    continue;
-                }
-
-                if ($mode->shouldDisableProducts()) {
-                    $product->active = false;
-                }
-
-                $product->id_category_default = $parentCategoryId;
-                $product->addToCategories($parentCategoryId);
-                $product->save();
-            }
-        }
-    }
-
-    /**
      * @param array<int, int[]> $deletedCategoryIdsByParent
      * @param CategoryDeleteMode $mode
      */
