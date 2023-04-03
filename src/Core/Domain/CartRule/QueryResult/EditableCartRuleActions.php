@@ -53,16 +53,23 @@ class EditableCartRuleActions
      */
     private $giftCombinationId;
 
+    /**
+     * @var string
+     */
+    private $discountApplicationType;
+
     public function __construct(
         bool $freeShipping,
         EditableCartRuleReduction $reduction,
         ?ProductId $giftProductId,
-        ?CombinationId $giftCombinationId
+        ?CombinationId $giftCombinationId,
+        string $discountApplicationType
     ) {
         $this->freeShipping = $freeShipping;
         $this->reduction = $reduction;
         $this->giftProductId = $giftProductId;
         $this->giftCombinationId = $giftCombinationId;
+        $this->discountApplicationType = $discountApplicationType;
     }
 
     /**
@@ -95,5 +102,13 @@ class EditableCartRuleActions
     public function getGiftCombinationId(): ?CombinationId
     {
         return $this->giftCombinationId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDiscountApplicationType(): string
+    {
+        return $this->discountApplicationType;
     }
 }

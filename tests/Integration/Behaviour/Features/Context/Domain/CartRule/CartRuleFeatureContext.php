@@ -422,7 +422,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function createCartRuleWithReference(string $cartRuleReference, TableNode $node): void
     {
-        $data = $node->getRowsHash();
+        $data = $this->localizeByRows($node);
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
         $cartRuleAction = $this->createCartRuleAction(
@@ -436,8 +436,15 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['gift_product_attribute_id'] ?? null
         );
 
+        $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
+
+        if (isset($data['name'])) {
+            $name = $data['name'];
+        } else {
+            $name = [$defaultLanguageId => $data['name_in_default_language']];
+        }
         $command = new AddCartRuleCommand(
-            [$defaultLanguageId => $data['name_in_default_language']],
+            $name,
             $data['highlight'],
             $data['allow_partial_use'],
             $data['priority'],
@@ -447,6 +454,12 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['total_quantity'],
             $data['quantity_per_user'],
             $cartRuleAction
+//            $cartRuleAction,
+//            $data['minimum_amount'],
+//            $currencyId,
+//            // @todo: after PR is merged, tax and shipping properties should be fixed and the exclamations should be removed https://github.com/PrestaShop/PrestaShop/pull/31904
+//            !PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
+//            !PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
         );
 
         if (!empty($data['minimum_amount'])) {

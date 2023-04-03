@@ -248,6 +248,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\EditCartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext

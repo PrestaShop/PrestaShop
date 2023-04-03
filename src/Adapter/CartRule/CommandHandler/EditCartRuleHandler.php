@@ -132,7 +132,7 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
         }
         if (null !== $command->getMinimumAmount()) {
             $minimumAmount = $command->getMinimumAmount();
-            $cartRule->minimum_amount = (string) $minimumAmount->getMoneyAmount()->getAmount();
+            $cartRule->minimum_amount = (float) (string) $minimumAmount->getMoneyAmount()->getAmount();
             $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
             //@todo: isTaxIncluded method should appear after rebase when related PR is merged https://github.com/PrestaShop/PrestaShop/pull/31904
 //            $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();
@@ -149,7 +149,7 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
             $cartRule->quantity = $command->getTotalQuantity();
             $updatableProperties[] = 'quantity';
         }
-        if (null !== $command->getTotalQuantity()) {
+        if (null !== $command->getQuantityPerUser()) {
             $cartRule->quantity_per_user = $command->getQuantityPerUser();
             $updatableProperties[] = 'quantity_per_user';
         }

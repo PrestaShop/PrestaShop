@@ -32,6 +32,7 @@ use CartRule;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
+use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRuleInfor
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRuleMinimum;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRuleReduction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRuleRestrictions;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
@@ -153,7 +155,23 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
             (bool) $cartRule->free_shipping,
             $reduction,
             $giftProductProductId,
-            $giftProductProductAttributeId
+            $giftProductProductAttributeId,
+            $this->getDiscountApplicationType($cartRule)
         );
+    }
+
+    private function getDiscountApplicationType(CartRule $cartRule): string
+    {
+        $discountApplicationMap = [
+            LegacyDiscountApplicationType::CHEAPEST_PRODUCT => DiscountApplicationType::CHEAPEST_PRODUCT,
+            LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING => DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
+            LegacyDiscountApplicationType::SELECTED_PRODUCTS => DiscountApplicationType::SELECTED_PRODUCTS,
+        ];
+
+        if (array_key_exists((int) $cartRule->reduction_product, $discountApplicationMap)) {
+            return $discountApplicationMap[$cartRule->reduction_product];
+        } else {
+            return DiscountApplicationType::SPECIFIC_PRODUCT;
+        }
     }
 }

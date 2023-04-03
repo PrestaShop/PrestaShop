@@ -95,7 +95,7 @@ class EditCartRuleCommand
     /**
      * @var bool|null
      */
-    private $active;
+    private $enabled;
 
     /**
      * @var DateTimeImmutable|null
@@ -198,12 +198,12 @@ class EditCartRuleCommand
 
     public function isActive(): ?bool
     {
-        return $this->active;
+        return $this->enabled;
     }
 
-    public function setActive(bool $active): EditCartRuleCommand
+    public function setEnabled(bool $enabled): EditCartRuleCommand
     {
-        $this->active = $active;
+        $this->enabled = $enabled;
 
         return $this;
     }

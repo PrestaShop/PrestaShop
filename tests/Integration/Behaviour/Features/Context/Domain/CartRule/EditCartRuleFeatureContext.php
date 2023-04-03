@@ -28,16 +28,21 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
 use Behat\Gherkin\Node\TableNode;
+use CartRule;
 use DateTimeImmutable;
+use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -54,6 +59,177 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         $command = new EditCartRuleCommand($this->getSharedStorage()->get($cartRuleReference));
         $this->fillCommand($command, $this->localizeByRows($tableNode));
         $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then cart rule :cartRuleReference should have the following properties:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $tableNode
+     */
+    public function assertCartRuleProperties(string $cartRuleReference, TableNode $tableNode): void
+    {
+        /** @var CartRule $cartRule */
+        $cartRule = $this->getSharedStorage()->get($cartRuleReference);
+        /** @var EditableCartRule $editableCartRule */
+        $editableCartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing((int) $cartRule->id));
+
+        $data = $this->localizeByRows($tableNode);
+        $information = $editableCartRule->getInformation();
+        $conditions = $editableCartRule->getConditions();
+        $actions = $editableCartRule->getActions();
+
+        if (isset($data['name'])) {
+            Assert::assertSame($data['name'], $information->getLocalizedNames(), 'Unexpected localized name');
+        }
+        if (isset($data['description'])) {
+            Assert::assertSame($data['description'], $information->getDescription(), 'Unexpected description');
+        }
+        if (isset($data['highlight'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
+                $information->isHighlight(),
+                'Unexpected highlight'
+            );
+        }
+        if (isset($data['allow partial use'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['allow partial use']),
+                $information->isPartialUse(),
+                'Unexpected partial use'
+            );
+        }
+        if (isset($data['enabled'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
+                $information->isEnabled(),
+                'Unexpected enabled property'
+            );
+        }
+        if (isset($data['code'])) {
+            Assert::assertSame($data['code'], $information->getCode(), 'Unexpected code');
+        }
+        if (isset($data['customer'])) {
+            Assert::assertSame(
+                $this->getSharedStorage()->get($data['customer']),
+                $conditions->getCustomerId()->getValue(),
+                'Unexpected customer id'
+            );
+        }
+        if (isset($data['priority'])) {
+            Assert::assertSame((int) $data['priority'], $information->getPriority(), 'Unexpected priority');
+        }
+        if (isset($data['date from'])) {
+            Assert::assertEquals(
+                $data['date from'],
+                $conditions->getDateFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT),
+                'Unexpected date from'
+            );
+        }
+        if (isset($data['date to'])) {
+            Assert::assertEquals(
+                $data['date to'],
+                $conditions->getDateTo()->format(DateTime::DEFAULT_DATETIME_FORMAT),
+                'Unexpected date to'
+            );
+        }
+        if (isset($data['total quantity'])) {
+            Assert::assertSame((int) $data['total quantity'], $conditions->getQuantity(), 'Unexpected quantity');
+        }
+        if (isset($data['quantity per user'])) {
+            Assert::assertSame((int) $data['quantity per user'], $conditions->getQuantityPerUser(), 'Unexpected quantity per user');
+        }
+
+        if (isset($data['minimum amount'])) {
+            $minimum = $conditions->getMinimum();
+            Assert::assertEquals($data['minimum amount'], $minimum->getAmount(), 'Unexpected minimum amount');
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['tax included']),
+                $minimum->isAmountTax(),
+                'Unexpected tax included property'
+            );
+
+            Assert::assertSame(
+                $this->getSharedStorage()->get($data['currency']),
+                $minimum->getCurrencyId()->getValue(),
+                'Unexpected currency'
+            );
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['shipping included']),
+                $minimum->isShipping(),
+                'Unexpected shipping included property'
+            );
+        }
+
+        if (isset($data['discount application type'])) {
+            $expectedDiscountApplicationType = $data['discount application type'];
+            Assert::assertSame(
+                $expectedDiscountApplicationType,
+                $actions->getDiscountApplicationType(),
+                'Unexpected discount application type'
+            );
+
+            if ($expectedDiscountApplicationType === DiscountApplicationType::SPECIFIC_PRODUCT) {
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($data['discount product']),
+                    $actions->getReduction()->getProductId() ? $actions->getReduction()->getProductId()->getValue() : null,
+                    'Unexpected discount product'
+                );
+            }
+
+            if (isset($data['gift product'])) {
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($data['gift product']),
+                    $actions->getGiftProductId() ? $actions->getGiftProductId()->getValue() : null,
+                    'Unexpected gift product'
+                );
+            }
+
+            if (isset($data['percentage discount'])) {
+                Assert::assertTrue(
+                    $actions->getReduction()->getPercent()->equals(new DecimalNumber($data['percentage discount'])),
+                    'Unexpected percentage discount'
+                );
+            }
+
+            if (isset($data['amount discount'])) {
+                Assert::assertTrue(
+                    $actions->getReduction()->getAmount()->equals(new DecimalNumber($data['amount discount'])),
+                    'Unexpected amount discount'
+                );
+            }
+
+            if (isset($data['currency'])) {
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($data['currency']),
+                    $actions->getReduction()->getCurrencyId() ? $actions->getReduction()->getCurrencyId()->getValue() : null,
+                    'Unexpected currency'
+                );
+            }
+
+            if (isset($data['free shipping'])) {
+                Assert::assertSame(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['free shipping']),
+                    $actions->isFreeShipping(),
+                    'Unexpected free shipping'
+                );
+            }
+
+            if (isset($data['gift product'])) {
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($data['gift product']),
+                    $actions->getGiftProductId() ? $actions->getGiftProductId()->getValue() : null,
+                    'Unexpected gift product'
+                );
+            }
+            if (isset($data['gift combination'])) {
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($data['gift combination']),
+                    $actions->getGiftCombinationId() ? $actions->getGiftCombinationId()->getValue() : null,
+                    'Unexpected gift combination'
+                );
+            }
+        }
     }
 
     /**
@@ -74,8 +250,8 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['allow partial use'])) {
             $command->setAllowPartialUse(PrimitiveUtils::castStringBooleanIntoBoolean($data['allow partial use']));
         }
-        if (isset($data['active'])) {
-            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        if (isset($data['enabled'])) {
+            $command->setEnabled(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
         }
         if (isset($data['code'])) {
             $command->setCode($data['code']);
@@ -118,12 +294,15 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
 
     private function buildAction(array $data): ?CartRuleActionInterface
     {
+        $actionWasSet = false;
         $builder = new CartRuleActionBuilder();
 
         if (isset($data['free shipping'])) {
+            $actionWasSet = true;
             $builder->setFreeShipping(PrimitiveUtils::castStringBooleanIntoBoolean($data['free shipping']));
         }
         if (isset($data['percentage discount'])) {
+            $actionWasSet = true;
             $builder->setPercentageDiscount(
                 // @todo: string instead of float when related PR gets merged https://github.com/PrestaShop/PrestaShop/pull/31904
                 new PercentageDiscount(
@@ -133,20 +312,25 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
             );
         }
         if (isset($data['amount discount'])) {
+            $actionWasSet = true;
             $builder->setAmountDiscount(
-                new AmountDiscountAction(
-                    new MoneyAmountCondition(
-                        new Money(
-                            new DecimalNumber($data['amount discount']),
-                            new CurrencyId($this->getSharedStorage()->get($data['currency']))
-                        ),
-                        //@todo: after PR is merged, it should be tax included (not excluded) https://github.com/PrestaShop/PrestaShop/pull/31904
-                        $data['tax included'],
-                        false
-                    )
+                new MoneyAmountCondition(
+                    new Money(
+                        new DecimalNumber($data['amount discount']),
+                        new CurrencyId($this->getSharedStorage()->get($data['currency']))
+                    ),
+                    //@todo: after PR is merged, it should be tax included (not excluded) https://github.com/PrestaShop/PrestaShop/pull/31904
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['tax included']),
+                    false
                 )
             );
         }
+
+        if (!$actionWasSet) {
+            return null;
+        }
+
+        return $builder->build();
     }
 
     private function setDateRange(string $dateRange, EditCartRuleCommand $command): void
