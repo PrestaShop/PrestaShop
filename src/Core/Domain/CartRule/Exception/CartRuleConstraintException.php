@@ -78,4 +78,5 @@ class CartRuleConstraintException extends CartRuleException
     public const INVALID_REDUCTION_EXCLUDE_SPECIAL = 37;
     public const INVALID_HIGHLIGHT = 38;
     public const INVALID_ACTIVE = 39;
+    public const INVALID_REDUCTION_TYPE = 40;
 }

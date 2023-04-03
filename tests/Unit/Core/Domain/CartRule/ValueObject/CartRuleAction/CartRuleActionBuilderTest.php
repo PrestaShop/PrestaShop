@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
@@ -37,27 +37,67 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftPr
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Tests if cart rule actions are built correctly.
  */
 class CartRuleActionBuilderTest extends TestCase
 {
-    public function testItFailsWhenCartRuleHasIncompatibleActions()
-    {
-        $this->expectException(CartRuleConstraintException::class);
-        $this->expectExceptionCode(CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
+    /** @var CartRuleActionBuilder */
+    protected $cartRuleActionBuilder;
 
-        (new CartRuleActionBuilder())
-            ->setAmountDiscount(new Money(
-                new DecimalNumber('0'),
-                new CurrencyId(1),
-                true
-            ))
-            ->setPercentageDiscount(new PercentageDiscount('10', true))
-            ->build();
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->cartRuleActionBuilder = new CartRuleActionBuilder();
+    }
+
+    public function testItFailsWhenCartRuleIsMissingReductionTypeOrValue(): void
+    {
+        $this->expectException(DomainConstraintException::class);
+
+        $this->expectExceptionCode(DomainConstraintException::INVALID_REDUCTION_TYPE);
+        $this->cartRuleActionBuilder->build(true, null, '5');
+
+        $this->expectExceptionCode(DomainConstraintException::INVALID_REDUCTION_PERCENTAGE);
+        $this->cartRuleActionBuilder->build(true, Reduction::TYPE_PERCENTAGE);
+
+        $this->expectExceptionCode(DomainConstraintException::INVALID_REDUCTION_AMOUNT);
+        $this->cartRuleActionBuilder->build(true, Reduction::TYPE_AMOUNT);
+    }
+
+    /**
+     * @dataProvider getDataForReductionConstraintsViolation
+     *
+     * @return void
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function testItFailsWhenReductionConstraintsAreViolated(
+        ?string $reductionType,
+        ?string $reductionValue,
+        int $expectedExceptionCode
+    ): void {
+        $this->expectException(DomainConstraintException::class);
+        $this->expectExceptionCode($expectedExceptionCode);
+        $this->cartRuleActionBuilder->build(true, $reductionType, $reductionValue);
+    }
+
+    public function getDataForReductionConstraintsViolation(): iterable
+    {
+        yield ['random', '5', DomainConstraintException::INVALID_REDUCTION_TYPE];
+        yield [Reduction::TYPE_PERCENTAGE, '120', DomainConstraintException::INVALID_REDUCTION_PERCENTAGE];
+        yield [Reduction::TYPE_AMOUNT, '-20', DomainConstraintException::INVALID_REDUCTION_AMOUNT];
+    }
+
+    public function testItSucceedsWhenCartRuleHasNoReductionTypeAndNoReductionValue(): void
+    {
+        $action = $this->cartRuleActionBuilder->build(true);
+
+        Assert::assertTrue($action->isFreeShipping());
     }
 
     public function testItFailsWhenCartRuleHasNoAction()
@@ -65,90 +105,114 @@ class CartRuleActionBuilderTest extends TestCase
         $this->expectException(CartRuleConstraintException::class);
         $this->expectExceptionCode(CartRuleConstraintException::MISSING_ACTION);
 
-        (new CartRuleActionBuilder())->build();
+        $this->cartRuleActionBuilder->build(false);
+    }
+
+    public function testItFailsWhenReductionTypeIsAmountAndItIsMissingCurrency(): void
+    {
+        $this->expectException(CartRuleConstraintException::class);
+
+        $this->expectExceptionCode(CartRuleConstraintException::INVALID_REDUCTION_CURRENCY);
+        $this->cartRuleActionBuilder->build(true, Reduction::TYPE_AMOUNT, '10', null, true);
+    }
+
+    public function testItFailsWhenReductionTypeIsAmountAndItIsMissingTaxInclusion(): void
+    {
+        $this->expectException(CartRuleConstraintException::class);
+        $this->expectExceptionCode(CartRuleConstraintException::INVALID_REDUCTION_TAX);
+        $this->cartRuleActionBuilder->build(true, Reduction::TYPE_AMOUNT, '10', 2);
     }
 
     public function testItCorrectlyBuildsAmountDiscountAction()
     {
-        $action = (new CartRuleActionBuilder())
-            ->setAmountDiscount(new Money(
-                new DecimalNumber('10'),
-                new CurrencyId(1),
-                true
-            ))
-            ->build();
-
+        $action = $this->cartRuleActionBuilder->build(true, Reduction::TYPE_AMOUNT, '10', 1, true);
         $this->assertInstanceOf(AmountDiscountAction::class, $action);
     }
 
     public function testItCorrectlyBuildsPercentageDiscountAction()
     {
-        $action = (new CartRuleActionBuilder())
-            ->setPercentageDiscount(new PercentageDiscount('10', true))
-            ->build();
+        $this->assertInstanceOf(
+            PercentageDiscountAction::class,
+            $this->cartRuleActionBuilder->build(
+                false,
+                Reduction::TYPE_PERCENTAGE,
+                '10',
+                null,
+                null,
+                null,
+                null,
+                true
+            )
+        );
+    }
 
-        $this->assertInstanceOf(PercentageDiscountAction::class, $action);
+    public function testItFailsToBuildPercentageDiscountWhenApplyToDiscountedProductsIsMissing(): void
+    {
+        $this->expectException(CartRuleConstraintException::class);
+        $this->expectExceptionCode(CartRuleConstraintException::INVALID_REDUCTION_EXCLUDE_SPECIAL);
+
+        $this->cartRuleActionBuilder->build(false, Reduction::TYPE_PERCENTAGE, '10');
     }
 
     public function testItCorrectlyBuildsFreeShippingAction()
     {
-        $action = (new CartRuleActionBuilder())
-            ->setFreeShipping(true)
-            ->build();
-
-        $this->assertInstanceOf(FreeShippingAction::class, $action);
+        $this->assertInstanceOf(FreeShippingAction::class, $this->cartRuleActionBuilder->build(true));
     }
 
     public function testItCorrectlyBuildsGiftProductAction()
     {
-        $action = (new CartRuleActionBuilder())
-            ->setGiftProduct(new GiftProduct(1))
-            ->build();
+        $action = $this->cartRuleActionBuilder->build(
+            false,
+            null,
+            null,
+            null,
+            null,
+            5,
+            3
+        );
 
         $this->assertInstanceOf(GiftProductAction::class, $action);
+        Assert::assertSame(5, $action->getGiftProduct()->getProductId()->getValue());
+        Assert::assertSame(3, $action->getGiftProduct()->getCombinationId()->getValue());
     }
 
     /**
-     * @dataProvider validActionsProvider
+     * @dataProvider getValidActions
      */
     public function testItCorrectlyBuildsVariousValidActions(
-        ?Money $moneyAmount,
-        ?PercentageDiscount $percentage,
-        bool $isFreeShipping,
-        ?GiftProduct $giftProduct,
+        bool $freeShipping,
+        ?string $reductionType,
+        ?string $reductionValue,
+        ?int $currencyId,
+        ?bool $taxIncluded,
+        ?int $giftProductId,
+        ?int $giftCombinationId,
+        ?bool $appliesToDiscountedProducts,
         CartRuleActionInterface $expectedAction
     ) {
-        $builder = (new CartRuleActionBuilder())
-            ->setFreeShipping($isFreeShipping);
-
-        if (null !== $moneyAmount) {
-            $builder->setAmountDiscount($moneyAmount);
-        }
-
-        if (null !== $percentage) {
-            $builder->setPercentageDiscount($percentage);
-        }
-
-        if (null !== $giftProduct) {
-            $builder->setGiftProduct($giftProduct);
-        }
-
-        $this->assertEquals($expectedAction, $builder->build());
+        Assert::assertEquals($expectedAction, $this->cartRuleActionBuilder->build(
+            $freeShipping,
+            $reductionType,
+            $reductionValue,
+            $currencyId,
+            $taxIncluded,
+            $giftProductId,
+            $giftCombinationId,
+            $appliesToDiscountedProducts
+        ));
     }
 
-    public function validActionsProvider()
+    public function getValidActions(): iterable
     {
-        $moneyAmount = new Money(new DecimalNumber('100'), new CurrencyId(1), true);
-        $percentage = new PercentageDiscount('30.5', true);
-        $giftProduct = new GiftProduct(1);
-
-        // [Amount, Percentage, Is free shipping, Expected result]
-        yield [$moneyAmount, null, true, $giftProduct, new AmountDiscountAction($moneyAmount, true, $giftProduct)];
-        yield [$moneyAmount, null, false, null, new AmountDiscountAction($moneyAmount, false)];
-        yield [null, $percentage, false, $giftProduct, new PercentageDiscountAction($percentage, false, $giftProduct)];
-        yield [null, $percentage, true, null, new PercentageDiscountAction($percentage, true)];
-        yield [null, null, true, null, new FreeShippingAction()];
-        yield [null, null, true, $giftProduct, new FreeShippingAction($giftProduct)];
-        yield [null, null, false, $giftProduct, new GiftProductAction($giftProduct)];
+        // [freeShipping, reductionTye, reductionValue, currency, taxIncluded, giftProductId, giftCombinationId, appliesToDiscountedProducts, expected result]
+        yield [true, null, null, null, null, null, null, null, new FreeShippingAction()];
+        yield [true, null, null, null, null, 5, null, null, new FreeShippingAction(new GiftProduct(5))];
+        yield [true, null, null, null, null, 5, 6, null, new FreeShippingAction(new GiftProduct(5, 6))];
+        yield [true, null, null, null, null, 5, 6, true, new FreeShippingAction(new GiftProduct(5, 6))];
+        yield [true, null, null, null, null, 5, 6, false, new FreeShippingAction(new GiftProduct(5, 6))];
+        yield [false, null, null, null, null, 5, 6, false, new GiftProductAction(new GiftProduct(5, 6))];
+        yield [false, Reduction::TYPE_AMOUNT, '120.6', 1, true, null, null, false, new AmountDiscountAction(new Money('120.6', 1, true), false)];
+        yield [false, Reduction::TYPE_PERCENTAGE, '90.5', 1, true, 5, 6, true, new PercentageDiscountAction(new PercentageDiscount('90.5', true), false, new GiftProduct(5, 6))];
+        yield [true, Reduction::TYPE_AMOUNT, '90.5', 1, true, 5, 6, true, new AmountDiscountAction(new Money('90.5', 1, true), true, new GiftProduct(5, 6))];
     }
 }

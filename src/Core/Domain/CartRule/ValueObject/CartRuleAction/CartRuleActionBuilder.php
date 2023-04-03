@@ -29,33 +29,15 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Builds cart rule actions.
  */
-final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
+class CartRuleActionBuilder implements CartRuleActionBuilderInterface
 {
-    /**
-     * @var bool
-     */
-    private $isFreeShipping = false;
-
-    /**
-     * @var PercentageDiscount|null
-     */
-    private $percentageDiscount;
-
-    /**
-     * @var Money|null
-     */
-    private $amountDiscount;
-
-    /**
-     * @var GiftProduct|null
-     */
-    private $giftProduct;
-
     /**
      * {@inheritdoc}
      */
@@ -99,46 +81,102 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function build(): CartRuleActionInterface
-    {
-        $this->assertCartRuleActionsAreValid();
+    public function build(
+        bool $freeShipping,
+        ?string $reductionType = null,
+        ?string $reductionValue = null,
+        ?int $currencyId = null,
+        ?bool $taxIncluded = null,
+        ?int $giftProductId = null,
+        ?int $giftCombinationId = null,
+        ?bool $appliesToDiscountedProducts = null
+    ): CartRuleActionInterface {
+        $this->assertCartRuleActionsAreValid(
+            $freeShipping,
+            $reductionType,
+            $reductionValue,
+            $giftProductId,
+            $currencyId,
+            $taxIncluded
+        );
 
-        if (null !== $this->percentageDiscount) {
+        $giftProduct = null;
+        if (null !== $giftProductId) {
+            $giftProduct = new GiftProduct(
+                $giftProductId,
+                $giftCombinationId
+            );
+        }
+
+        if (empty($reductionType) && empty($reductionValue) && $freeShipping) {
+            $action = new FreeShippingAction($giftProduct);
+        } elseif (Reduction::TYPE_AMOUNT === $reductionType) {
+            $action = new AmountDiscountAction(new Money($reductionValue, $currencyId, $taxIncluded), $freeShipping, $giftProduct);
+        } elseif (Reduction::TYPE_PERCENTAGE === $reductionType) {
+            if (null === $appliesToDiscountedProducts) {
+                throw new CartRuleConstraintException(
+                    '$appliesToDiscountedProducts value is required when reduction is percentage type',
+                    CartRuleConstraintException::INVALID_REDUCTION_EXCLUDE_SPECIAL
+                );
+            }
             $action = new PercentageDiscountAction(
-                $this->percentageDiscount,
-                $this->isFreeShipping,
-                $this->giftProduct
+                new PercentageDiscount($reductionValue, $appliesToDiscountedProducts),
+                $freeShipping,
+                $giftProduct
             );
-        } elseif (null !== $this->amountDiscount) {
-            $action = new AmountDiscountAction(
-                $this->amountDiscount,
-                $this->isFreeShipping,
-                $this->giftProduct
-            );
-        } elseif (true === $this->isFreeShipping) {
-            $action = new FreeShippingAction($this->giftProduct);
         } else {
-            $action = new GiftProductAction($this->giftProduct);
+            if (null === $giftProduct) {
+                throw new CartRuleConstraintException(
+                    'Gift product is required for gift product action',
+                    CartRuleConstraintException::INVALID_GIFT_PRODUCT
+                );
+            }
+            $action = new GiftProductAction($giftProduct);
         }
 
         return $action;
     }
 
-    /**
-     * @throws CartRuleConstraintException
-     */
-    private function assertCartRuleActionsAreValid()
-    {
-        if (null !== $this->percentageDiscount && null !== $this->amountDiscount) {
-            throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
+    private function assertCartRuleActionsAreValid(
+        bool $freeShipping,
+        ?string $reductionType,
+        ?string $reductionValue,
+        ?int $giftProductId,
+        ?int $currencyId,
+        ?bool $taxIncluded
+    ) {
+        $reduction = null;
+        if (null !== $reductionType && null !== $reductionValue) {
+            // this Reduction class is only initiated for validation
+            $reduction = new Reduction($reductionType, $reductionValue);
         }
 
-        if (null === $this->percentageDiscount &&
-            null === $this->amountDiscount &&
-            null === $this->giftProduct &&
-            false === $this->isFreeShipping
-        ) {
+        if (!$reduction && null === $giftProductId && !$freeShipping) {
             throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
+        }
+
+        if (null !== $reductionType) {
+            if (null === $reductionValue) {
+                throw new DomainConstraintException(
+                    'Reduction value is required',
+                    $reductionType === Reduction::TYPE_AMOUNT ? DomainConstraintException::INVALID_REDUCTION_AMOUNT : DomainConstraintException::INVALID_REDUCTION_PERCENTAGE
+                );
+            }
+
+            if (Reduction::TYPE_PERCENTAGE === $reduction->getType()) {
+                return;
+            }
+
+            // when it is amount type, we require currency and tax inclusion
+            if (!$currencyId) {
+                throw new CartRuleConstraintException('Amount discount requires currency', CartRuleConstraintException::INVALID_REDUCTION_CURRENCY);
+            }
+
+            if (null === $taxIncluded) {
+                throw new CartRuleConstraintException('Amount discount requires defining tax inclusion', CartRuleConstraintException::INVALID_REDUCTION_TAX);
+            }
+        } elseif (!empty($reductionValue)) {
+            throw new DomainConstraintException('Reduction type is required', DomainConstraintException::INVALID_REDUCTION_TYPE);
         }
     }
 }
