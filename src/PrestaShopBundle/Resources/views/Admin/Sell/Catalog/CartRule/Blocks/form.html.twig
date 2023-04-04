@@ -29,19 +29,21 @@
     {{ 'Cart rule'|trans({}, 'Admin.Catalog.Feature') }}
   </h3>
   <div class="card-body">
-    {{ form_widget(cartRuleForm) }}
-    {% block cart_rule_form_rest %}
-      {{ form_rest(cartRuleForm) }}
-    {% endblock %}
+    <div class="form-wrapper">
+      {{ form_widget(cartRuleForm) }}
+      {% block cart_rule_form_rest %}
+        {{ form_row(cartRuleForm) }}
+      {% endblock %}
+    </div>
   </div>
-</div>
-<div class="card-footer">
-  <a href="{{ path('admin_cart_rules_index') }}" class="btn btn-outline-secondary">
-    {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-  </a>
-  <button class="btn btn-primary float-right">
-    {{ 'Save'|trans({}, 'Admin.Actions') }}
-  </button>
+  <div class="card-footer">
+    <a href="{{ path('admin_cart_rules_index') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <button class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
 </div>
 {{ form_end(cartRuleForm) }}
 
