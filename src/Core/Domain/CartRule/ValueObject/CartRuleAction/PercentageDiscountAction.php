@@ -61,7 +61,7 @@ final class PercentageDiscountAction implements CartRuleActionInterface
     public function __construct(
         PercentageDiscount $percentageDiscount,
         bool $isFreeShipping,
-        ?GiftProduct $giftProduct = null
+        GiftProduct $giftProduct = null
     ) {
         $this->percentageDiscount = $percentageDiscount;
         $this->isFreeShipping = $isFreeShipping;

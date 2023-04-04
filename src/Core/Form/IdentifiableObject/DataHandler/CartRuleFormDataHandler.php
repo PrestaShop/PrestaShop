@@ -28,11 +28,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use DateTime;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class CartRuleFormDataHandler implements FormDataHandlerInterface
@@ -42,17 +48,10 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
      */
     private $commandBus;
 
-    /**
-     * @var CartRuleActionBuilderInterface
-     */
-    private $cartRuleActionBuilder;
-
     public function __construct(
-        CommandBusInterface $commandBus,
-        CartRuleActionBuilderInterface $cartRuleActionBuilder
+        CommandBusInterface $commandBus
     ) {
         $this->commandBus = $commandBus;
-        $this->cartRuleActionBuilder = $cartRuleActionBuilder;
     }
 
     /**
@@ -110,29 +109,36 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
     private function buildCartRuleActionForCreate(array $actionsData): CartRuleActionInterface
     {
-        $reductionType = null;
-        $reductionValue = null;
+        $actionBuilder = new CartRuleActionBuilder();
+
         if (!empty($actionsData['discount']['reduction']['value'])) {
-            $reductionValue = $actionsData['discount']['reduction']['value'];
-            $reductionType = $actionsData['discount']['reduction']['type'];
+            $reductionData = $actionsData['discount']['reduction'];
+            if ($reductionData['type'] === Reduction::TYPE_AMOUNT) {
+                $actionBuilder->setAmountDiscount(
+                    new Money(
+                        new DecimalNumber((string) $reductionData['value']),
+                        new CurrencyId((int) $reductionData['currency']),
+                        (bool) $reductionData['include_tax']
+                    )
+                );
+            } else {
+                $actionBuilder->setPercentageDiscount(new PercentageDiscount(
+                    (string) $actionsData['discount']['reduction']['value'],
+                    (bool) $actionsData['discount']['exclude_discounted_products']
+                ));
+            }
         }
 
-        $giftProductId = null;
-        $giftCombinationId = null;
+        $actionBuilder->setFreeShipping((bool) $actionsData['free_shipping']);
+
         if (!empty($actionsData['gift_product'][0])) {
-            $giftProductId = (int) $actionsData['gift_product'][0]['product_id'];
-            $giftCombinationId = !empty($actionsData['gift_product'][0]['combination_id']) ? (int) $actionsData['gift_product'][0]['combination_id'] : null;
+            $giftProductData = $actionsData['gift_product'][0];
+            $actionBuilder->setGiftProduct(new GiftProduct(
+                (int) $giftProductData['product_id'],
+                (int) $giftProductData['combination_id'] ?: null
+            ));
         }
 
-        return $this->cartRuleActionBuilder->build(
-            (bool) $actionsData['free_shipping'],
-            $reductionType,
-            $reductionValue,
-            !empty($actionsData['discount']['reduction']['currency']) ? $actionsData['discount']['reduction']['currency'] : null,
-            (bool) $actionsData['discount']['reduction']['include_tax'],
-            $giftProductId,
-            $giftCombinationId,
-            (bool) $actionsData['discount']['exclude_discounted_products']
-        );
+        return $actionBuilder->build();
     }
 }

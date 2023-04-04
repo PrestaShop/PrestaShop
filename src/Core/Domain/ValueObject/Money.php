@@ -48,22 +48,23 @@ class Money
     private $taxIncluded;
 
     /**
-     * @param string $amount
-     * @param int $currencyId
+     * @param DecimalNumber $amount
+     * @param CurrencyId $currencyId
      * @param bool $taxIncluded
+     *
+     * @throws DomainConstraintException
      */
     public function __construct(
-        string $amount,
-        int $currencyId,
+        DecimalNumber $amount,
+        CurrencyId $currencyId,
         bool $taxIncluded
     ) {
-        $amount = new DecimalNumber($amount);
         if (!$amount->isGreaterOrEqualThanZero()) {
-            throw new DomainConstraintException(sprintf('Money amount cannot be lower than zero, %s given', $amount), DomainConstraintException::INVALID_MONEY_AMOUNT);
+            throw new DomainConstraintException(sprintf('Money amount cannot be lower than zero, %f given', (string) $amount), DomainConstraintException::INVALID_MONEY_AMOUNT);
         }
 
         $this->amount = $amount;
-        $this->currencyId = new CurrencyId($currencyId);
+        $this->currencyId = $currencyId;
         $this->taxIncluded = $taxIncluded;
     }
 

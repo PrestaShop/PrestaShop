@@ -47,9 +47,11 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRu
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use RuntimeException;
@@ -823,26 +825,29 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     ): CartRuleActionInterface {
         $builder = new CartRuleActionBuilder();
 
-        $giftProduct = null;
+        $builder->setFreeShipping($isFreeShipping);
+
+        if (null !== $percentage) {
+            $builder->setPercentageDiscount(
+                new PercentageDiscount($percentage, $percentageAppliesToDiscountedProducts)
+            );
+        }
+
+        if (null !== $amount) {
+            $builder->setAmountDiscount(
+                new Money(
+                    new DecimalNumber((string) $amount),
+                    new CurrencyId($amountCurrencyId),
+                    $amountTaxIncluded
+                )
+            );
+        }
+
         if (null !== $giftProductId) {
-            $giftProduct = new GiftProduct($giftProductId, $giftProductAttributeId);
+            $builder->setGiftProduct(new GiftProduct($giftProductId, $giftProductAttributeId));
         }
 
-        $reduction = null;
-        if ($percentage) {
-            $reduction = new Reduction(Reduction::TYPE_PERCENTAGE, $percentage);
-        } elseif ($amount) {
-            $reduction = new Reduction(Reduction::TYPE_AMOUNT, $percentage);
-        }
-
-        return $builder->build(
-            $isFreeShipping,
-            $reduction,
-            $amountCurrencyId === null ? null : $amountCurrencyId,
-            $amountTaxIncluded,
-            $giftProduct,
-            $percentageAppliesToDiscountedProducts
-        );
+        return $builder->build();
     }
 
     private function areNumbersEqual($number1, $number2): bool

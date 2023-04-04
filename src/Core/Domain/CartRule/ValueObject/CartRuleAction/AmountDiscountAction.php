@@ -61,7 +61,7 @@ final class AmountDiscountAction implements CartRuleActionInterface
     public function __construct(
         Money $moneyAmountCondition,
         bool $isFreeShipping,
-        ?GiftProduct $giftProduct = null
+        GiftProduct $giftProduct = null
     ) {
         $this->moneyAmountCondition = $moneyAmountCondition;
         $this->isFreeShipping = $isFreeShipping;

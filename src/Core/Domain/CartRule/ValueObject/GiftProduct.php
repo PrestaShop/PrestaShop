@@ -48,12 +48,10 @@ class GiftProduct
      * @param int $productId
      * @param int|null $combinationId
      */
-    public function __construct(int $productId, ?int $combinationId = null)
+    public function __construct(int $productId, int $combinationId = null)
     {
         $this->productId = new ProductId($productId);
-        if (null !== $combinationId) {
-            $this->combinationId = new CombinationId($combinationId);
-        }
+        $this->combinationId = new CombinationId($combinationId);
     }
 
     /**

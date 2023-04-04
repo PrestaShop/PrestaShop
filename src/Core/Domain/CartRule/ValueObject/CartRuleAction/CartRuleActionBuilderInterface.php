@@ -76,14 +76,5 @@ interface CartRuleActionBuilderInterface
      *
      * @return CartRuleActionInterface
      */
-    public function build(
-        bool $freeShipping,
-        ?string $reductionType = null,
-        ?string $reductionValue = null,
-        ?int $currencyId = null,
-        ?bool $taxIncluded = null,
-        ?int $giftProductId = null,
-        ?int $giftCombinationId = null,
-        ?bool $appliesToDiscountedProducts = null
-    ): CartRuleActionInterface;
+    public function build(): CartRuleActionInterface;
 }
