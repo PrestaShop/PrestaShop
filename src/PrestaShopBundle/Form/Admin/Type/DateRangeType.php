@@ -42,6 +42,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DateRangeType extends AbstractType
 {
     /**
+     * These date format constants are used for front-end part and have different format compared to php DateTime class.
+     */
+    public const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
+    public const DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+    /**
      * @var TranslatorInterface
      */
     protected $translator;
@@ -130,7 +136,7 @@ class DateRangeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'date_format' => 'YYYY-MM-DD',
+            'date_format' => self::DEFAULT_DATE_FORMAT,
             'has_unlimited_checkbox' => false,
             'label_from' => $this->translator->trans('Start date', [], 'Admin.Global'),
             'label_to' => $this->translator->trans('End date', [], 'Admin.Global'),

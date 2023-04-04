@@ -33,7 +33,6 @@ use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchedProductItemType extends CommonAbstractType
 {
@@ -59,14 +58,6 @@ class SearchedProductItemType extends CommonAbstractType
                 'label' => false,
             ])
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'identifier_field' => 'unique_identifier',
-        ]);
     }
 
     public function getParent(): string

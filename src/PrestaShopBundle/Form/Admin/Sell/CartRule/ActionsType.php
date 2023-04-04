@@ -43,16 +43,7 @@ class ActionsType extends TranslatorAwareType
             ->add('free_shipping', SwitchType::class, [
                 'required' => false,
             ])
-            ->add('discount', DiscountType::class, [
-                'required' => false,
-                'row_attr' => [
-                    'class' => 'discount-container',
-                ],
-                'disabling_switch' => true,
-                'disabled_value' => static function (?array $data) {
-                    return empty($data['reduction']['value']);
-                },
-            ])
+            ->add('discount', DiscountType::class)
             ->add('gift_product', SearchProductType::class, [
                 'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),
             ])

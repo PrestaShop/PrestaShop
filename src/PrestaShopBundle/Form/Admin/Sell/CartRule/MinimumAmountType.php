@@ -66,6 +66,12 @@ class MinimumAmountType extends TranslatorAwareType
 
         $resolver->setDefaults([
             'form_theme' => '@PrestaShop/Admin/Sell/Catalog/CartRule/FormTheme/minimum_amount.html.twig',
+            'label' => $this->trans('Minimum amount', 'Admin.Catalog.Feature'),
+            'required' => false,
+            'disabling_switch' => true,
+            'disabled_value' => static function (?array $data): bool {
+                return empty($data['amount']);
+            },
         ]);
     }
 }

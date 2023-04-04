@@ -46,16 +46,9 @@ class ConditionsType extends TranslatorAwareType
                 'label_from' => $this->trans('Valid from', 'Admin.Catalog.Feature'),
                 'label_to' => $this->trans('Valid to', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'date_format' => 'YYYY-MM-DD HH:mm:ss',
+                'date_format' => DateRangeType::DEFAULT_DATE_TIME_FORMAT,
             ])
-            ->add('minimum_amount', MinimumAmountType::class, [
-                'label' => $this->trans('Minimum amount', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'disabling_switch' => true,
-                'disabled_value' => static function (?array $data): bool {
-                    return empty($data['amount']);
-                },
-            ])
+            ->add('minimum_amount', MinimumAmountType::class)
             ->add('total_available', NumberType::class, [
                 'label' => $this->trans('Total available', 'Admin.Catalog.Feature'),
                 'help' => $this->trans(

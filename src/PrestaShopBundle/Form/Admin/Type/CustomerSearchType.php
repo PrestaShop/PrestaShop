@@ -62,7 +62,7 @@ class CustomerSearchType extends EntitySearchInputType
             'limit' => 1,
             'disabling_switch' => true,
             'switch_state_on_disable' => 'on',
-            'disabling_switch_event' => 'entitySearchInputSwitchCustomer',
+            'disabling_switch_event' => null,
             'disabled_value' => function ($data) {
                 return empty($data[0]['id_customer']);
             },

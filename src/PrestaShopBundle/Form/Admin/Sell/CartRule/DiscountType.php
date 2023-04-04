@@ -36,6 +36,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -124,6 +125,22 @@ class DiscountType extends TranslatorAwareType
     {
         return $this->discountApplicationChoiceProvider->getChoices([
             'reduction_type' => $reductionType,
+        ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'required' => false,
+            'row_attr' => [
+                'class' => 'discount-container',
+            ],
+            'disabling_switch' => true,
+            'disabled_value' => static function (?array $data) {
+                return empty($data['reduction']['value']);
+            },
         ]);
     }
 }

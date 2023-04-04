@@ -288,7 +288,8 @@ class CartRuleController extends FrameworkBundleAdminController
 
     /**
      * This just prefills form fields that depends on query parameter like customer search input (if id is provided),
-     * all remaining data should be set in related form data provider
+     * all remaining data should be set in related form data provider.
+     * (The parameter is in the URL, not the post data which is why it's out of the provider's responsibility)
      *
      * @param Request $request
      *
