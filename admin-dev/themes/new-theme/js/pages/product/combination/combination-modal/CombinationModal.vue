@@ -61,7 +61,7 @@
 
         <button
           type="button"
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary btn-previous-combination"
           @click.prevent.stop="showPrevious"
           :aria-label="$t('modal.previous')"
           :disabled="
@@ -69,16 +69,16 @@
           "
         >
           <i class="material-icons rtl-flip">keyboard_arrow_left</i>
-          {{ $t('modal.previous') }}
+          <span class="btn-label">{{ $t('modal.previous') }}</span>
         </button>
         <button
           type="button"
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary btn-next-combination"
           @click.prevent.stop="showNext"
           :aria-label="$t('modal.next')"
           :disabled="nextCombinationId === null || submittingCombinationForm"
         >
-          {{ $t('modal.next') }}
+          <span class="btn-label">{{ $t('modal.next') }}</span>
           <i class="material-icons rtl-flip">keyboard_arrow_right</i>
         </button>
         <button
@@ -494,6 +494,39 @@
 
         .btn-close {
           margin-right: auto;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1299.98px) {
+  #combination-edit-modal {
+    .combination-modal {
+      .modal-dialog {
+        width: 100%;
+        height: 100%;
+
+        .btn-previous-combination,
+        .btn-next-combination {
+          padding: 0.5rem;
+
+          .btn-label {
+            display: none;
+          }
+
+          .material-icons {
+            display: block;
+            font-size: 1.7rem;
+            color: #6c868e;
+          }
+        }
+
+        .btn-previous-combination.disabled,
+        .btn-next-combination.disabled {
+          .material-icons {
+            color: #b3c7cd;
+          }
         }
       }
     }

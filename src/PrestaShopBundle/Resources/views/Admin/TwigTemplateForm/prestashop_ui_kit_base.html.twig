@@ -1295,7 +1295,9 @@
   <span class="label text-preview {{ preview_class }}">
     {# Allows to insert content as prefix, like an icon #}
     {% if prefix is defined %}
+    <span class="text-preview-prefix">
       {{ prefix|raw }}
+    </span>
     {% endif %}
 
     <span class="text-preview-value">
@@ -1310,7 +1312,9 @@
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
+    <span class="text-preview-suffix">
       {{ suffix|raw }}
+    </span>
     {% endif %}
   </span>
 {% endblock %}

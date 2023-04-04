@@ -298,4 +298,10 @@
     }
   }
 }
+
+@media screen and (max-width: 1299.98px) {
+  .history {
+    display: none;
+  }
+}
 </style>
