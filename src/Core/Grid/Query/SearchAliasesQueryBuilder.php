@@ -61,8 +61,8 @@ class SearchAliasesQueryBuilder extends AbstractDoctrineQueryBuilder
         $builder = $this->getSearchAliasesQueryBuilder($searchCriteria);
 
         $builder
-            ->select('a.id_alias, a.alias, a.search, a.active')
-            ->groupBy('g.id_alias')
+            ->select('a.id_alias, a.alias, a.search, a.active, COUNT(a.id_alias) as members')
+            ->groupBy('a.id_alias')
         ;
 
         $this->searchCriteriaApplicator
@@ -79,7 +79,7 @@ class SearchAliasesQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this->getSearchAliasesQueryBuilder($searchCriteria)->select('COUNT(g.id_alias)');
+        return $this->getSearchAliasesQueryBuilder($searchCriteria)->select('COUNT(a.id_alias)');
     }
 
     /**

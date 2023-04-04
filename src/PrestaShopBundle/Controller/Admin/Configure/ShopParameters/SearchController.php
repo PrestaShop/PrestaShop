@@ -31,6 +31,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 use PrestaShop\PrestaShop\Core\Search\Filters\SearchAliasesFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,6 +48,7 @@ class SearchController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param SearchAliasesFilters $filters
+     *
      * @return Response
      */
     public function indexAction(Request $request, SearchAliasesFilters $filters): Response
@@ -55,6 +58,45 @@ class SearchController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/index.html.twig', [
             'searchAliasesGrid' => $this->presentGrid($searchAliasesGrid),
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'desc' => $this->trans('Add new alias', 'Admin.Shopparameters.Feature'),
+                    'icon' => 'add_circle_outline',
+                    'href' => $this->generateUrl('admin_search_index'), // @TODO implement search route
+                ],
+            ],
         ]);
+    }
+
+    /**
+     * Bulk delete search aliases.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_search_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @DemoRestricted(redirectRoute="admin_search_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request)
+    {
+        $aliasIds = $request->request->get('contact_bulk');
+        $contactDeleter = $this->get('prestashop.adapter.alias.deleter');
+
+        if ($errors = $contactDeleter->delete($aliasIds)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_search_index');
     }
 }
