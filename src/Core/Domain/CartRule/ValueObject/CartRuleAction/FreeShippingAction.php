@@ -45,7 +45,7 @@ final class FreeShippingAction implements CartRuleActionInterface
     /**
      * @param GiftProduct|null $giftProduct
      */
-    public function __construct(GiftProduct $giftProduct = null)
+    public function __construct(?GiftProduct $giftProduct = null)
     {
         $this->giftProduct = $giftProduct;
     }

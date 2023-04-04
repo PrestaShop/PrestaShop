@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 
 /**
  * Percentage discount
@@ -42,22 +41,18 @@ class PercentageDiscount
     /**
      * @var bool
      */
-    private $appliesToDiscountedProducts;
+    private $excludeDiscountedProducts;
 
     /**
-     * @param string $percentage
-     * @param bool $appliesToDiscountedProducts
+     * @param DecimalNumber $percentage
+     * @param bool $excludeDiscountedProducts
      */
-    public function __construct(string $percentage, bool $appliesToDiscountedProducts)
-    {
-        $decimalPercentage = new DecimalNumber($percentage);
-
-        if ($decimalPercentage->isLowerOrEqualThanZero() || $decimalPercentage->isGreaterThan(new DecimalNumber('100'))) {
-            throw new CartRuleConstraintException('Percentage must be greater than 0 and not greater than 100', CartRuleConstraintException::INVALID_PERCENTAGE);
-        }
-
-        $this->percentage = $decimalPercentage;
-        $this->appliesToDiscountedProducts = $appliesToDiscountedProducts;
+    public function __construct(
+        DecimalNumber $percentage,
+        bool $excludeDiscountedProducts
+    ) {
+        $this->percentage = $percentage;
+        $this->excludeDiscountedProducts = $excludeDiscountedProducts;
     }
 
     /**
@@ -71,8 +66,24 @@ class PercentageDiscount
     /**
      * @return bool
      */
-    public function appliesToDiscountedProducts(): bool
+    public function excludeDiscountedProducts(): bool
     {
-        return $this->appliesToDiscountedProducts;
+        return $this->excludeDiscountedProducts;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFreeShipping(): bool
+    {
+        return $this->freeShipping;
+    }
+
+    /**
+     * @return GiftProduct|null
+     */
+    public function getGiftProduct(): ?GiftProduct
+    {
+        return $this->giftProduct;
     }
 }

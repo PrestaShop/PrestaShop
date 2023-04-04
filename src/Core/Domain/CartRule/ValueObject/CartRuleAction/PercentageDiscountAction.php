@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -46,7 +47,7 @@ final class PercentageDiscountAction implements CartRuleActionInterface
     /**
      * @var bool
      */
-    private $isFreeShipping;
+    private $freeShipping;
 
     /**
      * @var GiftProduct|null
@@ -54,17 +55,20 @@ final class PercentageDiscountAction implements CartRuleActionInterface
     private $giftProduct;
 
     /**
-     * @param PercentageDiscount $percentageDiscount
-     * @param bool $isFreeShipping
+     * @param bool $freeShipping
      * @param GiftProduct|null $giftProduct
      */
     public function __construct(
-        PercentageDiscount $percentageDiscount,
-        bool $isFreeShipping,
+        DecimalNumber $reductionValue,
+        bool $excludeDiscountedProducts,
+        bool $freeShipping,
         GiftProduct $giftProduct = null
     ) {
-        $this->percentageDiscount = $percentageDiscount;
-        $this->isFreeShipping = $isFreeShipping;
+        $this->percentageDiscount = new PercentageDiscount(
+            $reductionValue,
+            $excludeDiscountedProducts
+        );
+        $this->freeShipping = $freeShipping;
         $this->giftProduct = $giftProduct;
     }
 
@@ -73,7 +77,7 @@ final class PercentageDiscountAction implements CartRuleActionInterface
      */
     public function isFreeShipping(): bool
     {
-        return $this->isFreeShipping;
+        return $this->freeShipping;
     }
 
     /**

@@ -104,8 +104,8 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
 
         $minimumAmount = $command->getMinimumAmount();
         if ($minimumAmount) {
-            $cartRule->minimum_amount = (float) (string) $minimumAmount->getMoneyAmount()->getAmount();
-            $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
+            $cartRule->minimum_amount = (float) (string) $minimumAmount->getAmount();
+            $cartRule->minimum_amount_currency = $minimumAmount->getCurrencyId()->getValue();
             $cartRule->minimum_amount_shipping = $command->isMinimumAmountShippingIncluded();
             $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();
         }
@@ -123,27 +123,26 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
     private function fillCartRuleActionsFromCommandData(CartRule $cartRule, AddCartRuleCommand $command): void
     {
         $cartRuleAction = $command->getCartRuleAction();
-        $amountDiscount = $cartRuleAction->getAmountDiscount();
-        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
-        $giftProduct = $cartRuleAction->getGiftProduct();
         $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
 
-        $cartRule->gift_product = null !== $giftProduct ? $giftProduct->getProductId()->getValue() : null;
-        $cartRule->gift_product_attribute = null !== $giftProduct ? $giftProduct->getCombinationId() : null;
-        $cartRule->reduction_amount = null !== $amountDiscount ?
-            (float) (string) $amountDiscount->getMoneyAmount()->getAmount() :
-            null;
-        $cartRule->reduction_currency = null !== $amountDiscount ?
-            $amountDiscount->getMoneyAmount()->getCurrencyId()->getValue() :
-            null;
+        $giftProduct = $cartRuleAction->getGiftProduct();
+        if ($giftProduct) {
+            $cartRule->gift_product = $giftProduct->getProductId()->getValue();
+            $cartRule->gift_product_attribute = $giftProduct->getCombinationId() ? $giftProduct->getCombinationId()->getValue() : null;
+        }
 
-        // Legacy reduction_tax property is true when it's tax included, false when tax excluded.
-        $cartRule->reduction_tax = null !== $amountDiscount ? $amountDiscount->isTaxIncluded() : null;
+        $amountDiscount = $cartRuleAction->getAmountDiscount();
+        if ($amountDiscount) {
+            $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
+            $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
+            $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
+        }
 
-        $cartRule->reduction_percent = null !== $percentageDiscount ? (float) (string) $percentageDiscount->getPercentage() : null;
-        $cartRule->reduction_exclude_special = null !== $percentageDiscount ?
-            !$percentageDiscount->appliesToDiscountedProducts() :
-            null;
+        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
+        if ($percentageDiscount) {
+            $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
+            $cartRule->reduction_exclude_special = $percentageDiscount->excludeDiscountedProducts();
+        }
 
         $discountApplicationType = $command->getDiscountApplicationType();
 

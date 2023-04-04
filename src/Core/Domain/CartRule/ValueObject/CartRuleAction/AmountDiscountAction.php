@@ -41,7 +41,7 @@ final class AmountDiscountAction implements CartRuleActionInterface
     /**
      * @var Money
      */
-    private $moneyAmountCondition;
+    private $amountDiscount;
 
     /**
      * @var bool
@@ -54,16 +54,16 @@ final class AmountDiscountAction implements CartRuleActionInterface
     private $giftProduct;
 
     /**
-     * @param Money $moneyAmountCondition
+     * @param Money $amountDiscount
      * @param bool $isFreeShipping
      * @param GiftProduct|null $giftProduct
      */
     public function __construct(
-        Money $moneyAmountCondition,
+        Money $amountDiscount,
         bool $isFreeShipping,
         GiftProduct $giftProduct = null
     ) {
-        $this->moneyAmountCondition = $moneyAmountCondition;
+        $this->amountDiscount = $amountDiscount;
         $this->isFreeShipping = $isFreeShipping;
         $this->giftProduct = $giftProduct;
     }
@@ -89,7 +89,7 @@ final class AmountDiscountAction implements CartRuleActionInterface
      */
     public function getAmountDiscount(): ?Money
     {
-        return $this->moneyAmountCondition;
+        return $this->amountDiscount;
     }
 
     /**

@@ -28,16 +28,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use DateTime;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
@@ -115,17 +110,15 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             $reductionData = $actionsData['discount']['reduction'];
             if ($reductionData['type'] === Reduction::TYPE_AMOUNT) {
                 $actionBuilder->setAmountDiscount(
-                    new Money(
-                        new DecimalNumber((string) $reductionData['value']),
-                        new CurrencyId((int) $reductionData['currency']),
-                        (bool) $reductionData['include_tax']
-                    )
+                    $actionsData['discount']['reduction']['value'],
+                    (int) $reductionData['currency'],
+                    (bool) $reductionData['include_tax']
                 );
             } else {
-                $actionBuilder->setPercentageDiscount(new PercentageDiscount(
-                    (string) $actionsData['discount']['reduction']['value'],
+                $actionBuilder->setPercentageDiscount(
+                    $actionsData['discount']['reduction']['value'],
                     (bool) $actionsData['discount']['exclude_discounted_products']
-                ));
+                );
             }
         }
 
@@ -133,10 +126,10 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         if (!empty($actionsData['gift_product'][0])) {
             $giftProductData = $actionsData['gift_product'][0];
-            $actionBuilder->setGiftProduct(new GiftProduct(
+            $actionBuilder->setGiftProduct(
                 (int) $giftProductData['product_id'],
                 (int) $giftProductData['combination_id'] ?: null
-            ));
+            );
         }
 
         return $actionBuilder->build();
