@@ -48,7 +48,7 @@ class SearchAliasesGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getId()
+    protected function getId(): string
     {
         return self::GRID_ID;
     }
@@ -56,7 +56,7 @@ class SearchAliasesGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getName()
+    protected function getName(): string
     {
         return $this->trans('Aliases', [], 'Admin.Navigation.Menu');
     }
@@ -64,7 +64,7 @@ class SearchAliasesGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getColumns()
+    protected function getColumns(): ColumnCollection
     {
         return (new ColumnCollection())
             ->add(
@@ -124,7 +124,7 @@ class SearchAliasesGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getFilters()
+    protected function getFilters(): FilterCollection
     {
         return (new FilterCollection())
             ->add(
