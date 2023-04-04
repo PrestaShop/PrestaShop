@@ -157,7 +157,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
       await expect(isNotVisible).to.be.true;
     });
 
-    it('should add the first product to the cart by quick view', async function () {
+    it('should add the second product to the cart by quick view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addSecondProductToCart', baseContext);
 
       await homePage.addProductToCartByQuickView(page, 2);
@@ -168,7 +168,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
       await expect(notificationsNumber).to.eq(3);
     });
 
-    it('should add the promo code and  error message', async function () {
+    it('should add the promo code and check the cart rule name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode', baseContext);
 
       await cartPage.addPromoCode(page, newCartRuleData.code);

@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import basicHelper from '@utils/basicHelper';
 
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
@@ -15,8 +16,9 @@ import dashboardPage from '@pages/BO/dashboard';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/home';
-import foProductPage from '@pages/FO/product';
+import {homePage} from '@pages/FO/home';
+import productPage from '@pages/FO/product';
+import {loginPage} from '@pages/FO/login';
 
 // Import data
 import Customers from '@data/demo/customers';
@@ -26,28 +28,29 @@ import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import basicHelper from '@utils/basicHelper';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_checkTotalAvailable';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_checkTotalAvailableForEachUser';
 
 /*
 Scenario:
-- Create cart rule with total available = 1
-- Go to FO, Add product to cart
+- Create cart rule with total for each user = 1
+- Go to FO, Add product to cart, login by default customer
 - Add promo code and check total after discount
 - Complete the order
 - Try to use a second time the same promo code anc check the error message
+- Logout and try to set a third time the promo code and check total after discount
 Post-condition:
 - Delete the created cart rule
 */
-describe('BO - Catalog - Cart rules : Check Total available', async () => {
+describe('BO - Catalog - Cart rules : Check Total available for each user', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const cartRuleCode: CartRuleData = new CartRuleData({
+  const newCartRuleData: CartRuleData = new CartRuleData({
     name: 'New cart rule',
     code: '4QABV6L3',
-    quantity: 1,
+    quantity: 2,
+    quantityPerUser: 1,
     discountType: 'Percent',
     discountPercent: 20,
   });
@@ -92,7 +95,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
-      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleCode);
+      const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
       await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
 
@@ -101,41 +104,41 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
 
       // View my shop and init pages
       page = await addCartRulePage.viewMyShop(page);
-      await foHomePage.changeLanguage(page, 'en');
+      await homePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foHomePage.isHomePage(page);
+      const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
   });
 
   [
-    {args: {testIdentifier: 'cartRuleAccepted', testTitle: 'for the first time'}},
-    {args: {testIdentifier: 'cartRuleNotAccepted', testTitle: 'for the second time'}},
+    {args: {testIdentifier: 'cartRuleAccepted', testTitle: 'for the first time by default customer'}},
+    {args: {testIdentifier: 'cartRuleNotAccepted', testTitle: 'for the second time by default customer'}},
+    {args: {testIdentifier: 'cartRuleAccepted_2', testTitle: 'for the third time without sign in'}},
   ].forEach((test, index) => {
     describe(`FO : Check the created cart rule '${test.args.testTitle}'`, async () => {
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-        await foHomePage.goToProductPage(page, 1);
+        await homePage.goToProductPage(page, 1);
 
-        const pageTitle = await foProductPage.getPageTitle(page);
+        const pageTitle = await productPage.getPageTitle(page);
         await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
-        await foProductPage.addProductToTheCart(page);
+        await productPage.addProductToTheCart(page);
 
         const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
         await expect(notificationsNumber).to.be.equal(1);
       });
 
       it('should set the promo code', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `addPromoCode${index}`, baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', `addPromoCode${index}`, baseContext);
 
-        await cartPage.addPromoCode(page, cartRuleCode.code);
+        await cartPage.addPromoCode(page, newCartRuleData.code);
       });
 
       if (test.args.testIdentifier === 'cartRuleAccepted') {
@@ -143,14 +146,14 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
           const discountedPrice = Products.demo_1.finalPrice
-            - await basicHelper.percentage(Products.demo_1.finalPrice, cartRuleCode.discountPercent);
+            - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
           await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
         });
 
         it('should proceed to checkout', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', 'ProceedToCheckout', baseContext);
 
           // Proceed to checkout the shopping cart
           await cartPage.clickOnProceedToCheckout(page);
@@ -192,26 +195,57 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
         });
 
-        it('should click on the logo of the shop', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
+        it('should go to home page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-          await foHomePage.clickOnHeaderLink(page, 'Logo');
+          await homePage.clickOnHeaderLink(page, 'Logo');
 
-          const pageTitle = await foHomePage.getPageTitle(page);
-          await expect(pageTitle).to.equal(foHomePage.pageTitle);
+          const pageTitle = await homePage.getPageTitle(page);
+          await expect(pageTitle).to.equal(homePage.pageTitle);
         });
       }
       if (test.args.testIdentifier === 'cartRuleNotAccepted') {
-        it('should search for the same created voucher and check the error message', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'searchExistingVoucher', baseContext);
+        it('should check the promo code error message', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
 
           const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-          await expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyUsedErrorText);
+          await expect(voucherErrorText).to.equal(cartPage.cartRuleLimitUsageErrorText);
+        });
+
+        it('should sign out', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'signOut', baseContext);
+
+          await cartPage.logout(page);
+          await loginPage.clickOnHeaderLink(page, 'Logo');
+
+          const isCustomerConnected = await homePage.isCustomerConnected(page);
+          await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+        });
+      }
+
+      if (test.args.testIdentifier === 'cartRuleAccepted_2') {
+        it('should check that the promo code is applied to the cart', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkPromoCode', baseContext);
+
+          const discountedPrice = Products.demo_1.finalPrice
+            - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent);
+
+          const totalAfterDiscount = await cartPage.getATIPrice(page);
+          await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
+        });
+
+        it('should delete the last product from the cart', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
+
+          await cartPage.deleteProduct(page, 1);
+
+          const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+          await expect(notificationNumber).to.eq(0);
         });
       }
     });
   });
 
   // Post-condition : Delete the created cart rule
-  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest`);
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest`);
 });

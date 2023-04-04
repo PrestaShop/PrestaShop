@@ -24,10 +24,17 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_groupCustomerSelection';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_customerGroupSelection';
 
 /*
-
+Scenario:
+- Create cart rule with customer group selection (Remove customer group)
+- Go to FO > Add product to the cart > login by default customer
+- Add the discount and check the error message
+- Sign out and try to add the discount a second time
+- Check that the promo code is applied to the cart
+Post-condition:
+- Delete the created cart rule
  */
 describe('BO - Catalog - Cart rules : Customer Group selection', async () => {
   let browserContext: BrowserContext;
