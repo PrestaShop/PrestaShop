@@ -376,8 +376,8 @@ class OrderAmountUpdater
             $this->orderDetailUpdater->updateOrderDetail(
                 $orderDetail,
                 $order,
-                new Number((string) $cartProduct['price_with_reduction_without_tax']),
-                new Number((string) $cartProduct['price_with_reduction'])
+                new DecimalNumber((string) $cartProduct['price_with_reduction_without_tax']),
+                new DecimalNumber((string) $cartProduct['price_with_reduction'])
             );
         }
     }

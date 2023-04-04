@@ -34,19 +34,41 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 class MoneyTest extends TestCase
 {
-    public function testCreateWithPositiveValue()
-    {
-        $money = new Money(new DecimalNumber('100'), new CurrencyId(10));
+    /**
+     * @dataProvider getValidDataForCreatingMoneyClass
+     *
+     * @param string $number
+     * @param int $currencyId
+     * @param bool $taxIncluded
+     *
+     * @return void
+     */
+    public function testItCreatesMoneyClass(
+        string $number,
+        int $currencyId,
+        bool $taxIncluded
+    ): void {
+        $money = new Money(new DecimalNumber($number), new CurrencyId($currencyId), $taxIncluded);
 
-        $this->assertEquals('100', (string) $money->getAmount());
-        $this->assertEquals('', $money->getAmount()->getSign());
+        $this->assertTrue($money->getAmount()->equals(new DecimalNumber($number)));
+        $this->assertSame('', $money->getAmount()->getSign());
+        $this->assertSame($currencyId, $money->getCurrencyId()->getValue());
+        $this->assertSame($taxIncluded, $money->isTaxIncluded());
     }
 
-    public function testCreateWithNegativeValue()
+    public function getValidDataForCreatingMoneyClass(): iterable
+    {
+        yield ['100', 10, true];
+        yield ['100.5', 5, false];
+        yield ['0', 99, true];
+    }
+
+    public function testItFailsWhenCreatingWithNegativeValue()
     {
         $this->expectException(DomainConstraintException::class);
+        $this->expectExceptionCode(DomainConstraintException::INVALID_MONEY_AMOUNT);
         $this->expectExceptionMessage('Money amount cannot be lower than zero, -100.000000 given');
 
-        new Money(new DecimalNumber('-100'), new CurrencyId(10));
+        new Money(new DecimalNumber('-100'), new CurrencyId(10), false);
     }
 }
