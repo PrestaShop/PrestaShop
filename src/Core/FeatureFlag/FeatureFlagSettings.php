@@ -63,5 +63,5 @@ class FeatureFlagSettings
     public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
     public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
 
-    public const FEATURE_FLAG_CARTS_INDEX = 'carts_index';
+    public const FEATURE_FLAG_CARTS = 'carts';
 }

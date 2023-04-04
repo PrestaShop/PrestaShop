@@ -46,19 +46,19 @@ services:
   prestashop.core.kpi_row.factory.orders:
     class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
     arguments:
-      - - '@prestashop.adapter.kpi.conversion_rate'
-        - '@prestashop.adapter.kpi.abandoned_cart'
-        - '@prestashop.adapter.kpi.average_order_value'
-        - '@prestashop.adapter.kpi.net_profit_per_visit'
+      - - '@PrestaShop\PrestaShop\Adapter\Kpi\ConversionRateKpi'
+        - '@PrestaShop\PrestaShop\Adapter\Kpi\AbandonedCartKpi'
+        - '@PrestaShop\PrestaShop\Adapter\Kpi\AverageOrderValueKpi'
+        - '@PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi'
       - '@prestashop.core.hook.dispatcher'
       - 'orders'
 
   prestashop.core.kpi_row.factory.carts:
     class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
     arguments:
-      - - '@prestashop.adapter.kpi.conversion_rate'
-        - '@prestashop.adapter.kpi.abandoned_cart'
-        - '@prestashop.adapter.kpi.average_order_value'
-        - '@prestashop.adapter.kpi.net_profit_per_visit'
+      - - '@PrestaShop\PrestaShop\Adapter\Kpi\ConversionRateKpi'
+        - '@PrestaShop\PrestaShop\Adapter\Kpi\AbandonedCartKpi'
+        - '@PrestaShop\PrestaShop\Adapter\Kpi\AverageOrderValueKpi'
+        - '@PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi'
       - '@prestashop.core.hook.dispatcher'
-      - 'orders'
+      - 'carts'

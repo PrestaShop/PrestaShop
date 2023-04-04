@@ -63,6 +63,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilter;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -71,6 +72,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * Shows list of carts
      *
@@ -81,7 +84,7 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request, CartFilter $filters)
+    public function indexAction(Request $request, CartFilter $filters): Response
     {
         $cartsKpiFactory = $this->get('prestashop.core.kpi_row.factory.carts');
         $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
@@ -111,7 +114,7 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteCartAction(int $cartId)
+    public function deleteCartAction(int $cartId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteCartCommand($cartId));
@@ -121,24 +124,6 @@ class CartController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_carts_index');
-    }
-
-    /**
-     * Provides cart ids from request of bulk action
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getBulkCartsFromRequest(Request $request): array
-    {
-        $cartIds = $request->request->get('cart_bulk');
-
-        if (!is_array($cartIds)) {
-            return [];
-        }
-
-        return array_map('intval', $cartIds);
     }
 
     /**
@@ -152,7 +137,7 @@ class CartController extends FrameworkBundleAdminController
      */
     public function bulkDeleteCartAction(Request $request): RedirectResponse
     {
-        $cartIds = $this->getBulkCartsFromRequest($request);
+        $cartIds = $this->getBulkActionIds($request, 'cart_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
@@ -177,7 +162,7 @@ class CartController extends FrameworkBundleAdminController
      */
     public function exportCartAction(Request $request, CartFilter $filters): CsvResponse
     {
-        $filters = new CartFilter(['limit' => null] + $filters->all());
+        $filters = new CartFilter($filters->getShopConstraint(), ['limit' => null] + $filters->all());
         $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
         $cartGrid = $cartGridFactory->getGrid($filters);
 

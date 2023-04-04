@@ -28,9 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use PrestaShopBundle\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -43,7 +43,7 @@ final class AverageOrderValueKpi implements KpiInterface
     private $translator;
 
     /**
-     * @var ConfigurationInterface
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
@@ -54,12 +54,12 @@ final class AverageOrderValueKpi implements KpiInterface
 
     /**
      * @param TranslatorInterface $translator
-     * @param ConfigurationInterface $configuration
+     * @param ShopConfigurationInterface $configuration
      * @param LegacyContext $contextAdapter
      */
     public function __construct(
         TranslatorInterface $translator,
-        ConfigurationInterface $configuration,
+        ShopConfigurationInterface $configuration,
         LegacyContext $contextAdapter
     ) {
         $this->translator = $translator;
@@ -92,7 +92,7 @@ final class AverageOrderValueKpi implements KpiInterface
             'action' => 'getKpi',
             'kpi' => 'average_order_value',
         ]);
-        $helper->refresh = (bool) ($this->configuration->get('AVG_ORDER_VALUE_EXPIRE') < time());
+        $helper->refresh = $this->configuration->get('AVG_ORDER_VALUE_EXPIRE') < time();
 
         return $helper->generate();
     }

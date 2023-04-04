@@ -29,12 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
 /**
  * Default Cart list filters
  */
-class CartFilter extends Filters
+class CartFilter extends ShopFilters
 {
     /**
      * @var string

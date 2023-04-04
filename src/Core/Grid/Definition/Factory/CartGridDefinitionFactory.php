@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CartStatusesChoiceProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteCartAccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -55,7 +55,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class CartGridDefinitionFactory builds Grid definition for carts listing.
  */
-final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
+class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use DeleteActionTrait;
     use BulkDeleteActionTrait;
@@ -66,11 +66,6 @@ final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
      * @var string
      */
     private $contextDateFormat;
-
-    /**
-     * @var AccessibilityCheckerInterface
-     */
-    private $deleteCartAccessibilityChecker;
 
     /**
      * @var MultistoreContextCheckerInterface
@@ -88,27 +83,32 @@ final class CartGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
     private $cartStatusesChoiceProvider;
 
     /**
+     * @var DeleteCartAccessibilityChecker
+     */
+    private $deleteCartAccessibilityChecker;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param string $contextDateFormat
-     * @param AccessibilityCheckerInterface $deleteCartAccessibilityChecker
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param bool $isMultiStoreFeatureUsed
      * @param CartStatusesChoiceProvider $cartStatusesChoiceProvider
+     * @param DeleteCartAccessibilityChecker $deleteCartAccessibilityChecker
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         string $contextDateFormat,
-        AccessibilityCheckerInterface $deleteCartAccessibilityChecker,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         bool $isMultiStoreFeatureUsed,
-        CartStatusesChoiceProvider $cartStatusesChoiceProvider
+        CartStatusesChoiceProvider $cartStatusesChoiceProvider,
+        DeleteCartAccessibilityChecker $deleteCartAccessibilityChecker
     ) {
         parent::__construct($hookDispatcher);
         $this->contextDateFormat = $contextDateFormat;
-        $this->deleteCartAccessibilityChecker = $deleteCartAccessibilityChecker;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->isMultiStoreFeatureUsed = $isMultiStoreFeatureUsed;
         $this->cartStatusesChoiceProvider = $cartStatusesChoiceProvider;
+        $this->deleteCartAccessibilityChecker = $deleteCartAccessibilityChecker;
     }
 
     /**

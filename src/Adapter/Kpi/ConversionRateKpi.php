@@ -30,7 +30,7 @@ use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use PrestaShopBundle\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -92,7 +92,7 @@ final class ConversionRateKpi implements KpiInterface
             'action' => 'getKpi',
             'kpi' => 'conversion_rate',
         ]);
-        $helper->refresh = (bool) ($this->configuration->get('CONVERSION_RATE_EXPIRE') < time());
+        $helper->refresh = $this->configuration->get('CONVERSION_RATE_EXPIRE') < time();
 
         return $helper->generate();
     }

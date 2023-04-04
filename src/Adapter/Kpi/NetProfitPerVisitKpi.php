@@ -30,7 +30,7 @@ use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use PrestaShopBundle\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -88,7 +88,7 @@ final class NetProfitPerVisitKpi implements KpiInterface
             'action' => 'getKpi',
             'kpi' => 'netprofit_visit',
         ]);
-        $helper->refresh = (bool) ($this->configuration->get('NETPROFIT_VISIT_EXPIRE') < time());
+        $helper->refresh = $this->configuration->get('NETPROFIT_VISIT_EXPIRE') < time();
 
         return $helper->generate();
     }

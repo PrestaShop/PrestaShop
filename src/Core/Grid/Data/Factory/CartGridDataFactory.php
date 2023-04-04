@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -124,11 +124,11 @@ class CartGridDataFactory implements GridDataFactoryInterface
     /**
      * Modify cart record for grid data.
      *
-     * @param array $record
+     * @param array<string, mixed> $record
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    private function setRecordData(array $record)
+    private function setRecordData(array $record): array
     {
         $cartForViewing = $this->queryBus->handle(new GetCartForViewing((int) $record['id_cart']));
         $record['cart_total'] = $this->locale->formatPrice(
@@ -136,8 +136,8 @@ class CartGridDataFactory implements GridDataFactoryInterface
             $this->contextCurrencyIsoCode
         );
 
-        $record['unremovable'] = $record['status'] === CartStatusType::ORDERED;
-        $record['status_badge_color'] = $record['status'] === CartStatusType::ORDERED ? 'success' : 'danger';
+        $record['unremovable'] = $record['status'] === CartStatus::ORDERED;
+        $record['status_badge_color'] = $record['status'] === CartStatus::ORDERED ? 'success' : 'danger';
         $record['status'] = $this->getOrderLabel($record);
 
         $record['customer_online_id'] = $record['customer_online'];
@@ -155,14 +155,14 @@ class CartGridDataFactory implements GridDataFactoryInterface
      *
      * @return string
      */
-    private function getOrderLabel(array $record)
+    private function getOrderLabel(array $record): string
     {
         switch ($record['status']) {
-            case CartStatusType::ORDERED:
+            case CartStatus::ORDERED:
                 return $this->translator->trans('Ordered', [], 'Admin.Orderscustomers.Feature');
-            case CartStatusType::NOT_ORDERED:
+            case CartStatus::NOT_ORDERED:
                 return $this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature');
-            case CartStatusType::ABANDONED_CART:
+            case CartStatus::ABANDONED_CART:
                 return $this->translator->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature');
         }
 

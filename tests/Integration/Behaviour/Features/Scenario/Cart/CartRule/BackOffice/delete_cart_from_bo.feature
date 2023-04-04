@@ -28,18 +28,16 @@ Feature: Cart deleting in BO
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     When I delete cart "dummy_cart"
-    Then cart "dummy_cart" should not be deleted because cart is already ordered
+    Then cart "dummy_cart" should exist because cart is already ordered
 
   Scenario: Bulk delete carts not already ordered
     Given I create an empty cart "dummy_cart1" for customer "testCustomer1"
     And I create an empty cart "dummy_cart2" for customer "testCustomer2"
     And I create an empty cart "dummy_cart3" for customer "testCustomer3"
-    When I bulk delete following carts:
-      | dummy_cart1 |
-      | dummy_cart2 |
+    When I bulk delete carts "dummy_cart1,dummy_cart2"
     Then cart "dummy_cart1" should be deleted
     And cart "dummy_cart2" should be deleted
-    And cart "dummy_cart3" should not be deleted
+    And cart "dummy_cart3" should exist
 
   Scenario: Bulk delete carts not already ordered but one already ordered
     Given I create an empty cart "dummy_cart1" for customer "testCustomer1"
@@ -51,9 +49,7 @@ Feature: Cart deleting in BO
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
-    When I bulk delete following carts:
-      | dummy_cart1 |
-      | dummy_cart2 |
-    Then cart "dummy_cart1" should not be deleted because cart is already ordered
-    And cart "dummy_cart2" should not be deleted
-    And cart "dummy_cart3" should not be deleted
+    When I bulk delete carts "dummy_cart1,dummy_cart2"
+    Then cart "dummy_cart1" should exist because cart is already ordered
+    And cart "dummy_cart2" should exist
+    And cart "dummy_cart3" should exist

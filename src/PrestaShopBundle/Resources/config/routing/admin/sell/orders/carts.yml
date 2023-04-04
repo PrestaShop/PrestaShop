@@ -5,7 +5,7 @@ admin_carts_index:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::indexAction
     _legacy_controller: AdminCarts
     _legacy_link: AdminCarts
-    _legacy_feature_flag: carts_index
+    _legacy_feature_flag: carts
 
 admin_carts_search:
   path: /
@@ -16,7 +16,7 @@ admin_carts_search:
     redirectRoute: admin_carts_index
     _legacy_controller: AdminCarts
     _legacy_link: AdminCarts
-    _legacy_feature_flag: carts_index
+    _legacy_feature_flag: carts
 
 admin_carts_delete:
   path: /{cartId}
@@ -24,7 +24,7 @@ admin_carts_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::deleteCartAction
     _legacy_controller: AdminCarts
-    _legacy_feature_flag: carts_index
+    _legacy_feature_flag: carts
   requirements:
     cartId: \d+
 
@@ -35,7 +35,7 @@ admin_carts_bulk_delete:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::bulkDeleteCartAction
     _legacy_controller: AdminCarts
     _legacy_link: AdminCarts
-    _legacy_feature_flag: carts_index
+    _legacy_feature_flag: carts
 
 admin_carts_export:
   path: /export
@@ -44,7 +44,7 @@ admin_carts_export:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::exportCartAction
     _legacy_controller: AdminCarts
     _legacy_link: AdminCarts:exportcart
-    _legacy_feature_flag: carts_index
+    _legacy_feature_flag: carts
 
 admin_carts_view:
   path: /{cartId}/view
