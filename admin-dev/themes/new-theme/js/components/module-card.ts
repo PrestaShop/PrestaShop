@@ -374,7 +374,7 @@ export default class ModuleCard {
     }
 
     this.pendingRequest = true;
-    const self = this;
+
     let jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
     const spinnerObj = $(
