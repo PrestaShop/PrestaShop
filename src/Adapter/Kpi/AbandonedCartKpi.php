@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
@@ -55,11 +55,6 @@ final class AbandonedCartKpi implements KpiInterface
      * @var LegacyContext
      */
     private $contextAdapter;
-
-    /**
-     * @var string
-     */
-    private $dateFormat;
 
     /**
      * @var UrlGeneratorInterface
@@ -90,7 +85,6 @@ final class AbandonedCartKpi implements KpiInterface
         $this->contextAdapter = $contextAdapter;
         $this->router = $router;
         $this->featureFlag = $featureFlag;
-        $this->dateFormat = $this->contextAdapter->getLanguage()->date_format_lite;
     }
 
     /**
@@ -98,22 +92,24 @@ final class AbandonedCartKpi implements KpiInterface
      */
     public function render()
     {
+        $dateFormat = $this->contextAdapter->getLanguage()->date_format_lite;
+
         $helper = new HelperKpi();
         $helper->id = 'box-carts';
         $helper->icon = 'remove_shopping_cart';
         $helper->color = 'color2';
         $helper->title = $this->translator->trans('Abandoned Carts', [], 'Admin.Global');
         $helper->subtitle = $this->translator->trans('From %date1% to %date2%', [
-            '%date1%' => date($this->dateFormat, strtotime('-2 day')),
-            '%date2%' => date($this->dateFormat, strtotime('-1 day')),
+            '%date1%' => date($dateFormat, strtotime('-2 day')),
+            '%date2%' => date($dateFormat, strtotime('-1 day')),
         ], 'Admin.Orderscustomers.Feature');
         $helper->href = $this->contextAdapter->getAdminLink('AdminCarts', true, [
             'action' => 'filterOnlyAbandonedCarts',
         ]);
 
-        if ($this->featureFlag->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CARTS_INDEX)) {
+        if ($this->featureFlag->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CARTS)) {
             $helper->href = $this->router->generate('admin_carts_index', [
-                'cart[filters][status]' => CartStatusType::ABANDONED_CART,
+                'cart[filters][status]' => CartStatus::ABANDONED_CART,
             ]);
         }
 
@@ -126,7 +122,7 @@ final class AbandonedCartKpi implements KpiInterface
             'action' => 'getKpi',
             'kpi' => 'abandoned_cart',
         ]);
-        $helper->refresh = (bool) ($this->configuration->get('ABANDONED_CARTS_EXPIRE') < time());
+        $helper->refresh = $this->configuration->get('ABANDONED_CARTS_EXPIRE') < time();
 
         return $helper->generate();
     }

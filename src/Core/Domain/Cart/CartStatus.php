@@ -29,10 +29,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Cart;
 
 /**
- * Cart status type
+ * Cart status
  */
-class CartStatusType
+class CartStatus
 {
+    /**
+     * Class not supposed to be initialized
+     */
+    private function __construct()
+    {
+    }
+
     /**
      * Cart ordered
      */

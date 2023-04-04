@@ -540,9 +540,7 @@ services:
   prestashop.core.grid.query.builder.cart:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\CartQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
     arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - '@prestashop.adapter.shop.context'
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextShopGroupId()"
-    public: true
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+      $multistoreContextChecker: '@prestashop.adapter.shop.context'

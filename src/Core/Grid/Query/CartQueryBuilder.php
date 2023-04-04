@@ -30,8 +30,10 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
@@ -49,16 +51,6 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $multistoreContextChecker;
 
-    /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
-     * @var int
-     */
-    private $contextShopGroupId;
-
     /** @var int */
     private const CUSTOMER_ONLINE_TIME = 1800; // 30 min
 
@@ -67,22 +59,16 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param int $contextShopId
-     * @param int|null $contextShopGroupId
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        int $contextShopId,
-        ?int $contextShopGroupId
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->multistoreContextChecker = $multistoreContextChecker;
-        $this->contextShopId = $contextShopId;
-        $this->contextShopGroupId = $contextShopGroupId;
     }
 
     /**
@@ -90,7 +76,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb = $this->getQueryBuilder($searchCriteria);
 
         $qb
             ->select('c.`id_cart`')
@@ -103,7 +89,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('o.`total_products` AS cart_total')
             ->addSelect($this->getCartStatusQuery() . ' AS status')
             ->setParameter('current_date', date('Y-m-d H:i:00', time()))
-            ->setParameter('cart_expiration_time', CartStatusType::ABANDONED_CART_EXPIRATION_TIME)
+            ->setParameter('cart_expiration_time', CartStatus::ABANDONED_CART_EXPIRATION_TIME)
         ;
 
         $this->searchCriteriaApplicator
@@ -119,7 +105,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->getQueryBuilder($searchCriteria->getFilters())
+        return $this->getQueryBuilder($searchCriteria)
             ->select('COUNT(DISTINCT c.`id_cart`)');
     }
 
@@ -142,12 +128,20 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * Gets query builder with the common sql used for displaying carts list and applying filter actions.
      *
-     * @param array $filters
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
+     *
+     * @throws InvalidArgumentException
      */
-    private function getQueryBuilder(array $filters)
+    private function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
+        if (!$searchCriteria instanceof ShopSearchCriteriaInterface) {
+            throw new InvalidArgumentException('Invalid search criteria type');
+        }
+
+        $filters = $searchCriteria->getFilters();
+
         $qbOnline = $this->connection
             ->createQueryBuilder()
             ->select('DISTINCT co.`id_guest`')
@@ -193,12 +187,13 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             'c.`id_shop` = s.`id_shop`'
         );
 
+        $shopConstraint = $searchCriteria->getShopConstraint();
         if ($this->multistoreContextChecker->isSingleShopContext()) {
             $qb->andWhere('s.`id_shop` = :shopId');
-            $qb->setParameter('shopId', $this->contextShopId);
+            $qb->setParameter('shopId', $shopConstraint->getShopId()->getValue());
         } elseif ($this->multistoreContextChecker->isGroupShopContext()) {
             $qb->andWhere('s.`id_shop_group` = :shopGroupId');
-            $qb->setParameter('shopGroupId', $this->contextShopGroupId);
+            $qb->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue());
         }
 
         $this->applyFilters($qb, $filters);
@@ -210,7 +205,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      * Apply filters to carts query builder
      *
      * @param QueryBuilder $qb
-     * @param array $filters
+     * @param array<string, mixed> $filters
      *
      * @return void
      */
@@ -247,7 +242,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->andWhere($this->getCartStatusQuery() . ' = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
                 $qb->setParameter('current_date', date('Y-m-d H:i:00', time()));
-                $qb->setParameter('cart_expiration_time', CartStatusType::ABANDONED_CART_EXPIRATION_TIME);
+                $qb->setParameter('cart_expiration_time', CartStatus::ABANDONED_CART_EXPIRATION_TIME);
                 continue;
             }
 

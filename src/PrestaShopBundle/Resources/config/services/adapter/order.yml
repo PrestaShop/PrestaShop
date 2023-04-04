@@ -232,4 +232,10 @@ services:
     autoconfigure: true
 
   prestashop.adapter.order.repository.order_repository:
-    class: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository
+    alias: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository
+    deprecated: ~
+
+  PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

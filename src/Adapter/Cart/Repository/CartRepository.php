@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\Repository;
 
 use Cart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -68,18 +67,11 @@ class CartRepository extends AbstractObjectModelRepository
      *
      * @return void
      *
-     * @throws CoreException
      * @throws CartException
-     * @throws CannotDeleteOrderedCartException
+     * @throws CoreException
      */
     public function delete(CartId $cartId): void
     {
-        $cart = $this->get($cartId);
-
-        if ($cart->orderExists()) {
-            throw new CannotDeleteOrderedCartException(sprintf('Cart "%s" with order cannot be deleted.', $cart->id));
-        }
-
-        $this->deleteObjectModel($cart, CannotDeleteCartException::class);
+        $this->deleteObjectModel($this->get($cartId), CannotDeleteCartException::class);
     }
 }

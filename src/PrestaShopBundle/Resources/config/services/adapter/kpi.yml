@@ -88,32 +88,14 @@ services:
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
 
-  prestashop.adapter.kpi.abandoned_cart:
-    class: 'PrestaShop\PrestaShop\Adapter\Kpi\AbandonedCartKpi'
-    arguments:
-      - '@translator'
-      - '@prestashop.adapter.legacy.kpi_configuration'
-      - '@prestashop.adapter.legacy.context'
-      - '@router'
-      - '@prestashop.core.admin.feature_flag.repository'
+  PrestaShop\PrestaShop\Adapter\Kpi\AbandonedCartKpi:
+    autowire: true
 
-  prestashop.adapter.kpi.average_order_value:
-    class: 'PrestaShop\PrestaShop\Adapter\Kpi\AverageOrderValueKpi'
-    arguments:
-      - '@translator'
-      - '@prestashop.adapter.legacy.kpi_configuration'
-      - '@prestashop.adapter.legacy.context'
+  PrestaShop\PrestaShop\Adapter\Kpi\AverageOrderValueKpi:
+    autowire: true
 
-  prestashop.adapter.kpi.conversion_rate:
-    class: 'PrestaShop\PrestaShop\Adapter\Kpi\ConversionRateKpi'
-    arguments:
-      - '@translator'
-      - '@prestashop.adapter.legacy.kpi_configuration'
-      - '@prestashop.adapter.legacy.context'
+  PrestaShop\PrestaShop\Adapter\Kpi\ConversionRateKpi:
+    autowire: true
 
-  prestashop.adapter.kpi.net_profit_per_visit:
-    class: 'PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi'
-    arguments:
-      - '@translator'
-      - '@prestashop.adapter.legacy.kpi_configuration'
-      - '@prestashop.adapter.legacy.context'
+  PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi:
+    autowire: true

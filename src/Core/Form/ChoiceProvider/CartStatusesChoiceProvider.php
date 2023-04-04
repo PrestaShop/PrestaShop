@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CartStatusesChoiceProvider is responsible for providing cart status choices in cart grid filters.
@@ -49,14 +49,14 @@ final class CartStatusesChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * @return array|void
+     * @return array
      */
-    public function getChoices()
+    public function getChoices(): array
     {
         return [
-            $this->translator->trans('Ordered', [], 'Admin.Orderscustomers.Feature') => CartStatusType::ORDERED,
-            $this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') => CartStatusType::NOT_ORDERED,
-            $this->translator->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatusType::ABANDONED_CART,
+            $this->translator->trans('Ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::ORDERED,
+            $this->translator->trans('Non ordered', [], 'Admin.Orderscustomers.Feature') => CartStatus::NOT_ORDERED,
+            $this->translator->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatus::ABANDONED_CART,
         ];
     }
 }

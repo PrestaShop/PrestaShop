@@ -29,8 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\BulkDeleteCartHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteOrderedCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
@@ -45,15 +47,21 @@ final class BulkDeleteCartHandler implements BulkDeleteCartHandlerInterface
     private $cartRepository;
 
     /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    /**
      * @param CartRepository $cartRepository
      */
-    public function __construct(CartRepository $cartRepository)
+    public function __construct(CartRepository $cartRepository, OrderRepository $orderRepository)
     {
         $this->cartRepository = $cartRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
-     * @inerhitDoc
+     * {@inheritdoc}
      *
      * @throws CartException
      * @throws CoreException
@@ -61,6 +69,10 @@ final class BulkDeleteCartHandler implements BulkDeleteCartHandlerInterface
     public function handle(BulkDeleteCartCommand $command): void
     {
         foreach ($command->getCartIds() as $cartId) {
+            $order = $this->orderRepository->findByCartId($cartId);
+            if ($order) {
+                throw new CannotDeleteOrderedCartException(sprintf('Cart "%s" with order cannot be deleted.', $cartId->getValue()));
+            }
             $this->cartRepository->delete($cartId);
         }
     }

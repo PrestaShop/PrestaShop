@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\DeleteCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
@@ -48,11 +49,17 @@ final class DeleteCartHandler extends AbstractCartHandler implements DeleteCartH
     private $cartRepository;
 
     /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    /**
      * @param CartRepository $cartRepository
      */
-    public function __construct(CartRepository $cartRepository)
+    public function __construct(CartRepository $cartRepository, OrderRepository $orderRepository)
     {
         $this->cartRepository = $cartRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -65,6 +72,10 @@ final class DeleteCartHandler extends AbstractCartHandler implements DeleteCartH
      */
     public function handle(DeleteCartCommand $command): void
     {
+        $order = $this->orderRepository->findByCartId($command->getCartId());
+        if ($order) {
+            throw new CannotDeleteOrderedCartException(sprintf('Cart "%s" with order cannot be deleted.', $command->getCartId()->getValue()));
+        }
         $this->cartRepository->delete($command->getCartId());
     }
 }

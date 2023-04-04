@@ -36,7 +36,7 @@ class DeleteCartAccessibilityChecker implements AccessibilityCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function isGranted(array $record)
+    public function isGranted(array $record): bool
     {
         if (isset($record['unremovable'])) {
             return !$record['unremovable'];

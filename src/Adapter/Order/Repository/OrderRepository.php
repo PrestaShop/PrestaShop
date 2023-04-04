@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Repository;
 
+use Doctrine\DBAL\Connection;
+use Exception;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -38,6 +41,24 @@ use PrestaShopException;
 
 class OrderRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
     /**
      * Gets legacy Order
      *
@@ -70,5 +91,44 @@ class OrderRepository extends AbstractObjectModelRepository
         }
 
         return $order;
+    }
+
+    /**
+     * Get Order by cartId
+     *
+     * @param CartId $cartId
+     *
+     * @return Order|null
+     *
+     * @throws CoreException
+     */
+    public function findByCartId(CartId $cartId): ?Order
+    {
+        try {
+            $orderId = $this->connection->createQueryBuilder()
+                ->select('id_order')
+                ->from($this->dbPrefix . 'orders')
+                ->where('id_cart = :cartId')
+                ->setParameter('cartId', $cartId->getValue())
+                ->execute()
+                ->fetchOne();
+
+            if ($orderId) {
+                return $this->get(new OrderId((int) $orderId));
+            }
+
+            return null;
+        } catch (Exception $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s by cart #%d [%s]',
+                    Order::class,
+                    $cartId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
     }
 }

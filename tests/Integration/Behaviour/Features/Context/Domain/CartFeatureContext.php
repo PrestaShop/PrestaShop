@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Gherkin\Node\TableNode;
 use Cart;
 use CartRule;
 use Configuration;
@@ -1193,35 +1192,30 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then cart :cartReference should not be deleted because cart is already ordered
+     * @Then cart :cartReference should exist because cart is already ordered
      */
-    public function cartShouldNotBeDeletedBecauseCartIsAlreadyOrdered(string $cartReference)
+    public function cartShouldExistBecauseCartIsAlreadyOrdered(string $cartReference)
     {
         $this->assertLastErrorIs(CannotDeleteOrderedCartException::class);
-        $this->cartShouldNotBeDeleted($cartReference);
+        $this->cartShouldExist($cartReference);
     }
 
     /**
-     * @When I bulk delete following carts:
+     * @When I bulk delete carts :cartReferences
      */
-    public function iBulkDeleteFollowingCarts(TableNode $table)
+    public function iBulkDeleteCarts(string $cartReferences)
     {
-        $cartIds = [];
-        foreach ($table->getRows() as $row) {
-            $cartIds[] = (int) SharedStorage::getStorage()->get($row[0]);
-        }
-
         try {
-            $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
+            $this->getCommandBus()->handle(new BulkDeleteCartCommand($this->referencesToIds($cartReferences)));
         } catch (CartException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @Given cart :cartReference should not be deleted
+     * @Given cart :cartReference should exist
      */
-    public function cartShouldNotBeDeleted(string $cartReference)
+    public function cartShouldExist(string $cartReference)
     {
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
         $repository = new CartRepository();

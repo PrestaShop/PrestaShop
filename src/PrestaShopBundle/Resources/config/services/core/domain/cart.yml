@@ -1,6 +1,0 @@
-services:
-  _defaults:
-    autowire: true
-    public: true
-
-  PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository:
