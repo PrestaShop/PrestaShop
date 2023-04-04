@@ -23,7 +23,7 @@ class ImportTheme extends themeAndLogoBasePage {
   constructor() {
     super();
 
-    this.pageTitle = `Theme & Logo > Theme • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitle = `Theme import • ${global.INSTALL.SHOP_NAME}`;
 
     this.importForm = 'form[name="import_theme"]';
     // Form "Import from the web"
