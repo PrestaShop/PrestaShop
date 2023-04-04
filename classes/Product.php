@@ -884,10 +884,10 @@ class ProductCore extends ObjectModel
     protected function fillUnitRatio(bool $ecotaxEnabled): void
     {
         // Update instance field
-        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
-        $price = new DecimalNumber((string) ($this->price ?? 0));
+        $unitPrice = new DecimalNumber((string) ($this->unit_price ?: 0));
+        $price = new DecimalNumber((string) ($this->price ?: 0));
         if ($ecotaxEnabled) {
-            $price = $price->plus(new DecimalNumber((string) ($this->ecotax ?? 0)));
+            $price = $price->plus(new DecimalNumber((string) ($this->ecotax ?: 0)));
         }
         if ($unitPrice->isGreaterThanZero()) {
             $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
