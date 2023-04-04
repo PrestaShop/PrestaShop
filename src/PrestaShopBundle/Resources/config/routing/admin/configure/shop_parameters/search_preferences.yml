@@ -1,11 +1,12 @@
+# @TODO uncomment legacy links when page is done
 admin_search_index:
   path: /
   methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::indexAction'
     _legacy_controller: AdminSearchConf
-    _legacy_link: AdminSearchConf
-    _legacy_feature_flag: search
+    # _legacy_link: AdminSearchConf
+    # _legacy_feature_flag: search
 
 admin_alias_delete_bulk:
   path: /delete/bulk
@@ -13,4 +14,4 @@ admin_alias_delete_bulk:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::deleteBulkAction'
     _legacy_controller: AdminSearchConf
-    _legacy_link: AdminSearchConf:submitBulkdeletealias
+    # _legacy_link: AdminSearchConf:submitBulkdeletealias
