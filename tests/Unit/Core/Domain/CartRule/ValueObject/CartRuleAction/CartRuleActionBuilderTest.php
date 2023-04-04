@@ -26,19 +26,20 @@
 
 namespace Tests\Unit\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
  * Tests if cart rule actions are built correctly.
@@ -51,12 +52,12 @@ class CartRuleActionBuilderTest extends TestCase
         $this->expectExceptionCode(CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
 
         (new CartRuleActionBuilder())
-            ->setAmountDiscount(new Money(
-                new DecimalNumber('0'),
-                new CurrencyId(1),
+            ->setAmountDiscount(
+                '0',
+                1,
                 true
-            ))
-            ->setPercentageDiscount(new PercentageDiscount('10', true))
+            )
+            ->setPercentageDiscount('10', true)
             ->build();
     }
 
@@ -68,26 +69,119 @@ class CartRuleActionBuilderTest extends TestCase
         (new CartRuleActionBuilder())->build();
     }
 
-    public function testItCorrectlyBuildsAmountDiscountAction()
-    {
-        $action = (new CartRuleActionBuilder())
-            ->setAmountDiscount(new Money(
-                new DecimalNumber('10'),
-                new CurrencyId(1),
-                true
-            ))
-            ->build();
+    /**
+     * @dataProvider getDataToBuildAmountDiscountAction
+     *
+     * @return void
+     */
+    public function testItBuildsAmountDiscountAction(
+        string $reductionValue,
+        int $currencyId,
+        bool $taxIncluded,
+        bool $freeShipping,
+        ?int $giftProductId = null,
+        ?int $giftCombinationId = null,
+        ?string $expectedException = null,
+        ?int $expectedExceptionCode = null
+    ): void {
+        if ($expectedException) {
+            $this->expectException($expectedException);
+            if ($expectedExceptionCode) {
+                $this->expectExceptionCode($expectedExceptionCode);
+            }
+        }
 
+        $builder = new CartRuleActionBuilder();
+        $builder
+            ->setAmountDiscount($reductionValue, $currencyId, $taxIncluded)
+            ->setFreeShipping($freeShipping)
+        ;
+
+        if (null !== $giftProductId) {
+            $builder->setGiftProduct($giftProductId, $giftCombinationId);
+        }
+
+        $action = $builder->build();
         $this->assertInstanceOf(AmountDiscountAction::class, $action);
+        $amountDiscount = $action->getAmountDiscount();
+
+        Assert::assertTrue($amountDiscount->getAmount()->equals(new DecimalNumber($reductionValue)));
+        Assert::assertSame($amountDiscount->getCurrencyId()->getValue(), $currencyId);
+        Assert::assertSame($amountDiscount->isTaxIncluded(), $taxIncluded);
+        Assert::assertSame($action->isFreeShipping(), $freeShipping);
+        if (null !== $giftProductId) {
+            Assert::assertEquals($action->getGiftProduct(), new GiftProduct($giftProductId, $giftCombinationId));
+        } else {
+            Assert::assertNull($action->getGiftProduct());
+        }
     }
 
-    public function testItCorrectlyBuildsPercentageDiscountAction()
+    public function getDataToBuildAmountDiscountAction(): iterable
     {
-        $action = (new CartRuleActionBuilder())
-            ->setPercentageDiscount(new PercentageDiscount('10', true))
-            ->build();
+        yield ['10', 1, true, true];
+        yield ['10', 1, false, true];
+        yield ['11', 1, true, false];
+        yield ['11', 1, true, false, 1];
+        yield ['11', 1, true, false, 1, 2];
+        yield ['11', 1, true, false, 0, 2, ProductConstraintException::class, ProductConstraintException::INVALID_ID];
+        yield ['11', 1, true, false, -1, 2, ProductConstraintException::class, ProductConstraintException::INVALID_ID];
+        yield ['11', 1, true, false, 1, -1, CombinationConstraintException::class, CombinationConstraintException::INVALID_ID];
+        yield ['15', 0, false, false, null, null, CurrencyConstraintException::class, CurrencyConstraintException::INVALID_ID];
+        yield ['-50', 0, false, false, null, null, DomainConstraintException::class, DomainConstraintException::INVALID_REDUCTION_AMOUNT];
+    }
 
+    /**
+     * @dataProvider getDataToBuildPercentageDiscount
+     *
+     * @return void
+     */
+    public function testItBuildsPercentageDiscountAction(
+        string $reductionValue,
+        bool $freeShipping,
+        bool $excludeDiscountedProducts,
+        ?int $giftProductId = null,
+        ?int $giftCombinationId = null,
+        ?string $expectedException = null,
+        ?int $expectedExceptionCode = null
+    ): void {
+        if ($expectedException) {
+            $this->expectException($expectedException);
+            if ($expectedExceptionCode) {
+                $this->expectExceptionCode($expectedExceptionCode);
+            }
+        }
+
+        $builder = (new CartRuleActionBuilder())
+            ->setPercentageDiscount($reductionValue, $excludeDiscountedProducts)
+            ->setFreeShipping($freeShipping)
+        ;
+
+        if (null !== $giftProductId) {
+            $builder->setGiftProduct($giftProductId, $giftCombinationId);
+        }
+
+        $action = $builder->build();
         $this->assertInstanceOf(PercentageDiscountAction::class, $action);
+        $percentageDiscount = $action->getPercentageDiscount();
+
+        Assert::assertTrue($percentageDiscount->getPercentage()->equals(new DecimalNumber($reductionValue)));
+        Assert::assertSame($action->isFreeShipping(), $freeShipping);
+        if (null !== $giftProductId) {
+            Assert::assertEquals($action->getGiftProduct(), new GiftProduct($giftProductId, $giftCombinationId));
+        } else {
+            Assert::assertNull($action->getGiftProduct());
+        }
+    }
+
+    public function getDataToBuildPercentageDiscount(): iterable
+    {
+        yield ['99', true, true];
+        yield ['55.5', true, false, 1];
+        yield ['55.5', true, true, 1, 2];
+        yield ['55.5', true, false, 0, 2, ProductConstraintException::class, ProductConstraintException::INVALID_ID];
+        yield ['55.5', true, false, -1, 2, ProductConstraintException::class, ProductConstraintException::INVALID_ID];
+        yield ['55.5', true, false, 1, -1, CombinationConstraintException::class, CombinationConstraintException::INVALID_ID];
+        yield ['101', true, false, 1, 2, DomainConstraintException::class, DomainConstraintException::INVALID_REDUCTION_PERCENTAGE];
     }
 
     public function testItCorrectlyBuildsFreeShippingAction()
@@ -102,53 +196,15 @@ class CartRuleActionBuilderTest extends TestCase
     public function testItCorrectlyBuildsGiftProductAction()
     {
         $action = (new CartRuleActionBuilder())
-            ->setGiftProduct(new GiftProduct(1))
+            ->setGiftProduct(1)
             ->build();
 
         $this->assertInstanceOf(GiftProductAction::class, $action);
-    }
 
-    /**
-     * @dataProvider validActionsProvider
-     */
-    public function testItCorrectlyBuildsVariousValidActions(
-        ?Money $moneyAmount,
-        ?PercentageDiscount $percentage,
-        bool $isFreeShipping,
-        ?GiftProduct $giftProduct,
-        CartRuleActionInterface $expectedAction
-    ) {
-        $builder = (new CartRuleActionBuilder())
-            ->setFreeShipping($isFreeShipping);
+        $action = (new CartRuleActionBuilder())
+            ->setGiftProduct(1, 2)
+            ->build();
 
-        if (null !== $moneyAmount) {
-            $builder->setAmountDiscount($moneyAmount);
-        }
-
-        if (null !== $percentage) {
-            $builder->setPercentageDiscount($percentage);
-        }
-
-        if (null !== $giftProduct) {
-            $builder->setGiftProduct($giftProduct);
-        }
-
-        $this->assertEquals($expectedAction, $builder->build());
-    }
-
-    public function validActionsProvider()
-    {
-        $moneyAmount = new Money(new DecimalNumber('100'), new CurrencyId(1), true);
-        $percentage = new PercentageDiscount('30.5', true);
-        $giftProduct = new GiftProduct(1);
-
-        // [Amount, Percentage, Is free shipping, Expected result]
-        yield [$moneyAmount, null, true, $giftProduct, new AmountDiscountAction($moneyAmount, true, $giftProduct)];
-        yield [$moneyAmount, null, false, null, new AmountDiscountAction($moneyAmount, false)];
-        yield [null, $percentage, false, $giftProduct, new PercentageDiscountAction($percentage, false, $giftProduct)];
-        yield [null, $percentage, true, null, new PercentageDiscountAction($percentage, true)];
-        yield [null, null, true, null, new FreeShippingAction()];
-        yield [null, null, true, $giftProduct, new FreeShippingAction($giftProduct)];
-        yield [null, null, false, $giftProduct, new GiftProductAction($giftProduct)];
+        $this->assertInstanceOf(GiftProductAction::class, $action);
     }
 }

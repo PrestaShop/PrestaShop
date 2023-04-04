@@ -70,20 +70,4 @@ class PercentageDiscount
     {
         return $this->excludeDiscountedProducts;
     }
-
-    /**
-     * @return bool
-     */
-    public function isFreeShipping(): bool
-    {
-        return $this->freeShipping;
-    }
-
-    /**
-     * @return GiftProduct|null
-     */
-    public function getGiftProduct(): ?GiftProduct
-    {
-        return $this->giftProduct;
-    }
 }

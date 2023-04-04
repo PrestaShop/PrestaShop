@@ -38,9 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 class CartRuleActionBuilder implements CartRuleActionBuilderInterface
 {
     /**
-     * @var bool|null
+     * @var bool
      */
-    private $freeShipping;
+    private $freeShipping = false;
 
     /**
      * @var Reduction|null

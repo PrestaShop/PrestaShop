@@ -38,9 +38,9 @@ interface CartRuleActionInterface
     /**
      * Check if this cart rule is giving free shipping.
      *
-     * @return bool|null
+     * @return bool
      */
-    public function isFreeShipping(): ?bool;
+    public function isFreeShipping(): bool;
 
     /**
      * Get the amount discount, which this cart rule action is giving.
