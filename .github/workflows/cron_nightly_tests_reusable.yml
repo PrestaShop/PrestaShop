@@ -69,6 +69,8 @@ jobs:
           - 'functional:BO:advanced-parameters'
           - 'functional:BO:header'
           - 'functional:FO'
+          - 'functional:FO:classic'
+          - 'functional:FO:hummingbird'
           - 'functional:API'
         exclude:
           - BRANCH: 8.0.x
@@ -79,6 +81,14 @@ jobs:
             CAMPAIGN: 'functional:productV2'
           - BRANCH: 8.0.x
             CAMPAIGN: 'functional:API'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:classic'
+          - BRANCH: 8.0.x
+            CAMPAIGN: 'functional:FO:hummingbird'
+          - BRANCH: 8.1.x
+            CAMPAIGN: 'functional:FO'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:FO'
 
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
