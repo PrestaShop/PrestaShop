@@ -2697,18 +2697,8 @@ $mobile-menu-height: 2.6rem !default;
       .product-footer {
         a.btn {
           &.cancel-button {
-            width: 3.45em;
-            height: 3em;
-            color: transparent;
-
-            .material-icons {
-              color: #fff;
-            }
-
-            &.disabled {
-              .material-icons {
-                color: #b3c7cd;
-              }
+            .btn-label {
+              display: none;
             }
           }
         }
