@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
-use Category;
 use Context;
 use Customer;
 use CustomerThread;
@@ -34,12 +33,10 @@ use Db;
 use Gender;
 use Group;
 use Language;
-use Link;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\BoughtProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GroupInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\LastConnectionInformation;
@@ -50,14 +47,11 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ProductsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use Product;
 use Shop;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
-use Validate;
 
 /**
  * Handles commands which gets customer for viewing in Back Office.
@@ -82,11 +76,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private $translator;
 
     /**
-     * @var Link
-     */
-    private $link;
-
-    /**
      * @var Locale
      */
     private $locale;
@@ -94,19 +83,16 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     /**
      * @param TranslatorInterface $translator
      * @param int $contextLangId
-     * @param Link $link
      * @param Locale $locale
      */
     public function __construct(
         TranslatorInterface $translator,
         $contextLangId,
-        Link $link,
         Locale $locale
     ) {
         $this->context = new LegacyContext();
         $this->contextLangId = $contextLangId;
         $this->translator = $translator;
-        $this->link = $link;
         $this->locale = $locale;
     }
 
@@ -273,66 +259,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerProducts(Customer $customer)
     {
-        $boughtProducts = [];
-        $viewedProducts = [];
-
-        $products = $customer->getBoughtProducts();
-        foreach ($products as $product) {
-            $boughtProducts[] = new BoughtProductInformation(
-                (int) $product['id_order'],
-                Tools::displayDate($product['date_add'], false),
-                $product['product_name'],
-                $product['product_quantity']
-            );
-        }
-
-        $sql = '
-            SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
-            FROM ' . _DB_PREFIX_ . 'cart_product cp
-            JOIN ' . _DB_PREFIX_ . 'cart c ON (c.id_cart = cp.id_cart)
-            JOIN ' . _DB_PREFIX_ . 'product p ON (cp.id_product = p.id_product)
-            WHERE c.id_customer = ' . (int) $customer->id . '
-                AND NOT EXISTS (
-                        SELECT 1
-                        FROM ' . _DB_PREFIX_ . 'orders o
-                        JOIN ' . _DB_PREFIX_ . 'order_detail od ON (o.id_order = od.id_order)
-                        WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = ' . (int) $customer->id . '
-                )
-        ';
-
-        $viewedProductsData = Db::getInstance()->executeS($sql);
-        foreach ($viewedProductsData as $productData) {
-            $product = new Product(
-                $productData['id_product'],
-                false,
-                $this->contextLangId,
-                $productData['id_shop']
-            );
-
-            if (!Validate::isLoadedObject($product)) {
-                continue;
-            }
-
-            $productUrl = $this->link->getProductLink(
-                $product->id,
-                $product->link_rewrite,
-                Category::getLinkRewrite($product->id_category_default, $this->contextLangId),
-                null,
-                null,
-                $productData['cp_id_shop']
-            );
-
-            $viewedProducts[] = new ViewedProductInformation(
-                (int) $product->id,
-                $product->name,
-                $productUrl
-            );
-        }
-
-        return new ProductsInformation(
-            $boughtProducts,
-            $viewedProducts
-        );
+        return new ProductsInformation([], []);
     }
 
     /**

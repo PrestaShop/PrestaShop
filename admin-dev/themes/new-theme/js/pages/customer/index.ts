@@ -83,6 +83,12 @@ $(() => {
   customerCartsGrid.addExtension(new SubmitRowActionExtension());
   customerCartsGrid.addExtension(new LinkRowActionExtension());
 
+  const customerBoughtProductsGrid = new Grid('customer_bought_product');
+  customerBoughtProductsGrid.addExtension(new SortingExtension());
+
+  const customerViewedProductsGrid = new Grid('customer_viewed_product');
+  customerViewedProductsGrid.addExtension(new SortingExtension());
+
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 

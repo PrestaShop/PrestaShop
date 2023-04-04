@@ -56,6 +56,8 @@ class ViewableCustomer
     private $cartsInformation;
 
     /**
+     * @deprecated Since 9.0.0, returns empty ProductsInformation object with no data.
+     *
      * @var ProductsInformation
      */
     private $productsInformation;
@@ -176,6 +178,8 @@ class ViewableCustomer
     }
 
     /**
+     * @deprecated Since 9.0.0, returns empty ProductsInformation object with no data.
+     *
      * @return ProductsInformation
      */
     public function getProductsInformation()

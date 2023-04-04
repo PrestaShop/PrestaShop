@@ -335,7 +335,7 @@ describe('BO - Customers - Customers : View information about customer', async (
     [
       {args: {blockName: 'Orders', number: 1}},
       {args: {blockName: 'Carts', number: 1}},
-      {args: {blockName: 'Viewed products', number: 1}},
+      {args: {blockName: 'Purchased products', number: 1}},
       {args: {blockName: 'Messages', number: 1}},
       {args: {blockName: 'Vouchers', number: 0}},
       {args: {blockName: 'Last emails', number: 2}},
@@ -370,10 +370,10 @@ describe('BO - Customers - Customers : View information about customer', async (
       expect(carts).to.contains(Products.demo_1.finalPrice);
     });
 
-    it('should check viewed products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkViewedProduct', baseContext);
+    it('should check purchased products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPurchasedProduct', baseContext);
 
-      const viewedProduct = await viewCustomerPage.getTextFromElement(page, 'Viewed products');
+      const viewedProduct = await viewCustomerPage.getTextFromElement(page, 'Purchased products');
       expect(viewedProduct).to.contains(Products.demo_1.name);
     });
 

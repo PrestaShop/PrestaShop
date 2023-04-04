@@ -23,36 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% if customerInformation.productsInformation.boughtProductsInformation is not empty %}
+{% if customerBoughtProductGrid.data.records_total > 0 %}
 <div class="card customer-bought-products-card">
   <h3 class="card-header">
     <i class="material-icons">attach_money</i>
     {{ 'Purchased products'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.productsInformation.boughtProductsInformation|length }}</span>
+    <span class="badge badge-primary rounded">{{ customerBoughtProductGrid.data.records_total }}</span>
   </h3>
   <div class="card-body">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for product in customerInformation.productsInformation.boughtProductsInformation %}
-          <tr class="customer-bought-product">
-            <td class="customer-bought-product-date">{{ product.boughtDate }}</td>
-            <td class="customer-bought-product-name">
-              <a href="{{ getAdminLink('AdminOrders', true, {'id_order': product.orderId, 'vieworder': 1}) }}">
-                {{ product.productName }}
-              </a>
-            </td>
-            <td class="customer-bought-product-quantity">{{ product.boughtQuantity }}</td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+    {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerBoughtProductGrid} %}
   </div>
 </div>
 {% endif %}

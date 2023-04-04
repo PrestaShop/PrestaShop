@@ -186,7 +186,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
     [
       {args: {blockName: 'Orders', number: 5}},
       {args: {blockName: 'Carts', number: 6}},
-      {args: {blockName: 'Viewed products', number: 6}},
+      {args: {blockName: 'Purchased products', number: 6}},
       {args: {blockName: 'Messages', number: 0}},
       {args: {blockName: 'Vouchers', number: 0}},
       {args: {blockName: 'Last emails', number: 0}},
