@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
@@ -40,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\StatusColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -139,7 +142,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getGridActions(): GridActionCollection
+    protected function getGridActions(): GridActionCollectionInterface
     {
         return (new GridActionCollection())
             ->add(
@@ -162,7 +165,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getBulkActions(): BulkActionCollection
+    protected function getBulkActions(): BulkActionCollectionInterface
     {
         return (new BulkActionCollection())
             ->add(
@@ -173,7 +176,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getFilters(): FilterCollection
+    protected function getFilters(): FilterCollectionInterface
     {
         return (new FilterCollection())
             ->add(
