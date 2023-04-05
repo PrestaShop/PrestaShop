@@ -50,7 +50,7 @@ class SearchAliasesGridDefinitionFactory extends AbstractGridDefinitionFactory
     use DeleteActionTrait;
     use BulkDeleteActionTrait;
 
-    public const GRID_ID = 'search_aliases';
+    public const GRID_ID = 'alias';
 
     /**
      * {@inheritdoc}
@@ -124,6 +124,13 @@ class SearchAliasesGridDefinitionFactory extends AbstractGridDefinitionFactory
                                         'route_param_field' => 'id_alias',
                                         'clickable_row' => true,
                                     ])
+                            )
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_search_index', // @TODO implement delete route
+                                    'aliasId',
+                                    'id_alias'
+                                )
                             ),
                     ])
             );

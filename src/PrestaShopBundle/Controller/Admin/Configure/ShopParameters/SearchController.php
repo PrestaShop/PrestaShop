@@ -62,7 +62,7 @@ class SearchController extends FrameworkBundleAdminController
                 'add' => [
                     'desc' => $this->trans('Add new alias', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
-                    'href' => $this->generateUrl('admin_search_index'), // @TODO implement search route
+                    'href' => $this->generateUrl('admin_search_index'), // @TODO change when add new alias route will be implemented
                 ],
             ],
         ]);

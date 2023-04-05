@@ -41,7 +41,7 @@ import ColumnTogglingExtension from '@components/grid/extension/column-toggling-
  */
 export default class SearchPage {
   constructor() {
-    const searchAliasGrid = new Grid('search_aliases');
+    const searchAliasGrid = new Grid('alias');
 
     searchAliasGrid.addExtension(new ReloadListActionExtension());
     searchAliasGrid.addExtension(new ExportToSqlManagerExtension());
