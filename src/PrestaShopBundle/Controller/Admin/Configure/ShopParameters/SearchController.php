@@ -67,36 +67,4 @@ class SearchController extends FrameworkBundleAdminController
             ],
         ]);
     }
-
-    /**
-     * Bulk delete search aliases.
-     *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_search_index",
-     *     message="You do not have permission to delete this."
-     * )
-     *
-     * @DemoRestricted(redirectRoute="admin_search_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function deleteBulkAction(Request $request)
-    {
-        $aliasIds = $request->request->get('alias_title_bulk');
-        $aliasDeleter = $this->get('prestashop.adapter.alias.deleter');
-
-        if ($errors = $aliasDeleter->delete($aliasIds)) {
-            $this->flashErrors($errors);
-        } else {
-            $this->addFlash(
-                'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
-            );
-        }
-
-        return $this->redirectToRoute('admin_search_index');
-    }
 }

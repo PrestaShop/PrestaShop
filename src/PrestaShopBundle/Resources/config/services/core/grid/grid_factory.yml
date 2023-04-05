@@ -483,7 +483,7 @@ services:
   prestashop.core.grid.factory.alias:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.alias'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.alias'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'

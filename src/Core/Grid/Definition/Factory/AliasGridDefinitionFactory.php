@@ -163,7 +163,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_alias_delete_bulk')
+                $this->buildBulkDeleteAction('admin_search_index') // @TODO implement bulk delete action
             );
     }
 

@@ -1,6 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  prestashop.adapter.alias.deleter:
-    class: 'PrestaShop\PrestaShop\Adapter\Search\AliasDeleter'
