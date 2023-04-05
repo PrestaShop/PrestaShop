@@ -603,10 +603,10 @@ services:
       - '@prestashop.core.grid.data.factory.tax_rule'
       - '@translator'
 
-  prestashop.core.grid.data.factory.search_aliases:
+  prestashop.core.grid.data.factory.alias:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Grid\Query\SearchAliasesQueryBuilder'
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'search_aliases'

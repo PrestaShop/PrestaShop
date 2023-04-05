@@ -32,7 +32,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-class SearchAliasesQueryBuilder extends AbstractDoctrineQueryBuilder
+class AliasQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -58,7 +58,7 @@ class SearchAliasesQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $builder = $this->getSearchAliasesQueryBuilder($searchCriteria);
+        $builder = $this->getAliasQueryBuilder($searchCriteria);
 
         $builder
             ->select('a.id_alias, a.alias, a.search, a.active, COUNT(a.id_alias) as members')
@@ -79,7 +79,7 @@ class SearchAliasesQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this->getSearchAliasesQueryBuilder($searchCriteria)->select('COUNT(a.id_alias)');
+        return $this->getAliasQueryBuilder($searchCriteria)->select('COUNT(a.id_alias)');
     }
 
     /**
@@ -87,7 +87,7 @@ class SearchAliasesQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @return QueryBuilder
      */
-    private function getSearchAliasesQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
+    private function getAliasQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $builder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'alias', 'a')

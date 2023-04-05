@@ -41,18 +41,18 @@ import ColumnTogglingExtension from '@components/grid/extension/column-toggling-
  */
 export default class SearchPage {
   constructor() {
-    const searchAliasGrid = new Grid('alias');
+    const AliasGrid = new Grid('alias');
 
-    searchAliasGrid.addExtension(new ReloadListActionExtension());
-    searchAliasGrid.addExtension(new ExportToSqlManagerExtension());
-    searchAliasGrid.addExtension(new FiltersResetExtension());
-    searchAliasGrid.addExtension(new SortingExtension());
-    searchAliasGrid.addExtension(new LinkRowActionExtension());
-    searchAliasGrid.addExtension(new SubmitGridExtension());
-    searchAliasGrid.addExtension(new SubmitBulkExtension());
-    searchAliasGrid.addExtension(new BulkActionCheckboxExtension());
-    searchAliasGrid.addExtension(new SubmitRowActionExtension());
-    searchAliasGrid.addExtension(new ColumnTogglingExtension());
+    AliasGrid.addExtension(new ReloadListActionExtension());
+    AliasGrid.addExtension(new ExportToSqlManagerExtension());
+    AliasGrid.addExtension(new FiltersResetExtension());
+    AliasGrid.addExtension(new SortingExtension());
+    AliasGrid.addExtension(new LinkRowActionExtension());
+    AliasGrid.addExtension(new SubmitGridExtension());
+    AliasGrid.addExtension(new SubmitBulkExtension());
+    AliasGrid.addExtension(new BulkActionCheckboxExtension());
+    AliasGrid.addExtension(new SubmitRowActionExtension());
+    AliasGrid.addExtension(new ColumnTogglingExtension());
 
     new TranslatableInput();
   }

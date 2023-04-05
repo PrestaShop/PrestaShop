@@ -28,18 +28,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SearchAliasesGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
  * Default search alias list filters
  */
-class SearchAliasesFilters extends Filters
+class AliasFilters extends Filters
 {
     /**
      * @var string
      */
-    protected $filterId = SearchAliasesGridDefinitionFactory::GRID_ID;
+    protected $filterId = AliasGridDefinitionFactory::GRID_ID;
 
     /**
      * {@inheritdoc}

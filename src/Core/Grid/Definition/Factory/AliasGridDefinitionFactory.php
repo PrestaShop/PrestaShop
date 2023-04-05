@@ -45,7 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class SearchAliasesGridDefinitionFactory extends AbstractGridDefinitionFactory
+class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use DeleteActionTrait;
     use BulkDeleteActionTrait;

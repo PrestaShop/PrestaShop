@@ -387,7 +387,7 @@ services:
     public: false
     autowire: true
 
-  prestashop.core.grid.definition.factory.search_aliases:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SearchAliasesGridDefinitionFactory'
+  prestashop.core.grid.definition.factory.alias:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: true

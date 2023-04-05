@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\SearchAliasesFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -47,17 +47,17 @@ class SearchController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
-     * @param SearchAliasesFilters $filters
+     * @param AliasFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request, SearchAliasesFilters $filters): Response
+    public function indexAction(Request $request, AliasFilters $filters): Response
     {
-        $searchAliasesGridFactory = $this->get('prestashop.core.grid.factory.search_alias');
-        $searchAliasesGrid = $searchAliasesGridFactory->getGrid($filters);
+        $aliasGridFactory = $this->get('prestashop.core.grid.factory.alias');
+        $aliasGrid = $aliasGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/index.html.twig', [
-            'searchAliasesGrid' => $this->presentGrid($searchAliasesGrid),
+            'aliasGrid' => $this->presentGrid($aliasGrid),
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'desc' => $this->trans('Add new alias', 'Admin.Shopparameters.Feature'),
@@ -85,7 +85,7 @@ class SearchController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request)
     {
-        $aliasIds = $request->request->get('search_aliases_title_bulk');
+        $aliasIds = $request->request->get('alias_title_bulk');
         $aliasDeleter = $this->get('prestashop.adapter.alias.deleter');
 
         if ($errors = $aliasDeleter->delete($aliasIds)) {
