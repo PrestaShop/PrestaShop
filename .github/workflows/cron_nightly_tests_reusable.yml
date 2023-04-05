@@ -195,11 +195,11 @@ jobs:
           node-version: ${{ inputs.NODE_VERSION }}
 
       - name: Install dependencies
-        working-directory: ${{ env.TESTS_DIR }}
+        working-directory: ${{ inputs.TESTS_DIR }}
         run: npm ci
 
       - name: Combine reports
-        working-directory: ${{ env.TESTS_DIR }}
+        working-directory: ${{ inputs.TESTS_DIR }}
         env:
           REPORTS_DIR_PATH: ${{ github.workspace }}/${{ env.REPORTS_DIR }}
           COMBINED_REPORT_DIR_PATH: ${{ github.workspace }}/${{ env.COMBINED_REPORT_DIR }}
