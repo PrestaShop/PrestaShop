@@ -139,7 +139,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getGridActions()
+    protected function getGridActions(): GridActionCollection
     {
         return (new GridActionCollection())
             ->add(
@@ -159,7 +159,7 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
     }
 
-    protected function getBulkActions()
+    protected function getBulkActions(): BulkActionCollection
     {
         return (new BulkActionCollection())
             ->add(
