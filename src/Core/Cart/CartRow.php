@@ -58,11 +58,6 @@ class CartRow
     public const ROUND_MODE_TOTAL = 'total';
 
     /**
-     * static cache key pattern.
-     */
-    public const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
-
-    /**
      * @var PriceCalculator adapter to calculate price
      */
     protected $priceCalculator;
@@ -302,6 +297,7 @@ class CartRow
     {
         $productId = (int) $rowData['id_product'];
         $quantity = (int) $rowData['cart_quantity'];
+        $cartQuantity = (int) $rowData['grouped_quantity'];
 
         $addressId = $cart->getProductAddressId($rowData);
         if (!$addressId) {
@@ -321,23 +317,6 @@ class CartRow
         }
         if (!$groupId) {
             $groupId = (int) $this->groupDataProvider->getCurrent()->id;
-        }
-
-        $cartQuantity = 0;
-        if ((int) $cart->id) {
-            $cacheId = sprintf(self::PRODUCT_PRICE_CACHE_ID_PATTERN, (int) $productId, (int) $cart->id);
-            if (!$this->cacheAdapter->isStored($cacheId)
-                || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
-                                    != (int) $quantity)) {
-                $sql = 'SELECT SUM(`quantity`)
-				FROM `' . _DB_PREFIX_ . 'cart_product`
-				WHERE `id_product` = ' . (int) $productId . '
-				AND `id_cart` = ' . (int) $cart->id;
-                $cartQuantity = (int) $this->databaseAdapter->getValue($sql, _PS_USE_SQL_SLAVE_);
-                $this->cacheAdapter->store($cacheId, (string) $cartQuantity);
-            } else {
-                $cartQuantity = (int) $this->cacheAdapter->retrieve($cacheId);
-            }
         }
 
         // The $null variable below is not used,

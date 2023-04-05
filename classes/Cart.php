@@ -741,6 +741,7 @@ class CartCore extends ObjectModel
         // Reset the cache before the following return, or else an empty cart will add dozens of queries
         $products_ids = [];
         $pa_ids = [];
+        $grouped_quantity = [];
         if (is_iterable($products)) {
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
@@ -753,6 +754,16 @@ class CartCore extends ObjectModel
                 }
 
                 $products[$key] = array_merge($product, $reduction_type_row);
+
+                if (!isset($grouped_quantity[$product['id_product']])) {
+                    $grouped_quantity[$product['id_product']] = $product['cart_quantity'];
+                } else {
+                    $grouped_quantity[$product['id_product']] += $product['cart_quantity'];
+                }
+            }
+
+            foreach ($products as &$product) {
+                $product['grouped_quantity'] = isset($grouped_quantity[$product['id_product']]) ? $grouped_quantity[$product['id_product']] : 0;
             }
         }
         // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
