@@ -33,7 +33,7 @@ The first stable version of PrestaShop 8.0, was released on October 26th, 2022. 
 Server configuration
 --------
 
-To install the latest PrestaShop 8.0, you need a web server running PHP 7.2+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).
+To install the latest PrestaShop 8.0, you need a web server running PHP 7.2+ and any flavor of MySQL 5.6+ (MySQL, MariaDB, Percona Server, etc.).
 
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
 We recommend the Apache or Nginx web servers (check out our [example Nginx configuration file][example-nginx]).
