@@ -23,52 +23,48 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-/**
- * Product identity.
- */
-class ProductId
+class ProductIdTest extends TestCase
 {
     /**
-     * @var int
+     * @dataProvider getValidValues
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     *
-     * @throws ProductConstraintException
-     */
-    public function __construct(int $productId)
+    public function testItIsConstructedSuccessfully(int $value): void
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
-        $this->productId = $productId;
+        $productId = new ProductId($value);
+
+        Assert::assertSame($value, $productId->getValue());
     }
 
     /**
-     * @return int
+     * @dataProvider getInvalidValues
      */
-    public function getValue(): int
+    public function testItThrowsExceptionWhenBeingConstructedWithInvalidValue(int $value): void
     {
-        return $this->productId;
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_ID);
+
+        new ProductId($value);
     }
 
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero(int $productId): void
+    public function getValidValues(): iterable
     {
-        if ($productId > 0) {
-            return;
-        }
+        yield [1];
+        yield [100];
+        yield [999991];
+    }
 
-        throw new ProductConstraintException(
-            sprintf('Product id %s is invalid. Product id must be an integer greater than zero.', $productId),
-            ProductConstraintException::INVALID_ID
-        );
+    public function getInvalidValues(): iterable
+    {
+        yield [0];
+        yield [-5];
     }
 }
