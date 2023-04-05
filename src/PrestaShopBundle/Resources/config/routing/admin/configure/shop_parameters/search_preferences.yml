@@ -8,6 +8,17 @@ admin_search_index:
     # _legacy_link: AdminSearchConf
     # _legacy_feature_flag: search
 
+admin_contacts_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.contacts
+    redirectRoute: admin_search_index
+    _legacy_controller: AdminSearchConf
+#    _legacy_link: AdminSearchConf:submitFiltercontact
+
+
 admin_alias_delete_bulk:
   path: /delete/bulk
   methods: [ POST ]
