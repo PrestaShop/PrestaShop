@@ -35,7 +35,7 @@ use PrestaShopCollection;
 final class AliasDeleter
 {
     /**
-     * Delete contacts by given IDs.
+     * Delete alias by given IDs.
      *
      * @param array $aliasIds
      *
@@ -55,15 +55,15 @@ final class AliasDeleter
             return $errors;
         }
 
-        $contactCollection = new PrestaShopCollection(Alias::class);
-        $contactCollection->where('id_alias', 'in', $aliasIds);
+        $aliasCollection = new PrestaShopCollection(Alias::class);
+        $aliasCollection->where('id_alias', 'in', $aliasIds);
 
-        foreach ($contactCollection as $contact) {
-            if (!$contact->delete()) {
+        foreach ($aliasCollection as $alias) {
+            if (!$alias->delete()) {
                 $errors[] = [
                     'key' => 'Can\'t delete #%id%',
                     'parameters' => [
-                        '%id%' => $contact->id,
+                        '%id%' => $alias->id,
                     ],
                     'domain' => 'Admin.Notifications.Error',
                 ];
