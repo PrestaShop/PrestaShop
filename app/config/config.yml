@@ -108,3 +108,30 @@ api_platform:
       - '%kernel.project_dir%/app/config/api_platform'
 
   metadata_backward_compatibility_layer: false
+
+# app/config/config.yml
+
+liip_imagine:
+  resolvers:
+    default:
+      web_path:
+        cache_prefix: ../img/cache
+  loaders:
+    default:
+      filesystem:
+        data_root:
+          - "%kernel.root_dir%/../"
+  filter_sets:
+    cache: ~
+    # the name of the "filter set"
+    my_thumb:
+      # adjust the image quality to 75%
+      quality: 75
+      # list of transformations to apply (the "filters")
+      filters:
+        # create a thumbnail: set size to 120x90 and use the "outbound" mode
+        # to crop the image when the size ratio of the input differs
+        thumbnail: { size: [120, 90], mode: outbound }
+        # create a 2px black border: center the thumbnail on a black background
+        # 4px larger to create a 2px border around the final image
+        background: { size: [124, 94], position: center, color: '#000000' }

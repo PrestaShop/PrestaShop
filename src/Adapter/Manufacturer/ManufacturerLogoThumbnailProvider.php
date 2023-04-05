@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
 use HelperList;
 use ImageManager;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
@@ -42,12 +43,19 @@ final class ManufacturerLogoThumbnailProvider implements ImageProviderInterface
     private $imageTagSourceParser;
 
     /**
+     * @var CacheManager
+     */
+    private $imageCacheManager;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      */
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser
+        ImageTagSourceParserInterface $imageTagSourceParser,
+        CacheManager $imageCacheManager
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->imageCacheManager = $imageCacheManager;
     }
 
     /**
@@ -55,14 +63,7 @@ final class ManufacturerLogoThumbnailProvider implements ImageProviderInterface
      */
     public function getPath($manufacturerId)
     {
-        $pathToImage = _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg';
-
-        $imageTag = ImageManager::thumbnail(
-            $pathToImage,
-            'manufacturer_mini_' . $manufacturerId . '.jpg',
-            HelperList::LIST_THUMBNAIL_SIZE
-        );
-
-        return $this->imageTagSourceParser->parse($imageTag);
+        $pathToImage = '/img/m/' . $manufacturerId . '.jpg';
+        return $this->imageCacheManager->getBrowserPath($pathToImage, 'my_thumb');
     }
 }

@@ -7,3 +7,6 @@ app_modules:
   # v1: only YAML format is supported for now.
   resource: .
   type: module
+
+_liip_imagine:
+  resource: "@LiipImagineBundle/Resources/config/routing.yaml"
