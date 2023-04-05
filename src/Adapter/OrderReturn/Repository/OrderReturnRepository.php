@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
 use Doctrine\DBAL\Connection;
 use Exception;
-use Order;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
@@ -165,8 +164,8 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             $this->dbPrefix . 'order_return_detail',
             [
                 'id_order_detail' => $orderReturnDetailId->getOrderDetailId()->getValue(),
-                'id_order_return' =>$orderReturnDetailId->getOrderReturnId()->getValue(),
-                'id_customization' => $customizationId ? $customizationId->getValue() : 0
+                'id_order_return' => $orderReturnDetailId->getOrderReturnId()->getValue(),
+                'id_customization' => $customizationId ? $customizationId->getValue() : 0,
             ]
         );
     }
@@ -209,6 +208,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
 
     /**
      * @param OrderReturnId $orderReturnId
+     *
      * @return array<OrderReturnDetail>
      *
      * @throws OrderReturnException

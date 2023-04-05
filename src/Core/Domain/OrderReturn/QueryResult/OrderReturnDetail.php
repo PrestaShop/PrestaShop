@@ -35,11 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 class OrderReturnDetail
 {
     /**
-     * @var OrderReturnId
-     */
-    private $orderReturnId;
-
-    /**
      * @var OrderReturnDetailId
      */
     private $orderDetailId;

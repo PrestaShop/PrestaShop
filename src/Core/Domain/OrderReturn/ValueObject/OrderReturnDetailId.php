@@ -49,6 +49,7 @@ class OrderReturnDetailId
     /**
      * @param int $orderReturnId
      * @param int $orderDetailId
+     *
      * @throws OrderReturnConstraintException
      */
     public function __construct(int $orderReturnId, int $orderDetailId)
