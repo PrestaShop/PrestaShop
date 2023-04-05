@@ -27,10 +27,13 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -38,6 +41,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Class MerchandiseReturnController responsible for "Sell > Customer Service > Merchandise Returns" page
@@ -104,6 +108,11 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
 
         try {
+            $editableOrderReturn = $this->getQueryBus()->handle(
+                new GetOrderReturnForEditing(
+                    $orderReturnId
+                )
+            );
             $form = $formBuilder->getFormFor($orderReturnId);
             $form->handleRequest($request);
 
@@ -119,13 +128,30 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_merchandise_returns_index');
         }
+        $allowPrintingOrderReturnPdf =
+            $editableOrderReturn->getOrderReturnStateId() === OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID;
 
-        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
+            'allowPrintingOrderReturnPdf' => $allowPrintingOrderReturnPdf,
+            'editableOrderReturn' => $editableOrderReturn,
             'orderReturnForm' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Return merchandise authorization (RMA)', 'Admin.Navigation.Menu'),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_returns_index")
+     *
+     * @param Request $request
+     * @param int $orderReturnId
+     *
+     * @return Response
+     */
+    public function generateOrderReturnPdfAction(Request $request, int $orderReturnId): Response
+    {
+        return new StreamedResponse($this->get(OrderReturnPdfGenerator::class)->generatePDF([$orderReturnId]));
     }
 
     /**

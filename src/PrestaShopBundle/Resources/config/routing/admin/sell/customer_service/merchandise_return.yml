@@ -48,3 +48,13 @@ admin_order_returns_update:
       id_order_return: orderReturnId
   requirements:
     orderReturnId: \d+
+
+admin_order_returns_generate_pdf:
+  path: /{orderReturnId}/generate-order-return-pdf
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:generateOrderReturnPdf
+    _legacy_controller: AdminReturn
+    _legacy_feature_flag: order_return
+  requirements:
+    orderReturnId: \d+

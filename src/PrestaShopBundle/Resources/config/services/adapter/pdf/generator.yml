@@ -32,3 +32,6 @@ services:
 
   prestashop.adapter.pdf.generator.single_invoice:
     class: PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator
+
+  PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator:
+    autowire: true
