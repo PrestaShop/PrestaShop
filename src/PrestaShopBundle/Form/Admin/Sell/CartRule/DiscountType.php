@@ -30,14 +30,13 @@ namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DiscountApplicationChoiceProvider;
 use PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener\DiscountListener;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
+use PrestaShopBundle\Form\Admin\Type\SearchProductType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscountType extends TranslatorAwareType
@@ -48,16 +47,6 @@ class DiscountType extends TranslatorAwareType
     private $discountListener;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var string
-     */
-    private $languageIsoCode;
-
-    /**
      * @var DiscountApplicationChoiceProvider
      */
     private $discountApplicationChoiceProvider;
@@ -66,14 +55,10 @@ class DiscountType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         DiscountListener $discountListener,
-        RouterInterface $router,
-        string $employeeIsoCode,
         DiscountApplicationChoiceProvider $discountApplicationChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->discountListener = $discountListener;
-        $this->router = $router;
-        $this->languageIsoCode = $employeeIsoCode;
         $this->discountApplicationChoiceProvider = $discountApplicationChoiceProvider;
     }
 
@@ -96,19 +81,11 @@ class DiscountType extends TranslatorAwareType
                     'data-percentage-choices' => json_encode($this->getChoicesByType(Reduction::TYPE_PERCENTAGE)),
                 ],
             ])
-            ->add('specific_product', EntitySearchInputType::class, [
+            ->add('specific_product', SearchProductType::class, [
+                'search_combinations' => false,
                 'row_attr' => [
                     'class' => 'specific-product-search-container',
                 ],
-                'required' => false,
-                'limit' => 1,
-                'min_length' => 3,
-                'label' => $this->trans('Search for specific product', 'Admin.Catalog.Feature'),
-                'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
-                    'languageCode' => $this->languageIsoCode,
-                    'query' => '__QUERY__',
-                ]),
-                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             ])
             ->add('exclude_discounted_products', SwitchType::class, [
                 'label' => $this->trans('Exclude discounted products', 'Admin.Catalog.Feature'),

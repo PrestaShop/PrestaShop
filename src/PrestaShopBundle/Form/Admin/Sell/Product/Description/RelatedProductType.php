@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RelatedProductType extends AbstractType
 {
@@ -52,5 +53,10 @@ class RelatedProductType extends AbstractType
                 'label' => false,
             ])
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
     }
 }

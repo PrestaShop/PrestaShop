@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductItemType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -64,21 +65,45 @@ class SearchProductType extends EntitySearchInputType
     {
         parent::configureOptions($resolver);
 
+        $refLabel = $this->trans('Ref: %s', 'Admin.Catalog.Feature');
+        $combinationsUrl = $this->router->generate('admin_products_v2_search_combinations', [
+            'languageCode' => $this->languageIsoCode,
+            'query' => '__QUERY__',
+        ]);
+        $productsUrl = $this->router->generate('admin_products_v2_search_associations', [
+            'languageCode' => $this->languageIsoCode,
+            'query' => '__QUERY__',
+        ]);
+        $resolver->setDefault('search_combinations', true);
         $resolver->setDefaults([
             'required' => false,
             'label' => false,
-            'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
-                'languageCode' => $this->languageIsoCode,
-                'query' => '__QUERY__',
-            ]),
-            'entry_type' => SearchedProductItemType::class,
-            'attr' => [
-                'data-reference-label' => $this->trans('Ref: %s', 'Admin.Catalog.Feature'),
-            ],
+            'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             'min_length' => 3,
             'limit' => 1,
-            'identifier_field' => 'unique_identifier',
-            'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
+            'identifier_field' => static function (Options $options): string {
+                return $options->offsetGet('search_combinations') === true ? 'unique_identifier' : 'id';
+            },
+            'entry_type' => static function (Options $options): string {
+                return $options->offsetGet('search_combinations') === true ? SearchedProductItemType::class : EntityItemType::class;
+            },
+            'remote_url' => static function (Options $options) use ($combinationsUrl, $productsUrl): string {
+                if ($options->offsetGet('search_combinations') === true) {
+                    return $combinationsUrl;
+                } else {
+                    return $productsUrl;
+                }
+            },
         ]);
+
+        $resolver->setNormalizer('attr', static function (Options $options, ?array $value) use ($refLabel): array {
+            if ($options->offsetGet('search_combinations') === true) {
+                return array_merge(['data-reference-label' => $refLabel], (array) $value);
+            } else {
+                return $value;
+            }
+        });
+
+        $resolver->setAllowedTypes('search_combinations', 'bool');
     }
 }
