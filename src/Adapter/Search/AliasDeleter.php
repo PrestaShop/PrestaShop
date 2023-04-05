@@ -30,22 +30,22 @@ use Alias;
 use PrestaShopCollection;
 
 /**
- * Class ContactDeleter deletes alias records, using legacy code.
+ * Class AliasDeleter deletes alias records, using legacy code.
  */
 final class AliasDeleter
 {
     /**
      * Delete contacts by given IDs.
      *
-     * @param array $contactIds
+     * @param array $aliasIds
      *
      * @return array of errors
      */
-    public function delete(array $aliasIds)
+    public function delete(array $aliasIds): array
     {
         $errors = [];
 
-        if (empty($contactIds)) {
+        if (empty($aliasIds)) {
             $errors[] = [
                 'key' => 'You must select at least one element to delete.',
                 'parameters' => [],
@@ -56,7 +56,7 @@ final class AliasDeleter
         }
 
         $contactCollection = new PrestaShopCollection(Alias::class);
-        $contactCollection->where('id_alias', 'in', $contactIds);
+        $contactCollection->where('id_alias', 'in', $aliasIds);
 
         foreach ($contactCollection as $contact) {
             if (!$contact->delete()) {
