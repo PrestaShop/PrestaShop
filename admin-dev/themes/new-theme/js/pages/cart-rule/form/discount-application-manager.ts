@@ -69,6 +69,7 @@ export default class DiscountApplicationManager {
   private updateChoices(reductionType: string): void {
     const discountApplicationSelect = <HTMLSelectElement> document.querySelector(CartRuleMap.discountApplicationSelect);
 
+    const selectedValue = discountApplicationSelect.value;
     $(discountApplicationSelect).empty();
 
     let choices: Record<string, string> = JSON.parse(<string> discountApplicationSelect.dataset.amountChoices);
@@ -82,6 +83,7 @@ export default class DiscountApplicationManager {
 
       newOption.label = label;
       newOption.value = value;
+      newOption.selected = selectedValue === value;
 
       discountApplicationSelect.add(newOption);
     });
