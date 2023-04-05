@@ -26,16 +26,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Alias\Validate;
 
 use Alias;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\AddAliasCommandHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 
-class AddAliasCommandHandler implements AddAliasCommandHandlerInterface
+/**
+ * Validates alias field using legacy object model
+ */
+class AliasValidator extends AbstractObjectModelValidator
 {
-    public function handle(AddAliasCommand $command)
+    public function validate(Alias $alias):void
     {
-        $alias = new Alias();
+
     }
 }

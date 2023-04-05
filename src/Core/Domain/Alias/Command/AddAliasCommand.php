@@ -34,33 +34,27 @@ namespace PrestaShop\PrestaShop\Core\Domain\Alias\Command;
 class AddAliasCommand
 {
     /**
-     * @var string
+     * @var string[]
      */
-    private $alias;
+    private $aliases;
 
     /**
      * @var string
      */
     private $search;
 
-    /**
-     * @var bool
-     */
-    private $active;
-
-    public function __construct($alias, $search, bool $active)
+    public function __construct($aliases, $search)
     {
-        $this->alias = $alias;
+        $this->aliases = $aliases;
         $this->search = $search;
-        $this->active = $active;
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getAlias(): string
+    public function getAliases(): array
     {
-        return $this->alias;
+        return $this->aliases;
     }
 
     /**
@@ -69,13 +63,5 @@ class AddAliasCommand
     public function getSearch(): string
     {
         return $this->search;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
     }
 }

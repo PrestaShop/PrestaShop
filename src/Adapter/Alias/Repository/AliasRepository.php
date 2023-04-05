@@ -26,16 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Alias\Repository;
 
 use Alias;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\AddAliasCommandHandlerInterface;
+use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
-class AddAliasCommandHandler implements AddAliasCommandHandlerInterface
+class AliasRepository extends AbstractObjectModelRepository
 {
-    public function handle(AddAliasCommand $command)
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @var AliasValidator
+     */
+    private $aliasValidator;
+
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix,
+        AliasValidator $aliasValidator
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+        $this->aliasValidator = $aliasValidator;
+    }
+
+    /**
+     * @param Alias $product
+     *
+     * @return void
+     */
+    public function update(Alias $alias): void
     {
-        $alias = new Alias();
+        $this->aliasValidator->validate($alias);
+        $this->addObjectModel($alias);
     }
 }
