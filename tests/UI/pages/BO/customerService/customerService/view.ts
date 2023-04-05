@@ -77,12 +77,12 @@ class ViewCustomer extends BOBasePage {
 
   // Thread form
   /**
-   * Get thread number
+   * Get badge number
    * @param page {Page} Browser tab
-   * @returns {Promise<number>}
+   * @returns {Promise<string>}
    */
-  getThreadNumber(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.threadBadge);
+  getBadgeNumber(page: Page): Promise<string> {
+    return this.getTextContent(page, this.threadBadge);
   }
 
   /**
