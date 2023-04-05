@@ -159,6 +159,9 @@ class AliasGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getBulkActions(): BulkActionCollection
     {
         return (new BulkActionCollection())
