@@ -85,10 +85,10 @@ class SearchController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request)
     {
-        $aliasIds = $request->request->get('contact_bulk');
-        $contactDeleter = $this->get('prestashop.adapter.alias.deleter');
+        $aliasIds = $request->request->get('search_aliases_title_bulk');
+        $aliasDeleter = $this->get('prestashop.adapter.alias.deleter');
 
-        if ($errors = $contactDeleter->delete($aliasIds)) {
+        if ($errors = $aliasDeleter->delete($aliasIds)) {
             $this->flashErrors($errors);
         } else {
             $this->addFlash(
