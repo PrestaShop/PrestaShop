@@ -818,7 +818,7 @@ class HookCore extends ObjectModel
                 $hookRegistry->collect();
             }
 
-            return ($array_return) ? [] : false;
+            return ($array_return) ? [] : null;
         }
 
         // Store list of executed hooks on this page
