@@ -29,8 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\EntityItemType;
-use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -44,18 +42,15 @@ class SearchedProductItemType extends CommonAbstractType
         $builder
             ->add('unique_identifier', HiddenType::class, [
                 'label' => false,
+                'block_prefix' => 'searched_entity_item_hidden',
             ])
             ->add('product_id', HiddenType::class, [
                 'label' => false,
+                'block_prefix' => 'searched_entity_item_hidden',
             ])
             ->add('combination_id', HiddenType::class, [
                 'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => false,
-            ])
-            ->add('image', ImagePreviewType::class, [
-                'label' => false,
+                'block_prefix' => 'searched_entity_item_hidden',
             ])
         ;
     }

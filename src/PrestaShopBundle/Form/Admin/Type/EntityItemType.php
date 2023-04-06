@@ -44,12 +44,15 @@ class EntityItemType extends CommonAbstractType
         $builder
             ->add('id', HiddenType::class, [
                 'label' => false,
+                'block_prefix' => 'searched_entity_item_hidden',
             ])
             ->add('name', TextPreviewType::class, [
                 'label' => false,
+                'block_prefix' => 'searched_entity_item_text_preview',
             ])
             ->add('image', ImagePreviewType::class, [
                 'label' => false,
+                'block_prefix' => 'searched_entity_item_image_preview',
             ])
         ;
     }

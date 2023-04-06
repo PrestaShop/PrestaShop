@@ -155,22 +155,6 @@
   </tr>
 {%- endblock -%}
 
-
-{#
-these widgets are the prototype templates (that are handled by js later) and they are rendered as disabled by default
-on page load because of disablingSwitch component behavior. But they must not be disabled
-or else will not be submitted to the form, so we remove "disabled" attribute if it exists.
-#}
-{% block entity_item_id_widget %}
-  {% set attr = attr|filter((value, key) => key != 'disabled') %}
-  {{ block('hidden_widget') }}
-{% endblock %}
-
-{% block entity_item_name_widget %}
-  {% set attr = attr|filter((value, key) => key != 'disabled') %}
-  {{ block('text_preview_widget') }}
-{% endblock %}
-
 {% block searched_customer_row %}
   {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
   <li {{ block('widget_container_attributes') }}>
@@ -187,12 +171,17 @@ these widgets are the prototype templates (that are handled by js later) and the
 on page load because of disablingSwitch component behavior. But they must not be disabled
 or else will not be submitted to the form, so we remove "disabled" attribute if it exists.
 #}
-{% block searched_customer_id_customer_widget %}
+{% block searched_entity_item_hidden_widget %}
   {% set attr = attr|filter((value, key) => key != 'disabled') %}
   {{ block('hidden_widget') }}
 {% endblock %}
 
-{% block searched_customer_fullname_and_email_widget %}
+{% block searched_entity_item_image_preview_widget %}
+  {% set attr = attr|filter((value, key) => key != 'disabled') %}
+  {{ block('image_preview_widget') }}
+{% endblock %}
+
+{% block searched_entity_item_text_preview_widget %}
   {% set attr = attr|filter((value, key) => key != 'disabled') %}
   {{ block('text_preview_widget') }}
 {% endblock %}

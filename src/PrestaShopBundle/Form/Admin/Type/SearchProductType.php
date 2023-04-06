@@ -36,7 +36,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Initiates input with ability to search for any type of product
  */
-class SearchProductType extends EntitySearchInputType
+class SearchProductType extends TranslatorAwareType
 {
     /**
      * @var RouterInterface
@@ -50,10 +50,11 @@ class SearchProductType extends EntitySearchInputType
 
     public function __construct(
         TranslatorInterface $translator,
+        array $locales,
         RouterInterface $router,
         string $employeeIsoCode
     ) {
-        parent::__construct($translator);
+        parent::__construct($translator, $locales);
         $this->router = $router;
         $this->languageIsoCode = $employeeIsoCode;
     }
@@ -105,5 +106,10 @@ class SearchProductType extends EntitySearchInputType
         });
 
         $resolver->setAllowedTypes('search_combinations', 'bool');
+    }
+
+    public function getParent(): string
+    {
+        return EntitySearchInputType::class;
     }
 }
