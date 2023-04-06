@@ -91,6 +91,10 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             );
         }
 
+        if (!empty($conditionsData['customer'][0]['id_customer'])) {
+            $command->setCustomerId((int) $conditionsData['customer'][0]['id_customer']);
+        }
+
         $this->commandBus->handle($command);
     }
 
