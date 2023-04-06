@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShopBundle\Form\Admin\Type\SearchProductType;
+use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,7 +44,7 @@ class ActionsType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('discount', DiscountType::class)
-            ->add('gift_product', SearchProductType::class, [
+            ->add('gift_product', ProductSearchType::class, [
                 'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),
             ])
         ;

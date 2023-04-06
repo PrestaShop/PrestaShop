@@ -36,7 +36,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Initiates input with ability to search for any type of product
  */
-class SearchProductType extends TranslatorAwareType
+class ProductSearchType extends TranslatorAwareType
 {
     /**
      * @var RouterInterface

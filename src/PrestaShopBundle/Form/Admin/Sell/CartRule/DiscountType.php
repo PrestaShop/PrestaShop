@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DiscountApplicationChoiceProvider;
 use PrestaShopBundle\Form\Admin\Sell\CartRule\EventListener\DiscountListener;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
-use PrestaShopBundle\Form\Admin\Type\SearchProductType;
+use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -81,7 +81,7 @@ class DiscountType extends TranslatorAwareType
                     'data-percentage-choices' => json_encode($this->getChoicesByType(Reduction::TYPE_PERCENTAGE)),
                 ],
             ])
-            ->add('specific_product', SearchProductType::class, [
+            ->add('specific_product', ProductSearchType::class, [
                 'search_combinations' => false,
                 'row_attr' => [
                     'class' => 'specific-product-search-container',

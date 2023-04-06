@@ -110,13 +110,13 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             $reductionData = $actionsData['discount']['reduction'];
             if ($reductionData['type'] === Reduction::TYPE_AMOUNT) {
                 $actionBuilder->setAmountDiscount(
-                    $actionsData['discount']['reduction']['value'],
+                    (string) $actionsData['discount']['reduction']['value'],
                     (int) $reductionData['currency'],
                     (bool) $reductionData['include_tax']
                 );
             } else {
                 $actionBuilder->setPercentageDiscount(
-                    $actionsData['discount']['reduction']['value'],
+                    (string) $actionsData['discount']['reduction']['value'],
                     (bool) $actionsData['discount']['exclude_discounted_products']
                 );
             }
