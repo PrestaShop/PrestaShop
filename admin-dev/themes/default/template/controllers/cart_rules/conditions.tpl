@@ -256,7 +256,7 @@
 				<table  class="table">
 					<tr>
 						<td>
-							<p>{l s='Uncombinable cart rules' d='Admin.Catalog.Feature'}</p>
+							<p>{l s='Allow List' d='Admin.Catalog.Feature'}</p>
 							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search' d='Admin.Actions'}" value="">
 							<select id="cart_rule_select_1" class="jscroll" multiple="">
 							</select>
@@ -264,7 +264,7 @@
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
-							<p>{l s='Combinable cart rules' d='Admin.Catalog.Feature'}</p>
+							<p>{l s='Block List' d='Admin.Catalog.Feature'}</p>
 							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search' d='Admin.Actions'}" value="">
 							<select name="cart_rule_select[]" class="jscroll" id="cart_rule_select_2" multiple>
 							</select>
