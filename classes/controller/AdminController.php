@@ -2647,6 +2647,7 @@ class AdminControllerCore extends Controller
 
             //Bootstrap
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->bo_css . '?v=' . _PS_VERSION_, 'all', 0);
+            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/extra/' . $this->bo_color_css . '?v=' . _PS_VERSION_, 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/titatoggle-min.css', 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
 
