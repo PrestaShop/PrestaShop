@@ -72,3 +72,5 @@ services:
   PrestaShopBundle\Command\ShopCreatorCommand:
     autowire: true
     autoconfigure: true
+    arguments:
+      $dbPrefix: !php/const _DB_PREFIX_
