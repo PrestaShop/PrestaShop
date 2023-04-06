@@ -147,8 +147,8 @@
     "require-dev": {
         "behat/behat": "^3.5",
         "ergebnis/composer-normalize": "^2.8",
+        "fakerphp/faker": "^1.20",
         "friendsofphp/php-cs-fixer": "^v3.2.0",
-        "fzaninotto/faker": "^1.9",
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
         "phpstan/extension-installer": "^1.2",
