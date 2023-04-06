@@ -11,8 +11,6 @@ Feature: Add cart rule
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And there is a currency named "chf" with iso code "CHF" and exchange rate of 1.25
     And currency "usd" is the default one
-
-  Scenario: I edit cart rule
     Given I create cart rule "cart_rule_1" with following properties:
       | name[en-US]                      | cart rule 1         |
       | highlight                        | true                |
@@ -24,23 +22,80 @@ Feature: Add cart rule
       | total_quantity                   | 11                  |
       | quantity_per_user                | 3                   |
       | free_shipping                    | true                |
-      | minimum_amount                   | 10                  |
+      | minimum_amount                   | 0                   |
       | minimum_amount_currency          | usd                 |
+      | minimum_amount_tax_included      | false               |
+      | minimum_amount_shipping_included | false               |
+    And cart rule "cart_rule_1" should have the following properties:
+      | name[en-US]                      | cart rule 1         |
+      | highlight                        | true                |
+      | is_active                        | true                |
+      | allow_partial_use                | true                |
+      | priority                         | 1                   |
+      | valid_from                       | 2019-01-01 11:05:00 |
+      | valid_to                         | 2019-12-01 00:00:00 |
+      | total_quantity                   | 11                  |
+      | quantity_per_user                | 3                   |
+      | free_shipping                    | true                |
+      # @todo: update the test without providing minimum amount because it should not be mandatory (after PR https://github.com/PrestaShop/PrestaShop/pull/31904)
+      | minimum_amount                   | 0                   |
+      | minimum_amount_currency          | usd                 |
+      # when currency is not provided the default one is used
+      | reduction_currency               | usd                 |
+      | minimum_amount_tax_included      | false               |
+      | minimum_amount_shipping_included | false               |
+
+  Scenario: I edit cart rule and change various properties
+    When I edit cart rule cart_rule_1 with following properties:
+      | name[en-US]                      | cart rule 1 edited                                 |
+      | highlight                        | false                                              |
+      | is_active                        | false                                              |
+      | allow_partial_use                | false                                              |
+      | priority                         | 2                                                  |
+      | date_range                       | from: 2019-01-01 11:05:01, to: 2020-12-01 00:00:00 |
+      | total_quantity                   | 100                                                |
+      | quantity_per_user                | 1                                                  |
+      | free_shipping                    | true                                               |
+      | minimum_amount                   | 10                                                 |
+      | minimum_amount_currency          | chf                                                |
+      | minimum_amount_tax_included      | true                                               |
+      | minimum_amount_shipping_included | true                                               |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | name[en-US]                      | cart rule 1 edited  |
+      | highlight                        | false               |
+      | is_active                        | false               |
+      | allow_partial_use                | false               |
+      | priority                         | 2                   |
+      | valid_from                       | 2019-01-01 11:05:01 |
+      | valid_to                         | 2020-12-01 00:00:00 |
+      | total_quantity                   | 100                 |
+      | quantity_per_user                | 1                   |
+      | free_shipping                    | true                |
+      | minimum_amount                   | 10                  |
+      | minimum_amount_currency          | chf                 |
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
+      | reduction_amount                 | 0                   |
+      | reduction_tax                    | false               |
+
+  Scenario: I edit cart rule and remove free shipping when it is the only action.
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping | false |
+    Then I should get cart rule error about "missing action"
     And cart rule "cart_rule_1" should have the following properties:
-      | name[en-US]       | cart rule 1         |
-      | description       |                     |
-      | highlight         | true                |
-      | enabled           | true                |
-      | allow partial use | true                |
-      | priority          | 1                   |
-      | valid_from        | 2019-01-01 11:05:00 |
-      | valid_to          | 2019-12-01 00:00:00 |
-      | total quantity    | 11                  |
-      | quantity per user | 3                   |
-      | free shipping     | true                |
-      | minimum amount    | 10                  |
-      | currency          | usd                 |
-      | tax included      | true                |
-      | shipping included | true                |
+      | free_shipping | true |
+
+  Scenario: I edit cart rule by adding amount discount action
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping             | true                   |
+      | reduction_amount          | 10.5                   |
+      | reduction_tax             | true                   |
+      | reduction_currency        | chf                    |
+      | discount_application_type | order_without_shipping |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping             | true                   |
+      | reduction_amount          | 10.5                   |
+      | reduction_tax             | true                   |
+      | reduction_currency        | chf                    |
+      | discount_application_type | order_without_shipping |
+      # @todo: add more cases

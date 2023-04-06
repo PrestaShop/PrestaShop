@@ -478,6 +478,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         /** @var CartRuleId $cartRule */
         $cartRule = $this->getCommandBus()->handle($command);
 
+        //@todo: should be refactored to save only id to shared storage instead of whole object model
         SharedStorage::getStorage()->set($cartRuleReference, new CartRule($cartRule->getValue()));
     }
 
@@ -654,6 +655,25 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         ];
 
         return $map[$property] ?? $property;
+    }
+
+    /**
+     * @Then I should get cart rule error about :errorName
+     *
+     * @param string $errorName
+     *
+     * @return void
+     */
+    public function assertCartRuleConstraintError(string $errorName): void
+    {
+        $errorMap = [
+            'missing action' => CartRuleConstraintException::MISSING_ACTION,
+        ];
+
+        $this->assertLastErrorIs(
+            CartRuleConstraintException::class,
+            $errorMap[$errorName]
+        );
     }
 
     /**

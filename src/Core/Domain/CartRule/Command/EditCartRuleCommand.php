@@ -73,7 +73,7 @@ class EditCartRuleCommand
     private $customerId;
 
     /**
-     * @var array|null
+     * @var array<int, string>|null
      */
     private $localizedNames;
 
@@ -145,6 +145,11 @@ class EditCartRuleCommand
         return $this->cartRuleId;
     }
 
+    /**
+     * @param array<int, string> $localizedNames names index by language id
+     *
+     * @return EditCartRuleCommand
+     */
     public function setLocalizedNames(array $localizedNames): EditCartRuleCommand
     {
         $this->localizedNames = $localizedNames;
@@ -167,7 +172,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -208,7 +213,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getCode(): string
+    public function getCode(): ?string
     {
         return $this->code;
     }
@@ -232,7 +237,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getPriority(): int
+    public function getPriority(): ?int
     {
         return $this->priority;
     }
@@ -267,7 +272,7 @@ class EditCartRuleCommand
         return $this->validTo;
     }
 
-    public function getTotalQuantity(): int
+    public function getTotalQuantity(): ?int
     {
         return $this->totalQuantity;
     }
@@ -283,7 +288,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getQuantityPerUser(): int
+    public function getQuantityPerUser(): ?int
     {
         return $this->quantityPerUser;
     }
