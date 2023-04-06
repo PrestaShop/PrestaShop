@@ -110,6 +110,11 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
+      # Workaround until https://github.com/PrestaShop/PrestaShop/issues/29813 is fixed
+      - name: PrestaShop Configuration (Copy of Config API)
+        if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
+        run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
+
       # Use docker to create shop
       - name: Build and run shop with docker
         timeout-minutes: 15
@@ -117,11 +122,6 @@ jobs:
           USER_ID=$(id -u) GROUP_ID=$(id -g) \
           docker-compose -f docker-compose.yml up -d --build
           bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:8001/en/)" != "200" ]]; do sleep 5; done'
-
-      # Workaround until https://github.com/PrestaShop/PrestaShop/issues/29813 is fixed
-      - name: PrestaShop Configuration (Copy of Config API)
-        if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
-        run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
 
       - name: Setup Node
         uses: actions/setup-node@v3
