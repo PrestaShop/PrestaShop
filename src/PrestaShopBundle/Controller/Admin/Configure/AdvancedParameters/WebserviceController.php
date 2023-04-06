@@ -100,6 +100,7 @@ class WebserviceController extends FrameworkBundleAdminController
                 'webserviceKeyForm' => $form->createView(),
                 'layoutTitle' => $this->trans('New webservice key', 'Admin.Navigation.Menu'),
                 'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminWebservice'),
             ]
         );
     }
