@@ -1,14 +1,27 @@
-/*
- * Thickbox 3.1 - One Box To Rule Them All.
- * By Cody Lindley (http://www.codylindley.com)
- * Copyright (c) 2007 cody lindley
- * Licensed under the MIT License: http://www.opensource.org/licenses/mit-license.php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
- * Patched Version by Jamie Thompson - Fixes IE7 Positioning Issues
- * http://jamazon.co.uk/web/2008/03/17/thickbox-31-ie7-positioning-bug/
- * Patched Version by PrestaShop - Translated fields
- * https://www.prestashop.com
-*/
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
 
 
 $.browser.msie6=$.browser.msie&&/MSIE 6\.0/i.test(window.navigator.userAgent)&&!/MSIE 7\.0/i.test(window.navigator.userAgent);$(document).ready(function(){tb_init('a.thickbox, area.thickbox, input.thickbox');imgLoader=new Image();imgLoader.src=tb_pathToImage;});function tb_init(domChunk){$(domChunk).click(function(){var t=this.title||this.name||null;var a=this.href||this.alt;var g=this.rel||false;tb_show(t,a,g);this.blur();return false;}).removeClass('thickbox');}
