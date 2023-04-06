@@ -165,23 +165,3 @@
     {{ form_widget(form.id_customer) }}
   </li>
 {% endblock %}
-
-{#
-these widgets are the prototype templates (that are handled by js later) and they are rendered as disabled by default
-on page load because of disablingSwitch component behavior. But they must not be disabled
-or else will not be submitted to the form, so we remove "disabled" attribute if it exists.
-#}
-{% block searched_entity_item_hidden_widget %}
-  {% set attr = attr|filter((value, key) => key != 'disabled') %}
-  {{ block('hidden_widget') }}
-{% endblock %}
-
-{% block searched_entity_item_image_preview_widget %}
-  {% set attr = attr|filter((value, key) => key != 'disabled') %}
-  {{ block('image_preview_widget') }}
-{% endblock %}
-
-{% block searched_entity_item_text_preview_widget %}
-  {% set attr = attr|filter((value, key) => key != 'disabled') %}
-  {{ block('text_preview_widget') }}
-{% endblock %}
