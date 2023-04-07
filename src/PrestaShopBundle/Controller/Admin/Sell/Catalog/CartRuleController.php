@@ -156,7 +156,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
-        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+        $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteCartRuleCommand($cartRuleIds));
@@ -242,7 +242,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function bulkEnableAction(Request $request): RedirectResponse
     {
-        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+        $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, true));
@@ -270,7 +270,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function bulkDisableAction(Request $request): RedirectResponse
     {
-        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+        $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, false));
@@ -320,24 +320,6 @@ class CartRuleController extends FrameworkBundleAdminController
         }
 
         return $formData;
-    }
-
-    /**
-     * Provides cart rule ids from request of bulk action
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getBulkCartRulesFromRequest(Request $request): array
-    {
-        $cartRuleIds = $request->request->get('cart_rule_bulk');
-
-        if (!is_array($cartRuleIds)) {
-            return [];
-        }
-
-        return array_map('intval', $cartRuleIds);
     }
 
     private function getErrorMessages(Exception $e): array
