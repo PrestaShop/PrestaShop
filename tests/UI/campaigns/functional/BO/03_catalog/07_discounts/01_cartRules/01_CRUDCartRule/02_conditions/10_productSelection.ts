@@ -40,7 +40,7 @@ Scenario:
 Post-condition:
 - Delete the created cart rule
  */
-describe('BO - Catalog - Cart rules : Restrictions - Product selection', async () => {
+describe('BO - Catalog - Cart rules : Product selection', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
