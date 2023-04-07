@@ -24,7 +24,7 @@ import Products from '@data/demo/products';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_minimumAmount';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_minimumAmount';
 
 /*
 Scenario:

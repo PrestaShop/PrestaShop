@@ -24,7 +24,7 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_customerGroupSelection';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_customerGroupSelection';
 
 /*
 Scenario:
