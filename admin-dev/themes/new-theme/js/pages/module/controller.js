@@ -38,6 +38,7 @@ class AdminModuleController {
    * @memberof AdminModule
    */
   constructor(moduleCardController) {
+    this.eventEmitter = window.prestashop.component.EventEmitter;
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
@@ -221,10 +222,10 @@ class AdminModuleController {
   }
 
   initBOEventRegistering() {
-    window.BOEvent.on('Module Enabled', this.onModuleDisabled, this);
-    window.BOEvent.on('Module Disabled', this.onModuleDisabled, this);
-    window.BOEvent.on('Module Uninstalled', this.installHandler, this);
-    window.BOEvent.on('Module Installed', this.installHandler, this);
+    this.eventEmitter.on('Module Enabled', (context) => this.onModuleDisabled(context));
+    this.eventEmitter.on('Module Disabled', (context) => this.onModuleDisabled(context));
+    this.eventEmitter.on('Module Uninstalled', (context) => this.installHandler(context));
+    this.eventEmitter.on('Module Installed', (context) => this.installHandler(context));
   }
 
   installHandler(event) {
@@ -234,7 +235,7 @@ class AdminModuleController {
 
   updateModuleStatus(event) {
     this.modulesList = this.modulesList.map((module) => {
-      const moduleElement = $(event.detail[0]);
+      const moduleElement = $(event);
 
       if (moduleElement.data('tech-name') === module.techName) {
         const newModule = {
@@ -735,6 +736,9 @@ class AdminModuleController {
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
           self.displayOnUploadDone(responseObject);
+
+          const elem = $(`<div data-tech-name="${responseObject.module_name}"></div>`);
+          this.eventEmitter.emit((responseObject.upgraded ? 'Module Upgraded' : 'Module Installed'), elem);
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;

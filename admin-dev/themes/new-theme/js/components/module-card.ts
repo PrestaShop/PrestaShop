@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {EventEmitter} from 'events';
 import ConfirmModal from '@components/modal';
 import ComponentsMap from './components-map';
 
@@ -29,24 +30,6 @@ const ModuleCardMap = ComponentsMap.moduleCard;
 
 const {$} = window;
 
-const BOEvent = {
-  on(eventName: string, callback: (event: Event) => void, context: any) {
-    document.addEventListener(eventName, (event) => {
-      if (typeof context !== 'undefined') {
-        callback.call(context, event);
-      } else {
-        callback(event);
-      }
-    });
-  },
-
-  emitEvent(eventName: string, eventType: string, datas: JQuery) {
-    const event = new CustomEvent(eventType, <any>datas);
-    // true values stand for: can bubble, and is cancellable
-    event.initCustomEvent(eventName, true, true, datas);
-    document.dispatchEvent(event);
-  },
-};
 
 /**
  * Class is responsible for handling Module Card behavior
@@ -88,6 +71,8 @@ export default class ModuleCard {
 
   private pendingRequest: boolean = false;
 
+  private eventEmitter: EventEmitter;
+
   constructor() {
     /* Selectors for module action links (uninstall, reset, etc...) to add a confirm popin */
     this.moduleActionMenuLinkSelector = 'button.module_action_menu_';
@@ -108,6 +93,8 @@ export default class ModuleCard {
     this.moduleActionModalResetLinkSelector = 'a.module_action_modal_reset';
     this.moduleActionModalUninstallLinkSelector = 'a.module_action_modal_uninstall';
     this.forceDeletionOption = '#force_deletion';
+
+    this.eventEmitter = window.prestashop.component.EventEmitter;
 
     this.initActionButtons();
   }
@@ -435,26 +422,30 @@ export default class ModuleCard {
           mainElement.attr('data-installed', '0');
           mainElement.attr('data-active', '0');
 
-          BOEvent.emitEvent('Module Uninstalled', 'CustomEvent', mainElement);
+          this.eventEmitter.emit('Module Uninstalled', mainElement);
         } else if (action === 'disable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.addClass(`${alteredSelector}-isNotActive`);
           mainElement.attr('data-active', '0');
 
-          BOEvent.emitEvent('Module Disabled', 'CustomEvent', mainElement);
+          this.eventEmitter.emit('Module Disabled', mainElement);
         } else if (action === 'enable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.removeClass(`${alteredSelector}-isNotActive`);
           mainElement.attr('data-active', '1');
 
-          BOEvent.emitEvent('Module Enabled', 'CustomEvent', mainElement);
+          this.eventEmitter.emit('Module Enabled', mainElement);
         } else if (action === 'install') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.attr('data-installed', '1');
           mainElement.attr('data-active', '1');
           mainElement.removeClass(`${alteredSelector}-isNotActive`);
 
-          BOEvent.emitEvent('Module Installed', 'CustomEvent', mainElement);
+          this.eventEmitter.emit('Module Installed', mainElement);
+        } else if (action === 'update' || action === 'upgrade') { // because the action is update on ModuleManager button and upgrade on bulk actions
+          mainElement = jqElementObj.closest(`.${alteredSelector}`);
+
+          this.eventEmitter.emit('Module Upgraded', mainElement);
         };
 
         // Since we replace the DOM content
