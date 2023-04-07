@@ -42,15 +42,12 @@ class SearchedProductItemType extends CommonAbstractType
         $builder
             ->add('unique_identifier', HiddenType::class, [
                 'label' => false,
-                'block_prefix' => 'searched_entity_item_hidden',
             ])
             ->add('product_id', HiddenType::class, [
                 'label' => false,
-                'block_prefix' => 'searched_entity_item_hidden',
             ])
             ->add('combination_id', HiddenType::class, [
                 'label' => false,
-                'block_prefix' => 'searched_entity_item_hidden',
             ])
         ;
     }

@@ -28,35 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 
-use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
+use PrestaShopBundle\Form\Admin\Type\EntityItemType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RelatedProductType extends AbstractType
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getParent(): string
     {
-        $builder
-            ->add('id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('image', ImagePreviewType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => false,
-            ])
-        ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
+        return EntityItemType::class;
     }
 }

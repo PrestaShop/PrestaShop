@@ -55,9 +55,6 @@ class CustomerSearchType extends EntitySearchInputType
             'label' => $this->trans('Apply to all customers', 'Admin.Global'),
             'layout' => EntitySearchInputType::LIST_LAYOUT,
             'entry_type' => SearchedCustomerType::class,
-            'entry_options' => [
-                'block_prefix' => 'searched_customer',
-            ],
             'allow_delete' => false,
             'limit' => 1,
             'disabling_switch' => true,

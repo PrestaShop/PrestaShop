@@ -75,37 +75,38 @@ class ProductSearchType extends TranslatorAwareType
             'languageCode' => $this->languageIsoCode,
             'query' => '__QUERY__',
         ]);
-        $resolver->setDefault('search_combinations', true);
-        $resolver->setDefaults([
-            'required' => false,
-            'label' => false,
-            'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
-            'min_length' => 3,
-            'limit' => 1,
-            'identifier_field' => static function (Options $options): string {
-                return $options->offsetGet('search_combinations') === true ? 'unique_identifier' : 'id';
-            },
-            'entry_type' => static function (Options $options): string {
-                return $options->offsetGet('search_combinations') === true ? SearchedProductItemType::class : EntityItemType::class;
-            },
-            'remote_url' => static function (Options $options) use ($combinationsUrl, $productsUrl): string {
+
+        $resolver
+            ->setRequired(['search_combinations'])
+            ->setAllowedTypes('search_combinations', 'bool')
+            ->setDefaults([
+                'search_combinations' => true,
+                'required' => false,
+                'label' => false,
+                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
+                'min_length' => 3,
+                'limit' => 1,
+                'identifier_field' => static function (Options $options): string {
+                    return $options->offsetGet('search_combinations') === true ? 'unique_identifier' : 'id';
+                },
+                'entry_type' => static function (Options $options): string {
+                    return $options->offsetGet('search_combinations') === true ? SearchedProductItemType::class : EntityItemType::class;
+                },
+                'remote_url' => static function (Options $options) use ($combinationsUrl, $productsUrl): string {
+                    if ($options->offsetGet('search_combinations') === true) {
+                        return $combinationsUrl;
+                    } else {
+                        return $productsUrl;
+                    }
+                },
+            ])
+            ->setNormalizer('attr', static function (Options $options, ?array $value) use ($refLabel): array {
                 if ($options->offsetGet('search_combinations') === true) {
-                    return $combinationsUrl;
+                    return array_merge(['data-reference-label' => $refLabel], (array) $value);
                 } else {
-                    return $productsUrl;
+                    return $value;
                 }
-            },
-        ]);
-
-        $resolver->setNormalizer('attr', static function (Options $options, ?array $value) use ($refLabel): array {
-            if ($options->offsetGet('search_combinations') === true) {
-                return array_merge(['data-reference-label' => $refLabel], (array) $value);
-            } else {
-                return $value;
-            }
-        });
-
-        $resolver->setAllowedTypes('search_combinations', 'bool');
+            });
     }
 
     public function getParent(): string
