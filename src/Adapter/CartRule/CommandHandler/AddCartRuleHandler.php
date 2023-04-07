@@ -136,12 +136,17 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
             $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
             $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
             $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
+            $cartRule->reduction_percent = null;
+            $cartRule->reduction_exclude_special = false;
         }
 
         $percentageDiscount = $cartRuleAction->getPercentageDiscount();
         if ($percentageDiscount) {
             $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
             $cartRule->reduction_exclude_special = $percentageDiscount->excludeDiscountedProducts();
+            $cartRule->reduction_amount = null;
+            $cartRule->reduction_currency = 0;
+            $cartRule->reduction_tax = false;
         }
 
         $discountApplicationType = $command->getDiscountApplicationType();
