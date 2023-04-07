@@ -23,10 +23,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import SearchPage from './SearchPage';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
 
+/**
+ * Responsible for actions in admin search listing page to list aliases.
+ */
 $(() => {
-  new SearchPage();
+  const aliasGrid = new Grid('alias');
+
+  aliasGrid.addExtension(new ReloadListActionExtension());
+  aliasGrid.addExtension(new ExportToSqlManagerExtension());
+  aliasGrid.addExtension(new FiltersResetExtension());
+  aliasGrid.addExtension(new SortingExtension());
+  aliasGrid.addExtension(new LinkRowActionExtension());
+  aliasGrid.addExtension(new SubmitGridExtension());
+  aliasGrid.addExtension(new SubmitBulkExtension());
+  aliasGrid.addExtension(new BulkActionCheckboxExtension());
+  aliasGrid.addExtension(new SubmitRowActionExtension());
+  aliasGrid.addExtension(new ColumnTogglingExtension());
+
+  new TranslatableInput();
 });
