@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b283900c6887089a6bf04fcb7e2c2eea",
+    "content-hash": "b3df58a8975f993d0755085af17ffd5a",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5724,16 +5724,16 @@
         },
         {
             "name": "prestashop/gsitemap",
-            "version": "v4.2.1",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gsitemap.git",
-                "reference": "5d7c4bf591fcbbd3ac66e15bd9805b78abb47694"
+                "reference": "06763bb45c7643c92726cb3e43783183b37c3506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/5d7c4bf591fcbbd3ac66e15bd9805b78abb47694",
-                "reference": "5d7c4bf591fcbbd3ac66e15bd9805b78abb47694",
+                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/06763bb45c7643c92726cb3e43783183b37c3506",
+                "reference": "06763bb45c7643c92726cb3e43783183b37c3506",
                 "shasum": ""
             },
             "require": {
@@ -5761,9 +5761,9 @@
             "description": "PrestaShop module gsitemap",
             "homepage": "https://github.com/PrestaShop/gsitemap",
             "support": {
-                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.2.1"
+                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.3.0"
             },
-            "time": "2023-01-10T10:10:23+00:00"
+            "time": "2023-04-05T13:04:34+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
@@ -6769,16 +6769,16 @@
         },
         {
             "name": "prestashop/ps_googleanalytics",
-            "version": "v4.2.1",
+            "version": "v4.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_googleanalytics.git",
-                "reference": "3adf470973a3ac782ddff853aa170361ea6d3821"
+                "reference": "7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/3adf470973a3ac782ddff853aa170361ea6d3821",
-                "reference": "3adf470973a3ac782ddff853aa170361ea6d3821",
+                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233",
+                "reference": "7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233",
                 "shasum": ""
             },
             "require": {
@@ -6808,9 +6808,9 @@
             "description": "PrestaShop module ps_googleanalytics",
             "homepage": "https://github.com/PrestaShop/ps_googleanalytics",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v4.2.1"
+                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v4.2.2"
             },
-            "time": "2023-03-15T10:36:39+00:00"
+            "time": "2023-04-05T09:37:41+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
@@ -7392,26 +7392,27 @@
         },
         {
             "name": "prestashop/psgdpr",
-            "version": "v1.4.3",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/psgdpr.git",
-                "reference": "2b94cd472d00c837275f0aa8677947de2691c6d7"
+                "reference": "227c226fb26453a9e23932e3c5b34795dd8cb20c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/psgdpr/zipball/2b94cd472d00c837275f0aa8677947de2691c6d7",
-                "reference": "2b94cd472d00c837275f0aa8677947de2691c6d7",
+                "url": "https://api.github.com/repos/PrestaShop/psgdpr/zipball/227c226fb26453a9e23932e3c5b34795dd8cb20c",
+                "reference": "227c226fb26453a9e23932e3c5b34795dd8cb20c",
                 "shasum": ""
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\Psgdpr\\": "src/"
+                },
                 "classmap": [
-                    "classes",
-                    "controllers",
                     "psgdpr.php"
                 ]
             },
@@ -7428,9 +7429,9 @@
             "description": "PrestaShop module psgdpr",
             "homepage": "https://github.com/PrestaShopCorp/psgdpr",
             "support": {
-                "source": "https://github.com/PrestaShop/psgdpr/tree/v1.4.3"
+                "source": "https://github.com/PrestaShop/psgdpr/tree/v2.0.0"
             },
-            "time": "2022-12-15T10:02:36+00:00"
+            "time": "2023-04-06T15:42:25+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
@@ -13601,5 +13602,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
