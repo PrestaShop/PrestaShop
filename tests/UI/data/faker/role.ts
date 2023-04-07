@@ -1,20 +1,20 @@
-import type ProfileCreator from '@data/types/profile';
+import type RoleCreator from '@data/types/role';
 
 import {faker} from '@faker-js/faker';
 
 /**
- * Create new profile to use on creation form on profile page on BO
+ * Create new role to use on creation form on role page on BO
  * @class
  */
-export default class ProfileData {
+export default class RoleData {
   public readonly name: string;
 
   /**
-   * Constructor for class ProfileData
-   * @param profileToCreate {Object} Could be used to force the value of some members
+   * Constructor for class RoleData
+   * @param roleToCreate {RoleCreator} Could be used to force the value of some members
    */
-  constructor(profileToCreate: ProfileCreator = {}) {
+  constructor(roleToCreate: RoleCreator = {}) {
     /** @type {string} Name of the profile */
-    this.name = profileToCreate.name || faker.name.jobType();
+    this.name = roleToCreate.name || faker.name.jobType();
   }
 }

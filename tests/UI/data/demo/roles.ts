@@ -1,16 +1,16 @@
-import ProfileData from '@data/faker/role';
+import RoleData from '@data/faker/role';
 
 export default [
-  new ProfileData({
+  new RoleData({
     name: 'SuperAdmin',
   }),
-  new ProfileData({
+  new RoleData({
     name: 'Logistician',
   }),
-  new ProfileData({
+  new RoleData({
     name: 'Translator',
   }),
-  new ProfileData({
+  new RoleData({
     name: 'Salesman',
   }),
 ];

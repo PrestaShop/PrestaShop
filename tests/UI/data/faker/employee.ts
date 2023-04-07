@@ -1,13 +1,13 @@
 import Languages from '@data/demo/languages';
 import Pages from '@data/demo/pages';
-import Profiles from '@data/demo/profiles';
+import Roles from '@data/demo/roles';
 import LanguageData from '@data/faker/language';
-import ProfileData from '@data/faker/profile';
+import RoleData from '@data/faker/role';
 import EmployeeCreator from '@data/types/employee';
 
 import {faker} from '@faker-js/faker';
 
-const profileNames: string[] = Object.values(Profiles).map((profile: ProfileData) => profile.name);
+const profileNames: string[] = Object.values(Roles).map((profile: RoleData) => profile.name);
 const languagesNames: string[] = Object.values(Languages).map((lang: LanguageData) => lang.name);
 
 /**

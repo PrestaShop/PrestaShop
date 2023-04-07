@@ -1,5 +1,5 @@
-type ProfileCreator = {
+type RoleCreator = {
   name?: string
 };
 
-export default ProfileCreator;
+export default RoleCreator;
