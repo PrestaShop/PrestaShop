@@ -19,7 +19,7 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_roles_paginationAndBulkActions';
 
-describe('BO - Advanced Parameters - Team : Pagination and delete by bulk actions roles', async () => {
+describe('BO - Advanced Parameters - Team : Pagination and delete roles by bulk actions', async () => {
   const createRoleData: RoleData = new RoleData();
 
   let browserContext: BrowserContext;
