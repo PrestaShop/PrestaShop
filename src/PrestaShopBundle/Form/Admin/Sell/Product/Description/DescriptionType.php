@@ -127,7 +127,9 @@ class DescriptionType extends TranslatorAwareType
                 'search_combinations' => false,
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'entry_type' => RelatedProductType::class,
+                'entry_options' => [
+                    'block_prefix' => 'related_product',
+                ],
                 'limit' => 0,
                 'filtered_identities' => $productId > 0 ? [$productId] : [],
             ])
