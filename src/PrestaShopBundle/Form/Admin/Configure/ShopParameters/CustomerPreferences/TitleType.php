@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -46,6 +47,7 @@ class TitleType extends TranslatorAwareType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'constraints' => [new DefaultLanguage()],
                 'label' => $this->trans(
                     'Title',
                     'Admin.Global'
