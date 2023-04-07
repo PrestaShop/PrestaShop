@@ -80,7 +80,6 @@ class ProductSearchType extends TranslatorAwareType
             ->setRequired(['search_combinations'])
             ->setAllowedTypes('search_combinations', 'bool')
             ->setDefaults([
-                'search_combinations' => true,
                 'required' => false,
                 'label' => false,
                 'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),

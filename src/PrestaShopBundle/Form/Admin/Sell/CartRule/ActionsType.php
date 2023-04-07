@@ -45,6 +45,7 @@ class ActionsType extends TranslatorAwareType
             ])
             ->add('discount', DiscountType::class)
             ->add('gift_product', ProductSearchType::class, [
+                'search_combinations' => true,
                 'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),
             ])
         ;
