@@ -35,11 +35,13 @@ const shopPreviewRowClass = 'shop-preview-row';
 export default {
   productForm: 'form[name=product]',
   productLocalizedNameInput: 'input[name^="product[header][name]"]',
+  productNameLocaleSelector: '.header-name .js-locale-btn',
   productLocalizedLinkRewriteInput: 'input[name^="product[seo][link_rewrite]"]',
   productTypePreview: '.product-type-preview',
   summaryTotalQuantityContainer: '.product-field-preview[data-role="quantity"]',
   summaryTotalQuantity: '.product-field-preview[data-role="quantity"] .product-total-quantity',
   summaryTotalQuantityLabel: '.product-field-preview[data-role="quantity"] .product-total-quantity-label',
+  onlineSwitch: '#product_header_active input',
   productType: {
     headerSelector: '#product_header_type',
     headerPreviewButton: '.product-type-preview',
@@ -175,7 +177,7 @@ export default {
       editionModeClass: 'combination-edition-mode',
       fieldInputs: `.combination-list-row :input:not(.${commonBulkSelectAllClass}):not(.${isSelectedCombinationClass})`,
       errorAlerts: '.combination-list-row .alert-danger',
-      rowActionButtons: '.combination-row-actions button',
+      rowActionButtons: '.combination-row-actions button, .combination-row-actions .dropdown-toggle',
       footer: {
         cancel: '#cancel-combinations-edition',
         save: '#save-combinations-edition',

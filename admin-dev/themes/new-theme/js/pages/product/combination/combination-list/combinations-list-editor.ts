@@ -66,6 +66,10 @@ export default class CombinationsListEditor {
     CombinationsMap.generateCombinationsButton,
     CombinationsMap.list.rowActionButtons,
     ProductMap.toggleTab,
+    ProductMap.productLocalizedNameInput,
+    ProductMap.productNameLocaleSelector,
+    ProductMap.productType.headerPreviewButton,
+    ProductMap.onlineSwitch,
   ];
 
   private readonly editionHiddenElements: string[] = [

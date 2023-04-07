@@ -23,7 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div id="combination-edit-modal">
+  <div
+    id="combination-edit-modal"
+    :class="{ 'history-collapsed': historyCollapsed }"
+  >
     <modal
       class="combination-modal"
       v-if="selectedCombinationId !== null"
@@ -106,6 +109,7 @@
           @selectCombination="selectCombination"
           :selected-combination-id="selectedCombinationId"
           :empty-image-url="emptyImageUrl"
+          @collapsed="(collapsed) => { this.historyCollapsed = collapsed; }"
         />
       </template>
     </modal>
@@ -165,6 +169,7 @@
     temporarySelection: number | null,
     isFormUpdated: boolean,
     isClosing: boolean,
+    historyCollapsed: boolean,
   }
 
   const {$} = window;
@@ -192,6 +197,7 @@
         temporarySelection: null,
         isFormUpdated: false,
         isClosing: false,
+        historyCollapsed: true,
       };
     },
     props: {
@@ -430,72 +436,80 @@
 <style lang="scss" type="text/scss">
 @import '~@scss/config/_settings.scss';
 
-#combination-edit-modal .combination-modal {
-  .modal {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .modal-dialog {
-    max-width: 990px;
-    width: 90%;
-    height: 95%;
-    margin: 0;
-
-    .modal-header {
-      display: none;
+#combination-edit-modal {
+  .combination-modal {
+    .modal {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
     }
 
-    .modal-content {
-      height: 100%;
-      padding: 0;
+    .modal-dialog {
+      max-width: 990px;
+      width: 90%;
+      height: 95%;
       margin: 0;
-      overflow: hidden;
 
-      .modal-body {
+      .modal-header {
+        display: none;
+      }
+
+      .modal-content {
+        height: 100%;
         padding: 0;
         margin: 0;
-        background: #eaebec;
+        overflow: hidden;
 
-        .combination-loading {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1;
-          background: rgba(255, 255, 255, 0.8);
-        }
-
-        .combination-iframe {
+        .modal-body {
           padding: 0;
           margin: 0;
-          border: 0;
-          outline: none;
-          vertical-align: top;
-          width: 100%;
-          height: 100%;
-          display: block;
+          background: #eaebec;
 
-          .card {
-            margin-bottom: 0;
+          .combination-loading {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.8);
+          }
+
+          .combination-iframe {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            outline: none;
+            vertical-align: top;
+            width: 100%;
+            height: 100%;
+            display: block;
+
+            .card {
+              margin-bottom: 0;
+            }
+          }
+        }
+
+        .modal-footer {
+          margin: 0;
+          padding: 0.6rem 1rem;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+
+          .btn-close {
+            margin-right: auto;
           }
         }
       }
+    }
+  }
 
-      .modal-footer {
-        margin: 0;
-        padding: 0.6rem 1rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-
-        .btn-close {
-          margin-right: auto;
-        }
-      }
+  &.history-collapsed {
+    .modal-content {
+      border-top-right-radius: 0;
     }
   }
 }

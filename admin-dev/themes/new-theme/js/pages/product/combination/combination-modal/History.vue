@@ -74,6 +74,7 @@
 
     <div
       class="history-handle"
+      :title="handleTitle"
       @click="togglePanel"
     />
   </div>
@@ -125,11 +126,13 @@
       },
       isCollapsed(): boolean {
         // Null indicates initial state, collapsed by default, unless history has more than one combination
-        if (this.forcedCollapsed === null) {
-          return this.combinationsList.length <= 1;
-        }
+        const isCollapsed = this.forcedCollapsed === null ? this.combinationsList.length <= 1 : this.forcedCollapsed;
+        this.$emit('collapsed', isCollapsed);
 
-        return this.forcedCollapsed;
+        return isCollapsed;
+      },
+      handleTitle(): string {
+        return this.isCollapsed ? this.$t('modal.history.open') : this.$t('modal.history.close');
       },
     },
     methods: {
@@ -175,6 +178,7 @@
         } else {
           this.forcedCollapsed = !this.forcedCollapsed;
         }
+        this.$emit('collapsed', this.forcedCollapsed);
       },
     },
   });
@@ -192,10 +196,15 @@
   transform: translateY(-50%);
   height: 95%;
   margin: 0 1rem;
+  border-top-right-radius: 0;
 
   &-list {
     padding: 0;
     margin: 0;
+  }
+
+  .card-header {
+    border-top-right-radius: 0;
   }
 
   .card-block {
@@ -254,12 +263,11 @@
 
   .history-handle {
     position: absolute;
-    top: 50%;
+    top: -1px;
     right: -2rem;
-    transform: translateY(-50%);
-    background-color: #fff;
+    background-color: #fafbfc;
     width: 2rem;
-    height: 4rem;
+    height: 46px;
     border: 1px solid #dbe6e9;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -285,7 +293,10 @@
     border: none;
 
     .history-handle {
+      top: -0.5px;
       right: -2rem;
+      background-color: #fff;
+
       &::after {
         content: 'history';
       }

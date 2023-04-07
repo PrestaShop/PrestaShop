@@ -113,22 +113,9 @@ $(() => {
   }
   new PriceSummary(productFormModel);
 
-  const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
-  const $productFormPreviewButton = $(ProductMap.footer.previewUrlButton);
-  const $productFormDuplicateButton = $(ProductMap.footer.duplicateProductButton);
-  const $productFormNewProductButton = $(ProductMap.footer.newProductButton);
-  const $productFormGoToCatalogButton = $(ProductMap.footer.goToCatalogButton);
-  const $productFormCancelButton = $(ProductMap.footer.cancelButton);
-
   new ProductPartialUpdater(
     eventEmitter,
     $productForm,
-    $productFormSubmitButton,
-    $productFormPreviewButton,
-    $productFormDuplicateButton,
-    $productFormNewProductButton,
-    $productFormGoToCatalogButton,
-    $productFormCancelButton,
   );
 
   // From here we init component specific to edition

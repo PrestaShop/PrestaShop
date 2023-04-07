@@ -31,9 +31,9 @@
       <td>
         {# When value is null we are displaying the prototype #}
         {% if value is null %}
-          {% set widgetAttr = {value: placeholder_data[child.vars.name]} %}
+          {% set widgetAttr = {value: placeholder_data[child.vars.name], label: false} %}
         {% else %}
-          {% set widgetAttr = {} %}
+          {% set widgetAttr = {label: false} %}
         {% endif %}
         {{ form_widget(child, widgetAttr) }}
         {{ form_errors(child) }}
@@ -95,7 +95,7 @@
       {% for child in prototype.children %}
         {# Exception: is_selected header has already been rendered manually #}
         {% if child.vars.name != 'is_selected' %}
-          <th scope="col">
+          <th scope="col" class="combination-column-{{ child.vars.name }}">
             {% if child.vars.attr['data-order-by'] is defined %}
               {{ ps.sortable_column_header(child.vars.label, child.vars.attr['data-order-by']) }}
             {% else %}
