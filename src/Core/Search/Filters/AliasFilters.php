@@ -47,7 +47,7 @@ class AliasFilters extends Filters
     public static function getDefaults(): array
     {
         return [
-            'limit' => 10,
+            'limit' => self::LIST_LIMIT,
             'offset' => 0,
             'orderBy' => 'id_alias',
             'sortOrder' => 'asc',

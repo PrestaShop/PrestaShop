@@ -117,7 +117,7 @@ class AliasQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $builder
-                ->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
+                ->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName)
                 ->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
