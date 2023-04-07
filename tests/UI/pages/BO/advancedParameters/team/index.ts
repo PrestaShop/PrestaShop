@@ -16,7 +16,7 @@ class Employees extends BOBasePage {
 
   private readonly addNewEmployeeLink: string;
 
-  private readonly profilesTab: string;
+  private readonly rolesTab: string;
 
   private readonly permissionsTab: string;
 
@@ -90,7 +90,7 @@ class Employees extends BOBasePage {
     // Selectors
     // Header links
     this.addNewEmployeeLink = '#page-header-desc-configuration-add[title=\'Add new employee\']';
-    this.profilesTab = '#subtab-AdminProfiles';
+    this.rolesTab = '#subtab-AdminProfiles';
     this.permissionsTab = '#subtab-AdminAccess';
 
     // List of employees
@@ -160,12 +160,12 @@ class Employees extends BOBasePage {
 
   // Tab methods
   /**
-   * Go to Profiles page
+   * Go to roles page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToProfilesPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.profilesTab);
+  async goToRolesPage(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.rolesTab);
   }
 
   // Columns methods

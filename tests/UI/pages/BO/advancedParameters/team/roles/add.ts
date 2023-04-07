@@ -1,6 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type RoleData from '@data/faker/profile';
+import type RoleData from '@data/faker/role';
 
 import type {Page} from 'playwright';
 

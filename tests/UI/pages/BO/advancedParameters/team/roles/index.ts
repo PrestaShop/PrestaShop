@@ -74,9 +74,9 @@ class Roles extends BOBasePage {
     this.addNewRoleLink = '#page-header-desc-configuration-add[title=\'Add new role\']';
 
     // List of roles
-    this.roleGridPanel = '#role_grid_panel';
+    this.roleGridPanel = '#profile_grid_panel';
     this.roleGridTitle = `${this.roleGridPanel} h3.card-header-title`;
-    this.rolesListForm = '#role_grid';
+    this.rolesListForm = '#profile_grid';
     this.rolesListTableRow = (row: number) => `${this.rolesListForm} tbody tr:nth-child(${row})`;
     this.rolesListTableColumn = (row: number, column: string) => `${this.rolesListTableRow(row)} td.column-${column}`;
     this.rolesListTableColumnAction = (row: number) => this.rolesListTableColumn(row, 'actions');
@@ -86,17 +86,17 @@ class Roles extends BOBasePage {
     this.rolesListTableEditLink = (row: number) => `${this.rolesListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.roleFilterInput = (filterBy: string) => `${this.rolesListForm} #role_${filterBy}`;
+    this.roleFilterInput = (filterBy: string) => `${this.rolesListForm} #profile_${filterBy}`;
     this.filterSearchButton = `${this.rolesListForm} .grid-search-button`;
     this.filterResetButton = `${this.rolesListForm} .grid-reset-button`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.rolesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.rolesListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.rolesListForm} #role_grid_bulk_action_delete_selection`;
+    this.bulkActionsDeleteButton = `${this.rolesListForm} #profile_grid_bulk_action_delete_selection`;
 
     // Delete modal
-    this.confirmDeleteModal = '#role-grid-confirm-modal';
+    this.confirmDeleteModal = '#profile-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Pages selectors
