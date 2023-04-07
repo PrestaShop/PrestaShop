@@ -29,7 +29,11 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 
 class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -39,38 +43,37 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int[]
-     */
-    protected $shopIds;
-
-    /**
      * @var int
      */
     protected $languageId;
 
     /**
+     * @var StoreRepository
+     */
+    private $storeRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int[] $shopIds
      * @param int $languageId
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        array $shopIds,
-        int $languageId
+        int $languageId,
+        StoreRepository $storeRepository
     ) {
         parent::__construct($connection, $dbPrefix);
-        $this->shopIds = $shopIds;
         $this->languageId = $languageId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->storeRepository = $storeRepository;
     }
 
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getCommonQueryBuilder($searchCriteria->getFilters())
+        $qb = $this->getCommonQueryBuilder($searchCriteria)
             ->select('
                 s.id_store, sl.name, sl.address1 AS address, s.city, s.postcode,
                 state.name AS state, cl.name AS country, s.phone, s.fax, s.active
@@ -88,17 +91,25 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
 
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this->getCommonQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT s.id_store)x');
+        return $this->getCommonQueryBuilder($searchCriteria)
+            ->select('COUNT(DISTINCT s.id_store)');
     }
 
     /**
-     * @param array<string, int|string|bool> $filters
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
-    protected function getCommonQueryBuilder(array $filters): QueryBuilder
+    protected function getCommonQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
+        if (!$searchCriteria instanceof ShopSearchCriteriaInterface) {
+            throw new InvalidArgumentException(sprintf('Invalid search criteria, expected a %s', ShopSearchCriteriaInterface::class));
+        }
+
+        $shopIds = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->storeRepository->getShopIdsByConstraint($searchCriteria->getShopConstraint()));
+
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'store', 's')
             ->innerJoin(
@@ -107,7 +118,7 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
                 'ss',
                 's.id_store = ss.id_store AND ss.id_shop IN (:shopIds)'
             )
-            ->setParameter('shopIds', $this->shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
             ->innerJoin(
                 's',
                 $this->dbPrefix . 'store_lang',
@@ -129,7 +140,7 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
-        $this->applyFilters($qb, $filters);
+        $this->applyFilters($qb, $searchCriteria->getFilters());
 
         return $qb;
     }

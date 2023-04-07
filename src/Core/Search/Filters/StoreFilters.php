@@ -28,9 +28,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
-class StoreFilters extends Filters
+class StoreFilters extends ShopFilters
 {
     /** @var string */
     protected $filterId = StoreGridDefinitionFactory::GRID_ID;
