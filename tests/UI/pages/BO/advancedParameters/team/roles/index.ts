@@ -3,34 +3,34 @@ import BOBasePage from '@pages/BO/BObasePage';
 import type {Page} from 'playwright';
 
 /**
- * Profiles page, contains functions that can be used on the page
+ * Roles page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
-class Profiles extends BOBasePage {
+class Roles extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly addNewProfileLink: string;
+  private readonly addNewRoleLink: string;
 
-  private readonly profileGridPanel: string;
+  private readonly roleGridPanel: string;
 
-  private readonly profileGridTitle: string;
+  private readonly roleGridTitle: string;
 
-  private readonly profilesListForm: string;
+  private readonly rolesListForm: string;
 
-  private readonly profilesListTableRow: (row: number) => string;
+  private readonly rolesListTableRow: (row: number) => string;
 
-  private readonly profilesListTableColumn: (row: number, column: string) => string;
+  private readonly rolesListTableColumn: (row: number, column: string) => string;
 
-  private readonly profilesListTableColumnAction: (row: number) => string;
+  private readonly rolesListTableColumnAction: (row: number) => string;
 
-  private readonly profilesListTableToggleDropDown: (row: number) => string;
+  private readonly rolesListTableToggleDropDown: (row: number) => string;
 
-  private readonly profilesListTableDeleteLink: (row: number) => string;
+  private readonly rolesListTableDeleteLink: (row: number) => string;
 
-  private readonly profilesListTableEditLink: (row: number) => string;
+  private readonly rolesListTableEditLink: (row: number) => string;
 
-  private readonly profileFilterInput: (filterBy: string) => string;
+  private readonly roleFilterInput: (filterBy: string) => string;
 
   private readonly filterSearchButton: string;
 
@@ -62,7 +62,7 @@ class Profiles extends BOBasePage {
 
   /**
    * @constructs
-   * Setting up texts and selectors to use on profiles page
+   * Setting up texts and selectors to use on roles page
    */
   constructor() {
     super();
@@ -71,42 +71,42 @@ class Profiles extends BOBasePage {
 
     // Selectors
     // Header links
-    this.addNewProfileLink = '#page-header-desc-configuration-add[title=\'Add new role\']';
+    this.addNewRoleLink = '#page-header-desc-configuration-add[title=\'Add new role\']';
 
-    // List of profiles
-    this.profileGridPanel = '#profile_grid_panel';
-    this.profileGridTitle = `${this.profileGridPanel} h3.card-header-title`;
-    this.profilesListForm = '#profile_grid';
-    this.profilesListTableRow = (row: number) => `${this.profilesListForm} tbody tr:nth-child(${row})`;
-    this.profilesListTableColumn = (row: number, column: string) => `${this.profilesListTableRow(row)} td.column-${column}`;
-    this.profilesListTableColumnAction = (row: number) => this.profilesListTableColumn(row, 'actions');
-    this.profilesListTableToggleDropDown = (row: number) => `${this.profilesListTableColumnAction(row)
+    // List of roles
+    this.roleGridPanel = '#role_grid_panel';
+    this.roleGridTitle = `${this.roleGridPanel} h3.card-header-title`;
+    this.rolesListForm = '#role_grid';
+    this.rolesListTableRow = (row: number) => `${this.rolesListForm} tbody tr:nth-child(${row})`;
+    this.rolesListTableColumn = (row: number, column: string) => `${this.rolesListTableRow(row)} td.column-${column}`;
+    this.rolesListTableColumnAction = (row: number) => this.rolesListTableColumn(row, 'actions');
+    this.rolesListTableToggleDropDown = (row: number) => `${this.rolesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.profilesListTableDeleteLink = (row: number) => `${this.profilesListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.profilesListTableEditLink = (row: number) => `${this.profilesListTableColumnAction(row)} a.grid-edit-row-link`;
+    this.rolesListTableDeleteLink = (row: number) => `${this.rolesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.rolesListTableEditLink = (row: number) => `${this.rolesListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.profileFilterInput = (filterBy: string) => `${this.profilesListForm} #profile_${filterBy}`;
-    this.filterSearchButton = `${this.profilesListForm} .grid-search-button`;
-    this.filterResetButton = `${this.profilesListForm} .grid-reset-button`;
+    this.roleFilterInput = (filterBy: string) => `${this.rolesListForm} #role_${filterBy}`;
+    this.filterSearchButton = `${this.rolesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.rolesListForm} .grid-reset-button`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .grid_bulk_action_select_all`;
-    this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_delete_selection`;
+    this.selectAllRowsLabel = `${this.rolesListForm} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = `${this.rolesListForm} button.dropdown-toggle`;
+    this.bulkActionsDeleteButton = `${this.rolesListForm} #role_grid_bulk_action_delete_selection`;
 
     // Delete modal
-    this.confirmDeleteModal = '#profile-grid-confirm-modal';
+    this.confirmDeleteModal = '#role-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Pages selectors
     this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
-    this.pagesPaginationLabel = `${this.profilesListForm} .col-form-label`;
-    this.pagesPaginationNextLink = `${this.profilesListForm} [data-role=next-page-link]`;
-    this.pagesPaginationPreviousLink = `${this.profilesListForm} [data-role='previous-page-link']`;
+    this.pagesPaginationLabel = `${this.rolesListForm} .col-form-label`;
+    this.pagesPaginationNextLink = `${this.rolesListForm} [data-role=next-page-link]`;
+    this.pagesPaginationPreviousLink = `${this.rolesListForm} [data-role='previous-page-link']`;
 
     // Sort Selectors
-    this.tableHead = `${this.profileGridPanel} thead`;
+    this.tableHead = `${this.roleGridPanel} thead`;
     this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
@@ -116,12 +116,12 @@ class Profiles extends BOBasePage {
    */
 
   /**
-   * Go to new profile page
+   * Go to new role page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewProfilePage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.addNewProfileLink);
+  async goToAddNewRolePage(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.addNewRoleLink);
   }
 
   /**
@@ -132,7 +132,7 @@ class Profiles extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getTextColumnFromTable(page: Page, row: number, column: string): Promise<string> {
-    return this.getTextContent(page, this.profilesListTableColumn(row, column));
+    return this.getTextContent(page, this.rolesListTableColumn(row, column));
   }
 
   /**
@@ -141,7 +141,7 @@ class Profiles extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page: Page): Promise<number> {
-    return this.getNumberFromText(page, this.profileGridTitle);
+    return this.getNumberFromText(page, this.roleGridTitle);
   }
 
   /**
@@ -157,31 +157,31 @@ class Profiles extends BOBasePage {
   }
 
   /**
-   * Go to Edit profile page
+   * Go to Edit role page
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToEditProfilePage(page: Page, row: number): Promise<void> {
+  async goToEditRolePage(page: Page, row: number): Promise<void> {
     // Click on edit
-    await this.clickAndWaitForNavigation(page, this.profilesListTableEditLink(row));
+    await this.clickAndWaitForNavigation(page, this.rolesListTableEditLink(row));
   }
 
   /**
-   * Filter list of profiles
+   * Filter list of roles
    * @param page {Page} Browser tab
    * @param filterType {string} Input or select to choose method of filter
    * @param filterBy {string} Column to filter
    * @param value {string} Value to put on filter
    * @returns {Promise<void>}
    */
-  async filterProfiles(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
+  async filterRoles(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.profileFilterInput(filterBy), value);
+        await this.setValue(page, this.roleFilterInput(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.profileFilterInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.roleFilterInput(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
@@ -191,25 +191,25 @@ class Profiles extends BOBasePage {
   }
 
   /**
-   * Delete profile
+   * Delete role
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteProfile(page: Page, row: number): Promise<string> {
+  async deleteRole(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
-      page.click(this.profilesListTableToggleDropDown(row)),
+      page.click(this.rolesListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
         page,
-        `${this.profilesListTableToggleDropDown(row)}[aria-expanded='true']`),
+        `${this.rolesListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      page.click(this.profilesListTableDeleteLink(row)),
+      page.click(this.rolesListTableDeleteLink(row)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteProfiles(page);
+    await this.confirmDeleteRoles(page);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -219,12 +219,12 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async confirmDeleteProfiles(page: Page): Promise<void> {
+  async confirmDeleteRoles(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
-   * Delete all profiles with Bulk Actions
+   * Delete all roles with Bulk Actions
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
@@ -246,12 +246,12 @@ class Profiles extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
 
-    await this.confirmDeleteProfiles(page);
+    await this.confirmDeleteRoles(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
-   * Select profiles pagination limit
+   * Select roles pagination limit
    * @param page {Page} Browser tab
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
@@ -263,7 +263,7 @@ class Profiles extends BOBasePage {
   }
 
   /**
-   * Profiles pagination next
+   * Click on pagination next
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
@@ -274,7 +274,7 @@ class Profiles extends BOBasePage {
   }
 
   /**
-   * Profiles pagination previous
+   * Click on pagination previous
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
@@ -296,7 +296,7 @@ class Profiles extends BOBasePage {
     const allRowsContentTable: string[] = [];
 
     for (let i: number = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextContent(page, this.profilesListTableColumn(i, column));
+      const rowContent = await this.getTextContent(page, this.rolesListTableColumn(i, column));
       allRowsContentTable.push(rowContent);
     }
 
@@ -324,4 +324,4 @@ class Profiles extends BOBasePage {
   }
 }
 
-export default new Profiles();
+export default new Roles();

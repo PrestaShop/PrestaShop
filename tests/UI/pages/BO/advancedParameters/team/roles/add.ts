@@ -1,6 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type ProfileData from '@data/faker/profile';
+import type RoleData from '@data/faker/profile';
 
 import type {Page} from 'playwright';
 
@@ -9,7 +9,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends BOBasePage
  */
-class AddProfile extends BOBasePage {
+class AddRole extends BOBasePage {
   public readonly pageTitleCreate: string;
 
   public readonly pageTitleEdit: (name: string) => string;
@@ -25,8 +25,8 @@ class AddProfile extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = `New profile • ${global.INSTALL.SHOP_NAME}`;
-    this.pageTitleEdit = (name: string) => `Editing ${name} profile • `
+    this.pageTitleCreate = `New role • ${global.INSTALL.SHOP_NAME}`;
+    this.pageTitleEdit = (name: string) => `Editing ${name} role • `
       + `${global.INSTALL.SHOP_NAME}`;
 
     // Selectors
@@ -41,14 +41,14 @@ class AddProfile extends BOBasePage {
   /**
    * Fill form for add/edit page profile
    * @param page {Page} Browser tab
-   * @param profileData {ProfileData} Data to set on add/edit profile form
+   * @param roleData {RoleData} Data to set on add/edit profile form
    * @return {Promise<string>}
    */
-  async createEditProfile(page: Page, profileData: ProfileData): Promise<string> {
-    await this.setValue(page, this.nameInput, profileData.name);
+  async createEditRole(page: Page, roleData: RoleData): Promise<string> {
+    await this.setValue(page, this.nameInput, roleData.name);
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
-export default new AddProfile();
+export default new AddRole();

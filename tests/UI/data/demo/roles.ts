@@ -1,4 +1,4 @@
-import ProfileData from '@data/faker/profile';
+import ProfileData from '@data/faker/role';
 
 export default [
   new ProfileData({

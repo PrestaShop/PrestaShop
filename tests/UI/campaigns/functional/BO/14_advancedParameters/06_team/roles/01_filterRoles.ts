@@ -8,17 +8,17 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team';
-import profilesPage from '@pages/BO/advancedParameters/team/profiles';
+import rolesPage from '@pages/BO/advancedParameters/team/roles';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_team_profiles_filterProfiles';
+const baseContext: string = 'functional_BO_advancedParameters_team_roles_filterRoles';
 
 /*
-Filter profiles table by ID and Name
+Filter roles table by ID and Name
  */
-describe('BO - Advanced Parameters - Team : Filter profiles table', async () => {
+describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -52,24 +52,24 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
     await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
-  it('should go to \'Profiles\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
+  it('should go to \'Roles\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToRolesPage', baseContext);
 
-    await employeesPage.goToProfilesPage(page);
+    await employeesPage.goToRolesPage(page);
 
-    const pageTitle = await profilesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(profilesPage.pageTitle);
+    const pageTitle = await rolesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(rolesPage.pageTitle);
   });
 
-  it('should reset all filters and get number of profiles', async function () {
+  it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfProfiles = await profilesPage.resetAndGetNumberOfLines(page);
+    numberOfProfiles = await rolesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProfiles).to.be.above(0);
   });
 
-  // 1 : Filter profiles table
-  describe('Filter profiles table in BO', async () => {
+  // 1 : Filter roles table
+  describe('Filter roles table in BO', async () => {
     const tests = [
       {
         args: {
@@ -87,13 +87,13 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await profilesPage.filterProfiles(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
+        await rolesPage.filterRoles(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
 
-        const numberOfProfilesAfterFilter = await profilesPage.getNumberOfElementInGrid(page);
+        const numberOfProfilesAfterFilter = await rolesPage.getNumberOfElementInGrid(page);
         await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
 
         for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
-          const textName = await profilesPage.getTextColumnFromTable(page, i, test.args.filterBy);
+          const textName = await rolesPage.getTextColumnFromTable(page, i, test.args.filterBy);
           await expect(textName).to.contains(test.args.filterValue);
         }
       });
@@ -101,7 +101,7 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfProfilesAfterDelete = await profilesPage.resetAndGetNumberOfLines(page);
+        const numberOfProfilesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
       });
     });
