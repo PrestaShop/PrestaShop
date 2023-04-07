@@ -61,40 +61,11 @@ export default class PriceReductionManager {
   private handle(): void {
     this.initCurrencySymbolUpdater();
 
-    const isPercentage = this.$reductionTypeSelect.val() === 'percentage';
-
-    if (isPercentage) {
+    if (this.$reductionTypeSelect.val() === 'percentage') {
       this.$taxInclusionInputs.fadeOut();
     } else {
       this.$taxInclusionInputs.fadeIn();
     }
-
-    if (this.reductionValueSymbolSelector !== '') {
-      const reductionTypeAmountSymbols = document.querySelectorAll(this.reductionValueSymbolSelector);
-
-      if (reductionTypeAmountSymbols.length) {
-        reductionTypeAmountSymbols.forEach((value: Element) => {
-          // eslint-disable-next-line no-param-reassign
-          value.innerHTML = isPercentage ? '%' : this.getSymbol(value.innerHTML);
-        });
-      }
-    }
-  }
-
-  private getSymbol(defaultValue: string): string {
-    const select = document.querySelector<HTMLSelectElement>(this.currencySelect);
-
-    if (!select) {
-      return defaultValue;
-    }
-
-    const defaultCurrencySymbol: string = select.dataset.defaultCurrencySymbol ?? '';
-    const selectItem = select.item(select.selectedIndex);
-
-    if (!selectItem) {
-      return defaultCurrencySymbol;
-    }
-    return selectItem.getAttribute('symbol') ?? defaultCurrencySymbol;
   }
 
   private initCurrencySymbolUpdater(): void {
@@ -112,24 +83,25 @@ export default class PriceReductionManager {
             const reductionOption = reductionTypeSelect.options[i];
 
             if (reductionOption.value === 'amount') {
-              // Update reduction amount choice symbol
+              // Update reduction type choice "amount" symbol
               reductionOption.innerHTML = symbol;
             }
           }
 
-          const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
+          const selectedReduction = <string> reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
+          const reductionValueSymbols = <NodeListOf<HTMLSelectElement>> document.querySelectorAll(
+            this.reductionValueSymbolSelector,
+          );
 
-          if (selectedReduction === 'amount') {
-            const reductionTypeAmountSymbols = document.querySelectorAll(this.reductionValueSymbolSelector);
-
-            if (reductionTypeAmountSymbols.length) {
-              // Update reduction value field symbol when "amount" type is selected
-              reductionTypeAmountSymbols.forEach((value: Element) => {
-                // eslint-disable-next-line no-param-reassign
-                value.innerHTML = symbol;
-              });
-            }
+          if (reductionValueSymbols.length === 0) {
+            return;
           }
+
+          // Update reduction value field symbol when "amount" type is selected
+          reductionValueSymbols.forEach((value: Element) => {
+            // eslint-disable-next-line no-param-reassign
+            value.innerHTML = selectedReduction === 'amount' ? symbol : '%';
+          });
         }
       }),
     );
