@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFac
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShop\PrestaShop\Core\Search\Row\SearchPanelRow;
+use PrestaShop\PrestaShop\Core\Search\SearchPanel;
+use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -350,5 +353,22 @@ class CommonController extends FrameworkBundleAdminController
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
+    }
+
+    /**
+     * Back Office Search action
+     *
+     * @return Response
+     */
+    public function backOfficeSearchAction(Request $request)
+    {
+        $searchExpression = $request->request->get('bo_search') ?? '';
+        $searchType = (int) $request->request->get('bo_type');
+
+        $searchPanels = $this->get('prestashop.core.search.panel');
+        return $this->render('@PrestaShop/Admin/Common/back_office_search.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'searchPanelCollections' => $searchPanels->build($searchExpression),
+        ]);
     }
 }

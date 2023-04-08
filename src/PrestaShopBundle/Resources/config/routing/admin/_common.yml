@@ -51,3 +51,11 @@ admin_common_reset_search_by_filter_id:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
     controller: ''
     action: ''
+
+admin_common_back_office_search:
+  path: /back_office_search
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::backOfficeSearchAction'
+    _legacy_controller: AdminSearch
+    _legacy_link: AdminSearch
