@@ -51,9 +51,5 @@
 {{ form_end(orderReturnForm) }}
 
 {% block order_returns_products %}
-  <div class="row">
-    <div class="col-12">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnsProductsGrid} %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnsProductsGrid} %}
 {% endblock %}
