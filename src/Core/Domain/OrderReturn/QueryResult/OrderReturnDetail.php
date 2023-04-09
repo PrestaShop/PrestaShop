@@ -59,14 +59,6 @@ class OrderReturnDetail
     }
 
     /**
-     * @return OrderReturnId
-     */
-    public function getOrderReturnId(): OrderReturnId
-    {
-        return $this->orderReturnId;
-    }
-
-    /**
      * @return OrderReturnDetailId
      */
     public function getOrderDetailId(): OrderReturnDetailId
