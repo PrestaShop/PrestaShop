@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\OrderReturnSettings;
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -53,7 +56,7 @@ class PdfOrderReturnControllerCore extends FrontController
             die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
         } elseif (!$from_admin && $this->orderReturn->id_customer != $this->context->customer->id) {
             die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
-        } elseif ($this->orderReturn->state < 2) {
+        } elseif ($this->orderReturn->state < OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID) {
             die($this->trans('Order return not confirmed.', [], 'Shop.Notifications.Error'));
         }
     }
