@@ -284,7 +284,7 @@ class CartRow
                 $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision) * $quantity,
                 $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision) * $quantity
             );
-        } else if ($this->roundType == self::ROUND_MODE_LINE) {
+        } elseif ($this->roundType == self::ROUND_MODE_LINE) {
             $tools = new Tools();
             $this->initialTotalPrice = new AmountImmutable(
                 $tools->round($this->initialUnitPrice->getTaxIncluded() * $quantity, $this->precision),
