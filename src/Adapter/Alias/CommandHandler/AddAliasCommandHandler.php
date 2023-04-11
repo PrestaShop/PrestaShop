@@ -40,13 +40,19 @@ class AddAliasCommandHandler implements AddAliasCommandHandlerInterface
      */
     private $aliasRepository;
 
+    /**
+     * @param AliasRepository $aliasRepository
+     */
     public function __construct(
         AliasRepository $aliasRepository
     ) {
         $this->aliasRepository = $aliasRepository;
     }
 
-    public function handle(AddAliasCommand $command)
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(AddAliasCommand $command): AliasId
     {
         $alias = $this->aliasRepository->create(
             $command->getSearch(),

@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\InvalidAliasIdException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Interface for services that handle command which adds new alias
@@ -37,7 +39,10 @@ interface AddAliasCommandHandlerInterface
     /**
      * @param AddAliasCommand $command
      *
-     * @return AliasId Added alias ID
+     * @return AliasId
+     *
+     * @throws InvalidAliasIdException
+     * @throws CoreException
      */
-    public function handle(AddAliasCommand $command);
+    public function handle(AddAliasCommand $command): AliasId;
 }
