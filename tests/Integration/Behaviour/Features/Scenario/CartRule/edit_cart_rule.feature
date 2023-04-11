@@ -156,7 +156,7 @@ Feature: Add cart rule
       | Size  | [S,M]   |
       | Color | [White] |
     And product "product2" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url                                          |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url                                              |
       | product2SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       | http://myshop.com/img/p/{no_picture}-small_default.jpg |
       | product2MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      | http://myshop.com/img/p/{no_picture}-small_default.jpg |
     When I edit cart rule cart_rule_1 with following properties:
@@ -166,3 +166,30 @@ Feature: Add cart rule
       | free_shipping    | false          |
       | gift_product     | product2       |
       | gift_combination | product2SWhite |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping    | true           |
+      | gift_product     | product2       |
+      | gift_combination | product2SWhite |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping                          | true                   |
+      | gift_product                           | product2               |
+      | gift_combination                       | product2SWhite         |
+      # assert default values of reduction fields
+      | reduction_percentage                   | 0                      |
+      | reduction_amount                       | 0                      |
+      | reduction_currency                     | usd                    |
+      | discount_application_type              | order_without_shipping |
+      | reduction_apply_to_discounted_products | true                   |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping | true     |
+      | gift_product  | product1 |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping                          | true                   |
+      | gift_product                           | product1               |
+      | gift_combination                       |                        |
+      # assert default values of reduction fields
+      | reduction_percentage                   | 0                      |
+      | reduction_amount                       | 0                      |
+      | reduction_currency                     | usd                    |
+      | discount_application_type              | order_without_shipping |
+      | reduction_apply_to_discounted_products | true                   |

@@ -244,9 +244,10 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
                 'Unexpected gift_product'
             );
         }
+
         if (isset($data['gift_combination'])) {
             Assert::assertSame(
-                $this->getSharedStorage()->get($data['gift_combination']),
+                !empty($data['gift_combination']) ? $this->getSharedStorage()->get($data['gift_combination']) : null,
                 $actions->getGiftCombinationId(),
                 'Unexpected gift_combination'
             );

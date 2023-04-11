@@ -180,14 +180,26 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
             $cartRule->reduction_currency = $amountDiscount->getMoneyAmount()->getCurrencyId()->getValue();
             // @todo: property is TaxIncluded should exist after related PR is merged https://github.com/PrestaShop/PrestaShop/pull/31904
             // $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
+            $cartRule->reduction_percent = 0;
+            $cartRule->reduction_exclude_special = false;
+            $cartRule->reduction_product = DiscountApplicationType::ORDER_WITHOUT_SHIPPING;
             $updatableProperties[] = 'reduction_amount';
             $updatableProperties[] = 'reduction_currency';
+            $updatableProperties[] = 'reduction_percent';
+            $updatableProperties[] = 'reduction_exclude_special';
+            $updatableProperties[] = 'reduction_product';
         }
 
         $percentageDiscount = $cartRuleAction->getPercentageDiscount();
         if (null !== $percentageDiscount) {
             $cartRule->reduction_percent = (string) $percentageDiscount->getPercentage();
             $cartRule->reduction_exclude_special = !$percentageDiscount->appliesToDiscountedProducts();
+            $cartRule->reduction_amount = 0;
+            $cartRule->reduction_currency = 0;
+            $cartRule->reduction_tax = false;
+            $updatableProperties[] = 'reduction_amount';
+            $updatableProperties[] = 'reduction_currency';
+            $updatableProperties[] = 'reduction_tax';
             $updatableProperties[] = 'reduction_percent';
             $updatableProperties[] = 'reduction_exclude_special';
         }
