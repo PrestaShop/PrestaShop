@@ -104,7 +104,7 @@ class AliasQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria): void
     {
-        $allowedFiltersMap = [
+        $filtersMap = [
             'id_alias' => 'a.id_alias',
             'alias' => 'a.alias',
             'search' => 'a.search',
@@ -112,12 +112,22 @@ class AliasQueryBuilder extends AbstractDoctrineQueryBuilder
         ];
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
-            if (!array_key_exists($filterName, $allowedFiltersMap)) {
+            if (!array_key_exists($filterName, $filtersMap)) {
+                continue;
+            }
+
+            $dbColumn = $filtersMap[$filterName];
+
+            // apply strict filtering only for certain fields
+            if ('id_alias' === $filterName || 'active' === $filterName) {
+                $builder->andWhere($dbColumn . ' = :' . $filterName)
+                    ->setParameter($filterName, $filterValue);
+
                 continue;
             }
 
             $builder
-                ->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName)
+                ->andWhere($dbColumn . ' LIKE :' . $filterName)
                 ->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
