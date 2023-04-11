@@ -9,6 +9,9 @@ type CategoryCreator = {
   metaTitle?: string
   metaDescription?: string
   groupAccess?: GroupData
+  coverImage?: string
+  thumbnailImage?: string
+  metaImage?: string
 };
 
 export default CategoryCreator;

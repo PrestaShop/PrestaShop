@@ -58,6 +58,8 @@ class CreateProduct extends BOBasePage {
 
   private readonly duplicateProductFooterModalConfirmSubmit: string;
 
+  private readonly formProductPage: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products V2 page
@@ -92,6 +94,9 @@ class CreateProduct extends BOBasePage {
     this.duplicateProductButton = '#product_footer_actions_duplicate_product';
     this.duplicateProductFooterModal = '#duplicate-product-footer-modal';
     this.duplicateProductFooterModalConfirmSubmit = `${this.duplicateProductFooterModal} button.btn-confirm-submit`;
+
+    // Form
+    this.formProductPage = 'form.product-page';
   }
 
   /*
@@ -109,6 +114,15 @@ class CreateProduct extends BOBasePage {
       quantity: await this.getTextContent(page, this.productHeaderQuantity, false),
       reference: await this.getTextContent(page, this.productHeaderReference),
     };
+  }
+
+  /**
+   * Get product header summary
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductID(page: Page): Promise<number> {
+    return parseInt(await page.getAttribute(this.formProductPage, 'data-product-id') ?? '', 10);
   }
 
   /**

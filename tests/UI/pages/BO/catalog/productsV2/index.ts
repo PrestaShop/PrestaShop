@@ -17,7 +17,7 @@ class Products extends BOBasePage {
 
   public readonly alertDangerQuantityFilterValue: string;
 
-  private readonly standardProductDescription: string;
+  public readonly standardProductDescription: string;
 
   public readonly productWithCombinationsDescription: string;
 
