@@ -91,6 +91,8 @@
         this.currencyData.symbols[language.id] = language.currencySymbol;
 
         showGrowl('success', this.$t('list.reset.success'));
+
+        EventEmitter.emit(CurrencyFormEventMap.refreshCurrencyApp, this.currencyData);
       },
       applyCustomization(customData) {
         const selectedPattern = this.selectedLanguage.transformations[
