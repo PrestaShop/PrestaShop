@@ -190,6 +190,7 @@ class AdminModelAdapterTest extends KernelTestCase
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.pack'),
             self::$kernel->getContainer()->get('prestashop.adapter.shop.context'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.tax'),
+            self::$kernel->getContainer()->get('prestashop.adapter.legacy.configuration'),
             self::$kernel->getContainer()->get('router'),
             self::$kernel->getContainer()->get(FloatParser::class)
         );

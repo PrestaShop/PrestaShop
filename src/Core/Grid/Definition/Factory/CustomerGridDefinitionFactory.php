@@ -285,7 +285,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             $columns->addBefore(
                 'actions',
                 (new DataColumn('shop_name'))
-                    ->setName($this->trans('Shop', [], 'Admin.Global'))
+                    ->setName($this->trans('Store', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'shop_name',
                         'sortable' => false,

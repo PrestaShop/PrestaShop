@@ -345,7 +345,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         foreach ($catalogPriceRuleList->getCatalogPriceRules() as $catalogPriceRule) {
             $list[] = [
                 'id' => $catalogPriceRule->getCatalogPriceRuleId(),
-                'shop' => $catalogPriceRule->getShopName() ?? $this->trans('All shops', 'Admin.Global'),
+                'shop' => $catalogPriceRule->getShopName() ?? $this->trans('All stores', 'Admin.Global'),
                 'currency' => $catalogPriceRule->getCurrencyName() ?? $this->trans('All currencies', 'Admin.Global'),
                 'country' => $catalogPriceRule->getCountryName() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $catalogPriceRule->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),

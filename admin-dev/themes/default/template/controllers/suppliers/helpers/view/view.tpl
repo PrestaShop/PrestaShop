@@ -36,7 +36,7 @@
 				<th><span class="title_box">{l s='Supplier Reference'}</span></th>
 				<th><span class="title_box">{l s='Wholesale price'}</span></th>
 				<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
-				<th><span class="title_box">{l s='EAN13'}</span></th>
+				<th><span class="title_box">{l s='EAN-13'}</span></th>
 				<th><span class="title_box">{l s='UPC'}</span></th>
 				<th><span class="title_box">{l s='MPN' d='Admin.Catalog.Feature'}</span></th>
 				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right"><span class="title_box">{l s='Available Quantity'}</span></th>{/if}

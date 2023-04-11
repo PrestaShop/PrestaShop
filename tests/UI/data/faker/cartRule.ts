@@ -1,6 +1,11 @@
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
-import type {CartRuleCreator, CartRuleDiscountAmount, CartRuleMinimalAmount} from '@data/types/cartRule';
+import type {
+  CartRuleCreator,
+  CartRuleDiscountAmount,
+  CartRuleMinimalAmount,
+  CartRuleProductSelection,
+} from '@data/types/cartRule';
 
 import {faker} from '@faker-js/faker';
 import CustomerData from '@data/faker/customer';
@@ -28,11 +33,11 @@ export default class CartRuleData {
 
   public readonly status: boolean;
 
-  public readonly customer: CustomerData|null;
+  public readonly customer: CustomerData | null;
 
-  public readonly dateFrom: string|null;
+  public readonly dateFrom: string | null;
 
-  public readonly dateTo: string|null;
+  public readonly dateTo: string | null;
 
   public readonly minimumAmount: CartRuleMinimalAmount;
 
@@ -48,23 +53,29 @@ export default class CartRuleData {
 
   public readonly customerGroupSelection: boolean;
 
+  public readonly productSelection: boolean;
+
+  public readonly productSelectionNumber: number;
+
+  public readonly productRestriction: CartRuleProductSelection[];
+
   public readonly freeShipping: boolean;
 
   public readonly discountType: string;
 
-  public readonly discountPercent: number|null;
+  public readonly discountPercent: number | null;
 
-  public readonly discountAmount: CartRuleDiscountAmount|null;
+  public readonly discountAmount: CartRuleDiscountAmount | null;
 
   public readonly applyDiscountTo: string;
 
-  public readonly product: string|null;
+  public readonly product: string | null;
 
   public readonly excludeDiscountProducts: boolean;
 
   public readonly freeGift: boolean;
 
-  public readonly freeGiftProduct: ProductData|null;
+  public readonly freeGiftProduct: ProductData | null;
 
   /**
    * Constructor for class CartRuleData
@@ -131,6 +142,15 @@ export default class CartRuleData {
 
     /** @type {boolean} True to enable group selection on the cart rule */
     this.customerGroupSelection = cartRuleToCreate.customerGroupSelection || false;
+
+    /** @type {boolean} True to enable product selection on the cart rule */
+    this.productSelection = cartRuleToCreate.productSelection || false;
+
+    /** @type {number} Number of product selection */
+    this.productSelectionNumber = cartRuleToCreate.productSelectionNumber || 1;
+
+    /** @type {CartRuleProductSelection[]} Values of product restriction */
+    this.productRestriction = cartRuleToCreate.productRestriction || [];
 
     // Actions
     /** @type {boolean} True to enable free shipping on the cart rule */

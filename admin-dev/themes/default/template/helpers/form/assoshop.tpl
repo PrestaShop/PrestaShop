@@ -76,12 +76,12 @@ function check_all_shop() {
 <div class="assoShop">
 	<table class="table">
 		<tr>
-			<th>{l s='Shop' d='Admin.Global'}</th>
+			<th>{l s='Store' d='Admin.Global'}</th>
 		</tr>
 		<tr>
 			<td>
 				<label>
-					<input class="input_all_shop" type="checkbox" />{l s='All shops'}
+					<input class="input_all_shop" type="checkbox" />{l s='All stores'}
 				</label>
 			</td>
 		</tr>

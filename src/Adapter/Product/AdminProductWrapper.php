@@ -511,7 +511,7 @@ class AdminProductWrapper
                         'id_product' => $product->id,
                         'rule_name' => $rule_name,
                         'attributes_name' => $attributes_name,
-                        'shop' => ($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->translator->trans('All shops', [], 'Admin.Global')),
+                        'shop' => ($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->translator->trans('All stores', [], 'Admin.Global')),
                         'currency' => ($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->translator->trans('All currencies', [], 'Admin.Global')),
                         'country' => ($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->translator->trans('All countries', [], 'Admin.Global')),
                         'group' => ($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->translator->trans('All groups', [], 'Admin.Global')),

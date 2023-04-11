@@ -19,6 +19,7 @@ import {loginPage as foLoginPage} from '@pages/FO/login';
 // Import data
 import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
+import Employees from '@data/demo/employees';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,6 +36,11 @@ describe('BO - Customer Service : Change status', async () => {
 
   const contactUsData: MessageData = new MessageData({subject: 'Customer service', reference: 'OHSATSERP'});
 
+  const forwardMessageData: MessageData = new MessageData({
+    employeeName: `${Employees.DefaultEmployee.firstName.slice(0, 1)}. ${Employees.DefaultEmployee.lastName}`,
+    message: 'Forward message',
+  });
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +55,7 @@ describe('BO - Customer Service : Change status', async () => {
     await files.deleteFile(`${contactUsData.fileName}.jpg`);
   });
 
-  describe('Send message to customer service', async () => {
+  describe('FO : Send message to customer service', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
@@ -97,7 +103,7 @@ describe('BO - Customer Service : Change status', async () => {
     });
   });
 
-  describe('Change message status and check it', async () => {
+  describe('BO : Change message status and check it', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -158,7 +164,47 @@ describe('BO - Customer Service : Change status', async () => {
     });
   });
 
-  describe('Delete the order message', async () => {
+  describe('BO : Forward the message to an existing employee', async () => {
+    it('should go to view message page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
+
+      await customerServicePage.goToViewMessagePage(page);
+
+      const pageTitle = await viewPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewPage.pageTitle);
+    });
+
+    it('should click on forward message button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForwardButton', baseContext);
+
+      const isModalVisible = await viewPage.clickOnForwardMessageButton(page);
+      await expect(isModalVisible).to.be.true;
+    });
+
+    it('should forward the message and check the thread', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'forwardMessage', baseContext);
+
+      await viewPage.forwardMessage(page, forwardMessageData);
+
+      const messages = await viewPage.getThreadMessages(page);
+      await expect(messages)
+        .to.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
+          + ` ${Employees.DefaultEmployee.lastName}`)
+        .and.contains(forwardMessageData.message);
+    });
+
+    it('should check orders and messages timeline', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
+
+      const text = await viewPage.getOrdersAndMessagesTimeline(page);
+      await expect(text).to.contains('Orders and messages timeline')
+        .and.contains(`${viewPage.forwardMessageSuccessMessage} ${Employees.DefaultEmployee.firstName}`
+        + ` ${Employees.DefaultEmployee.lastName}`)
+        .and.contains(`Comment: ${forwardMessageData.message}`);
+    });
+  });
+
+  describe('BO : Delete the message', async () => {
     it('should go to \'Customer Service > Customer Service\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPageToDelete', baseContext);
 

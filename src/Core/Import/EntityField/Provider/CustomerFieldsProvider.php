@@ -69,8 +69,8 @@ final class CustomerFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('id_default_group', $this->trans('Default group ID', 'Admin.Advparameters.Feature')),
             new EntityField(
                 'id_shop',
-                $this->trans('ID / Name of shop', 'Admin.Advparameters.Feature'),
-                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
+                $this->trans('ID / Name of the store', 'Admin.Advparameters.Feature'),
+                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', 'Admin.Advparameters.Help')
             ),
         ];
 
