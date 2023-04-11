@@ -121,7 +121,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             } else {
                 $actionBuilder->setPercentageDiscount(
                     (string) $actionsData['discount']['reduction']['value'],
-                    (bool) $actionsData['discount']['exclude_discounted_products']
+                    (bool) $actionsData['discount']['apply_to_discounted_products']
                 );
             }
         }

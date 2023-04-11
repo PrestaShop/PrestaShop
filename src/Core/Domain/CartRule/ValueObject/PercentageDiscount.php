@@ -41,18 +41,18 @@ class PercentageDiscount
     /**
      * @var bool
      */
-    private $excludeDiscountedProducts;
+    private $applyToDiscountedProducts;
 
     /**
      * @param DecimalNumber $percentage
-     * @param bool $excludeDiscountedProducts
+     * @param bool $includeDiscountedProducts
      */
     public function __construct(
         DecimalNumber $percentage,
-        bool $excludeDiscountedProducts
+        bool $includeDiscountedProducts
     ) {
         $this->percentage = $percentage;
-        $this->excludeDiscountedProducts = $excludeDiscountedProducts;
+        $this->applyToDiscountedProducts = $includeDiscountedProducts;
     }
 
     /**
@@ -66,8 +66,8 @@ class PercentageDiscount
     /**
      * @return bool
      */
-    public function excludeDiscountedProducts(): bool
+    public function applyToDiscountedProducts(): bool
     {
-        return $this->excludeDiscountedProducts;
+        return $this->applyToDiscountedProducts;
     }
 }

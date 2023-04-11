@@ -111,7 +111,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
                         'tax_included' => true,
                     ],
                     'specific_product' => [],
-                    'exclude_discounted_products' => false,
+                    'apply_to_discounted_products' => true,
                 ],
                 'gift_product' => [],
             ],

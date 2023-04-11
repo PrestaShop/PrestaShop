@@ -209,7 +209,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $discountApplicationType
     ) {
         $properties['reduction_percentage'] = (float) $percentage;
-        $properties['reduction_excludes_discounted_products'] = !$includesDiscountedProducts;
+        $properties['reduction_apply_to_discounted_products'] = $includesDiscountedProducts;
         $properties['discount_application_type'] = $discountApplicationType;
         $this->setCartRuleProperties($properties);
     }
@@ -222,7 +222,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $cartRuleAction = $this->createCartRuleAction(
             $properties['free_shipping'] ?? false,
             $properties['reduction_percentage'] ?? null,
-            $properties['reduction_excludes_discounted_products'] ?? null,
+            $properties['reduction_apply_to_discounted_products'] ?? null,
             $properties['reduction_amount'] ?? null,
             $properties['reduction_currency'] ?? null,
             $properties['reduction_tax'] ?? null,
@@ -427,7 +427,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $cartRuleAction = $this->createCartRuleAction(
             $data['free_shipping'] ?? false,
             $data['reduction_percentage'] ?? null,
-            $data['reduction_exclude_discounted_products'] ?? null,
+            $data['reduction_apply_to_discounted_products'] ?? null,
             $data['reduction_amount'] ?? null,
             $data['reduction_currency'] ?? null,
             $data['reduction_tax'] ?? null,

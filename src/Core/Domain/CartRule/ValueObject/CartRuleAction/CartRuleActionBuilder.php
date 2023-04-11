@@ -60,7 +60,7 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * @var bool|null
      */
-    private $excludeDiscountedProducts;
+    private $applyToDiscountedProducts;
 
     /**
      * @var GiftProduct|null
@@ -87,7 +87,7 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
         }
 
         $this->reduction = new Reduction(Reduction::TYPE_PERCENTAGE, $reductionValue);
-        $this->excludeDiscountedProducts = $excludeDiscountedProducts;
+        $this->applyToDiscountedProducts = $excludeDiscountedProducts;
 
         return $this;
     }
@@ -142,7 +142,7 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
 
         return new PercentageDiscountAction(
             $this->reduction->getValue(),
-            $this->excludeDiscountedProducts,
+            $this->applyToDiscountedProducts,
             $this->freeShipping,
             $this->giftProduct
         );

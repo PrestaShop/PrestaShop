@@ -33,7 +33,7 @@ export default {
   discountApplicationSelect: '#cart_rule_actions_discount_discount_application',
   discountContainer,
   giftProductSearchContainer: '#cart_rule_actions_gift_product',
-  excludeDiscountedProductsContainer: '.exclude-discounted-products',
+  applyToDiscountedProductsContainer: '.apply-to-discounted-products',
   highlightSwitchContainer: '.js-highlight-switch-container',
   includeTaxInput: '#cart_rule_actions_discount_reduction_include_tax',
   reductionTypeSelect: '#cart_rule_actions_discount_reduction_type',

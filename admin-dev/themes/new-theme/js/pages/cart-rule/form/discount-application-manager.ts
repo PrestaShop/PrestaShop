@@ -90,7 +90,7 @@ export default class DiscountApplicationManager {
   }
 
   private toggleExcludeDiscountedProducts(reductionType: string): void {
-    const excludeDiscountedProductsEl = <HTMLDivElement> document.querySelector(CartRuleMap.excludeDiscountedProductsContainer);
+    const excludeDiscountedProductsEl = <HTMLDivElement> document.querySelector(CartRuleMap.applyToDiscountedProductsContainer);
 
     if (reductionType === 'percentage') {
       $(excludeDiscountedProductsEl).fadeIn();

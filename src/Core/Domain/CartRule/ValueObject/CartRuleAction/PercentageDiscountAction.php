@@ -60,13 +60,13 @@ final class PercentageDiscountAction implements CartRuleActionInterface
      */
     public function __construct(
         DecimalNumber $reductionValue,
-        bool $excludeDiscountedProducts,
+        bool $applyToDiscountedProducts,
         bool $freeShipping,
         GiftProduct $giftProduct = null
     ) {
         $this->percentageDiscount = new PercentageDiscount(
             $reductionValue,
-            $excludeDiscountedProducts
+            $applyToDiscountedProducts
         );
         $this->freeShipping = $freeShipping;
         $this->giftProduct = $giftProduct;
