@@ -668,6 +668,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $errorMap = [
             'missing action' => CartRuleConstraintException::MISSING_ACTION,
+            'required specific product' => CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT,
         ];
 
         $this->assertLastErrorIs(

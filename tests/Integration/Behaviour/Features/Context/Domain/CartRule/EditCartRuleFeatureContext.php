@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
@@ -183,13 +182,11 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
                 'Unexpected discount_application_type'
             );
 
-            if ($expectedDiscountApplicationType === DiscountApplicationType::SPECIFIC_PRODUCT) {
-                Assert::assertSame(
-                    $this->getSharedStorage()->get($data['discount_product']),
-                    $actions->getReduction()->getProductId(),
-                    'Unexpected discount_product'
-                );
-            }
+            Assert::assertSame(
+                !empty($data['discount_product']) ? $this->getSharedStorage()->get($data['discount_product']) : null,
+                $actions->getReduction()->getProductId(),
+                'Unexpected discount_product'
+            );
         }
 
         if (isset($data['reduction_percentage'])) {

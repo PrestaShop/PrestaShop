@@ -345,7 +345,10 @@ class EditCartRuleCommand
         $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
         if (DiscountApplicationType::SPECIFIC_PRODUCT === $discountApplicationType) {
             if (!$productId) {
-                throw new CartRuleConstraintException('ProductId is required for discount application "specific_product"');
+                throw new CartRuleConstraintException(
+                    'ProductId is required for discount application "specific_product"',
+                    CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
+                );
             }
             $this->discountProductId = new ProductId($productId);
         } else {

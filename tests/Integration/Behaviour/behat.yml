@@ -109,7 +109,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\CartRUle\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext

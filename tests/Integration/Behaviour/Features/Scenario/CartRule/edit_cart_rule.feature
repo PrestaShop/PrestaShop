@@ -116,6 +116,32 @@ Feature: Add cart rule
       | reduction_tax             | false                  |
       | reduction_currency        | usd                    |
       | discount_application_type | order_without_shipping |
+    Given I add product "product1" with following information:
+      | name[en-US] | Presta camera |
+      | type        | standard      |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping             | false            |
+      | reduction_amount          | 11               |
+      | reduction_tax             | false            |
+      | reduction_currency        | usd              |
+      | discount_application_type | specific_product |
+      | discount_product          | product1         |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping             | false            |
+      | reduction_amount          | 11               |
+      | reduction_tax             | false            |
+      | reduction_currency        | usd              |
+      | discount_application_type | specific_product |
+      | discount_product          | product1         |
+
+  Scenario: I edit cart rule by applying specific product discount, but not providing the specific product itself
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping             | true             |
+      | reduction_amount          | 10.5             |
+      | reduction_tax             | true             |
+      | reduction_currency        | chf              |
+      | discount_application_type | specific_product |
+    Then I should get cart rule error about "required specific product"
 
   Scenario: I edit cart rule by adding percentage discount action.
     When I edit cart rule cart_rule_1 with following properties:
@@ -138,6 +164,37 @@ Feature: Add cart rule
       | reduction_percentage                   | 10               |
       | discount_application_type              | cheapest_product |
       | reduction_apply_to_discounted_products | false            |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping                          | false            |
+      | reduction_percentage                   | 10               |
+      | discount_application_type              | cheapest_product |
+      | reduction_apply_to_discounted_products | false            |
+    Given I add product "product1" with following information:
+      | name[en-US] | Presta camera |
+      | type        | standard      |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping                          | false            |
+      | reduction_percentage                   | 10               |
+      | discount_application_type              | specific_product |
+      | reduction_apply_to_discounted_products | true             |
+      | discount_product                       | product1         |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping                          | false            |
+      | reduction_percentage                   | 10               |
+      | discount_application_type              | specific_product |
+      | reduction_apply_to_discounted_products | true             |
+      | discount_product                       | product1         |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping                          | false                  |
+      | reduction_percentage                   | 10                     |
+      | discount_application_type              | order_without_shipping |
+      | reduction_apply_to_discounted_products | true                   |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping                          | false                  |
+      | reduction_percentage                   | 10                     |
+      | discount_application_type              | order_without_shipping |
+      | reduction_apply_to_discounted_products | true                   |
+      | discount_product                       |                        |
 
   Scenario: I edit cart rule by adding gift product action.
     Given I add product "product1" with following information:

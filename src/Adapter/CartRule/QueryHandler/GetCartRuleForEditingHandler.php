@@ -134,12 +134,19 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
 
     private function getCartRuleActions(CartRule $cartRule): EditableCartRuleActions
     {
+        $discountApplicationType = $this->getDiscountApplicationType($cartRule);
+
+        $discountProductId = null;
+        if ($discountApplicationType === DiscountApplicationType::SPECIFIC_PRODUCT) {
+            $discountProductId = (int) $cartRule->reduction_product;
+        }
+
         $reduction = new EditableCartRuleReduction(
             new DecimalNumber($cartRule->reduction_percent),
             new DecimalNumber($cartRule->reduction_amount),
             (bool) $cartRule->reduction_tax,
             (int) $cartRule->reduction_currency ?: null,
-            (int) $cartRule->reduction_product ?: null,
+            $discountProductId,
             !$cartRule->reduction_exclude_special
         );
 
