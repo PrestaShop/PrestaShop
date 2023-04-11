@@ -123,6 +123,7 @@ module.exports = {
     pre_select_product_shop: './js/pages/product/shop/pre-select-product-shop',
     profiles: './js/pages/profiles',
     search_engine: './js/pages/search-engine',
+    search: './js/pages/search',
     security: './js/pages/security',
     shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/product/specific-price/form',

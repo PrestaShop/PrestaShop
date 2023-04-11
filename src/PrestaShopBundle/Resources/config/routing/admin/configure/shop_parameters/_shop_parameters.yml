@@ -45,3 +45,7 @@ _search_engines:
 _title:
   resource: "title.yml"
   prefix: /title/
+
+_search_preferences:
+  resource: "search_preferences.yml"
+  prefix: /search/
