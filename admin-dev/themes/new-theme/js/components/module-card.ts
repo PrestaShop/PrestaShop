@@ -30,7 +30,6 @@ const ModuleCardMap = ComponentsMap.moduleCard;
 
 const {$} = window;
 
-
 /**
  * Class is responsible for handling Module Card behavior
  */
