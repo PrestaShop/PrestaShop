@@ -139,7 +139,7 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
             new DecimalNumber($cartRule->reduction_amount),
             (bool) $cartRule->reduction_tax,
             (int) $cartRule->reduction_currency ?: null,
-            (int) $cartRule->gift_product ?: null,
+            (int) $cartRule->reduction_product ?: null,
             !$cartRule->reduction_exclude_special
         );
 
@@ -147,7 +147,7 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
             (bool) $cartRule->free_shipping,
             $reduction,
             $this->getDiscountApplicationType($cartRule),
-            (int) $cartRule->reduction_product ?: null,
+            (int) $cartRule->gift_product ?: null,
             (int) $cartRule->gift_product_attribute ?: null
         );
     }

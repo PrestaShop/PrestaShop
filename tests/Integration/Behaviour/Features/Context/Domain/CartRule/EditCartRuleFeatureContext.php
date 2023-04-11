@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -320,6 +321,16 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['free_shipping'])) {
             $actionWasSet = true;
             $builder->setFreeShipping(PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']));
+        }
+        if (isset($data['gift_product'])) {
+            $actionWasSet = true;
+            $builder->setGiftProduct(
+                //@todo: will need adaptations after PR is merged https://github.com/PrestaShop/PrestaShop/pull/31904
+                new GiftProduct(
+                    $this->getSharedStorage()->get($data['gift_product']),
+                    isset($data['gift_combination']) ? $this->getSharedStorage()->get($data['gift_combination']) : null
+                )
+            );
         }
         if (isset($data['reduction_percentage'])) {
             $actionWasSet = true;

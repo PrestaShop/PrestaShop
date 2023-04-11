@@ -11,6 +11,12 @@ Feature: Add cart rule
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And there is a currency named "chf" with iso code "CHF" and exchange rate of 1.25
     And currency "usd" is the default one
+    And language with iso code "en" is the default one
+    And attribute group "Size" named "Size" in en language exists
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "S" named "S" in en language exists
+    And attribute "M" named "M" in en language exists
+    And attribute "White" named "White" in en language exists
     Given I create cart rule "cart_rule_1" with following properties:
       | name[en-US]                      | cart rule 1         |
       | highlight                        | true                |
@@ -132,3 +138,31 @@ Feature: Add cart rule
       | reduction_percentage                   | 10               |
       | discount_application_type              | cheapest_product |
       | reduction_apply_to_discounted_products | false            |
+
+  Scenario: I edit cart rule by adding gift product action.
+    Given I add product "product1" with following information:
+      | name[en-US] | Presta camera |
+      | type        | standard      |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping | false    |
+      | gift_product  | product1 |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping | false    |
+      | gift_product  | product1 |
+    Given I add product "product2" with following information:
+      | name[en-US] | Combicorn    |
+      | type        | combinations |
+    And I generate combinations for product "product2" using following attributes:
+      | Size  | [S,M]   |
+      | Color | [White] |
+    And product "product2" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url                                          |
+      | product2SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+      | product2MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+    When I edit cart rule cart_rule_1 with following properties:
+      | gift_product     | product2       |
+      | gift_combination | product2SWhite |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping    | false          |
+      | gift_product     | product2       |
+      | gift_combination | product2SWhite |
