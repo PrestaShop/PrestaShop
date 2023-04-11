@@ -3324,7 +3324,7 @@ exit;
     /**
      * Clear Symfony cache.
      *
-     * @param string $env
+     * @param string|null $env
      */
     public static function clearSf2Cache($env = null)
     {
@@ -3332,6 +3332,8 @@ exit;
         // it should not be used anymore and will be removed. Until then, it fallbacks on the proper SymfonyCacheClearer service
         $container = SymfonyContainer::getInstance();
         if (null === $container) {
+            static::removeSymfonyCache($env);
+
             return;
         }
 
@@ -3352,6 +3354,21 @@ exit;
         if ($symfonyCacheClearer) {
             $symfonyCacheClearer->clear();
         }
+    }
+
+    public static function removeSymfonyCache(?string $env = null): void
+    {
+        if (null === $env) {
+            $env = _PS_ENV_;
+        }
+
+        $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
+
+        register_shutdown_function(function () use ($dir) {
+            $fs = new Filesystem();
+            $fs->remove($dir);
+            Hook::exec('actionClearSf2Cache');
+        });
     }
 
     /**
