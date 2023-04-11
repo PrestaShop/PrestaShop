@@ -24,25 +24,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\InvalidAliasIdException;
-use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
 /**
- * Interface for services that handle command which adds new alias
+ * Is thrown when alias constraints are violated
  */
-interface AddAliasCommandHandlerInterface
+class AliasConstraintException extends AliasException
 {
     /**
-     * @param AddAliasCommand $command
-     *
-     * @return AliasId[]
-     *
-     * @throws InvalidAliasIdException
-     * @throws CoreException
+     * Code is used when invalid id is supplied.
      */
-    public function handle(AddAliasCommand $command): array;
+    public const INVALID_ID = 10;
+
+    /**
+     * When invalid alias search type is supplied.
+     */
+    public const INVALID_SEARCH = 20;
+
+    /**
+     * When invalid alias type is supplied
+     */
+    public const INVALID_ALIAS = 30;
+
+    /**
+     * When alias visibility value is invalid
+     */
+    public const INVALID_VISIBILITY = 40;
 }

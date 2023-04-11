@@ -32,6 +32,8 @@ use Alias;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class AliasRepository extends AbstractObjectModelRepository
@@ -67,12 +69,14 @@ class AliasRepository extends AbstractObjectModelRepository
      * @param string $search
      * @param array $aliases
      *
-     * @return void
+     * @return AliasId[]
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     * @throws CoreException
      */
-    public function create(string $search, array $aliases): Alias
+    public function create(string $search, array $aliases): array
     {
+        $aliasIds = [];
+
         foreach ($aliases as $searchAlias) {
             $alias = new Alias();
             $alias->search = $search;
@@ -81,6 +85,10 @@ class AliasRepository extends AbstractObjectModelRepository
 
             $this->aliasValidator->validateCreation($alias);
             $this->addObjectModel($alias, CannotAddAliasException::class);
+
+            $aliasIds = new AliasId($alias->id);
         }
+
+        return $aliasIds;
     }
 }

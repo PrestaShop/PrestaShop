@@ -52,13 +52,11 @@ class AddAliasCommandHandler implements AddAliasCommandHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(AddAliasCommand $command): AliasId
+    public function handle(AddAliasCommand $command): array
     {
-        $alias = $this->aliasRepository->create(
+        return $this->aliasRepository->create(
             $command->getSearch(),
             $command->getAliases()
         );
-
-        return new AliasId((int) $alias->id);
     }
 }
