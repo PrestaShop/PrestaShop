@@ -41,6 +41,16 @@ use Symfony\Component\Console\Output\NullOutput;
 final class SymfonyCacheClearer implements CacheClearerInterface
 {
     /**
+     * @var string|null
+     */
+    private $environment;
+
+    public function __construct(string $environment = null)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function clear()
@@ -59,7 +69,9 @@ final class SymfonyCacheClearer implements CacheClearerInterface
 
         // If we reach here it means the clear lock file is locked, we register a shutdown function that will clear the cache once
         // the current process is over.
-        register_shutdown_function(function () use ($kernel) {
+        $environment = $this->environment ?: $kernel->getEnvironment();
+        register_shutdown_function(static function () use ($environment) {
+            $kernel = new AppKernel($environment, _PS_MODE_DEV_);
             $cacheDir = $kernel->getCacheDir();
             if (!file_exists($cacheDir)) {
                 return;
@@ -72,7 +84,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             $input = new ArrayInput([
                 'command' => 'cache:clear',
                 '--no-optional-warmers' => true,
-                '--env' => $kernel->getEnvironment(),
+                '--env' => $environment,
             ]);
 
             $output = new NullOutput();

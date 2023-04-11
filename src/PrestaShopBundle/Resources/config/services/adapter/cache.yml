@@ -14,5 +14,15 @@ services:
   prestashop.adapter.cache.clearer.symfony_cache_clearer:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'
 
+  prestashop.adapter.cache.clearer.symfony_cache_clearer.prod:
+    class: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'
+    arguments:
+      - 'prod'
+
+  prestashop.adapter.cache.clearer.symfony_cache_clearer.dev:
+    class: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'
+    arguments:
+      - 'dev'
+
   prestashop.adapter.cache.clearer.xml_cache_clearer:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\XmlCacheClearer'

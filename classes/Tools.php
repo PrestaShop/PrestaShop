@@ -3335,8 +3335,20 @@ exit;
             return;
         }
 
+        switch ($env) {
+            case 'prod':
+                $cacheClearService = 'prestashop.adapter.cache.clearer.symfony_cache_clearer.prod';
+                break;
+            case 'dev':
+                $cacheClearService = 'prestashop.adapter.cache.clearer.symfony_cache_clearer.dev';
+                break;
+            default:
+                $cacheClearService = 'prestashop.adapter.cache.clearer.symfony_cache_clearer';
+                break;
+        }
+
         /** @var CacheClearerInterface|null $symfonyCacheClearer */
-        $symfonyCacheClearer = $container->get('prestashop.adapter.cache.clearer.symfony_cache_clearer');
+        $symfonyCacheClearer = $container->get($cacheClearService);
         if ($symfonyCacheClearer) {
             $symfonyCacheClearer->clear();
         }
