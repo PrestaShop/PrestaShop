@@ -342,6 +342,8 @@ class EditCartRuleCommand
                 throw new CartRuleConstraintException('ProductId is required for discount application "specific_product"');
             }
             $this->discountProductId = new ProductId($productId);
+        } else {
+            $this->discountProductId = null;
         }
 
         return $this;

@@ -187,7 +187,7 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
         $percentageDiscount = $cartRuleAction->getPercentageDiscount();
         if (null !== $percentageDiscount) {
             $cartRule->reduction_percent = (string) $percentageDiscount->getPercentage();
-            $cartRule->reduction_exclude_special = $percentageDiscount->appliesToDiscountedProducts();
+            $cartRule->reduction_exclude_special = !$percentageDiscount->appliesToDiscountedProducts();
             $updatableProperties[] = 'reduction_percent';
             $updatableProperties[] = 'reduction_exclude_special';
         }

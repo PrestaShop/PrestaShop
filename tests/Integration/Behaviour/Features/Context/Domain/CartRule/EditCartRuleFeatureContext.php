@@ -164,7 +164,7 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
 
             Assert::assertSame(
                 $this->getSharedStorage()->get($data['minimum_amount_currency']),
-                $minimum->getCurrencyId()->getValue(),
+                $minimum->getCurrencyId(),
                 'Unexpected minimum_amount_currency'
             );
             Assert::assertSame(
@@ -185,16 +185,16 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
             if ($expectedDiscountApplicationType === DiscountApplicationType::SPECIFIC_PRODUCT) {
                 Assert::assertSame(
                     $this->getSharedStorage()->get($data['discount_product']),
-                    $actions->getReduction()->getProductId() ? $actions->getReduction()->getProductId()->getValue() : null,
+                    $actions->getReduction()->getProductId(),
                     'Unexpected discount_product'
                 );
             }
         }
 
-        if (isset($data['reduction_percent'])) {
+        if (isset($data['reduction_percentage'])) {
             Assert::assertTrue(
-                $actions->getReduction()->getPercent()->equals(new DecimalNumber($data['reduction_percent'])),
-                'Unexpected reduction_percent'
+                $actions->getReduction()->getPercent()->equals(new DecimalNumber($data['reduction_percentage'])),
+                'Unexpected reduction_percentage'
             );
         }
 
@@ -214,10 +214,18 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
             } else {
                 Assert::assertSame(
                     $this->getSharedStorage()->get($data['reduction_currency']),
-                    $actions->getReduction()->getCurrencyId() ? $actions->getReduction()->getCurrencyId()->getValue() : null,
+                    $actions->getReduction()->getCurrencyId(),
                     'Unexpected reduction_currency'
                 );
             }
+        }
+
+        if (isset($data['reduction_apply_to_discounted_products'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products']),
+                $actions->getReduction()->applyToDiscountedProducts(),
+                'Unexpected reduction_apply_to_discounted_products'
+            );
         }
 
         if (isset($data['free_shipping'])) {
@@ -231,14 +239,14 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['gift_product'])) {
             Assert::assertSame(
                 $this->getSharedStorage()->get($data['gift_product']),
-                $actions->getGiftProductId() ? $actions->getGiftProductId()->getValue() : null,
+                $actions->getGiftProductId(),
                 'Unexpected gift_product'
             );
         }
         if (isset($data['gift_combination'])) {
             Assert::assertSame(
                 $this->getSharedStorage()->get($data['gift_combination']),
-                $actions->getGiftCombinationId() ? $actions->getGiftCombinationId()->getValue() : null,
+                $actions->getGiftCombinationId(),
                 'Unexpected gift_combination'
             );
         }
@@ -313,13 +321,13 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
             $actionWasSet = true;
             $builder->setFreeShipping(PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']));
         }
-        if (isset($data['reduction_percent'])) {
+        if (isset($data['reduction_percentage'])) {
             $actionWasSet = true;
             $builder->setPercentageDiscount(
                 // @todo: string instead of float when related PR gets merged https://github.com/PrestaShop/PrestaShop/pull/31904
                 new PercentageDiscount(
-                    (float) $data['reduction_percent'],
-                    PrimitiveUtils::castStringBooleanIntoBoolean($data['exclude_discounted_products'])
+                    (float) $data['reduction_percentage'],
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products'])
                 )
             );
         }

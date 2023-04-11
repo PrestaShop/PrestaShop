@@ -29,8 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class EditableCartRuleReduction
 {
@@ -50,26 +48,26 @@ class EditableCartRuleReduction
     private $tax;
 
     /**
-     * @var CurrencyId|null
+     * @var int|null
      */
     private $currencyId;
 
     /**
-     * @var ProductId|null
+     * @var int|null
      */
     private $productId;
 
     /**
      * @var bool
      */
-    private $excludeSpecial;
+    private $applyToDiscountedProducts;
 
     public function __construct(
         DecimalNumber $percent,
         DecimalNumber $amount,
         bool $tax,
-        ?CurrencyId $currencyId,
-        ?ProductId $productId,
+        ?int $currencyId,
+        ?int $productId,
         bool $excludeSpecial
     ) {
         $this->percent = $percent;
@@ -77,7 +75,7 @@ class EditableCartRuleReduction
         $this->tax = $tax;
         $this->currencyId = $currencyId;
         $this->productId = $productId;
-        $this->excludeSpecial = $excludeSpecial;
+        $this->applyToDiscountedProducts = $excludeSpecial;
     }
 
     /**
@@ -105,17 +103,17 @@ class EditableCartRuleReduction
     }
 
     /**
-     * @return CurrencyId|null
+     * @return int|null
      */
-    public function getCurrencyId(): ?CurrencyId
+    public function getCurrencyId(): ?int
     {
         return $this->currencyId;
     }
 
     /**
-     * @return ProductId|null
+     * @return int|null
      */
-    public function getProductId(): ?ProductId
+    public function getProductId(): ?int
     {
         return $this->productId;
     }
@@ -123,8 +121,8 @@ class EditableCartRuleReduction
     /**
      * @return bool
      */
-    public function isExcludeSpecial(): bool
+    public function applyToDiscountedProducts(): bool
     {
-        return $this->excludeSpecial;
+        return $this->applyToDiscountedProducts;
     }
 }

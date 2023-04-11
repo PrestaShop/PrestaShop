@@ -28,9 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-
 class EditableCartRuleActions
 {
     /**
@@ -44,12 +41,12 @@ class EditableCartRuleActions
     private $reduction;
 
     /**
-     * @var ProductId|null
+     * @var int|null
      */
     private $giftProductId;
 
     /**
-     * @var CombinationId|null
+     * @var int|null
      */
     private $giftCombinationId;
 
@@ -61,15 +58,15 @@ class EditableCartRuleActions
     public function __construct(
         bool $freeShipping,
         EditableCartRuleReduction $reduction,
-        ?ProductId $giftProductId,
-        ?CombinationId $giftCombinationId,
-        string $discountApplicationType
+        string $discountApplicationType,
+        ?int $giftProductId,
+        ?int $giftCombinationId
     ) {
         $this->freeShipping = $freeShipping;
         $this->reduction = $reduction;
+        $this->discountApplicationType = $discountApplicationType;
         $this->giftProductId = $giftProductId;
         $this->giftCombinationId = $giftCombinationId;
-        $this->discountApplicationType = $discountApplicationType;
     }
 
     /**
@@ -89,17 +86,17 @@ class EditableCartRuleActions
     }
 
     /**
-     * @return ProductId|null
+     * @return int|null
      */
-    public function getGiftProductId(): ?ProductId
+    public function getGiftProductId(): ?int
     {
         return $this->giftProductId;
     }
 
     /**
-     * @return CombinationId|null
+     * @return int|null
      */
-    public function getGiftCombinationId(): ?CombinationId
+    public function getGiftCombinationId(): ?int
     {
         return $this->giftCombinationId;
     }

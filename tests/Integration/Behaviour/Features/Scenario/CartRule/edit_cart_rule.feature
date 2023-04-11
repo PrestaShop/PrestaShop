@@ -85,7 +85,7 @@ Feature: Add cart rule
     And cart rule "cart_rule_1" should have the following properties:
       | free_shipping | true |
 
-  Scenario: I edit cart rule by adding amount discount action
+  Scenario: I edit cart rule by adding amount discount action.
     When I edit cart rule cart_rule_1 with following properties:
       | free_shipping             | true                   |
       | reduction_amount          | 10.5                   |
@@ -98,4 +98,37 @@ Feature: Add cart rule
       | reduction_tax             | true                   |
       | reduction_currency        | chf                    |
       | discount_application_type | order_without_shipping |
-      # @todo: add more cases
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping             | false                  |
+      | reduction_amount          | 11                     |
+      | reduction_tax             | false                  |
+      | reduction_currency        | usd                    |
+      | discount_application_type | order_without_shipping |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping             | false                  |
+      | reduction_amount          | 11                     |
+      | reduction_tax             | false                  |
+      | reduction_currency        | usd                    |
+      | discount_application_type | order_without_shipping |
+
+  Scenario: I edit cart rule by adding percentage discount action.
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping                          | true                   |
+      | reduction_percentage                   | 85.5                   |
+      | discount_application_type              | order_without_shipping |
+      | reduction_apply_to_discounted_products | true                   |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping                          | true                   |
+      | reduction_percentage                   | 85.5                   |
+      | discount_application_type              | order_without_shipping |
+      | reduction_apply_to_discounted_products | true                   |
+    When I edit cart rule cart_rule_1 with following properties:
+      | free_shipping                          | false            |
+      | reduction_percentage                   | 10               |
+      | discount_application_type              | cheapest_product |
+      | reduction_apply_to_discounted_products | false            |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | free_shipping                          | false            |
+      | reduction_percentage                   | 10               |
+      | discount_application_type              | cheapest_product |
+      | reduction_apply_to_discounted_products | false            |
