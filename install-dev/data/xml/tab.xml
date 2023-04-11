@@ -573,7 +573,7 @@
                     </tab>
                     <tab id="Profiles" id_parent="Employees" active="1" enabled="1">
                         <class_name>AdminProfiles</class_name>
-                        <wording>Profiles</wording>
+                        <wording>Roles</wording>
                         <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
                     <tab id="Permissions" id_parent="Employees" active="1" enabled="1">

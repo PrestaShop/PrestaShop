@@ -8,23 +8,23 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team';
-import profilesPage from '@pages/BO/advancedParameters/team/profiles';
-import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
+import rolesPage from '@pages/BO/advancedParameters/team/roles';
+import addProfilePage from '@pages/BO/advancedParameters/team/roles/add';
 
 // Import data
-import ProfileData from '@data/faker/profile';
+import RoleData from '@data/faker/role';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_team_profiles_paginationAndBulkActions';
+const baseContext: string = 'functional_BO_advancedParameters_team_roles_paginationAndBulkActions';
 
-describe('BO - Advanced Parameters - Team : Pagination and delete by bulk actions profiles', async () => {
-  const createProfileData: ProfileData = new ProfileData();
+describe('BO - Advanced Parameters - Team : Pagination and delete roles by bulk actions', async () => {
+  const createRoleData: RoleData = new RoleData();
 
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfProfiles: number = 0;
+  let numberOfRoles: number = 0;
 
   // before and after functions
   before(async function () {
@@ -54,47 +54,47 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
     await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
-  it('should go to \'Profiles\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
+  it('should go to \'Roles\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToRolesPage', baseContext);
 
-    await employeesPage.goToProfilesPage(page);
+    await employeesPage.goToRolesPage(page);
 
-    const pageTitle = await profilesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(profilesPage.pageTitle);
+    const pageTitle = await rolesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(rolesPage.pageTitle);
   });
 
-  it('should reset all filters and get number of profiles', async function () {
+  it('should reset all filters and get number of roles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfProfiles = await profilesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProfiles).to.be.above(0);
+    numberOfRoles = await rolesPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfRoles).to.be.above(0);
   });
 
-  // 1 : Create 11 profiles
-  describe('Create 10 profiles in BO', async () => {
+  // 1 : Create 11 roles
+  describe('Create 10 roles in BO', async () => {
     const tests: number[] = new Array(10).fill(0, 0, 10);
     tests.forEach((test: number, index: number) => {
       it('should go to add new profile page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToNewProfilePage${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewRolePage${index}`, baseContext);
 
-        await profilesPage.goToAddNewProfilePage(page);
+        await rolesPage.goToAddNewRolePage(page);
 
         const pageTitle = await addProfilePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addProfilePage.pageTitleCreate);
       });
 
       it(`should create profile n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `CreateProfile${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `CreateRole${index}`, baseContext);
 
-        const textResult = await addProfilePage.createEditProfile(page, createProfileData);
-        await expect(textResult).to.equal(profilesPage.successfulCreationMessage);
+        const textResult = await addProfilePage.createEditRole(page, createRoleData);
+        await expect(textResult).to.equal(rolesPage.successfulCreationMessage);
       });
 
-      it('should check profiles number', async function () {
+      it('should check roles number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProfilesNumber${index}`, baseContext);
 
-        const numberOfProfilesAfterDelete = await profilesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles + 1 + index);
+        const numberOfRolesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles + 1 + index);
       });
     });
   });
@@ -104,55 +104,55 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await profilesPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await rolesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await profilesPage.paginationNext(page);
+      const paginationNumber = await rolesPage.paginationNext(page);
       expect(paginationNumber).to.contain('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await profilesPage.paginationPrevious(page);
+      const paginationNumber = await rolesPage.paginationPrevious(page);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await profilesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await rolesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
 
-  // 3 : Delete the 11 profiles with bulk actions
-  describe('Delete profiles with Bulk Actions', async () => {
+  // 3 : Delete the 11 roles with bulk actions
+  describe('Delete roles with Bulk Actions', async () => {
     it('should filter list by Name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await profilesPage.filterProfiles(page, 'input', 'name', createProfileData.name);
+      await rolesPage.filterRoles(page, 'input', 'name', createRoleData.name);
 
-      const textName = await profilesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(createProfileData.name);
+      const textName = await rolesPage.getTextColumnFromTable(page, 1, 'name');
+      await expect(textName).to.contains(createRoleData.name);
     });
 
-    it('should delete profiles with Bulk Actions and check result', async function () {
+    it('should delete roles with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteProfile', baseContext);
 
-      const deleteTextResult = await profilesPage.deleteBulkActions(page);
-      await expect(profilesPage.successfulDeleteMessage).to.be.contains(deleteTextResult);
+      const deleteTextResult = await rolesPage.deleteBulkActions(page);
+      await expect(rolesPage.successfulDeleteMessage).to.be.contains(deleteTextResult);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfProfilesAfterDelete = await profilesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
+      const numberOfRolesAfterDelete = await rolesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfRolesAfterDelete).to.be.equal(numberOfRoles);
     });
   });
 });

@@ -209,7 +209,7 @@ final class EmployeeType extends AbstractType
                 'required' => false,
             ])
             ->add('profile', ChoiceType::class, [
-                'label' => $this->trans('Permission profile', [], 'Admin.Advparameters.Feature'),
+                'label' => $this->trans('Role', [], 'Admin.Advparameters.Feature'),
                 'attr' => [
                     'data-admin-profile' => $this->superAdminProfileId,
                     'data-get-tabs-url' => $this->router->generate('admin_employees_get_tabs'),

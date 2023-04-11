@@ -63,7 +63,7 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Profiles', [], 'Admin.Navigation.Menu');
+        return $this->trans('Roles', [], 'Admin.Navigation.Menu');
     }
 
     /**
