@@ -206,9 +206,9 @@ class StockManager implements StockInterface
         }
         $updateReservedQuantityQuery = str_replace('{ID_ORDER_ASSOCIATION_CLAUSE}', $id_order_association_clause, $updateReservedQuantityQuery);
 
-        $updateReservedQuantityQuery = str_replace(':error_state', $errorState, $updateReservedQuantityQuery);
+        $updateReservedQuantityQuery = str_replace(':error_state', (string) $errorState, $updateReservedQuantityQuery);
 
-        $updateReservedQuantityQuery = str_replace(':cancellation_state', $cancellationState, $updateReservedQuantityQuery);
+        $updateReservedQuantityQuery = str_replace(':cancellation_state', (string) $cancellationState, $updateReservedQuantityQuery);
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
     }
