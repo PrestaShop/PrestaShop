@@ -26,18 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Alias\Validate;
-
-use Alias;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
 /**
- * Validates alias field using legacy object model
+ * Thrown when new alias creation fails
  */
-class AliasValidator extends AbstractObjectModelValidator
+class CannotAddAliasException extends AliasException
 {
-    public function validateCreation(Alias $alias):void
-    {
-
-    }
 }

@@ -28,14 +28,31 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
-use Alias;
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\AddAliasCommandHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 
 class AddAliasCommandHandler implements AddAliasCommandHandlerInterface
 {
+    /**
+     * @var AliasRepository
+     */
+    private $aliasRepository;
+
+    public function __construct(
+        AliasRepository $aliasRepository
+    ) {
+        $this->aliasRepository = $aliasRepository;
+    }
+
     public function handle(AddAliasCommand $command)
     {
-        $alias = new Alias();
+        $alias = $this->aliasRepository->create(
+            $command->getSearch(),
+            $command->getAliases()
+        );
+
+        return new AliasId((int) $alias->id);
     }
 }
