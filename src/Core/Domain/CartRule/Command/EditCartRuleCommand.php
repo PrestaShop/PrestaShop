@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationTy
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
@@ -68,7 +70,7 @@ class EditCartRuleCommand
     private $minimumAmountShippingIncluded;
 
     /**
-     * @var CustomerId|null
+     * @var CustomerIdInterface|null
      */
     private $customerId;
 
@@ -225,14 +227,18 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getCustomerId(): ?CustomerId
+    public function getCustomerId(): ?CustomerIdInterface
     {
         return $this->customerId;
     }
 
     public function setCustomerId(int $customerId): EditCartRuleCommand
     {
-        $this->customerId = new CustomerId($customerId);
+        if ($customerId) {
+            $this->customerId = new CustomerId($customerId);
+        } else {
+            $this->customerId = new NoCustomerId();
+        }
 
         return $this;
     }

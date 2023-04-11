@@ -120,7 +120,7 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['customer'])) {
             Assert::assertSame(
-                $this->getSharedStorage()->get($data['customer']),
+                !empty($data['customer']) ? $this->getSharedStorage()->get($data['customer']) : 0,
                 $conditions->getCustomerId()->getValue(),
                 'Unexpected customer id'
             );
@@ -279,7 +279,7 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
             $command->setCode($data['code']);
         }
         if (isset($data['customer'])) {
-            $command->setCustomerId($this->getSharedStorage()->get($data['customer']));
+            $command->setCustomerId(!empty($data['customer']) ? $this->getSharedStorage()->get($data['customer']) : 0);
         }
         if (isset($data['priority'])) {
             $command->setPriority((int) $data['priority']);

@@ -193,3 +193,16 @@ Feature: Add cart rule
       | reduction_currency                     | usd                    |
       | discount_application_type              | order_without_shipping |
       | reduction_apply_to_discounted_products | true                   |
+
+  Scenario: I edit cart rule by alternating customer
+    Given there is customer "JohnDoe" with email "pub@prestashop.com"
+    And cart rule "cart_rule_1" should have the following properties:
+      | customer |  |
+    When I edit cart rule cart_rule_1 with following properties:
+      | customer | JohnDoe |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | customer | JohnDoe |
+    When I edit cart rule cart_rule_1 with following properties:
+      | customer |  |
+    Then cart rule "cart_rule_1" should have the following properties:
+      | customer |  |

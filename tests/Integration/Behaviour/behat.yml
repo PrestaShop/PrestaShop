@@ -246,6 +246,7 @@ default:
                 - "%paths.base%/Features/Scenario/CartRule"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRule\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
