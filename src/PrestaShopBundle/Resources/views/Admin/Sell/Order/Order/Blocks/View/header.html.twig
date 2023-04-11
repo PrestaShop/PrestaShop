@@ -52,4 +52,10 @@
       {{ orderForViewing.createdAt|date('H:i:s') }}
     </span>
   </p>
+
+    {% if orderForViewing.shipping.giftWrapping %}
+      <p class="lead d-inline">
+        <span class="badge rounded badge-success ml-2 mr-2 font-size-100 ">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      </p>
+    {% endif %}
 </div>

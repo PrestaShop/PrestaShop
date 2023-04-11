@@ -120,6 +120,17 @@
     {% if orderForViewing.shipping.giftWrapping %}
       <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
     {% endif %}
+
+    {% if orderForViewing.shipping.giftMessage %}
+      <div class="mt-2 info-block">
+        <h3>
+          {{ 'Gift message:'|trans({}, 'Admin.Global') }}
+        </h3>
+        <p id="gift-message">
+           {{ orderForViewing.shipping.giftMessage }}
+        </p>
+      </div>
+    {% endif %}
   </div>
 </div>
 
