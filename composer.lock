@@ -5724,16 +5724,16 @@
         },
         {
             "name": "prestashop/gsitemap",
-            "version": "v4.2.1",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gsitemap.git",
-                "reference": "5d7c4bf591fcbbd3ac66e15bd9805b78abb47694"
+                "reference": "06763bb45c7643c92726cb3e43783183b37c3506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/5d7c4bf591fcbbd3ac66e15bd9805b78abb47694",
-                "reference": "5d7c4bf591fcbbd3ac66e15bd9805b78abb47694",
+                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/06763bb45c7643c92726cb3e43783183b37c3506",
+                "reference": "06763bb45c7643c92726cb3e43783183b37c3506",
                 "shasum": ""
             },
             "require": {
@@ -5761,9 +5761,9 @@
             "description": "PrestaShop module gsitemap",
             "homepage": "https://github.com/PrestaShop/gsitemap",
             "support": {
-                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.2.1"
+                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.3.0"
             },
-            "time": "2023-01-10T10:10:23+00:00"
+            "time": "2023-04-05T13:04:34+00:00"
         },
         {
             "name": "prestashop/laminas-code-lts",
@@ -6769,16 +6769,16 @@
         },
         {
             "name": "prestashop/ps_googleanalytics",
-            "version": "v4.2.1",
+            "version": "v4.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_googleanalytics.git",
-                "reference": "3adf470973a3ac782ddff853aa170361ea6d3821"
+                "reference": "7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/3adf470973a3ac782ddff853aa170361ea6d3821",
-                "reference": "3adf470973a3ac782ddff853aa170361ea6d3821",
+                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233",
+                "reference": "7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233",
                 "shasum": ""
             },
             "require": {
@@ -6808,9 +6808,9 @@
             "description": "PrestaShop module ps_googleanalytics",
             "homepage": "https://github.com/PrestaShop/ps_googleanalytics",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v4.2.1"
+                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v4.2.2"
             },
-            "time": "2023-03-15T10:36:39+00:00"
+            "time": "2023-04-05T09:37:41+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
@@ -13601,5 +13601,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
