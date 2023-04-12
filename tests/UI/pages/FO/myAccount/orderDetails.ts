@@ -125,12 +125,30 @@ class OrderDetails extends FOBasePage {
    * Request merchandise return
    * @param page {Page} Browser tab
    * @param messageText {string} Value of message text to set on return input
+   * @param productsNumber {number} Number of products to return
+   * @param returnData {object} Data of return
    * @returns {Promise<void>}
    */
-  async requestMerchandiseReturn(page: Page, messageText: string): Promise<void> {
-    await this.setChecked(page, `${this.tableBodyColumn(1, 1)} input`);
+  async requestMerchandiseReturn(page: Page, messageText: string = 'test', productsNumber: number = 1,
+    returnData: object = [{quantity: 1}]): Promise<void> {
+    await this.chooseProductsToReturn(page, productsNumber, returnData);
     await this.setValue(page, this.returnTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.requestReturnButton);
+  }
+
+  /**
+   * Choose products to return
+   * @param page {Page} Browser tab
+   * @param productsNumber {number} Number of products to return
+   * @param returnData {object} Data of return
+   * @returns {Promise<void>}
+   */
+  async chooseProductsToReturn(page: Page, productsNumber: number, returnData: object): Promise<void> {
+    for (let i = 0; i < productsNumber; i++) {
+      const index: number = i + 1;
+      await this.setChecked(page, `${this.tableBodyColumn(index, 1)} input`);
+      await this.selectByVisibleText(page, `${this.tableBodyColumn(index, 3)} select`, returnData[i].quantity);
+    }
   }
 
   /**
