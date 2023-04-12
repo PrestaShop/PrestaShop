@@ -233,6 +233,7 @@ export default class CurrencyForm {
       /* eslint-enable */
     });
     this.state.languages = [...this.originalLanguages];
+    EventEmitter.emit(CurrencyFormEventMap.refreshCurrencyApp, this.state.currencyData);
 
     this.hideModal = true;
     this.$loadingDataModal.modal('hide');
