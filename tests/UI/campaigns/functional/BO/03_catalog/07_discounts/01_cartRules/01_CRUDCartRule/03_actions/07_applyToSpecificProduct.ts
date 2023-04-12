@@ -27,12 +27,12 @@ import CartRuleData from '@data/faker/cartRule';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_condition_productSelection';
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_actions_applyToSpecificProduct';
 
 /*
 Scenario:
-- Create cart rule with product restricted
-- Go to FO > Add 3 products to the cart (the product selected in the Cart rule + 2 other products)
+- Create cart rule with apply discount to specific product
+- Go to FO > Add 3 products to the cart (the specific product in the Cart rule + 2 other products)
 - Add the discount and check the total after discount
 - Remove one product from the cart and check the total after discount
 - Remove the product restriction and check that the discount is deleted
@@ -40,18 +40,17 @@ Scenario:
 Post-condition:
 - Delete the created cart rule
  */
-describe('BO - Catalog - Cart rules : Restrictions - Product selection', async () => {
+describe('BO - Catalog - Cart rules : Apply discount to specific product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
   const newCartRuleData: CartRuleData = new CartRuleData({
-    name: 'Discount product selection',
+    name: 'Discount specific product',
     code: '4QABV6L3',
-    productSelection: true,
-    productSelectionNumber: 1,
-    productRestriction: [{quantity: 1, ruleType: 'Products', value: Products.demo_8.id}],
     discountType: 'Percent',
     discountPercent: 20,
+    applyDiscountTo: 'Specific product',
+    product: Products.demo_8.name,
   });
 
   // before and after functions
@@ -157,7 +156,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
       await expect(isNotVisible).to.be.true;
     });
 
-    it('should add the first product to the cart by quick view', async function () {
+    it('should add the second product to the cart by quick view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addSecondProductToCart', baseContext);
 
       await homePage.addProductToCartByQuickView(page, 2);
@@ -168,7 +167,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
       await expect(notificationsNumber).to.eq(3);
     });
 
-    it('should add the promo code and  error message', async function () {
+    it('should add the promo code and check the cart rule name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode', baseContext);
 
       await cartPage.addPromoCode(page, newCartRuleData.code);
@@ -180,9 +179,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue1', baseContext);
 
-      const total = Products.demo_8.finalPrice + Products.demo_1.finalPrice + Products.demo_3.finalPrice;
-
-      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent);
+      const discount = await basicHelper.percentage(Products.demo_8.finalPrice, newCartRuleData.discountPercent);
 
       const discountValue = await cartPage.getDiscountValue(page);
       await expect(discountValue).to.eq(-discount.toFixed(2));
@@ -200,9 +197,7 @@ describe('BO - Catalog - Cart rules : Restrictions - Product selection', async (
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue2', baseContext);
 
-      const total = Products.demo_8.finalPrice + Products.demo_3.finalPrice;
-
-      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent);
+      const discount = await basicHelper.percentage(Products.demo_8.finalPrice, newCartRuleData.discountPercent);
 
       const discountValue = await cartPage.getDiscountValue(page);
       await expect(discountValue).to.eq(-discount.toFixed(2));

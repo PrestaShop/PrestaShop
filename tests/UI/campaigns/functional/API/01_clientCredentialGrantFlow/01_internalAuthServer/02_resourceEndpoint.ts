@@ -14,6 +14,8 @@ describe('API : Resource Endpoint', async () => {
   before(async () => {
     apiContext = await request.newContext({
       baseURL: global.BO.URL,
+      // @todo : Remove it when Puppeteer will accept self signed certificates
+      ignoreHTTPSErrors: true,
     });
   });
 

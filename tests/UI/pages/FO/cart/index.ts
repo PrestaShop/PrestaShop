@@ -16,6 +16,8 @@ class Cart extends FOBasePage {
 
   public readonly cartRuleAlreadyUsedErrorText: string;
 
+  public readonly cartRuleLimitUsageErrorText: string;
+
   public readonly cartRuleAlertMessageText: string;
 
   public readonly alertChooseDeliveryAddressWarningText: string;
@@ -80,6 +82,8 @@ class Cart extends FOBasePage {
 
   public readonly cartRuleCannotUseVoucherAlertMessageText: string;
 
+  public readonly minimumAmountErrorMessage: string;
+
   private readonly alertWarning: string;
 
   private readonly proceedToCheckoutButton: string;
@@ -97,12 +101,14 @@ class Cart extends FOBasePage {
 
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
+    this.cartRuleLimitUsageErrorText = 'You cannot use this voucher anymore (usage limit reached)';
     this.cartRuleAlertMessageText = 'You cannot use this voucher';
     this.alertChooseDeliveryAddressWarningText = 'You must choose a delivery address'
       + ' before applying this voucher to your order';
     this.noItemsInYourCartMessage = 'There are no more items in your cart';
     this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
+    this.minimumAmountErrorMessage = 'The minimum amount to benefit from this promo code is';
 
     // Selectors for cart page
     // Shopping cart block selectors

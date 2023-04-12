@@ -145,10 +145,10 @@ class ModuleDataProvider
         $from = ' FROM `' . _DB_PREFIX_ . 'module` m';
 
         $id_shops = (new Context())->getContextListShopID();
-        if (count($id_shops) === 1) {
+        if (count($id_shops) > 0) {
             $select .= ', ms.`id_module` as active, ms.`enable_device` as active_on_mobile';
             $from .= ' LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON ms.`id_module` = m.`id_module`';
-            $from .= ' AND ms.`id_shop` = ' . reset($id_shops);
+            $from .= ' AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')';
         }
 
         $results = Db::getInstance()->executeS($select . $from);

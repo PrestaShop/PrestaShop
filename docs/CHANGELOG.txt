@@ -24,6 +24,29 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.0.3 - (2023-03-01)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #31902: Remove cache clear lock file after it is not needed (by @jolelievre)
+    - #31647: Prevent email enumeration (by @MathiasReker)
+  - Bug fix:
+    - #31820: Handle custom lock file during the cache clear and force module actions one by one (by @jolelievre)
+    - #31772: Fix wordings in BO for keys WS (by @boherm)
+- Core:
+  - Improvement:
+    - #31912: Upgrade prestashop modules (by @matthieu-rolland)
+    - #31913: Bump symfony version  (by @matthieu-rolland)
+    - #31907: Bump module ps_distributionapiclient (by @matthieu-rolland)
+    - #31909: Bump prestashop to 8.0.3 patch version (by @matthieu-rolland)
+- Installer:
+  - Improvement:
+    - #31697: Link to the "data transparency" page inside installer (by @lartist)
+  - Bug fix:
+    - #31787: Installer : Fixed link to docs in Installer (by @Progi1984)
+
+####################################
 #   v8.0.2 - (2023-03-01)
 ####################################
 

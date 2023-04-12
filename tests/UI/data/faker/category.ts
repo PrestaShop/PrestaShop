@@ -25,6 +25,12 @@ export default class CategoryData {
 
   public readonly groupAccess: GroupData;
 
+  public readonly coverImage: string|null;
+
+  public readonly thumbnailImage: string|null;
+
+  public readonly metaImage: string|null;
+
   /**
    * Constructor for class CategoryData
    * @param categoryToCreate {CategoryCreator} Could be used to force the value of some members
@@ -54,5 +60,14 @@ export default class CategoryData {
     /** @type {GroupData} Customer group that could access to the category */
     this.groupAccess = categoryToCreate.groupAccess
       || faker.helpers.arrayElement([Groups.customer, Groups.guest, Groups.visitor]);
+
+    /** @type {string|null} Category cover image of the category */
+    this.coverImage = categoryToCreate.coverImage || null;
+
+    /** @type {string|null} Category thumbnail of the category */
+    this.thumbnailImage = categoryToCreate.thumbnailImage || null;
+
+    /** @type {string|null} Menu thumbnail of the category */
+    this.metaImage = categoryToCreate.metaImage || null;
   }
 }
