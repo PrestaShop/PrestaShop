@@ -17,7 +17,7 @@ on:
         description: 'Nightly hook to import report'
         required: false
         type: string
-        default: 'https://api-nightly.prestashop.com/hook/reports/import'
+        default: 'https://api-nightly.prestashop-project.org/hook/reports/import'
       TESTS_DIR:
         description: 'Where UI tests are'
         required: false
@@ -224,7 +224,7 @@ jobs:
   push-nightly-reports:
     permissions:
       contents: none
-    name: Push reports to nightly.prestashop.com
+    name: Push reports to nightly.prestashop-project.org
     if: ${{ always() }}
     needs:
       - merge-upload-reports
