@@ -1330,7 +1330,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $breadcrumb;
     }
 
-    protected function addProductCustomizationData(array $product_full)
+    protected function addProductCustomizationData(array|bool $product_full)
     {
         if ($product_full['customizable']) {
             $customizationData = [
