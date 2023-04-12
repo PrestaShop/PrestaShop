@@ -55,7 +55,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
             /** @var FeatureId $featureId */
             $featureId = $this->getCommandBus()->handle(new AddFeatureCommand(
                 $localizedData['name'],
-                isset($localizedData['shop association']) ? $this->referencesToIds($localizedData['shop association']) : []
+                isset($localizedData['associated shops']) ? $this->referencesToIds($localizedData['associated shops']) : []
             ));
 
             $this->getSharedStorage()->set($featureReference, $featureId->getValue());
@@ -183,6 +183,17 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             FeatureConstraintException::class,
             FeatureConstraintException::INVALID_NAME
+        );
+    }
+
+    /**
+     * @Then I should get an error that feature shop association is invalid
+     */
+    public function assertLastErrorIsInvalidShopAssociation(): void
+    {
+        $this->assertLastErrorIs(
+            FeatureConstraintException::class,
+            FeatureConstraintException::INVALID_SHOP_ASSOCIATION
         );
     }
 

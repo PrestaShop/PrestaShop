@@ -42,13 +42,13 @@ class AddFeatureCommand
     /**
      * @var ShopId[]
      */
-    private $associatedShopIds = [];
+    private $associatedShopIds;
 
     /**
      * @param string[] $localizedNames
      * @param int[] $shopAssociation
      */
-    public function __construct(array $localizedNames, array $shopAssociation = [])
+    public function __construct(array $localizedNames, array $shopAssociation)
     {
         $this->assertNamesAreNotEmpty($localizedNames);
         $this->setShopAssociation($shopAssociation);
@@ -92,7 +92,7 @@ class AddFeatureCommand
     private function setShopAssociation(array $associatedShopIds): void
     {
         if (empty($associatedShopIds)) {
-            return;
+            throw new FeatureConstraintException('Shop association cannot be empty', FeatureConstraintException::INVALID_SHOP_ASSOCIATION);
         }
 
         $this->associatedShopIds = array_map(static function (int $shopId): ShopId {

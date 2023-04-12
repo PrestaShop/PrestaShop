@@ -11,8 +11,10 @@ Feature: Update product details from Back Office (BO)
     Given language "en" with locale "en-US" exists
     And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
+    And shop "shop1" with name "test_shop" exists
     When I create product feature "element" with specified properties:
-      | name[en-US] | Nature Element |
+      | name[en-US]      | Nature Element |
+      | associated shops | shop1          |
     Then product feature "element" should have following details:
       | name[en-US] | Nature Element |
       | name[fr-FR] | Nature Element |
@@ -29,7 +31,8 @@ Feature: Update product details from Back Office (BO)
       | value[en-US] | Earth |
       | value[fr-FR] | Terre |
     When I create product feature "emotion" with specified properties:
-      | name[en-US] | Emotion |
+      | name[en-US]      | Emotion |
+      | associated shops | shop1   |
     Then product feature "emotion" should have following details:
       | name[en-US] | Emotion |
       | name[fr-FR] | Emotion |

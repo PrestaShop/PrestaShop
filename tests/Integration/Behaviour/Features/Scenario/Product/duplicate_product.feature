@@ -576,10 +576,12 @@ Feature: Duplicate product from Back Office (BO).
     Given I create product feature "element" with specified properties:
       | name[en-US] | Nature Element |
     And I create feature value "fire" for feature "element" with following properties:
-      | value[en-US] | Fire |
-      | value[fr-FR] | Feu  |
+      | value[en-US]     | Fire  |
+      | value[fr-FR]     | Feu   |
+      | associated shops | shop1 |
     And I create product feature "emotion" with specified properties:
-      | name[en-US] | Emotion |
+      | name[en-US]      | Emotion |
+      | associated shops | shop1   |
     And I create feature value "anger" for feature "emotion" with following properties:
       | value[en-US] | Anger  |
       | value[fr-FR] | Colère |

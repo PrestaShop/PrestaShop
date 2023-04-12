@@ -207,7 +207,8 @@ Feature: List catalog price rules for product in Back Office (BO)
 
   Scenario: I can see correctly with feature condition
     When I create product feature "testFeature" with specified properties:
-      | name[en-US] | test |
+      | name[en-US]      | test     |
+      | associated shops | testShop |
     And I create feature value "testFeatureValue" for feature "testFeature" with following properties:
       | value[en-US] | Value |
     And I set to product "product1" the following feature values:

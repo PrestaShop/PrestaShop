@@ -62,6 +62,13 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
         return Shop::getContextShopID($null_value_without_multishop);
     }
 
+    public function getContextShopIds(): array
+    {
+        return array_map(static function ($shopId): int {
+            return (int) $shopId;
+        }, $this->getContextListShopID());
+    }
+
     /**
      * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID).
      *

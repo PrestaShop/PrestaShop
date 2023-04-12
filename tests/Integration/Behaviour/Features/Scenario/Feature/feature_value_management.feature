@@ -12,7 +12,8 @@ Feature: Product feature value management
     And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
     And I create product feature "element" with specified properties:
-      | name[en-US] | Nature Element |
+      | name[en-US]      | Nature Element |
+      | associated shops | shop1          |
     And product feature "element" should have following details:
       | name[en-US] | Nature Element |
       | name[fr-FR] | Nature Element |
@@ -66,7 +67,8 @@ Feature: Product feature value management
       | fr-FR  | Terre |
     And feature value "earth" should be associated to feature "element"
     When I create product feature "planet" with specified properties:
-      | name[en-US] | Planet |
+      | name[en-US]      | Planet |
+      | associated shops | shop1  |
     Then product feature "planet" should have following details:
       | name[en-US] | Planet |
       | name[fr-FR] | Planet |

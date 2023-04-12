@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
  * Handles data of submitted Feature form.
@@ -40,13 +41,21 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
      * @var CommandBusInterface
      */
     private $commandBus;
+    /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
 
     /**
      * @param CommandBusInterface $commandBus
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
+    public function __construct(
+        CommandBusInterface $commandBus,
+        MultistoreContextCheckerInterface $multistoreContextChecker
+    ) {
         $this->commandBus = $commandBus;
+        $this->multistoreContextChecker = $multistoreContextChecker;
     }
 
     /**
@@ -57,7 +66,7 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
         /** @var FeatureId $featureId */
         $featureId = $this->commandBus->handle(new AddFeatureCommand(
             $data['name'],
-            $data['shop_association'] ?? []
+            $data['shop_association'] ?? $this->multistoreContextChecker->getContextShopIds()
         ));
 
         return $featureId->getValue();
