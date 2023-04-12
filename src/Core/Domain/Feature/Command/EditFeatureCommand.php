@@ -109,7 +109,7 @@ class EditFeatureCommand
     public function setAssociatedShopIds(array $associatedShopIds): self
     {
         if (empty($associatedShopIds)) {
-            return $this;
+            throw new FeatureConstraintException('Shop association cannot be empty', FeatureConstraintException::INVALID_SHOP_ASSOCIATION);
         }
 
         $this->associatedShopIds = array_map(static function (int $shopId): ShopId {

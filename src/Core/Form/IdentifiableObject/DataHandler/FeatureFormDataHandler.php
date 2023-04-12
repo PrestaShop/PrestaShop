@@ -41,6 +41,7 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
      * @var CommandBusInterface
      */
     private $commandBus;
+
     /**
      * @var MultistoreContextCheckerInterface
      */

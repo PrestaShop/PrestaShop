@@ -19,6 +19,24 @@ Feature: Product feature management
       | name[fr-FR] | My feature fr |
     Then I should get an error that feature shop association is invalid
 
+  Scenario: I should not be able to update feature when providing empty shop association
+    Given I create product feature "feature1" with specified properties:
+      | name[en-US]      | My feature en |
+      | name[fr-FR]      | My feature fr |
+      | associated shops | shop1         |
+    # when empty shop ids provided, it should throw exception
+    When I update product feature feature1 with following details:
+      | associated shops |  |
+    Then I should get an error that feature shop association is invalid
+    # but when shop ids are not provided at all, they should stay unchaged
+    When I update product feature feature1 with following details:
+      | name[en-US] | My feature en updated |
+      | name[fr-FR] | My feature fr updated |
+    Then product feature feature1 should have following details:
+      | name[en-US]      | My feature en updated |
+      | name[fr-FR]      | My feature fr updated |
+      | associated shops | shop1                 |
+
   Scenario: Create product feature in single shop
     When I create product feature "feature1" with specified properties:
       | name[en-US]      | My feature en |

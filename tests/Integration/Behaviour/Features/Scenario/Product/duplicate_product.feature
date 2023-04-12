@@ -574,7 +574,8 @@ Feature: Duplicate product from Back Office (BO).
 
   Scenario: I duplicate product features
     Given I create product feature "element" with specified properties:
-      | name[en-US] | Nature Element |
+      | name[en-US]      | Nature Element |
+      | associated shops | shop1          |
     And I create feature value "fire" for feature "element" with following properties:
       | value[en-US]     | Fire  |
       | value[fr-FR]     | Feu   |
