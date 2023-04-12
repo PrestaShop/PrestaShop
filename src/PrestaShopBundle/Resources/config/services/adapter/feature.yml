@@ -64,6 +64,8 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValidator: ~
+
   PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator: ~
 
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository:

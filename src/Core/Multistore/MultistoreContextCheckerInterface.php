@@ -51,9 +51,4 @@ interface MultistoreContextCheckerInterface
      * @return bool
      */
     public function isSingleShopContext();
-
-    /**
-     * @return int[]
-     */
-    public function getContextShopIds(): array;
 }
