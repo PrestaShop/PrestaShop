@@ -60,9 +60,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup NPM
-        run: npm install -g npm@7
-
       - name: Create Release directory
         run: mkdir -p ${{ env.RELEASE_DIR }}
 

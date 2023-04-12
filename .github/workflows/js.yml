@@ -24,9 +24,6 @@ jobs:
         with:
           node-version: ${{ matrix.js }}
 
-      - name: Setup NPM
-        run: npm install -g npm@7
-
       - name: Checkout
         uses: actions/checkout@v3
 

@@ -54,9 +54,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup NPM
-        run: npm install -g npm@7
-
       - name: Checkout
         uses: actions/checkout@v3
         with:
