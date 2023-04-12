@@ -1257,7 +1257,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
 
-        if (empty($content)) {
+        //Check if response is empty or not a valid zip file
+        if (empty($content) || strpos($content, "\x50\x4b\x03\x04") === false) {
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
 
             return false;

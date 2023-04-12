@@ -23,7 +23,7 @@ use(chaiString);
 
 const baseContext: string = 'cldr_deleteCurrency';
 
-describe('CLDR : Edit symbol / format currency', async () => {
+describe('CLDR : Delete a currency', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCurrencies: number;
