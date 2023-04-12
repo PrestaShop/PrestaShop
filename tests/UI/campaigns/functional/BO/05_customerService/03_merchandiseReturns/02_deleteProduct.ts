@@ -34,14 +34,18 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_BO_customerService_merchandiseReturns_deleteProduct';
 
 /*
-Create order in FO
-Activate/Deactivate merchandise return
-Update returns prefix
-Change the first order status in the list to shipped
-Check the existence of the button return products
-Go to FO>My account>Order history> first order detail in the list
-Check the existence of product return form
-Create a merchandise returns then check the file prefix
+Pre-condition:
+- Create order in FO
+- Activate merchandise returns
+- Change the first order status in the list to shipped
+Scenario
+- Create merchandise returns in FO (3 products)
+- GO to BO > merchandise returns page > Edit
+- Delete the first product (Click on Take me out of here!)
+- Delete the second product (Click on I understand the risks...)
+- Try to delete the last product and check the error message
+Post-condition:
+- Deactivate merchandise returns
  */
 describe('BO - Customer Service - Merchandise Returns : Delete product', async () => {
   let browserContext: BrowserContext;
@@ -57,7 +61,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('FO : Create order', async () => {
+  describe('PRE-TEST: Create order in FO', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
@@ -133,7 +137,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     });
   });
 
-  describe('BO : Enable merchandise return', async () => {
+  describe('PRE-TEST: Enable merchandise returns', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -160,7 +164,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     });
   });
 
-  describe('BO : Change order status to \'Shipped\'', async () => {
+  describe('PRE-TEST: Change order status to \'Shipped\'', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -258,7 +262,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     });
   });
 
-  describe('BO : Delete product from merchandise return', async () => {
+  describe('BO : Delete products from merchandise return', async () => {
     [
       {args: {understandTheRisk: false, button: 'Take me out of here!'}},
       {args: {understandTheRisk: true, button: 'I understand the risks and I really want to display this page'}},
@@ -312,6 +316,15 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
       const errorMessage = await editMerchandiseReturnsPage.clickOnDeleteLastProductButton(page);
       await expect(errorMessage).to.contains(merchandiseReturnsPage.errorDeletionMessage);
+    });
+  });
+
+  describe('POST-TEST: Disable merchandise returns', async () => {
+    it('should disable merchandise returns', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
+
+      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
+      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 });
