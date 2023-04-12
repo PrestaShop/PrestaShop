@@ -27,17 +27,13 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
  * This class should not be used as a Grid query builder. @see LogQueryBuilder
  */
-class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
+class LogRepository implements RepositoryInterface
 {
     /**
      * @var Connection
@@ -52,20 +48,13 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      */
     private $logTable;
 
-    /**
-     * @var DoctrineSearchCriteriaApplicatorInterface
-     */
-    private $searchCriteriaApplicator;
-
     public function __construct(
         Connection $connection,
-        $databasePrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+        $databasePrefix
     ) {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
         $this->logTable = $this->databasePrefix . 'log';
-        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
@@ -177,121 +166,5 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         $platform = $this->connection->getDatabasePlatform();
 
         return $this->connection->executeUpdate($platform->getTruncateTableSQL($this->logTable, true));
-    }
-
-    /**
-     * Get query that searches grid rows.
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @deprecated deprecated since 1.7.8.0
-     * @see LogQueryBuilder::getSearchQueryBuilder
-     *
-     * @return QueryBuilder
-     */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
-
-        $qb = $this->buildGridQuery($searchCriteria);
-        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee');
-
-        $this->searchCriteriaApplicator
-            ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb);
-
-        return $qb;
-    }
-
-    /**
-     * Get query that counts grid rows.
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @deprecated deprecated since 1.7.8.0
-     * @see LogQueryBuilder::getCountQueryBuilder
-     *
-     * @return QueryBuilder
-     */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
-
-        $qb = $this->buildGridQuery($searchCriteria);
-        $qb->select('COUNT(*)');
-
-        return $qb;
-    }
-
-    /**
-     * Build query body without select, sorting & limiting.
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @deprecated deprecated since 1.7.8.0
-     * @see LogQueryBuilder::buildGridQuery
-     *
-     * @return QueryBuilder
-     */
-    private function buildGridQuery(SearchCriteriaInterface $searchCriteria)
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
-
-        $allowedFilters = [
-            'id_log',
-            'employee',
-            'severity',
-            'message',
-            'object_type',
-            'object_id',
-            'error_code',
-            'date_add',
-        ];
-
-        $employeeTable = $this->databasePrefix . 'employee';
-
-        $qb = $this->connection
-            ->createQueryBuilder()
-            ->from($this->logTable, 'l')
-            ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
-
-        $filters = $searchCriteria->getFilters();
-        foreach ($filters as $filterName => $filterValue) {
-            if (empty($filterValue)) {
-                continue;
-            }
-            if (!in_array($filterName, $allowedFilters)) {
-                continue;
-            }
-
-            if ('employee' == $filterName) {
-                $qb->andWhere(
-                    'e.lastname LIKE :employee
-                    OR e.firstname LIKE :employee
-                    OR CONCAT(e.firstname, \' \', e.lastname) LIKE :employee
-                    OR CONCAT(e.lastname, \' \', e.firstname) LIKE :employee'
-                );
-                $qb->setParameter('employee', '%' . $filterValue . '%');
-
-                continue;
-            }
-
-            if ('date_add' == $filterName) {
-                if (!empty($filterValue['from']) &&
-                    !empty($filterValue['to'])
-                ) {
-                    $qb->andWhere('l.date_add >= :date_from AND l.date_add <= :date_to');
-                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
-                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
-                }
-
-                continue;
-            }
-
-            $qb->andWhere("$filterName LIKE :$filterName");
-            $qb->setParameter($filterName, '%' . $filterValue . '%');
-        }
-
-        return $qb;
     }
 }
