@@ -142,7 +142,7 @@ class OrderHistoryCore extends ObjectModel
                 foreach ($assign as $product) {
                     $complementaryText = [];
                     if (isset($product['deadline'])) {
-                        $complementaryText[] = $this->trans('expires on %s.', [$product['deadline']], 'Admin.Orderscustomers.Notification');
+                        $complementaryText[] = $this->trans('expires on %s.', [htmlspecialchars($product['deadline'])], 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
                         $complementaryText[] = $this->trans('downloadable %d time(s)', [(int) $product['downloadable']], 'Admin.Orderscustomers.Notification');
