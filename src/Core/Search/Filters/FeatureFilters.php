@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
 /**
  * Class ManufacturerFilters is responsible for providing filter values for manufacturer grid.
  */
-final class FeatureFilters extends Filters
+final class FeatureFilters extends ShopFilters
 {
     /** @var string */
     protected $filterId = FeatureGridDefinitionFactory::GRID_ID;

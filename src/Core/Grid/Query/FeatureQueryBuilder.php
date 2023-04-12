@@ -28,7 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 
 class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -38,33 +42,32 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int[]
-     */
-    private $contextShopIds;
-
-    /**
      * @var int
      */
-    private $contextLangId;
+    private $languageId;
+
+    /**
+     * @var FeatureRepository
+     */
+    private $featureRepository;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param array $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        array $contextShopIds,
-        int $contextLangId
+        int $contextLangId,
+        FeatureRepository $featureRepository
     ) {
         parent::__construct($connection, $dbPrefix);
 
-        $this->contextShopIds = $contextShopIds;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->contextLangId = $contextLangId;
+        $this->languageId = $contextLangId;
+        $this->featureRepository = $featureRepository;
     }
 
     /**
@@ -72,7 +75,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb = $this->getQueryBuilder($searchCriteria);
         $qb
             ->select('f.id_feature, fl.name')
             ->addSelect('(f.position +1) AS position')
@@ -99,18 +102,29 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->getQueryBuilder($searchCriteria->getFilters())
+        return $this->getQueryBuilder($searchCriteria)
             ->select('COUNT(DISTINCT f.id_feature)')
         ;
     }
 
     /**
-     * @param array<string, mixed> $filters
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
+     *
+     * @throws InvalidArgumentException
      */
-    private function getQueryBuilder(array $filters): QueryBuilder
+    private function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
+        if (!$searchCriteria instanceof ShopSearchCriteriaInterface) {
+            throw new InvalidArgumentException('Invalid search criteria type');
+        }
+
+        $filters = $searchCriteria->getFilters();
+        $shopIds = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->featureRepository->getShopIdsByConstraint($searchCriteria->getShopConstraint()));
+
         $allowedFilters = ['id_feature', 'name', 'position'];
 
         $qb = $this->connection
@@ -120,16 +134,16 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 'f',
                 $this->dbPrefix . 'feature_shop',
                 'fs',
-                'fs.id_feature = f.id_feature AND fs.id_shop IN (:contextShopIds)'
+                'fs.id_feature = f.id_feature AND fs.id_shop IN (:shopIds)'
             )
-            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
             ->leftJoin(
                 'f',
                 $this->dbPrefix . 'feature_lang',
                 'fl',
                 'f.id_feature = fl.id_feature AND fl.id_lang = :langId'
             )
-            ->setParameter('langId', $this->contextLangId)
+            ->setParameter('langId', $this->languageId)
         ;
 
         foreach ($filters as $filterName => $value) {

@@ -32,6 +32,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -114,6 +117,58 @@ class FeatureRepository extends AbstractObjectModelRepository
         }
 
         return $features;
+    }
+
+    /**
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     */
+    public function getShopIdsByConstraint(ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            return $this->getAssociatedShopIdsFromGroup($shopConstraint->getShopGroupId());
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return array_map(static function (array $result): ShopId {
+                return new ShopId((int) $result['id_shop']);
+            }, $this->connection->createQueryBuilder()
+                ->select('id_shop')
+                ->from($this->dbPrefix . 'feature_shop', 'fs')
+                ->execute()
+                ->fetchAllAssociative()
+            );
+        }
+
+        return [$shopConstraint->getShopId()];
+    }
+
+    /**
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIdsFromGroup(ShopGroupId $shopGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('fs.id_shop')
+            ->from($this->dbPrefix . 'feature_shop', 'fs')
+            ->innerJoin(
+                'fs',
+                $this->dbPrefix . 'shop',
+                's',
+                's.id_shop = fs.id_shop'
+            )
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->groupBy('id_shop')
+        ;
+
+        return array_map(static function (array $result): ShopId {
+            return new ShopId((int) $result['id_shop']);
+        }, $qb->execute()->fetchAllAssociative());
     }
 
     /**

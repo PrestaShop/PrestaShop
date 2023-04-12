@@ -1,6 +1,9 @@
 services:
   _defaults:
     public: true
+    bind:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureHandler:
     tags:
@@ -40,15 +43,11 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing
 
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator: ~
 
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository:
+    autowire: true
     public: true
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator'
