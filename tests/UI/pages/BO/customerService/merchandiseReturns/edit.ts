@@ -20,7 +20,13 @@ class EditMerchandiseReturns extends BOBasePage {
 
   private readonly cancelButton: string;
 
-  private readonly saveButton: string;
+  private readonly orderReturnSaveButton: string;
+
+  private readonly orderReturnCancelButton: string;
+
+  private readonly saveAndStayButton: string;
+
+  private readonly fileName: string;
 
   /**
    * @constructs
@@ -35,7 +41,11 @@ class EditMerchandiseReturns extends BOBasePage {
     this.status = '#state';
     this.productsTableRow = (row: number) => `table tbody tr:nth-child(${row})`;
     this.productsTableDeleteColumn = (row: number) => `${this.productsTableRow(row)} td a.btn-default`;
-    this.saveButton = '#order_return_form_submit_btn';
+    this.orderReturnSaveButton = '#order_return_form_submit_btn';
+    this.orderReturnCancelButton = '#order_return_form_cancel_btn';
+    this.saveAndStayButton = 'button[name=submitAddorder_returnAndStay]';
+    this.fileName = '#fieldset_0 div.form-wrapper div:nth-child(8) div p:nth-child(1)';
+    // Selectors in security page
     this.continueButton = 'body div.container div.action-container a.btn-continue';
     this.cancelButton = 'body div.container div.action-container a.btn-cancel';
   }
@@ -47,13 +57,45 @@ class EditMerchandiseReturns extends BOBasePage {
    * Set merchandise return status
    * @param page {Page} Browser tab
    * @param status {string} Status to select
+   * @param saveAndStay {boolean} True if we need to click on save and stay button
    * @returns {Promise<string>}
    */
-  async setStatus(page: Page, status: string): Promise<string> {
+  async setStatus(page: Page, status: string, saveAndStay: boolean = false): Promise<string> {
     await this.selectByVisibleText(page, this.status, status);
-    await this.waitForSelectorAndClick(page, this.saveButton);
-
+    if (saveAndStay) {
+      await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+    } else {
+      await this.clickAndWaitForNavigation(page, this.orderReturnSaveButton);
+    }
     return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Get file name
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getFileName(page: Page): Promise<string> {
+    return this.getTextContent(page, this.fileName);
+  }
+
+  /**
+   * Download PDF
+   * @param page {Page} Browser tab
+   * @returns {Promise<string | null>}
+   */
+  async downloadPDF(page: Page): Promise<string | null> {
+    return this.clickAndWaitForDownload(page, `${this.fileName} a`);
+  }
+
+  /**
+   * Click on cancel button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnCancelButton(page: Page): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.orderReturnCancelButton);
+    await this.clickAndWaitForNavigation(page, this.orderReturnCancelButton);
   }
 
   /**
