@@ -27,12 +27,11 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotUpdateAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\BulkDeleteAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\DeleteAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\DeleteAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
@@ -309,10 +308,6 @@ class AttributeGroupController extends FrameworkBundleAdminController
 
             CannotAddAttributeGroupException::class => $this->trans(
                 'An error occurred while creating the attribute.',
-                'Admin.Catalog.Notification'
-            ),
-            CannotUpdateAttributeGroupException::class => $this->trans(
-                'The error occoured while updating the attribute group.',
                 'Admin.Catalog.Notification'
             ),
             DeleteAttributeGroupException::class => [
