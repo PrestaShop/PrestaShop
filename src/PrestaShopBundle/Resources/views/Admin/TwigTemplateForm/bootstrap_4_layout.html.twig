@@ -552,7 +552,6 @@
         {%- if errors|length > 1 -%}
             <ul class="alert-text">
                 {%- for error in errors -%}
-                  {{  dump(error.messagePluralization) }}
                     <li> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
                     </li>
                 {%- endfor -%}

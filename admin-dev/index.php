@@ -81,7 +81,7 @@ $catch = strpos($request->getRequestUri(), Api::API_BASE_PATH) !== false;
 
 try {
     require_once __DIR__.'/../autoload.php';
-    $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, $catch);
+    $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, $catch);
     $response->send();
     $kernel->terminate($request, $response);
 } catch (NotFoundHttpException $exception) {
