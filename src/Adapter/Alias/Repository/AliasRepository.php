@@ -44,8 +44,6 @@ class AliasRepository extends AbstractObjectModelRepository
     private $aliasValidator;
 
     public function __construct(
-        Connection $connection,
-        string $dbPrefix,
         AliasValidator $aliasValidator
     ) {
         $this->aliasValidator = $aliasValidator;

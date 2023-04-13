@@ -9,8 +9,6 @@ services:
   PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository:
     autowire: true
     arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator'
 
 
