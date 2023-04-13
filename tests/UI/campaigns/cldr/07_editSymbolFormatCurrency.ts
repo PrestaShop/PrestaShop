@@ -121,27 +121,11 @@ describe('CLDR : Edit symbol / format currency', async () => {
     await expect(exampleFormat).to.endWith(` ${customSymbol}`);
   });
 
-  // @todo : Enable when https://github.com/PrestaShop/PrestaShop/issues/31759 is fixed
-  it.skip('should reset the currency format', async function () {
+  it('should reset the currency format', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat', baseContext);
 
     const growlMessage = await addCurrencyPage.resetCurrencyFormat(page, 1);
     await expect(growlMessage).to.be.eq(addCurrencyPage.resetCurrencyFormatMessage);
-
-    const exampleFormat = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
-    await expect(exampleFormat).to.startWith(Currencies.euro.symbol);
-  });
-
-  // @todo : Remove when https://github.com/PrestaShop/PrestaShop/issues/31759 is fixed
-  it(`should update the symbol by ${Currencies.euro.symbol} & the format`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormatBypass', baseContext);
-
-    const isModalVisible = await addCurrencyPage.editCurrencyFormat(page, 1);
-    await expect(isModalVisible).to.be.true;
-
-    await addCurrencyPage.setCurrencyFormatSymbol(page, Currencies.euro.symbol);
-    await addCurrencyPage.setCurrencyFormatFormat(page, 'leftWithoutSpace');
-    await addCurrencyPage.saveCurrencyFormat(page);
 
     const exampleFormat = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
     await expect(exampleFormat).to.startWith(Currencies.euro.symbol);
