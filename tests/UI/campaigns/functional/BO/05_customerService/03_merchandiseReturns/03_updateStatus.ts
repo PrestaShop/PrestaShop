@@ -289,7 +289,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
         await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
       });
 
-      it(`should delete the first returned product and click on '${test.args.button}'`, async function () {
+      it(`'should delete the first returned product and click on '${test.args.button}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteFirstProduct${index}`, baseContext);
 
         const text = await editMerchandiseReturnsPage.deleteProduct(page, 1, test.args.understandTheRisk);
