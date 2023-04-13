@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
 /**
- * Is thrown when attribute group constraints are violated
+ * When attribute group Id contains invalid values
  */
 class AttributeGroupConstraintException extends AttributeGroupException
 {
