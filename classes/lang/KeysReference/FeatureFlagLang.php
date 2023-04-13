@@ -65,7 +65,7 @@ trans('Countries', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated countries page.', 'Admin.Advparameters.Help');
 
 // States feature flag
-trans('States', 'Admin.Advaprameters.Feature');
+trans('States', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated states page.', 'Admin.Advparameters.Help');
 
 // Carriers feature flag
