@@ -82,7 +82,7 @@ class DiscountType extends TranslatorAwareType
                 ],
             ])
             ->add('specific_product', ProductSearchType::class, [
-                'search_combinations' => false,
+                'include_combinations' => false,
                 'row_attr' => [
                     'class' => 'specific-product-search-container',
                 ],

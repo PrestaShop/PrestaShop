@@ -795,7 +795,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @param bool $isFreeShipping
      * @param string|null $percentage
-     * @param bool|null $excludeDiscountedProducts
+     * @param bool|null $applyToDiscountedProducts
      * @param string|null $amount
      * @param int|null $amountCurrencyId
      * @param bool|null $amountTaxIncluded
@@ -807,7 +807,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     private function createCartRuleAction(
         bool $isFreeShipping,
         ?string $percentage = null,
-        ?bool $excludeDiscountedProducts = null,
+        ?bool $applyToDiscountedProducts = null,
         ?string $amount = null,
         ?int $amountCurrencyId = null,
         ?bool $amountTaxIncluded = null,
@@ -821,7 +821,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         if (null !== $percentage) {
             $builder->setPercentageDiscount(
                 $percentage,
-                $excludeDiscountedProducts
+                $applyToDiscountedProducts
             );
         }
 

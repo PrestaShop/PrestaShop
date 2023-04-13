@@ -81,7 +81,7 @@ class StockType extends TranslatorAwareType
     {
         $builder
             ->add('packed_products', ProductSearchType::class, [
-                'search_combinations' => true,
+                'include_combinations' => true,
                 'label' => $this->trans('Pack of products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'limit' => 0,

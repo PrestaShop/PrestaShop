@@ -77,8 +77,10 @@ class ProductSearchType extends TranslatorAwareType
         ]);
 
         $resolver
-            ->setRequired(['search_combinations'])
-            ->setAllowedTypes('search_combinations', 'bool')
+            ->setRequired([
+                'include_combinations',
+            ])
+            ->setAllowedTypes('include_combinations', 'bool')
             ->setDefaults([
                 'required' => false,
                 'label' => false,
@@ -86,13 +88,13 @@ class ProductSearchType extends TranslatorAwareType
                 'min_length' => 3,
                 'limit' => 1,
                 'identifier_field' => static function (Options $options): string {
-                    return $options->offsetGet('search_combinations') === true ? 'unique_identifier' : 'id';
+                    return $options->offsetGet('include_combinations') === true ? 'unique_identifier' : 'id';
                 },
                 'entry_type' => static function (Options $options): string {
-                    return $options->offsetGet('search_combinations') === true ? SearchedProductItemType::class : EntityItemType::class;
+                    return $options->offsetGet('include_combinations') === true ? SearchedProductItemType::class : EntityItemType::class;
                 },
                 'remote_url' => static function (Options $options) use ($combinationsUrl, $productsUrl): string {
-                    if ($options->offsetGet('search_combinations') === true) {
+                    if ($options->offsetGet('include_combinations') === true) {
                         return $combinationsUrl;
                     } else {
                         return $productsUrl;
@@ -100,7 +102,7 @@ class ProductSearchType extends TranslatorAwareType
                 },
             ])
             ->setNormalizer('attr', static function (Options $options, ?array $value) use ($refLabel): array {
-                if ($options->offsetGet('search_combinations') === true) {
+                if ($options->offsetGet('include_combinations') === true) {
                     return array_merge(['data-reference-label' => $refLabel], (array) $value);
                 } else {
                     return $value;

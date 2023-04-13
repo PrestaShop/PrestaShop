@@ -80,14 +80,14 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setPercentageDiscount(string $reductionValue, bool $excludeDiscountedProducts): CartRuleActionBuilderInterface
+    public function setPercentageDiscount(string $reductionValue, bool $applyToDiscountedProducts): CartRuleActionBuilderInterface
     {
         if ($this->reduction) {
             throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
         }
 
         $this->reduction = new Reduction(Reduction::TYPE_PERCENTAGE, $reductionValue);
-        $this->applyToDiscountedProducts = $excludeDiscountedProducts;
+        $this->applyToDiscountedProducts = $applyToDiscountedProducts;
 
         return $this;
     }

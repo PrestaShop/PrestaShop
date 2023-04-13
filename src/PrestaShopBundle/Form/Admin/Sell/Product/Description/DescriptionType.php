@@ -124,7 +124,7 @@ class DescriptionType extends TranslatorAwareType
             ])
             ->add('manufacturer', ManufacturerType::class)
             ->add('related_products', ProductSearchType::class, [
-                'search_combinations' => false,
+                'include_combinations' => false,
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'entry_options' => [

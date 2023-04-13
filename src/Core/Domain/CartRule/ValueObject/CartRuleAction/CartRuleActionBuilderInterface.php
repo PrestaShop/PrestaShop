@@ -44,11 +44,11 @@ interface CartRuleActionBuilderInterface
      * Set percentage discount for cart rule action.
      *
      * @param string $reductionValue
-     * @param bool $excludeDiscountedProducts
+     * @param bool $applyToDiscountedProducts
      *
      * @return CartRuleActionBuilderInterface
      */
-    public function setPercentageDiscount(string $reductionValue, bool $excludeDiscountedProducts): CartRuleActionBuilderInterface;
+    public function setPercentageDiscount(string $reductionValue, bool $applyToDiscountedProducts): CartRuleActionBuilderInterface;
 
     /**
      * Set amount discount for cart rule action.
