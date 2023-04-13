@@ -74,7 +74,7 @@ class AttributeGroupType
     private function assertTypeExists(string $type): void
     {
         $types = [static::ATTRIBUTE_GROUP_TYPE_COLOR, static::ATTRIBUTE_GROUP_TYPE_SELECT, static::ATTRIBUTE_GROUP_TYPE_RADIO];
-        if (!in_array($type, $types)){
+        if (!in_array($type, $types)) {
             throw new InvalidAttributeGroupTypeException(
                 sprintf(
                     'Invalid attributeGroup type %s supplied.',

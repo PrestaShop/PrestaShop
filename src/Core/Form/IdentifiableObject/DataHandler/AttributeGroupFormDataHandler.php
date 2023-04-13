@@ -73,7 +73,7 @@ final class AttributeGroupFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        /** @var AttributeGroupId $attributeGroupId */
+        /* @var AttributeGroupId $attributeGroupId */
         $this->commandBus->handle(new EditAttributeGroupCommand(
             (int) $id,
             $data['name'],

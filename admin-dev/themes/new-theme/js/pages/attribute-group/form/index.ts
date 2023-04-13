@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,28 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+// @ts-ignore
+const {$} = window;
 
-namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate;
+$(() => {
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+    ],
+  );
 
-use AttributeGroup;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-
-/**
- * Validates Attribute Group properties using legacy object model
- */
-class AttributeGroupValidator extends AbstractObjectModelValidator
-{
-    /**
-     * @param AttributeGroup $attributeGroup
-     *
-     * @throws CoreException
-     */
-    public function validate(AttributeGroup $attributeGroup): void
-    {
-        $this->validateObjectModelLocalizedProperty($attributeGroup, 'name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME);
-        $this->validateObjectModelLocalizedProperty($attributeGroup, 'public_name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME);
-    }
-}
+  new window.prestashop.component.ChoiceTree('#attribute_group_shop_association').enableAutoCheckChildren();
+});

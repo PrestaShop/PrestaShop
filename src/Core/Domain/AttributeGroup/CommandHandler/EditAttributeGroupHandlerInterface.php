@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
  * Describes a service that handles attribute group edit command.

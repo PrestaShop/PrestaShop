@@ -30,7 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
@@ -121,7 +120,6 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     {
         $attributeGroupId = $this->referenceToId($reference);
         $attributeGroup = new \AttributeGroup($attributeGroupId);
-
 
         if ($attributeGroup->$field[$this->getDefaultLangId()] !== $value) {
             throw new RuntimeException(sprintf('Attribute group "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field[$this->getDefaultLangId()], $field, $value));

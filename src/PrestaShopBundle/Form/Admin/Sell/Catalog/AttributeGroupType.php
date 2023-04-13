@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType as GroupType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -39,7 +40,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType as GroupType;
 
 /**
  * Form type for attribute add/edit
@@ -79,18 +79,18 @@ class AttributeGroupType extends TranslatorAwareType
 
         $builder
             ->add('name', TranslatableType::class, [
-            'type' => TextType::class,
-            'label' => $this->trans('Name', 'Admin.Global'),
-            'options' => [
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => TypedRegex::TYPE_CATALOG_NAME,
-                    ]),
+                'type' => TextType::class,
+                'label' => $this->trans('Name', 'Admin.Global'),
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_CATALOG_NAME,
+                        ]),
+                    ],
                 ],
-            ],
-            'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
-                . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
-                . ' ' . TypedRegexValidator::CATALOG_CHARS,
+                'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
+                    . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
+                    . ' ' . TypedRegexValidator::CATALOG_CHARS,
             ])
             ->add('public_name', TranslatableType::class, [
                 'type' => TextType::class,
