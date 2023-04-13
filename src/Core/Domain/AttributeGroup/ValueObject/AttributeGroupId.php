@@ -67,7 +67,7 @@ class AttributeGroupId
     {
         if (0 > $attributeGroupId) {
             throw new AttributeGroupConstraintException(
-                sprintf('Invalid attributeGroup id %s supplied. Attribute ID must be a positive integer.', $attributeGroupId),
+                sprintf('Invalid attributeGroup id %s supplied. Attribute group ID must be a positive integer.', $attributeGroupId),
                 AttributeGroupConstraintException::INVALID_ID
             );
         }
