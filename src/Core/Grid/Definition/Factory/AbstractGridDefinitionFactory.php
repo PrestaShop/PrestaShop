@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -54,27 +53,10 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected $hookDispatcher;
 
     /**
-     * @param HookDispatcherInterface|null $hookDispatcher
-     */
-    public function __construct(HookDispatcherInterface $hookDispatcher = null)
-    {
-        if (null === $hookDispatcher) {
-            @trigger_error('The $hookDispatcher parameter should not be null, inject your main HookDispatcherInterface service, or NullDispatcher if you don\'t need hooks.', E_USER_DEPRECATED);
-        }
-        $this->hookDispatcher = $hookDispatcher ? $hookDispatcher : new NullDispatcher();
-    }
-
-    /**
-     * Set hook dispatcher.
-     *
      * @param HookDispatcherInterface $hookDispatcher
-     *
-     * @deprecated
      */
-    final public function setHookDispatcher(HookDispatcherInterface $hookDispatcher)
+    public function __construct(HookDispatcherInterface $hookDispatcher)
     {
-        @trigger_error('The AbstractGridDefinitionFactory::setHookDispatcher method is deprecated as of 1.7.5.1 Please use the constructor instead', E_USER_DEPRECATED);
-
         $this->hookDispatcher = $hookDispatcher;
     }
 
