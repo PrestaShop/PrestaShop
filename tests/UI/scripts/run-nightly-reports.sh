@@ -18,7 +18,7 @@ REPORT_PATH="${DIR_PATH}/campaigns"
 TESTS_DIR="${DIR_PATH}/prestashop/tests/UI"
 LOG_DIR="/var/log/ps-reports/"
 LOG_PATH="${LOG_DIR}${REPORT_NAME}.log"
-API_NIGHTLY_IMPORT_HOOK="https://api-nightly.prestashop.com/hook/reports/import"
+API_NIGHTLY_IMPORT_HOOK="https://api-nightly.prestashop-project.org/hook/reports/import"
 
 exec &> >(tee -a $LOG_PATH)
 

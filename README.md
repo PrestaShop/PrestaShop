@@ -3,7 +3,7 @@ About PrestaShop
 
 [![Travis build Status](https://travis-ci.com/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.com/PrestaShop/PrestaShop)
 ![PHPStan status](https://github.com/PrestaShop/PrestaShop/workflows/PHP%20Static%20Analysis/badge.svg)
-[![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop.com%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop.com/)
+[![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop-project.org%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop-project.org/)
 
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
 [![GitHub release](https://img.shields.io/github/v/release/prestashop/prestashop)](https://github.com/PrestaShop/PrestaShop)
