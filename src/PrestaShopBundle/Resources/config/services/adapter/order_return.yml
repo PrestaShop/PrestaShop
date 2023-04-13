@@ -28,3 +28,28 @@ services:
 
   prestashop.adapter.order_return.validator.order_return_validator:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'
+
+  PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler:
+    autowire: true
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations'
+
+  PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandlerInterface: '@PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler'
+
+  PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
+
+  PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand'
+
+  PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandler:
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand'

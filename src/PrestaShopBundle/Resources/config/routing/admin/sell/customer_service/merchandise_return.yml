@@ -48,3 +48,48 @@ admin_order_returns_update:
       id_order_return: orderReturnId
   requirements:
     orderReturnId: \d+
+
+admin_order_returns_products_filter:
+  path: /{orderReturnId}/edit
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_return_products
+    redirectRoute: admin_order_returns_edit
+    redirectQueryParamsToKeep:
+      - 'orderReturnId'
+    _legacy_controller: AdminReturn
+  #    _legacy_link: AdminReturn:submitFilterorder_return
+  requirements:
+    orderReturnId: \d+
+
+admin_order_returns_delete_product:
+  path: /{orderReturnId}/products/{orderReturnDetailId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProduct
+    _legacy_controller: AdminReturn
+  #    _legacy_link: AdminReturn:deleteorder_return_detail
+  #    _legacy_parameters:
+  #      id_order_return: orderReturnId
+  #      id_order_detail: orderReturnDetailId
+  requirements:
+    orderReturnId: \d+
+    orderReturnDetailId: \d+
+
+admin_order_returns_delete_product_bulk:
+  path: /{orderReturnId}/products/bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:bulkDeleteProduct
+  requirements:
+    orderReturnId: \d+
+
+admin_order_returns_generate_pdf:
+  path: /{orderReturnId}/generate-order-return-pdf
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:generateOrderReturnPdf
+    _legacy_controller: AdminReturn
+  requirements:
+    orderReturnId: \d+

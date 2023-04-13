@@ -368,6 +368,14 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+  PrestaShop\Core\Grid\Factory\OrderReturnProducts:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDefinitionFactory'
+      - '@PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsDecorator'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\OrderReturnProductsFilterFormFactory'
+      - '@prestashop.core.hook.dispatcher'
+
   prestashop.core.grid.factory.order_return_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:

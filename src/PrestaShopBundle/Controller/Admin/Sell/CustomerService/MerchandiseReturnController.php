@@ -27,14 +27,19 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -98,8 +103,9 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction(int $orderReturnId, Request $request): Response
+    public function editAction(int $orderReturnId, OrderReturnProductsFilters $filters, Request $request): Response
     {
+        $gridFactory = $this->get('PrestaShop\Core\Grid\Factory\OrderReturnProducts');
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_return_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
 
@@ -122,10 +128,97 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
             'orderReturnForm' => $form->createView(),
+            'orderReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Return merchandise authorization (RMA)', 'Admin.Navigation.Menu'),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_returns_index")
+     *
+     * @param Request $request
+     * @param int $orderReturnId
+     * @param int $orderReturnDetailId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteProductAction(Request $request, int $orderReturnId, int $orderReturnDetailId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteProductFromOrderReturnCommand($orderReturnId, $orderReturnDetailId)
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute(
+            'admin_order_returns_edit',
+            [
+                'orderReturnId' => $orderReturnId,
+            ]
+        );
+    }
+
+    /**
+     * Deletes order return products on bulk action
+     *
+     * @DemoRestricted(redirectRoute="admin_merchandise_returns_index")
+     *
+     * @param int $orderReturnId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteProductAction(int $orderReturnId, Request $request): RedirectResponse
+    {
+        $orderReturnDetails = $this->getBulkOrderReturnDetailsFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(
+                new BulkDeleteProductFromOrderReturnCommand(
+                    $orderReturnId,
+                    $orderReturnDetails
+                )
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute(
+            'admin_order_returns_edit',
+            [
+                'orderReturnId' => $orderReturnId,
+            ]
+        );
+    }
+
+    /**
+     * Provides order return ids from request of bulk action
+     *
+     * @param Request $request
+     *
+     * @return OrderReturnDetailId[]
+     */
+    private function getBulkOrderReturnDetailsFromRequest(Request $request): array
+    {
+        $orderReturnDetailIds = $request->request->get('order_return_products_order_return_bulk');
+        if (!is_array($orderReturnDetailIds)) {
+            return [];
+        }
+
+        return $orderReturnDetailIds;
     }
 
     /**

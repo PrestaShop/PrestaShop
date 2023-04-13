@@ -408,6 +408,21 @@ services:
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'merchandise_return'
 
+  PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsGridDataFactory:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    autowire: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\OrderReturnProductsQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'order_return_products'
+
+  PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsDecorator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsGridDataFactory'
+    autowire: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsGridDataFactory'
+
   prestashop.core.grid.data.factory.tax_rules_group:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:

@@ -23,37 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme orderReturnForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-
-{{ form_start(orderReturnForm) }}
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">person</i>
-    {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </h3>
-
-  <div class="card-body">
-    <div class="form-wrapper">
-      {{ form_widget(orderReturnForm) }}
-    </div>
-  </div>
-
-  <div class="card-footer">
-    <a href="{{ path('admin_merchandise_returns_index') }}" class="btn btn-outline-secondary">
-      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-    </a>
-
-    <button class="btn btn-primary float-right">
-      {{ 'Save'|trans({}, 'Admin.Actions') }}
-    </button>
+<div class="text-nowrap">
+  <div class="text-nowrap">
+    {% for customizations in [record['customizations']] %}
+      {% if customizations is  not null %}
+        {% for customization in customizations.orderDetailCustomizations %}
+          <div class="row">
+            <span class="col-lg-12"><strong>{{ customization.name }}</strong></span>
+            <div class="col-lg-12">
+              {% if customization.image is not null %}
+                <img class="img-thumbnail" src="{{ customization.image }}" alt="{{ customization.value }}">
+              {% else %}
+                {{ customization.value }}
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
   </div>
 </div>
-{{ form_end(orderReturnForm) }}
-
-{% block order_returns_products %}
-  <div class="row">
-    <div class="col-12">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnsProductsGrid} %}
-    </div>
-  </div>
-{% endblock %}

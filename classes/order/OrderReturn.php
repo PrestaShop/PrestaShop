@@ -166,6 +166,19 @@ class OrderReturnCore extends ObjectModel
     }
 
     /**
+     * @param int $id_order_detail
+     *
+     * @return array
+     */
+    public static function getOrderReturnDetailByOrderDetailId($id_order_detail)
+    {
+        return Db::getInstance()->getRow('
+		SELECT *
+		FROM `' . _DB_PREFIX_ . 'order_return_detail`
+		WHERE `id_order_detail` = ' . (int) $id_order_detail);
+    }
+
+    /**
      * @param int $order_return_id
      * @param Order $order
      *

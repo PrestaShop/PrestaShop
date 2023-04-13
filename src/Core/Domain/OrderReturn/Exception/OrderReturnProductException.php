@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,39 +22,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme orderReturnForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+declare(strict_types=1);
 
-{{ form_start(orderReturnForm) }}
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">person</i>
-    {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </h3>
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
-  <div class="card-body">
-    <div class="form-wrapper">
-      {{ form_widget(orderReturnForm) }}
-    </div>
-  </div>
-
-  <div class="card-footer">
-    <a href="{{ path('admin_merchandise_returns_index') }}" class="btn btn-outline-secondary">
-      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-    </a>
-
-    <button class="btn btn-primary float-right">
-      {{ 'Save'|trans({}, 'Admin.Actions') }}
-    </button>
-  </div>
-</div>
-{{ form_end(orderReturnForm) }}
-
-{% block order_returns_products %}
-  <div class="row">
-    <div class="col-12">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnsProductsGrid} %}
-    </div>
-  </div>
-{% endblock %}
+/**
+ * Base exception for order return products
+ */
+class OrderReturnProductException extends OrderReturnException
+{
+}

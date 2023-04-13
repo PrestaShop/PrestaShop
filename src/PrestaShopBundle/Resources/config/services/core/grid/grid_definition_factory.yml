@@ -291,6 +291,13 @@ services:
       - '@prestashop.core.grid.action.row.accessibility_checker.delete_order_return_states'
     public: true
 
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDefinitionFactory:
+    autowire: true
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+    arguments:
+      - '@request_stack'
+
   prestashop.core.grid.definition.factory.outstanding:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
