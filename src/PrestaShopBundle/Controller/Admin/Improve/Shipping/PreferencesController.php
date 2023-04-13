@@ -147,22 +147,6 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 8.1.0 and will be removed in next major version.
-     */
-    protected function renderForm($handlingForm, $carrierOptionsForm, $request)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0 and will be removed in the next major version. Use doRenderForm() instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return $this->doRenderForm($handlingForm, $carrierOptionsForm, $request);
-    }
-
-    /**
      * @param FormInterface $handlingForm
      * @param FormInterface $carrierOptionsForm
      * @param Request $request
