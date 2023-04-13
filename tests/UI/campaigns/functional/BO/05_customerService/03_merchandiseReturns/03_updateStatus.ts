@@ -1,6 +1,8 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import files from '@utils/files';
+import date from '@utils/date';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -27,11 +29,14 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
+import Addresses from '@data/demo/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_customerService_merchandiseReturns_deleteProduct';
+const baseContext: string = 'functional_BO_customerService_merchandiseReturns_updateStatus';
 
 /*
 Pre-condition:
@@ -39,17 +44,18 @@ Pre-condition:
 - Activate merchandise returns
 - Change the first order status in the list to shipped
 Scenario
-- Create merchandise returns in FO (3 products)
+- Create merchandise returns in FO
 - GO to BO > merchandise returns page > Edit
-- Delete the first product (Click on Take me out of here!)
-- Delete the second product (Click on I understand the risks...)
-- Try to delete the last product and check the error message
+- Test all return statuses
 Post-condition:
 - Deactivate merchandise returns
  */
-describe('BO - Customer Service - Merchandise Returns : Delete product', async () => {
+describe('BO - Customer Service - Merchandise Returns : Update status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+  let filePath: string;
+  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
+  let returnID: number;
 
   // before and after functions
   before(async function () {
@@ -90,25 +96,17 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should add 3 products to the cart', async function () {
+    it('should add the first product to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foLoginPage.goToHomePage(page);
 
       // Add first product to cart by quick view
       await homePage.addProductToCartByQuickView(page, 1, 2);
-      await homePage.continueShopping(page);
-
-      // Add second product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 2, 2);
-      await homePage.continueShopping(page);
-
-      // Add third product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 3, 2);
       await homePage.proceedToCheckout(page);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(6);
+      await expect(notificationsNumber).to.be.equal(2);
     });
 
     it('should go to delivery step', async function () {
@@ -204,7 +202,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
   describe('FO : Create merchandise returns', async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await viewOrderBasePage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
@@ -243,10 +241,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should create a merchandise return', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-      await orderDetailsPage.requestMerchandiseReturn(page,
-        'test',
-        3,
-        [{quantity: 1}, {quantity: 1}, {quantity: 2}]);
+      await orderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
 
       const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
@@ -262,60 +257,146 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     });
   });
 
-  describe('BO : Delete products from merchandise return', async () => {
-    [
-      {args: {understandTheRisk: false, button: 'Take me out of here!'}},
-      {args: {understandTheRisk: true, button: 'I understand the risks and I really want to display this page'}},
-    ].forEach((test, index: number) => {
-      it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
+  describe('BO : Update returns status', async () => {
+    it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.merchandiseReturnsLink,
-        );
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customerServiceParentLink,
+        dashboardPage.merchandiseReturnsLink,
+      );
 
-        const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
-      });
+      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+    });
 
-      it('should go to edit merchandise returns page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToEditReturnsPage${index}`, baseContext);
+    it('should get the return number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getReturnNumber', baseContext);
 
-        await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
+      returnID = parseInt(await merchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order_return'), 10);
+      await expect(returnID).to.not.equal(0);
+    });
 
-        const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
-      });
+    const tests = [
+      {args: {status: OrderReturnStatuses.waitingForPackage.name}},
+      {args: {status: OrderReturnStatuses.packageReceived.name}},
+      {args: {status: OrderReturnStatuses.returnDenied.name}},
+      {args: {status: OrderReturnStatuses.returnCompleted.name}},
+    ];
+    tests.forEach((test, index: number) => {
+      describe(`Update returns status to ${test.args.status} and check result`, async () => {
+        it('should go to edit merchandise returns page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToEditReturnsPage${index}`, baseContext);
 
-      it(`'should delete the first returned product and click on '${test.args.button}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteFirstProduct${index}`, baseContext);
+          await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
 
-        const text = await editMerchandiseReturnsPage.deleteProduct(page, 1, test.args.understandTheRisk);
+          const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
+        });
 
-        if (test.args.understandTheRisk) {
-          await expect(text).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
+        it('should update the status', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `editStatus${index}`, baseContext);
+
+          const textResult = await editMerchandiseReturnsPage.setStatus(page, test.args.status, true);
+          await expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
+        });
+
+        if (test.args.status === OrderReturnStatuses.waitingForPackage.name) {
+          it('should download and check the existence of the PDF print out file', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'checkPDF', baseContext);
+
+            filePath = await editMerchandiseReturnsPage.downloadPDF(page);
+
+            const exist = await files.doesFileExist(filePath);
+            await expect(exist, 'File does not exist').to.be.true;
+          });
+
+          it('should check the file name', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'checkFileName', baseContext);
+
+            const fileName = await editMerchandiseReturnsPage.getFileName(page);
+            await expect(fileName).to.eq('Print out');
+          });
+
+          it('should check the header of the return PDF', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnPDF', baseContext);
+
+            let returnPrefix = '#RE00000';
+
+            if (returnID >= 10) {
+              returnPrefix = '#RE0000';
+            }
+            const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${todayDate},,${returnPrefix}${returnID}`);
+            await expect(isVisible, 'The header of the PDF is not correct!').to.be.true;
+          });
+
+          it('should check the billing address in the PDF', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
+
+            const billingAddressExist = await files.isTextInPDF(
+              filePath,
+              'Billing & Delivery Address,,'
+              + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+              + `${Addresses.second.company},`
+              + `${Addresses.second.address},`
+              + `${Addresses.second.secondAddress},`
+              + `${Addresses.second.postalCode} ${Addresses.second.city},`
+              + `${Addresses.second.country},`
+              + `${Addresses.second.phone}`,
+            );
+            await expect(billingAddressExist, 'Billing address is not correct in PDF!').to.be.true;
+          });
+
+          it('should check the return number', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'checkReturnNumber', baseContext);
+
+            let returnPrefix = '00000';
+
+            if (returnID >= 10) {
+              returnPrefix = '0000';
+            }
+
+            const isVisible = await files.isTextInPDF(
+              filePath,
+              'We have logged your return request.,Your package must be returned to us within 14 days of receiving your order.'
+              + `,,Return Number, ,Date,,${returnPrefix}${returnID}, ,${todayDate}`);
+            await expect(isVisible, 'Order return ID and the date are not correct!').to.be.true;
+          });
+
+          it('should check the returned product details', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'checkReturnedProduct', baseContext);
+
+            const isVisible = await files.isTextInPDF(
+              filePath,
+              `Items to be returned, ,Reference, ,Qty,,${Products.demo_1.name} (Size: S - Color: White), ,`
+              + `${Products.demo_1.reference}, ,1`);
+            await expect(isVisible, 'Returned product details are not correct!').to.be.true;
+          });
         } else {
-          await expect(text).to.eq(dashboardPage.pageTitle);
+          it('should check the file is not existing', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', `checkFileNotExisting${index}`, baseContext);
+
+            const fileName = await editMerchandiseReturnsPage.getFileName(page);
+            await expect(fileName).to.eq('--');
+          });
         }
+        it('should click on cancel button', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `clickOnCancelButton${index}`, baseContext);
+
+          await editMerchandiseReturnsPage.clickOnCancelButton(page);
+
+          const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+        });
+
+        it('should check the updated status in the merchandise returns table', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkStatus${index}`, baseContext);
+
+          const status = await merchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'name');
+          await expect(status).to.eq(test.args.status);
+        });
       });
-    });
-
-    it('should go to edit merchandise returns page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditReturnsPage3', baseContext);
-
-      await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
-
-      const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
-    });
-
-    it('should try to delete the last returned product and check the error message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
-
-      const errorMessage = await editMerchandiseReturnsPage.clickOnDeleteLastProductButton(page);
-      await expect(errorMessage).to.contains(merchandiseReturnsPage.errorDeletionMessage);
     });
   });
 
