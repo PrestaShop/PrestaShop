@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Service\DataProvider;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Convenient way to access User, if exists.
@@ -60,8 +61,9 @@ class UserProvider
 
     public function getUsername()
     {
-        if ($this->getUser() instanceof User) {
-            return $this->getUser()->getUsername();
+        $user = $this->getUser();
+        if ($user instanceof UserInterface) {
+            return $user->getUsername();
         }
 
         return self::ANONYMOUS_USER;
