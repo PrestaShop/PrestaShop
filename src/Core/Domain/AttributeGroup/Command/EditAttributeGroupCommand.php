@@ -76,9 +76,16 @@ class EditAttributeGroupCommand
         array $shopAssociation = []
     ) {
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->assertNamesAreValid($localizedNames);
-        $this->assertNamesAreValid($localizedPublicNames);
-
+        $this->assertNamesAreValid(
+            $localizedNames,
+            'Attribute name cannot be empty',
+            AttributeGroupConstraintException::EMPTY_NAME
+        );
+        $this->assertNamesAreValid(
+            $localizedPublicNames,
+            'Attribute public name cannot be empty',
+            AttributeGroupConstraintException::EMPTY_PUBLIC_NAME
+        );
         $this->localizedNames = $localizedNames;
         $this->localizedPublicNames = $localizedPublicNames;
         $this->type = $type;
@@ -132,10 +139,10 @@ class EditAttributeGroupCommand
      *
      * @throws AttributeGroupConstraintException
      */
-    private function assertNamesAreValid(array $names): void
+    private function assertNamesAreValid(array $names, string $message, int $errorCode): void
     {
         if (empty($names)) {
-            throw new AttributeGroupConstraintException('Attribute name cannot be empty', AttributeGroupConstraintException::EMPTY_NAME);
+            throw new AttributeGroupConstraintException($message, $errorCode);
         }
     }
 }

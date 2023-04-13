@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\InvalidAttributeGroupIdException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 
 /**
  * Defines Attribute group ID with its constraints.
@@ -61,12 +61,15 @@ class AttributeGroupId
     /**
      * @param int $attributeGroupId
      *
-     * @throws InvalidAttributeGroupIdException
+     * @throws AttributeGroupConstraintException
      */
     private function assertIntegerIsGreaterThanZero(int $attributeGroupId): void
     {
         if (0 > $attributeGroupId) {
-            throw new AttributeGroupConstraintException(sprintf('Invalid attributeGroup id %s supplied. Attribute group id must be positive integer.', $attributeGroupId), AttributeGroupConstraintException::INVALID_ID);
+            throw new AttributeGroupConstraintException(
+                sprintf('Invalid attributeGroup id %s supplied. Attribute group id must be positive integer.', $attributeGroupId),
+                AttributeGroupConstraintException::INVALID_ID
+            );
         }
     }
 }

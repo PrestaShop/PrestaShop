@@ -48,7 +48,7 @@ class EditableAttributeGroup
     /**
      * @var int[]
      */
-    private $shopAssociationIds;
+    private $associatedShopIds;
 
     /**
      * @var array
@@ -65,18 +65,18 @@ class EditableAttributeGroup
      * @param string[] $name
      * @param array $publicName
      * @param string $type
-     * @param int[] $shopAssociationIds
+     * @param int[] $associatedShopIds
      */
     public function __construct(
         AttributeGroupId $attributeGroupId,
         array $name,
         array $publicName,
         string $type,
-        array $shopAssociationIds
+        array $associatedShopIds
     ) {
         $this->attributeGroupId = $attributeGroupId;
         $this->name = $name;
-        $this->shopAssociationIds = $shopAssociationIds;
+        $this->associatedShopIds = $associatedShopIds;
         $this->publicName = $publicName;
         $this->type = $type;
     }
@@ -100,9 +100,9 @@ class EditableAttributeGroup
     /**
      * @return int[]
      */
-    public function getShopAssociationIds(): array
+    public function getAssociatedShopIds(): array
     {
-        return $this->shopAssociationIds;
+        return $this->associatedShopIds;
     }
 
     /**

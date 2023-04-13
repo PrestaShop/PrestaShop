@@ -61,7 +61,7 @@ class AttributeGroupFormDataProvider implements FormDataProviderInterface
             'name' => $editableAttributeGroup->getName(),
             'public_name' => $editableAttributeGroup->getPublicName(),
             'group_type' => $editableAttributeGroup->getType(),
-            'shop_association' => $editableAttributeGroup->getShopAssociationIds(),
+            'shop_association' => $editableAttributeGroup->getAssociatedShopIds(),
         ];
     }
 
