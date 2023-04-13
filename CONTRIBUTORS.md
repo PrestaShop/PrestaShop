@@ -108,6 +108,7 @@ GitHub contributors:
 - Bersam Karbasion
 - Berto Ferrero
 - Bertrand Merlier
+- bibips
 - BigZ
 - BluTiGeS
 - BMS-fenaille
@@ -766,6 +767,7 @@ GitHub contributors:
 - Sébastien Alfaiate
 - Sébastien Bareyre
 - Sebastien Bocahu
+- Sébastien Cantos
 - Sébastien LE BRUCHEC
 - Sebastien Monterisi
 - Sébastien Rufer
