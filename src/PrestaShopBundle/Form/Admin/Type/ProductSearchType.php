@@ -67,14 +67,8 @@ class ProductSearchType extends TranslatorAwareType
         parent::configureOptions($resolver);
 
         $refLabel = $this->trans('Ref: %s', 'Admin.Catalog.Feature');
-        $combinationsUrl = $this->router->generate('admin_products_v2_search_combinations', [
-            'languageCode' => $this->languageIsoCode,
-            'query' => '__QUERY__',
-        ]);
-        $productsUrl = $this->router->generate('admin_products_v2_search_associations', [
-            'languageCode' => $this->languageIsoCode,
-            'query' => '__QUERY__',
-        ]);
+        $router = $this->router;
+        $languageIsoCode = $this->languageIsoCode;
 
         $resolver
             ->setRequired([
@@ -87,17 +81,25 @@ class ProductSearchType extends TranslatorAwareType
                 'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
                 'min_length' => 3,
                 'limit' => 1,
+                'filters' => [],
                 'identifier_field' => static function (Options $options): string {
                     return $options->offsetGet('include_combinations') === true ? 'unique_identifier' : 'id';
                 },
                 'entry_type' => static function (Options $options): string {
                     return $options->offsetGet('include_combinations') === true ? SearchedProductItemType::class : EntityItemType::class;
                 },
-                'remote_url' => static function (Options $options) use ($combinationsUrl, $productsUrl): string {
+                'remote_url' => static function (Options $options) use ($router, $languageIsoCode): string {
                     if ($options->offsetGet('include_combinations') === true) {
-                        return $combinationsUrl;
+                        return $router->generate('admin_products_v2_search_combinations', [
+                            'languageCode' => $languageIsoCode,
+                            'query' => '__QUERY__',
+                            'filters' => $options['filters'],
+                        ]);
                     } else {
-                        return $productsUrl;
+                        return $router->generate('admin_products_v2_search_associations', [
+                            'languageCode' => $languageIsoCode,
+                            'query' => '__QUERY__',
+                        ]);
                     }
                 },
             ])
@@ -107,7 +109,8 @@ class ProductSearchType extends TranslatorAwareType
                 } else {
                     return $value;
                 }
-            });
+            })
+        ;
     }
 
     public function getParent(): string

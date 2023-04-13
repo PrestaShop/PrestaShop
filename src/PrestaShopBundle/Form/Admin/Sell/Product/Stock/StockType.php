@@ -86,6 +86,9 @@ class StockType extends TranslatorAwareType
                 'label_tag_name' => 'h2',
                 'limit' => 0,
                 'entry_type' => PackedProductType::class,
+                'filters' => [
+                    'filteredTypes' => [ProductType::TYPE_PACK],
+                ],
                 'attr' => [
                     'class' => 'product_packed_products',
                     'data-reference-label' => $this->trans('Ref: %s', 'Admin.Catalog.Feature'),
