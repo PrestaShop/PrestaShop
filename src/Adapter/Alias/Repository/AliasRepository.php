@@ -39,16 +39,6 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 class AliasRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
      * @var AliasValidator
      */
     private $aliasValidator;
@@ -58,8 +48,6 @@ class AliasRepository extends AbstractObjectModelRepository
         string $dbPrefix,
         AliasValidator $aliasValidator
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
         $this->aliasValidator = $aliasValidator;
     }
 
