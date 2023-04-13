@@ -220,25 +220,10 @@ services:
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_iso_code").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\AbstractPaymentModuleRestrictionsType:
-    tags:
-      - { name: form.type }
-
   PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCarrierRestrictionsType:
-    tags:
-      - { name: form.type }
-
   PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCountryRestrictionsType:
-    tags:
-      - { name: form.type }
-
   PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCurrencyRestrictionsType:
-    tags:
-      - { name: form.type }
-
   PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType:
-    arguments:
-    tags:
-      - { name: form.type }
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType:
     arguments:

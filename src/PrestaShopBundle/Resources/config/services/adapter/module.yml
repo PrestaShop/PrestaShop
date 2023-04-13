@@ -59,7 +59,6 @@ services:
       - '@prestashop.adapter.module.payment_module_provider'
 
   PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider:
-    autowire: true
     public: false
     arguments:
       - '@prestashop.core.admin.module.repository'

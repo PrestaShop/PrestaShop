@@ -26,7 +26,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider:
     public: false
-    autowire: true
     arguments:
       $combinationFeature: '@PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature'
 
@@ -35,7 +34,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
     public: false
-    autowire: true
     arguments:
       - '@prestashop.adapter.data_provider.currency'
 
@@ -70,7 +68,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider:
     public: false
-    autowire: true
     arguments:
       - '@prestashop.adapter.data_provider.group'
 
@@ -78,7 +75,6 @@ services:
     alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider:
-    autowire: true
     public: false
     arguments:
       - '@prestashop.adapter.data_provider.carrier'
