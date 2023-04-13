@@ -28,13 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryHandler\GetAttributeGroupForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
-use PrestaShopException;
 
 /**
  * Handles query which gets attribute group for editing
@@ -42,12 +39,22 @@ use PrestaShopException;
 final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEditingHandlerInterface
 {
     /**
+     * @var AttributeGroupRepository
+     */
+    private $attributeGroupRepository;
+
+    public function __construct(AttributeGroupRepository $attributeGroupRepository)
+    {
+        $this->attributeGroupRepository = $attributeGroupRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(GetAttributeGroupForEditing $query): EditableAttributeGroup
     {
         $attributeGroupId = $query->getAttributeGroupId();
-        $attributeGroup = $this->getAttributeGroup($attributeGroupId);
+        $attributeGroup = $this->attributeGroupRepository->get($attributeGroupId);
 
         return new EditableAttributeGroup(
             $attributeGroupId,
@@ -56,30 +63,5 @@ final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEd
             $attributeGroup->group_type,
             $attributeGroup->getAssociatedShops()
         );
-    }
-
-    /**
-     * Gets legacy Attribute group
-     *
-     * @param AttributeGroupId $attributeGroupId
-     *
-     * @return \AttributeGroup
-     *
-     * @throws AttributeGroupException
-     * @throws AttributeGroupNotFoundException
-     */
-    protected function getAttributeGroup(AttributeGroupId $attributeGroupId): \AttributeGroup
-    {
-        try {
-            $attributeGroup = new \AttributeGroup($attributeGroupId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new AttributeGroupException('Failed to create new attribute group', 0, $e);
-        }
-
-        if ($attributeGroup->id !== $attributeGroupId->getValue()) {
-            throw new AttributeGroupNotFoundException(sprintf('Attribute group with id "%s" was not found.', $attributeGroupId->getValue()));
-        }
-
-        return $attributeGroup;
     }
 }

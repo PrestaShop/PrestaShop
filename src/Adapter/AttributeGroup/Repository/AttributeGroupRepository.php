@@ -29,11 +29,14 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository;
 
 use AttributeGroup;
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
 class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
@@ -48,12 +51,69 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
      */
     private $dbPrefix;
 
+    /**
+     * @var AttributeGroupValidator
+     */
+    private $validator;
+
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        AttributeGroupValidator $validator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->validator = $validator;
+    }
+
+    /**
+     * @param AttributeGroupId $attributeGroupId
+     *
+     * @return AttributeGroup
+     *
+     * @throws AttributeGroupNotFoundException
+     * @throws CoreException
+     */
+    public function get(AttributeGroupId $attributeGroupId): AttributeGroup
+    {
+        /** @var AttributeGroup $attributeGroup */
+        $attributeGroup = $this->getObjectModel(
+            $attributeGroupId->getValue(),
+            AttributeGroup::class,
+            AttributeGroupNotFoundException::class
+        );
+
+        return $attributeGroup;
+    }
+
+    /**
+     * @param AttributeGroup $attributeGroup
+     * @param int $errorCode
+     *
+     * @return AttributeGroupId
+     *
+     * @throws CoreException
+     */
+    public function add(AttributeGroup $attributeGroup, int $errorCode = 0): AttributeGroupId
+    {
+        $this->validator->validate($attributeGroup);
+        $id = $this->addObjectModel($attributeGroup, CannotAddAttributeGroupException::class, $errorCode);
+
+        return new AttributeGroupId($id);
+    }
+
+    /**
+     * @param AttributeGroup $attributeGroup
+     * @param int $errorCode
+     *
+     * @return void
+     *
+     * @throws CoreException
+     */
+    public function update(AttributeGroup $attributeGroup, int $errorCode = 0): void
+    {
+        $this->validator->validate($attributeGroup);
+        $this->updateObjectModel($attributeGroup, CannotAddAttributeGroupException::class, $errorCode);
     }
 
     /**

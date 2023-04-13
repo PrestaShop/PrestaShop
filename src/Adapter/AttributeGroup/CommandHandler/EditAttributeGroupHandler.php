@@ -28,12 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\EditAttributeGroupHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotUpdateAttributeGroupException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
  * Handles editing of attribute groups using legacy logic.
@@ -41,9 +39,19 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupI
 final class EditAttributeGroupHandler extends AbstractObjectModelHandler implements EditAttributeGroupHandlerInterface
 {
     /**
+     * @var AttributeGroupRepository
+     */
+    private $attributeGroupRepository;
+
+    public function __construct(AttributeGroupRepository $attributeGroupRepository)
+    {
+        $this->attributeGroupRepository = $attributeGroupRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function handle(EditAttributeGroupCommand $command): AttributeGroupId
+    public function handle(EditAttributeGroupCommand $command): void
     {
         $attributeGroup = new \AttributeGroup($command->getAttributeGroupId()->getValue());
 
@@ -51,20 +59,8 @@ final class EditAttributeGroupHandler extends AbstractObjectModelHandler impleme
         $attributeGroup->public_name = $command->getLocalizedPublicNames();
         $attributeGroup->group_type = $command->getType()->getValue();
 
-        if (false === $attributeGroup->validateFields(false)) {
-            throw new AttributeGroupConstraintException('Invalid attribute data');
-        }
-
-        if (false === $attributeGroup->validateFieldsLang(false)) {
-            throw new AttributeGroupConstraintException('Invalid attribute group data', AttributeGroupConstraintException::INVALID_NAME);
-        }
-
-        if (false === $attributeGroup->update()) {
-            throw new CannotUpdateAttributeGroupException('Unable to update attribute group');
-        }
+        $this->attributeGroupRepository->update($attributeGroup);
 
         $this->associateWithShops($attributeGroup, $command->getShopAssociation());
-
-        return new AttributeGroupId((int) $attributeGroup->id);
     }
 }

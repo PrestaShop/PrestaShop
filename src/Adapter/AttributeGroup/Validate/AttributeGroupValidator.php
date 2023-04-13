@@ -24,18 +24,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
+namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate;
+
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use AttributeGroup;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Describes a service that handles attribute group edit command.
+ * Validates Attribute Group properties using legacy object model
  */
-interface EditAttributeGroupHandlerInterface
+class AttributeGroupValidator extends AbstractObjectModelValidator
 {
     /**
-     * @param EditAttributeGroupCommand $command
+     * @param AttributeGroup $attributeGroup
+     *
+     * @throws CoreException
      */
-    public function handle(EditAttributeGroupCommand $command): void;
+    public function validate(AttributeGroup $attributeGroup): void
+    {
+        $this->validateObjectModelLocalizedProperty($attributeGroup, 'name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME);
+        $this->validateObjectModelLocalizedProperty($attributeGroup, 'public_name', AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME);
+    }
 }

@@ -28,11 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\CommandHandler\AddAttributeGroupHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
@@ -40,6 +39,16 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupI
  */
 final class AddAttributeGroupHandler extends AbstractObjectModelHandler implements AddAttributeGroupHandlerInterface
 {
+    /**
+     * @var AttributeGroupRepository
+     */
+    private $attributeGroupRepository;
+
+    public function __construct(AttributeGroupRepository $attributeGroupRepository)
+    {
+        $this->attributeGroupRepository = $attributeGroupRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -51,20 +60,10 @@ final class AddAttributeGroupHandler extends AbstractObjectModelHandler implemen
         $attributeGroup->public_name = $command->getLocalizedPublicNames();
         $attributeGroup->group_type = $command->getType()->getValue();
 
-        if (false === $attributeGroup->validateFields(false)) {
-            throw new AttributeGroupConstraintException('Invalid attribute data');
-        }
-
-        if (false === $attributeGroup->validateFieldsLang(false)) {
-            throw new AttributeGroupConstraintException('Invalid attribute group data', AttributeGroupConstraintException::INVALID_NAME);
-        }
-
-        if (false === $attributeGroup->add()) {
-            throw new CannotAddAttributeGroupException('Unable to create new attribute group');
-        }
+        $id = $this->attributeGroupRepository->add($attributeGroup);
 
         $this->associateWithShops($attributeGroup, $command->getShopAssociation());
 
-        return new AttributeGroupId((int) $attributeGroup->id);
+        return $id;
     }
 }

@@ -48,6 +48,9 @@ services:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository:
+    autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\AttributeGroup\Validate\AttributeGroupValidator:
