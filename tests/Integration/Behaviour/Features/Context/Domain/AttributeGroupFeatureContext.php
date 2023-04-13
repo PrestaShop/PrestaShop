@@ -30,15 +30,113 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @var int default language id from configs
+     */
+    private $defaultLangId;
+
+    /**
+     * @var int default shop id from configs
+     */
+    private $defaultShopId;
+
+    public function __construct()
+    {
+        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
+        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
+    }
+
+    /**
+     * @When I create attribute group :reference with specified properties:
+     */
+    public function createAttributeGroup(string $reference, TableNode $node): void
+    {
+        $properties = $node->getRowsHash();
+        $attributeGroupId = $this->createAttributeGroupUsingCommand($properties['name'], $properties['public_name'], $properties['type']);
+
+        $this->getSharedStorage()->set($reference, $attributeGroupId->getValue());
+    }
+
+    /**
+     * @When I edit attribute group :reference with specified properties:
+     */
+    public function editAttributeGroup(string $reference, TableNode $node): void
+    {
+        $attributeGroupId = SharedStorage::getStorage()->get($reference);
+
+        $properties = $node->getRowsHash();
+        $this->editAttributeGroupUsingCommand($attributeGroupId, $properties['name'], $properties['public_name'], $properties['type']);
+    }
+
+    /**
+     * @When I delete attribute group :reference
+     */
+    public function deleteManufacturer(string $reference): void
+    {
+        $attributeGroupId = SharedStorage::getStorage()->get($reference);
+
+        $this->getCommandBus()->handle(new DeleteAttributeGroupCommand($attributeGroupId));
+    }
+
+    /**
+     * @Then attribute group :reference should be deleted
+     */
+    public function assertAttributeGroupIsDeleted(string $reference): void
+    {
+        $attributeGroupId = SharedStorage::getStorage()->get($reference);
+
+        try {
+            $this->getQueryBus()->handle(new GetAttributeGroupForEditing($attributeGroupId));
+
+            throw new NoExceptionAlthoughExpectedException(sprintf('Attribute group %s exists, but it was expected to be deleted', $reference));
+        } catch (AttributeGroupNotFoundException $e) {
+            SharedStorage::getStorage()->clear($reference);
+        }
+    }
+
+
+    /**
+     * @Then attribute group :reference :field should be :value
+     */
+    public function assertFieldValue(string $reference, string $field, string $value): void
+    {
+        $attributeGroupId = SharedStorage::getStorage()->get($reference);
+        $attributeGroup = new \AttributeGroup($attributeGroupId);
+
+        if ($attributeGroup->$field !== $value) {
+            throw new RuntimeException(sprintf('Attribute group "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field, $field, $value));
+        }
+    }
+
+    /**
+     * @Then attribute group :reference :field in default language should be :value
+     */
+    public function assertFieldWithLangValue(string $reference, string $field, string $value): void
+    {
+        $attributeGroupId = SharedStorage::getStorage()->get($reference);
+        $attributeGroup = new \AttributeGroup($attributeGroupId);
+
+        if ($attributeGroup->$field[$this->defaultLangId] !== $value) {
+            throw new RuntimeException(sprintf('Attribute group "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field[$this->defaultLangId], $field, $value));
+        }
+    }
+
     /**
      * @Given there is a list of following attribute groups:
      *
@@ -420,5 +518,49 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             $expectedId = $this->getSharedStorage()->get($attributesDatum['reference']);
             Assert::assertEquals($expectedId, $attribute->getAttributeId());
         }
+    }
+
+    /**
+     * @param string $nameInDefaultLanguage
+     * @param string $publicNameInDefaultLanguage
+     * @param string $type
+     * @return AttributeGroupId
+     * @throws \PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException
+     */
+    private function createAttributeGroupUsingCommand(string $nameInDefaultLanguage, string $publicNameInDefaultLanguage, string $type): AttributeGroupId
+    {
+        $command = new AddAttributeGroupCommand(
+            [$this->defaultLangId => $nameInDefaultLanguage],
+            [$this->defaultLangId => $publicNameInDefaultLanguage],
+            $type,
+            [$this->defaultShopId]
+        );
+
+        return $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @param string $nameInDefaultLanguage
+     * @param string $publicNameInDefaultLanguage
+     * @param string $type
+     * @return AttributeGroupId
+     * @throws \PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException
+     */
+    private function editAttributeGroupUsingCommand(
+        int $attributeGroupId,
+        string $nameInDefaultLanguage,
+        string $publicNameInDefaultLanguage,
+        string $type
+    ): AttributeGroupId
+    {
+        $command = new EditAttributeGroupCommand(
+            $attributeGroupId,
+            [$this->defaultLangId => $nameInDefaultLanguage],
+            [$this->defaultLangId => $publicNameInDefaultLanguage],
+            $type,
+            [$this->defaultShopId]
+        );
+
+        return $this->getCommandBus()->handle($command);
     }
 }
