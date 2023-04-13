@@ -65,7 +65,7 @@ class AttributeGroupFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'group_type' => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_SELECT
+            'group_type' => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_SELECT,
         ];
     }
 }
