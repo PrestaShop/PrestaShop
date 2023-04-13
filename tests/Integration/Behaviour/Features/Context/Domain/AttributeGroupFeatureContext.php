@@ -94,7 +94,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getQueryBus()->handle(new GetAttributeGroupForEditing($attributeGroupId));
 
-            throw new NoExceptionAlthoughExpectedException(sprintf('Attribute group %s exists, but it was expected to be deleted', $reference));
+            throw new NoExceptionAlthoughExpectedException(sprintf('Attribute %s exists, but it was expected to be deleted', $reference));
         } catch (AttributeGroupNotFoundException $e) {
             $this->getSharedStorage()->clear($reference);
         }
@@ -109,7 +109,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
         $attributeGroup = new \AttributeGroup($attributeGroupId);
 
         if ($attributeGroup->$field !== $value) {
-            throw new RuntimeException(sprintf('Attribute group "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field, $field, $value));
+            throw new RuntimeException(sprintf('Attribute "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field, $field, $value));
         }
     }
 
@@ -122,7 +122,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
         $attributeGroup = new \AttributeGroup($attributeGroupId);
 
         if ($attributeGroup->$field[$this->getDefaultLangId()] !== $value) {
-            throw new RuntimeException(sprintf('Attribute group "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field[$this->getDefaultLangId()], $field, $value));
+            throw new RuntimeException(sprintf('Attribute "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field[$this->getDefaultLangId()], $field, $value));
         }
     }
 
