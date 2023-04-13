@@ -33,9 +33,11 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\InvalidAttributeGroupTypeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
@@ -530,14 +532,14 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @return AttributeGroupId
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException
+     * @throws AttributeGroupConstraintException|InvalidAttributeGroupTypeException
      */
     private function createAttributeGroupUsingCommand(string $nameInDefaultLanguage, string $publicNameInDefaultLanguage, string $type): AttributeGroupId
     {
         $command = new AddAttributeGroupCommand(
             [$this->defaultLangId => $nameInDefaultLanguage],
             [$this->defaultLangId => $publicNameInDefaultLanguage],
-            $type,
+            (new AttributeGroupType($type)),
             [$this->defaultShopId]
         );
 
@@ -552,7 +554,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @return AttributeGroupId
      *
-     * @throws AttributeGroupConstraintException
+     * @throws AttributeGroupConstraintException|InvalidAttributeGroupTypeException
      */
     private function editAttributeGroupUsingCommand(
         int $attributeGroupId,
@@ -564,7 +566,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             $attributeGroupId,
             [$this->defaultLangId => $nameInDefaultLanguage],
             [$this->defaultLangId => $publicNameInDefaultLanguage],
-            $type,
+            (new AttributeGroupType($type)),
             [$this->defaultShopId]
         );
 

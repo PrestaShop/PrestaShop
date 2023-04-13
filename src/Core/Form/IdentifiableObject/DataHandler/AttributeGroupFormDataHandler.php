@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\EditAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 
 /**
  * Handles data of submitted Attribute Group form.
@@ -60,7 +61,7 @@ final class AttributeGroupFormDataHandler implements FormDataHandlerInterface
         $attributeGroupId = $this->commandBus->handle(new AddAttributeGroupCommand(
             $data['name'],
             $data['public_name'],
-            $data['group_type'],
+            (new AttributeGroupType($data['group_type'])),
             $data['shop_association'] ?? []
         ));
 
@@ -77,7 +78,7 @@ final class AttributeGroupFormDataHandler implements FormDataHandlerInterface
             (int) $id,
             $data['name'],
             $data['public_name'],
-            $data['group_type'],
+            (new AttributeGroupType($data['group_type'])),
             $data['shop_association'] ?? []
         ));
 

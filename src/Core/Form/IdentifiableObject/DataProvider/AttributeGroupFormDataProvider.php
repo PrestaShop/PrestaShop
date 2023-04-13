@@ -28,10 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupSettings;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 
 class AttributeGroupFormDataProvider implements FormDataProviderInterface
 {
@@ -65,7 +65,7 @@ class AttributeGroupFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'group_type' => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_SELECT,
+            'group_type' => AttributeGroupType::ATTRIBUTE_GROUP_TYPE_SELECT,
         ];
     }
 }

@@ -49,7 +49,7 @@ final class AddAttributeGroupHandler extends AbstractObjectModelHandler implemen
 
         $attributeGroup->name = $command->getLocalizedNames();
         $attributeGroup->public_name = $command->getLocalizedPublicNames();
-        $attributeGroup->group_type = $command->getType();
+        $attributeGroup->group_type = $command->getType()->getValue();
 
         if (false === $attributeGroup->validateFields(false)) {
             throw new AttributeGroupConstraintException('Invalid attribute data');

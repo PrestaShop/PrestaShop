@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupSettings;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -40,6 +39,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType as GroupType;
 
 /**
  * Form type for attribute add/edit
@@ -72,9 +72,9 @@ class AttributeGroupType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributeTypes = [
-            $this->trans('Drop-down list', 'Admin.Global') => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_SELECT,
-            $this->trans('Radio buttons', 'Admin.Global') => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_RADIO,
-            $this->trans('Color or texture', 'Admin.Catalog.Feature') => AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_COLOR,
+            $this->trans('Drop-down list', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_SELECT,
+            $this->trans('Radio buttons', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_RADIO,
+            $this->trans('Color or texture', 'Admin.Catalog.Feature') => GroupType::ATTRIBUTE_GROUP_TYPE_COLOR,
         ];
 
         $builder->add('name', TranslatableType::class, [
