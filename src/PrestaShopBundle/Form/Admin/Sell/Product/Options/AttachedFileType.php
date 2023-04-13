@@ -38,6 +38,7 @@ class AttachedFileType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->remove('image')
             ->add('attachment_id', HiddenType::class, [
                 'label' => false,
             ])
