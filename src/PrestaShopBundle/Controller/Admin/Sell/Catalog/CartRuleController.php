@@ -33,10 +33,16 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\BulkDeleteCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\BulkToggleCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -73,6 +79,13 @@ class CartRuleController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartRuleGrid' => $this->presentGrid($cartRuleGrid),
             'layoutTitle' => $this->trans('Cart rules', 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => [
+                'add_cart_rule' => [
+                    'href' => $this->generateUrl('admin_cart_rules_create'),
+                    'desc' => $this->trans('Add new cart rule', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
         ]);
     }
 
@@ -143,7 +156,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
-        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+        $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteCartRuleCommand($cartRuleIds));
@@ -188,21 +201,33 @@ class CartRuleController extends FrameworkBundleAdminController
     }
 
     /**
-     * Provides cart rule ids from request of bulk action
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
-     * @param Request $request
-     *
-     * @return array
+     * @return Response
      */
-    private function getBulkCartRulesFromRequest(Request $request): array
+    public function createAction(Request $request): Response
     {
-        $cartRuleIds = $request->request->get('cart_rule_bulk');
+        $form = $this->getFormBuilder()->getForm($this->prefillFormDataForCreation($request));
+        $form->handleRequest($request);
 
-        if (!is_array($cartRuleIds)) {
-            return [];
+        try {
+            $handlerResult = $this->getFormHandler()->handle($form);
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                //@todo: redirect to edition page when it is implemented
+                return $this->redirectToRoute('admin_cart_rules_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return array_map('intval', $cartRuleIds);
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/CartRule/create.html.twig', [
+            'enableSidebar' => true,
+            'cartRuleForm' => $form->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -217,7 +242,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function bulkEnableAction(Request $request): RedirectResponse
     {
-        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+        $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, true));
@@ -245,7 +270,7 @@ class CartRuleController extends FrameworkBundleAdminController
      */
     public function bulkDisableAction(Request $request): RedirectResponse
     {
-        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+        $cartRuleIds = $this->getBulkActionIds($request, 'cart_rule_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, false));
@@ -259,6 +284,42 @@ class CartRuleController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_cart_rules_index');
+    }
+
+    /**
+     * This just prefills form fields that depends on query parameter like customer search input (if id is provided),
+     * all remaining data should be set in related form data provider.
+     * (The parameter is in the URL, not the post data which is why it's out of the provider's responsibility)
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function prefillFormDataForCreation(Request $request): array
+    {
+        $formData = [];
+
+        $customerId = $request->query->getInt('customerId');
+        if ($customerId) {
+            $cartRuleFormDataProvider = $this->get(CartRuleFormDataProvider::class);
+            // form data is multidimensional, so we need to get all of it and override only customer,
+            // or else the remaining data from data provider 'conditions' tab will be lost
+            $formData = $cartRuleFormDataProvider->getDefaultData();
+            /** @var ViewableCustomer $customer */
+            $customer = $this->getQueryBus()->handle(new GetCustomerForViewing($customerId));
+            $customerInfo = $customer->getPersonalInformation();
+            $formData['conditions']['customer'][] = [
+                'id_customer' => $customerId,
+                'fullname_and_email' => sprintf(
+                    '%s %s - %s',
+                    $customerInfo->getFirstname(),
+                    $customerInfo->getLastname(),
+                    $customerInfo->getEmail()
+                ),
+            ];
+        }
+
+        return $formData;
     }
 
     private function getErrorMessages(Exception $e): array
@@ -280,6 +341,28 @@ class CartRuleController extends FrameworkBundleAdminController
                 ),
                 $e instanceof BulkToggleCartRuleException ? implode(', ', $e->getCartRuleIds()) : ''
             ),
+            CartRuleConstraintException::class => [
+                CartRuleConstraintException::MISSING_ACTION => $this->trans(
+                    'Cart rule must have at least one action',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.cart_rule_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.cart_rule_form_builder');
     }
 }

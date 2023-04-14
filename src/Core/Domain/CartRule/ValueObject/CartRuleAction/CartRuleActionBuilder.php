@@ -28,28 +28,39 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Builds cart rule actions.
  */
-final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
+class CartRuleActionBuilder implements CartRuleActionBuilderInterface
 {
     /**
      * @var bool
      */
-    private $isFreeShipping = false;
+    private $freeShipping = false;
 
     /**
-     * @var PercentageDiscount|null
+     * @var Reduction|null
      */
-    private $percentageDiscount;
+    private $reduction;
 
     /**
-     * @var MoneyAmountCondition|null
+     * @var CurrencyId|null
      */
-    private $amountDiscount;
+    private $currencyId;
+
+    /**
+     * @var bool|null
+     */
+    private $taxIncluded;
+
+    /**
+     * @var bool|null
+     */
+    private $applyToDiscountedProducts;
 
     /**
      * @var GiftProduct|null
@@ -59,9 +70,9 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setFreeShipping(bool $isFreeShipping): CartRuleActionBuilderInterface
+    public function setFreeShipping(bool $freeShipping): CartRuleActionBuilderInterface
     {
-        $this->isFreeShipping = $isFreeShipping;
+        $this->freeShipping = $freeShipping;
 
         return $this;
     }
@@ -69,9 +80,14 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setPercentageDiscount(PercentageDiscount $percentageDiscount): CartRuleActionBuilderInterface
+    public function setPercentageDiscount(string $reductionValue, bool $applyToDiscountedProducts): CartRuleActionBuilderInterface
     {
-        $this->percentageDiscount = $percentageDiscount;
+        if ($this->reduction) {
+            throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
+        }
+
+        $this->reduction = new Reduction(Reduction::TYPE_PERCENTAGE, $reductionValue);
+        $this->applyToDiscountedProducts = $applyToDiscountedProducts;
 
         return $this;
     }
@@ -79,9 +95,18 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setAmountDiscount(MoneyAmountCondition $amount): CartRuleActionBuilderInterface
-    {
-        $this->amountDiscount = $amount;
+    public function setAmountDiscount(
+        string $reductionValue,
+        int $currencyId,
+        bool $taxIncluded
+    ): CartRuleActionBuilderInterface {
+        if ($this->reduction) {
+            throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
+        }
+
+        $this->reduction = new Reduction(Reduction::TYPE_AMOUNT, $reductionValue);
+        $this->currencyId = new CurrencyId($currencyId);
+        $this->taxIncluded = $taxIncluded;
 
         return $this;
     }
@@ -89,9 +114,9 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setGiftProduct(GiftProduct $giftProduct): CartRuleActionBuilderInterface
+    public function setGiftProduct(int $productId, ?int $combinationId = null): CartRuleActionBuilderInterface
     {
-        $this->giftProduct = $giftProduct;
+        $this->giftProduct = new GiftProduct($productId, $combinationId);
 
         return $this;
     }
@@ -103,41 +128,32 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     {
         $this->assertCartRuleActionsAreValid();
 
-        if (null !== $this->percentageDiscount) {
-            $action = new PercentageDiscountAction(
-                $this->percentageDiscount,
-                $this->isFreeShipping,
-                $this->giftProduct
-            );
-        } elseif (null !== $this->amountDiscount) {
-            $action = new AmountDiscountAction(
-                $this->amountDiscount,
-                $this->isFreeShipping,
-                $this->giftProduct
-            );
-        } elseif (true === $this->isFreeShipping) {
-            $action = new FreeShippingAction($this->giftProduct);
-        } else {
-            $action = new GiftProductAction($this->giftProduct);
+        if (null === $this->reduction) {
+            return $this->freeShipping ? new FreeShippingAction($this->giftProduct) : new GiftProductAction($this->giftProduct);
         }
 
-        return $action;
+        if ($this->reduction->getType() === Reduction::TYPE_AMOUNT) {
+            return new AmountDiscountAction(
+                new Money($this->reduction->getValue(), $this->currencyId, $this->taxIncluded),
+                $this->freeShipping,
+                $this->giftProduct
+            );
+        }
+
+        return new PercentageDiscountAction(
+            $this->reduction->getValue(),
+            $this->applyToDiscountedProducts,
+            $this->freeShipping,
+            $this->giftProduct
+        );
     }
 
     /**
      * @throws CartRuleConstraintException
      */
-    private function assertCartRuleActionsAreValid()
+    private function assertCartRuleActionsAreValid(): void
     {
-        if (null !== $this->percentageDiscount && null !== $this->amountDiscount) {
-            throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-        }
-
-        if (null === $this->percentageDiscount &&
-            null === $this->amountDiscount &&
-            null === $this->giftProduct &&
-            false === $this->isFreeShipping
-        ) {
+        if (null === $this->reduction && null === $this->giftProduct && !$this->freeShipping) {
             throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
         }
     }

@@ -23,64 +23,37 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
+namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\EntityItemType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-/**
- * A cart rule condition for amount of money
- */
-class MoneyAmountCondition
+class SearchedProductItemType extends CommonAbstractType
 {
     /**
-     * @var Money
+     * {@inheritDoc}
      */
-    private $money;
-
-    /**
-     * @var bool
-     */
-    private $taxExcluded;
-
-    /**
-     * @var bool|null
-     */
-    private $shippingExcluded;
-
-    /**
-     * @param Money $money
-     * @param bool $taxExcluded
-     * @param bool|null $shippingExcluded
-     */
-    public function __construct(Money $money, bool $taxExcluded, bool $shippingExcluded = null)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->money = $money;
-        $this->taxExcluded = $taxExcluded;
-        $this->shippingExcluded = $shippingExcluded;
+        $builder
+            ->add('unique_identifier', HiddenType::class, [
+                'label' => false,
+            ])
+            ->add('product_id', HiddenType::class, [
+                'label' => false,
+            ])
+            ->add('combination_id', HiddenType::class, [
+                'label' => false,
+            ])
+        ;
     }
 
-    /**
-     * @return Money
-     */
-    public function getMoneyAmount(): Money
+    public function getParent(): string
     {
-        return $this->money;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTaxExcluded(): bool
-    {
-        return $this->taxExcluded;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isShippingExcluded(): ?bool
-    {
-        return $this->shippingExcluded;
+        return EntityItemType::class;
     }
 }

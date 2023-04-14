@@ -39,6 +39,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -511,5 +512,26 @@ class FrameworkBundleAdminController extends AbstractController
             $exceptionCode,
             $e->getMessage()
         );
+    }
+
+    protected function getBulkActionIds(Request $request, string $key): array
+    {
+        $ids = $request->request->get($key);
+
+        if (is_numeric($ids)) {
+            return [(int) $ids];
+        }
+
+        if (!is_array($ids)) {
+            return [];
+        }
+
+        foreach ($ids as $i => $id) {
+            $ids[$i] = (int) $id;
+        }
+
+        sort($ids);
+
+        return $ids;
     }
 }

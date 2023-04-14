@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
 use DateTime;
@@ -31,10 +33,8 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -47,52 +47,27 @@ class AddCartRuleCommand
     /**
      * @var string
      */
-    private $description;
+    private $description = '';
 
     /**
      * @var string
      */
-    private $code;
+    private $code = '';
 
     /**
-     * @var MoneyAmountCondition
+     * @var Money|null
      */
-    private $minimumAmountCondition;
+    private $minimumAmount;
+
+    /**
+     * @var bool|null
+     */
+    private $minimumAmountShippingIncluded;
 
     /**
      * @var CustomerId|null
      */
     private $customerId;
-
-    /**
-     * @var bool
-     */
-    private $hasCountryRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasCarrierRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasGroupRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasCartRuleRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasProductRestriction = false;
-
-    /**
-     * @var bool
-     */
-    private $hasShopRestriction = false;
 
     /**
      * @var array
@@ -145,9 +120,6 @@ class AddCartRuleCommand
     private $cartRuleAction;
 
     /**
-     * Discount application type indicates what the discount should be applied to.
-     * E.g. to whole order, to a specific product, to cheapest product.
-     *
      * @var DiscountApplicationType|null
      */
     private $discountApplicationType;
@@ -170,13 +142,8 @@ class AddCartRuleCommand
      * @param int $totalQuantity
      * @param int $quantityPerUser
      * @param CartRuleActionInterface $cartRuleAction
-     * @param float $minimumAmount
-     * @param int $minimumAmountCurrencyId
-     * @param bool $isMinimumAmountTaxExcluded
-     * @param bool $isMinimumAmountShippingExcluded
      *
      * @throws CartRuleConstraintException
-     * @throws DomainConstraintException
      */
     public function __construct(
         array $localizedNames,
@@ -188,22 +155,13 @@ class AddCartRuleCommand
         DateTime $validTo,
         int $totalQuantity,
         int $quantityPerUser,
-        CartRuleActionInterface $cartRuleAction,
-        float $minimumAmount,
-        int $minimumAmountCurrencyId,
-        bool $isMinimumAmountTaxExcluded,
-        bool $isMinimumAmountShippingExcluded
+        CartRuleActionInterface $cartRuleAction
     ) {
         $this->assertDateRangeIsValid($validFrom, $validTo);
         $this->setLocalizedNames($localizedNames);
         $this->setPriority($priority);
         $this->setTotalQuantity($totalQuantity);
         $this->setQuantityPerUser($quantityPerUser);
-        $this->minimumAmountCondition = new MoneyAmountCondition(
-            new Money(new DecimalNumber((string) $minimumAmount), new CurrencyId($minimumAmountCurrencyId)),
-            $isMinimumAmountTaxExcluded,
-            $isMinimumAmountShippingExcluded
-        );
         $this->highlightInCart = $highlightInCart;
         $this->allowPartialUse = $allowPartialUse;
         $this->isActive = $isActive;
@@ -271,67 +229,11 @@ class AddCartRuleCommand
     }
 
     /**
-     * @return MoneyAmountCondition
-     */
-    public function getMinimumAmountCondition(): MoneyAmountCondition
-    {
-        return $this->minimumAmountCondition;
-    }
-
-    /**
      * @return CustomerId|null
      */
     public function getCustomerId(): ?CustomerId
     {
         return $this->customerId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasCountryRestriction(): bool
-    {
-        return $this->hasCountryRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasCarrierRestriction(): bool
-    {
-        return $this->hasCarrierRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasGroupRestriction(): bool
-    {
-        return $this->hasGroupRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasCartRuleRestriction(): bool
-    {
-        return $this->hasCartRuleRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasProductRestriction(): bool
-    {
-        return $this->hasProductRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasShopRestriction(): bool
-    {
-        return $this->hasShopRestriction;
     }
 
     /**
@@ -450,89 +352,39 @@ class AddCartRuleCommand
         return $this;
     }
 
-    /**
-     * @param bool $hasCountryRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasCountryRestriction(bool $hasCountryRestriction): AddCartRuleCommand
-    {
-        $this->hasCountryRestriction = $hasCountryRestriction;
+    public function setMinimumAmount(
+        string $minimumAmount,
+        int $currencyId,
+        bool $taxIncluded,
+        bool $shippingIncluded
+    ): AddCartRuleCommand {
+        $this->minimumAmount = new Money(
+            new DecimalNumber($minimumAmount),
+            new CurrencyId($currencyId),
+            $taxIncluded
+        );
+        $this->minimumAmountShippingIncluded = $shippingIncluded;
 
         return $this;
     }
 
-    /**
-     * @param bool $hasCarrierRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasCarrierRestriction(bool $hasCarrierRestriction): AddCartRuleCommand
+    public function getMinimumAmount(): ?Money
     {
-        $this->hasCarrierRestriction = $hasCarrierRestriction;
+        return $this->minimumAmount;
+    }
 
-        return $this;
+    public function isMinimumAmountShippingIncluded(): ?bool
+    {
+        return $this->minimumAmountShippingIncluded;
     }
 
     /**
-     * @param bool $hasGroupRestriction
+     * @param array<int, string> $localizedNames
      *
      * @return AddCartRuleCommand
-     */
-    public function setHasGroupRestriction(bool $hasGroupRestriction): AddCartRuleCommand
-    {
-        $this->hasGroupRestriction = $hasGroupRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasCartRuleRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasCartRuleRestriction(bool $hasCartRuleRestriction): AddCartRuleCommand
-    {
-        $this->hasCartRuleRestriction = $hasCartRuleRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasProductRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasProductRestriction(bool $hasProductRestriction): AddCartRuleCommand
-    {
-        $this->hasProductRestriction = $hasProductRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $hasShopRestriction
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setHasShopRestriction(bool $hasShopRestriction): AddCartRuleCommand
-    {
-        $this->hasShopRestriction = $hasShopRestriction;
-
-        return $this;
-    }
-
-    /**
-     * @param array $localizedNames
-     *
-     * @return AddCartRuleCommand
-     *
-     * @throws CartRuleConstraintException
      */
     private function setLocalizedNames(array $localizedNames): AddCartRuleCommand
     {
-        $this->assertAtLeastOneNameIsPresent($localizedNames);
-
         foreach ($localizedNames as $languageId => $name) {
             $this->localizedNames[(new LanguageId($languageId))->getValue()] = $name;
         }
@@ -592,18 +444,6 @@ class AddCartRuleCommand
         $this->quantityPerUser = $quantity;
 
         return $this;
-    }
-
-    /**
-     * @param array $names
-     *
-     * @throws CartRuleConstraintException
-     */
-    private function assertAtLeastOneNameIsPresent(array $names): void
-    {
-        if (empty($names)) {
-            throw new CartRuleConstraintException('Cart rule name is mandatory in at least one language', CartRuleConstraintException::EMPTY_NAME);
-        }
     }
 
     /**

@@ -26,10 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-
 /**
  * Describes a builder which builds cart rule actions.
  */
@@ -47,29 +43,33 @@ interface CartRuleActionBuilderInterface
     /**
      * Set percentage discount for cart rule action.
      *
-     * @param PercentageDiscount $percentageDiscount
+     * @param string $reductionValue
+     * @param bool $applyToDiscountedProducts
      *
      * @return CartRuleActionBuilderInterface
      */
-    public function setPercentageDiscount(PercentageDiscount $percentageDiscount): CartRuleActionBuilderInterface;
+    public function setPercentageDiscount(string $reductionValue, bool $applyToDiscountedProducts): CartRuleActionBuilderInterface;
 
     /**
      * Set amount discount for cart rule action.
      *
-     * @param MoneyAmountCondition $amount
+     * @param string $reductionValue
+     * @param int $currencyId
+     * @param bool $taxIncluded
      *
      * @return CartRuleActionBuilderInterface
      */
-    public function setAmountDiscount(MoneyAmountCondition $amount): CartRuleActionBuilderInterface;
+    public function setAmountDiscount(string $reductionValue, int $currencyId, bool $taxIncluded): CartRuleActionBuilderInterface;
 
     /**
      * Set the gift product for cart rule action.
      *
-     * @param GiftProduct $giftProduct
+     * @param int $productId
+     * @param int|null $combinationId
      *
      * @return CartRuleActionBuilderInterface
      */
-    public function setGiftProduct(GiftProduct $giftProduct): CartRuleActionBuilderInterface;
+    public function setGiftProduct(int $productId, ?int $combinationId = null): CartRuleActionBuilderInterface;
 
     /**
      * Build the cart rule action.

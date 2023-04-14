@@ -145,7 +145,7 @@ Feature: Add cart rule
     Then Cart rule with reference "cart_rule_1" does not exist
     And Cart rule with reference "cart_rule_2" does not exist
 
-  Scenario: Enable and enable cart rule
+  Scenario: Create and enable cart rule
     When I create cart rule "cart_rule_1" with following properties:
       | id_cart_rule                              | 1                     |
       | name_in_default_language                  | Cart Rule 1           |

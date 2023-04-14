@@ -32,73 +32,49 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 class CartRuleConstraintException extends CartRuleException
 {
     /**
-     * Used when cart rule is using an invalid discount application type
+     * Used when discount is applied to specific product, but that product is not set.
      */
-    public const INVALID_DISCOUNT_APPLICATION_TYPE = 1;
-
-    /**
-     * Used when cart rule name is empty
-     */
-    public const EMPTY_NAME = 2;
-
-    /**
-     * Used when cart rule's priority is invalid
-     */
-    public const INVALID_PRIORITY = 3;
-
-    /**
-     * Used when cart rule's date from is greater than date to
-     */
-    public const DATE_FROM_GREATER_THAN_DATE_TO = 4;
-
-    /**
-     * Used when cart rule's quantity is invalid
-     */
-    public const INVALID_QUANTITY = 5;
-
-    /**
-     * Used when quantity per user is invalid
-     */
-    public const INVALID_QUANTITY_PER_USER = 6;
-
-    /**
-     * Used when percentage discount is invalid
-     */
-    public const INVALID_PERCENTAGE = 7;
-
-    /**
-     * Used when cart rule has invalid gift product assigned
-     */
-    public const INVALID_GIFT_PRODUCT = 8;
-
-    /**
-     * Used when cart rule has invalid gift product attribute
-     */
-    public const INVALID_GIFT_PRODUCT_ATTRIBUTE = 9;
+    public const MISSING_DISCOUNT_APPLICATION_PRODUCT = 1;
 
     /**
      * Used when cart rule has incompatible actions,
      * e.g. both amount and percentage discounts at the same time.
      */
-    public const INCOMPATIBLE_CART_RULE_ACTIONS = 10;
-
-    /**
-     * Used when cart rule is missing an action.
-     */
-    public const MISSING_ACTION = 11;
-
-    /**
-     * Used when discount is applied to specific product, but that product is not set.
-     */
-    public const MISSING_DISCOUNT_APPLICATION_PRODUCT = 12;
-
-    /**
-     * Used when cart rule id constraints are violated
-     */
-    public const INVALID_ID = 13;
-
-    /**
-     * When cart rule status is not valid
-     */
-    public const INVALID_STATUS = 20;
+    public const INCOMPATIBLE_CART_RULE_ACTIONS = 2;
+    public const INVALID_DISCOUNT_APPLICATION_TYPE = 3;
+    public const INVALID_GIFT_PRODUCT_ATTRIBUTE = 4;
+    public const INVALID_PRIORITY = 5;
+    public const DATE_FROM_GREATER_THAN_DATE_TO = 6;
+    public const INVALID_QUANTITY = 7;
+    public const INVALID_QUANTITY_PER_USER = 8;
+    public const INVALID_GIFT_PRODUCT = 9;
+    public const MISSING_ACTION = 10;
+    public const INVALID_ID = 11;
+    public const INVALID_NAME = 12;
+    public const INVALID_STATUS = 13;
+    public const INVALID_CUSTOMER_ID = 14;
+    public const INVALID_DATE_FROM = 15;
+    public const INVALID_DATE_TO = 16;
+    public const INVALID_DESCRIPTION = 17;
+    public const INVALID_PARTIAL_USE = 18;
+    public const INVALID_CODE = 19;
+    public const INVALID_MINIMUM_AMOUNT = 20;
+    public const INVALID_MINIMUM_AMOUNT_TAX = 21;
+    public const INVALID_MINIMUM_AMOUNT_CURRENCY = 22;
+    public const INVALID_MINIMUM_AMOUNT_SHIPPING = 23;
+    public const INVALID_COUNTRY_RESTRICTION = 24;
+    public const INVALID_CARRIER_RESTRICTION = 25;
+    public const INVALID_GROUP_RESTRICTION = 26;
+    public const INVALID_CART_RULE_RESTRICTION = 27;
+    public const INVALID_PRODUCT_RESTRICTION = 28;
+    public const INVALID_SHOP_RESTRICTION = 29;
+    public const INVALID_FREE_SHIPPING = 30;
+    public const INVALID_REDUCTION_PERCENT = 31;
+    public const INVALID_REDUCTION_AMOUNT = 32;
+    public const INVALID_REDUCTION_TAX = 33;
+    public const INVALID_REDUCTION_CURRENCY = 34;
+    public const INVALID_REDUCTION_PRODUCT = 35;
+    public const INVALID_REDUCTION_EXCLUDE_SPECIAL = 36;
+    public const INVALID_HIGHLIGHT = 37;
+    public const INVALID_ACTIVE = 38;
 }

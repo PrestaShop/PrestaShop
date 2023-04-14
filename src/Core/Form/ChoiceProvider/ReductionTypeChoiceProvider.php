@@ -24,33 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
-use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class RelatedProductType extends AbstractType
+class ReductionTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * {@inheritDoc}
+     * @var CurrencyDataProviderInterface
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $currencyDataProvider;
+
+    public function __construct(
+        CurrencyDataProviderInterface $currencyDataProvider
+    ) {
+        $this->currencyDataProvider = $currencyDataProvider;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getChoices(): array
     {
-        $builder
-            ->add('id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('image', ImagePreviewType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => false,
-            ])
-        ;
+        return [
+            $this->currencyDataProvider->getDefaultCurrencySymbol() => Reduction::TYPE_AMOUNT,
+            '%' => Reduction::TYPE_PERCENTAGE,
+        ];
     }
 }

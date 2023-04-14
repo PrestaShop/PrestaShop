@@ -29,7 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 
 /**
- * Discount application type
+ * Discount application type indicates what the discount should be applied to.
+ * E.g. to whole order, to a specific product, to cheapest product.
  */
 class DiscountApplicationType
 {

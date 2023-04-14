@@ -83,11 +83,6 @@ class EntitySearchInputType extends CollectionType
 
             // Default entry type that matches the default template from the prestashop ui kit form theme
             'entry_type' => EntityItemType::class,
-            'entry_options' => [
-                // Force block prefix to easily profit from the UI kit theme (without changing it in the entity type itself)
-                'block_prefix' => 'entity_item',
-            ],
-
             // This is an optional entity type that can be useful to identify which type of entity is searched
             'entity_type' => null,
             // The remote url is used internally by a javascript component which performs a request when search input is used

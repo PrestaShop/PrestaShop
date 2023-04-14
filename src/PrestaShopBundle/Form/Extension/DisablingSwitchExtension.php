@@ -100,6 +100,12 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     {
         $switchableParent = $this->getSwitchableParent($form);
         if ($switchableParent) {
+            // When rendering a prototype we must not force the disabled attribute in any way, because it will be hard-coded
+            // in all the future elements rendered dynamically thanks to the prototype template
+            if ($this->isRenderingPrototype($form)) {
+                return;
+            }
+
             $disablingFieldName = self::FIELD_PREFIX . $switchableParent->getName();
             $parent = $switchableParent->getParent();
             if ($parent->has($disablingFieldName)) {
@@ -112,28 +118,6 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 $view->vars['attr']['disabled'] = $shouldBeDisabled;
             }
         }
-    }
-
-    /**
-     * The switch option may be defined on a compound input, so we need to get back the parent with the option to get
-     * back the appropriate options and be able to check the disabled status even for children. For non-compound forms
-     * the switchable parent is actually itself.
-     *
-     * @param FormInterface $form
-     *
-     * @return FormInterface|null
-     */
-    private function getSwitchableParent(FormInterface $form): ?FormInterface
-    {
-        if (!$form->getParent()) {
-            return null;
-        }
-
-        if ($form->getConfig()->getOption(static::SWITCH_OPTION, false)) {
-            return $form;
-        }
-
-        return $this->getSwitchableParent($form->getParent());
     }
 
     /**
@@ -174,5 +158,50 @@ class DisablingSwitchExtension extends AbstractTypeExtension
             ->setAllowedTypes(static::SWITCH_STATE_ON_DISABLE_OPTION, 'string')
             ->setAllowedValues(static::SWITCH_STATE_ON_DISABLE_OPTION, ['off', 'on'])
         ;
+    }
+
+    /**
+     * Go up in the form parents until a collection is detected, if the rendered form name matches the prototype_name
+     * config from the parent, it means the prototype is being rendered not an actual form field.
+     *
+     * @param FormInterface $form
+     *
+     * @return bool
+     */
+    private function isRenderingPrototype(FormInterface $form): bool
+    {
+        $checkedForm = $form;
+        while ($checkedForm !== null && $checkedForm->getParent() !== null) {
+            $prototypeName = $checkedForm->getParent()->getConfig()->getOption('prototype_name');
+            if ($checkedForm->getName() === $prototypeName) {
+                return true;
+            }
+
+            $checkedForm = $checkedForm->getParent();
+        }
+
+        return false;
+    }
+
+    /**
+     * The switch option may be defined on a compound input, so we need to get back the parent with the option to get
+     * back the appropriate options and be able to check the disabled status even for children. For non-compound forms
+     * the switchable parent is actually itself.
+     *
+     * @param FormInterface $form
+     *
+     * @return FormInterface|null
+     */
+    private function getSwitchableParent(FormInterface $form): ?FormInterface
+    {
+        if (!$form->getParent()) {
+            return null;
+        }
+
+        if ($form->getConfig()->getOption(static::SWITCH_OPTION, false)) {
+            return $form;
+        }
+
+        return $this->getSwitchableParent($form->getParent());
     }
 }

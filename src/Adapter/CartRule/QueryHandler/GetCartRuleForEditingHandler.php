@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler;
 
 use CartRule;
 use DateTime;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
@@ -102,14 +102,16 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
         $customerId = (int) $cartRule->id_customer !== NoCustomerId::NO_CUSTOMER_ID_VALUE ? new CustomerId((int) $cartRule->id_customer) : new NoCustomerId();
         $dateFrom = $cartRule->date_from;
         $dateTo = $cartRule->date_to;
-        $minimumAmountCurrencyId = $cartRule->minimum_amount_currency ? new CurrencyId((int) $cartRule->minimum_amount_currency) : null;
 
-        $cartRuleMinimum = new EditableCartRuleMinimum(
-            new Number($cartRule->minimum_amount),
-            (bool) $cartRule->minimum_amount_tax,
-            $minimumAmountCurrencyId,
-            (bool) $cartRule->minimum_amount_shipping
-        );
+        $cartRuleMinimum = null;
+        if (!empty($cartRule->minimum_amount)) {
+            $cartRuleMinimum = new EditableCartRuleMinimum(
+                new DecimalNumber($cartRule->minimum_amount),
+                (bool) $cartRule->minimum_amount_tax,
+                new CurrencyId((int) $cartRule->minimum_amount_currency),
+                (bool) $cartRule->minimum_amount_shipping
+            );
+        }
 
         $cartRuleRestrictions = new EditableCartRuleRestrictions(
             (bool) $cartRule->country_restriction,
@@ -139,8 +141,8 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
         $giftProductProductAttributeId = $cartRule->gift_product_attribute ? new CombinationId((int) $cartRule->gift_product_attribute) : null;
 
         $reduction = new EditableCartRuleReduction(
-            new Number($cartRule->reduction_percent),
-            new Number($cartRule->reduction_amount),
+            new DecimalNumber($cartRule->reduction_percent),
+            new DecimalNumber($cartRule->reduction_amount),
             (bool) $cartRule->reduction_tax,
             $reductionCurrencyId,
             $reductionProductId,

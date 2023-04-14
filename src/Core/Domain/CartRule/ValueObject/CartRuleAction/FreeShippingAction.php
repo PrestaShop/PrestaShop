@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
  * Cart rule action that gives free shipping.
@@ -45,7 +45,7 @@ final class FreeShippingAction implements CartRuleActionInterface
     /**
      * @param GiftProduct|null $giftProduct
      */
-    public function __construct(GiftProduct $giftProduct = null)
+    public function __construct(?GiftProduct $giftProduct = null)
     {
         $this->giftProduct = $giftProduct;
     }
@@ -69,7 +69,7 @@ final class FreeShippingAction implements CartRuleActionInterface
     /**
      * {@inheritdoc}
      */
-    public function getAmountDiscount(): ?MoneyAmountCondition
+    public function getAmountDiscount(): ?Money
     {
         return null;
     }

@@ -18,11 +18,6 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
       - '@prestashop.adapter.data_provider.country'
 
-  prestashop.core.form.choice_provider.currency_by_id:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
-    arguments:
-      - '@prestashop.adapter.data_provider.currency'
-
   prestashop.core.form.choice_provider.timezone_by_name:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'
     arguments:
@@ -220,11 +215,6 @@ services:
     arguments:
       - '@translator'
 
-  prestashop.core.form.choice_provider.tax_inclusion:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider'
-    arguments:
-      - '@translator'
-
   prestashop.core.form.choice_provider.address_required_fields:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AddressRequiredFieldsChoiceProvider'
 
@@ -320,3 +310,34 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider'
     arguments:
       - '@translator'
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ReductionTypeChoiceProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DiscountApplicationChoiceProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShippingInclusionChoiceProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
+    autowire: true
+    public: false
+
+  # deprecated services
+  prestashop.core.form.choice_provider.currency_by_id:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider
+    public: true
+    deprecated: ~
+
+  prestashop.core.form.choice_provider.tax_inclusion:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider
+    public: true
+    deprecated: ~

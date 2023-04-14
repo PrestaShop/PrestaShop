@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\Decimal\DecimalNumber;
 
 /**
  * Percentage discount
@@ -34,33 +34,31 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintExcep
 class PercentageDiscount
 {
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $percentage;
 
     /**
      * @var bool
      */
-    private $appliesToDiscountedProducts;
+    private $applyToDiscountedProducts;
 
     /**
-     * @param float $percentage
-     * @param bool $appliesToDiscountedProducts
+     * @param DecimalNumber $percentage
+     * @param bool $includeDiscountedProducts
      */
-    public function __construct(float $percentage, bool $appliesToDiscountedProducts)
-    {
-        if ($percentage <= 0 || $percentage > 100) {
-            throw new CartRuleConstraintException('Percentage must be greater than 0 and not greater than 100', CartRuleConstraintException::INVALID_PERCENTAGE);
-        }
-
+    public function __construct(
+        DecimalNumber $percentage,
+        bool $includeDiscountedProducts
+    ) {
         $this->percentage = $percentage;
-        $this->appliesToDiscountedProducts = $appliesToDiscountedProducts;
+        $this->applyToDiscountedProducts = $includeDiscountedProducts;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getPercentage(): float
+    public function getPercentage(): DecimalNumber
     {
         return $this->percentage;
     }
@@ -68,8 +66,8 @@ class PercentageDiscount
     /**
      * @return bool
      */
-    public function appliesToDiscountedProducts(): bool
+    public function applyToDiscountedProducts(): bool
     {
-        return $this->appliesToDiscountedProducts;
+        return $this->applyToDiscountedProducts;
     }
 }

@@ -41,6 +41,7 @@ services:
       $isCombinationsUsed: '@=service("prestashop.adapter.combination_feature").isUsed()'
       $availableLocales: "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
+      $translator: '@translator'
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
@@ -426,7 +427,6 @@ services:
   PrestaShopBundle\Form\Admin\Type\PriceReductionType:
     arguments:
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
-      $taxInclusionChoiceProvider: '@prestashop.core.form.choice_provider.tax_inclusion'
 
   PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType:
@@ -510,6 +510,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType:
   PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
   PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
+  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductItemType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
@@ -765,6 +766,15 @@ services:
 
   PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
+
+  PrestaShopBundle\Form\Admin\Sell\CartRule\:
+    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
+
+  PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
+  PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType:
+  PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType:
+  PrestaShopBundle\Form\Admin\Type\ShippingInclusionChoiceType:
+  PrestaShopBundle\Form\Admin\Type\ProductSearchType:
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:

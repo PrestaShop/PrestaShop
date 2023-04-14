@@ -28,10 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
+use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
@@ -40,25 +40,26 @@ use PrestaShopException;
 /**
  * Handles adding new cart rule using legacy logic.
  */
-final class AddCartRuleHandler implements AddCartRuleHandlerInterface
+class AddCartRuleHandler implements AddCartRuleHandlerInterface
 {
+    /**
+     * @var CartRuleRepository
+     */
+    private $cartRuleRepository;
+
+    public function __construct(
+        CartRuleRepository $cartRuleRepository
+    ) {
+        $this->cartRuleRepository = $cartRuleRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(AddCartRuleCommand $command): CartRuleId
     {
-        try {
-            $cartRule = $this->buildCartRuleFromCommandData($command);
-
-            if (false === $cartRule->validateFields(false) || false === $cartRule->validateFieldsLang(false)) {
-                throw new CartRuleConstraintException('Cart rule contains invalid field values');
-            }
-            if (false === $cartRule->add()) {
-                throw new CartRuleException('Failed to add new cart rule');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartRuleException('An error occurred when trying to add new cart rule');
-        }
+        //@todo: restrictions are missing. We should consider dedicated command for restrictions
+        $cartRule = $this->cartRuleRepository->create($this->buildCartRuleFromCommandData($command));
 
         return new CartRuleId((int) $cartRule->id);
     }
@@ -101,21 +102,16 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->date_from = $command->getValidFrom()->format('Y-m-d H:i:s');
         $cartRule->date_to = $command->getValidTo()->format('Y-m-d H:i:s');
 
-        $minimumAmount = $command->getMinimumAmountCondition();
-        $cartRule->minimum_amount = (string) $minimumAmount->getMoneyAmount()->getAmount();
-        $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
-        $cartRule->minimum_amount_shipping = !$minimumAmount->isShippingExcluded();
-        $cartRule->minimum_amount_tax = !$minimumAmount->isTaxExcluded();
+        $minimumAmount = $command->getMinimumAmount();
+        if ($minimumAmount) {
+            $cartRule->minimum_amount = (float) (string) $minimumAmount->getAmount();
+            $cartRule->minimum_amount_currency = $minimumAmount->getCurrencyId()->getValue();
+            $cartRule->minimum_amount_shipping = $command->isMinimumAmountShippingIncluded();
+            $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();
+        }
 
         $cartRule->quantity = $command->getTotalQuantity();
         $cartRule->quantity_per_user = $command->getQuantityPerUser();
-
-        $cartRule->country_restriction = $command->hasCountryRestriction();
-        $cartRule->carrier_restriction = $command->hasCarrierRestriction();
-        $cartRule->group_restriction = $command->hasGroupRestriction();
-        $cartRule->cart_rule_restriction = $command->hasCartRuleRestriction();
-        $cartRule->product_restriction = $command->hasProductRestriction();
-        $cartRule->shop_restriction = $command->hasShopRestriction();
     }
 
     /**
@@ -127,27 +123,31 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
     private function fillCartRuleActionsFromCommandData(CartRule $cartRule, AddCartRuleCommand $command): void
     {
         $cartRuleAction = $command->getCartRuleAction();
-        $amountDiscount = $cartRuleAction->getAmountDiscount();
-        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
-        $giftProduct = $cartRuleAction->getGiftProduct();
         $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
 
-        $cartRule->gift_product = null !== $giftProduct ? $giftProduct->getProductId()->getValue() : null;
-        $cartRule->gift_product_attribute = null !== $giftProduct ? $giftProduct->getProductAttributeId() : null;
-        $cartRule->reduction_amount = null !== $amountDiscount ?
-            (string) $amountDiscount->getMoneyAmount()->getAmount() :
-            null;
-        $cartRule->reduction_currency = null !== $amountDiscount ?
-            $amountDiscount->getMoneyAmount()->getCurrencyId()->getValue() :
-            null;
+        $giftProduct = $cartRuleAction->getGiftProduct();
+        if ($giftProduct) {
+            $cartRule->gift_product = $giftProduct->getProductId()->getValue();
+            $cartRule->gift_product_attribute = $giftProduct->getCombinationId() ? $giftProduct->getCombinationId()->getValue() : null;
+        }
 
-        // Legacy reduction_tax property is true when it's tax included, false when tax excluded.
-        $cartRule->reduction_tax = null !== $amountDiscount ? !$amountDiscount->isTaxExcluded() : null;
+        $amountDiscount = $cartRuleAction->getAmountDiscount();
+        if ($amountDiscount) {
+            $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
+            $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
+            $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
+            $cartRule->reduction_percent = null;
+            $cartRule->reduction_exclude_special = false;
+        }
 
-        $cartRule->reduction_percent = null !== $percentageDiscount ? $percentageDiscount->getPercentage() : null;
-        $cartRule->reduction_exclude_special = null !== $percentageDiscount ?
-            !$percentageDiscount->appliesToDiscountedProducts() :
-            null;
+        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
+        if ($percentageDiscount) {
+            $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
+            $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
+            $cartRule->reduction_amount = null;
+            $cartRule->reduction_currency = 0;
+            $cartRule->reduction_tax = false;
+        }
 
         $discountApplicationType = $command->getDiscountApplicationType();
 

@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
  * Cart rule action that gives amount discount.
@@ -39,9 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 final class AmountDiscountAction implements CartRuleActionInterface
 {
     /**
-     * @var MoneyAmountCondition
+     * @var Money
      */
-    private $moneyAmountCondition;
+    private $amountDiscount;
 
     /**
      * @var bool
@@ -54,16 +54,16 @@ final class AmountDiscountAction implements CartRuleActionInterface
     private $giftProduct;
 
     /**
-     * @param MoneyAmountCondition $moneyAmountCondition
+     * @param Money $amountDiscount
      * @param bool $isFreeShipping
      * @param GiftProduct|null $giftProduct
      */
     public function __construct(
-        MoneyAmountCondition $moneyAmountCondition,
+        Money $amountDiscount,
         bool $isFreeShipping,
         GiftProduct $giftProduct = null
     ) {
-        $this->moneyAmountCondition = $moneyAmountCondition;
+        $this->amountDiscount = $amountDiscount;
         $this->isFreeShipping = $isFreeShipping;
         $this->giftProduct = $giftProduct;
     }
@@ -87,9 +87,9 @@ final class AmountDiscountAction implements CartRuleActionInterface
     /**
      * {@inheritdoc}
      */
-    public function getAmountDiscount(): ?MoneyAmountCondition
+    public function getAmountDiscount(): ?Money
     {
-        return $this->moneyAmountCondition;
+        return $this->amountDiscount;
     }
 
     /**

@@ -23,7 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import SpecificPriceMap from '@pages/product/specific-price/specific-price-map';
-import EntitySearchInput from '@components/entity-search-input';
+import SpecificPriceEventMap from '@pages/product/specific-price/specific-price-event-map';
+import CustomerSearchInput from '@components/form/customer-search-input';
 
 export default class CustomerSelector {
   constructor() {
@@ -33,25 +34,24 @@ export default class CustomerSelector {
   private init(): void {
     const customerSearchInput = this.initCustomerSearchInput();
     // clear selected customers whenever shop is changed, because customers may differ between shops
-    this.getShopIdSelect().addEventListener('change', () => customerSearchInput.setValues([]));
+    this.getShopIdSelect()?.addEventListener('change', () => customerSearchInput.setValues([]));
   }
 
-  private initCustomerSearchInput(): EntitySearchInput {
-    return new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
-      extraQueryParams: () => ({
-        shopId: Number(this.getShopIdSelect().value) ?? null,
-      }),
-      responseTransformer: (response: any) => {
-        if (!response || response.customers.length === 0) {
-          return [];
-        }
-
-        return Object.values(response.customers);
-      },
-    });
+  private initCustomerSearchInput(): CustomerSearchInput {
+    return new CustomerSearchInput(
+      SpecificPriceMap.customerSearchContainer,
+      SpecificPriceMap.customerItem,
+      () => Number(this.getShopIdSelect()?.value) ?? null,
+      SpecificPriceEventMap.switchCustomer,
+    );
   }
 
-  private getShopIdSelect(): HTMLSelectElement {
+  /**
+   * ShopIdSelector might not exist in some forms, and it is legit. In that case it returns null.
+   *
+   * @private
+   */
+  private getShopIdSelect(): HTMLSelectElement|null {
     return <HTMLSelectElement> document.querySelector(
       `${SpecificPriceMap.formContainer} ${SpecificPriceMap.shopIdSelect}`,
     );

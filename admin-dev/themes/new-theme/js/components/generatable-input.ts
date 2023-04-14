@@ -54,10 +54,8 @@ export default class GeneratableInput {
    * Attaches event listener on button than can generate value
    *
    * @param {String} generatorBtnSelector
-   *
-   * @private
    */
-  private attachOn(generatorBtnSelector: string): void {
+  public attachOn(generatorBtnSelector: string): void {
     const generatorBtn = document.querySelector(generatorBtnSelector);
 
     if (generatorBtn !== null) {
@@ -75,6 +73,7 @@ export default class GeneratableInput {
           document.querySelector(`#${targetInputId}`)
         );
         targetInput.value = this.generateValue(generatedValueLength);
+        targetInput.dispatchEvent(new CustomEvent('change', {bubbles: true}));
       });
     }
   }
