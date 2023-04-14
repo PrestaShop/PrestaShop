@@ -69,10 +69,12 @@ admin_carriers_update_position:
   path: /update-position
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::updatePositionAction'
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::updatePositionAction
     _legacy_controller: AdminCarriers
     _legacy_link: AdminCarriers:updatePositions
     _legacy_feature_flag: carrier
+    position_definition: prestashop.core.grid.carrier.position_definition
+    redirect_route: admin_carriers_index
 
 admin_carriers_bulk_enable_status:
   path: /bulk-enable

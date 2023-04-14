@@ -41,9 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
-use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
-use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CarrierFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -207,43 +204,6 @@ class CarriersController extends FrameworkBundleAdminController
             );
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-        }
-
-        return $this->redirectToRoute('admin_carriers_index');
-    }
-
-    /**
-     * Changes carrier position
-     *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_carriers_index",
-     *     message="You need permission to edit this."
-     * )
-     *
-     * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function updatePositionAction(Request $request): RedirectResponse
-    {
-        $positionsData = [
-            'positions' => $request->request->get('positions'),
-        ];
-
-        $positionDefinition = $this->get('prestashop.core.grid.carrier.position_definition');
-        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
-
-        try {
-            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
-            $updater = $this->get(GridPositionUpdaterInterface::class);
-            $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
-        } catch (PositionUpdateException $e) {
-            $errors = [$e->toArray()];
-            $this->flashErrors($errors);
         }
 
         return $this->redirectToRoute('admin_carriers_index');
