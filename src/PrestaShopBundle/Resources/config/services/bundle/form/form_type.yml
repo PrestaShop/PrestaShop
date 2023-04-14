@@ -659,37 +659,3 @@ services:
   PrestaShopBundle\Form\Admin\Type\FeatureChoiceType:
     arguments:
       $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
-
-  # Deprecated
-  form.type.sell.product.event_listener.categories_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
-    public: true
-    deprecated: ~
-  form.type.sell.product.event_listener.feature_value_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
-    public: true
-    deprecated: ~
-  form.event_listener.add_disabling_switch_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
-    public: true
-    deprecated: ~
-  form.type.sell.product.event_listener.product_type_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
-    public: true
-    deprecated: ~
-  form.event_listener.price_reduction:
-    alias: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
-    public: true
-    deprecated: ~
-  form.type.sell.product.toolbar_buttons_provider:
-    alias: 'PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface'
-    public: true
-    deprecated: ~
-  form.type.sell.product.event_listener.redirect_option_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
-    public: true
-    deprecated: ~
-  form.type.sell.product.event_listener.combination_listener:
-    alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
-    public: true
-    deprecated: ~

@@ -52,23 +52,3 @@ services:
   PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory:
     arguments:
       - !tagged core.module.source_handler
-
-  prestashop.core.admin.module.repository:
-    alias: PrestaShop\PrestaShop\Core\Module\ModuleRepository
-    public: true
-    deprecated: ~
-
-  prestashop.module.factory.sourcehandler:
-    alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
-    public: true
-    deprecated: ~
-
-  prestashop.module.sourcehandler.zip:
-    alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler
-    public: true
-    deprecated: ~
-
-  prestashop.module.manager:
-    alias: PrestaShop\PrestaShop\Core\Module\ModuleManager
-    public: true
-    deprecated: ~

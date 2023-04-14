@@ -9,10 +9,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Tools: ~
 
-  prestashop.adapter.tools:
-    alias: PrestaShop\PrestaShop\Adapter\Tools
-    deprecated: ~
-
   PrestaShop\PrestaShop\Adapter\LegacyContext:
     arguments:
       - "%mail_themes_uri%"

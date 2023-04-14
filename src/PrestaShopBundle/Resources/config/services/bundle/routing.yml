@@ -16,10 +16,6 @@ services:
     class: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
     public: true
 
-  prestashop.bundle.routing.converter.router_provider:
-    alias: PrestaShopBundle\Routing\Converter\RouterProvider
-    deprecated: ~
-
   PrestaShopBundle\Routing\Converter\RouterProvider:
     autowire: true
 

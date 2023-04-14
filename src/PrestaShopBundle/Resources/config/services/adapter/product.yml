@@ -14,10 +14,6 @@ services:
     public: false
     deprecated: ~
 
-  prestashop.adapter.admin.data_provider.product:
-    alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
-    deprecated: ~
-
   PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater:
     class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
     decorates: prestashop.core.admin.data_updater.product_interface
@@ -25,10 +21,6 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
       - "@prestashop.static_cache.adapter"
-    deprecated: ~
-
-  prestashop.adapter.admin.data_updater.product:
-    alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
     deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper:
@@ -58,10 +50,6 @@ services:
     deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater:
-    deprecated: ~
-
-  prestashop.adapter.product.list_parameters_updater:
-    alias: PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater
     deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler:
