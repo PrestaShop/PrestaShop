@@ -2805,12 +2805,12 @@ class AdminProductsController extends AdminProductsControllerCore
                     $combinations[$attribute['id_product_attribute']]['attributes'] = '';
                 }
                 $combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'] . ' - ';
-                $combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(
+                $combinations[$attribute['id_product_attribute']]['price'] = $this->context->getContextLocale()->formatPrice(
                     Tools::convertPrice(
                         Product::getPriceStatic((int) $obj->id, false, $attribute['id_product_attribute']),
                         $this->context->currency
                     ),
-                    $this->context->currency
+                    $this->context->currency->iso_code
                 );
             }
             foreach ($combinations as &$combination) {
@@ -3120,7 +3120,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 if ($specific_price['reduction_type'] == 'percentage') {
                     $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
+                    $impact = '- ' . $this->context->getContextLocale()->formatPrice(
+                        Tools::ps_round($specific_price['reduction'], 2),
+                        $current_specific_currency['iso_code']
+                    ) . ' ';
                     if ($specific_price['reduction_tax']) {
                         $impact .= '(' . $this->l('Tax incl.') . ')';
                     } else {
@@ -3167,7 +3170,7 @@ class AdminProductsController extends AdminProductsControllerCore
 						<td>' . ($id_shop_sp ? $shops[$id_shop_sp]['name'] : $this->l('All shops')) . '</td>';
                     }
                     $price = Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = ($price == Tools::ps_round($obj->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
+                    $fixed_price = ($price == Tools::ps_round($obj->price, 2) || $specific_price['price'] == -1) ? '--' : $this->context->getContextLocale()->formatPrice($price, $current_specific_currency['iso_code']);
                     $content .= '
 						<td>' . ($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')) . '</td>
 						<td>' . ($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')) . '</td>
@@ -3889,7 +3892,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $combination_images = $product->getCombinationImages($this->context->language->id);
                 foreach ($combinations as $k => $combination) {
                     $price_to_convert = Tools::convertPrice($combination['price'], $currency);
-                    $price = Tools::displayPrice($price_to_convert, $currency);
+                    $price = $this->context->getContextLocale()->formatPrice($price_to_convert, $currency['iso_code']);
                     $container['id_product_attribute'] = $combination['id_product_attribute'];
                     $container['attributes'][] = [$combination['group_name'], $combination['attribute_name'], $combination['id_attribute']];
                     $container['wholesale_price'] = $combination['wholesale_price'];

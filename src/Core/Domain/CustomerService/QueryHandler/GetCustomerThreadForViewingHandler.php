@@ -349,9 +349,9 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
                 }
 
                 $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
-                $orders[$key]['total_paid_real'] = Tools::displayPrice(
+                $orders[$key]['total_paid_real'] = $this->context->getCurrentLocale()->formatPrice(
                     $order['total_paid_real'],
-                    new Currency((int) $order['id_currency'])
+                    (new Currency((int) $order['id_currency']))->iso_code
                 );
             }
         }
@@ -362,7 +362,9 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
             $customer->lastname,
             $thread->email,
             count($ordersOk),
-            $totalOk ? Tools::displayPrice($totalOk, $this->context->currency) : $totalOk,
+            $totalOk
+                ? $this->context->getCurrentLocale()->formatPrice($totalOk, $this->context->currency->iso_code)
+                : $totalOk,
             (new DateTime($customer->date_add))->format($this->context->language->date_format_lite)
         );
     }
