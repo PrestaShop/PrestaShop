@@ -73,7 +73,7 @@ class LocalizationWarmer implements CacheWarmerInterface
             }
         }
 
-        return $localization_file_content;
+        return [$localization_file_content];
     }
 
     public function isOptional()

@@ -264,7 +264,7 @@ class BackupController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $backupsToDelete = $request->request->get('backup_backup_bulk_file_names', []);
+        $backupsToDelete = $request->request->all('backup_backup_bulk_file_names');
 
         if (empty($backupsToDelete)) {
             $this->addFlash(

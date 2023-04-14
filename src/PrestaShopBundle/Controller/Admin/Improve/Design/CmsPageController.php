@@ -502,7 +502,7 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function deleteBulkCmsCategoryAction(Request $request)
     {
-        $cmsCategoriesToDelete = $request->request->get('cms_page_category_bulk');
+        $cmsCategoriesToDelete = $request->request->all('cms_page_category_bulk');
 
         try {
             $cmsCategoriesToDelete = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToDelete);
@@ -691,8 +691,7 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function bulkCmsPageCategoryStatusEnableAction(Request $request)
     {
-        $cmsCategoriesToEnable = $request->request->get('cms_page_category_bulk');
-        $cmsCategoryParentId = null;
+        $cmsCategoriesToEnable = $request->request->all('cms_page_category_bulk');
         try {
             $cmsCategoriesToEnable = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToEnable);
 
@@ -734,7 +733,7 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function bulkCmsPageCategoryStatusDisableAction(Request $request)
     {
-        $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
+        $cmsCategoriesToDisable = $request->request->all('cms_page_category_bulk');
         try {
             $cmsCategoriesToDisable = array_map(
                 function ($item) {
@@ -817,7 +816,7 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function bulkDisableCmsPageStatusAction(Request $request)
     {
-        $cmsPagesToDisable = $request->request->get('cms_page_bulk');
+        $cmsPagesToDisable = $request->request->all('cms_page_bulk');
 
         try {
             $cmsPagesToDisable = array_map(function ($item) { return (int) $item; }, $cmsPagesToDisable);
@@ -860,7 +859,7 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function bulkEnableCmsPageStatusAction(Request $request)
     {
-        $cmsPagesToDisable = $request->request->get('cms_page_bulk');
+        $cmsPagesToDisable = $request->request->all('cms_page_bulk');
 
         try {
             $cmsPagesToDisable = array_map(
@@ -908,7 +907,7 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function bulkDeleteCmsPageAction(Request $request)
     {
-        $cmsPagesToDisable = $request->request->get('cms_page_bulk');
+        $cmsPagesToDisable = $request->request->all('cms_page_bulk');
 
         $redirectResponse = $this->redirectToParentIndexPageByBulkIds($cmsPagesToDisable);
 

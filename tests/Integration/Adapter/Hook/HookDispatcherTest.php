@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class HookDispatcherTest extends KernelTestCase
 {
@@ -51,9 +51,9 @@ class HookDispatcherTest extends KernelTestCase
     public function testDispatch(): void
     {
         $hookDispatcher = $this->getHookDispatcher();
-        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch('unknown_hook_name'));
-        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch('unknown_hook_name', new HookEvent()));
-        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch('unknown_hook_name', new RenderingHookEvent()));
+        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch(new HookEvent()));
+        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch(new HookEvent(), 'unknown_hook_name'));
+        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch(new RenderingHookEvent(), 'unknown_hook_name'));
     }
 
     /**
@@ -64,9 +64,9 @@ class HookDispatcherTest extends KernelTestCase
         $hookDispatcher = $this->getHookDispatcher();
 
         $hookDispatcher->addListener('test_test', [$this, 'listenerCallback']);
-        $hookDispatcher->dispatch('unknown_hook_name');
+        $hookDispatcher->dispatch(new HookEvent(), 'unknown_hook_name');
         $this->assertFalse($this->testedListenerCallbackCalled);
-        $hookDispatcher->dispatch('test_test');
+        $hookDispatcher->dispatch(new HookEvent(), 'test_test');
         $this->assertTrue($this->testedListenerCallbackCalled);
     }
 
@@ -80,7 +80,7 @@ class HookDispatcherTest extends KernelTestCase
         $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2']);
         $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2b']);
         /** @var RenderingHookEvent $event */
-        $event = $hookDispatcher->dispatch('test_test_2', new RenderingHookEvent());
+        $event = $hookDispatcher->dispatch(new RenderingHookEvent(), 'test_test_2');
 
         $subset = [
             'listenerCallback2' => ['result_test_2'],
@@ -90,7 +90,7 @@ class HookDispatcherTest extends KernelTestCase
 
         foreach ($subset as $key => $value) {
             $this->assertArrayHasKey($key, $array);
-            $this->assertEquals($value, $subset[$key]);
+            $this->assertEquals($value, $value);
         }
     }
 

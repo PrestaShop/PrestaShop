@@ -44,7 +44,7 @@ class CustomerRepositoryTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $this->customerRepository = self::$container->get(CustomerRepository::class);
+        $this->customerRepository = self::getContainer()->get(CustomerRepository::class);
     }
 
     public function testGetThrowsException(): void

@@ -144,7 +144,7 @@ services:
 
   prestashop.core.form.identifiable_object.builder.order_return_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
-    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\OrderReturnType'
       - '@prestashop.core.form.identifiable_object.data_provider.order_return_form_data_provider'

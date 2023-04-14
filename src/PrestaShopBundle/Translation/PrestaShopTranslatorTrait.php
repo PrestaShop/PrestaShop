@@ -115,10 +115,10 @@ trait PrestaShopTranslatorTrait
         }
 
         if (!$this->isSprintfString($id)) {
-            return parent::transChoice($id, $number, $parameters, $domain, $locale);
+            return parent::trans($id, array_merge($parameters, ['%count%' => $number]), $domain, $locale);
         }
 
-        return vsprintf(parent::transChoice($id, $number, [], $domain, $locale), $parameters);
+        return vsprintf(parent::trans($id, ['%count%' => $number], $domain, $locale), $parameters);
     }
 
     /**
@@ -142,6 +142,7 @@ trait PrestaShopTranslatorTrait
      *
      * @return mixed|string
      *
+     * @throws InvalidArgumentException If the locale contains invalid characters
      * @throws \Exception
      */
     private function translateUsingLegacySystem($message, array $parameters, $domain, $locale = null)

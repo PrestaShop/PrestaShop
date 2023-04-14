@@ -35,7 +35,7 @@ use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -294,31 +294,10 @@ class SearchParametersResolverTest extends TestCase
                 return $default;
             });
 
-        $parametersBagMock = $this->getMockBuilder(ParameterBag::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $parametersBagMock
-            ->method('has')
-            ->willReturnCallback(function ($parameter) use ($parameters) {
-                return isset($parameters[$parameter]);
-            })
-        ;
-        $parametersBagMock
-            ->method('get')
-            ->willReturnCallback(function ($parameter, $default = null) use ($parameters) {
-                return $parameters[$parameter] ?? $default;
-            })
-        ;
+        $parametersBagMock = new InputBag();
+        $parametersBagMock->replace($parameters);
 
-        $emptyParametersBagMock = $this->getMockBuilder(ParameterBag::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $emptyParametersBagMock
-            ->method('has')
-            ->willReturn(false)
-        ;
+        $emptyParametersBagMock = new InputBag();
 
         $requestMock
             ->expects($this->once())

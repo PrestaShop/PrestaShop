@@ -93,10 +93,12 @@ class FrameworkBundleAdminController extends AbstractController
             }
 
             if ($error->getMessagePluralization()) {
-                $errors[$formId][] = $translator->transChoice(
+                $errors[$formId][] = $translator->trans(
                     $error->getMessageTemplate(),
-                    $error->getMessagePluralization(),
-                    $error->getMessageParameters(),
+                    array_merge(
+                        $error->getMessageParameters(),
+                        ['%count%' => $error->getMessagePluralization()]
+                    ),
                     'validators'
                 );
             } else {

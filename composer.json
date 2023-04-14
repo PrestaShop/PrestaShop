@@ -133,6 +133,7 @@
         "smarty/smarty": "^4.3.1",
         "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~6.2",
+        "symfony/doctrine-messenger": "^5.4",
         "symfony/monolog-bundle": "^3.7.0",
         "symfony/polyfill-php73": "^1.10",
         "symfony/property-access": "^5",

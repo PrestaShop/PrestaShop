@@ -54,3 +54,5 @@ services:
       - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
       - '@Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory'
       - '@Nyholm\Psr7\Factory\Psr17Factory'
+    calls:
+      - [ setContainer, [ '@service_container' ] ]

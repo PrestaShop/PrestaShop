@@ -70,7 +70,7 @@ class TokenizedUrlsListener
             return;
         }
 
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

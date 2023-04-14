@@ -323,7 +323,7 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function bulkDeleteCustomerSessionAction(Request $request): RedirectResponse
     {
-        $sessionIds = $request->request->get('security_session_customer_bulk');
+        $sessionIds = $request->request->all('security_session_customer_bulk');
 
         try {
             $deleteSessionsCommand = new BulkDeleteCustomerSessionsCommand($sessionIds);
@@ -349,7 +349,7 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function bulkDeleteEmployeeSessionAction(Request $request): RedirectResponse
     {
-        $sessionIds = $request->request->get('security_session_employee_bulk');
+        $sessionIds = $request->request->all('security_session_employee_bulk');
 
         try {
             $deleteSessionsCommand = new BulkDeleteEmployeeSessionsCommand($sessionIds);

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
 use InvalidArgumentException;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -43,7 +43,7 @@ abstract class GridControllerTestCase extends WebTestCase
     use ContextMockerTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 

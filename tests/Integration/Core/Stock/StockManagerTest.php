@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Stock;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\PackItemsManager;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -38,8 +37,9 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
 use StockAvailable;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class StockManagerTest extends TestCase
+class StockManagerTest extends KernelTestCase
 {
     /**
      * @var ConfigurationInterface|MockObject
@@ -61,6 +61,7 @@ class StockManagerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        self::bootKernel();
 
         $this->configuration = $this->createMock(ConfigurationInterface::class);
         $this->savedContainer = ServiceLocator::getContainer();

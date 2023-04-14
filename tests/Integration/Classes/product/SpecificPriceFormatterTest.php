@@ -67,7 +67,7 @@ class SpecificPriceFormatterTest extends KernelTestCase
             $xmlContent = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
             $localizationPack = new LocalizationPack();
-            $localizationPack->loadLocalisationPack($xmlContent, [], true);
+            $localizationPack->loadLocalisationPack($xmlContent[0], [], true);
         }
     }
 

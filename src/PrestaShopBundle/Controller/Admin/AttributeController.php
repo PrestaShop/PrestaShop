@@ -228,7 +228,7 @@ class AttributeController extends FrameworkBundleAdminController
         $legacyResponse = false;
 
         if ($request->request->has('attribute-ids')) {
-            $attributeIds = $request->request->get('attribute-ids');
+            $attributeIds = $request->request->all('attribute-ids');
             foreach ($attributeIds as $attributeId) {
                 $legacyResponse = $this->get(AdminAttributeGeneratorControllerWrapper::class)
                     ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct);

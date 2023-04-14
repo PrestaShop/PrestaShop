@@ -1,10 +1,10 @@
 parameters:
-  ps_root_dir: "%kernel.root_dir%/../"
+  ps_root_dir: "%kernel.project_dir%/"
   ps_config_dir: "%ps_root_dir%config"
-  translations_dir: "%kernel.root_dir%/../translations"
+  translations_dir: "%kernel.project_dir%/translations"
   themes_translations_dir: "%kernel.cache_dir%/themes"
-  modules_dir: "%kernel.root_dir%/../modules"
-  themes_dir: "%kernel.root_dir%/../themes"
+  modules_dir: "%kernel.project_dir%/modules"
+  themes_dir: "%kernel.project_dir%/themes"
   translation_catalogues_export_dir: "%kernel.cache_dir%/export"
   translations_catalogue_extract_excluded_dirs: [ 'vendor', 'lib', 'tests' ]
 

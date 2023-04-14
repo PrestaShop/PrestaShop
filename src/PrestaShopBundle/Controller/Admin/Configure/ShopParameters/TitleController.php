@@ -219,11 +219,7 @@ class TitleController extends FrameworkBundleAdminController
      */
     private function getBulkTitlesFromRequest(Request $request): array
     {
-        $titleIds = $request->request->get('title_title_bulk');
-
-        if (!is_array($titleIds)) {
-            return [];
-        }
+        $titleIds = $request->request->all('title_title_bulk');
 
         foreach ($titleIds as $i => $titleId) {
             $titleIds[$i] = (int) $titleId;

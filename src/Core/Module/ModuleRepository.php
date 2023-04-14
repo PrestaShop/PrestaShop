@@ -170,8 +170,8 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     public function getModulePath(string $moduleName): ?string
     {
-        $path = $this->modulePath . '/' . $moduleName;
-        $filePath = $this->modulePath . '/' . $moduleName . '/' . $moduleName . '.php';
+        $path = $this->modulePath . $moduleName;
+        $filePath = $path . '/' . $moduleName . '.php';
 
         if (!is_file($filePath)) {
             return null;

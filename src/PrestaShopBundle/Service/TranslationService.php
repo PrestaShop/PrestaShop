@@ -100,7 +100,7 @@ class TranslationService
      */
     private function getResourcesDirectory()
     {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $this->container->getParameter('kernel.project_dir') . '/Resources';
     }
 
     /**

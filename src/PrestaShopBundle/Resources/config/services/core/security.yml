@@ -8,7 +8,7 @@ services:
   prestashop.core.security.folder_guard.vendor:
     class: 'PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard'
     arguments:
-      - '%kernel.root_dir%/Resources/security/.htaccess.dist'
+      - '%kernel.project_dir%/app/Resources/security/.htaccess.dist'
 
   PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface:
     alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'

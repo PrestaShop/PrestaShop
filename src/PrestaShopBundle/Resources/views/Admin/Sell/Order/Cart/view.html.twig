@@ -27,7 +27,7 @@
 {% block content %}
   {% block cart_kpis %}
     {{ render(controller(
-      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      'PrestaShopBundle\\Controller\\Admin\\CommonController:renderKpiRowAction',
       { 'kpiRow': cartKpi }
     )) }}
   {% endblock %}

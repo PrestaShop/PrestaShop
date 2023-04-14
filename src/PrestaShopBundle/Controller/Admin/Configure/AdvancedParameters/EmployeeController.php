@@ -174,7 +174,7 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function bulkStatusEnableAction(Request $request)
     {
-        $employeeIds = $request->request->get('employee_employee_bulk');
+        $employeeIds = $request->request->all('employee_employee_bulk');
 
         try {
             $this->getCommandBus()->handle(
@@ -204,7 +204,7 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function bulkStatusDisableAction(Request $request)
     {
-        $employeeIds = $request->request->get('employee_employee_bulk');
+        $employeeIds = $request->request->all('employee_employee_bulk');
 
         try {
             $this->getCommandBus()->handle(
@@ -257,7 +257,7 @@ class EmployeeController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $employeeIds = $request->request->get('employee_employee_bulk');
+        $employeeIds = $request->request->all('employee_employee_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteEmployeeCommand($employeeIds));

@@ -3,7 +3,7 @@ services:
     public: true
 
   PrestaShopBundle\Controller\Api\ApiController:
-    abstract: true
+    #abstract: true
     class: PrestaShopBundle\Controller\Api\ApiController
     calls:
       - [ setLogger, [ '@logger' ] ]
@@ -12,16 +12,16 @@ services:
       - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
 
   PrestaShopBundle\Controller\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Controller/*"
     exclude:
-      - "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
-      - "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product"
+      - "%kernel.project_dir%/src/PrestaShopBundle/Controller/Api"
+      - "%kernel.project_dir%/../src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product"
     public: true
     tags:
       - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
 
   PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/*"
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/*"
     autoconfigure: true
     autowire: true
     tags:

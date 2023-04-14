@@ -48,7 +48,6 @@ class GeolocationControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::bootKernel();
 
         // Enable debug mode
         $configurationMock = $this->getMockBuilder(Configuration::class)

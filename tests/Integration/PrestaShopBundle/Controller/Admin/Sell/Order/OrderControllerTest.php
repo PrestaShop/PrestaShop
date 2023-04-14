@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,7 +42,7 @@ class OrderControllerTest extends WebTestCase
     use ContextMockerTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
     /**
@@ -58,7 +58,6 @@ class OrderControllerTest extends WebTestCase
     {
         parent::setUp();
         self::mockContext();
-        self::bootKernel();
 
         // Enable debug mode (for data)
         $configurationMock = $this->getMockBuilder(Configuration::class)

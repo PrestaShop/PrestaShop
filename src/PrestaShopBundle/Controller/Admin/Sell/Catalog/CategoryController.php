@@ -785,7 +785,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $request->request->getInt('id_category_to_move'),
                 $request->request->getInt('id_category_parent'),
                 $request->request->getInt('way'),
-                $request->request->get('positions'),
+                $request->request->all('positions'),
                 $request->request->getBoolean('found_first')
             ));
         } catch (CategoryException $e) {
@@ -966,11 +966,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function getBulkCategoriesFromRequest(Request $request)
     {
-        $categoryIds = $request->request->get('category_id_category');
-
-        if (!is_array($categoryIds)) {
-            return [];
-        }
+        $categoryIds = $request->request->all('category_id_category');
 
         foreach ($categoryIds as $i => $categoryId) {
             $categoryIds[$i] = (int) $categoryId;

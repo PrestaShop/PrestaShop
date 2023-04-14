@@ -215,11 +215,7 @@ class AddressController extends FrameworkBundleAdminController
      */
     private function getBulkAddressesFromRequest(Request $request): array
     {
-        $addressIds = $request->request->get('address_addresses_bulk');
-
-        if (!is_array($addressIds)) {
-            return [];
-        }
+        $addressIds = $request->request->all('address_addresses_bulk');
 
         foreach ($addressIds as $i => $addressId) {
             $addressIds[$i] = (int) $addressId;

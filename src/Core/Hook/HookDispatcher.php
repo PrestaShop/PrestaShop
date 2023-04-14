@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -96,9 +95,9 @@ final class HookDispatcher implements HookDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch($eventName, Event $event = null)
+    public function dispatch(object $event, string $eventName = null): object
     {
-        return $this->hookDispatcherAdapter->dispatch($eventName, $event);
+        return $this->hookDispatcherAdapter->dispatch($event, $eventName);
     }
 
     /**
