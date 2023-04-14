@@ -69,7 +69,8 @@ class BulkDeleteFeatureHandler extends AbstractBulkCommandHandler implements Bul
     {
         return new BulkFeatureException(
             $coughtExceptions,
-            'Errors occurred during Feature bulk delete action'
+            'Errors occurred during Feature bulk delete action',
+            BulkFeatureException::FAILED_BULK_DELETE
         );
     }
 

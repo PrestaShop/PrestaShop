@@ -29,6 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
@@ -211,6 +214,26 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $featureId
+     *
+     * @return Response
+     */
+    public function deleteAction(int $featureId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteFeatureCommand($featureId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_features_index');
+    }
+
+    /**
      * @param array $parameters
      *
      * @return Response
@@ -248,6 +271,16 @@ class FeatureController extends FrameworkBundleAdminController
                     [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
                 ),
             ],
+            BulkFeatureException::class => [
+                BulkFeatureException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CannotDeleteFeatureException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 

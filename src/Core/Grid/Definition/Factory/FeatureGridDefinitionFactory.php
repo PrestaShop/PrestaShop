@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -134,16 +135,15 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'featureId',
                         'route_param_field' => 'id_feature',
                     ])
+                    )
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_features_delete',
+                            'featureId',
+                            'id_feature',
+                            Request::METHOD_DELETE
+                        )
                     ),
-                // @todo: delete aciton is not implemented yet
-                // ->add(
-                // $this->buildDeleteAction(
-                // 'admin_features_delete',
-                // 'featureId',
-                // 'id_feature',
-                // Request::METHOD_DELETE
-                // )
-                // ),
             ])
             );
     }

@@ -32,6 +32,8 @@ use Throwable;
 
 class BulkFeatureException extends FeatureException implements BulkCommandExceptionInterface
 {
+    public const FAILED_BULK_DELETE = 1;
+
     /**
      * @var Throwable[]
      */
