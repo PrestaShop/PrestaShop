@@ -318,7 +318,7 @@
 
   <{{ buttonTag }} {{ block('button_attributes') }}>
     <i class="material-icons">{{ button_icon }}</i>
-    {{ label }}
+    <span class="btn-label">{{ label }}</span>
   </{{ buttonTag }}>
 {%- endblock %}
 
@@ -1295,20 +1295,26 @@
   <span class="label text-preview {{ preview_class }}">
     {# Allows to insert content as prefix, like an icon #}
     {% if prefix is defined %}
+    <span class="text-preview-prefix">
       {{ prefix|raw }}
+    </span>
     {% endif %}
 
-    {% if  form.vars.allow_html %}
-      {# This outputs raw value #}
-      {{ value|raw }}
-    {% else %}
-      {# This just outputs the value #}
-      {{ value|e('html') }}
-    {% endif %}
+    <span class="text-preview-value">
+      {% if  form.vars.allow_html %}
+        {# This outputs raw value #}
+        {{ value|raw }}
+      {% else %}
+        {# This just outputs the value #}
+        {{ value|e('html') }}
+      {% endif %}
+    </span>
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
+    <span class="text-preview-suffix">
       {{ suffix|raw }}
+    </span>
     {% endif %}
   </span>
 {% endblock %}
@@ -1533,7 +1539,7 @@
              aria-expanded="false"
           >
           </a>
-          <div class="dropdown-menu dropdown-menu-right">
+          <div class="dropdown-menu">
             {% for action in form.children|slice(inlineButtonsLimit) %}
               {{ form_widget(action, {'attr': {
                 'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim

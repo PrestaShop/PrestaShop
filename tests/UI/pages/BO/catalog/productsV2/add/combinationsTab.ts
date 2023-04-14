@@ -355,13 +355,11 @@ class CombinationsTab extends BOBasePage {
   }
 
   /**
-   * Close generateCombinations modal
+   * Check if generation modal is closed
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeGenerateCombinationModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, this.generateCombinationsCloseButton);
-
+  async generateCombinationModalIsClosed(page: Page): Promise<boolean> {
     return this.elementNotVisible(page, this.generateCombinationsModal, 1000);
   }
 

@@ -61,6 +61,13 @@
             :key="attributeGroup.id"
           >
             <div class="attribute-group-header">
+              <a
+                class="attribute-group-name collapsed"
+                data-toggle="collapse"
+                :href="`#attribute-group-${attributeGroup.id}`"
+              >
+                <label>{{ attributeGroup.name }}</label>
+              </a>
               <div class="md-checkbox attribute-group-checkbox">
                 <label>
                   <input
@@ -70,18 +77,14 @@
                     @change.prevent.stop="toggleAll(attributeGroup)"
                     :checked="checkboxList.includes(attributeGroup)"
                   >
-
                   <i class="md-checkbox-control" />
+                  {{
+                    $tc('generator.select-all', attributeGroup.attributes.length, {
+                      'valuesNb': attributeGroup.attributes.length,
+                    })
+                  }}
                 </label>
               </div>
-
-              <a
-                class="attribute-group-name collapsed"
-                data-toggle="collapse"
-                :href="`#attribute-group-${attributeGroup.id}`"
-              >
-                {{ attributeGroup.name }}
-              </a>
             </div>
             <div
               class="attribute-group-content attributes collapse"
@@ -339,19 +342,42 @@
         }
 
         &-checkbox {
+          width: fit-content;
+          font-weight: 400;
           position: absolute;
+          right: 3.5rem;
           top: 0.5rem;
-          left: 0.5rem;
+        }
+
+        label {
+          margin-bottom: 0;
         }
 
         &-name {
           width: 100%;
-          padding: 0.4375rem 0.4375rem 0.4375rem 2.5rem;
+          padding: 0.4375rem 3rem 0.4375rem 0.4375rem;
           font-weight: 600;
           color: #363a41;
 
           &:hover {
             text-decoration: none;
+          }
+
+          &::after {
+            font-family: "Material Icons",Arial,Verdana,Tahoma,sans-serif;
+            font-size: 1.5rem;
+            content: 'expand_more';
+            line-height: 1.5rem;
+            height: 1.5rem;
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+          }
+
+          &[aria-expanded="true"] {
+            &::after {
+              content: 'expand_less';
+            }
           }
         }
 
