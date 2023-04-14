@@ -26,15 +26,16 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\CS\Tokenizer\Token;
 use Tools;
 
@@ -47,25 +48,19 @@ class TokenizedUrlsListener
 {
     private $tokenManager;
     private $router;
-    private $username;
-    private $employeeId;
+    private $legacyContext;
+    private $userProvider;
 
     public function __construct(
-        CsrfTokenManager $tokenManager,
+        CsrfTokenManagerInterface $tokenManager,
         RouterInterface $router,
-        $username,
-        LegacyContext $legacyContext
+        LegacyContext $legacyContext,
+        UserProvider $userProvider
     ) {
         $this->tokenManager = $tokenManager;
+        $this->legacyContext = $legacyContext;
         $this->router = $router;
-        $this->username = $username;
-        $context = $legacyContext->getContext();
-
-        if (null !== $context) {
-            if ($context->employee instanceof Employee) {
-                $this->employeeId = $context->employee->id;
-            }
-        }
+        $this->userProvider = $userProvider;
     }
 
     public function onKernelRequest(KernelEvent $event)
@@ -97,24 +92,21 @@ class TokenizedUrlsListener
          * every uri which contains 'token' should use the old validation system
          */
         if ($request->query->has('token')) {
-            if (0 == strcasecmp(Tools::getAdminToken($this->employeeId), $request->query->get('token'))) {
+            if (0 == strcasecmp(Tools::getAdminToken($this->legacyContext->getContext()->employee->id), $request->query->get('token'))) {
                 return;
             }
         }
 
         $token = false;
         if ($request->query->has('_token')) {
-            $token = new CsrfToken($this->username, $request->query->get('_token'));
+            $token = new CsrfToken($this->userProvider->getUsername(), $request->query->get('_token'));
         } elseif (isset($request->query->get('form')['_token'])) {
             $token = new CsrfToken('form', $request->query->get('form')['_token']);
         }
 
         if ((false === $token || !$this->tokenManager->isTokenValid($token)) && $event instanceof RequestEvent) {
-            // remove token if any
-            if (false !== strpos($uri, '_token=')) {
-                $uri = substr($uri, 0, strpos($uri, '_token='));
-            }
-
+            // Remove _token if any
+            $uri = UrlCleaner::cleanUrl($uri, ['_token']);
             $response = new RedirectResponse($this->router->generate('admin_security_compromised', ['uri' => urlencode($uri)]));
             $event->setResponse($response);
         }

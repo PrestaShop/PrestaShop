@@ -40,6 +40,7 @@ use PrestaShopBundle\Bridge\Exception\FailedToFetchListRecordsException;
 use PrestaShopBundle\Bridge\Helper\Listing\FilterPrefix;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
+use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;
@@ -174,7 +175,7 @@ class HelperListBridge
         }
 
         if ($helperListConfiguration->getMultiShopContext() && Shop::isTableAssociated($tableName) && !empty($helperListConfiguration->getObjectModelClassName())) {
-            if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->userProvider->getUser()->getData()->isSuperAdmin()) {
+            if (Shop::getContext() != Shop::CONTEXT_ALL || ($this->userProvider->getUser() instanceof Employee && !$this->userProvider->getUser()->getData()->isSuperAdmin())) {
                 $idKey = $helperListConfiguration->getIdentifierKey();
                 $helperListConfiguration->where .= ' AND EXISTS (
                         SELECT 1

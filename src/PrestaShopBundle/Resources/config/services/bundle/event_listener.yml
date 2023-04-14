@@ -19,11 +19,7 @@ services:
 
   prestashop.tokenized_url_listener:
     class: PrestaShopBundle\EventListener\TokenizedUrlsListener
-    arguments:
-      - "@security.csrf.token_manager"
-      - "@router"
-      - "@=service('prestashop.user_provider').getUsername()"
-      - "@prestashop.adapter.legacy.context"
+    autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
