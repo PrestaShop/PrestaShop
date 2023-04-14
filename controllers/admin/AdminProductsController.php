@@ -23,7 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
@@ -1067,10 +1070,15 @@ class AdminProductsControllerCore extends AdminController
         if (!$priorities = Tools::getValue('specificPricePriority')) {
             $this->errors[] = $this->trans('Please specify priorities.', [], 'Admin.Catalog.Notification');
         } elseif (Tools::isSubmit('specificPricePriorityToAll') && Tools::getValue('specificPricePriorityToAll')) {
-            if (!SpecificPrice::setPriorities($priorities)) {
-                $this->errors[] = $this->trans('An error occurred while updating priorities.', [], 'Admin.Catalog.Notification');
-            } else {
+            $sfContainer = SymfonyContainer::getInstance();
+            /** @var SpecificPricePriorityUpdater $specificPricePriorityUpdater */
+            $specificPricePriorityUpdater = $sfContainer->get(SpecificPricePriorityUpdater::class);
+
+            try {
+                $specificPricePriorityUpdater->updateDefaultPriorities($priorities);
                 $this->confirmations[] = 'The price rule has successfully updated';
+            } catch (CoreException $e) {
+                $this->errors[] = $this->trans('An error occurred while updating priorities.', [], 'Admin.Catalog.Notification');
             }
         } elseif (!SpecificPrice::setSpecificPriority((int) $obj->id, $priorities)) {
             $this->errors[] = $this->trans('An error occurred while setting priorities.', [], 'Admin.Catalog.Notification');
