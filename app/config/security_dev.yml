@@ -12,7 +12,7 @@ security:
     # Empty provider until a real provider is developed
     oauth2:
       memory:
-        users: []
+        users: [ ]
 
   encoders:
     Symfony\Component\Security\Core\User\User: plaintext
