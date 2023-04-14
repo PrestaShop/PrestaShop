@@ -773,7 +773,7 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
 
   PrestaShopBundle\Form\Admin\Sell\CartRule\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
 
   PrestaShopBundle\Form\Admin\Type\CustomerSearchType:
   PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType:
