@@ -82,11 +82,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
     deprecated: ~
 
-  prestashop.adapter.data_provider.tab:
-    alias: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
-    deprecated: ~
-    public: true
-
   PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider:
     class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
     public: false

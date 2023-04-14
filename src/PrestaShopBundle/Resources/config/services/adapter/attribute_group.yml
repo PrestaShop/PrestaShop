@@ -7,10 +7,6 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
-  prestashop.adapter.product.attribute_group.attribute_group_view_data_provider:
-    alias: PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider
-    deprecated: ~
-
   PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler:
     autoconfigure: true
 

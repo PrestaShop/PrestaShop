@@ -32,38 +32,3 @@ services:
   prestashop.core.util.color_brightness_calculator:
     alias: PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator
     public: true
-
-  prestashop.core.util.internationalized_domain_name_converter:
-    alias: PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter
-    public: true
-    deprecated: ~
-
-  prestashop.core.uti.back_url_provider:
-    alias: PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider
-    public: true
-    deprecated: ~
-
-  prestashop.core.util.arabic_to_latin_digit_converter:
-    alias: PrestaShop\PrestaShop\Core\Util\ArabicToLatinDigitConverter
-    public: true
-    deprecated: ~
-
-  prestashop.core.util.url.url_file_checker:
-    alias: PrestaShop\PrestaShop\Core\Util\Url\UrlFileChecker
-    public: true
-    deprecated: ~
-
-  prestashop.core.util.string.string_validator:
-    alias: PrestaShop\PrestaShop\Core\Util\String\StringValidator
-    public: true
-    deprecated: ~
-
-  prestashop.core.util.string.string_modifier:
-    alias: PrestaShop\PrestaShop\Core\Util\String\StringModifier
-    deprecated: ~
-    public: true
-
-  prestashop.core.util.file_size.size_converter:
-    alias: PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter
-    deprecated: ~
-    public: true

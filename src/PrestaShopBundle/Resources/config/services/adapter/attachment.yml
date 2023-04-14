@@ -57,10 +57,6 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  prestashop.adapter.attachment.attachment_repository:
-    alias: PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository
-    deprecated: ~
-
   prestashop.adapter.attachment.query_handler.get_attachment_information_handler:
     class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentInformationHandler
     autoconfigure: true

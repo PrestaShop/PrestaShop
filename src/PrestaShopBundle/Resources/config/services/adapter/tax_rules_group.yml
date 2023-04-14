@@ -37,7 +37,3 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator'
 
   PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator: ~
-
-  prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository:
-    alias: PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository
-    deprecated: ~

@@ -85,10 +85,6 @@ services:
   PrestaShop\PrestaShop\Adapter\ImageManager:
     arguments: [ '@PrestaShop\PrestaShop\Adapter\LegacyContext' ]
 
-  prestashop.adapter.image_manager:
-    alias: PrestaShop\PrestaShop\Adapter\ImageManager
-    deprecated: ~
-
   prestashop.core.module.updater:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
 

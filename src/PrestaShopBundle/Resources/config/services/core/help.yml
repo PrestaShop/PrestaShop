@@ -9,8 +9,3 @@ services:
     autowire: true
     arguments:
       $host: "https://help.prestashop-project.org/"
-
-  prestashop.core.help.documentation:
-    alias: PrestaShop\PrestaShop\Core\Help\Documentation
-    public: true
-    deprecated: ~
