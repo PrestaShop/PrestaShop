@@ -28,18 +28,22 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -55,7 +59,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getId()
+    protected function getId(): string
     {
         return self::GRID_ID;
     }
@@ -63,7 +67,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getName()
+    protected function getName(): string
     {
         return $this->trans('Features', [], 'Admin.Catalog.Feature');
     }
@@ -71,7 +75,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getColumns()
+    protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
@@ -151,7 +155,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getGridActions()
+    protected function getGridActions(): GridActionCollectionInterface
     {
         return (new GridActionCollection())
             ->add((new LinkGridAction('import'))
@@ -188,7 +192,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getFilters()
+    protected function getFilters(): FilterCollectionInterface
     {
         return (new FilterCollection())
             ->add((new Filter('id_feature', NumberType::class))
@@ -234,12 +238,10 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getBulkActions()
+    protected function getBulkActions(): BulkActionCollectionInterface
     {
-        return new BulkActionCollection();
-        // @todo: bulk delete action is not implemented yet
-        // return (new BulkActionCollection())
-        // ->add($this->buildBulkDeleteAction('admin_features_bulk_delete'))
-        // ;
+        return (new BulkActionCollection())
+            ->add($this->buildBulkDeleteAction('admin_features_bulk_delete'))
+         ;
     }
 }

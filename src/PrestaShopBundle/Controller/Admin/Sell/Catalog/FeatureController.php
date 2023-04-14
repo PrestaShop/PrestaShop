@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
@@ -224,6 +225,26 @@ class FeatureController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteFeatureCommand($featureId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_features_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function bulkDeleteAction(Request $request): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteFeatureCommand($this->getBulkActionIds($request, 'feature_bulk')));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }

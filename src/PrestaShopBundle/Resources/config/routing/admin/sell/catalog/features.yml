@@ -71,3 +71,12 @@ admin_features_delete:
     _legacy_controller: AdminFeatures
   requirements:
     featureId: \d+
+
+admin_features_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::bulkDeleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
