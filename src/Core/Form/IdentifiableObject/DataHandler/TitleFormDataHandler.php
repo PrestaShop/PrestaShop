@@ -63,7 +63,7 @@ class TitleFormDataHandler implements FormDataHandlerInterface
         /** @var TitleId $titleId */
         $titleId = $this->commandBus->handle(new AddTitleCommand(
             $data['name'],
-            (int) $data['genderType'],
+            (int) $data['gender_type'],
             $uploadedImage,
             $data['img_width'],
             $data['img_height']
@@ -80,7 +80,7 @@ class TitleFormDataHandler implements FormDataHandlerInterface
         $command = new EditTitleCommand((int) $id);
         $command
             ->setLocalizedNames($data['name'])
-            ->setGender((int) $data['genderType']);
+            ->setGender((int) $data['gender_type']);
 
         /** @var UploadedFile|null $uploadedImage */
         $uploadedImage = $data['image'];

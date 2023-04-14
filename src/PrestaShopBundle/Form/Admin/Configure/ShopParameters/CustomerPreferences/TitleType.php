@@ -53,7 +53,7 @@ class TitleType extends TranslatorAwareType
                     'Admin.Global'
                 ),
             ])
-            ->add('genderType', ChoiceType::class, [
+            ->add('gender_type', ChoiceType::class, [
                 'label' => $this->trans(
                     'Gender',
                     'Admin.Global'

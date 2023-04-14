@@ -63,7 +63,7 @@ class TitleFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $id,
             'name' => $result->getLocalizedNames(),
-            'genderType' => $result->getGender(),
+            'gender_type' => $result->getGender(),
             'img_height' => TitleSettings::DEFAULT_IMAGE_HEIGHT,
             'img_width' => TitleSettings::DEFAULT_IMAGE_WIDTH,
         ];
@@ -76,7 +76,7 @@ class TitleFormDataProvider implements FormDataProviderInterface
     {
         return [
             'name' => [],
-            'genderType' => Gender::TYPE_MALE,
+            'gender_type' => Gender::TYPE_MALE,
             'img_height' => TitleSettings::DEFAULT_IMAGE_HEIGHT,
             'img_width' => TitleSettings::DEFAULT_IMAGE_WIDTH,
         ];
