@@ -163,14 +163,13 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ],
             ])
             )
-            // @todo: export action is not implemented yet
-            // ->add((new LinkGridAction('export'))
-            // ->setName($this->trans('Export', [], 'Admin.Actions'))
-            // ->setIcon('cloud_download')
-            // ->setOptions([
-            // 'route' => 'admin_features_export',
-            // ])
-            // )
+            ->add((new LinkGridAction('export'))
+            ->setName($this->trans('Export', [], 'Admin.Actions'))
+            ->setIcon('cloud_download')
+            ->setOptions([
+                'route' => 'admin_features_export',
+            ])
+            )
             ->add((new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
@@ -238,8 +237,8 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return new BulkActionCollection();
         // @todo: bulk delete action is not implemented yet
-         // return (new BulkActionCollection())
-             // ->add($this->buildBulkDeleteAction('admin_features_bulk_delete'))
-         // ;
+        // return (new BulkActionCollection())
+        // ->add($this->buildBulkDeleteAction('admin_features_bulk_delete'))
+        // ;
     }
 }

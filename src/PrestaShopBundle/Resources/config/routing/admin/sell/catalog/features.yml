@@ -43,3 +43,10 @@ admin_features_edit:
       id_feature: featureId
   requirements:
     featureId: \d+
+
+admin_features_export:
+  path: /export
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::exportAction'
+    _legacy_controller: AdminFeatures

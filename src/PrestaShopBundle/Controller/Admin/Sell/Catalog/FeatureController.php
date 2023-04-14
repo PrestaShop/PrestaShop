@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -168,6 +169,43 @@ class FeatureController extends FrameworkBundleAdminController
             'featureForm' => $featureForm->createView(),
             'editableFeature' => $editableFeature,
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(FeatureFilters $filters): CsvResponse
+    {
+        $filters = new FeatureFilters($filters->getShopConstraint(), ['limit' => null] + $filters->all());
+
+        $featuresGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
+        $featuresGrid = $featuresGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_feature' => $this->trans('ID', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'values_count' => $this->trans('values', 'Admin.Global'),
+            'position' => $this->trans('position', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($featuresGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_feature' => $record['id_feature'],
+                'name' => $record['name'],
+                'values_count' => $record['values_count'],
+                'position' => $record['position'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('features_' . date('Y-m-d_His') . '.csv')
+        ;
     }
 
     /**
