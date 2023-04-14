@@ -65,6 +65,7 @@ class OrderReturnCore extends ObjectModel
     /**
      * @param int[] $order_detail_list
      * @param int[] $product_qty_list
+     *
      * @return void
      */
     public function addReturnDetail($order_detail_list, $product_qty_list)
@@ -84,6 +85,7 @@ class OrderReturnCore extends ObjectModel
     /**
      * @param int[] $order_detail_list
      * @param int[] $product_qty_list
+     *
      * @return bool|void
      */
     public function checkEnoughProduct($order_detail_list, $product_qty_list)
