@@ -30,7 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Builder\RequestFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class RequestFiltersBuilderTest extends TestCase
@@ -190,10 +190,7 @@ class RequestFiltersBuilderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parametersBagMock = $this->getMockBuilder(ParameterBag::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $parametersBagMock = new InputBag();
 
         if (!empty($requestScope)) {
             $parameters = [
@@ -201,21 +198,9 @@ class RequestFiltersBuilderTest extends TestCase
             ];
         }
 
-        $parametersBagMock
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn($parameters)
-        ;
+        $parametersBagMock->replace($parameters);
 
-        $emptyParametersBagMock = $this->getMockBuilder(ParameterBag::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $emptyParametersBagMock
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn([])
-        ;
+        $emptyParametersBagMock = new InputBag();
 
         if ($postQuery) {
             $requestMock->request = $parametersBagMock;

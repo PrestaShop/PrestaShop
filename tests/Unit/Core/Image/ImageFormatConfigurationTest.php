@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Classes;
+namespace Tests\Unit\Core\Image;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 class ImageFormatConfigurationTest extends TestCase
 {
     /**
-     * @dataProvider getGenerationFormatsProvider
+     * @dataProvider dataProviderGetGenerationFormats
      *
      * @param string $confData
      * @param array $expectedResult
@@ -117,7 +117,7 @@ class ImageFormatConfigurationTest extends TestCase
     /**
      * @return array[]
      */
-    public function getGenerationFormatsProvider(): array
+    public function dataProviderGetGenerationFormats(): array
     {
         return [
             ['jpg,png,webp', ['jpg', 'png', 'webp']],

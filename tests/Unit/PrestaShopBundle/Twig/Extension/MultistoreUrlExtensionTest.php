@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use PrestaShopBundle\Twig\Extension\MultistoreUrlExtension;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -73,7 +73,7 @@ class MultistoreUrlExtensionTest extends TestCase
             $this->requestStackMock
         );
 
-        $this->mockRequest(new ParameterBag());
+        $this->mockRequest(new InputBag());
 
         $result = $extension->generateUrl(25);
 
@@ -86,7 +86,7 @@ class MultistoreUrlExtensionTest extends TestCase
             $this->requestStackMock
         );
 
-        $this->mockRequest(new ParameterBag());
+        $this->mockRequest(new InputBag());
 
         $result = $extension->generateUrl(25, 'ps-');
 
@@ -99,7 +99,7 @@ class MultistoreUrlExtensionTest extends TestCase
             $this->requestStackMock
         );
 
-        $query = new ParameterBag();
+        $query = new InputBag();
         $query->set('category_id', 12);
         $this->mockRequest($query);
 
@@ -114,7 +114,7 @@ class MultistoreUrlExtensionTest extends TestCase
             $this->requestStackMock
         );
 
-        $this->mockRequest(new ParameterBag());
+        $this->mockRequest(new InputBag());
 
         $shop = $this
             ->getMockBuilder(Shop::class)
@@ -134,7 +134,7 @@ class MultistoreUrlExtensionTest extends TestCase
             $this->requestStackMock
         );
 
-        $this->mockRequest(new ParameterBag());
+        $this->mockRequest(new InputBag());
 
         $shop = $this
             ->getMockBuilder(ShopGroup::class)
@@ -148,7 +148,7 @@ class MultistoreUrlExtensionTest extends TestCase
         $this->assertEquals('/admin/index.php/categories/test?setShopContext=g-43', $result);
     }
 
-    protected function mockRequest(ParameterBag $query): void
+    protected function mockRequest(InputBag $query): void
     {
         $requestMock = $this
             ->getMockBuilder(Request::class)

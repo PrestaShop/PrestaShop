@@ -375,11 +375,7 @@ class ZoneController extends FrameworkBundleAdminController
      */
     private function getBulkZonesFromRequest(Request $request): array
     {
-        $zoneIds = $request->request->get('zone_bulk');
-
-        if (!is_array($zoneIds)) {
-            return [];
-        }
+        $zoneIds = $request->request->all('zone_bulk');
 
         return array_map('intval', $zoneIds);
     }

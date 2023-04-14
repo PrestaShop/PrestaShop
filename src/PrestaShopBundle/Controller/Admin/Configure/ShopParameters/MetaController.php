@@ -226,7 +226,7 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request)
     {
-        $metaToDelete = $request->request->get('meta_bulk');
+        $metaToDelete = $request->request->all('meta_bulk');
 
         $metaEraser = $this->get('prestashop.adapter.meta.meta_eraser');
         $errors = $metaEraser->erase($metaToDelete);

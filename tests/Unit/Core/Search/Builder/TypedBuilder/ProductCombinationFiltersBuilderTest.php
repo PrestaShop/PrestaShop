@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductCombinationFiltersBuilderTest extends TestCase
@@ -115,27 +115,11 @@ class ProductCombinationFiltersBuilderTest extends TestCase
             ->getMock()
         ;
 
-        $parameterBagMock = $this->getMockBuilder(ParameterBag::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $parameterBagMock
-            ->method('has')
-            ->willReturnMap([
-                ['shopId', true],
-            ])
-        ;
-
-        $parameterBagMock
-            ->method('getInt')
-            ->willReturnMap(
-                [
-                    ['productId', 0, $productId],
-                    ['shopId', 0, $shopId],
-                ]
-            )
-        ;
+        $parameterBagMock = new InputBag();
+        $parameterBagMock->replace([
+            'shopId' => $shopId,
+            'productId' => $productId,
+        ]);
 
         $requestMock->attributes = $parameterBagMock;
         $requestMock->query = $parameterBagMock;

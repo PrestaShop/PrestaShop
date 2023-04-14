@@ -11,10 +11,10 @@ parameters:
   AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
   translator.class: PrestaShopBundle\Translation\Translator
   translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
-  prestashop_views: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views"
+  prestashop_views: "%kernel.project_dir%/src/PrestaShopBundle/Resources/views"
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
-  env(PS_LOG_MAX_FILES): 30
+  env(PS_LOG_MAX_FILES): '30'
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
@@ -36,7 +36,7 @@ framework:
     fallbacks: [ "default" ]
     paths: "%modules_translation_paths%"
   router:
-    resource: "%kernel.root_dir%/config/routing.yml"
+    resource: "%kernel.project_dir%/app/config/routing.yml"
     strict_requirements: ~
   form: ~
   csrf_protection: ~
@@ -82,7 +82,7 @@ twig:
     '%admin_page%/Common': Common
     '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
     '%admin_page%/Configure/ShopParameters': ShopParameters
-    '%kernel.root_dir%/../modules': Modules
+    '%kernel.project_dir%/modules': Modules
     '%mail_themes_dir%': MailThemes
     '%prestashop_views%': PrestaShopCore
   globals:

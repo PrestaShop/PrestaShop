@@ -73,13 +73,13 @@ class GetCategoryForEditingHandlerTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $this->commandBus = self::$container->get('prestashop.core.command_bus');
-        $this->rootCategory = (int) self::$container->get('prestashop.adapter.legacy.configuration')->get('PS_ROOT_CATEGORY');
+        $this->commandBus = self::getContainer()->get('prestashop.core.command_bus');
+        $this->rootCategory = (int) self::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_ROOT_CATEGORY');
     }
 
     public function testGetCategoryForEditingReturnsAnEditableCategoryIfExists(): void
     {
-        $categories = self::$container->get('prestashop.adapter.form.choice_provider.category_tree_choice_provider')->getChoices();
+        $categories = self::getContainer()->get('prestashop.adapter.form.choice_provider.category_tree_choice_provider')->getChoices();
         $existingCategoryId = $categories[0]['id_category'];
         $command = new GetCategoryForEditing((int) $existingCategoryId);
 

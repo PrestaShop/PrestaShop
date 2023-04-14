@@ -67,7 +67,6 @@ class PositionsControllerTest extends WebTestCase
         Module::clearStaticCache();
 
         parent::setUp();
-        self::bootKernel();
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');

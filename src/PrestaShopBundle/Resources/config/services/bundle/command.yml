@@ -33,7 +33,7 @@ services:
 
   PrestaShopBundle\Command\UpdateEUTaxruleGroupsCommand:
     arguments:
-      - '%kernel.root_dir%/../localization'
+      - '%kernel.project_dir%/localization'
     tags:
       - 'console.command'
 

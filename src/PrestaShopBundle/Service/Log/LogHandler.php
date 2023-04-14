@@ -28,8 +28,15 @@ namespace PrestaShopBundle\Service\Log;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use Symfony\Component\DependencyInjection\Container;
 
+/**
+ * @phpstan-import-type LevelName from Logger
+ * @phpstan-import-type Level from Logger
+ * @phpstan-import-type Record from Logger
+ * @phpstan-type FormattedRecord array{message: string, context: mixed[], level: Level, level_name: LevelName, channel: string, datetime: \DateTimeImmutable, extra: mixed[], formatted: mixed}
+ */
 class LogHandler extends AbstractProcessingHandler
 {
     protected $container;
@@ -40,8 +47,14 @@ class LogHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $record)
+    /**
+     * Writes the record down to the log of the implementing handler
+     *
+     * @phpstan-param FormattedRecord $record
+     */
+    protected function write(array $record): void
     {
+        /** @var LegacyLogger $logger */
         $logger = $this->container->get('prestashop.adapter.legacy.logger');
         $logger->log($record['level'], $record['message'], $record['context']);
     }

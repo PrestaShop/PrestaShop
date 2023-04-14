@@ -31,7 +31,7 @@
 
   {% block categories_kpis %}
     {{ render(controller(
-      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      'PrestaShopBundle\\Controller\\Admin\\CommonController:renderKpiRowAction',
       { 'kpiRow': categoriesKpi }
     )) }}
   {% endblock %}

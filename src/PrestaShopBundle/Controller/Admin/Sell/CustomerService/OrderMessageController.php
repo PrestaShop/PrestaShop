@@ -214,7 +214,7 @@ class OrderMessageController extends FrameworkBundleAdminController
         try {
             $orderMessageIds = array_map(static function ($orderMessageId) {
                 return (int) $orderMessageId;
-            }, $request->request->get('order_message_order_messages_bulk'));
+            }, $request->request->all('order_message_order_messages_bulk'));
 
             $this->getCommandBus()->handle(new BulkDeleteOrderMessageCommand($orderMessageIds));
 

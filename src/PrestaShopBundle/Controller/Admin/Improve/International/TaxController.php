@@ -330,7 +330,7 @@ class TaxController extends FrameworkBundleAdminController
      */
     public function bulkEnableStatusAction(Request $request)
     {
-        $taxIds = $request->request->get('tax_bulk');
+        $taxIds = $request->request->all('tax_bulk');
         try {
             $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, true));
             $this->addFlash(
@@ -359,7 +359,7 @@ class TaxController extends FrameworkBundleAdminController
      */
     public function bulkDisableStatusAction(Request $request)
     {
-        $taxIds = $request->request->get('tax_bulk');
+        $taxIds = $request->request->all('tax_bulk');
         try {
             $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand($taxIds, false));
             $this->addFlash(
@@ -388,7 +388,7 @@ class TaxController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $taxIds = $request->request->get('tax_bulk');
+        $taxIds = $request->request->all('tax_bulk');
         try {
             $this->getCommandBus()->handle(new BulkDeleteTaxCommand($taxIds));
             $this->addFlash(

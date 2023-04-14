@@ -37,12 +37,13 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @todo Move to Unit Tests when HookManager will be instanciated in ProductPresenter
  */
-class ProductPresenterTest extends TestCase
+class ProductPresenterTest extends KernelTestCase
 {
     /**
      * @var ProductPresentationSettings
@@ -57,6 +58,7 @@ class ProductPresenterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        self::bootKernel();
 
         $this->settings = new ProductPresentationSettings();
         $this->settings->catalog_mode = false;

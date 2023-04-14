@@ -82,7 +82,7 @@ class HookDispatcherTest extends TestCase
             ->with([$lowerCasedEventName], $eventName, $this->hookEventMock)
         ;
 
-        $this->hookDispatcherMock->dispatch($eventName, $this->hookEventMock);
+        $this->hookDispatcherMock->dispatch($this->hookEventMock, $eventName);
     }
 
     public function getHookEventNames()

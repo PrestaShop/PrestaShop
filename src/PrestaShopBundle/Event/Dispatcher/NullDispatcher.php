@@ -46,10 +46,11 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
      * @param object $event
      * @param string|null $eventName
      *
-     * @return object|void
+     * @return object
      */
-    public function dispatch($event, string $eventName = null)
+    public function dispatch(object $event, string $eventName = null): object
     {
+        return $event;
     }
 
     /**

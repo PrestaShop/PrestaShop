@@ -732,11 +732,7 @@
         <div class="popover-error-list">
           <ul>
             {%- for error in errors -%}
-              <li class="text-danger"> {{
-                error.messagePluralization is null
-                ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-                }}
+              <li class="text-danger"> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
               </li>
             {% endfor %}
           </ul>
@@ -756,7 +752,7 @@
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|transchoice(errors|length, {}, 'Admin.Global') }}</u>
+          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|trans(errors|length, {}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
@@ -774,11 +770,7 @@
       <div class="d-inline-block">
         {% for error in errors %}
           <div class="text-danger">
-            <p> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
+            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
             </p>
           </div>
         {%- endfor -%}
@@ -795,11 +787,7 @@
       </button>
       <div class="alert-text">
         {% for error in errors %}
-            <p> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
+            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
             </p>
         {%- endfor -%}
       </div>

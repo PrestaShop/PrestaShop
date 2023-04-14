@@ -47,8 +47,8 @@ class PositionsController extends ApiController
         $moduleId = $request->request->getInt('moduleId');
         $hookId = $request->request->getInt('hookId');
         $way = $request->request->getInt('way');
-        $positions = $request->request->get('positions');
-        $position = (int) is_array($positions) ? array_search($hookId . '_' . $moduleId, $positions) + 1 : null;
+        $positions = $request->request->all('positions');
+        $position = (int) array_search($hookId . '_' . $moduleId, $positions) + 1;
 
         $module = $this->container->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
         if (empty($module)) {

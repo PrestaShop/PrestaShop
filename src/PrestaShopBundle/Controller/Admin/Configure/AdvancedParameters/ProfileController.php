@@ -264,12 +264,10 @@ class ProfileController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $profileIds = $request->request->get('profile_bulk');
+        $profileIds = $request->request->all('profile_bulk');
 
         try {
-            $deleteProfilesCommand = new BulkDeleteProfileCommand($profileIds);
-
-            $this->getCommandBus()->handle($deleteProfilesCommand);
+            $this->getCommandBus()->handle(new BulkDeleteProfileCommand($profileIds));
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (ProfileException $e) {

@@ -31,18 +31,24 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PathWithBackUrlExtensionTest extends TestCase
 {
     public const FALLBACK_URL = 'https://www.prestashop.com/en';
 
     /**
-     * @var MockObject|RoutingExtension
+     * @var RoutingExtension
      */
     private $routingExtensionMock;
+
+    /**
+     * @var MockObject|UrlGeneratorInterface
+     */
+    private $urlGeneratorInterfaceMock;
 
     /**
      * @var MockObject|RequestStack
@@ -58,17 +64,17 @@ class PathWithBackUrlExtensionTest extends TestCase
     {
         parent::setUp();
 
-        $this->routingExtensionMock = $this
-            ->getMockBuilder(RoutingExtension::class)
-            ->disableOriginalConstructor()
+        $this->urlGeneratorInterfaceMock = $this
+            ->getMockBuilder(UrlGeneratorInterface::class)
             ->getMock()
         ;
 
-        $this
-            ->routingExtensionMock
-            ->method('getPath')
+        $this->urlGeneratorInterfaceMock
+            ->method('generate')
             ->willReturn(self::FALLBACK_URL)
         ;
+
+        $this->routingExtensionMock = new RoutingExtension($this->urlGeneratorInterfaceMock);
 
         $this->requestStackMock = $this
             ->getMockBuilder(RequestStack::class)
@@ -101,7 +107,7 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->getMock()
         ;
 
-        $requestMock->query = new ParameterBag();
+        $requestMock->query = new InputBag();
 
         $this->requestStackMock
             ->method('getCurrentRequest')
@@ -133,7 +139,7 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->getMock()
         ;
 
-        $requestMock->query = new ParameterBag();
+        $requestMock->query = new InputBag();
 
         $this->requestStackMock
             ->method('getCurrentRequest')

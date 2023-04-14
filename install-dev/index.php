@@ -29,7 +29,7 @@ require_once 'install_version.php';
 if (
     !defined('PHP_VERSION_ID') // PHP_VERSION_ID is available since 5.2.7
     || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_
-    || PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_ 
+    || PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_
     || !extension_loaded('SimpleXML') /** @phpstan-ignore-line */
     || !extension_loaded('zip') /** @phpstan-ignore-line */
     || !is_writable(
@@ -45,7 +45,7 @@ require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 
 try {
     if (_PS_MODE_DEV_) {
-        Symfony\Component\Debug\Debug::enable();
+        Symfony\Component\ErrorHandler\Debug::enable();
     }
 
     require_once _PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php';

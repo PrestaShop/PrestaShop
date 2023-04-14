@@ -393,11 +393,7 @@ class CarriersController extends FrameworkBundleAdminController
      */
     private function getCarrierIdsFromRequest(Request $request): array
     {
-        $carrierIds = $request->request->get('carrier_bulk');
-
-        if (!is_array($carrierIds)) {
-            return [];
-        }
+        $carrierIds = $request->request->all('carrier_bulk');
 
         foreach ($carrierIds as $i => $carrierId) {
             $carrierIds[$i] = (int) $carrierId;

@@ -28,33 +28,22 @@ namespace Tests\Unit\PrestaShopBundle\EventListener;
 
 use Context;
 use Employee;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\EventListener\BackUrlRedirectResponseListener;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class BackUrlRedirectResponseListenerTest extends TestCase
 {
-    /**
-     * @var MockObject|FilterResponseEvent
-     */
-    private $filterResponseEventMock;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->filterResponseEventMock = $this
-            ->getMockBuilder(FilterResponseEvent::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-    }
-
     protected function getLegacyContextMock($isConnected = true)
     {
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
@@ -98,24 +87,26 @@ class BackUrlRedirectResponseListenerTest extends TestCase
             $expectedUrl
         );
 
-        $this->filterResponseEventMock
-            ->method('getResponse')
-            ->willReturn(new RedirectResponse('http://localhost.dev'))
-        ;
-
-        $this->filterResponseEventMock
-            ->method('getRequest')
-            ->willReturn(new Request())
-        ;
+        $filterResponseEventMock = new ResponseEvent(
+            new HttpKernel(
+                new EventDispatcher(),
+                new ControllerResolver(),
+                new RequestStack(),
+                new ArgumentResolver()
+            ),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            new RedirectResponse('http://localhost.dev')
+        );
 
         $responseListener = new BackUrlRedirectResponseListener(
             $backUrlProviderMock,
             $legacyContextMock
         );
 
-        $responseListener->onKernelResponse($this->filterResponseEventMock);
+        $responseListener->onKernelResponse($filterResponseEventMock);
 
-        $actual = $this->filterResponseEventMock->getResponse();
+        $actual = $filterResponseEventMock->getResponse();
         $expected = new RedirectResponse($expectedUrl);
 
         $this->assertEquals($expected, $actual);
@@ -132,11 +123,6 @@ class BackUrlRedirectResponseListenerTest extends TestCase
 
         $originalRedirectResponse = new RedirectResponse($expectedUrl);
 
-        $this->filterResponseEventMock
-            ->method('getResponse')
-            ->willReturn($originalRedirectResponse)
-        ;
-
         $currentRequest = $this
             ->getMockBuilder(Request::class)
             ->getMock();
@@ -146,27 +132,32 @@ class BackUrlRedirectResponseListenerTest extends TestCase
             ->willReturn($expectedUrl)
         ;
 
-        $this->filterResponseEventMock
-            ->method('getRequest')
-            ->willReturn($currentRequest)
-        ;
+        $filterResponseEventMock = new ResponseEvent(
+            new HttpKernel(
+                new EventDispatcher(),
+                new ControllerResolver(),
+                new RequestStack(),
+                new ArgumentResolver()
+            ),
+            $currentRequest,
+            HttpKernelInterface::MAIN_REQUEST,
+            $originalRedirectResponse
+        );
 
         $responseListener = new BackUrlRedirectResponseListener(
             $backUrlProviderMock,
             $legacyContextMock
         );
 
-        $responseListener->onKernelResponse($this->filterResponseEventMock);
+        $responseListener->onKernelResponse($filterResponseEventMock);
 
-        $actual = $this->filterResponseEventMock->getResponse();
+        $actual = $filterResponseEventMock->getResponse();
 
         $this->assertEquals($originalRedirectResponse, $actual);
     }
 
     public function testWhenEmployeeIsNotConnected()
     {
-        $expectedUrl = 'http://localhost';
-
         $legacyContextMock = $this->getLegacyContextMock(false);
         $backUrlProviderMock = $this->getBackUrlProviderMock(
             'http://localhost-not-called.dev'
@@ -177,6 +168,18 @@ class BackUrlRedirectResponseListenerTest extends TestCase
             $legacyContextMock
         );
 
-        $this->assertNull($responseListener->onKernelResponse($this->filterResponseEventMock));
+        $filterResponseEventMock = new ResponseEvent(
+            new HttpKernel(
+                new EventDispatcher(),
+                new ControllerResolver(),
+                new RequestStack(),
+                new ArgumentResolver()
+            ),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            new RedirectResponse('http://localhost.dev')
+        );
+
+        $this->assertNull($responseListener->onKernelResponse($filterResponseEventMock));
     }
 }

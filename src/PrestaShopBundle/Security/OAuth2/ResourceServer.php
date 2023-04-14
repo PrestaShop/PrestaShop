@@ -32,7 +32,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer as LeagueResourceServer;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -80,7 +80,7 @@ class ResourceServer implements ResourceServerInterface
 
         try {
             return $this->userProvider->loadUserByUsername($audience);
-        } catch (UsernameNotFoundException $exception) {
+        } catch (UserNotFoundException $exception) {
             return null;
         }
     }

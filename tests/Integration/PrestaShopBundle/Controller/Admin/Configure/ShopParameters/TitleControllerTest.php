@@ -51,7 +51,6 @@ class TitleControllerTest extends WebTestCase
     {
         parent::setUp();
         self::mockContext();
-        self::bootKernel();
 
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');

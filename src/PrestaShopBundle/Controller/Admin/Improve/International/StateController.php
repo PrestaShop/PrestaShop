@@ -369,11 +369,7 @@ class StateController extends FrameworkBundleAdminController
      */
     private function getBulkStatesFromRequest(Request $request): array
     {
-        $stateIds = $request->request->get('state_states_bulk');
-
-        if (!is_array($stateIds)) {
-            return [];
-        }
+        $stateIds = $request->request->all('state_states_bulk');
 
         foreach ($stateIds as $i => $stateId) {
             $stateIds[$i] = (int) $stateId;

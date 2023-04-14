@@ -99,7 +99,7 @@ class Admin
         //if employee loggdin in legacy context, authenticate him into sf2 security context
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->isLoggedBack()) {
             $user = $this->userProvider->loadUserByUsername($this->legacyContext->employee->email);
-            $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
+            $token = new UsernamePasswordToken($user, 'admin', $user->getRoles());
             $this->securityTokenStorage->setToken($token);
 
             return true;

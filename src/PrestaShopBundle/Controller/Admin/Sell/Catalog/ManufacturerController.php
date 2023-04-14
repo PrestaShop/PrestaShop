@@ -757,11 +757,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     private function getBulkManufacturersFromRequest(Request $request): array
     {
-        $manufacturerIds = $request->request->get('manufacturer_bulk');
-
-        if (!is_array($manufacturerIds)) {
-            return [];
-        }
+        $manufacturerIds = $request->request->all('manufacturer_bulk');
 
         foreach ($manufacturerIds as $i => $manufacturerId) {
             $manufacturerIds[$i] = (int) $manufacturerId;
@@ -775,11 +771,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     private function getBulkAddressesFromRequest(Request $request): array
     {
-        $addressIds = $request->request->get('manufacturer_address_bulk');
-
-        if (!is_array($addressIds)) {
-            return [];
-        }
+        $addressIds = $request->request->all('manufacturer_address_bulk');
 
         foreach ($addressIds as $i => $addressId) {
             $addressIds[$i] = (int) $addressId;

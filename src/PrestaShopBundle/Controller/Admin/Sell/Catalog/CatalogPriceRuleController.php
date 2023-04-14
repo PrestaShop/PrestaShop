@@ -305,11 +305,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      */
     private function getBulkCatalogPriceRulesFromRequest(Request $request)
     {
-        $catalogPriceRuleIds = $request->request->get('catalog_price_rule_bulk');
-
-        if (!is_array($catalogPriceRuleIds)) {
-            return [];
-        }
+        $catalogPriceRuleIds = $request->request->all('catalog_price_rule_bulk');
 
         foreach ($catalogPriceRuleIds as &$catalogPriceRuleId) {
             $catalogPriceRuleId = (int) $catalogPriceRuleId;

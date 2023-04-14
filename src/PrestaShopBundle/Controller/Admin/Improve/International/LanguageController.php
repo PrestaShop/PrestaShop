@@ -430,11 +430,7 @@ class LanguageController extends FrameworkBundleAdminController
      */
     private function getBulkLanguagesFromRequest(Request $request)
     {
-        $languageIds = $request->request->get('language_language_bulk');
-
-        if (!is_array($languageIds)) {
-            return [];
-        }
+        $languageIds = $request->request->all('language_language_bulk');
 
         foreach ($languageIds as $i => $languageId) {
             $languageIds[$i] = (int) $languageId;

@@ -44,7 +44,7 @@ class OrderReturnStateRepositoryTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $this->orderReturnStateRepository = self::$container->get('prestashop.adapter.order_return_state.repository.order_return_state_repository');
+        $this->orderReturnStateRepository = self::getContainer()->get('prestashop.adapter.order_return_state.repository.order_return_state_repository');
     }
 
     public function testGetThrowsException(): void

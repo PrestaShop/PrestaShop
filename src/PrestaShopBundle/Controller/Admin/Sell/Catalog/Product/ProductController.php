@@ -70,6 +70,7 @@ use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
+use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -732,7 +733,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductsPositionsCommand(
-                    $request->request->get('positions'),
+                    $request->request->all('positions'),
                     $request->query->getInt('id_category')
                 )
             );
@@ -1222,15 +1223,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function getProductIdsFromRequest(Request $request): array
     {
-        $productIds = $request->request->get('product_bulk');
-
-        if (is_numeric($productIds)) {
-            return [(int) $productIds];
-        }
-
-        if (!is_array($productIds)) {
-            return [];
-        }
+        $productIds = $request->request->all('product_bulk');
 
         foreach ($productIds as $i => $productId) {
             $productIds[$i] = (int) $productId;
@@ -1515,7 +1508,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
-        $employeeId = $this->getUser()->getId();
+        $employeeId = $this->getUser() instanceof Employee ? $this->getUser()->getId() : 0;
         $shopId = $this->getContext()->shop->id;
 
         return $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, ProductGridDefinitionFactory::GRID_ID);

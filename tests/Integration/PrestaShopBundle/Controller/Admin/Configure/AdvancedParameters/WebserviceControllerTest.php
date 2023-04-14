@@ -57,8 +57,6 @@ class WebserviceControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        self::bootKernel();
-
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
         $this->session = self::$kernel->getContainer()->get('session');

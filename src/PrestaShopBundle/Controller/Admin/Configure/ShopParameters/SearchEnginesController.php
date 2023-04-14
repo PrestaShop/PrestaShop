@@ -258,11 +258,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
      */
     private function getBulkSearchEnginesFromRequest(Request $request): array
     {
-        $searchEngineIds = $request->request->get('search_engine_bulk');
-
-        if (!is_array($searchEngineIds)) {
-            return [];
-        }
+        $searchEngineIds = $request->request->all('search_engine_bulk');
 
         return array_map('intval', $searchEngineIds);
     }

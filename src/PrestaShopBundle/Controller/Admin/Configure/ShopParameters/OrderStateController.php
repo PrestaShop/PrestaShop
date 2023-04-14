@@ -525,7 +525,7 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     private function getBulkOrderStatesFromRequest(Request $request): array
     {
-        $orderStateIds = $request->request->get('order_states_order_states_bulk');
+        $orderStateIds = $request->request->all('order_states_order_states_bulk');
 
         if (!is_array($orderStateIds)) {
             return [];
@@ -543,11 +543,7 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     private function getBulkOrderReturnStatesFromRequest(Request $request): array
     {
-        $orderReturnStateIds = $request->request->get('order_return_states_order_return_states_bulk');
-
-        if (!is_array($orderReturnStateIds)) {
-            return [];
-        }
+        $orderReturnStateIds = $request->request->all('order_return_states_order_return_states_bulk');
 
         return array_map(static function (string $orderReturnStateId) {
             return (int) $orderReturnStateId;

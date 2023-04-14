@@ -56,7 +56,7 @@
       {% endblock %}
 
   {% if product_count_filtered > 20 %}
-        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\CommonController:paginationAction', {
           'limit': limit,
           'offset': offset,
           'total': product_count_filtered,

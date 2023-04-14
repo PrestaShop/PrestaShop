@@ -791,7 +791,7 @@ class CustomerController extends AbstractAdminController
     {
         $customerIds = array_map(function ($customerId) {
             return (int) $customerId;
-        }, $request->request->get('customer_customers_bulk', []));
+        }, $request->request->all('customer_customers_bulk'));
 
         try {
             $command = new BulkEnableCustomerCommand($customerIds);
@@ -824,7 +824,7 @@ class CustomerController extends AbstractAdminController
         try {
             $customerIds = array_map(function ($customerId) {
                 return (int) $customerId;
-            }, $request->request->get('customer_customers_bulk', []));
+            }, $request->request->all('customer_customers_bulk'));
 
             $command = new BulkDisableCustomerCommand($customerIds);
 

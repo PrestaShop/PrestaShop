@@ -248,6 +248,7 @@ class AdminControllerTest extends TestCase
     {
         $language = $this->getMockBuilder(Language::class)->getMock();
         $language->iso_code = 'en';
+        $language->locale = 'en';
 
         return $language;
     }
@@ -271,7 +272,7 @@ class AdminControllerTest extends TestCase
 
     private function getMockContainerBuilder(): ContainerBuilder
     {
-        $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->getMock();
+        $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->disableOriginalConstructor()->getMock();
         $mockContainerBuilder->method('get')
             ->willReturnCallback(function (string $param) {
                 if ($param === Controller::SERVICE_LOCALE_REPOSITORY) {

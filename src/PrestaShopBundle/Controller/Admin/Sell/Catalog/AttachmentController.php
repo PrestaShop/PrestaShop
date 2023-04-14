@@ -403,11 +403,7 @@ class AttachmentController extends FrameworkBundleAdminController
      */
     private function getBulkAttachmentsFromRequest(Request $request): array
     {
-        $attachmentIds = $request->request->get('attachment_files_bulk');
-
-        if (!is_array($attachmentIds)) {
-            return [];
-        }
+        $attachmentIds = $request->request->all('attachment_files_bulk');
 
         foreach ($attachmentIds as $i => $attachmentId) {
             $attachmentIds[$i] = (int) $attachmentId;

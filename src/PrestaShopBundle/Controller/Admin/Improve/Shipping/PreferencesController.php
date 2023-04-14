@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible of "Improve > Shipping > Preferences" page.
+ * Controller responsible for "Improve > Shipping > Preferences" page.
  */
 class PreferencesController extends FrameworkBundleAdminController
 {

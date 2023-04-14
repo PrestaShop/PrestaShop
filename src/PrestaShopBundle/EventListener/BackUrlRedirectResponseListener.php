@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * This class allows to redirect to back url.
@@ -62,7 +62,7 @@ final class BackUrlRedirectResponseListener
         }
     }
 
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         // No need to continue because the employee is not connected
         if (!$this->employeeId) {
@@ -86,7 +86,7 @@ final class BackUrlRedirectResponseListener
 
     /**
      * Compares if request url is equal to response url - in such case the back url should not work since the action
-     * is suppose to be kept on the same url . E.g "save and stay" button click.
+     * is supposed to be kept on the same url . E.g "save and stay" button click.
      *
      * @param Request $currentRequest
      * @param RedirectResponse $originalResponse

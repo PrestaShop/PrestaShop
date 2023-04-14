@@ -555,7 +555,7 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function generateCombinationsAction(int $productId, ?int $shopId, Request $request): JsonResponse
     {
-        $requestAttributeGroups = $request->request->get('attributes');
+        $requestAttributeGroups = $request->request->all('attributes');
         $attributes = [];
         foreach ($requestAttributeGroups as $attributeGroupId => $requestAttributes) {
             $attributes[(int) $attributeGroupId] = array_map('intval', $requestAttributes);

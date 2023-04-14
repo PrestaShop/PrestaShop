@@ -40,14 +40,14 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Psr\Log\NullLogger;
 use Shop;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Router;
 
 class ProductControllerTest extends WebTestCase
 {
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -59,10 +59,6 @@ class ProductControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        self::bootKernel();
-        global $kernel;
-        $kernel = self::$kernel;
 
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');

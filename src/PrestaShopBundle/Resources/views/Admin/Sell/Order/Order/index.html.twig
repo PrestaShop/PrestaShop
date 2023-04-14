@@ -34,7 +34,7 @@
 
   {% block orders_kpi %}
     {{ render(controller(
-      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      'PrestaShopBundle\\Controller\\Admin\\CommonController:renderKpiRowAction',
       { 'kpiRow': orderKpi }
     )) }}
   {% endblock %}

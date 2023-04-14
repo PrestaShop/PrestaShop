@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -203,7 +203,7 @@ class ResponseBuilderTest extends TestCase
 
         $mockRequest = $this->createMock(Request::class);
         $mockRequest->setMethod('POST');
-        $mockRequest->request = $this->createMock(ParameterBag::class);
+        $mockRequest->request = new InputBag();
 
         $session = $this->createMock(Session::class);
         if (!$isValid) {

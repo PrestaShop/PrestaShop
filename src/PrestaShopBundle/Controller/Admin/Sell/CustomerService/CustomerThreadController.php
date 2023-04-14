@@ -402,7 +402,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      */
     private function getBulkCustomerThreadsFromRequest(Request $request): array
     {
-        $customerThreadIds = $request->request->get('customer_thread_bulk');
+        $customerThreadIds = $request->request->all('customer_thread_bulk');
 
         if (!is_array($customerThreadIds)) {
             return [];

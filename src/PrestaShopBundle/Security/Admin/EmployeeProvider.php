@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -70,7 +70,7 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @return Employee
      *
-     * @throws UsernameNotFoundException
+     * @throws UserNotFoundException
      */
     public function loadUserByUsername($username)
     {
@@ -96,7 +96,7 @@ class EmployeeProvider implements UserProviderInterface
             return $cachedEmployee->get();
         }
 
-        throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+        throw new UserNotFoundException(sprintf('Username "%s" does not exist.', $username));
     }
 
     /**

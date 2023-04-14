@@ -669,11 +669,7 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     private function getBulkCurrenciesFromRequest(Request $request)
     {
-        $currenciesIds = $request->request->get('currency_currency_bulk');
-
-        if (!is_array($currenciesIds)) {
-            return [];
-        }
+        $currenciesIds = $request->request->all('currency_currency_bulk');
 
         foreach ($currenciesIds as $i => $currencyId) {
             $currenciesIds[$i] = (int) $currencyId;

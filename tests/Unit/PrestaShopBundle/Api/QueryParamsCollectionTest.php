@@ -32,7 +32,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -433,9 +433,9 @@ AND EXISTS(SELECT 1
     /**
      * @param array $testedParams
      *
-     * @return ParameterBag
+     * @return InputBag
      */
-    private function mockQuery(array $testedParams): ParameterBag
+    private function mockQuery(array $testedParams): InputBag
     {
         $params = [];
         $validQueryParams = [
@@ -455,8 +455,8 @@ AND EXISTS(SELECT 1
             }
         });
 
-        $queryMock = $this->createMock(ParameterBag::class);
-        $queryMock->method('all')->willReturn($params);
+        $queryMock = new InputBag();
+        $queryMock->replace($params);
 
         return $queryMock;
     }
@@ -464,12 +464,12 @@ AND EXISTS(SELECT 1
     /**
      * @param array $attributes
      *
-     * @return ParameterBag
+     * @return InputBag
      */
     private function mockAttributes(array $attributes)
     {
-        $attributesMock = $this->createMock(ParameterBag::class);
-        $attributesMock->method('all')->willReturn($attributes);
+        $attributesMock = new InputBag();
+        $attributesMock->replace($attributes);
 
         return $attributesMock;
     }

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParameters;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class SearchParametersTest extends TestCase
@@ -168,24 +168,10 @@ class SearchParametersTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parametersBagMock = $this->getMockBuilder(ParameterBag::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $parametersBagMock
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn($parameters)
-        ;
-        $emptyParametersBagMock = $this->getMockBuilder(ParameterBag::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $emptyParametersBagMock
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn([])
-        ;
+        $parametersBagMock = new InputBag();
+        $parametersBagMock->replace($parameters);
+
+        $emptyParametersBagMock = new InputBag();
 
         if ($postQuery) {
             $requestMock->request = $parametersBagMock;

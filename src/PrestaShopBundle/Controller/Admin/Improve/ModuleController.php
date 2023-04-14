@@ -215,14 +215,14 @@ class ModuleController extends ModuleAbstractController
                 $args[] = $source;
             }
             if ($action === ModuleAdapter::ACTION_UNINSTALL) {
-                $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
+                $args[] = (bool) ($request->request->all('actionParams')['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
             }
             if ($action === ModuleAdapter::ACTION_DELETE) {
                 $response[$module]['refresh_needed'] = false;
             }
             $systemCacheClearEnabled = filter_var(
-                $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
+                $request->request->all('actionParams')['cacheClearEnabled'] ?? true,
                 FILTER_VALIDATE_BOOLEAN
             );
             if (!$systemCacheClearEnabled) {
