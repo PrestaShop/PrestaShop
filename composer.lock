@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df659e5d38714215a2a66920775f6668",
+    "content-hash": "61518aaab37938ec22a64705e79dfae9",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4721,16 +4721,16 @@
         },
         {
             "name": "prestashop/dashgoals",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashgoals.git",
-                "reference": "78c6ecf7c8a40c69964b9a92f6d73534636f1a5f"
+                "reference": "13667ef6458cdbc55b760a1d9ae75ac76bb13932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/78c6ecf7c8a40c69964b9a92f6d73534636f1a5f",
-                "reference": "78c6ecf7c8a40c69964b9a92f6d73534636f1a5f",
+                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/13667ef6458cdbc55b760a1d9ae75ac76bb13932",
+                "reference": "13667ef6458cdbc55b760a1d9ae75ac76bb13932",
                 "shasum": ""
             },
             "require": {
@@ -4759,9 +4759,9 @@
             "description": "PrestaShop module dashgoals",
             "homepage": "https://github.com/PrestaShop/dashgoals",
             "support": {
-                "source": "https://github.com/PrestaShop/dashgoals/tree/v2.0.3"
+                "source": "https://github.com/PrestaShop/dashgoals/tree/v2.0.4"
             },
-            "time": "2023-01-17T15:04:32+00:00"
+            "time": "2023-03-22T16:16:12+00:00"
         },
         {
             "name": "prestashop/dashproducts",
@@ -4803,16 +4803,16 @@
         },
         {
             "name": "prestashop/dashtrends",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashtrends.git",
-                "reference": "122384c3a7367a3bf8810466e5c0a2f80ab170fb"
+                "reference": "c0ffb850abf1896ae8650522c8c8f4cff1c1dd80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/122384c3a7367a3bf8810466e5c0a2f80ab170fb",
-                "reference": "122384c3a7367a3bf8810466e5c0a2f80ab170fb",
+                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/c0ffb850abf1896ae8650522c8c8f4cff1c1dd80",
+                "reference": "c0ffb850abf1896ae8650522c8c8f4cff1c1dd80",
                 "shasum": ""
             },
             "require": {
@@ -4840,9 +4840,9 @@
             "description": "PrestaShop module dashtrends",
             "homepage": "https://github.com/PrestaShop/dashtrends",
             "support": {
-                "source": "https://github.com/PrestaShop/dashtrends/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/dashtrends/tree/v2.1.1"
             },
-            "time": "2022-12-01T10:44:15+00:00"
+            "time": "2023-03-24T13:19:08+00:00"
         },
         {
             "name": "prestashop/decimal",
@@ -6020,16 +6020,16 @@
         },
         {
             "name": "prestashop/ps_googleanalytics",
-            "version": "v4.2.1",
+            "version": "v4.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_googleanalytics.git",
-                "reference": "3adf470973a3ac782ddff853aa170361ea6d3821"
+                "reference": "7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/3adf470973a3ac782ddff853aa170361ea6d3821",
-                "reference": "3adf470973a3ac782ddff853aa170361ea6d3821",
+                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233",
+                "reference": "7bfdf5f6e88658e7b0f6b5a01cbe384516eb7233",
                 "shasum": ""
             },
             "require": {
@@ -6059,9 +6059,9 @@
             "description": "PrestaShop module ps_googleanalytics",
             "homepage": "https://github.com/PrestaShop/ps_googleanalytics",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v4.2.1"
+                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v4.2.2"
             },
-            "time": "2023-03-15T10:36:39+00:00"
+            "time": "2023-04-05T09:37:41+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
@@ -7932,16 +7932,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v4.2.1",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "ffa2b81a8e354a49fd8a2f24742dc9dc399e8007"
+                "reference": "e28cb0915b4e3749bf57d4ebae2984e25395cfe5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/ffa2b81a8e354a49fd8a2f24742dc9dc399e8007",
-                "reference": "ffa2b81a8e354a49fd8a2f24742dc9dc399e8007",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/e28cb0915b4e3749bf57d4ebae2984e25395cfe5",
+                "reference": "e28cb0915b4e3749bf57d4ebae2984e25395cfe5",
                 "shasum": ""
             },
             "require": {
@@ -7992,9 +7992,9 @@
             "support": {
                 "forum": "https://github.com/smarty-php/smarty/discussions",
                 "issues": "https://github.com/smarty-php/smarty/issues",
-                "source": "https://github.com/smarty-php/smarty/tree/v4.2.1"
+                "source": "https://github.com/smarty-php/smarty/tree/v4.3.1"
             },
-            "time": "2022-09-14T10:59:01+00:00"
+            "time": "2023-03-28T19:47:03+00:00"
         },
         {
             "name": "soundasleep/html2text",
