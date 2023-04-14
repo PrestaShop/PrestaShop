@@ -52,7 +52,6 @@ export default class PositionExtension {
   }
 
   /**
-   * @todo: Why this extension requires grid in constructor and as well in extend method? needs clean up.
    * Extend grid
    *
    * @param {Grid} grid

@@ -174,6 +174,8 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param FeatureFilters $filters
+     *
      * @return CsvResponse
      */
     public function exportAction(FeatureFilters $filters): CsvResponse
@@ -205,35 +207,6 @@ class FeatureController extends FrameworkBundleAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('features_' . date('Y-m-d_His') . '.csv');
-    }
-
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function updatePositionAction(Request $request): RedirectResponse
-    {
-        $positionsData = [
-            'positions' => $request->request->get('positions'),
-        ];
-
-        $positionDefinition = $this->get('prestashop.core.grid.feature.position_definition');
-        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
-
-        try {
-            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
-            $updater = $this->get(GridPositionUpdaterInterface::class);
-            $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
-        } catch (PositionUpdateException $e) {
-            $errors = [$e->toArray()];
-            $this->flashErrors($errors);
-        }
-
-        return $this->redirectToRoute('admin_features_index');
     }
 
     /**
