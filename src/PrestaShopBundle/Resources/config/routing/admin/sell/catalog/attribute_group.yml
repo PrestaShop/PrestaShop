@@ -90,7 +90,9 @@ admin_attribute_groups_update_position:
   path: /update-position
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::updatePositionAction'
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::updatePositionAction
     _legacy_controller: AdminAttributesGroups
     _legacy_link: AdminAttributesGroups:updateGroupsPositions
     _legacy_feature_flag: attribute_group
+    position_definition: prestashop.core.grid.attribute_group.position_definition
+    redirect_route: admin_attribute_groups_index

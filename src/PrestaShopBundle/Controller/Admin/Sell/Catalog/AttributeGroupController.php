@@ -33,9 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNot
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\DeleteAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
-use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
-use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
-use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -118,41 +115,6 @@ class AttributeGroupController extends FrameworkBundleAdminController
     public function exportAction(int $attributeGroupId)
     {
         //@todo: implement in antoher pr
-        return $this->redirectToRoute('admin_attribute_groups_index');
-    }
-
-    /**
-     * Updates attribute groups positioning order
-     *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attribute_groups_index"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function updatePositionAction(Request $request)
-    {
-        $positionsData = [
-            'positions' => $request->request->get('positions'),
-        ];
-
-        $positionDefinition = $this->get('prestashop.core.grid.attribute_group.position_definition');
-        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
-
-        try {
-            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
-            $updater = $this->get(GridPositionUpdaterInterface::class);
-            $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
-        } catch (TranslatableCoreException $e) {
-            $errors = [$e->toArray()];
-            $this->flashErrors($errors);
-        } catch (Exception $e) {
-            $this->flashErrors([$e->getMessage()]);
-        }
-
         return $this->redirectToRoute('admin_attribute_groups_index');
     }
 
