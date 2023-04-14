@@ -79,10 +79,12 @@ services:
   PrestaShopBundle\Service\DataProvider\UserProvider:
     autowire: true
     public: false
+    arguments:
+      $userProvider: '@prestashop.security.admin.provider'
 
   prestashop.user_provider:
     alias: PrestaShopBundle\Service\DataProvider\UserProvider
-    deprecated: ~   # since 9.0
+    deprecated: 'The "%alias_id%" service alias is deprecated since v9.0.'
     public: true
 
   prestashop.router:

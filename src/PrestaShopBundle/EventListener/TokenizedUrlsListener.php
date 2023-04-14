@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -36,6 +36,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\CS\Tokenizer\Token;
 use Tools;
 
 /**
@@ -45,21 +46,12 @@ use Tools;
  */
 class TokenizedUrlsListener
 {
-    private ?int $employeeId = null;
-
     public function __construct(
         private readonly CsrfTokenManagerInterface $tokenManager,
         private readonly RouterInterface $router,
-        private readonly UserProvider $userProvider,
-        LegacyContext $legacyContext
+        private readonly LegacyContext $legacyContext,
+        private readonly UserProvider $userProvider
     ) {
-        $context = $legacyContext->getContext();
-
-        if (null !== $context) {
-            if ($context->employee instanceof Employee) {
-                $this->employeeId = $context->employee->id;
-            }
-        }
     }
 
     public function onKernelRequest(KernelEvent $event)
@@ -91,7 +83,7 @@ class TokenizedUrlsListener
          * every uri which contains 'token' should use the old validation system
          */
         if ($request->query->has('token')) {
-            if (0 == strcasecmp(Tools::getAdminToken((string) $this->employeeId), $request->query->get('token'))) {
+            if (0 == strcasecmp(Tools::getAdminToken($this->legacyContext->getContext()->employee->id), $request->query->get('token'))) {
                 return;
             }
         }
@@ -104,11 +96,8 @@ class TokenizedUrlsListener
         }
 
         if ((false === $token || !$this->tokenManager->isTokenValid($token)) && $event instanceof RequestEvent) {
-            // remove token if any
-            if (false !== strpos($uri, '_token=')) {
-                $uri = substr($uri, 0, strpos($uri, '_token='));
-            }
-
+            // Remove _token if any
+            $uri = UrlCleaner::cleanUrl($uri, ['_token']);
             $response = new RedirectResponse($this->router->generate('admin_security_compromised', ['uri' => urlencode($uri)]));
             $event->setResponse($response);
         }
