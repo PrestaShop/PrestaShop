@@ -70,12 +70,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand
 
-  PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusHandler:
-    autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
-
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler:
     arguments:
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().language.id'
