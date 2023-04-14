@@ -31,7 +31,6 @@ namespace Tests\Integration\Controllers;
 use AdminSearchControllerCore;
 use Context;
 use Employee;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AdminSearchControllerCoreTest extends KernelTestCase
@@ -40,6 +39,7 @@ class AdminSearchControllerCoreTest extends KernelTestCase
     {
         self::bootKernel();
     }
+
     /**
      * @dataProvider dataProviderSearch
      *
