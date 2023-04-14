@@ -1474,22 +1474,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return Language::countActiveLanguages($id_shop) > 1;
     }
 
-    public static function getLanguagePackListContent($iso, $tar)
-    {
-        $key = 'Language::getLanguagePackListContent_' . $iso;
-        if (!Cache::isStored($key)) {
-            if (!$tar instanceof \Archive_Tar) {
-                return false;
-            }
-            $result = $tar->listContent();
-            Cache::store($key, $result);
-
-            return $result;
-        }
-
-        return Cache::retrieve($key);
-    }
-
     /**
      * Updates multilanguage tables in all languages using DataLang
      *
