@@ -29,52 +29,50 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
-use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
-use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
-use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\FeatureHelperListBridge;
-use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tools;
 
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController implements FrameworkBridgeControllerInterface
+class FeatureController extends FrameworkBundleAdminController
 {
-    use FrameworkBridgeControllerTrait;
-    use FrameworkBridgeControllerListTrait;
-    use FrameworkControllerSmartyTrait;
-
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(Request $request): Response
+    public function indexAction(Request $request, FeatureFilters $filters): Response
     {
-        $this->setHeaderToolbarActions();
+        $featureGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
 
-        $helperListConfiguration = $this->buildListConfiguration(
-            'id_feature',
-            //@todo: position update is still handled by legacy ajax controller action. Need to handle in dedicated PR
-            'position',
-            $request->attributes->get('_route'),
-            'id_feature'
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed(
+                (int) $this->getContext()->employee->id,
+                ShowcaseCard::FEATURES_CARD
+            )
         );
 
-        $this->setListFields($helperListConfiguration);
-        $this->setListActions($helperListConfiguration);
-        $this->processFilters($request, $helperListConfiguration);
-
-        return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'featureGrid' => $this->presentGrid($featureGridFactory->getGrid($filters)),
+            'settingsTipMessage' => $this->getSettingsTipMessage(),
+            'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'layoutHeaderToolbarBtn' => [
+                'add_feature' => [
+                    'href' => $this->generateUrl('admin_features_add'),
+                    'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -129,10 +127,10 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return Response
      */
-    public function editAction($featureId, Request $request): Response
+    public function editAction(int $featureId, Request $request): Response
     {
         try {
-            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
+            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing($featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
@@ -173,112 +171,13 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     }
 
     /**
-     * @return ControllerConfiguration
-     */
-    public function getControllerConfiguration(): ControllerConfiguration
-    {
-        return $this->buildControllerConfiguration(
-            'feature',
-            Feature::class,
-            'AdminFeatures'
-        );
-    }
-
-    /**
-     * @return FeatureHelperListBridge
-     */
-    private function getHelperListBridge(): FeatureHelperListBridge
-    {
-        return $this->get('prestashop.bridge.helper.listing.helper_bridge.feature_helper_list_bridge');
-    }
-
-    /**
-     * @return void
-     */
-    private function setHeaderToolbarActions(): void
-    {
-        $controllerConfiguration = $this->getControllerConfiguration();
-        $index = $controllerConfiguration->legacyCurrentIndex;
-        $token = $controllerConfiguration->token;
-
-        $controllerConfiguration
-            ->addHeaderToolbarAction('new_feature', [
-                'href' => $this->generateUrl('admin_features_add'),
-                'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new',
-            ])
-            ->addHeaderToolbarAction('new_feature_value', [
-                'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
-                'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
-                'icon' => 'process-icon-new',
-            ])
-        ;
-    }
-
-    /**
-     * Build actions for list.
-     *
-     * @return void
-     */
-    private function setListActions(HelperListConfiguration $helperListConfiguration): void
-    {
-        $helperListConfiguration
-            ->addRowAction('view')
-            ->addRowAction('edit')
-            ->addRowAction('delete')
-            ->addToolbarAction('new', [
-                'href' => $this->generateUrl('admin_features_add'),
-                'desc' => $this->trans('Add new', 'Admin.Actions'),
-            ])
-            ->addBulkAction('delete', [
-                'text' => $this->trans('Delete selected', 'Admin.Actions'),
-                'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', 'Admin.Notifications.Warning'),
-            ])
-        ;
-    }
-
-    /**
-     * @param HelperListConfiguration $helperListConfiguration
-     */
-    private function setListFields(HelperListConfiguration $helperListConfiguration): void
-    {
-        $helperListConfiguration->setFieldsList([
-            'id_feature' => [
-                'title' => $this->trans('ID', 'Admin.Global'),
-                'align' => 'center',
-                'class' => 'fixed-width-xs',
-            ],
-            'name' => [
-                'title' => $this->trans('Name', 'Admin.Global'),
-                'width' => 'auto',
-                'filter_key' => 'b!name',
-            ],
-            'value' => [
-                'title' => $this->trans('Values', 'Admin.Global'),
-                'orderby' => false,
-                'search' => false,
-                'align' => 'center',
-                'class' => 'fixed-width-xs',
-            ],
-            'position' => [
-                'title' => $this->trans('Position', 'Admin.Global'),
-                'filter_key' => 'a!position',
-                'align' => 'center',
-                'class' => 'fixed-width-xs',
-                'position' => 'position',
-            ],
-        ]);
-    }
-
-    /**
      * Render feature edit form
      *
      * @param array $parameters
      *
      * @return Response
      */
-    private function renderEditForm(array $parameters = [])
+    private function renderEditForm(array $parameters = []): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/edit.html.twig', $parameters + [
             'contextLangId' => $this->getConfiguration()->get('PS_LANG_DEFAULT'),
@@ -295,9 +194,9 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     /**
      * Get translated error messages for feature exceptions
      *
-     * @return array
+     * @return array<string, string|array<int, string>>
      */
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         return [
             FeatureNotFoundException::class => $this->trans(
@@ -324,8 +223,31 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return bool
      */
-    private function isFeatureEnabled()
+    private function isFeatureEnabled(): bool
     {
         return $this->get('prestashop.adapter.feature.feature')->isActive();
+    }
+
+    /**
+     * @return string
+     */
+    private function getSettingsTipMessage(): string
+    {
+        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_performance'));
+        $urlEnding = '</a>';
+
+        if ($this->isFeatureEnabled()) {
+            return $this->trans(
+                'The features are enabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',
+                'Admin.Catalog.Notification',
+                [$urlOpening, $urlEnding]
+            );
+        }
+
+        return $this->trans(
+            'The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.',
+            'Admin.Catalog.Notification',
+            [$urlOpening, $urlEnding]
+        );
     }
 }

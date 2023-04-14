@@ -23,44 +23,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\FeatureValue\ValueObject;
+namespace Tests\Resources\Resetter;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use Tests\Resources\DatabaseDump;
 
-class FeatureIdTest extends TestCase
+class FeatureResetter
 {
-    /**
-     * @dataProvider getValidInput
-     */
-    public function testValidInput($featureValueId): void
+    public static function resetFeatures(): void
     {
-        $vo = new FeatureId($featureValueId);
-        $this->assertEquals($featureValueId, $vo->getValue());
-    }
-
-    public function getValidInput(): iterable
-    {
-        yield [42];
-        yield [1000];
-    }
-
-    /**
-     * @dataProvider getInvalidInput
-     */
-    public function testInvalidInput($featureValueId): void
-    {
-        $this->expectException(InvalidFeatureIdException::class);
-        new FeatureId($featureValueId);
-    }
-
-    public function getInvalidInput(): iterable
-    {
-        yield [-1];
-        yield [0];
+        DatabaseDump::restoreTables([
+            'feature',
+            'feature_shop',
+            'feature_lang',
+        ]);
     }
 }

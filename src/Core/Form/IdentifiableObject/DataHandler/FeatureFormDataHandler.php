@@ -72,7 +72,7 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedNames($data['name']);
 
         if (isset($data['shop_association'])) {
-            $command->setAssociatedShopIds($data['shop_association']);
+            $command->setAssociatedShopIds(array_map('intval', $data['shop_association']));
         }
 
         $this->commandBus->handle($command);

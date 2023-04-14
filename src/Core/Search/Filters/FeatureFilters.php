@@ -24,43 +24,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-namespace Tests\Unit\Core\Domain\FeatureValue\ValueObject;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-
-class FeatureIdTest extends TestCase
+/**
+ * Class ManufacturerFilters is responsible for providing filter values for manufacturer grid.
+ */
+final class FeatureFilters extends ShopFilters
 {
-    /**
-     * @dataProvider getValidInput
-     */
-    public function testValidInput($featureValueId): void
-    {
-        $vo = new FeatureId($featureValueId);
-        $this->assertEquals($featureValueId, $vo->getValue());
-    }
-
-    public function getValidInput(): iterable
-    {
-        yield [42];
-        yield [1000];
-    }
+    /** @var string */
+    protected $filterId = FeatureGridDefinitionFactory::GRID_ID;
 
     /**
-     * @dataProvider getInvalidInput
+     * {@inheritdoc}
      */
-    public function testInvalidInput($featureValueId): void
+    public static function getDefaults()
     {
-        $this->expectException(InvalidFeatureIdException::class);
-        new FeatureId($featureValueId);
-    }
-
-    public function getInvalidInput(): iterable
-    {
-        yield [-1];
-        yield [0];
+        return [
+            'limit' => self::LIST_LIMIT,
+            'offset' => 0,
+            'orderBy' => 'name',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }

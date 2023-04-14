@@ -74,6 +74,11 @@ class ShowcaseCard
     public const CARRIERS_CARD = 'carriers_card';
 
     /**
+     * Card shown in Sell -> Catalog -> Attributes & features -> Features
+     */
+    public const FEATURES_CARD = 'features_card';
+
+    /**
      * List of supported card names
      */
     public const SUPPORTED_NAMES = [
@@ -85,6 +90,7 @@ class ShowcaseCard
         self::ATTRIBUTES_CARD => true,
         self::MONITORING_CARD => true,
         self::CARRIERS_CARD => true,
+        self::FEATURES_CARD => true,
     ];
 
     /**
