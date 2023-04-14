@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Language;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\AddTitleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand;
@@ -42,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Title\QueryResult\EditableTitle;
-use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use RuntimeException;
@@ -53,17 +51,6 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class TitleFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default lang id from configs
-     */
-    protected $defaultLangId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = (int) $configuration->get('PS_LANG_DEFAULT');
-    }
-
     /**
      * @When I add a new title :titleReference with the following properties:
      *
@@ -173,45 +160,26 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the title :titleReference name should be :name in locale :locale
+     * @Then the title :titleReference should have the following properties:
      */
-    public function assertTitleName(string $titleReference, string $name, string $locale): void
-    {
-        $editableTitle = $this->getTitleForEdition($titleReference);
-
-        $langId = (int) Language::getIdByLocale($locale, true);
-
-        if (!$langId) {
-            throw new RuntimeException(sprintf('Language by locale "%s" was not found', $locale));
-        }
-
-        Assert::assertEquals(
-            $name,
-            $editableTitle->getLocalizedNames()[$langId]
-        );
-    }
-
-    /**
-     * @Then the title :titleReference gender type should be :gender
-     */
-    public function assertTitleGender(string $titleReference, string $gender): void
+    public function assertTitleProperties(string $titleReference, TableNode $table): void
     {
         /** @var FormChoiceProviderInterface $provider */
         $provider = CommonFeatureContext::getContainer()->get('prestashop.core.form.choice_provider.gender_choice_provider');
         $availableGendersTypes = $provider->getChoices();
-        if (!isset($availableGendersTypes[$gender])) {
-            throw new RuntimeException(sprintf('Gender type "%s" is not available.', $gender));
-        }
 
-        $editableTitle = $this->getTitleForEdition($titleReference);
+        $expectedData = $this->localizeByRows($table);
 
+        $result = $this->getTitleForEdition($titleReference);
+
+        Assert::assertEquals($expectedData['name'], $result->getLocalizedNames());
         Assert::assertEquals(
-            $availableGendersTypes[$gender],
-            $editableTitle->getGender(),
+            $availableGendersTypes[$expectedData['type']],
+            $result->getGender(),
             sprintf(
                 'Failed asserting that "%s" matches expected "%s".',
-                array_flip($availableGendersTypes)[$editableTitle->getGender()],
-                $gender
+                array_flip($availableGendersTypes)[$result->getGender()],
+                $expectedData['type']
             )
         );
     }
@@ -267,7 +235,7 @@ class TitleFeatureContext extends AbstractDomainFeatureContext
     protected function isFoundTitle(string $titleReference): bool
     {
         try {
-            $editableTitle = $this->getTitleForEdition($titleReference);
+            $this->getTitleForEdition($titleReference);
 
             return true;
         } catch (TitleNotFoundException $e) {

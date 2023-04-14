@@ -14,18 +14,20 @@ Feature: Title management
       | name[en-US] | Third Title EN |
       | name[fr-FR] | Third Title FR |
       | type        | Other          |
-    Then the title "3rdTitle" name should be "Third Title EN" in locale "en-US"
-    Then the title "3rdTitle" name should be "Third Title FR" in locale "fr-FR"
-    And the title "3rdTitle" gender type should be "Other"
+    Then the title "3rdTitle" should have the following properties:
+      | name[en-US] | Third Title EN |
+      | name[fr-FR] | Third Title FR |
+      | type        | Other          |
 
   Scenario: Editing title
     When I edit title "3rdTitle" with following properties:
       | name[en-US] | Fourth Title EN |
       | name[fr-FR] | Fourth Title FR |
       | type        | Female          |
-    Then the title "3rdTitle" name should be "Fourth Title EN" in locale "en-US"
-    Then the title "3rdTitle" name should be "Fourth Title FR" in locale "fr-FR"
-    And the title "3rdTitle" gender type should be "Female"
+    Then the title "3rdTitle" should have the following properties:
+      | name[en-US] | Fourth Title EN |
+      | name[fr-FR] | Fourth Title FR |
+      | type        | Female          |
 
   Scenario: Deleting title
     When I delete the title "3rdTitle"
