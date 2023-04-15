@@ -219,6 +219,8 @@ export default class BOBasePage extends CommonPage {
 
   protected alertBlock: string;
 
+  protected alertTextBlock: string;
+
   protected alertBlockCloseButton: string;
 
   protected readonly alertSuccessBlock: string;
@@ -545,6 +547,7 @@ export default class BOBasePage extends CommonPage {
 
     // Alert Text
     this.alertBlock = 'div.alert';
+    this.alertTextBlock = `${this.alertBlock} div.alert-text`;
     this.alertBlockCloseButton = `${this.alertBlock} button[aria-label='Close']`;
     this.alertSuccessBlock = `${this.alertBlock}.alert-success`;
     this.alertDangerBlock = `${this.alertBlock}.alert-danger`;
@@ -964,6 +967,15 @@ export default class BOBasePage extends CommonPage {
    */
   getAlertDangerBlockParagraphContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertDangerBlockParagraph);
+  }
+
+  /**
+   * Get alert block content
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getAlertBlockContent(page: Page): Promise<string> {
+    return this.getTextContent(page, this.alertTextBlock);
   }
 
   /**
