@@ -71,6 +71,7 @@
     &:not(.toolbar-icons--persistent) {
       @include media-breakpoint-down(sm) {
         display: none;
+
         > .wrapper {
           .btn-help {
             display: none;
@@ -86,6 +87,7 @@
 
       @include media-breakpoint-down(sm) {
         justify-content: flex-start;
+
         #recommended-modules-button {
           display: none;
         }
