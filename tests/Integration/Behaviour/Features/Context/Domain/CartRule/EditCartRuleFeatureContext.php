@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -280,8 +279,11 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['priority'])) {
             $command->setPriority((int) $data['priority']);
         }
-        if (isset($data['date_range'])) {
-            $this->setDateRange($data['date_range'], $command);
+        if (isset($data['valid_from'])) {
+            $command->setDateRange(
+                new DateTimeImmutable($data['valid_from']),
+                new DateTimeImmutable($data['valid_to'])
+            );
         }
         if (isset($data['total_quantity'])) {
             $command->setTotalQuantity((int) $data['total_quantity']);
@@ -297,6 +299,7 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
             );
         }
+
         if (isset($data['discount_application_type'])) {
             $command->setDiscountApplication(
                 $data['discount_application_type'],
@@ -347,18 +350,5 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $builder->build();
-    }
-
-    private function setDateRange(string $dateRange, EditCartRuleCommand $command): void
-    {
-        $rangeParts = explode(',', $dateRange);
-        if (!isset($rangeParts[0], $rangeParts[1])) {
-            throw new RuntimeException('Expected date range format: "from: Y-m-d H:i:s, to: Y-m-d H:i:s"');
-        }
-
-        $command->setValidDateRange(
-            new DateTimeImmutable(str_replace('from:', '', $rangeParts[0])),
-            new DateTimeImmutable(str_replace('to:', '', $rangeParts[1]))
-        );
     }
 }

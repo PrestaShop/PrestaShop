@@ -72,13 +72,18 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
         );
 
         if (!empty($data['actions']['discount']['reduction']['value'])) {
-            $command->setDiscountApplicationType($data['actions']['discount']['discount_application']);
+            $discountProductId = null;
             if (
                 $data['actions']['discount']['discount_application'] === DiscountApplicationType::SPECIFIC_PRODUCT &&
                 !empty($data['actions']['discount']['specific_product'][0]['id'])
             ) {
-                $command->setDiscountProductId((int) $data['actions']['discount']['specific_product'][0]['id']);
+                $discountProductId = (int) $data['actions']['discount']['specific_product'][0]['id'];
             }
+
+            $command->setDiscountApplication(
+                $data['actions']['discount']['discount_application'],
+                $discountProductId
+            );
         }
 
         if (!empty($conditionsData['minimum_amount']['amount'])) {

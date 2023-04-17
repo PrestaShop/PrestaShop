@@ -426,11 +426,11 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
         $cartRuleAction = $this->createCartRuleAction(
-            $data['free_shipping'] ?? false,
+            $data['free_shipping'],
             $data['reduction_percentage'] ?? null,
-            $data['reduction_apply_to_discounted_products'] ?? null,
+            isset($data['reduction_apply_to_discounted_products']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products']) : null,
             $data['reduction_amount'] ?? null,
-            $data['reduction_currency'] ?? null,
+            isset($data['reduction_currency']) ? $this->getSharedStorage()->get($data['reduction_currency']) : null,
             $data['reduction_tax'] ?? null,
             $data['gift_product_id'] ?? null,
             $data['gift_product_attribute_id'] ?? null
@@ -445,10 +445,10 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         $command = new AddCartRuleCommand(
             $name,
-            $data['highlight'],
-            $data['allow_partial_use'],
-            $data['priority'],
-            $data['is_active'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']),
+            (int) $data['priority'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_active']),
             new DateTime($data['valid_from']),
             new DateTime($data['valid_to']),
             $data['total_quantity'],
@@ -468,6 +468,14 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         $command->setDescription($data['description'] ?? '');
         $command->setCode($data['code'] ?? '');
+
+        if (isset($data['discount_application_type'])) {
+            $command->setDiscountApplication(
+                $data['discount_application_type'],
+                // if specific product type is provided and product is not, then command should throw exception
+                isset($data['discount_product']) ? $this->getSharedStorage()->get($data['discount_product']) : null
+            );
+        }
 
         /** @var CartRuleId $cartRule */
         $cartRule = $this->getCommandBus()->handle($command);
@@ -768,11 +776,11 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         int $minimumAmountCurrencyId,
         bool $minimumAmountTaxIncluded,
         bool $minimumAmountShippingIncluded,
-        string $code = null,
-        string $description = null,
-        int $customerId = null,
-        string $discountApplicationType = null,
-        int $discountProductId = null
+        ?string $code = null,
+        ?string $description = null,
+        ?int $customerId = null,
+        ?string $discountApplicationType = null,
+        ?int $discountProductId = null
     ): CartRuleId {
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
@@ -809,11 +817,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (null !== $discountApplicationType) {
-            $command->setDiscountApplicationType($discountApplicationType);
-        }
-
-        if (null !== $discountProductId) {
-            $command->setDiscountProductId($discountProductId);
+            $command->setDiscountApplication($discountApplicationType, $discountProductId);
         }
 
         return $this->getCommandBus()->handle($command);

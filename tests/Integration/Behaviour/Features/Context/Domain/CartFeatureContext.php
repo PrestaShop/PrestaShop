@@ -584,7 +584,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function useDiscountByCodeOnCart(string $voucherCode, string $cartReference)
     {
         $cartId = SharedStorage::getStorage()->get($cartReference);
-        $cartRuleId = SharedStorage::getStorage()->get($voucherCode);
+        $cartRuleId = (int) CartRule::getIdByCode($voucherCode);
 
         $this->getCommandBus()->handle(
             new AddCartRuleToCartCommand(
@@ -697,7 +697,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartRuleIsNotAppliedToCart(string $voucherCode, string $cartReference)
     {
         $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
-        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+        $cartRuleId = (int) CartRule::getIdByCode($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
             if ($cartRule->getCartRuleId() === $cartRuleId) {
@@ -905,7 +905,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $value
     ) {
         $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
-        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+        $cartRuleId = (int) CartRule::getIdByCode($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
             if ($cartRuleId === $cartRule->getCartRuleId()) {

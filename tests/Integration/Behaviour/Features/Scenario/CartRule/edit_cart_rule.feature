@@ -49,20 +49,21 @@ Feature: Add cart rule
 
   Scenario: I edit cart rule and change various properties
     When I edit cart rule cart_rule_1 with following properties:
-      | name[en-US]                      | cart rule 1 edited                                 |
-      | highlight                        | false                                              |
-      | is_active                        | false                                              |
-      | allow_partial_use                | false                                              |
-      | priority                         | 120                                                |
-      | date_range                       | from: 2019-01-01 11:05:01, to: 2020-12-01 00:00:00 |
-      | total_quantity                   | 100                                                |
-      | quantity_per_user                | 1                                                  |
-      | free_shipping                    | true                                               |
-      | minimum_amount                   | 10                                                 |
-      | minimum_amount_currency          | chf                                                |
-      | minimum_amount_tax_included      | true                                               |
-      | minimum_amount_shipping_included | true                                               |
-      | code                             | abcxyz                                             |
+      | name[en-US]                      | cart rule 1 edited  |
+      | highlight                        | false               |
+      | is_active                        | false               |
+      | allow_partial_use                | false               |
+      | priority                         | 120                 |
+      | valid_from                       | 2019-01-01 11:05:01 |
+      | valid_to                         | 2020-12-01 00:00:00 |
+      | total_quantity                   | 100                 |
+      | quantity_per_user                | 1                   |
+      | free_shipping                    | true                |
+      | minimum_amount                   | 10                  |
+      | minimum_amount_currency          | chf                 |
+      | minimum_amount_tax_included      | true                |
+      | minimum_amount_shipping_included | true                |
+      | code                             | abcxyz              |
     Then cart rule "cart_rule_1" should have the following properties:
       | name[en-US]                      | cart rule 1 edited  |
       | highlight                        | false               |

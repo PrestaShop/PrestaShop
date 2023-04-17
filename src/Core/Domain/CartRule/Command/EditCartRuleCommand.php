@@ -261,7 +261,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function setValidDateRange(DateTimeImmutable $validFrom, DateTimeImmutable $validTo): EditCartRuleCommand
+    public function setDateRange(DateTimeImmutable $validFrom, DateTimeImmutable $validTo): EditCartRuleCommand
     {
         $this->assertDateRangeIsValid($validFrom, $validTo);
         $this->validFrom = $validFrom;
