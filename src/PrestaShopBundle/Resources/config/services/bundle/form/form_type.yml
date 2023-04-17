@@ -83,6 +83,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.combination:
     class: PrestaShopBundle\Form\Admin\Product\ProductCombination
@@ -94,6 +95,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.custom_field:
     class: PrestaShopBundle\Form\Admin\Product\ProductCustomField
@@ -104,6 +106,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.information:
     class: PrestaShopBundle\Form\Admin\Product\ProductInformation
@@ -119,6 +122,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.options:
     class: PrestaShopBundle\Form\Admin\Product\ProductOptions
@@ -148,6 +152,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.quantity:
     class: PrestaShopBundle\Form\Admin\Product\ProductQuantity
@@ -160,6 +165,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.seo:
     class: PrestaShopBundle\Form\Admin\Product\ProductSeo
@@ -171,6 +177,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.shipping:
     class: PrestaShopBundle\Form\Admin\Product\ProductShipping
@@ -185,6 +192,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.specific_price:
     class: PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice
@@ -201,6 +209,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.supplier_combination:
     class: PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination
@@ -211,6 +220,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.virtual:
     class: PrestaShopBundle\Form\Admin\Product\ProductVirtual
@@ -221,6 +231,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.warehouse_combination:
     class: PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination
@@ -230,6 +241,7 @@ services:
     public: true
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.typeahead.product:
     class: PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType
@@ -258,6 +270,7 @@ services:
       - "@prestashop.adapter.legacy.configuration"
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.categories:
     class: PrestaShopBundle\Form\Admin\Product\ProductCategories
@@ -268,6 +281,7 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.translatable.aware:
     abstract: true
