@@ -116,7 +116,7 @@ export default class CombinationSelector {
       routeParams.shopId = shopId;
     }
 
-    return this.router.generate('admin_products_v2_search_product_combinations', routeParams);
+    return this.router.generate('admin_products_search_product_combinations', routeParams);
   }
 
   getChoiceForAllCombinations(): CombinationChoice {

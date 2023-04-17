@@ -119,7 +119,7 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function searchCombinationProductsAction(
+    public function searchCombinationsForAssociationAction(
         Request $request,
         string $languageCode
     ): JsonResponse {

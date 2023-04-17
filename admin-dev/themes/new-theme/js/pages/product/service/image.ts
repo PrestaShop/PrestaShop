@@ -31,7 +31,7 @@ const router = new Router();
 const {$} = window;
 
 export const getProductImages = async (productId: number, shopId: number): Promise<JQuery.jqXHR<any>> => {
-  const imagesUrl = router.generate('admin_products_v2_images_for_shop', {
+  const imagesUrl = router.generate('admin_products_images_for_shop', {
     productId,
     shopId,
   });
@@ -39,13 +39,13 @@ export const getProductImages = async (productId: number, shopId: number): Promi
   return $.get(imagesUrl);
 };
 
-export const getProductShopImages = async (productId: number): Promise<Response> => fetch(router.generate('admin_products_v2_product_shop_images', {productId}));
+export const getProductShopImages = async (productId: number): Promise<Response> => fetch(router.generate('admin_products_product_shop_images', {productId}));
 export const updateProductShopImages = async (productId: number, imageAssociations: any): Promise<Response> => {
   const formData = new FormData();
   formData.append('image_associations', JSON.stringify(imageAssociations));
 
   return fetch(
-    router.generate('admin_products_v2_product_shop_images', {productId}),
+    router.generate('admin_products_product_shop_images', {productId}),
     {
       method: 'POST',
       body: formData,
@@ -59,7 +59,7 @@ export const saveImageInformations = async (
   formName: string,
   shopId: number|null,
 ): Promise<JQuery.jqXHR<any>> => {
-  const saveUrl = router.generate('admin_products_v2_update_image', {
+  const saveUrl = router.generate('admin_products_update_image', {
     productImageId: selectedFile.image_id,
   });
 
@@ -79,7 +79,7 @@ export const saveImageInformations = async (
 };
 
 export const replaceImage = async (selectedFile: Record<string, any>, newFile: Blob, formName: string, token: string): Promise<JQuery.jqXHR<any>> => {
-  const replaceUrl = router.generate('admin_products_v2_update_image', {
+  const replaceUrl = router.generate('admin_products_update_image', {
     productImageId: selectedFile.image_id,
   });
 
@@ -103,7 +103,7 @@ export const saveImagePosition = async (
   token: string,
   shopId: number|null,
 ): Promise<JQuery.jqXHR<any>> => {
-  const sortUrl = router.generate('admin_products_v2_update_image', {
+  const sortUrl = router.generate('admin_products_update_image', {
     productImageId,
   });
 
@@ -119,7 +119,7 @@ export const saveImagePosition = async (
 };
 
 export const removeProductImage = async (productImageId: string): Promise<JQuery.jqXHR<any>> => {
-  const deleteUrl = router.generate('admin_products_v2_delete_image', {
+  const deleteUrl = router.generate('admin_products_delete_image', {
     productImageId,
   });
 

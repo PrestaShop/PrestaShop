@@ -116,7 +116,7 @@ class ProductToolbarButtonsProviderTest extends TestCase
         $routerMock
             ->expects($this->once())
             ->method('generate')
-            ->with('admin_products_v2_light_list')
+            ->with('admin_products_light_list')
             ->willReturn('http://local.light_product_list')
         ;
         $helpProviderMock = $this->getMockBuilder(HelpProvider::class)

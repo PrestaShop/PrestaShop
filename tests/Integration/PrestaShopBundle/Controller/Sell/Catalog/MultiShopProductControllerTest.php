@@ -507,7 +507,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
             ];
         }
 
-        return $this->router->generate('admin_products_v2_index', $routeParams);
+        return $this->router->generate('admin_products_index', $routeParams);
     }
 
     /**

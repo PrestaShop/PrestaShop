@@ -87,7 +87,7 @@ class StockType extends TranslatorAwareType
                 'entry_options' => [
                     'block_prefix' => 'packed',
                 ],
-                'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
+                'remote_url' => $this->router->generate('admin_products_search_combinations_for_association', [
                     'languageCode' => $this->employeeIsoCode,
                     'filters' => [
                         'filteredTypes' => [ProductType::TYPE_PACK],

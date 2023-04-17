@@ -76,7 +76,7 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
             ->setOptions([
                 'field' => 'active',
                 'primary_field' => 'id_product',
-                'route' => 'admin_products_v2_toggle_status_for_shop',
+                'route' => 'admin_products_toggle_status_for_shop',
                 'route_param_name' => 'productId',
                 'extra_route_params' => [
                     'shopId' => 'id_shop',
@@ -100,7 +100,7 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
             ->setName($this->trans('Edit', [], 'Admin.Actions'))
             ->setIcon('edit')
             ->setOptions([
-                'route' => 'admin_products_v2_edit',
+                'route' => 'admin_products_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 // @todo: Clickable row will be handled later (if it doesn't impact the UX negatively)
@@ -114,7 +114,7 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
             ->setName($this->trans('Preview', [], 'Admin.Actions'))
             ->setIcon('remove_red_eye')
             ->setOptions([
-                'route' => 'admin_products_v2_preview',
+                'route' => 'admin_products_preview',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'target' => '_blank',
@@ -125,7 +125,7 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
             )
             ->add(
                 $this->buildDeleteAction(
-                    'admin_products_v2_delete_from_shop',
+                    'admin_products_delete_from_shop',
                     'productId',
                     'id_product',
                     'POST',

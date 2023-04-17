@@ -3,7 +3,7 @@ _products:
   prefix: /products/
 
 _products_v2:
-  resource: "product_v2/product.yml"
+  resource: "products_v2/product.yml"
   prefix: /products-v2/
 
 _categories:

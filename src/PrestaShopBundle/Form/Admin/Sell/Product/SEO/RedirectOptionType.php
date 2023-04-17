@@ -103,7 +103,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
                 'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
-                'searchUrl' => $this->router->generate('admin_products_v2_search_associations', [
+                'searchUrl' => $this->router->generate('admin_products_search_products_for_association', [
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
                 ]),

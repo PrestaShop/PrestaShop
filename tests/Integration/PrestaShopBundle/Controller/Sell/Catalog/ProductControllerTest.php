@@ -304,7 +304,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         $products = $this->getEntitiesFromGrid();
         $initialEntityCount = $products->count();
 
-        $this->deleteEntityFromPage('admin_products_v2_delete_from_all_shops', ['productId' => $productId]);
+        $this->deleteEntityFromPage('admin_products_delete_from_all_shops', ['productId' => $productId]);
 
         $newProducts = $this->getEntitiesFromGrid();
         $this->assertCount($initialEntityCount - 1, $newProducts);
@@ -339,7 +339,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     protected function generateCreateUrl(): string
     {
-        return $this->router->generate('admin_products_v2_create');
+        return $this->router->generate('admin_products_create');
     }
 
     /**
@@ -347,7 +347,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     protected function generateEditUrl(array $routeParams): string
     {
-        return $this->router->generate('admin_products_v2_edit', $routeParams);
+        return $this->router->generate('admin_products_edit', $routeParams);
     }
 
     /**
@@ -385,7 +385,7 @@ class ProductControllerTest extends FormGridControllerTestCase
             ];
         }
 
-        return $this->router->generate('admin_products_v2_index', $routeParams);
+        return $this->router->generate('admin_products_index', $routeParams);
     }
 
     /**
