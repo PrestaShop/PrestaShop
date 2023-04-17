@@ -36,6 +36,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for product images.
  */
 class ProductImageController extends FrameworkBundleAdminController

@@ -40,6 +40,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for the Category pages.
  */
 class CategoryController extends FrameworkBundleAdminController
