@@ -18,9 +18,11 @@ services:
 
   prestashop.adapter.data_provider.supplier:
     class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
+    deprecated: ~
 
   prestashop.adapter.data_provider.warehouse:
     class: PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider
+    deprecated: ~
 
   prestashop.adapter.data_provider.category:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
@@ -31,6 +33,7 @@ services:
 
   prestashop.adapter.data_provider.tax:
     class: PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider
+    deprecated: ~
 
   prestashop.adapter.data_provider.manufacturer:
     class: PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider
@@ -43,6 +46,7 @@ services:
 
   prestashop.adapter.data_provider.feature:
     class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
+    deprecated: ~
 
   prestashop.adapter.data_provider.carrier:
     class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
@@ -67,12 +71,14 @@ services:
     class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
+    deprecated: ~
 
   prestashop.adapter.data_provider.cms:
     class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider
 
   prestashop.adapter.data_provider.pack:
     class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
+    deprecated: ~
 
   prestashop.adapter.data_provider.tab:
     alias: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider

@@ -12,6 +12,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\ImageManager'
       - "@prestashop.static_cache.adapter"
     public: false
+    deprecated: ~
 
   prestashop.adapter.admin.data_provider.product:
     alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
@@ -24,6 +25,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
       - "@prestashop.static_cache.adapter"
+    deprecated: ~
 
   prestashop.adapter.admin.data_updater.product:
     alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
@@ -35,6 +37,7 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
       - '@PrestaShop\PrestaShop\Core\Localization\LocaleInterface'
       - '@PrestaShopBundle\Utils\FloatParser'
+    deprecated: ~
 
   prestashop.adapter.admin.wrapper.product:
     alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
@@ -46,13 +49,15 @@ services:
     alias: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
     deprecated: ~
 
-  PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier: ~
+  PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier:
+    deprecated: ~
 
   prestashop.adapter.product.filter_categories_request_purifier:
     alias: PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier
     deprecated: ~
 
-  PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater: ~
+  PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater:
+    deprecated: ~
 
   prestashop.adapter.product.list_parameters_updater:
     alias: PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater

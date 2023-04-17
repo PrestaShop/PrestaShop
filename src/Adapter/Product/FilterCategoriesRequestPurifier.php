@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Extracted from Product Controller, used to cleanup the request.
  * For internal use only.
  */

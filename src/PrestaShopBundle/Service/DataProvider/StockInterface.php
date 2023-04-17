@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Service\DataProvider;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Data provider for new Architecture, about Product stocks.
  *
  * This class will provide data from DB / ORM about Product stocks.
