@@ -143,7 +143,6 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
                 'minimum_amount_shipping',
             ]);
         }
-
         if (null !== $command->getTotalQuantity()) {
             $cartRule->quantity = $command->getTotalQuantity();
             $updatableProperties[] = 'quantity';

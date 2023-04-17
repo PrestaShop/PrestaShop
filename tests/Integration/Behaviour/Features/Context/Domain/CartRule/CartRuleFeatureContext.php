@@ -436,13 +436,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['gift_product_attribute_id'] ?? null
         );
 
-        $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
-
         if (isset($data['name'])) {
             $name = $data['name'];
         } else {
+            //@todo: remove this fallback and change all scenarios to support multilang instead
             $name = [$defaultLanguageId => $data['name_in_default_language']];
         }
+
         $command = new AddCartRuleCommand(
             $name,
             $data['highlight'],
@@ -454,12 +454,6 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['total_quantity'],
             $data['quantity_per_user'],
             $cartRuleAction
-//            $cartRuleAction,
-//            $data['minimum_amount'],
-//            $currencyId,
-//            // @todo: after PR is merged, tax and shipping properties should be fixed and the exclamations should be removed https://github.com/PrestaShop/PrestaShop/pull/31904
-//            !PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
-//            !PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
         );
 
         if (!empty($data['minimum_amount'])) {
@@ -467,8 +461,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $command->setMinimumAmount(
                 $data['minimum_amount'],
                 $currencyId,
-                $data['minimum_amount_tax_included'],
-                $data['minimum_amount_shipping_included']
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
             );
         }
 

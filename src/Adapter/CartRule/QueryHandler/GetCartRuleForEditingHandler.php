@@ -104,12 +104,15 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
 
         $cartRuleMinimum = null;
         if (!empty($cartRule->minimum_amount)) {
-            $cartRuleMinimum = new EditableCartRuleMinimum(
-                new DecimalNumber($cartRule->minimum_amount),
-                (bool) $cartRule->minimum_amount_tax,
-                (int) $cartRule->minimum_amount_currency,
-                (bool) $cartRule->minimum_amount_shipping
-            );
+            $minimumAmount = new DecimalNumber($cartRule->minimum_amount);
+            if (!$minimumAmount->equalsZero()) {
+                $cartRuleMinimum = new EditableCartRuleMinimum(
+                    $minimumAmount,
+                    (bool) $cartRule->minimum_amount_tax,
+                    (int) $cartRule->minimum_amount_currency,
+                    (bool) $cartRule->minimum_amount_shipping
+                );
+            }
         }
 
         $cartRuleRestrictions = new EditableCartRuleRestrictions(

@@ -28,28 +28,22 @@ Feature: Add cart rule
       | total_quantity                   | 11                  |
       | quantity_per_user                | 3                   |
       | free_shipping                    | true                |
-      | minimum_amount                   | 0                   |
-      | minimum_amount_currency          | usd                 |
       | minimum_amount_tax_included      | false               |
       | minimum_amount_shipping_included | false               |
     And cart rule "cart_rule_1" should have the following properties:
-      | name[en-US]                      | cart rule 1         |
-      | highlight                        | true                |
-      | is_active                        | true                |
-      | allow_partial_use                | true                |
-      | priority                         | 1                   |
-      | valid_from                       | 2019-01-01 11:05:00 |
-      | valid_to                         | 2019-12-01 00:00:00 |
-      | total_quantity                   | 11                  |
-      | quantity_per_user                | 3                   |
-      | free_shipping                    | true                |
-      # @todo: update the test without providing minimum amount because it should not be mandatory (after PR https://github.com/PrestaShop/PrestaShop/pull/31904)
-      | minimum_amount                   | 0                   |
-      | minimum_amount_currency          | usd                 |
+      | name[en-US]        | cart rule 1         |
+      | highlight          | true                |
+      | is_active          | true                |
+      | allow_partial_use  | true                |
+      | priority           | 1                   |
+      | valid_from         | 2019-01-01 11:05:00 |
+      | valid_to           | 2019-12-01 00:00:00 |
+      | total_quantity     | 11                  |
+      | quantity_per_user  | 3                   |
+      | free_shipping      | true                |
+      | minimum_amount     |                     |
       # when currency is not provided the default one is used
-      | reduction_currency               | usd                 |
-      | minimum_amount_tax_included      | false               |
-      | minimum_amount_shipping_included | false               |
+      | reduction_currency | usd                 |
 
   Scenario: I edit cart rule and change various properties
     When I edit cart rule cart_rule_1 with following properties:

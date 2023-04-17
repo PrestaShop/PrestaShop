@@ -38,11 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
@@ -149,29 +144,33 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['minimum_amount'])) {
-            $minimum = $conditions->getMinimum();
-            Assert::assertTrue(
-                $minimum->getAmount()->equals(new DecimalNumber($data['minimum_amount'])),
-                'Unexpected minimum_amount'
-            );
+            if (empty($data['minimum_amount'])) {
+                Assert::assertNull($conditions->getMinimum(), 'unexpected minimum_amount');
+            } else {
+                $minimum = $conditions->getMinimum();
+                Assert::assertTrue(
+                    $minimum->getAmount()->equals(new DecimalNumber($data['minimum_amount'])),
+                    'Unexpected minimum_amount'
+                );
 
-            // @todo: uncomment when PR https://github.com/PrestaShop/PrestaShop/pull/31904 is merged, as now its not handled
-//            Assert::assertSame(
-//                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
-//                $minimum->isAmountTax(),
-//                'Unexpected minimum_amount_tax_included'
-//            );
+                Assert::assertSame(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
+                    $minimum->isAmountTax(),
+                    'Unexpected minimum_amount_tax_included'
+                );
 
-            Assert::assertSame(
-                $this->getSharedStorage()->get($data['minimum_amount_currency']),
-                $minimum->getCurrencyId(),
-                'Unexpected minimum_amount_currency'
-            );
-            Assert::assertSame(
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included']),
-                $minimum->isShipping(),
-                'Unexpected minimum_amount_shipping_included'
-            );
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($data['minimum_amount_currency']),
+                    $minimum->getCurrencyId(),
+                    'Unexpected minimum_amount_currency'
+                );
+
+                Assert::assertSame(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included']),
+                    $minimum->isShipping(),
+                    'Unexpected minimum_amount_shipping_included'
+                );
+            }
         }
 
         if (isset($data['discount_application_type'])) {
@@ -323,35 +322,23 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['gift_product'])) {
             $actionWasSet = true;
             $builder->setGiftProduct(
-                //@todo: will need adaptations after PR is merged https://github.com/PrestaShop/PrestaShop/pull/31904
-                new GiftProduct(
-                    $this->getSharedStorage()->get($data['gift_product']),
-                    isset($data['gift_combination']) ? $this->getSharedStorage()->get($data['gift_combination']) : null
-                )
+                $this->getSharedStorage()->get($data['gift_product']),
+                isset($data['gift_combination']) ? $this->getSharedStorage()->get($data['gift_combination']) : null
             );
         }
         if (isset($data['reduction_percentage'])) {
             $actionWasSet = true;
             $builder->setPercentageDiscount(
-                // @todo: string instead of float when related PR gets merged https://github.com/PrestaShop/PrestaShop/pull/31904
-                new PercentageDiscount(
-                    (float) $data['reduction_percentage'],
-                    PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products'])
-                )
+                $data['reduction_percentage'],
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products'])
             );
         }
         if (isset($data['reduction_amount'])) {
             $actionWasSet = true;
             $builder->setAmountDiscount(
-                new MoneyAmountCondition(
-                    new Money(
-                        new DecimalNumber($data['reduction_amount']),
-                        new CurrencyId($this->getSharedStorage()->get($data['reduction_currency']))
-                    ),
-                    //@todo: after PR is merged, it should be tax included (not excluded) https://github.com/PrestaShop/PrestaShop/pull/31904
-                    PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_tax']),
-                    false
-                )
+                $data['reduction_amount'],
+                $this->getSharedStorage()->get($data['reduction_currency']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_tax'])
             );
         }
 
