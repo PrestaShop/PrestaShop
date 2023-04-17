@@ -61,6 +61,7 @@ class FeatureController extends FrameworkBundleAdminController
         );
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featureGrid' => $this->presentGrid($featureGridFactory->getGrid($filters)),
             'settingsTipMessage' => $this->getSettingsTipMessage(),

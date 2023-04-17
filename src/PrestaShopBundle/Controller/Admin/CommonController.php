@@ -361,7 +361,7 @@ class CommonController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return RedirectResponse
      */
     public function updatePositionAction(Request $request): RedirectResponse
     {
