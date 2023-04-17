@@ -104,6 +104,11 @@ class ProductController extends FrameworkBundleAdminController
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
 
     /**
+     * Request key to retrieve product ids for various bulk actions
+     */
+    private const BULK_PRODUCT_IDS_KEY = 'product_bulk';
+
+    /**
      * @var ProductRepository
      */
     private $productRepository;
@@ -1141,7 +1146,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new BulkDuplicateProductCommand(
-                    $this->getBulkActionIds($request, 'product_bulk'),
+                    $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
                     $shopConstraint
                 )
             );
@@ -1197,7 +1202,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand(
-                $this->getBulkActionIds($request, 'product_bulk'),
+                $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
                 $shopConstraint
             ));
             $this->addFlash(
@@ -1280,7 +1285,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new BulkUpdateProductStatusCommand(
-                    $this->getBulkActionIds($request, 'product_bulk'),
+                    $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
                     $newStatus,
                     $shopConstraint
                 )
