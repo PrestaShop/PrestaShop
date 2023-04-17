@@ -40,6 +40,7 @@ services:
 
   prestashop.adapter.data_provider.product:
     class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
+    deprecated: ~
 
   prestashop.adapter.data_provider.attachment:
     class: PrestaShop\PrestaShop\Adapter\Product\AttachmentDataProvider

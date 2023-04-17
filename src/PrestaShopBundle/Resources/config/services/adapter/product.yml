@@ -64,6 +64,7 @@ services:
     deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler:
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand

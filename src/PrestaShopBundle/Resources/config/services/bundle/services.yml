@@ -46,6 +46,7 @@ services:
     class: PrestaShopBundle\Service\ProductService
     arguments:
       - "@prestashop.adapter.data_provider.product"
+    deprecated: ~
 
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService
