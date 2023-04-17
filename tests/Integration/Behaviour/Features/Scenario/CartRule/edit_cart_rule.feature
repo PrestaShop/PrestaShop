@@ -30,6 +30,7 @@ Feature: Add cart rule
       | free_shipping                    | true                |
       | minimum_amount_tax_included      | false               |
       | minimum_amount_shipping_included | false               |
+      | code                             | xyz                 |
     And cart rule "cart_rule_1" should have the following properties:
       | name[en-US]        | cart rule 1         |
       | highlight          | true                |
@@ -44,6 +45,7 @@ Feature: Add cart rule
       | minimum_amount     |                     |
       # when currency is not provided the default one is used
       | reduction_currency | usd                 |
+      | code               | xyz                 |
 
   Scenario: I edit cart rule and change various properties
     When I edit cart rule cart_rule_1 with following properties:
@@ -51,7 +53,7 @@ Feature: Add cart rule
       | highlight                        | false                                              |
       | is_active                        | false                                              |
       | allow_partial_use                | false                                              |
-      | priority                         | 2                                                  |
+      | priority                         | 120                                                |
       | date_range                       | from: 2019-01-01 11:05:01, to: 2020-12-01 00:00:00 |
       | total_quantity                   | 100                                                |
       | quantity_per_user                | 1                                                  |
@@ -60,12 +62,13 @@ Feature: Add cart rule
       | minimum_amount_currency          | chf                                                |
       | minimum_amount_tax_included      | true                                               |
       | minimum_amount_shipping_included | true                                               |
+      | code                             | abcxyz                                             |
     Then cart rule "cart_rule_1" should have the following properties:
       | name[en-US]                      | cart rule 1 edited  |
       | highlight                        | false               |
-      | is_active                        | false               |
+      | is_active                        | true                |
       | allow_partial_use                | false               |
-      | priority                         | 2                   |
+      | priority                         | 120                 |
       | valid_from                       | 2019-01-01 11:05:01 |
       | valid_to                         | 2020-12-01 00:00:00 |
       | total_quantity                   | 100                 |
@@ -77,6 +80,7 @@ Feature: Add cart rule
       | minimum_amount_shipping_included | true                |
       | reduction_amount                 | 0                   |
       | reduction_tax                    | false               |
+      | code                             | abcxyz              |
 
   Scenario: I edit cart rule and remove free shipping when it is the only action.
     When I edit cart rule cart_rule_1 with following properties:
@@ -244,6 +248,7 @@ Feature: Add cart rule
       | reduction_currency                     | usd                    |
       | discount_application_type              | order_without_shipping |
       | reduction_apply_to_discounted_products | true                   |
+      | code                                   | xyz                    |
 
   Scenario: I edit cart rule by alternating customer
     Given there is customer "JohnDoe" with email "pub@prestashop.com"

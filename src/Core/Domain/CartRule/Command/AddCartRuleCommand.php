@@ -402,7 +402,10 @@ class AddCartRuleCommand
     private function setPriority(int $priority): AddCartRuleCommand
     {
         if (0 >= $priority) {
-            throw new CartRuleConstraintException(sprintf('Invalid cart rule priority "%s". Must be a positive integer.', var_export($priority, true)), CartRuleConstraintException::INVALID_PRIORITY);
+            throw new CartRuleConstraintException(
+                sprintf('Invalid cart rule priority "%s". Must be a positive integer.', $priority),
+                CartRuleConstraintException::INVALID_PRIORITY
+            );
         }
 
         $this->priority = $priority;
