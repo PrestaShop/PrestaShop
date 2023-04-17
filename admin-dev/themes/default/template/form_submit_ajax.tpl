@@ -24,8 +24,8 @@
  *}
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#{$table}_form').submit(function(e) {
+	$(function() {
+		$('#{$table}_form').on('submit', function(e) {
 			e.preventDefault();
 			var form_datas = new Object;
 			form_datas['liteDisplaying'] = 1;

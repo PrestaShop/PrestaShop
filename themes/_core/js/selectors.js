@@ -106,6 +106,6 @@ prestashop.selectors = {
   },
 };
 
-$(document).ready(() => {
+$(() => {
   prestashop.emit('selectorsInit');
 });

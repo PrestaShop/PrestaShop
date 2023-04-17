@@ -82,7 +82,7 @@ export default function (): void {
     );
   };
 
-  $('.translation-domain .go-to-pagination-bar').click((event) => {
+  $('.translation-domain .go-to-pagination-bar').on('click', (event) => {
     const paginationBar = $(event.target)
       .parents('.translation-domain')
       .find('.pagination')[0];
@@ -108,14 +108,14 @@ export default function (): void {
 
     $(nav)
       .find('.page-link')
-      .click((event) => {
+      .on('click', (event) => {
         const paginationBar = $(event.target).parents('.pagination')[0];
         scrollToPreviousPaginationBar(paginationBar);
       });
 
     $(nav)
       .find('.page-item')
-      .click((event) => {
+      .on('click', (event) => {
         const pageLink = $(event.target);
         const domain = pageLink
           .parents('.translation-domains')

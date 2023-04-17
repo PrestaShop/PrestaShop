@@ -195,7 +195,7 @@ if (isset($_GET['action'])) {
                 ?>
 
 				<script type="text/javascript">
-					$(document).ready(function () {
+					$(function () {
 
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {
@@ -227,7 +227,7 @@ if (isset($_GET['action'])) {
                 ?>
 
 				<script type="text/javascript">
-					$(document).ready(function () {
+					$(function () {
 
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {

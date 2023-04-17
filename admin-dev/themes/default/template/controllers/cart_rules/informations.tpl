@@ -150,8 +150,8 @@
 </div>
 <script type="text/javascript">
 	$(".textarea-autosize").autosize();
-	$(document).ready(function() {
-    $('#code').bind('keyup change', function() {
+	$(function() {
+    $('#code').on('keyup change', function() {
       $('#cart-rules-highlight').toggle($(this).val() !== "");
     });
   });

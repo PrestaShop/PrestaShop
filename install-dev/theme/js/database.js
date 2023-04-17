@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(function()
+$(function()
 {
 	// Check rewrite engine availability
 	$.ajax({
@@ -34,7 +34,7 @@ $(document).ready(function()
 	});
 
 	// Check database configuration
-	$('#btTestDB').click(function()
+	$('#btTestDB').on('click', function()
 	{
 		$("#dbResultCheck")
 			.removeClass('errorBlock')
@@ -91,7 +91,7 @@ $(document).ready(function()
 function bindCreateDB()
 {
 	// Attempt to create the database
-	$('#btCreateDB').click(function()
+	$('#btCreateDB').on('click', function()
 	{
 		$("#dbResultCheck").slideUp('fast');
 		$.ajax({

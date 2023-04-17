@@ -248,7 +248,7 @@ function displayFlags(languages, defaultLanguageID, employee_cookie)
             .addClass('pointer')
             .attr('src', '../img/l/' + defaultLanguage['id_lang'] + '.jpg')
             .attr('alt', defaultLanguage['name'])
-            .click(function() {
+            .on('click', function() {
               toggleLanguageFlags(this);
             })
           );
@@ -261,7 +261,7 @@ function displayFlags(languages, defaultLanguageID, employee_cookie)
             .css('margin', '2px 2px')
             .attr('src', '../img/l/' + language['id_lang'] + '.jpg')
             .attr('alt', language['name'])
-            .click(function() {
+            .on('click', function() {
               changeFormLanguage(language['id_lang'], language['iso_code'], employee_cookie);
             });
           languagesFlags.append(img);
@@ -536,11 +536,11 @@ function showRedirectProductOptions(show)
 function redirectSelectChange()
 {
   redirectTypeValue = $('#redirect_type :selected').val();
-  if (redirectTypeValue == '404' || 
-      redirectTypeValue == '410' || 
-      redirectTypeValue == 'default' || 
-      redirectTypeValue == '200-displayed' || 
-      redirectTypeValue == '404-displayed' || 
+  if (redirectTypeValue == '404' ||
+      redirectTypeValue == '410' ||
+      redirectTypeValue == 'default' ||
+      redirectTypeValue == '200-displayed' ||
+      redirectTypeValue == '404-displayed' ||
       redirectTypeValue == '410-displayed')
     showRedirectProductSelectOptions(false);
   else
@@ -687,7 +687,7 @@ function showNoticeMessage(msg) {
   $.growl.notice({ title: "", message:msg});
 }
 
-$(document).ready(function()
+$(function()
 {
   if (typeof helper_tabs != 'undefined' && typeof unique_field_id != 'undefined')
   {
@@ -780,7 +780,7 @@ $(document).ready(function()
     });
 
   //Check filters value on submit filter
-  $("[name='submitFilter']").click(function(event) {
+  $("[name='submitFilter']").on('click', function(event) {
     var list_id = $(this).data('list-id');
     var empty_filters = true;
 
@@ -882,7 +882,7 @@ $(document).ready(function()
       bindSwapButton('add', 'available', 'selected', this);
       bindSwapButton('remove', 'selected', 'available', this);
 
-      $('button:submit').click(function() {
+      $('button:submit').on('click', function() {
         bindSwapSave(swap_container);
       });
     }
@@ -1442,7 +1442,7 @@ function countDown($source, $target) {
   var max = $source.attr("data-maxchar");
   $target.html(max-$source.val().length);
 
-  $source.keyup(function(){
+  $source.on('keyup', function(){
     $target.html(max-$source.val().length);
   });
 }

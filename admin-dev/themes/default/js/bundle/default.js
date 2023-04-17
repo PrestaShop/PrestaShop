@@ -1,7 +1,7 @@
 /**
  * Default layout instanciation
  */
-$(document).ready(function () {
+$(function () {
   const $this = $(this);
   const $ajaxSpinner = $('.ajax-spinner');
   $('[data-toggle="tooltip"]').tooltip();

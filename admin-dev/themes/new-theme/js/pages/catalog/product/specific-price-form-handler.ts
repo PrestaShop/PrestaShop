@@ -164,7 +164,7 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = true;
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $(SpecificMap.cancel).click(() => {
+    $(SpecificMap.cancel).on('click', () => {
       this.resetCreatePriceFormDefaultValues();
       $(SpecificMap.priceForm).collapse('hide');
     });
@@ -190,12 +190,12 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = false;
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $(SpecificMap.modalCancel).click(() => this.closeEditPriceModalAndRemoveForm(),
+    $(SpecificMap.modalCancel).on('click', () => this.closeEditPriceModalAndRemoveForm(),
     );
-    $(SpecificMap.modalClose).click(() => this.closeEditPriceModalAndRemoveForm(),
+    $(SpecificMap.modalClose).on('click', () => this.closeEditPriceModalAndRemoveForm(),
     );
 
-    $(SpecificMap.modalSave).click(() => this.submitEditPriceForm());
+    $(SpecificMap.modalSave).on('click', () => this.submitEditPriceForm());
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 

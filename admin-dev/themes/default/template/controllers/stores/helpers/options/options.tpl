@@ -50,12 +50,12 @@
     });
 }
 
-$(document).ready(function(){
+$(function(){
     {if isset($categoryData.fields.PS_SHOP_STATE_ID.value)}
 	    if ($('#PS_SHOP_COUNTRY_ID') && $('#PS_SHOP_STATE_ID'))
 	    {
 			ajaxStoreStates({$categoryData.fields.PS_SHOP_STATE_ID.value});
-			$('#PS_SHOP_COUNTRY_ID').change(function() {
+			$('#PS_SHOP_COUNTRY_ID').on('change', function() {
 			    ajaxStoreStates();
 			});
 	    }

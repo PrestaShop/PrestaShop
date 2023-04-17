@@ -24,8 +24,8 @@
  */
 
 var is_installing = false;
-$(document).ready(function() {
-  $("#loaderSpace").unbind('ajaxStart');
+$(function() {
+  $("#loaderSpace").off('ajaxStart');
   start_install();
 });
 

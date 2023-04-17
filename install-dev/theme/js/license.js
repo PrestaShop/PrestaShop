@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(function()
+$(function()
 {
 	// Desactivate next button if licence checkbox is not checked
 	if (!$('#set_license').prop('checked'))
@@ -32,7 +32,7 @@ $(document).ready(function()
 	}
 
 	// Activate / desactivate next button when licence checkbox is clicked
-	$('#set_license').click(function()
+	$('#set_license').on('click', function()
 	{
 		if ($(this).prop('checked'))
 			$('#btNext').removeClass('disabled').attr('disabled', false);

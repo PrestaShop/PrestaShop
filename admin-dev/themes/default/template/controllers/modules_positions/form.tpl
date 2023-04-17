@@ -129,12 +129,12 @@
 			str = val.join(', ');
 		obj.closest('form').find('#em_text_' + shopID).val(str);
 	}
-	$(document).ready(function(){
+	$(function(){
 		$('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
-			$(this).change(position_exception_textchange).change();
+			$(this).on('change', position_exception_textchange).change();
 		});
 		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
-			$(this).change(position_exception_listchange);
+			$(this).on('change', position_exception_listchange);
 		});
 		$('select[name=id_hook]').on('change', function() {
 			$('#new_hook').attr('value', $(this).val());

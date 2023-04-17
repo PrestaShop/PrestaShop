@@ -80,7 +80,7 @@
 	</div>
 	<script>
 		{if isset($search_type) && $search_type}
-			$(document).ready(function() {
+			$(function() {
 				$('.search-option a[data-value='+{$search_type|intval}+']').click();
 			});
 		{/if}

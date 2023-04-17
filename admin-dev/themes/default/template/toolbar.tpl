@@ -72,13 +72,13 @@
 						//hide standard submit button
 						btn_submit.hide();
 						//bind enter key press to validate form
-						$('#{$table}_form').keypress(function (e) {
+						$('#{$table}_form').on('keypress', function (e) {
 							if (e.which == 13 && e.target.localName != 'textarea' && !e.target.hasClass('tagify'))
 								$('#desc-{$table}-save').click();
 						});
 						//submit the form
 						{block name=formSubmit}
-							btn_save.click(function() {
+							btn_save.on('click', function() {
 								// Vars
 								var btn_submit = $('#{$table}_form_submit_btn');
 
@@ -96,7 +96,7 @@
 
 							if (btn_save_and_stay)
 							{
-								btn_save_and_stay.click(function() {
+								btn_save_and_stay.on('click', function() {
 									//add hidden input to emulate submit button click when posting the form -> field name posted
 									btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
 

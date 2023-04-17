@@ -258,7 +258,7 @@ function saveDashConfig(widget_name) {
 	});
 }
 
-$(document).ready( function () {
+$( function () {
 	$('#calendar_form input[type="submit"]').on('click', function(elt) {
 		elt.preventDefault();
 		setDashboardDateRange(elt.currentTarget.name);
@@ -269,7 +269,7 @@ $(document).ready( function () {
 	bindCancelDashConfig();
 
 	$('#page-header-desc-configuration-switch_demo i').removeClass('btn-primary');
-	$('#page-header-desc-configuration-switch_demo').tooltip().click(function(e) {
+	$('#page-header-desc-configuration-switch_demo').tooltip().on('click', function(e) {
 		$.ajax({
 			url : dashboard_ajax_url,
 			data : {

@@ -23,12 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(() => {
+$(() => {
   /*
   * Link action on the select list in the navigator toolbar.
   * When change occurs, the page is refreshed (location.href redirection)
   */
-  $('select[name="paginator_select_page_limit"]').change(function () {
+  $('select[name="paginator_select_page_limit"]').on('change', function () {
     const url = $(this).attr('psurl').replace(/_limit/, $('option:selected', this).val());
     window.location.href = url;
     return false;

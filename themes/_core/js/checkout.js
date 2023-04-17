@@ -60,7 +60,7 @@ function handleCheckoutStepChange() {
 function handleSubmitButton() {
   // prevents rage clicking on submit button and related issues
   const formSelector = prestashop.selectors.checkout.form;
-  $(formSelector).submit(function (e) {
+  $(formSelector).on('submit', function (e) {
     if ($(this).data('disabled') === true) {
       e.preventDefault();
     }
@@ -69,7 +69,7 @@ function handleSubmitButton() {
   });
 }
 
-$(document).ready(() => {
+$(() => {
   if ($('#checkout').length === 1) {
     setUpCheckout();
   }

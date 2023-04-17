@@ -82,7 +82,7 @@ function ProductTabsManager(){
 
 		// onReady() is always called after the dom has been created for the tab (similar to $(document).ready())
 		if (container.hasClass('not-loaded'))
-			container.bind('loaded', callback);
+			container.on('loaded', callback);
 		else
 			callback();
 	}
@@ -419,7 +419,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindToggleAddCombination = function (){
-		$('#desc-product-newCombination').click(function(e) {
+		$('#desc-product-newCombination').on('click', function(e) {
 			e.preventDefault();
 
 			if ($(this).children('i').first().hasClass('process-icon-new'))
@@ -703,7 +703,7 @@ product_tabs['Prices'] = new function(){
 	var self = this;
 	// Bind to show/hide new specific price form
 	this.toggleSpecificPrice = function (){
-		$('#show_specific_price').click(function()
+		$('#show_specific_price').on('click', function()
 		{
 			$('#add_specific_price').slideToggle();
 
@@ -714,7 +714,7 @@ product_tabs['Prices'] = new function(){
 			return false;
 		});
 
-		$('#hide_specific_price').click(function()
+		$('#hide_specific_price').on('click', function()
 		{
 			$('#add_specific_price').slideToggle();
 			$('#add_specific_price').find('input[name=submitPriceAddition]').remove();
@@ -782,7 +782,7 @@ product_tabs['Prices'] = new function(){
 		self.deleteSpecificPrice();
 		self.bindDelete();
 
-		$('#sp_id_shop').change(function() {
+		$('#sp_id_shop').on('change', function() {
 			self.loadInformations('#sp_id_group','getGroupsOptions');
 			self.loadInformations('#spm_currency_0', 'getCurrenciesOptions');
 			self.loadInformations('#sp_id_country', 'getCountriesOptions');
@@ -960,7 +960,7 @@ product_tabs['Attachments'] = new function(){
 			});
 			return !$("#selectAttachment1 option:selected").remove().appendTo("#selectAttachment2");
 		});
-		$("#product").submit(function() {
+		$("#product").on('submit', function() {
 			$("#selectAttachment1 option").each(function(i) {
 				$(this).attr("selected", "selected");
 			});
@@ -1011,7 +1011,7 @@ product_tabs['Shipping'] = new function(){
 product_tabs['Informations'] = new function(){
 	var self = this;
 	this.bindAvailableForOrder = function (){
-		$("#available_for_order").click(function()
+		$("#available_for_order").on('click', function()
 		{
 			if ($(this).is(':checked') || ($('input[name=\'multishop_check[show_price]\']').length && !$('input[name=\'multishop_check[show_price]\']').prop('checked')))
 			{
@@ -1032,7 +1032,7 @@ product_tabs['Informations'] = new function(){
 		else
 			showRedirectProductOptions(true);
 
-		$('#redirect_type').change(function () {
+		$('#redirect_type').on('change', function () {
 			redirectSelectChange();
 		});
 
@@ -1065,12 +1065,12 @@ product_tabs['Informations'] = new function(){
 			$('#resultImage').val(tag);
 		}
 		changeTagImage();
-		$('#createImageDescription input').change(function(){
+		$('#createImageDescription input').on('change', function(){
 			changeTagImage();
 		});
 
 		var i = 0;
-		$('.addImageDescription').click(function(){
+		$('.addImageDescription').on('click', function(){
 			if (i == 0){
 				$('#createImageDescription').animate({
 					opacity: 1, height: 'toggle'
@@ -1130,10 +1130,10 @@ product_tabs['Informations'] = new function(){
 				{
 					$('#product-pack-container').show();
 					// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
-					$("#product-tab-content-Pack").bind('loaded', function(){
+					$("#product-tab-content-Pack").on('loaded', function(){
 						$('#ppack').val(1).attr('checked', true).attr('disabled', true);
 					});
-					$("#product-tab-content-Quantities").bind('loaded', function(){
+					$("#product-tab-content-Quantities").on('loaded', function(){
 						$('.stockForVirtualProduct').show();
 					});
 
@@ -1213,7 +1213,7 @@ product_tabs['Informations'] = new function(){
 					showOptions(checked);
 				}
 			};
-			$('input[name=\'multishop_check[active]\']').click(active_click);
+			$('input[name=\'multishop_check[active]\']').on('click', active_click);
 			active_click();
 		}
 	};
@@ -1478,7 +1478,7 @@ product_tabs['Quantities'] = new function(){
 			dateFormat: 'yy-mm-dd'
 		});
 
-		$('.depends_on_stock').click(function(e)
+		$('.depends_on_stock').on('click', function(e)
 		{
 			self.refreshQtyAvailabilityForm();
 			self.ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
@@ -1486,7 +1486,7 @@ product_tabs['Quantities'] = new function(){
 				$('.available_quantity input').trigger('change');
 		});
 
-		$('.advanced_stock_management').click(function(e)
+		$('.advanced_stock_management').on('click', function(e)
 		{
 			var val = 0;
 			if ($(this).prop('checked'))
@@ -1509,12 +1509,12 @@ product_tabs['Quantities'] = new function(){
 			self.refreshQtyAvailabilityForm();
 		});
 
-		$('.available_quantity').find('input').change(function(e, init_val)
+		$('.available_quantity').find('input').on('change', function(e, init_val)
 		{
 			self.ajaxCall({actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val()});
 		});
 
-		$('.out_of_stock').click(function(e)
+		$('.out_of_stock').on('click', function(e)
 		{
 			self.refreshQtyAvailabilityForm();
 			self.ajaxCall({actionQty: 'out_of_stock', value: $(this).val()});
@@ -1522,7 +1522,7 @@ product_tabs['Quantities'] = new function(){
 		if (display_multishop_checkboxes)
 			ProductMultishop.checkAllQuantities();
 
-		$('.pack_stock_type').click(function(e)
+		$('.pack_stock_type').on('click', function(e)
 		{
 			self.refreshQtyAvailabilityForm();
 			self.ajaxCall({actionQty: 'pack_stock_type', value: $(this).val()});
@@ -1651,7 +1651,7 @@ product_tabs['VirtualProduct'] = new function(){
 
 product_tabs['Warehouses'] = new function(){
 	this.onReady = function(){
-		$('.check_all_warehouse').click(function() {
+		$('.check_all_warehouse').on('click', function() {
 			//get all checkboxes of current warehouse
 			var checkboxes = $('input[name*="'+$(this).val()+'"]');
 			var checked = false;
@@ -1892,7 +1892,7 @@ var ProductMultishop = new function()
 var tabs_manager = new ProductTabsManager();
 tabs_manager.setTabs(product_tabs);
 
-$(document).ready(function() {
+$(function() {
 	// The manager schedules the onReady() methods of each tab to be called when the tab is loaded
 	tabs_manager.init();
 	updateCurrentText();
@@ -1913,7 +1913,7 @@ $(document).ready(function() {
 		return (code == 13) ? false : true;
 	});
 
-	$('#product_form').submit(function(e) {
+	$('#product_form').on('submit', function(e) {
 		$('#selectedCarriers option').attr('selected', 'selected');
 		$('#selectAttachment1 option').attr('selected', 'selected');
 		return true;

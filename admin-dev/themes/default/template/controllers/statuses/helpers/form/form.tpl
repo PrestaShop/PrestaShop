@@ -109,8 +109,8 @@
 {/block}
 
 {block name="script"}
-	$(document).ready(function() {
-		$('#send_email_on').click(function() {
+	$(function() {
+		$('#send_email_on').on('click', function() {
 			$('#tpl').slideToggle();
 		});
 	});

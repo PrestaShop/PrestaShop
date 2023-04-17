@@ -107,14 +107,14 @@ window.restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'sho
 
 for (i in restrictions) {
   toggleCartRuleFilter($(`#${restrictions[i]}_restriction`));
-  $(`#${restrictions[i]}_restriction`).change(function () { toggleCartRuleFilter(this); });
-  $(`#${restrictions[i]}_select_remove`).click(function () { removeCartRuleOption(this); });
-  $(`#${restrictions[i]}_select_add`).click(function () { addCartRuleOption(this); });
+  $(`#${restrictions[i]}_restriction`).on('change', function () { toggleCartRuleFilter(this); });
+  $(`#${restrictions[i]}_select_remove`).on('click', function () { removeCartRuleOption(this); });
+  $(`#${restrictions[i]}_select_add`).on('click', function () { addCartRuleOption(this); });
 }
 
 toggleCartRuleFilter($('#product_restriction'));
 
-$('#group_restriction').change(function () {
+$('#group_restriction').on('change', function () {
   $('#customerFilter').prop('disabled', $(this).prop('checked'));
 }).change();
 
@@ -122,7 +122,7 @@ $('#customerFilter').on('change keyup', function () {
   $('#group_restriction').prop('disabled', $(this).val() !== '');
 }).change();
 
-$('#product_restriction').change(function () {
+$('#product_restriction').on('change', function () {
   toggleCartRuleFilter(this);
 
   if ($(this).prop('checked')) {
@@ -134,7 +134,7 @@ $('#product_restriction').change(function () {
   }
 });
 
-$('#apply_discount_to_selection_shortcut').click((e) => {
+$('#apply_discount_to_selection_shortcut').on('click', (e) => {
   displayCartRuleTab('conditions');
   $('#product_restriction').focus();
   e.preventDefault();
@@ -201,57 +201,57 @@ function toggleGiftProduct() {
   }
 }
 
-$('#apply_discount_percent').click(() => {
+$('#apply_discount_percent').on('click', () => {
   toggleApplyDiscount(true, false, true);
 });
 if ($('#apply_discount_percent').prop('checked')) toggleApplyDiscount(true, false, true);
 
-$('#apply_discount_amount').click(() => {
+$('#apply_discount_amount').on('click', () => {
   toggleApplyDiscount(false, true, true);
 });
 if ($('#apply_discount_amount').prop('checked')) toggleApplyDiscount(false, true, true);
 
-$('#apply_discount_off').click(() => {
+$('#apply_discount_off').on('click', () => {
   toggleApplyDiscount(false, false, false);
 });
 if ($('#apply_discount_off').prop('checked')) toggleApplyDiscount(false, false, false);
 
-$('#apply_discount_to_order').click(() => {
+$('#apply_discount_to_order').on('click', () => {
   toggleApplyDiscountTo();
 },
 );
 if ($('#apply_discount_to_order').prop('checked')) toggleApplyDiscountTo();
 
-$('#apply_discount_to_product').click(() => {
+$('#apply_discount_to_product').on('click', () => {
   toggleApplyDiscountTo();
 },
 );
 if ($('#apply_discount_to_product').prop('checked')) toggleApplyDiscountTo();
 
-$('#apply_discount_to_cheapest').click(() => {
+$('#apply_discount_to_cheapest').on('click', () => {
   toggleApplyDiscountTo();
 },
 );
 if ($('#apply_discount_to_cheapest').prop('checked')) toggleApplyDiscountTo();
 
-$('#apply_discount_to_selection').click(() => {
+$('#apply_discount_to_selection').on('click', () => {
   toggleApplyDiscountTo();
 },
 );
 if ($('#apply_discount_to_selection').prop('checked')) toggleApplyDiscountTo();
 
-$('#free_gift_on').click(() => {
+$('#free_gift_on').on('click', () => {
   toggleGiftProduct();
 },
 );
-$('#free_gift_off').click(() => {
+$('#free_gift_off').on('click', () => {
   toggleGiftProduct();
 },
 );
 toggleGiftProduct();
 
 // Main form submit
-$('#cart_rule_form').submit(() => {
+$('#cart_rule_form').on('submit', () => {
   if ($('#customerFilter').val() == '') $('#id_customer').val('0');
 
   for (i in restrictions) {
@@ -447,8 +447,8 @@ function displayProductAttributes() {
   }
 }
 
-$(document).ready(() => {
-  $(window).keydown((event) => {
+$(() => {
+  $(window).on('keydown', (event) => {
     if (event.keyCode == 13) {
 	  		event.preventDefault();
 	  		return false;
