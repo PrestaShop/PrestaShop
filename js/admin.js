@@ -228,53 +228,6 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
   updateCurrentText();
 }
 
-function displayFlags(languages, defaultLanguageID, employee_cookie)
-{
-  if ($('.translatable'))
-  {
-    $('.translatable').each(function() {
-      if (!$(this).find('.displayed_flag').length > 0) {
-        $.each(languages, function(key, language) {
-          if (language['id_lang'] == defaultLanguageID)
-          {
-            defaultLanguage = language;
-            return false;
-          }
-        });
-        var displayFlags = $('<div></div>')
-          .addClass('displayed_flag')
-          .append($('<img>')
-            .addClass('language_current')
-            .addClass('pointer')
-            .attr('src', '../img/l/' + defaultLanguage['id_lang'] + '.jpg')
-            .attr('alt', defaultLanguage['name'])
-            .on('click', function() {
-              toggleLanguageFlags(this);
-            })
-          );
-        var languagesFlags = $('<div></div>')
-          .addClass('language_flags')
-          .html(choose_language_translate+':<br /><br />');
-        $.each(languages, function(key, language) {
-          var img = $('<img>')
-            .addClass('pointer')
-            .css('margin', '2px 2px')
-            .attr('src', '../img/l/' + language['id_lang'] + '.jpg')
-            .attr('alt', language['name'])
-            .on('click', function() {
-              changeFormLanguage(language['id_lang'], language['iso_code'], employee_cookie);
-            });
-          languagesFlags.append(img);
-        });
-        if ($(this).find('p:last-child').hasClass('clear'))
-          $(this).find('p:last-child').before(displayFlags).before(languagesFlags);
-        else
-          $(this).append(displayFlags).append(languagesFlags);
-      }
-    });
-  }
-}
-
 function checkAll(pForm)
 {
   for (i = 0, n = pForm.elements.length; i < n; i++)
