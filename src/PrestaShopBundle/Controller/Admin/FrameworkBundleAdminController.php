@@ -520,14 +520,6 @@ class FrameworkBundleAdminController extends AbstractController
     {
         $ids = $request->request->all($key);
 
-        if (is_numeric($ids)) {
-            return [(int) $ids];
-        }
-
-        if (!is_array($ids)) {
-            return [];
-        }
-
         foreach ($ids as $i => $id) {
             $ids[$i] = (int) $id;
         }
