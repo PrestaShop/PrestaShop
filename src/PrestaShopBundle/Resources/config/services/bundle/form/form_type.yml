@@ -42,6 +42,7 @@ services:
       - "@prestashop.adapter.data_provider.category"
     tags:
       - { name: form.type }
+    deprecated: ~
 
   form.type.product.categories_tree:
     class: 'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType'
