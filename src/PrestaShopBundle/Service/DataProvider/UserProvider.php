@@ -52,7 +52,10 @@ class UserProvider
     public function getUser(): ?UserInterface
     {
         if ($this->tokenStorage->getToken()) {
-            return $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
+            if ($user instanceof UserInterface) {
+                return $user;
+            }
         }
 
         if ($this->legacyContext->getContext()->employee && !empty($this->legacyContext->getContext()->employee->email)) {
