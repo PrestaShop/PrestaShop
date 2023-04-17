@@ -20,7 +20,7 @@ Feature: Add cart rule in cart
     And shipping handling fees are set to 2.0
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
-    When I create cart rule "cart_rule_1" with following properties:
+    And I create cart rule "cart_rule_1" with following properties:
       | name[en-US]                            | CartRule with minimum amount |
       | description                            | CartRule with minimum amount |
       | highlight                              | true                         |

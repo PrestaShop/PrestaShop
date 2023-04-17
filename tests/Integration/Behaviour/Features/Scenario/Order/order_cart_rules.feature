@@ -11,6 +11,7 @@ Feature: Order from Back Office (BO)
     Given email sending is disabled
     And the current currency is "USD"
     And country "US" is enabled
+    And language with iso code "en" is the default one
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
@@ -46,9 +47,9 @@ Feature: Order from Back Office (BO)
     And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
     And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product Cart Rule On Select Product  |
-      | amount        | 1                                         |
-      | price         | 15                                        |
+      | name   | Test Product Cart Rule On Select Product |
+      | amount | 1                                        |
+      | price  | 15                                       |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
@@ -102,9 +103,9 @@ Feature: Order from Back Office (BO)
     And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
     And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product Cart Rule On Select Product  |
-      | amount        | 1                                         |
-      | price         | 15                                        |
+      | name   | Test Product Cart Rule On Select Product |
+      | amount | 1                                        |
+      | price  | 15                                       |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
@@ -121,8 +122,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     When I edit product "Test Product Cart Rule On Select Product" to order "bo_order1" with following products details:
-      | amount        | 3                       |
-      | price         | 15                      |
+      | amount | 3  |
+      | price  | 15 |
     Then order "bo_order1" should have 5 products in total
     Then order "bo_order1" should contain 3 products "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
@@ -131,7 +132,7 @@ Feature: Order from Back Office (BO)
       | total_products           | 68.800 |
       | total_products_wt        | 72.930 |
       | total_discounts_tax_excl | 45.000 |
-      | total_discounts_tax_incl | 47.7 |
+      | total_discounts_tax_incl | 47.7   |
       | total_paid_tax_excl      | 30.8   |
       | total_paid_tax_incl      | 32.650 |
       | total_paid               | 32.650 |
@@ -139,8 +140,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     When I edit product "Test Product Cart Rule On Select Product" to order "bo_order1" with following products details:
-      | amount        | 3                       |
-      | price         | 10                      |
+      | amount | 3  |
+      | price  | 10 |
     Then order "bo_order1" should have 5 products in total
     Then order "bo_order1" should contain 3 products "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
@@ -245,9 +246,9 @@ Feature: Order from Back Office (BO)
     Given there is a cart rule named "CartRuleAmountOnWholeOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRuleAmountOnWholeOrder" is applied on every order
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product Cart Rule On Order |
-      | amount        | 1                               |
-      | price         | 15                              |
+      | name   | Test Product Cart Rule On Order |
+      | amount | 1                               |
+      | price  | 15                              |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
@@ -301,9 +302,9 @@ Feature: Order from Back Office (BO)
     Given there is a cart rule named "CartRuleAmountOnEveryOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRuleAmountOnEveryOrder" is applied on every order
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product Cart Rule On Order |
-      | amount        | 1                               |
-      | price         | 15                              |
+      | name   | Test Product Cart Rule On Order |
+      | amount | 1                               |
+      | price  | 15                              |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
@@ -373,9 +374,9 @@ Feature: Order from Back Office (BO)
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Percent Discount |
-      | amount        | 1                                  |
-      | price         | 350.00                             |
+      | name   | Test Product With Percent Discount |
+      | amount | 1                                  |
+      | price  | 350.00                             |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 1 cart rule
@@ -392,9 +393,9 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     When I add discount to order "bo_order1" with following details:
-      | name      | discount five-percent |
-      | type      | percent               |
-      | value     | 5                     |
+      | name  | discount five-percent |
+      | type  | percent               |
+      | value | 5                     |
     Then order "bo_order1" should have 2 cart rule
     Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
     Then order "bo_order1" should have cart rule "discount five-percent" with amount "$9.94"
@@ -447,9 +448,9 @@ Feature: Order from Back Office (BO)
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Percent Discount |
-      | amount        | 1                                  |
-      | price         | 350.00                             |
+      | name   | Test Product With Percent Discount |
+      | amount | 1                                  |
+      | price  | 350.00                             |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 1 cart rule
@@ -466,9 +467,9 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     When I add discount to order "bo_order1" with following details:
-      | name      | discount five-percent |
-      | type      | percent               |
-      | value     | 5                     |
+      | name  | discount five-percent |
+      | type  | percent               |
+      | value | 5                     |
     Then order "bo_order1" should have 2 cart rule
     Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
     Then order "bo_order1" should have cart rule "discount five-percent" with amount "$9.94"
@@ -522,9 +523,9 @@ Feature: Order from Back Office (BO)
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Percent Discount |
-      | amount        | 1                                  |
-      | price         | 350.00                             |
+      | name   | Test Product With Percent Discount |
+      | amount | 1                                  |
+      | price  | 350.00                             |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 1 cart rule
@@ -572,9 +573,9 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Percent Discount |
-      | amount        | 1                                  |
-      | price         | 350.00                             |
+      | name   | Test Product With Percent Discount |
+      | amount | 1                                  |
+      | price  | 350.00                             |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 1 cart rule
@@ -609,9 +610,9 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     When I add discount to order "bo_order1" with following details:
-      | name      | discount five-percent |
-      | type      | percent               |
-      | value     | 5                     |
+      | name  | discount five-percent |
+      | type  | percent               |
+      | value | 5                     |
     Then order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.19"
     Then order "bo_order1" should have following details:
@@ -629,9 +630,9 @@ Feature: Order from Back Office (BO)
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Percent Discount |
-      | amount        | 1                                  |
-      | price         | 350.00                             |
+      | name   | Test Product With Percent Discount |
+      | amount | 1                                  |
+      | price  | 350.00                             |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 2 cart rule
@@ -701,32 +702,32 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 1 products in total
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
-      | total_products           | 0.000  |
-      | total_products_wt        | 0.000  |
-      | total_discounts_tax_excl | 0.000  |
-      | total_discounts_tax_incl | 0.000  |
-      | total_paid_tax_excl      | 7.000  |
-      | total_paid_tax_incl      | 7.420  |
-      | total_paid               | 7.420  |
-      | total_paid_real          | 0.000  |
-      | total_shipping_tax_excl  | 7.000  |
-      | total_shipping_tax_incl  | 7.420  |
+      | total_products           | 0.000 |
+      | total_products_wt        | 0.000 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 7.000 |
+      | total_paid_tax_incl      | 7.420 |
+      | total_paid               | 7.420 |
+      | total_paid_real          | 0.000 |
+      | total_shipping_tax_excl  | 7.000 |
+      | total_shipping_tax_incl  | 7.420 |
     When I add discount to order "bo_order1" with following details:
-      | name      | Free Shipping |
-      | type      | free_shipping |
+      | name | Free Shipping |
+      | type | free_shipping |
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have following details:
-      | total_products           | 0.000  |
-      | total_products_wt        | 0.000  |
-      | total_discounts_tax_excl | 7.000  |
-      | total_discounts_tax_incl | 7.420  |
-      | total_paid_tax_excl      | 0.000  |
-      | total_paid_tax_incl      | 0.000  |
-      | total_paid               | 0.000  |
-      | total_paid_real          | 0.000  |
-      | total_shipping_tax_excl  | 7.000  |
-      | total_shipping_tax_incl  | 7.420  |
+      | total_products           | 0.000 |
+      | total_products_wt        | 0.000 |
+      | total_discounts_tax_excl | 7.000 |
+      | total_discounts_tax_incl | 7.420 |
+      | total_paid_tax_excl      | 0.000 |
+      | total_paid_tax_incl      | 0.000 |
+      | total_paid               | 0.000 |
+      | total_paid_real          | 0.000 |
+      | total_shipping_tax_excl  | 7.000 |
+      | total_shipping_tax_incl  | 7.420 |
 
   Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
     Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
@@ -735,55 +736,55 @@ Feature: Order from Back Office (BO)
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
     Then cart "dummy_cart_free_shipping" should contain 1 products
     When I add order "bo_order1" with the following details:
-      | cart                | dummy_cart_free_shipping   |
-      | message             |                            |
-      | payment module name | dummy_payment              |
-      | status              | Payment accepted           |
+      | cart                | dummy_cart_free_shipping |
+      | message             |                          |
+      | payment module name | dummy_payment            |
+      | status              | Payment accepted         |
     Then order "bo_order1" should have 1 products in total
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
-      | total_products           | 0.000  |
-      | total_products_wt        | 0.000  |
-      | total_discounts_tax_excl | 0.000  |
-      | total_discounts_tax_incl | 0.000  |
-      | total_paid_tax_excl      | 7.000  |
-      | total_paid_tax_incl      | 7.420  |
-      | total_paid               | 7.420  |
-      | total_paid_real          | 7.420  |
-      | total_shipping_tax_excl  | 7.000  |
-      | total_shipping_tax_incl  | 7.420  |
+      | total_products           | 0.000 |
+      | total_products_wt        | 0.000 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 7.000 |
+      | total_paid_tax_incl      | 7.420 |
+      | total_paid               | 7.420 |
+      | total_paid_real          | 7.420 |
+      | total_shipping_tax_excl  | 7.000 |
+      | total_shipping_tax_incl  | 7.420 |
     And order "bo_order1" should have invoice
     When I add discount to order "bo_order1" on first invoice and following details:
-      | name      | Free Shipping |
-      | type      | free_shipping |
+      | name | Free Shipping |
+      | type | free_shipping |
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have following details:
-      | total_products           | 0.000  |
-      | total_products_wt        | 0.000  |
-      | total_discounts_tax_excl | 7.000  |
-      | total_discounts_tax_incl | 7.420  |
-      | total_paid_tax_excl      | 0.000  |
-      | total_paid_tax_incl      | 0.000  |
-      | total_paid               | 0.000  |
-      | total_paid_real          | 7.420  |
-      | total_shipping_tax_excl  | 7.000  |
-      | total_shipping_tax_incl  | 7.420  |
+      | total_products           | 0.000 |
+      | total_products_wt        | 0.000 |
+      | total_discounts_tax_excl | 7.000 |
+      | total_discounts_tax_incl | 7.420 |
+      | total_paid_tax_excl      | 0.000 |
+      | total_paid_tax_incl      | 0.000 |
+      | total_paid               | 0.000 |
+      | total_paid_real          | 7.420 |
+      | total_shipping_tax_excl  | 7.000 |
+      | total_shipping_tax_incl  | 7.420 |
 
   Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
     Given there is a product in the catalog named "product_expensive" with a price of 123.00 and 100 items in stock
     And there is a product in the catalog named "product_cheap" with a price of 10.00 and 100 items in stock
-    When I create an empty cart "dummy_cart_cart_rule_cheapest" for customer "testCustomer"
+    And I create an empty cart "dummy_cart_cart_rule_cheapest" for customer "testCustomer"
     And I add 1 products "product_expensive" to the cart "dummy_cart_cart_rule_cheapest"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_cart_rule_cheapest"
-    Then cart "dummy_cart_cart_rule_cheapest" should contain 1 products
+    And cart "dummy_cart_cart_rule_cheapest" should contain 1 products
     ## Create an order with the expensive product
-    When I add order "bo_order1" with the following details:
+    And I add order "bo_order1" with the following details:
       | cart                | dummy_cart_cart_rule_cheapest |
       | message             |                               |
       | payment module name | dummy_payment                 |
       | status              | Payment accepted              |
-    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 123.000 |
@@ -798,37 +799,56 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42    |
     And order "bo_order1" should have invoice
     ## Create a new cart rule
-    When I want to create a new cart rule
-    And I specify its name in default language as "Cart Rule 50% which excludes discounted products and applies to cheapest product"
-    And I specify its "description" as "None"
-    And I specify its "code" as ""
-    And I specify that its active from "2019-01-01 11:00:00"
-    And I specify that its active until "2040-01-01 12:00:00"
-    And I specify that its "quantity" is "100"
-    And I specify that its "quantity per user" is "100"
-    And I specify that its "priority" is "1"
-    And its minimum purchase amount in currency "USD" is "0.0"
-    And its minimum purchase amount is tax included
-    And its minimum purchase amount is shipping included
-    And I specify its status as enabled
-    And it gives a percentage reduction of "50" which excludes discounted products and applies to cheapest product
-    Then I save it
+    And I create cart rule "cart_rule_1" with following properties:
+      | name[en-US]                            | Cart Rule 50% which excludes discounted products and applies to cheapest product |
+      | description                            | None                                                                             |
+      | highlight                              | true                                                                             |
+      | is_active                              | true                                                                             |
+      | allow_partial_use                      | false                                                                            |
+      | priority                               | 1                                                                                |
+      | valid_from                             | 2019-01-01 11:00:00                                                              |
+      | valid_to                               | 2040-01-01 12:00:00                                                              |
+      | total_quantity                         | 100                                                                              |
+      | quantity_per_user                      | 100                                                                              |
+      | free_shipping                          | false                                                                            |
+      | minimum_amount                         |                                                                                  |
+      | code                                   |                                                                                  |
+      | reduction_percentage                   | 50                                                                               |
+      | reduction_apply_to_discounted_products | false                                                                            |
+      | discount_application_type              | cheapest_product                                                                 |
+    And cart rule "cart_rule_1" should have the following properties:
+      | name[en-US]                            | Cart Rule 50% which excludes discounted products and applies to cheapest product |
+      | description                            | None                                                                             |
+      | highlight                              | true                                                                             |
+      | is_active                              | true                                                                             |
+      | allow_partial_use                      | false                                                                            |
+      | priority                               | 1                                                                                |
+      | valid_from                             | 2019-01-01 11:00:00                                                              |
+      | valid_to                               | 2040-01-01 12:00:00                                                              |
+      | total_quantity                         | 100                                                                              |
+      | quantity_per_user                      | 100                                                                              |
+      | free_shipping                          | false                                                                            |
+      | minimum_amount                         |                                                                                  |
+      | code                                   |                                                                                  |
+      | reduction_percentage                   | 50                                                                               |
+      | reduction_apply_to_discounted_products | false                                                                            |
+      | discount_application_type              | cheapest_product                                                                 |
     ## Add the product to the order
     When I add products to order "bo_order1" without invoice and the following products details:
-      | name          | product_cheap     |
-      | amount        | 1                 |
-      | price         | 10                |
+      | name   | product_cheap |
+      | amount | 1             |
+      | price  | 10            |
     Then order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have a cart rule with name "Cart Rule 50% which excludes discounted products and applies to cheapest product"
     And order "bo_order1" should have following details:
-      | total_products           | 133.000  |
-      | total_products_wt        | 140.980  |
-      | total_discounts_tax_excl | 5.000    |
-      | total_discounts_tax_incl | 5.300    |
-      | total_paid_tax_excl      | 135.000  |
-      | total_paid_tax_incl      | 143.100  |
-      | total_paid               | 143.100  |
-      | total_paid_real          | 137.800  |
-      | total_shipping_tax_excl  | 7.000    |
-      | total_shipping_tax_incl  | 7.420    |
+      | total_products           | 133.000 |
+      | total_products_wt        | 140.980 |
+      | total_discounts_tax_excl | 5.000   |
+      | total_discounts_tax_incl | 5.300   |
+      | total_paid_tax_excl      | 135.000 |
+      | total_paid_tax_incl      | 143.100 |
+      | total_paid               | 143.100 |
+      | total_paid_real          | 137.800 |
+      | total_shipping_tax_excl  | 7.000   |
+      | total_shipping_tax_incl  | 7.420   |
