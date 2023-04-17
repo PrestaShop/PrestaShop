@@ -66,7 +66,17 @@
             {if isset($help_link) and $help_link != false}
 
               {if $enableSidebar}
-                <a class="btn btn-outline-secondary btn-help btn-sidebar" href="#"
+
+                <a class="toolbar-button d-inline-block d-md-none" href="#"
+                   title="{l s='Help' d='Admin.Global'}"
+                   data-toggle="sidebar"
+                   data-target="#right-sidebar"
+                   data-url="{$help_link|escape}"
+                   id="product_form_open_help"
+                >
+                  <i class="material-icons">help_outline</i>
+                </a>
+                <a class="btn btn-outline-secondary btn-help btn-sidebar d-none d-md-inline-block" href="#"
                    title="{l s='Help' d='Admin.Global'}"
                    data-toggle="sidebar"
                    data-target="#right-sidebar"
@@ -76,7 +86,10 @@
                   {l s='Help' d='Admin.Global'}
                 </a>
               {else}
-                <a class="btn btn-outline-secondary btn-help" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
+                <a class="toolbar-button d-inline-block d-md-none" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
+                  <i class="material-icons">help_outline</i>
+                </a>
+                <a class="btn btn-outline-secondary btn-help d-none d-md-inline-block" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
                   {l s='Help' d='Admin.Global'}
                 </a>
               {/if}
