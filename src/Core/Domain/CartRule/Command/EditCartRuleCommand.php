@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
@@ -60,7 +59,7 @@ class EditCartRuleCommand
     private $code;
 
     /**
-     * @var MoneyAmountCondition|null
+     * @var Money|null
      */
     private $minimumAmount;
 
@@ -321,8 +320,9 @@ class EditCartRuleCommand
         bool $taxIncluded,
         bool $shippingIncluded
     ): EditCartRuleCommand {
-        $this->minimumAmount = new MoneyAmountCondition(
-            new Money(new DecimalNumber($minimumAmount), new CurrencyId($currencyId)),
+        $this->minimumAmount = new Money(
+            new DecimalNumber($minimumAmount),
+            new CurrencyId($currencyId),
             $taxIncluded
         );
         $this->minimumAmountShippingIncluded = $shippingIncluded;
@@ -330,7 +330,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getMinimumAmount(): ?MoneyAmountCondition
+    public function getMinimumAmount(): ?Money
     {
         return $this->minimumAmount;
     }

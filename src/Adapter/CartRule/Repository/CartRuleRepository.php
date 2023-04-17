@@ -48,7 +48,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->cartRuleValidator = $cartRuleValidator;
     }
 
-    public function create(CartRule $cartRule): CartRule
+    public function add(CartRule $cartRule): CartRule
     {
         $this->cartRuleValidator->validate($cartRule);
         $this->addObjectModel($cartRule, CannotAddCartRuleException::class);
@@ -75,7 +75,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
      */
     public function partialUpdate(CartRule $cartRule, array $propertiesToUpdate, int $errorCode = 0): void
     {
-        //@todo: use validator when its merged in another PR. https://github.com/PrestaShop/PrestaShop/pull/31904
+        $this->cartRuleValidator->validate($cartRule);
         $this->partiallyUpdateObjectModel(
             $cartRule,
             $propertiesToUpdate,

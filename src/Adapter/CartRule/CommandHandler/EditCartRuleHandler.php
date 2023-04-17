@@ -132,10 +132,9 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
         }
         if (null !== $command->getMinimumAmount()) {
             $minimumAmount = $command->getMinimumAmount();
-            $cartRule->minimum_amount = (float) (string) $minimumAmount->getMoneyAmount()->getAmount();
-            $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
-            //@todo: isTaxIncluded method should appear after rebase when related PR is merged https://github.com/PrestaShop/PrestaShop/pull/31904
-//            $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();
+            $cartRule->minimum_amount = (float) (string) $minimumAmount->getAmount();
+            $cartRule->minimum_amount_currency = $minimumAmount->getCurrencyId()->getValue();
+            $cartRule->minimum_amount_tax = $minimumAmount->isTaxIncluded();
             $cartRule->minimum_amount_shipping = $command->isMinimumAmountShippingIncluded();
             $updatableProperties = array_merge($updatableProperties, [
                 'minimum_amount',
@@ -176,10 +175,9 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
         $updatableProperties = [];
         $amountDiscount = $cartRuleAction->getAmountDiscount();
         if (null !== $amountDiscount) {
-            $cartRule->reduction_amount = (string) $amountDiscount->getMoneyAmount()->getAmount();
-            $cartRule->reduction_currency = $amountDiscount->getMoneyAmount()->getCurrencyId()->getValue();
-            // @todo: property is TaxIncluded should exist after related PR is merged https://github.com/PrestaShop/PrestaShop/pull/31904
-            // $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
+            $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
+            $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
+            $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
             $cartRule->reduction_percent = 0;
             $cartRule->reduction_exclude_special = false;
             $cartRule->reduction_product = DiscountApplicationType::ORDER_WITHOUT_SHIPPING;
@@ -193,7 +191,7 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
         $percentageDiscount = $cartRuleAction->getPercentageDiscount();
         if (null !== $percentageDiscount) {
             $cartRule->reduction_percent = (string) $percentageDiscount->getPercentage();
-            $cartRule->reduction_exclude_special = !$percentageDiscount->appliesToDiscountedProducts();
+            $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
             $cartRule->reduction_amount = 0;
             $cartRule->reduction_currency = 0;
             $cartRule->reduction_tax = false;
@@ -207,7 +205,7 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
         $giftProduct = $cartRuleAction->getGiftProduct();
         if (null !== $giftProduct) {
             $cartRule->gift_product = $giftProduct->getProductId()->getValue();
-            $cartRule->gift_product_attribute = $giftProduct->getProductAttributeId();
+            $cartRule->gift_product_attribute = $giftProduct->getCombinationId() ? $giftProduct->getCombinationId()->getValue() : null;
             $updatableProperties[] = 'gift_product';
             $updatableProperties[] = 'gift_product_attribute';
         }
@@ -278,7 +276,6 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
                     throw new CartRuleConstraintException('Cart rule, which is applied to whole order without shipping, ' . 'must have percentage or amount application type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
                 }
 
-                //@todo: do we really need that LegacyDiscountApplicationType adapter?
                 $cartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
 
                 break;
