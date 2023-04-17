@@ -43,7 +43,8 @@ services:
     alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
     deprecated: ~
 
-  PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper:
+    deprecated: ~
 
   prestashop.adapter.admin.controller.attribute_generator:
     alias: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
