@@ -196,7 +196,8 @@ class ImageManagerCore
         &$targetHeight = null,
         $quality = 5,
         &$sourceWidth = null,
-        &$sourceHeight = null
+        &$sourceHeight = null,
+        $copy_raw_image = false
     ) {
         clearstatcache(true, $sourceFile);
 
@@ -297,6 +298,10 @@ class ImageManagerCore
             $error = self::ERROR_MEMORY_LIMIT;
 
             return false;
+        }
+
+        if ($copy_raw_image) {
+            return file_put_contents($destinationFile, file_get_contents($sourceFile));
         }
 
         $targetWidth = $destinationWidth;
