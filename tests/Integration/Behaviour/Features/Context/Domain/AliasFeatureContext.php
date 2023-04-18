@@ -31,6 +31,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\EditableAlias;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -70,6 +72,31 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         /** @var AliasId[] $aliasIds */
         $aliasIds = SharedStorage::getStorage()->get($reference);
 
-        // @TODO implement assertion logic: Assert::assertEquals($expectedEditableAlias, $editableAlias);
+        foreach ($aliasIds as $aliasId) {
+            $aliasIdValue = $aliasId->getValue();
+            $expectedEditableContact = $this->mapToEditableAlias($aliasIdValue, $data);
+        }
+
+
+        /** @var EditableAlias $editableContact */
+        $editableContact = $this->getQueryBus()->handle(new GetAliasForEditing($aliasId));
+
+        Assert::assertEquals($expectedEditableContact, $editableContact);
+    }
+
+    /**
+     * @param int $aliasId
+     * @param array $data
+     *
+     * @return EditableAlias
+     */
+    private function mapToEditableAlias(int $aliasId, array $data): EditableAlias
+    {
+        return new EditableAlias(
+            $aliasId,
+            $data['alias'],
+            $data['search'],
+            $data['active']
+        );
     }
 }

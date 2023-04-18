@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\Repository;
 
 use Alias;
-use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
