@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
-use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\int;
 
 /**
  * Class GetAliasForEditing is responsible for getting the data related with alias entity.
