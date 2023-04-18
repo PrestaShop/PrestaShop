@@ -14,17 +14,11 @@ Feature: Add basic alias from Back Office (BO)
     Then alias "alias1" should have the following details:
       | alias   | alias1  |
       | search  | alias 1 |
-      | enabled | true    |
 
   Scenario: I add a multiple aliases with basic information
     When I add alias "alias2" with following information:
       | alias  | alias2,aliases2 |
       | search | alias 2         |
     Then alias "alias2" should have the following details:
-      | alias   | alias2  |
-      | search  | alias 2 |
-      | enabled | true    |
-    And alias "alias2" should have the following details:
-      | alias   | aliases2 |
-      | search  | alias 2  |
-      | enabled | true     |
+      | alias  | alias2,aliases2 |
+      | search | alias 2         |

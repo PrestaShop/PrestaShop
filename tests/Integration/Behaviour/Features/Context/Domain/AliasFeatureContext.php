@@ -68,36 +68,30 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     public function assertAlias(string $reference, TableNode $table): void
     {
         $data = $table->getRowsHash();
+        $expectedEditableContacts = $this->mapToEditableAlias($data);
 
         /** @var AliasId[] $aliasIds */
         $aliasIds = SharedStorage::getStorage()->get($reference);
 
-        $expectedEditableContacts = [];
-
+        /** @var AliasId $aliasId */
         foreach ($aliasIds as $aliasId) {
-            $aliasIdValue = $aliasId->getValue();
-            $expectedEditableContacts[] = $this->mapToEditableAlias($aliasIdValue, $data);
+            /** @var AliasForEditing $editableContact */
+            $editableContact = $this->getQueryBus()->handle(new GetAliasForEditing($aliasId));
+
+            Assert::assertEquals($editableContact, $expectedEditableContacts);
         }
-
-        /** @var AliasForEditing $editableContact */
-        $editableContact = $this->getQueryBus()->handle(new GetAliasForEditing($aliasId));
-
-        Assert::assertContains($editableContact, $expectedEditableContacts);
     }
 
     /**
-     * @param int $aliasId
      * @param array $data
      *
      * @return AliasForEditing
      */
-    private function mapToEditableAlias(int $aliasId, array $data): AliasForEditing
+    private function mapToEditableAlias(array $data): AliasForEditing
     {
         return new AliasForEditing(
-            $aliasId,
-            $data['alias'],
-            $data['search'],
-            $data['active']
+            explode(',', $data['alias']),
+            $data['search']
         );
     }
 }
