@@ -69,20 +69,20 @@ class AliasRepository extends AbstractObjectModelRepository
     /**
      * Creates new Alias entity and saves to the database
      *
-     * @param string $search
+     * @param string $searchTerm
      * @param string[] $aliases
      *
      * @return AliasId[]
      *
      * @throws CoreException
      */
-    public function create(string $search, array $aliases): array
+    public function create(string $searchTerm, array $aliases): array
     {
         $aliasIds = [];
 
         foreach ($aliases as $searchAlias) {
             $alias = new Alias();
-            $alias->search = $search;
+            $alias->search = $searchTerm;
             $alias->alias = $searchAlias;
             $alias->active = true;
 

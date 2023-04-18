@@ -24,38 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\AddAliasCommandHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\InvalidAliasIdException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-class AddAliasHandler implements AddAliasCommandHandlerInterface
+/**
+ * Interface for services that handle command which adds new alias
+ */
+interface AddAliasCommandInterface
 {
     /**
-     * @var AliasRepository
+     * @param AddAliasCommand $command
+     *
+     * @return AliasId[]
+     *
+     * @throws InvalidAliasIdException
+     * @throws CoreException
      */
-    private $aliasRepository;
-
-    /**
-     * @param AliasRepository $aliasRepository
-     */
-    public function __construct(
-        AliasRepository $aliasRepository
-    ) {
-        $this->aliasRepository = $aliasRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(AddAliasCommand $command): array
-    {
-        return $this->aliasRepository->create(
-            $command->getSearch(),
-            $command->getAliases()
-        );
-    }
+    public function handle(AddAliasCommand $command): array;
 }
