@@ -32,7 +32,6 @@ use Alias;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;

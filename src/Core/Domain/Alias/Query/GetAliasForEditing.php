@@ -50,7 +50,6 @@ class GetAliasForEditing
      */
     public function getAliasId(): AliasId
     {
-
         return $this->aliasId;
     }
 }
