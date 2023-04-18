@@ -18,3 +18,10 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand
+
+  PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\GetAliasForEditingHandler:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing

@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Alias\Repository;
 use Alias;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -76,5 +78,21 @@ class AliasRepository extends AbstractObjectModelRepository
         }
 
         return $aliasIds;
+    }
+
+    public function get(AliasId $aliasId): Alias
+    {
+        try {
+            /** @var Alias $alias */
+            $alias = $this->getObjectModel(
+                $aliasId->getValue(),
+                Alias::class,
+                AliasException::class
+            );
+        } catch (AliasException $e) {
+            throw new AliasNotFoundException($aliasId, $e->getMessage());
+        }
+
+        return $alias;
     }
 }

@@ -26,35 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Alias\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\GetAliasForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\EditableAlias;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 
-class GetAliasForEditingHandler implements GetAliasForEditingHandlerInterface
+class AliasNotFoundException extends AliasException
 {
     /**
-     * @var AliasRepository
+     * @var AliasId
      */
-    private $aliasRepository;
+    private $aliasId;
 
-    public function __construct(
-        AliasRepository $aliasRepository
-    ) {
-        $this->aliasRepository = $aliasRepository;
+    /**
+     * @param AliasId $aliasId
+     * @param $message
+     * @param $code
+     * @param $previous
+     */
+    public function __construct(AliasId $aliasId, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->aliasId = $aliasId;
     }
 
-    public function handle(GetAliasForEditing $query): EditableAlias
+    /**
+     * @return AliasId
+     */
+    public function getAliasId(): AliasId
     {
-        $alias = $this->aliasRepository->get($query->getAliasId());
-
-        return new EditableAlias(
-            $alias->id,
-            $alias->alias,
-            $alias->search,
-            $alias->active
-        );
+        return $this->aliasId;
     }
 }
