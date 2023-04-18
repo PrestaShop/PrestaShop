@@ -41,16 +41,16 @@ class AddAliasCommand
     /**
      * @var string
      */
-    private $search;
+    private $searchTerm;
 
     /**
      * @param string[] $aliases
-     * @param string $search
+     * @param string $searchTerm
      */
-    public function __construct(array $aliases, string $search)
+    public function __construct(array $aliases, string $searchTerm)
     {
         $this->aliases = $aliases;
-        $this->search = $search;
+        $this->searchTerm = $searchTerm;
     }
 
     /**
@@ -64,8 +64,8 @@ class AddAliasCommand
     /**
      * @return string
      */
-    public function getSearch(): string
+    public function getSearchTerm(): string
     {
-        return $this->search;
+        return $this->searchTerm;
     }
 }

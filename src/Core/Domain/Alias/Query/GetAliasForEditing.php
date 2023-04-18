@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\int;
 
 /**
  * Class GetAliasForEditing is responsible for getting the data related with alias entity.
@@ -40,9 +41,9 @@ class GetAliasForEditing
      */
     private $aliasId;
 
-    public function __construct(AliasId $aliasId)
+    public function __construct(int $aliasId)
     {
-        $this->aliasId = $aliasId;
+        $this->aliasId = new AliasId($aliasId);
     }
 
     /**
@@ -50,6 +51,7 @@ class GetAliasForEditing
      */
     public function getAliasId(): AliasId
     {
+
         return $this->aliasId;
     }
 }

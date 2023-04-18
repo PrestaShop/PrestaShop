@@ -41,18 +41,18 @@ class AliasForEditing
     /**
      * @var string
      */
-    private $search;
+    private $searchTerm;
 
     public function __construct(
         array $aliases,
         string $search
     ) {
         $this->aliases = $aliases;
-        $this->search = $search;
+        $this->searchTerm = $search;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getAliases(): array
     {
@@ -62,8 +62,8 @@ class AliasForEditing
     /**
      * @return string
      */
-    public function getSearch(): string
+    public function getSearchTerm(): string
     {
-        return $this->search;
+        return $this->searchTerm;
     }
 }

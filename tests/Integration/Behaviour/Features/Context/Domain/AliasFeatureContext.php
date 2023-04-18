@@ -75,10 +75,10 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $aliasIds = SharedStorage::getStorage()->get($reference);
 
         foreach ($aliasIds as $aliasId) {
-            /** @var AliasForEditing $editableContact */
-            $editableContact = $this->getQueryBus()->handle(new GetAliasForEditing($aliasId));
+            /** @var AliasForEditing $aliasForEditing */
+            $aliasForEditing = $this->getQueryBus()->handle(new GetAliasForEditing($aliasId->getValue()));
 
-            Assert::assertEquals($editableContact, $expectedEditableContacts);
+            Assert::assertEquals($aliasForEditing, $expectedEditableContacts);
         }
     }
 

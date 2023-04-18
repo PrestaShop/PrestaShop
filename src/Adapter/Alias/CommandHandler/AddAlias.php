@@ -54,7 +54,7 @@ class AddAlias implements AddAliasHandlerInterface
     public function handle(AddAliasCommand $command): array
     {
         return $this->aliasRepository->create(
-            $command->getSearch(),
+            $command->getSearchTerm(),
             $command->getAliases()
         );
     }
