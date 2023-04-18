@@ -60,5 +60,5 @@ admin_features_update_position:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::updatePositionAction
     _legacy_controller: AdminFeatures
-    position_definition: PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition
+    position_definition: prestashop.core.grid.feature.position_definition
     redirect_route: admin_features_index
