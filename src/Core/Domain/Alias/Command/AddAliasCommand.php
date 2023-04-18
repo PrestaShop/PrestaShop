@@ -43,7 +43,11 @@ class AddAliasCommand
      */
     private $search;
 
-    public function __construct($aliases, $search)
+    /**
+     * @param string[] $aliases
+     * @param string $search
+     */
+    public function __construct(array $aliases, string $search)
     {
         $this->aliases = $aliases;
         $this->search = $search;

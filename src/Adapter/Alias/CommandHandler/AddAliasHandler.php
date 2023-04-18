@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\AddAliasCommandHandlerInterface;
 
-class AddAliasCommandHandler implements AddAliasCommandHandlerInterface
+class AddAliasHandler implements AddAliasCommandHandlerInterface
 {
     /**
      * @var AliasRepository

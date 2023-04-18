@@ -7,19 +7,20 @@ services:
     public: false
 
   PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository:
-    autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator'
 
 
-  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAliasCommandHandler:
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAliasHandler:
     autowire: true
     public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand
+    arguments:
+      [ '@PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository' ]
 
   PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\GetAliasForEditingHandler:
     autowire: true

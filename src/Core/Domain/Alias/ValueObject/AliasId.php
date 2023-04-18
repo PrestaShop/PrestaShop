@@ -43,7 +43,7 @@ class AliasId
      *
      * @throws InvalidAliasIdException
      */
-    public function __construct($aliasId)
+    public function __construct(int $aliasId)
     {
         $this->assertIntegerIsGreaterThanZero($aliasId);
 
@@ -53,7 +53,7 @@ class AliasId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->aliasId;
     }
@@ -63,10 +63,10 @@ class AliasId
      *
      * @throws InvalidAliasIdException
      */
-    private function assertIntegerIsGreaterThanZero($aliasId)
+    private function assertIntegerIsGreaterThanZero(int $aliasId)
     {
-        if (!is_int($aliasId) || 0 > $aliasId) {
-            throw new InvalidAliasIdException(sprintf('Invalid alias id %s supplied. alias id must be positive integer.', var_export($aliasId, true)));
+        if (0 > $aliasId) {
+            throw new InvalidAliasIdException(sprintf('Invalid alias id %s supplied. alias id must be positive integer.', $aliasId));
         }
     }
 }

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Resources\DatabaseDump;
 
 class AliasFeatureContext extends AbstractDomainFeatureContext
 {
@@ -73,13 +74,20 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         /** @var AliasId[] $aliasIds */
         $aliasIds = SharedStorage::getStorage()->get($reference);
 
-        /** @var AliasId $aliasId */
         foreach ($aliasIds as $aliasId) {
             /** @var AliasForEditing $editableContact */
             $editableContact = $this->getQueryBus()->handle(new GetAliasForEditing($aliasId));
 
             Assert::assertEquals($editableContact, $expectedEditableContacts);
         }
+    }
+
+    /**
+     * @BeforeFeature @restore-aliases-before-feature
+     */
+    public static function restoreAliasTablesBeforeFeature(): void
+    {
+        DatabaseDump::restoreTables(['alias']);
     }
 
     /**

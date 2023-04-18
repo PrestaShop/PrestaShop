@@ -62,6 +62,8 @@ class AliasRepository extends AbstractObjectModelRepository
         AliasValidator $aliasValidator
     ) {
         $this->aliasValidator = $aliasValidator;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -87,7 +89,7 @@ class AliasRepository extends AbstractObjectModelRepository
             $this->aliasValidator->validateCreation($alias);
             $this->addObjectModel($alias, CannotAddAliasException::class);
 
-            $aliasIds = new AliasId($alias->id);
+            $aliasIds[] = new AliasId((int) $alias->id);
         }
 
         return $aliasIds;
