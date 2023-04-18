@@ -35,10 +35,6 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  */
 final class FormDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 1;
-    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 2;
-    public const ERROR_COOKIE_SAMESITE_NONE = 3;
-
     /**
      * @deprecated since 8.1 moved to
      * PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError
