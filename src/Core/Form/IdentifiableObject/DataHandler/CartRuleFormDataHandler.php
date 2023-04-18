@@ -73,21 +73,6 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
 
         $command->setCode($informationData['code']);
 
-        if (!empty($data['actions']['discount']['reduction']['value'])) {
-            $discountProductId = null;
-            if (
-                $data['actions']['discount']['discount_application'] === DiscountApplicationType::SPECIFIC_PRODUCT &&
-                !empty($data['actions']['discount']['specific_product'][0]['id'])
-            ) {
-                $discountProductId = (int) $data['actions']['discount']['specific_product'][0]['id'];
-            }
-
-            $command->setDiscountApplication(
-                $data['actions']['discount']['discount_application'],
-                $discountProductId
-            );
-        }
-
         if (!empty($conditionsData['minimum_amount']['amount'])) {
             $amountData = $conditionsData['minimum_amount'];
             $command->setMinimumAmount(
@@ -118,17 +103,28 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
         $actionBuilder = new CartRuleActionBuilder();
 
         if (!empty($actionsData['discount']['reduction']['value'])) {
+            $discountApplicationType = $actionsData['actions']['discount']['discount_application'];
+            if ($discountApplicationType === DiscountApplicationType::SPECIFIC_PRODUCT) {
+                $discountProductId = (int) $actionsData['actions']['discount']['specific_product'][0]['id'];
+            } else {
+                $discountProductId = null;
+            }
+
             $reductionData = $actionsData['discount']['reduction'];
             if ($reductionData['type'] === Reduction::TYPE_AMOUNT) {
                 $actionBuilder->setAmountDiscount(
                     (string) $actionsData['discount']['reduction']['value'],
                     (int) $reductionData['currency'],
-                    (bool) $reductionData['include_tax']
+                    (bool) $reductionData['include_tax'],
+                    $discountApplicationType,
+                    $discountProductId
                 );
             } else {
                 $actionBuilder->setPercentageDiscount(
                     (string) $actionsData['discount']['reduction']['value'],
-                    (bool) $actionsData['discount']['apply_to_discounted_products']
+                    (bool) $actionsData['discount']['apply_to_discounted_products'],
+                    $discountApplicationType,
+                    $discountProductId
                 );
             }
         }

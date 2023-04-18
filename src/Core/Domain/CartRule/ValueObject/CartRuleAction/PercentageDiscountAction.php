@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -55,20 +56,30 @@ final class PercentageDiscountAction implements CartRuleActionInterface
     private $giftProduct;
 
     /**
+     * @var DiscountApplicationType
+     */
+    private $discountApplicationType;
+
+    /**
+     * @param DecimalNumber $reductionValue
+     * @param bool $applyToDiscountedProducts
      * @param bool $freeShipping
+     * @param DiscountApplicationType $discountApplicationType
      * @param GiftProduct|null $giftProduct
      */
     public function __construct(
         DecimalNumber $reductionValue,
         bool $applyToDiscountedProducts,
         bool $freeShipping,
-        GiftProduct $giftProduct = null
+        DiscountApplicationType $discountApplicationType,
+        ?GiftProduct $giftProduct = null
     ) {
         $this->percentageDiscount = new PercentageDiscount(
             $reductionValue,
             $applyToDiscountedProducts
         );
         $this->freeShipping = $freeShipping;
+        $this->discountApplicationType = $discountApplicationType;
         $this->giftProduct = $giftProduct;
     }
 
@@ -102,5 +113,13 @@ final class PercentageDiscountAction implements CartRuleActionInterface
     public function getGiftProduct(): ?GiftProduct
     {
         return $this->giftProduct;
+    }
+
+    /**
+     * @return DiscountApplicationType
+     */
+    public function getDiscountApplicationType(): DiscountApplicationType
+    {
+        return $this->discountApplicationType;
     }
 }

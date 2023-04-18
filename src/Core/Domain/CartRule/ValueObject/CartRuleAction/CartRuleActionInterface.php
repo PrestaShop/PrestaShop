@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -62,4 +63,6 @@ interface CartRuleActionInterface
      * @return GiftProduct|null returns null when not applicable
      */
     public function getGiftProduct(): ?GiftProduct;
+
+    public function getDiscountApplicationType(): ?DiscountApplicationType;
 }

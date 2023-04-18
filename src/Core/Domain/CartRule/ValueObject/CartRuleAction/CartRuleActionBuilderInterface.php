@@ -45,10 +45,17 @@ interface CartRuleActionBuilderInterface
      *
      * @param string $reductionValue
      * @param bool $applyToDiscountedProducts
+     * @param string $discountApplicationType
+     * @param int|null $productId
      *
      * @return CartRuleActionBuilderInterface
      */
-    public function setPercentageDiscount(string $reductionValue, bool $applyToDiscountedProducts): CartRuleActionBuilderInterface;
+    public function setPercentageDiscount(
+        string $reductionValue,
+        bool $applyToDiscountedProducts,
+        string $discountApplicationType,
+        ?int $productId = null
+    ): CartRuleActionBuilderInterface;
 
     /**
      * Set amount discount for cart rule action.
@@ -56,10 +63,18 @@ interface CartRuleActionBuilderInterface
      * @param string $reductionValue
      * @param int $currencyId
      * @param bool $taxIncluded
+     * @param string $discountApplicationType
+     * @param int|null $productId
      *
      * @return CartRuleActionBuilderInterface
      */
-    public function setAmountDiscount(string $reductionValue, int $currencyId, bool $taxIncluded): CartRuleActionBuilderInterface;
+    public function setAmountDiscount(
+        string $reductionValue,
+        int $currencyId,
+        bool $taxIncluded,
+        string $discountApplicationType,
+        ?int $productId = null
+    ): CartRuleActionBuilderInterface;
 
     /**
      * Set the gift product for cart rule action.

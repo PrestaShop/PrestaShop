@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
@@ -149,72 +148,34 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
             $cartRule->reduction_tax = false;
         }
 
-        $discountApplicationType = $command->getDiscountApplicationType();
-
-        if (null !== $discountApplicationType) {
-            $this->fillDiscountApplicationType(
-                $cartRule,
-                $command,
-                $cartRuleAction,
-                $discountApplicationType
-            );
-        }
+        $this->fillDiscountApplicationType(
+            $cartRule,
+            $cartRuleAction
+        );
     }
 
     /**
      * @param CartRule $cartRule
-     * @param AddCartRuleCommand $command
      * @param CartRuleActionInterface $cartRuleAction
-     * @param DiscountApplicationType $discountApplicationType
-     *
-     * @throws CartRuleConstraintException
      */
     private function fillDiscountApplicationType(
         CartRule $cartRule,
-        AddCartRuleCommand $command,
-        CartRuleActionInterface $cartRuleAction,
-        DiscountApplicationType $discountApplicationType
+        CartRuleActionInterface $cartRuleAction
     ): void {
-        $hasAmountDiscount = null !== $cartRuleAction->getAmountDiscount();
-        $hasPercentageDiscount = null !== $cartRuleAction->getPercentageDiscount();
+        $discountApplicationType = $cartRuleAction->getDiscountApplicationType();
 
-        switch ($discountApplicationType->getValue()) {
-            case DiscountApplicationType::SELECTED_PRODUCTS:
-                if (!$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to selected products, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                $cartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
-
-                break;
-            case DiscountApplicationType::CHEAPEST_PRODUCT:
-                if (!$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to cheapest product, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                $cartRule->reduction_product = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
-
-                break;
-            case DiscountApplicationType::SPECIFIC_PRODUCT:
-                if (!$hasPercentageDiscount && !$hasAmountDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to a specific product, ' . 'must have percentage or amount application type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                if (null === $command->getDiscountProductId()) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to a specific product, must have a product specified.', CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT);
-                }
-
-                $cartRule->reduction_product = $command->getDiscountProductId()->getValue();
-
-                break;
-            case DiscountApplicationType::ORDER_WITHOUT_SHIPPING:
-                if (!$hasAmountDiscount && !$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException('Cart rule, which is applied to whole order without shipping, ' . 'must have percentage or amount application type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-                }
-
-                $cartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
-
-                break;
+        if ((!$cartRuleAction->getAmountDiscount() && !$cartRuleAction->getPercentageDiscount()) || !$discountApplicationType) {
+            return;
         }
+
+        // maps new VO values with the legacy values
+        $discountTypeValueMap = [
+            DiscountApplicationType::ORDER_WITHOUT_SHIPPING => LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING,
+            DiscountApplicationType::SELECTED_PRODUCTS => LegacyDiscountApplicationType::SELECTED_PRODUCTS,
+            DiscountApplicationType::CHEAPEST_PRODUCT => LegacyDiscountApplicationType::CHEAPEST_PRODUCT,
+            DiscountApplicationType::SPECIFIC_PRODUCT => $discountApplicationType->getProductId()->getValue(),
+        ];
+
+        $cartRule->reduction_product = $discountTypeValueMap[$discountApplicationType->getType()];
     }
 }

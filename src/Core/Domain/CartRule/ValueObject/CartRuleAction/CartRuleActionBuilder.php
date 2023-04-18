@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -63,6 +64,11 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     private $applyToDiscountedProducts;
 
     /**
+     * @var DiscountApplicationType|null
+     */
+    private $discountApplicationType;
+
+    /**
      * @var GiftProduct|null
      */
     private $giftProduct;
@@ -80,12 +86,17 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setPercentageDiscount(string $reductionValue, bool $applyToDiscountedProducts): CartRuleActionBuilderInterface
-    {
+    public function setPercentageDiscount(
+        string $reductionValue,
+        bool $applyToDiscountedProducts,
+        string $discountApplicationType,
+        ?int $productId = null
+    ): CartRuleActionBuilderInterface {
         if ($this->reduction) {
             throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
         }
 
+        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType, $productId);
         $this->reduction = new Reduction(Reduction::TYPE_PERCENTAGE, $reductionValue);
         $this->applyToDiscountedProducts = $applyToDiscountedProducts;
 
@@ -98,12 +109,15 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     public function setAmountDiscount(
         string $reductionValue,
         int $currencyId,
-        bool $taxIncluded
+        bool $taxIncluded,
+        string $discountApplicationType,
+        ?int $productId = null
     ): CartRuleActionBuilderInterface {
         if ($this->reduction) {
             throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
         }
 
+        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType, $productId);
         $this->reduction = new Reduction(Reduction::TYPE_AMOUNT, $reductionValue);
         $this->currencyId = new CurrencyId($currencyId);
         $this->taxIncluded = $taxIncluded;
@@ -136,6 +150,7 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
             return new AmountDiscountAction(
                 new Money($this->reduction->getValue(), $this->currencyId, $this->taxIncluded),
                 $this->freeShipping,
+                $this->discountApplicationType,
                 $this->giftProduct
             );
         }
@@ -144,6 +159,7 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
             $this->reduction->getValue(),
             $this->applyToDiscountedProducts,
             $this->freeShipping,
+            $this->discountApplicationType,
             $this->giftProduct
         );
     }
