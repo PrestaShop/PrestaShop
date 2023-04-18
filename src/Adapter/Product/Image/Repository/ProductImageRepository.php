@@ -589,6 +589,15 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
                 ->setParameter('shopId', (int) $image['id_shop'])
                 ->execute()
             ;
+
+            $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'image')
+                ->set($this->dbPrefix . 'image' . '.cover', ':cover')
+                ->setParameter('cover', $newValue)
+                ->andWhere($this->dbPrefix . 'image' . '.id_image = :imageId')
+                ->setParameter('imageId', (int) $image['id_image'])
+                ->execute()
+            ;
         }
     }
 
