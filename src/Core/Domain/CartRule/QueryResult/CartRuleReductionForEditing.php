@@ -28,99 +28,101 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-class EditableCartRuleRestrictions
+use PrestaShop\Decimal\DecimalNumber;
+
+class CartRuleReductionForEditing
 {
     /**
-     * @var bool
+     * @var DecimalNumber
      */
-    private $countryRestriction;
+    private $percent;
+
+    /**
+     * @var DecimalNumber
+     */
+    private $amount;
 
     /**
      * @var bool
      */
-    private $carrierRestriction;
+    private $tax;
+
+    /**
+     * @var int|null
+     */
+    private $currencyId;
+
+    /**
+     * @var int|null
+     */
+    private $productId;
 
     /**
      * @var bool
      */
-    private $groupRestriction;
-
-    /**
-     * @var bool
-     */
-    private $cartRuleRestriction;
-
-    /**
-     * @var bool
-     */
-    private $productRestriction;
-
-    /**
-     * @var bool
-     */
-    private $shopRestriction;
+    private $applyToDiscountedProducts;
 
     public function __construct(
-        bool $countryRestriction,
-        bool $carrierRestriction,
-        bool $groupRestriction,
-        bool $cartRuleRestriction,
-        bool $productRestriction,
-        bool $shopRestriction
+        DecimalNumber $percent,
+        DecimalNumber $amount,
+        bool $tax,
+        ?int $currencyId,
+        ?int $productId,
+        bool $excludeSpecial
     ) {
-        $this->countryRestriction = $countryRestriction;
-        $this->carrierRestriction = $carrierRestriction;
-        $this->groupRestriction = $groupRestriction;
-        $this->cartRuleRestriction = $cartRuleRestriction;
-        $this->productRestriction = $productRestriction;
-        $this->shopRestriction = $shopRestriction;
+        $this->percent = $percent;
+        $this->amount = $amount;
+        $this->tax = $tax;
+        $this->currencyId = $currencyId;
+        $this->productId = $productId;
+        $this->applyToDiscountedProducts = $excludeSpecial;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getPercent(): DecimalNumber
+    {
+        return $this->percent;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getAmount(): DecimalNumber
+    {
+        return $this->amount;
     }
 
     /**
      * @return bool
      */
-    public function isCountryRestriction(): bool
+    public function isTax(): bool
     {
-        return $this->countryRestriction;
+        return $this->tax;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCurrencyId(): ?int
+    {
+        return $this->currencyId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getProductId(): ?int
+    {
+        return $this->productId;
     }
 
     /**
      * @return bool
      */
-    public function isCarrierRestriction(): bool
+    public function applyToDiscountedProducts(): bool
     {
-        return $this->carrierRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGroupRestriction(): bool
-    {
-        return $this->groupRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCartRuleRestriction(): bool
-    {
-        return $this->cartRuleRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isProductRestriction(): bool
-    {
-        return $this->productRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShopRestriction(): bool
-    {
-        return $this->shopRestriction;
+        return $this->applyToDiscountedProducts;
     }
 }

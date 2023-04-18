@@ -28,101 +28,114 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-use PrestaShop\Decimal\DecimalNumber;
-
-class EditableCartRuleReduction
+class CartRuleInformationForEditing
 {
     /**
-     * @var DecimalNumber
+     * @var array
      */
-    private $percent;
+    private $localizedNames;
 
     /**
-     * @var DecimalNumber
+     * @var string
      */
-    private $amount;
+    private $description;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $tax;
-
-    /**
-     * @var int|null
-     */
-    private $currencyId;
-
-    /**
-     * @var int|null
-     */
-    private $productId;
+    private $code;
 
     /**
      * @var bool
      */
-    private $applyToDiscountedProducts;
+    private $highlight;
+
+    /**
+     * @var bool
+     */
+    private $partialUse;
+
+    /**
+     * @var int
+     */
+    private $priority;
+
+    /**
+     * @var bool
+     */
+    private $enabled;
 
     public function __construct(
-        DecimalNumber $percent,
-        DecimalNumber $amount,
-        bool $tax,
-        ?int $currencyId,
-        ?int $productId,
-        bool $excludeSpecial
+        array $localizedNames,
+        string $description,
+        string $code,
+        bool $highlight,
+        bool $partialUse,
+        int $priority,
+        bool $enabled
     ) {
-        $this->percent = $percent;
-        $this->amount = $amount;
-        $this->tax = $tax;
-        $this->currencyId = $currencyId;
-        $this->productId = $productId;
-        $this->applyToDiscountedProducts = $excludeSpecial;
+        $this->localizedNames = $localizedNames;
+        $this->description = $description;
+        $this->code = $code;
+        $this->highlight = $highlight;
+        $this->partialUse = $partialUse;
+        $this->priority = $priority;
+        $this->enabled = $enabled;
     }
 
     /**
-     * @return DecimalNumber
+     * @return array
      */
-    public function getPercent(): DecimalNumber
+    public function getLocalizedNames(): array
     {
-        return $this->percent;
+        return $this->localizedNames;
     }
 
     /**
-     * @return DecimalNumber
+     * @return string
      */
-    public function getAmount(): DecimalNumber
+    public function getDescription(): string
     {
-        return $this->amount;
+        return $this->description;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isTax(): bool
+    public function getCode(): string
     {
-        return $this->tax;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCurrencyId(): ?int
-    {
-        return $this->currencyId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getProductId(): ?int
-    {
-        return $this->productId;
+        return $this->code;
     }
 
     /**
      * @return bool
      */
-    public function applyToDiscountedProducts(): bool
+    public function isHighlight(): bool
     {
-        return $this->applyToDiscountedProducts;
+        return $this->highlight;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPartialUse(): bool
+    {
+        return $this->partialUse;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
     }
 }

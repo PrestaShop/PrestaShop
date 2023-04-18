@@ -35,7 +35,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
@@ -73,7 +73,7 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CartRule $cartRule */
         $cartRule = $this->getSharedStorage()->get($cartRuleReference);
-        /** @var EditableCartRule $editableCartRule */
+        /** @var CartRuleForEditing $editableCartRule */
         $editableCartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing((int) $cartRule->id));
 
         $data = $this->localizeByRows($tableNode);

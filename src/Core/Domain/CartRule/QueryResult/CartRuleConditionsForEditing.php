@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
 
-class EditableCartRuleConditions
+class CartRuleConditionsForEditing
 {
     /**
      * @var CustomerIdInterface
@@ -59,12 +59,12 @@ class EditableCartRuleConditions
     private $quantityPerUser;
 
     /**
-     * @var EditableCartRuleMinimum|null
+     * @var CartRuleMinimumForEditing|null
      */
     private $minimum;
 
     /**
-     * @var EditableCartRuleRestrictions
+     * @var CartRuleRestrictionsForEditing
      */
     private $restrictions;
 
@@ -74,8 +74,8 @@ class EditableCartRuleConditions
         ?DateTime $dateTo,
         int $quantity,
         int $quantityPerUser,
-        ?EditableCartRuleMinimum $minimum,
-        EditableCartRuleRestrictions $restrictions
+        ?CartRuleMinimumForEditing $minimum,
+        CartRuleRestrictionsForEditing $restrictions
     ) {
         $this->customerId = $customerId;
         $this->dateFrom = $dateFrom;
@@ -127,17 +127,17 @@ class EditableCartRuleConditions
     }
 
     /**
-     * @return EditableCartRuleMinimum|null
+     * @return CartRuleMinimumForEditing|null
      */
-    public function getMinimum(): ?EditableCartRuleMinimum
+    public function getMinimum(): ?CartRuleMinimumForEditing
     {
         return $this->minimum;
     }
 
     /**
-     * @return EditableCartRuleRestrictions
+     * @return CartRuleRestrictionsForEditing
      */
-    public function getRestrictions(): EditableCartRuleRestrictions
+    public function getRestrictions(): CartRuleRestrictionsForEditing
     {
         return $this->restrictions;
     }

@@ -28,71 +28,84 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-use PrestaShop\Decimal\DecimalNumber;
-
-class EditableCartRuleMinimum
+class CartRuleActionForEditing
 {
     /**
-     * @var DecimalNumber
-     */
-    private $amount;
-
-    /**
      * @var bool
      */
-    private $amountTax;
+    private $freeShipping;
 
     /**
-     * @var int
+     * @var CartRuleReductionForEditing
      */
-    private $currencyId;
+    private $reduction;
 
     /**
-     * @var bool
+     * @var int|null
      */
-    private $shipping;
+    private $giftProductId;
+
+    /**
+     * @var int|null
+     */
+    private $giftCombinationId;
+
+    /**
+     * @var string
+     */
+    private $discountApplicationType;
 
     public function __construct(
-        DecimalNumber $amount,
-        bool $amountTax,
-        int $currencyId,
-        bool $shipping
+        bool $freeShipping,
+        CartRuleReductionForEditing $reduction,
+        string $discountApplicationType,
+        ?int $giftProductId,
+        ?int $giftCombinationId
     ) {
-        $this->amount = $amount;
-        $this->amountTax = $amountTax;
-        $this->currencyId = $currencyId;
-        $this->shipping = $shipping;
-    }
-
-    /**
-     * @return DecimalNumber
-     */
-    public function getAmount(): DecimalNumber
-    {
-        return $this->amount;
+        $this->freeShipping = $freeShipping;
+        $this->reduction = $reduction;
+        $this->discountApplicationType = $discountApplicationType;
+        $this->giftProductId = $giftProductId;
+        $this->giftCombinationId = $giftCombinationId;
     }
 
     /**
      * @return bool
      */
-    public function isAmountTax(): bool
+    public function isFreeShipping(): bool
     {
-        return $this->amountTax;
+        return $this->freeShipping;
     }
 
     /**
-     * @return int
+     * @return CartRuleReductionForEditing
      */
-    public function getCurrencyId(): int
+    public function getReduction(): CartRuleReductionForEditing
     {
-        return $this->currencyId;
+        return $this->reduction;
     }
 
     /**
-     * @return bool
+     * @return int|null
      */
-    public function isShipping(): bool
+    public function getGiftProductId(): ?int
     {
-        return $this->shipping;
+        return $this->giftProductId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getGiftCombinationId(): ?int
+    {
+        return $this->giftCombinationId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDiscountApplicationType(): string
+    {
+        return $this->discountApplicationType;
     }
 }

@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 /**
  * Provides data for editing CatalogPriceRule
  */
-class EditableCartRule
+class CartRuleForEditing
 {
     /**
      * @var CartRuleId
@@ -42,17 +42,17 @@ class EditableCartRule
     private $cartRuleId;
 
     /**
-     * @var EditableCartRuleInformation
+     * @var CartRuleInformationForEditing
      */
     private $information;
 
     /**
-     * @var EditableCartRuleConditions
+     * @var CartRuleConditionsForEditing
      */
     private $conditions;
 
     /**
-     * @var EditableCartRuleActions
+     * @var CartRuleActionForEditing
      */
     private $actions;
 
@@ -68,9 +68,9 @@ class EditableCartRule
 
     public function __construct(
         CartRuleId $cartRuleId,
-        EditableCartRuleInformation $information,
-        EditableCartRuleConditions $conditions,
-        EditableCartRuleActions $actions,
+        CartRuleInformationForEditing $information,
+        CartRuleConditionsForEditing $conditions,
+        CartRuleActionForEditing $actions,
         ?DateTime $dateAdd,
         ?DateTime $dateUpd
     ) {
@@ -91,25 +91,25 @@ class EditableCartRule
     }
 
     /**
-     * @return EditableCartRuleInformation
+     * @return CartRuleInformationForEditing
      */
-    public function getInformation(): EditableCartRuleInformation
+    public function getInformation(): CartRuleInformationForEditing
     {
         return $this->information;
     }
 
     /**
-     * @return EditableCartRuleConditions
+     * @return CartRuleConditionsForEditing
      */
-    public function getConditions(): EditableCartRuleConditions
+    public function getConditions(): CartRuleConditionsForEditing
     {
         return $this->conditions;
     }
 
     /**
-     * @return EditableCartRuleActions
+     * @return CartRuleActionForEditing
      */
-    public function getActions(): EditableCartRuleActions
+    public function getActions(): CartRuleActionForEditing
     {
         return $this->actions;
     }

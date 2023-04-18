@@ -28,114 +28,99 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-class EditableCartRuleInformation
+class CartRuleRestrictionsForEditing
 {
     /**
-     * @var array
+     * @var bool
      */
-    private $localizedNames;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var string
-     */
-    private $code;
+    private $countryRestriction;
 
     /**
      * @var bool
      */
-    private $highlight;
+    private $carrierRestriction;
 
     /**
      * @var bool
      */
-    private $partialUse;
-
-    /**
-     * @var int
-     */
-    private $priority;
+    private $groupRestriction;
 
     /**
      * @var bool
      */
-    private $enabled;
+    private $cartRuleRestriction;
+
+    /**
+     * @var bool
+     */
+    private $productRestriction;
+
+    /**
+     * @var bool
+     */
+    private $shopRestriction;
 
     public function __construct(
-        array $localizedNames,
-        string $description,
-        string $code,
-        bool $highlight,
-        bool $partialUse,
-        int $priority,
-        bool $enabled
+        bool $countryRestriction,
+        bool $carrierRestriction,
+        bool $groupRestriction,
+        bool $cartRuleRestriction,
+        bool $productRestriction,
+        bool $shopRestriction
     ) {
-        $this->localizedNames = $localizedNames;
-        $this->description = $description;
-        $this->code = $code;
-        $this->highlight = $highlight;
-        $this->partialUse = $partialUse;
-        $this->priority = $priority;
-        $this->enabled = $enabled;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLocalizedNames(): array
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCode(): string
-    {
-        return $this->code;
+        $this->countryRestriction = $countryRestriction;
+        $this->carrierRestriction = $carrierRestriction;
+        $this->groupRestriction = $groupRestriction;
+        $this->cartRuleRestriction = $cartRuleRestriction;
+        $this->productRestriction = $productRestriction;
+        $this->shopRestriction = $shopRestriction;
     }
 
     /**
      * @return bool
      */
-    public function isHighlight(): bool
+    public function isCountryRestriction(): bool
     {
-        return $this->highlight;
+        return $this->countryRestriction;
     }
 
     /**
      * @return bool
      */
-    public function isPartialUse(): bool
+    public function isCarrierRestriction(): bool
     {
-        return $this->partialUse;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPriority(): int
-    {
-        return $this->priority;
+        return $this->carrierRestriction;
     }
 
     /**
      * @return bool
      */
-    public function isEnabled(): bool
+    public function isGroupRestriction(): bool
     {
-        return $this->enabled;
+        return $this->groupRestriction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCartRuleRestriction(): bool
+    {
+        return $this->cartRuleRestriction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProductRestriction(): bool
+    {
+        return $this->productRestriction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShopRestriction(): bool
+    {
+        return $this->shopRestriction;
     }
 }

@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusComma
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
@@ -237,7 +237,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var EditableCartRule $cartRule */
+        /** @var CartRuleForEditing $cartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->getInformation()->isEnabled() === true) {
             throw new RuntimeException(sprintf('Cart rule %s is not disabled', $cartRuleReference));
@@ -255,7 +255,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var EditableCartRule $cartRule */
+        /** @var CartRuleForEditing $cartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->getInformation()->isEnabled() === false) {
             throw new RuntimeException(sprintf('Cart rule %s is not enabled', $cartRuleReference));
