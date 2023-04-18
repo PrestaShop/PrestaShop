@@ -47,16 +47,6 @@ class AliasValidator extends AbstractObjectModelValidator
      */
     public function validate(Alias $alias): void
     {
-        $this->validateAliasType($alias);
-    }
-
-    /**
-     * @param Alias $alias
-     *
-     * @throws AliasConstraintException|CoreException
-     */
-    private function validateAliasType(Alias $alias): void
-    {
         $this->validateAliasProperty($alias, 'search', AliasConstraintException::INVALID_SEARCH);
         $this->validateAliasProperty($alias, 'alias', AliasConstraintException::INVALID_ALIAS);
         $this->validateAliasProperty($alias, 'active', AliasConstraintException::INVALID_VISIBILITY);

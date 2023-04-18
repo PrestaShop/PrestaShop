@@ -112,20 +112,20 @@ class AliasRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param string $search
+     * @param string $searchTerm
      *
      * @return string[]
      *
      * @throws Exception
      * @throws \Doctrine\DBAL\Exception
      */
-    public function getAliasesBySearch(string $search): array
+    public function getAliasesBySearchTerm(string $searchTerm): array
     {
         $qb = $this->connection->createQueryBuilder()
             ->addSelect('a.alias')
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :search')
-            ->setParameter('search', $search)
+            ->setParameter('search', $searchTerm)
         ;
 
         return $qb->execute()->fetchFirstColumn();
