@@ -100,7 +100,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         /** @var EditableCategory $editableCategory */
         $editableCategory = $this->queryBus->handle(new GetCategoryForEditing($categoryId));
 
-        $coverImages = $thumbnailImages = null;
+        $coverImages = $thumbnailImages = [];
         $categoryId = (int) $categoryId;
         $categoryUrl = $this->categoryProvider->getUrl($categoryId, '{friendly-url}');
         $coverImage = $editableCategory->getCoverImage();
