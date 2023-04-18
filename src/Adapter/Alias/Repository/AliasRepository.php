@@ -121,7 +121,6 @@ class AliasRepository extends AbstractObjectModelRepository
      */
     public function getAliasesBySearch(string $search): array
     {
-
         $qb = $this->connection->createQueryBuilder()
             ->addSelect('a.alias')
             ->from($this->dbPrefix . 'alias', 'a')
