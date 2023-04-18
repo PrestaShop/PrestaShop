@@ -181,6 +181,7 @@ class ImageManagerCore
      * @param int $quality Needed by AdminImportController to speed up the import process
      * @param int $sourceWidth Needed by AdminImportController to speed up the import process
      * @param int $sourceHeight Needed by AdminImportController to speed up the import process
+     * @param bool $copy_raw_image To ignore resampling the original image and just save the raw image
      *
      *@return bool Operation result
      */
