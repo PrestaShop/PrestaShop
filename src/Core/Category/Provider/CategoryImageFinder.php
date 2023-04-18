@@ -28,43 +28,34 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Category\Provider;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use Symfony\Component\Finder\Finder;
 
 /**
- * This class is responsible for providing available category menu thumbnail keys.
- * Category can only have 3 thumbnails (0,1,2).
- * We check if thumbnails with those id's exist, if they do they are no longer available.
+ * Finds used thumb images for specific category id
  */
-class MenuThumbnailAvailableKeyProvider
+class CategoryImageFinder extends Finder
 {
     /**
-     * @var CategoryImageFinder
+     * @var string
      */
-    private $categoryImageFinder;
+    private $categoryImgDir;
 
-    public function __construct(CategoryImageFinder $categoryImageFinder)
+    /**
+     * @param string $categoryImgDir
+     */
+    public function __construct(string $categoryImgDir)
     {
-        $this->categoryImageFinder = $categoryImageFinder;
+        parent::__construct();
+        $this->categoryImgDir = $categoryImgDir;
     }
 
     /**
      * @param int $categoryId
      *
-     * @return array<int, int>
+     * @return Finder
      */
-    public function getAvailableKeys(int $categoryId): array
+    public function findMenuThumbnails(int $categoryId): Finder
     {
-        $usedKeys = [];
-
-        foreach ($this->categoryImageFinder->findMenuThumbnails($categoryId) as $file) {
-            $matches = [];
-
-            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file->getFilename(), $matches) === 1) {
-                $usedKeys[] = (int) $matches[1];
-            }
-        }
-
-        return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
+        return $this->files()->name('/^' . $categoryId . '-([0-9])?_thumb.jpg/i')->in($this->categoryImgDir);
     }
 }

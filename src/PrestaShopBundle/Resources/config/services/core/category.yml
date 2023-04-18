@@ -12,4 +12,11 @@ services:
     deprecated: ~
 
   PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider:
-    - !php/const _PS_CAT_IMG_DIR_
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Category\Provider\CategoryImageFinder:
+    autowire: true
+    public: false
+    arguments:
+      - !php/const _PS_CAT_IMG_DIR_
