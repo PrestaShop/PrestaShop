@@ -45,7 +45,7 @@ class AliasValidator extends AbstractObjectModelValidator
      *
      * @throws CoreException
      */
-    public function validateCreation(Alias $alias): void
+    public function validate(Alias $alias): void
     {
         $this->validateAliasType($alias);
     }

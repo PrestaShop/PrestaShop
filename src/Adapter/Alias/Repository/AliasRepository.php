@@ -70,7 +70,7 @@ class AliasRepository extends AbstractObjectModelRepository
      * Creates new Alias entity and saves to the database
      *
      * @param string $search
-     * @param array $aliases
+     * @param string[] $aliases
      *
      * @return AliasId[]
      *
@@ -86,7 +86,7 @@ class AliasRepository extends AbstractObjectModelRepository
             $alias->alias = $searchAlias;
             $alias->active = true;
 
-            $this->aliasValidator->validateCreation($alias);
+            $this->aliasValidator->validate($alias);
             $this->addObjectModel($alias, CannotAddAliasException::class);
 
             $aliasIds[] = new AliasId((int) $alias->id);
