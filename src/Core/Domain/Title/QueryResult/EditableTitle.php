@@ -23,30 +23,66 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
+namespace PrestaShop\PrestaShop\Core\Domain\Title\QueryResult;
 
 /**
- * Handles command that delete title
+ * Transfers state data for editing
  */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class EditableTitle
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws CannotDeleteTitleException
+     * @var int
      */
-    public function handle(DeleteTitleCommand $command): void
+    protected $titleId;
+
+    /**
+     * @var array<string>
+     */
+    protected $localizedNames;
+
+    /**
+     * @var int
+     */
+    protected $gender;
+
+    /**
+     * @param int $titleId
+     * @param array<string> $localizedNames
+     * @param int $gender
+     */
+    public function __construct(
+        int $titleId,
+        array $localizedNames,
+        int $gender
+    ) {
+        $this->titleId = $titleId;
+        $this->localizedNames = $localizedNames;
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTitleId(): int
     {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
+        return $this->titleId;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGender(): int
+    {
+        return $this->gender;
     }
 }

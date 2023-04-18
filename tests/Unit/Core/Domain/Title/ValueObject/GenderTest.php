@@ -26,27 +26,47 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+namespace Tests\Unit\Core\Domain\Title\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender;
 
-/**
- * Handles command that delete title
- */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class GenderTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws CannotDeleteTitleException
-     */
-    public function handle(DeleteTitleCommand $command): void
+    public function testItThrowsExceptionWhenTypeIsNotGood(): void
     {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
+        $this->expectException(TitleConstraintException::class);
+        $gender = new Gender(4);
+    }
+
+    /**
+     * @dataProvider dataProviderGender
+     *
+     * @param int $gender
+     *
+     * @return void
+     *
+     * @throws TitleConstraintException
+     */
+    public function testGoodValues(int $gender): void
+    {
+        $genderId = new Gender($gender);
+        $this->assertEquals($genderId->getValue(), $gender);
+    }
+
+    public function dataProviderGender(): array
+    {
+        return [
+            [
+                Gender::TYPE_MALE,
+            ],
+            [
+                Gender::TYPE_FEMALE,
+            ],
+            [
+                Gender::TYPE_OTHER,
+            ],
+        ];
     }
 }

@@ -28,51 +28,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Title\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
-use Throwable;
-
 /**
- * Is raised when title or titles cannot be deleted
+ * Is thrown when error occurs when uploading title image
  */
-class DeleteTitleException extends TitleException
+class TitleImageUploadingException extends TitleException
 {
     /**
-     * When fails to delete single title
+     * @var int Code is used when there are less memory than needed to upload image
      */
-    public const FAILED_DELETE = 1;
+    public const MEMORY_LIMIT_RESTRICTION = 1;
 
     /**
-     * When fails to delete titles in bulk actions
+     * @var int Code is used when unexpected error occurs while uploading image
      */
-    public const FAILED_BULK_DELETE = 2;
-
-    /**
-     * @param TitleId $titleId
-     * @param Throwable|null $previous
-     *
-     * @return static
-     */
-    public static function createDeleteFailure(TitleId $titleId, Throwable $previous = null): self
-    {
-        return new static(
-            sprintf('Cannot delete title with id "%d"', $titleId->getValue()),
-            static::FAILED_DELETE,
-            $previous
-        );
-    }
-
-    /**
-     * @param TitleId $titleId
-     * @param Throwable|null $previous
-     *
-     * @return static
-     */
-    public static function createBulkDeleteFailure(TitleId $titleId, Throwable $previous = null): self
-    {
-        return new static(
-            sprintf('Cannot delete title with id "%d"', $titleId->getValue()),
-            static::FAILED_BULK_DELETE,
-            $previous
-        );
-    }
+    public const UNEXPECTED_ERROR = 2;
 }

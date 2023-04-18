@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,31 +21,16 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-declare(strict_types=1);
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+{% block content %}
+  {% include '@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Title/Blocks/form.html.twig' %}
+{% endblock %}
 
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
+{% block javascripts %}
+  {{ parent() }}
 
-/**
- * Handles command that delete title
- */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
-{
-    /**
-     * {@inheritdoc}
-     *
-     * @throws CannotDeleteTitleException
-     */
-    public function handle(DeleteTitleCommand $command): void
-    {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
-    }
-}
+  <script src="{{ asset('themes/new-theme/public/title_form.bundle.js') }}"></script>
+{% endblock %}

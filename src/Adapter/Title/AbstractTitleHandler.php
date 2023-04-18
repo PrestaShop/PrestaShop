@@ -26,27 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Title;
 
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\TitleImageUploader;
+use PrestaShop\PrestaShop\Adapter\Title\Repository\TitleRepository;
 
-/**
- * Handles command that delete title
- */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class AbstractTitleHandler
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws CannotDeleteTitleException
+     * @var TitleRepository
      */
-    public function handle(DeleteTitleCommand $command): void
+    protected $titleRepository;
+
+    /**
+     * @var TitleImageUploader
+     */
+    protected $titleImageUploader;
+
+    /**
+     * @param TitleRepository $titleRepository
+     * @param TitleImageUploader $titleImageUploader
+     */
+    public function __construct(TitleRepository $titleRepository, TitleImageUploader $titleImageUploader)
     {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
+        $this->titleRepository = $titleRepository;
+        $this->titleImageUploader = $titleImageUploader;
     }
 }

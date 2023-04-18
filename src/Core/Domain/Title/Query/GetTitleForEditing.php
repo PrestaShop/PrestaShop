@@ -26,27 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Title\Query;
 
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 
 /**
- * Handles command that delete title
+ * Gets state for editing in back office
  */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class GetTitleForEditing
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws CannotDeleteTitleException
+     * @var TitleId
      */
-    public function handle(DeleteTitleCommand $command): void
+    private $titleId;
+
+    /**
+     * @param int $titleId
+     */
+    public function __construct(int $titleId)
     {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
+        $this->titleId = new TitleId($titleId);
+    }
+
+    /**
+     * @return TitleId
+     */
+    public function getTitleId(): TitleId
+    {
+        return $this->titleId;
     }
 }

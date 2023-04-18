@@ -32,4 +32,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Title\Exception;
 class TitleConstraintException extends TitleException
 {
     public const INVALID_ID = 1;
+    public const INVALID_NAME = 2;
+    public const INVALID_TYPE = 3;
 }

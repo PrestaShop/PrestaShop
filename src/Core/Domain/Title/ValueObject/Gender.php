@@ -26,27 +26,55 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Title\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
+use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleConstraintException;
 
-/**
- * Handles command that delete title
- */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class Gender
 {
+    public const TYPE_MALE = 0;
+    public const TYPE_FEMALE = 1;
+    public const TYPE_OTHER = 2;
+
     /**
-     * {@inheritdoc}
-     *
-     * @throws CannotDeleteTitleException
+     * @var int
      */
-    public function handle(DeleteTitleCommand $command): void
+    protected $type;
+
+    /**
+     * @param int $gender
+     *
+     * @throws TitleConstraintException
+     */
+    public function __construct(int $gender)
     {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
+        $this->assertIsAuthValues($gender);
+        $this->type = $gender;
+    }
+
+    /**
+     * @param int $gender
+     *
+     * @return void
+     *
+     * @throws TitleConstraintException
+     */
+    protected function assertIsAuthValues(int $gender): void
+    {
+        if (!in_array($gender, [
+            self::TYPE_MALE,
+            self::TYPE_FEMALE,
+            self::TYPE_OTHER,
+        ])) {
+            throw new TitleConstraintException(sprintf('Invalid type : "%d".', $gender), TitleConstraintException::INVALID_TYPE);
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->type;
     }
 }

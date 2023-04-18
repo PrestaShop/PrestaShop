@@ -235,3 +235,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider:
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider:
+    autowire: true

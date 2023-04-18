@@ -26,27 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Title;
 
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
-
-/**
- * Handles command that delete title
- */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+final class TitleSettings
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws CannotDeleteTitleException
+     * Default Image Height, by defaut, in pixels
      */
-    public function handle(DeleteTitleCommand $command): void
-    {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
-    }
+    public const DEFAULT_IMAGE_HEIGHT = 16;
+
+    /**
+     * Default Image Width, by defaut, in pixels
+     */
+    public const DEFAULT_IMAGE_WIDTH = 16;
 }

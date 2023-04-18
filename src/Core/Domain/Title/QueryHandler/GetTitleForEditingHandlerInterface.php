@@ -24,29 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Title\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\CannotDeleteTitleException;
+use PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Title\QueryResult\EditableTitle;
 
 /**
- * Handles command that delete title
+ * Defines contract for GetTitleForEditingHandler
  */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+interface GetTitleForEditingHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param GetTitleForEditing $query
      *
-     * @throws CannotDeleteTitleException
+     * @return EditableTitle
      */
-    public function handle(DeleteTitleCommand $command): void
-    {
-        $this->titleRepository->delete(
-            $this->titleRepository->get($command->getTitleId())
-        );
-    }
+    public function handle(GetTitleForEditing $query): EditableTitle;
 }
