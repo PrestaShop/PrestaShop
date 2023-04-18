@@ -69,7 +69,7 @@ export default class NavBar {
             $(this)
               .find('ul.submenu')
               .css('top', itemOffsetTop);
-          }
+          },
         ).on('mouseleave',
           function () {
             $(this).removeClass('link-hover');

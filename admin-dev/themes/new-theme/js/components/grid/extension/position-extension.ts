@@ -76,7 +76,7 @@ export default class PositionExtension {
           $(this)
             .closest('tr')
             .addClass('hover');
-        }
+        },
       ).on(
         'mouseleave',
         function () {

@@ -49,16 +49,21 @@ export default function () {
       refreshDefaultImage();
     });
 
-    $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te').on('keyup', function () {
-      const self = $(this);
-      const price = window.priceCalculation.normalizePrice(self.val());
+    $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te')
+      .on('keyup', function () {
+        const self = $(this);
+        const price = window.priceCalculation.normalizePrice(self.val());
 
-      if (self.attr('id') === 'product_combination_bulk_impact_on_price_ti') {
-        $('#product_combination_bulk_impact_on_price_te').val(window.priceCalculation.removeCurrentTax(price)).change();
-      } else {
-        $('#product_combination_bulk_impact_on_price_ti').val(window.priceCalculation.addCurrentTax(price)).change();
-      }
-    });
+        if (self.attr('id') === 'product_combination_bulk_impact_on_price_ti') {
+          $('#product_combination_bulk_impact_on_price_te')
+            .val(window.priceCalculation.removeCurrentTax(price))
+            .change();
+        } else {
+          $('#product_combination_bulk_impact_on_price_ti')
+            .val(window.priceCalculation.addCurrentTax(price))
+            .change();
+        }
+      });
 
     const getCombinations = (combinationsImages) => {
       const $jsCombinationsBulkForm = $('#combinations-bulk-form');
