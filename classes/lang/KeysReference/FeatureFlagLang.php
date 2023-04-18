@@ -91,3 +91,6 @@ trans('Enable or disable the migrated customer threads page.', 'Admin.Advparamet
 // Order states feature flag
 trans('Order states', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated order states page.', 'Admin.Advparameters.Help');
+
+trans('Features', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated features page.', 'Admin.Advparameters.Help');

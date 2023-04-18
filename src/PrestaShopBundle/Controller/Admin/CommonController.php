@@ -34,6 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResu
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
@@ -350,5 +354,35 @@ class CommonController extends FrameworkBundleAdminController
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updatePositionAction(Request $request): RedirectResponse
+    {
+        $positionsData = [
+            'positions' => $request->request->get('positions'),
+        ];
+
+        /** @var PositionDefinitionInterface $positionDefinition */
+        $positionDefinition = $this->get($request->attributes->get('position_definition'));
+        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
+
+        try {
+            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+            $updater = $this->get(GridPositionUpdaterInterface::class);
+            $updater->update($positionUpdate);
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+        } catch (PositionUpdateException $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute($request->attributes->get('redirect_route'));
     }
 }

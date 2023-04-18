@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -101,15 +102,15 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Position', [], 'Admin.Global'))
             ->setOptions(['field' => 'position'])
             )
-            //->add((new PositionColumn('position'))
-            //->setName($this->trans('Position', [], 'Admin.Global'))
-            //->setOptions([
-            //'id_field' => 'id_feature',
-            //'position_field' => 'position',
-            //'update_method' => 'POST',
-            //'update_route' => 'admin_features_update_position',
-            //])
-            //)
+            ->add((new PositionColumn('position'))
+            ->setName($this->trans('Position', [], 'Admin.Global'))
+            ->setOptions([
+                'id_field' => 'id_feature',
+                'position_field' => 'position',
+                'update_method' => 'POST',
+                'update_route' => 'admin_features_update_position',
+            ])
+            )
             ->add((new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([

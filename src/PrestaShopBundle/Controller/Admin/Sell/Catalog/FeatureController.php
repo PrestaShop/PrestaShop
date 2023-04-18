@@ -61,6 +61,7 @@ class FeatureController extends FrameworkBundleAdminController
         );
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featureGrid' => $this->presentGrid($featureGridFactory->getGrid($filters)),
             'settingsTipMessage' => $this->getSettingsTipMessage(),
@@ -174,6 +175,8 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param FeatureFilters $filters
+     *
      * @return CsvResponse
      */
     public function exportAction(FeatureFilters $filters): CsvResponse
@@ -204,13 +207,10 @@ class FeatureController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('features_' . date('Y-m-d_His') . '.csv')
-        ;
+            ->setFileName('features_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
-     * Render feature edit form
-     *
      * @param array $parameters
      *
      * @return Response
