@@ -526,13 +526,14 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param string $nameInDefaultLanguage
-     * @param string $publicNameInDefaultLanguage
+     * @param array $localizedNames
+     * @param array $localizedPublicNames
      * @param string $type
      *
      * @return AttributeGroupId
      *
-     * @throws AttributeGroupConstraintException|InvalidAttributeGroupTypeException
+     * @throws AttributeGroupConstraintException
+     * @throws InvalidAttributeGroupTypeException
      */
     private function createAttributeGroupUsingCommand(array $localizedNames, array $localizedPublicNames, string $type): AttributeGroupId
     {
