@@ -81,6 +81,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Tools as LegacyTools;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for the Product pages using the Symfony architecture:
  * - categories
  * - product list

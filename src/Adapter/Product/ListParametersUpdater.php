@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Can manage filter parameters from request in Product Catalogue Page.
  * For internal use only.
  */

@@ -32,6 +32,8 @@ use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for warehouse on the /product/form page.
  */
 class WarehouseController extends FrameworkBundleAdminController

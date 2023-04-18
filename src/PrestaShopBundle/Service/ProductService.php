@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Service;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use Product;
 
+/**
+ * @deprecated since 8.1 and will be removed in next major.
+ */
 class ProductService
 {
     /**
