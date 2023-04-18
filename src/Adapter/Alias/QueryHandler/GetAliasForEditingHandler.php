@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\GetAliasForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\EditableAlias;
 
+/**
+ * Handles the query @see GetAliasForEditing using legacy ObjectModel
+ */
 class GetAliasForEditingHandler implements GetAliasForEditingHandlerInterface
 {
     /**
