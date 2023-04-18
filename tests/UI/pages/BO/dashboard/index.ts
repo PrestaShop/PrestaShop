@@ -22,7 +22,7 @@ class Dashboard extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Dashboard • ';
+    this.pageTitle = `Dashboard • ${global.INSTALL.SHOP_NAME}`;
 
     // selectors
     this.demoModeButton = '#page-header-desc-configuration-switch_demo';
