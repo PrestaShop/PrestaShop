@@ -97,16 +97,12 @@ class AliasRepository extends AbstractObjectModelRepository
 
     public function get(AliasId $aliasId): Alias
     {
-        try {
-            /** @var Alias $alias */
-            $alias = $this->getObjectModel(
-                $aliasId->getValue(),
-                Alias::class,
-                AliasException::class
-            );
-        } catch (AliasException $e) {
-            throw new AliasNotFoundException($aliasId, $e->getMessage());
-        }
+        /** @var Alias $alias */
+        $alias = $this->getObjectModel(
+            $aliasId->getValue(),
+            Alias::class,
+            AliasNotFoundException::class
+        );
 
         return $alias;
     }

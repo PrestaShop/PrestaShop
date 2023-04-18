@@ -30,9 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\AddAliasCommandInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\AddAliasHandlerInterface;
 
-class AddAlias implements AddAliasCommandInterface
+class AddAlias implements AddAliasHandlerInterface
 {
     /**
      * @var AliasRepository

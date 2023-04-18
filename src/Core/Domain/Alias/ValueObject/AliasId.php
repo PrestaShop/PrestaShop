@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\InvalidAliasIdException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 
 /**
  * Defines Alias ID with it's constraints.
@@ -41,7 +41,7 @@ class AliasId
     /**
      * @param int $aliasId
      *
-     * @throws InvalidAliasIdException
+     * @throws AliasConstraintException
      */
     public function __construct(int $aliasId)
     {
@@ -61,12 +61,15 @@ class AliasId
     /**
      * @param int $aliasId
      *
-     * @throws InvalidAliasIdException
+     * @throws AliasConstraintException
      */
     private function assertIntegerIsGreaterThanZero(int $aliasId)
     {
-        if (0 > $aliasId) {
-            throw new InvalidAliasIdException(sprintf('Invalid alias id %s supplied. alias id must be positive integer.', $aliasId));
+        if (0 >= $aliasId) {
+            throw new AliasConstraintException(
+                sprintf('Invalid alias id %s supplied. alias id must be positive integer.', $aliasId),
+                AliasConstraintException::INVALID_ID
+            );
         }
     }
 }

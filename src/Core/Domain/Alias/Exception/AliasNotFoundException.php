@@ -28,33 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
-
 class AliasNotFoundException extends AliasException
 {
-    /**
-     * @var AliasId
-     */
-    private $aliasId;
-
-    /**
-     * @param AliasId $aliasId
-     * @param $message
-     * @param $code
-     * @param $previous
-     */
-    public function __construct(AliasId $aliasId, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->aliasId = $aliasId;
-    }
-
-    /**
-     * @return AliasId
-     */
-    public function getAliasId(): AliasId
-    {
-        return $this->aliasId;
-    }
 }

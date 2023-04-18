@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Domain\Alias\ValueObject;
 use Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\InvalidAliasIdException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 
 class AliasIdTest extends TestCase
@@ -49,8 +49,8 @@ class AliasIdTest extends TestCase
      */
     public function testItThrowsExceptionWhenInvalidValueIsProvided(int $value): void
     {
-        $this->expectException(InvalidAliasIdException::class);
-        $this->expectExceptionCode(0);
+        $this->expectException(AliasConstraintException::class);
+        $this->expectExceptionCode(AliasConstraintException::INVALID_ID);
 
         new AliasId($value);
     }
@@ -60,6 +60,7 @@ class AliasIdTest extends TestCase
      */
     public function getInvalidValues(): Generator
     {
+        yield [0];
         yield [-1];
         yield [-9999];
     }
