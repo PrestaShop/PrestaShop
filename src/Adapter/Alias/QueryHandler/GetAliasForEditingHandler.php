@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Alias\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler\GetAliasForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\EditableAlias;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
 
 /**
  * Handles the query @see GetAliasForEditing using legacy ObjectModel
@@ -49,15 +49,14 @@ class GetAliasForEditingHandler implements GetAliasForEditingHandlerInterface
         $this->aliasRepository = $aliasRepository;
     }
 
-    public function handle(GetAliasForEditing $query): EditableAlias
+    public function handle(GetAliasForEditing $query): AliasForEditing
     {
         $alias = $this->aliasRepository->get($query->getAliasId());
+        $aliases = $this->aliasRepository->getAliasesBySearch($alias->search);
 
-        return new EditableAlias(
-            $alias->id,
-            $alias->alias,
-            $alias->search,
-            $alias->active
+        return new AliasForEditing(
+            $aliases,
+            $alias->search
         );
     }
 }

@@ -9,6 +9,8 @@ services:
   PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository:
     autowire: true
     arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator'
 
 
@@ -25,3 +27,5 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
+    arguments:
+      [ '@PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository' ]

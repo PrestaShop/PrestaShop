@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\Repository;
 
 use Alias;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
@@ -40,11 +42,23 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 class AliasRepository extends AbstractObjectModelRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
      * @var AliasValidator
      */
     private $aliasValidator;
 
     public function __construct(
+        Connection $connection,
+        string $dbPrefix,
         AliasValidator $aliasValidator
     ) {
         $this->aliasValidator = $aliasValidator;
@@ -93,5 +107,26 @@ class AliasRepository extends AbstractObjectModelRepository
         }
 
         return $alias;
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return string[]
+     *
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getAliasesBySearch(string $search): array
+    {
+
+        $qb = $this->connection->createQueryBuilder()
+            ->addSelect('a.alias')
+            ->from($this->dbPrefix . 'alias', 'a')
+            ->where('a.search = :search')
+            ->setParameter('search', $search)
+        ;
+
+        return $qb->execute()->fetchFirstColumn();
     }
 }

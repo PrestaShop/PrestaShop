@@ -31,54 +31,32 @@ namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult;
 /**
  * Transfers alias data for editing.
  */
-class EditableAlias
+class AliasForEditing
 {
     /**
-     * @var int
+     * @var string[]
      */
-    private $aliasId;
-
-    /**
-     * @var string
-     */
-    private $alias;
+    private $aliases;
 
     /**
      * @var string
      */
     private $search;
 
-    /**
-     * @var bool
-     */
-    private $active;
-
     public function __construct(
-        $aliasId,
-        string $alias,
-        string $search,
-        bool $active
+        array $aliases,
+        string $search
     ) {
-        $this->aliasId = $aliasId;
-        $this->alias = $alias;
+        $this->aliases = $aliases;
         $this->search = $search;
-        $this->active = $active;
     }
 
     /**
-     * @return int
+     * @return array
      */
-    public function getAliasId(): int
+    public function getAliases(): array
     {
-        return $this->aliasId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAlias(): string
-    {
-        return $this->alias;
+        return $this->aliases;
     }
 
     /**
@@ -87,13 +65,5 @@ class EditableAlias
     public function getSearch(): string
     {
         return $this->search;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
     }
 }

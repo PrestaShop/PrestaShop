@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\EditableAlias;
+use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
 
 /**
  * Interface GetAliasForEditingHandlerInterface defines contract for GetAliasForEditingHandler
@@ -37,7 +37,7 @@ interface GetAliasForEditingHandlerInterface
     /**
      * @param GetAliasForEditing $query
      *
-     * @return EditableAlias
+     * @return AliasForEditing
      */
-    public function handle(GetAliasForEditing $query): EditableAlias;
+    public function handle(GetAliasForEditing $query): AliasForEditing;
 }
