@@ -27,9 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
 use Behat\Gherkin\Node\TableNode;
-use CartRule;
 use Configuration;
 use DateTime;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
@@ -50,6 +50,7 @@ use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureCon
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
 class CartRuleFeatureContext extends AbstractDomainFeatureContext
 {
@@ -80,15 +81,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['gift_product_attribute_id'] ?? null
         );
 
-        if (isset($data['name'])) {
-            $name = $data['name'];
-        } else {
-            //@todo: remove this fallback and change all scenarios to support multilang instead
-            $name = [$defaultLanguageId => $data['name_in_default_language']];
-        }
-
         $command = new AddCartRuleCommand(
-            $name,
+            $data['name'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
             PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']),
             (int) $data['priority'],
@@ -121,11 +115,14 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
-        /** @var CartRuleId $cartRule */
-        $cartRule = $this->getCommandBus()->handle($command);
+        /** @var CartRuleId $cartRuleId */
+        $cartRuleId = $this->getCommandBus()->handle($command);
+        SharedStorage::getStorage()->set($cartRuleReference, $cartRuleId->getValue());
 
-        //@todo: should be refactored to save only id to shared storage instead of whole object model
-        SharedStorage::getStorage()->set($cartRuleReference, new CartRule($cartRule->getValue()));
+        if (!empty($data['code'])) {
+            // set cart rule id by code when it is not empty
+            SharedStorage::getStorage()->set($data['code'], $cartRuleId->getValue());
+        }
     }
 
     /**
@@ -137,73 +134,36 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteCartRule(string $cartRuleReference): void
     {
-        $cartRule = SharedStorage::getStorage()->get($cartRuleReference);
-        $command = new DeleteCartRuleCommand((int) $cartRule->id);
-        $this->getCommandBus()->handle($command);
+        $this->getCommandBus()->handle(
+            new DeleteCartRuleCommand(SharedStorage::getStorage()->get($cartRuleReference))
+        );
     }
 
     /**
-     * @When I disable cart rule with reference :cartRuleReference
+     * @When /^I (enable|disable) cart rule with reference "(.+)"$/
      *
+     * @param bool $enable
      * @param string $cartRuleReference
-     */
-    public function disableCartRule(string $cartRuleReference): void
-    {
-        $cartRule = SharedStorage::getStorage()->get($cartRuleReference);
-        $command = new ToggleCartRuleStatusCommand((int) $cartRule->id, false);
-        $this->getCommandBus()->handle($command);
-    }
-
-    /**
-     * @When I enable cart rule with reference :cartRuleReference
      *
-     * @param string $cartRuleReference
+     * @see StringToBoolTransformContext::transformTruthyStringToBoolean for $enable string to bool transformation
      */
-    public function enableCartRule(string $cartRuleReference): void
+    public function toggleCartRuleStatus(bool $enable, string $cartRuleReference): void
     {
-        $cartRule = SharedStorage::getStorage()->get($cartRuleReference);
-        $command = new ToggleCartRuleStatusCommand((int) $cartRule->id, true);
-        $this->getCommandBus()->handle($command);
+        $this->getCommandBus()->handle(
+            new ToggleCartRuleStatusCommand($this->getSharedStorage()->get($cartRuleReference), $enable)
+        );
     }
 
     /**
-     * @When I bulk enable cart rules :cartRuleReferences
+     * @When /^I bulk (enable|disable) cart rules "(.+)"$/
      *
      * @param string $cartRuleReferences
-     *
-     * @throws CartRuleConstraintException
      */
-    public function bulkEnableCartRules(string $cartRuleReferences): void
+    public function bulkEnableCartRules(bool $enable, string $cartRuleReferences): void
     {
-        $cartRuleIds = [];
-        $cartRuleReferenceArray = explode(',', $cartRuleReferences);
-
-        foreach ($cartRuleReferenceArray as $carRuleReference) {
-            $cartRuleIds[] = SharedStorage::getStorage()->get($carRuleReference)->id;
-        }
-
-        $command = new BulkToggleCartRuleStatusCommand($cartRuleIds, true);
-        $this->getCommandBus()->handle($command);
-    }
-
-    /**
-     * @When I bulk disable cart rules :cartRuleReferences
-     *
-     * @param string $cartRuleReferences
-     *
-     * @throws CartRuleConstraintException
-     */
-    public function bulkDisableCartRules(string $cartRuleReferences): void
-    {
-        $cartRuleIds = [];
-        $cartRuleReferenceArray = explode(',', $cartRuleReferences);
-
-        foreach ($cartRuleReferenceArray as $carRuleReference) {
-            $cartRuleIds[] = SharedStorage::getStorage()->get($carRuleReference)->id;
-        }
-
-        $command = new BulkToggleCartRuleStatusCommand($cartRuleIds, false);
-        $this->getCommandBus()->handle($command);
+        $this->getCommandBus()->handle(
+            new BulkToggleCartRuleStatusCommand($this->referencesToIds($cartRuleReferences), $enable)
+        );
     }
 
     /**
@@ -215,14 +175,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkDeleteCartRules(string $cartRuleReferences): void
     {
-        $cartRuleIds = [];
-        $cartRuleReferenceArray = explode(',', $cartRuleReferences);
-
-        foreach ($cartRuleReferenceArray as $carRuleReference) {
-            $cartRuleIds[] = SharedStorage::getStorage()->get($carRuleReference)->id;
-        }
-        $command = new BulkDeleteCartRuleCommand($cartRuleIds);
-        $this->getCommandBus()->handle($command);
+        $this->getCommandBus()->handle(new BulkDeleteCartRuleCommand($this->referencesToIds($cartRuleReferences)));
     }
 
     /**
@@ -235,13 +188,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleEnabled(string $cartRuleReference): void
     {
-        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
-
         /** @var CartRuleForEditing $cartRule */
-        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
-        if (!$cartRule->getInformation()->isEnabled() === true) {
-            throw new RuntimeException(sprintf('Cart rule %s is not disabled', $cartRuleReference));
-        }
+        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing(SharedStorage::getStorage()->get($cartRuleReference)));
+
+        Assert::assertTrue(
+            $cartRule->getInformation()->isEnabled(),
+            sprintf('Cart rule %s is not enabled', $cartRuleReference)
+        );
     }
 
     /**
@@ -253,13 +206,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleDisabled(string $cartRuleReference): void
     {
-        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
-
         /** @var CartRuleForEditing $cartRule */
-        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
-        if (!$cartRule->getInformation()->isEnabled() === false) {
-            throw new RuntimeException(sprintf('Cart rule %s is not enabled', $cartRuleReference));
-        }
+        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing(SharedStorage::getStorage()->get($cartRuleReference)));
+
+        Assert::assertFalse(
+            $cartRule->getInformation()->isEnabled(),
+            sprintf('Cart rule %s is not disabled', $cartRuleReference)
+        );
     }
 
     /**
@@ -272,10 +225,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleDeleted(string $cartRuleReference): void
     {
-        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
-
         try {
-            $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
+            $this->getQueryBus()->handle(new GetCartRuleForEditing(SharedStorage::getStorage()->get($cartRuleReference)));
             throw new NoExceptionAlthoughExpectedException(sprintf('Cart rule "%s" was found, but it was expected to be deleted', $cartRuleReference));
         } catch (CartRuleNotFoundException $e) {
             SharedStorage::getStorage()->clear($cartRuleReference);

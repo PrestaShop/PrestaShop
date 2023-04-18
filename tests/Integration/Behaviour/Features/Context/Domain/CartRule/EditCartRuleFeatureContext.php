@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
 use Behat\Gherkin\Node\TableNode;
-use CartRule;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
@@ -51,11 +50,8 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function editCartRule(string $cartRuleReference, TableNode $tableNode): void
     {
-        /** @var CartRule $cartRule */
-        $cartRule = $this->getSharedStorage()->get($cartRuleReference);
-
         try {
-            $command = new EditCartRuleCommand($cartRule->id);
+            $command = new EditCartRuleCommand($this->getSharedStorage()->get($cartRuleReference));
             $this->fillCommand($command, $this->localizeByRows($tableNode));
             $this->getCommandBus()->handle($command);
         } catch (CartRuleConstraintException $e) {
@@ -71,10 +67,10 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleProperties(string $cartRuleReference, TableNode $tableNode): void
     {
-        /** @var CartRule $cartRule */
-        $cartRule = $this->getSharedStorage()->get($cartRuleReference);
         /** @var CartRuleForEditing $editableCartRule */
-        $editableCartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing((int) $cartRule->id));
+        $editableCartRule = $this->getQueryBus()->handle(
+            new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference))
+        );
 
         $data = $this->localizeByRows($tableNode);
         $information = $editableCartRule->getInformation();

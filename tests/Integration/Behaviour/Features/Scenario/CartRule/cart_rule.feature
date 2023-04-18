@@ -100,7 +100,6 @@ Feature: Add cart rule
 
   Scenario: Delete cart rule
     When I create cart rule "cart_rule_1" with following properties:
-      | id_cart_rule                     | 1                   |
       | name[en-US]                      | Cart Rule 1         |
       | highlight                        | true                |
       | active                           | true                |
@@ -121,7 +120,6 @@ Feature: Add cart rule
 
   Scenario: Delete multiple cart rules
     When I create cart rule "cart_rule_1" with following properties:
-      | id_cart_rule                     | 1                   |
       | name[en-US]                      | Cart Rule 1         |
       | highlight                        | true                |
       | active                           | true                |
@@ -138,7 +136,6 @@ Feature: Add cart rule
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
     And I create cart rule "cart_rule_2" with following properties:
-      | id_cart_rule                     | 2                   |
       | name[en-US]                      | Cart Rule 2         |
       | highlight                        | true                |
       | active                           | true                |
@@ -160,7 +157,6 @@ Feature: Add cart rule
 
   Scenario: Create and enable cart rule
     When I create cart rule "cart_rule_1" with following properties:
-      | id_cart_rule                     | 1                   |
       | name[en-US]                      | Cart Rule 1         |
       | highlight                        | true                |
       | active                           | true                |
@@ -181,7 +177,6 @@ Feature: Add cart rule
 
   Scenario: Disable cart rule
     When I create cart rule "cart_rule_1" with following properties:
-      | id_cart_rule                     | 1                   |
       | name[en-US]                      | Cart Rule 1         |
       | highlight                        | true                |
       | active                           | true                |
@@ -201,8 +196,7 @@ Feature: Add cart rule
     Then Cart rule with reference "cart_rule_1" is disabled
 
   Scenario: Enable multiple cart rules
-    When I create cart rule "cart_rule_1" with following properties:
-      | id_cart_rule                     | 1                   |
+    Given I create cart rule "cart_rule_1" with following properties:
       | name[en-US]                      | Cart Rule 1         |
       | highlight                        | true                |
       | active                           | true                |
@@ -219,7 +213,6 @@ Feature: Add cart rule
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
     And I create cart rule "cart_rule_2" with following properties:
-      | id_cart_rule                     | 2                   |
       | name[en-US]                      | Cart Rule 2         |
       | highlight                        | true                |
       | active                           | true                |
@@ -235,13 +228,16 @@ Feature: Add cart rule
       | minimum_amount_currency          | usd                 |
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
+    And cart rule cart_rule_1 should have the following properties:
+      | is_active                        | true                |
+    And cart rule cart_rule_2 should have the following properties:
+      | is_active                        | true                |
     And I bulk disable cart rules "cart_rule_1,cart_rule_2"
     Then Cart rule with reference "cart_rule_1" is disabled
     And Cart rule with reference "cart_rule_2" is disabled
 
   Scenario: Disable multiple cart rules
     When I create cart rule "cart_rule_1" with following properties:
-      | id_cart_rule                     | 1                   |
       | name[en-US]                      | Cart Rule 1         |
       | highlight                        | true                |
       | active                           | true                |
@@ -258,7 +254,6 @@ Feature: Add cart rule
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
     And I create cart rule "cart_rule_2" with following properties:
-      | id_cart_rule                     | 2                   |
       | name[en-US]                      | Cart Rule 2         |
       | highlight                        | true                |
       | active                           | false               |
