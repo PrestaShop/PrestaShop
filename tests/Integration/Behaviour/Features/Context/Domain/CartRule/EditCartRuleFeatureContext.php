@@ -51,9 +51,16 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
     public function editCartRule(string $cartRuleReference, TableNode $tableNode): void
     {
         try {
-            $command = new EditCartRuleCommand($this->getSharedStorage()->get($cartRuleReference));
-            $this->fillCommand($command, $this->localizeByRows($tableNode));
+            $cartRuleId = $this->getSharedStorage()->get($cartRuleReference);
+            $command = new EditCartRuleCommand($cartRuleId);
+            $data = $this->localizeByRows($tableNode);
+            $this->fillCommand($command, $data);
             $this->getCommandBus()->handle($command);
+
+            if (!empty($data['code'])) {
+                // resets cart rule id by the code in storage if it was edited
+                $this->getSharedStorage()->set($data['code'], $cartRuleId);
+            }
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
         }
