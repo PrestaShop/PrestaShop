@@ -49,7 +49,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
-        $aliases = explode(',', $data['alias']);
+        $aliases = array_map('trim', explode(',', $data['alias']));
 
         /** @var AliasId[] $aliasIds */
         $aliasIds = $this->getCommandBus()->handle(new AddAliasCommand(
