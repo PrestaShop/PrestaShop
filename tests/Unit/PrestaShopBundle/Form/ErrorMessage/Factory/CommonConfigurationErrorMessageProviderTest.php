@@ -30,8 +30,6 @@ namespace Tests\Unit\PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider;

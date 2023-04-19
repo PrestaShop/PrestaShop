@@ -28,12 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
-use PHP_CodeSniffer\Util\Common;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\FormDataProviderException;
 

@@ -44,6 +44,7 @@ class LabelProviderTest extends TypeTestCase
         self::assertSame('Field', $labelProvider->getLabel($form, 'field'));
         self::assertSame('Some field name', $labelProvider->getLabel($form, 'other_field'));
     }
+
     public function testThrowsFieldNotFoundException(): void
     {
         $form = $this->factory->create(TestFormType::class);
