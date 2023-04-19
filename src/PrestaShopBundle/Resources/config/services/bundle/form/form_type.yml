@@ -313,8 +313,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType:
     arguments:
-      $shopTreeChoices: "@=service('prestashop.adapter.form.choice_provider.shop_tree_choice_provider').getChoices()"
       $stringArrayToIntegerArrayDataTransformer: '@PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
+      $shopTreeChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Type\ShopSelectorType:
     arguments:

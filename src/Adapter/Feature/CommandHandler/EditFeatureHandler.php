@@ -59,12 +59,13 @@ class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatu
             $feature->name = $command->getLocalizedNames();
         }
 
-        if (null !== $command->getAssociatedShopIds()) {
-            $feature->id_shop_list = array_map(static function (ShopId $shopId) {
-                return $shopId->getValue();
-            }, $command->getAssociatedShopIds());
-        }
-
         $this->featureRepository->update($feature);
+
+        // ObjectModel::update doesn't seem to remove unassociated shops, so we must always update them manually afterwards
+        if (null !== $command->getAssociatedShopIds()) {
+            $this->associateWithShops($feature, array_map(static function (ShopId $shopId) {
+                return $shopId->getValue();
+            }, $command->getAssociatedShopIds()));
+        }
     }
 }

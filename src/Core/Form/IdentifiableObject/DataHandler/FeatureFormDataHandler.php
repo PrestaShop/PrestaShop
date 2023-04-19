@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 
 /**
  * Handles data of submitted Feature form.
@@ -43,20 +42,12 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var ShopContextInterface
-     */
-    private $shopContext;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param ShopContextInterface $shopContext
      */
     public function __construct(
-        CommandBusInterface $commandBus,
-        ShopContextInterface $shopContext
+        CommandBusInterface $commandBus
     ) {
         $this->commandBus = $commandBus;
-        $this->shopContext = $shopContext;
     }
 
     /**
@@ -67,7 +58,7 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
         /** @var FeatureId $featureId */
         $featureId = $this->commandBus->handle(new AddFeatureCommand(
             $data['name'],
-            $data['shop_association'] ?? $this->shopContext->getContextShopIds()
+            $data['shop_association']
         ));
 
         return $featureId->getValue();
@@ -78,12 +69,10 @@ final class FeatureFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new EditFeatureCommand($id);
-        $command->setLocalizedNames($data['name']);
-
-        if (isset($data['shop_association'])) {
-            $command->setAssociatedShopIds(array_map('intval', $data['shop_association']));
-        }
+        $command = (new EditFeatureCommand($id))
+            ->setLocalizedNames($data['name'])
+            ->setAssociatedShopIds($data['shop_association'])
+        ;
 
         $this->commandBus->handle($command);
     }

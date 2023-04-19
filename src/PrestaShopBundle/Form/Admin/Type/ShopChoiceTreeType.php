@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -38,9 +40,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ShopChoiceTreeType extends AbstractType
 {
     /**
-     * @var array
+     * @var FormChoiceProviderInterface
      */
-    private $shopTreeChoices;
+    private $shopTreeChoiceProvider;
 
     /**
      * @var DataTransformerInterface
@@ -48,15 +50,23 @@ class ShopChoiceTreeType extends AbstractType
     private $stringArrayToIntegerArrayDataTransformer;
 
     /**
-     * @param array $shopTreeChoices
+     * @var ShopContextInterface
+     */
+    private $shopContext;
+
+    /**
+     * @param FormChoiceProviderInterface $shopTreeChoiceProvider
      * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+     * @param ShopContextInterface $shopContext
      */
     public function __construct(
-        array $shopTreeChoices,
-        DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+        FormChoiceProviderInterface $shopTreeChoiceProvider,
+        DataTransformerInterface $stringArrayToIntegerArrayDataTransformer,
+        ShopContextInterface $shopContext
     ) {
-        $this->shopTreeChoices = $shopTreeChoices;
+        $this->shopTreeChoiceProvider = $shopTreeChoiceProvider;
         $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
+        $this->shopContext = $shopContext;
     }
 
     /**
@@ -75,10 +85,11 @@ class ShopChoiceTreeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices_tree' => $this->shopTreeChoices,
+            'choices_tree' => $this->shopTreeChoiceProvider->getChoices(),
             'multiple' => true,
             'choice_label' => 'name',
             'choice_value' => 'id_shop',
+            'default_empty_data' => $this->shopContext->getContextShopIds(),
         ]);
     }
 

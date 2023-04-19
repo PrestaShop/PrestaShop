@@ -109,6 +109,13 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
         return $feature;
     }
 
+    /**
+     * @param Feature $feature
+     *
+     * @return void
+     *
+     * @throws CoreException
+     */
     public function update(Feature $feature): void
     {
         $this->featureValidator->validate($feature);
