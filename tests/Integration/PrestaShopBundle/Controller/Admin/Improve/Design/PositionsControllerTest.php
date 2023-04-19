@@ -68,6 +68,7 @@ class PositionsControllerTest extends WebTestCase
 
         parent::setUp();
 
+        $this->client = self::createClient();
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
         if (!$moduleManager->isInstalled('ps_emailsubscription')) {
@@ -76,7 +77,6 @@ class PositionsControllerTest extends WebTestCase
 
         $this->moduleId = Module::getModuleIdByName('ps_emailsubscription');
         $this->hookId = Hook::getIdByName('displayFooterBefore');
-        $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
         $this->session = self::$kernel->getContainer()->get('session');
     }
