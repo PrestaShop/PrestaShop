@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Category\Provider;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
-use Symfony\Component\Finder\Finder;
 
 /**
  * This class is responsible for providing available category menu thumbnail keys.

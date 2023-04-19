@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Category\Provider;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Category\Provider\CategoryImageFinder;
 use PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider;
-use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
@@ -45,7 +45,7 @@ class MenuThumbnailAvailableKeyProviderTest extends TestCase
         $categoryImageFinder = $this->getMockBuilder(CategoryImageFinder::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $file1 = new SplFileInfo(sprintf( '%d-0_thumb.jpg', $categoryId));
+        $file1 = new SplFileInfo(sprintf('%d-0_thumb.jpg', $categoryId));
         $file2 = new SplFileInfo(sprintf('%d-1_thumb.jpg', $categoryId));
 
         $mockFinder = $this->getMockBuilder(Finder::class)
