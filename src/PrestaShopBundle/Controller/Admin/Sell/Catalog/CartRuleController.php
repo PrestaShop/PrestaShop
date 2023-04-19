@@ -346,6 +346,10 @@ class CartRuleController extends FrameworkBundleAdminController
                     'Cart rule must have at least one action',
                     'Admin.Notifications.Error'
                 ),
+                CartRuleConstraintException::NON_UNIQUE_CODE => $this->trans(
+                    'This cart rule code is already used',
+                    'Admin.Notifications.Error'
+                ),
             ],
         ];
     }

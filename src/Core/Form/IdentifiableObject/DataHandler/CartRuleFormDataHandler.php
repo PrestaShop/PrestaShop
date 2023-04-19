@@ -71,6 +71,8 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             $this->buildCartRuleActionForCreate($data['actions'])
         );
 
+        $command->setCode($informationData['code']);
+
         if (!empty($data['actions']['discount']['reduction']['value'])) {
             $discountProductId = null;
             if (

@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\Validate;
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 
 class CartRuleValidator extends AbstractObjectModelValidator
 {
@@ -72,6 +74,8 @@ class CartRuleValidator extends AbstractObjectModelValidator
             CartRuleConstraintException::class,
             CartRuleConstraintException::INVALID_NAME
         );
+
+        $this->assertCodeIsUnique($cartRule);
     }
 
     private function validateCartRuleProperty(CartRule $cartRule, string $propertyName, int $code): void
@@ -82,5 +86,27 @@ class CartRuleValidator extends AbstractObjectModelValidator
             CartRuleConstraintException::class,
             $code
         );
+    }
+
+    private function assertCodeIsUnique(CartRule $cartRule): void
+    {
+        $code = $cartRule->code;
+
+        if (empty($code)) {
+            return;
+        }
+
+        try {
+            $duplicateCodeCartRuleId = (int) CartRule::getIdByCode($code);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when trying to check if cart rule code is unique', 0, $e);
+        }
+
+        if ($duplicateCodeCartRuleId && $duplicateCodeCartRuleId !== (int) $cartRule->id) {
+            throw new CartRuleConstraintException(
+                sprintf('Cart rule with code "%s" already exists', $code),
+                CartRuleConstraintException::NON_UNIQUE_CODE
+            );
+        }
     }
 }

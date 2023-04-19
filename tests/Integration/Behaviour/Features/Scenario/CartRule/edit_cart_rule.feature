@@ -30,7 +30,6 @@ Feature: Add cart rule
       | free_shipping                    | true                |
       | minimum_amount_tax_included      | false               |
       | minimum_amount_shipping_included | false               |
-      | code                             | xyz                 |
     And cart rule "cart_rule_1" should have the following properties:
       | name[en-US]        | cart rule 1         |
       | highlight          | true                |
@@ -45,7 +44,7 @@ Feature: Add cart rule
       | minimum_amount     |                     |
       # when currency is not provided the default one is used
       | reduction_currency | usd                 |
-      | code               | xyz                 |
+      | code               |                     |
 
   Scenario: I edit cart rule and change various properties
     When I edit cart rule cart_rule_1 with following properties:
@@ -249,7 +248,6 @@ Feature: Add cart rule
       | reduction_currency                     | usd                    |
       | discount_application_type              | order_without_shipping |
       | reduction_apply_to_discounted_products | true                   |
-      | code                                   | xyz                    |
 
   Scenario: I edit cart rule by alternating customer
     Given there is customer "JohnDoe" with email "pub@prestashop.com"
@@ -263,3 +261,43 @@ Feature: Add cart rule
       | customer |  |
     Then cart rule "cart_rule_1" should have the following properties:
       | customer |  |
+
+  Scenario: I should not be able to edit cart rule with already existing code
+    Given I create cart rule "cart_rule_1" with following properties:
+      | name[en-US]       | Cart Rule 1         |
+      | highlight         | true                |
+      | active            | true                |
+      | allow_partial_use | true                |
+      | priority          | 1                   |
+      | is_active         | true                |
+      | valid_from        | 2019-01-01 11:05:00 |
+      | valid_to          | 2019-12-01 00:00:00 |
+      | total_quantity    | 10                  |
+      | quantity_per_user | 2                   |
+      | free_shipping     | true                |
+      | code              | testcode1           |
+    And cart rule cart_rule_1 should have the following properties:
+      | is_active | testcode1 |
+    And I create cart rule "cart_rule_2" with following properties:
+      | name[en-US]       | Cart Rule 2         |
+      | highlight         | true                |
+      | active            | true                |
+      | allow_partial_use | true                |
+      | priority          | 1                   |
+      | is_active         | true                |
+      | valid_from        | 2019-01-01 11:05:00 |
+      | valid_to          | 2019-12-01 00:00:00 |
+      | total_quantity    | 10                  |
+      | quantity_per_user | 2                   |
+      | free_shipping     | true                |
+      | code              | testcode2           |
+    When I edit cart rule cart_rule_2 with following properties:
+      | code              | testcode1           |
+    Then I should get cart rule error about "non unique cart rule code"
+    And cart rule cart_rule_2 should have the following properties:
+      | code              | testcode2           |
+    # make sure we do not raise error when cart rule is submitted with the same code as it was before
+    When I edit cart rule cart_rule_2 with following properties:
+      | code              | testcode2           |
+    Then cart rule cart_rule_2 should have the following properties:
+      | code              | testcode2           |

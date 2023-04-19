@@ -27,7 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
 use Behat\Gherkin\Node\TableNode;
-use Configuration;
 use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
@@ -68,60 +67,65 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function createCartRuleWithReference(string $cartRuleReference, TableNode $node): void
     {
         $data = $this->localizeByRows($node);
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
-        $cartRuleAction = $this->createCartRuleAction(
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']),
-            $data['reduction_percentage'] ?? null,
-            isset($data['reduction_apply_to_discounted_products']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products']) : null,
-            $data['reduction_amount'] ?? null,
-            isset($data['reduction_currency']) ? $this->getSharedStorage()->get($data['reduction_currency']) : null,
-            $data['reduction_tax'] ?? null,
-            $data['gift_product_id'] ?? null,
-            $data['gift_product_attribute_id'] ?? null
-        );
-
-        $command = new AddCartRuleCommand(
-            $data['name'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']),
-            (int) $data['priority'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_active']),
-            new DateTime($data['valid_from']),
-            new DateTime($data['valid_to']),
-            $data['total_quantity'],
-            $data['quantity_per_user'],
-            $cartRuleAction
-        );
-
-        if (!empty($data['minimum_amount'])) {
-            $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
-            $command->setMinimumAmount(
-                $data['minimum_amount'],
-                $currencyId,
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
+        try {
+            $cartRuleAction = $this->createCartRuleAction(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']),
+                $data['reduction_percentage'] ?? null,
+                isset($data['reduction_apply_to_discounted_products']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products']) : null,
+                $data['reduction_amount'] ?? null,
+                isset($data['reduction_currency']) ? $this->getSharedStorage()->get($data['reduction_currency']) : null,
+                $data['reduction_tax'] ?? null,
+                $data['gift_product_id'] ?? null,
+                $data['gift_product_attribute_id'] ?? null
             );
-        }
 
-        $command->setDescription($data['description'] ?? '');
-        $command->setCode($data['code'] ?? '');
-
-        if (isset($data['discount_application_type'])) {
-            $command->setDiscountApplication(
-                $data['discount_application_type'],
-                // if specific product type is provided and product is not, then command should throw exception
-                isset($data['discount_product']) ? $this->getSharedStorage()->get($data['discount_product']) : null
+            $command = new AddCartRuleCommand(
+                $data['name'],
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']),
+                (int) $data['priority'],
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['is_active']),
+                new DateTime($data['valid_from']),
+                new DateTime($data['valid_to']),
+                $data['total_quantity'],
+                $data['quantity_per_user'],
+                $cartRuleAction
             );
-        }
 
-        /** @var CartRuleId $cartRuleId */
-        $cartRuleId = $this->getCommandBus()->handle($command);
-        SharedStorage::getStorage()->set($cartRuleReference, $cartRuleId->getValue());
+            if (!empty($data['minimum_amount'])) {
+                $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
+                $command->setMinimumAmount(
+                    $data['minimum_amount'],
+                    $currencyId,
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
+                );
+            }
 
-        if (!empty($data['code'])) {
-            // set cart rule id by code when it is not empty
-            SharedStorage::getStorage()->set($data['code'], $cartRuleId->getValue());
+            $command->setDescription($data['description'] ?? '');
+            if (!empty($data['code'])) {
+                $command->setCode($data['code']);
+            }
+
+            if (isset($data['discount_application_type'])) {
+                $command->setDiscountApplication(
+                    $data['discount_application_type'],
+                    // if specific product type is provided and product is not, then command should throw exception
+                    isset($data['discount_product']) ? $this->getSharedStorage()->get($data['discount_product']) : null
+                );
+            }
+
+            /** @var CartRuleId $cartRuleId */
+            $cartRuleId = $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage()->set($cartRuleReference, $cartRuleId->getValue());
+
+            if (!empty($data['code'])) {
+                // set cart rule id by code when it is not empty
+                SharedStorage::getStorage()->set($data['code'], $cartRuleId->getValue());
+            }
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
         }
     }
 
@@ -245,6 +249,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $errorMap = [
             'missing action' => CartRuleConstraintException::MISSING_ACTION,
             'required specific product' => CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT,
+            'non unique cart rule code' => CartRuleConstraintException::NON_UNIQUE_CODE,
         ];
 
         $this->assertLastErrorIs(

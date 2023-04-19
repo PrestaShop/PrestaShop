@@ -1,5 +1,6 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart_rule
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart_rule --tags add-cart-rule
 @restore-all-tables-before-feature
+@add-cart-rule
 Feature: Add cart rule
   PrestaShop allows BO users to create cart rules
   As a BO user
@@ -229,9 +230,9 @@ Feature: Add cart rule
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
     And cart rule cart_rule_1 should have the following properties:
-      | is_active                        | true                |
+      | is_active | true |
     And cart rule cart_rule_2 should have the following properties:
-      | is_active                        | true                |
+      | is_active | true |
     And I bulk disable cart rules "cart_rule_1,cart_rule_2"
     Then Cart rule with reference "cart_rule_1" is disabled
     And Cart rule with reference "cart_rule_2" is disabled
@@ -272,3 +273,34 @@ Feature: Add cart rule
     When I bulk enable cart rules "cart_rule_1,cart_rule_2"
     Then Cart rule with reference "cart_rule_1" is enabled
     And Cart rule with reference "cart_rule_2" is enabled
+
+  Scenario: I should not be able to create cart rule with already existing code
+    Given I create cart rule "cart_rule_1" with following properties:
+      | name[en-US]       | Cart Rule 1         |
+      | highlight         | true                |
+      | active            | true                |
+      | allow_partial_use | true                |
+      | priority          | 1                   |
+      | is_active         | true                |
+      | valid_from        | 2019-01-01 11:05:00 |
+      | valid_to          | 2019-12-01 00:00:00 |
+      | total_quantity    | 10                  |
+      | quantity_per_user | 2                   |
+      | free_shipping     | true                |
+      | code              | testcode1           |
+    And cart rule cart_rule_1 should have the following properties:
+      | is_active | testcode1 |
+    When I create cart rule "cart_rule_2" with following properties:
+      | name[en-US]       | Cart Rule 2         |
+      | highlight         | true                |
+      | active            | true                |
+      | allow_partial_use | true                |
+      | priority          | 1                   |
+      | is_active         | true                |
+      | valid_from        | 2019-01-01 11:05:00 |
+      | valid_to          | 2019-12-01 00:00:00 |
+      | total_quantity    | 10                  |
+      | quantity_per_user | 2                   |
+      | free_shipping     | true                |
+      | code              | testcode1           |
+    Then I should get cart rule error about "non unique cart rule code"
