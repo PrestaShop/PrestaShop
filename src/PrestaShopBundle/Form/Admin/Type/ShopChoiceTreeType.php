@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
@@ -55,18 +56,26 @@ class ShopChoiceTreeType extends AbstractType
     private $shopContext;
 
     /**
+     * @var FeatureInterface
+     */
+    private $multiStoreFeature;
+
+    /**
      * @param FormChoiceProviderInterface $shopTreeChoiceProvider
      * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
      * @param ShopContextInterface $shopContext
+     * @param FeatureInterface $multiStoreFeature
      */
     public function __construct(
         FormChoiceProviderInterface $shopTreeChoiceProvider,
         DataTransformerInterface $stringArrayToIntegerArrayDataTransformer,
-        ShopContextInterface $shopContext
+        ShopContextInterface $shopContext,
+        FeatureInterface $multiStoreFeature
     ) {
         $this->shopTreeChoiceProvider = $shopTreeChoiceProvider;
         $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
         $this->shopContext = $shopContext;
+        $this->multiStoreFeature = $multiStoreFeature;
     }
 
     /**
@@ -84,12 +93,18 @@ class ShopChoiceTreeType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'choices_tree' => $this->shopTreeChoiceProvider->getChoices(),
             'multiple' => true,
             'choice_label' => 'name',
             'choice_value' => 'id_shop',
             'default_empty_data' => $this->shopContext->getContextShopIds(),
+            'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
+            'row_attr' => [
+                'class' => $this->multiStoreFeature->isUsed() ? '' : 'd-none',
+            ],
         ]);
     }
 
