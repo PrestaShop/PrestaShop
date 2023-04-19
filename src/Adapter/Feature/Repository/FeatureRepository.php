@@ -41,12 +41,12 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
 /**
  * Methods to access data storage for FeatureValue
  */
-class FeatureRepository extends AbstractObjectModelRepository
+class FeatureRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var Connection
@@ -102,12 +102,9 @@ class FeatureRepository extends AbstractObjectModelRepository
     ): Feature {
         $feature = new Feature();
         $feature->name = $localizedNames;
-        $feature->id_shop_list = array_map(static function (ShopId $shopId) {
-            return $shopId->getValue();
-        }, $associatedShopIds);
 
         $this->featureValidator->validate($feature);
-        $this->addObjectModel($feature, CannotAddFeatureException::class);
+        $this->addObjectModelToShops($feature, $associatedShopIds, CannotAddFeatureException::class);
 
         return $feature;
     }
