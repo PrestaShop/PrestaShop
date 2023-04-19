@@ -140,7 +140,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
     protected function tearDown(): void
     {
-        self::$kernel->shutdown();
+        parent::tearDown();
         error_reporting($this->previousErrorReportingLevel);
     }
 }

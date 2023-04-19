@@ -88,6 +88,8 @@ class ThemeExtractorTest extends KernelTestCase
         }
 
         $this->themeExtractor = null;
+
+        parent::tearDown();
     }
 
     public function testExtractWithLegacyFormat(): void
