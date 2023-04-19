@@ -162,6 +162,7 @@ admin_categories_get_ajax_categories:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::getAjaxCategoriesAction
+    _legacy_controller: AdminCategories
     _format: json
     limit: 20
   requirements:
