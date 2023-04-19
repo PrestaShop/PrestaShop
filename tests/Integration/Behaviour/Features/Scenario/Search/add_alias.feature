@@ -22,3 +22,14 @@ Feature: Add basic alias from Back Office (BO)
     Then alias "alias2" should have the following details:
       | alias  | alias2,aliases2 |
       | search | alias 2         |
+
+  Scenario: I add a multiple aliases with same search field and basic information
+    When I add alias "alias3" with following information:
+      | alias  | alias3,aliases3 |
+      | search | alias 3         |
+    And I add alias "alias4" with following information:
+      | alias  | alias4,aliases4 |
+      | search | alias 3         |
+    Then alias "alias2" should have the following details:
+      | alias  | alias3,aliases3,alias4,aliases4 |
+      | search | alias 3                         |
