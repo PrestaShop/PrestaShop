@@ -135,6 +135,27 @@ if [ $PS_DEMO_MODE -ne 0 ]; then
     sed -i -e "s/define('_PS_MODE_DEMO_', false);/define('_PS_MODE_DEMO_',\ true);/g" /var/www/html/config/defines.inc.php
 fi
 
-echo "\n* Almost ! Starting web server now\n";
+if [ $PS_USE_DOCKER_MAILDEV -eq 1 ]; then
+    echo "\n* Configuring emails to use maildev ..."
+    runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config set PS_MAIL_METHOD --value "2"
+    runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config set PS_MAIL_SERVER --value "maildev"
+    runuser -g www-data -u www-data -- php /var/www/html/bin/console prestashop:config set PS_MAIL_SMTP_PORT --value "1025"
+fi
+
+echo "\n***"
+echo "**"
+echo "** To view storefront point your browser to http://localhost:8001/"
+echo "** To view backoffice point your browser to http://localhost:8001/admin-dev"
+echo "**   Login with:"
+echo "**     username: ${ADMIN_MAIL}"
+echo "**     password: ${ADMIN_PASSWD}"
+if [ $PS_USE_DOCKER_MAILDEV -eq 1 ]; then
+echo "**"
+echo "** To view sent emails point your browser to http://localhost:8002/"
+fi
+echo "**"
+echo "***\n"
+
+echo "\n* Starting web server now\n";
 
 exec apache2-foreground

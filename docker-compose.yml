@@ -55,6 +55,7 @@ services:
       PS_DEV_MODE: ${PS_DEV_MODE:-1}
       PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
+      PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
@@ -65,3 +66,9 @@ services:
       - mysql
     volumes:
       - ./:/var/www/html:delegated
+
+  maildev:
+    image: 'maildev/maildev'
+    ports:
+      - "8002:1080"
+      - "1025:1025"
