@@ -44,6 +44,7 @@ class CategoryImageFinderTest extends TestCase
         $this->findFileName('1-0_thumb.jpg', $thumbnails, true);
         $this->findFileName('1-1_thumb.jpg', $thumbnails, true);
         $this->findFileName('3-1_thumb.jpg', $thumbnails, false);
+        $this->findFileName('1-1_thum.jpg', $thumbnails, false);
     }
 
     /**
