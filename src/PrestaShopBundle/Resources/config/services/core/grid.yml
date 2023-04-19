@@ -16,8 +16,15 @@ services:
   prestashop.core.grid.query.doctrine_query_parser:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'
 
+  PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface: '@PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
+
   prestashop.core.query.doctrine_search_criteria_applicator:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
+    alias: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
+    deprecated: ~
 
   # Grid position updater
   PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory:

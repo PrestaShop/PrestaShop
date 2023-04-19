@@ -182,6 +182,12 @@ abstract class GridControllerTestCase extends WebTestCase
         return $this->parseEntitiesFromGridTable($crawler);
     }
 
+    protected function resetGridFilters(): void
+    {
+        // grid filters reset button highly depends on javascript so there is no point trying to test it here
+        DatabaseDump::restoreTables(['admin_filter']);
+    }
+
     /**
      * @param Crawler $crawler
      * @param array $formModifications
@@ -230,6 +236,38 @@ abstract class GridControllerTestCase extends WebTestCase
         }, iterator_to_array($entities));
 
         $this->assertContains($searchEntityId, $ids);
+    }
+
+    /**
+     * @param string $deleteRoute
+     * @param array $routeParams
+     */
+    protected function deleteEntityFromPage(string $deleteRoute, array $routeParams): void
+    {
+        // performs the deletion and then redirects to the list
+        $this->client->request('POST', $this->router->generate($deleteRoute, $routeParams));
+        $this->assertResponseRedirects();
+    }
+
+    /**
+     * @param string $route
+     * @param array<string, mixed> $routeParams
+     */
+    protected function toggleStatus(string $route, array $routeParams): void
+    {
+        $this->client->request('POST', $this->router->generate($route, $routeParams));
+        $this->assertResponseRedirects();
+    }
+
+    /**
+     * @param string $route
+     * @param array $requestParams
+     */
+    protected function bulkDeleteEntitiesFromPage(string $route, array $requestParams): void
+    {
+        // Delete url performs the deletion and then redirects to the list
+        $this->client->request('POST', $this->router->generate($route), $requestParams);
+        $this->assertResponseRedirects();
     }
 
     /**

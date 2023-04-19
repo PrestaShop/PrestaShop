@@ -133,6 +133,7 @@ module.exports = {
     state: './js/pages/state',
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
+    store: './js/pages/store',
     supplier: './js/pages/supplier',
     supplier_form: './js/pages/supplier/supplier-form',
     tax: './js/pages/tax',

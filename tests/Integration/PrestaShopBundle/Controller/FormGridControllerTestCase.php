@@ -135,19 +135,6 @@ abstract class FormGridControllerTestCase extends GridControllerTestCase
     }
 
     /**
-     * @param string $deleteRoute
-     * @param array $routeParams
-     */
-    protected function deleteEntityFromPage(string $deleteRoute, array $routeParams): void
-    {
-        $deleteUrl = $this->router->generate($deleteRoute, $routeParams);
-
-        // Delete url performs the deletion and then redirects to the list
-        $this->client->request('POST', $deleteUrl);
-        $this->assertResponseRedirects();
-    }
-
-    /**
      * Returns the url of the create page.
      *
      * @return string

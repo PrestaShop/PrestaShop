@@ -411,3 +411,8 @@ services:
     autowire: true
     # must remain public to be accessed by CommonController:searchGridAction
     public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory:
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+    autowire: true

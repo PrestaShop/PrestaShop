@@ -23,17 +23,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
+namespace Tests\Resources\Resetter;
 
-/**
- * Thrown when cannot delete store
- */
-class CannotDeleteStoreException extends StoreException
+use Tests\Resources\DatabaseDump;
+
+class StoreResetter
 {
-    public const FAILED_DELETE = 1;
-
-    public const FAILED_BULK_DELETE = 2;
+    public static function resetStores(): void
+    {
+        DatabaseDump::restoreTables([
+            'store',
+            'store_lang',
+            'store_shop',
+        ]);
+    }
 }

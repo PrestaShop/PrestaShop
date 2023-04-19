@@ -2,8 +2,12 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.domain.store.repository.store_repository:
-    class: 'PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository'
+  PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository:
+    autowire: true
+    public: false
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   prestashop.adapter.store.query_handler.get_store_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler'
@@ -39,3 +43,8 @@ services:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand }
+
+  # deprecated
+  prestashop.core.domain.store.repository.store_repository:
+    alias: PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository
+    deprecated: ~

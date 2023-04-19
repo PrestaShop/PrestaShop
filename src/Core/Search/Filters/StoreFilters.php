@@ -23,17 +23,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-/**
- * Thrown when cannot delete store
- */
-class CannotDeleteStoreException extends StoreException
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
+
+class StoreFilters extends ShopFilters
 {
-    public const FAILED_DELETE = 1;
+    /** @var string */
+    protected $filterId = StoreGridDefinitionFactory::GRID_ID;
 
-    public const FAILED_BULK_DELETE = 2;
+    /**
+     * @return array<string, mixed>
+     */
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => self::LIST_LIMIT,
+            'offset' => 0,
+            'orderBy' => 'id_store',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
 }

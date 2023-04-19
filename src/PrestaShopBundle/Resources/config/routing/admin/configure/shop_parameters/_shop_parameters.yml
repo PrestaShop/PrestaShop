@@ -30,6 +30,10 @@ _contacts:
   resource: "contacts.yml"
   prefix: /contacts/
 
+_stores:
+  resource: "stores.yml"
+  prefix: /stores/
+
 _order_states:
   resource: "order_states.yml"
   prefix: /order-states/
