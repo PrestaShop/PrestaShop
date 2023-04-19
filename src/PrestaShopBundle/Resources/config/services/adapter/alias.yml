@@ -1,6 +1,7 @@
 services:
   _defaults:
-    public: true
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator:
     autowire: true
