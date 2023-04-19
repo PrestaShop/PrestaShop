@@ -549,13 +549,14 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param int $attributeGroupId
-     * @param string $nameInDefaultLanguage
-     * @param string $publicNameInDefaultLanguage
+     * @param array<int, string> $localizedNames
+     * @param array<int, string> $localizedPublicNames
      * @param string $type
      *
-     * @return AttributeGroupId
+     * @return void
      *
-     * @throws AttributeGroupConstraintException|InvalidAttributeGroupTypeException
+     * @throws AttributeGroupConstraintException
+     * @throws InvalidAttributeGroupTypeException
      */
     private function editAttributeGroupUsingCommand(
         int $attributeGroupId,
