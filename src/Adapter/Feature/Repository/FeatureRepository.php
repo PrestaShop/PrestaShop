@@ -229,21 +229,6 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @param array|null $filters
      *
-     * @return int
-     */
-    public function getFeaturesCount(?array $filters = []): int
-    {
-        $qb = $this->getFeaturesQueryBuilder($filters)
-            ->select('COUNT(f.id_feature_value) AS total_feature_values')
-            ->addGroupBy('f.id_feature_value')
-        ;
-
-        return (int) $qb->execute()->fetch()['total_feature_values'];
-    }
-
-    /**
-     * @param array|null $filters
-     *
      * @return QueryBuilder
      */
     private function getFeaturesQueryBuilder(?array $filters): QueryBuilder
