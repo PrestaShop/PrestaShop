@@ -526,8 +526,8 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param array $localizedNames
-     * @param array $localizedPublicNames
+     * @param array<int, string> $localizedNames
+     * @param array<int, string> $localizedPublicNames
      * @param string $type
      *
      * @return AttributeGroupId
