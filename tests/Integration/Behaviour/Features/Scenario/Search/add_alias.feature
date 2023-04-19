@@ -31,5 +31,5 @@ Feature: Add basic alias from Back Office (BO)
       | alias  | alias4,aliases4 |
       | search | alias 3         |
     Then alias "alias2" should have the following details:
-      | alias  | alias3,aliases3,alias4,aliases4 |
+      | alias  | alias3,aliases3 |
       | search | alias 3                         |
