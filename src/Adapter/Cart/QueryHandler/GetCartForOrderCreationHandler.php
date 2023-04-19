@@ -439,7 +439,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $orderMessage,
             $this->contextLink->getPageLink(
                 'order',
-                false,
+                null,
                 (int) $cart->getAssociatedLanguage()->getId(),
                 http_build_query([
                     'step' => 3,
