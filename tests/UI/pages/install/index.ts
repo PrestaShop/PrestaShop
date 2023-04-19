@@ -51,6 +51,8 @@ class Install extends CommonPage {
 
   private readonly countryChosenSearchInput: string;
 
+  private readonly enableSslRadio: (value: number) => string;
+
   private readonly firstNameInput: string;
 
   private readonly lastNameInput: string;
@@ -145,6 +147,7 @@ class Install extends CommonPage {
     this.shopNameInput = '#infosShop';
     this.countryChosenSelect = '#infosCountry_chosen';
     this.countryChosenSearchInput = `${this.countryChosenSelect} .chosen-search input`;
+    this.enableSslRadio = (value: number) => `input[name="enable_ssl"][value="${value}"]`;
     this.firstNameInput = '#infosFirstname';
     this.lastNameInput = '#infosName';
     this.emailInput = '#infosEmail';
@@ -290,6 +293,7 @@ class Install extends CommonPage {
     await page.click(this.countryChosenSelect);
     await page.type(this.countryChosenSearchInput, global.INSTALL.COUNTRY);
     await page.keyboard.press('Enter');
+    await page.click(this.enableSslRadio(global.INSTALL.ENABLE_SSL ? 1 : 0));
 
     await page.type(this.firstNameInput, global.BO.FIRSTNAME);
     await page.type(this.lastNameInput, global.BO.LASTNAME);
