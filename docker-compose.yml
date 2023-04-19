@@ -10,7 +10,7 @@ volumes:
 
 services:
   mysql:
-    image: mysql:5
+    image: mysql:8
     ports:
       - "3306"
     volumes:
@@ -18,7 +18,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: prestashop
       MYSQL_DATABASE: prestashop
-    restart: always
+    restart: unless-stopped
+
   prestashop-git:
     build:
       dockerfile: .docker/Dockerfile
@@ -38,8 +39,8 @@ services:
       PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
-      PS_LANGUAGE: ${PS_LANGUAGE:-fr}
-      PS_DEV_MODE: ${PS_DEV_MODE:-0}
+      PS_LANGUAGE: ${PS_LANGUAGE:-en}
+      PS_DEV_MODE: ${PS_DEV_MODE:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
@@ -47,3 +48,6 @@ services:
       - "8001:80"
     volumes:
       - ./:/var/www/html:delegated
+    depends_on:
+        - mysql
+

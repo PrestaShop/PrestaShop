@@ -25,7 +25,7 @@ About the 'develop' branch
 --------
 
 The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop.
- 
+
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
 The first stable version of PrestaShop 8.0, was released on October 26th, 2022. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop-project.org/tag/8.0/).
@@ -62,8 +62,25 @@ Docker will bind your port 8001 to the web server. If you want to use other port
 MySQL credentials can also be found and modified in this file if needed.
 
 **Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
-If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data` 
+If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data`
 has write access to the whole workspace.
+
+To fully reset your repo and get a fresh start, run (be careful: this removes all your extra files):
+
+```
+# clean everything that is not part of the original repository (node_modules, etc.)
+git fetch origin
+git reset --hard origin/develop
+git clean -dfx
+
+# inform build scripts to reinstall shop
+rm config/settings.inc.php
+
+# clear all docker caches and rebuild everything
+docker compose down -v
+docker compose build --no-cache
+docker-compose up --build --force-recreate
+```
 
 Documentation
 --------

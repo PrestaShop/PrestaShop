@@ -17,7 +17,7 @@ RUN chown -R www-data:www-data /var/www/.npm
 RUN mkdir -p /var/www/.composer
 RUN chown -R www-data:www-data /var/www/.composer
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt install -y nodejs
 
 # Install mailutils to make sendmail work

@@ -32,7 +32,7 @@ set -e
 
 if [ $PS_DEV_MODE -ne 1 ]; then
   echo "\n* Disabling DEV mode ...";
-  sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
+  sed -i -e "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
 fi
 
 if [ ! -f ./config/settings.inc.php ]; then
@@ -76,7 +76,7 @@ fi
 
 if [ $PS_DEMO_MODE -ne 0 ]; then
     echo "\n* Enabling DEMO mode ...";
-    sed -ie "s/define('_PS_MODE_DEMO_', false);/define('_PS_MODE_DEMO_',\ true);/g" /var/www/html/config/defines.inc.php
+    sed -i -e "s/define('_PS_MODE_DEMO_', false);/define('_PS_MODE_DEMO_',\ true);/g" /var/www/html/config/defines.inc.php
 fi
 
 echo "\n* Almost ! Starting web server now\n";
