@@ -184,8 +184,6 @@ class CartRuleCore extends ObjectModel
             return false;
         }
 
-        Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', '1');
-
         return true;
     }
 
@@ -211,11 +209,6 @@ class CartRuleCore extends ObjectModel
             return false;
         }
 
-        Configuration::updateGlobalValue(
-            'PS_CART_RULE_FEATURE_ACTIVE',
-            CartRule::isCurrentlyUsed($this->def['table'], true)
-        );
-
         return true;
     }
 
@@ -231,11 +224,6 @@ class CartRuleCore extends ObjectModel
         if (!parent::delete()) {
             return false;
         }
-
-        Configuration::updateGlobalValue(
-            'PS_CART_RULE_FEATURE_ACTIVE',
-            CartRule::isCurrentlyUsed($this->def['table'], true)
-        );
 
         $r = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $this->id);
         $r &= Db::getInstance()->delete('cart_rule_carrier', '`id_cart_rule` = ' . (int) $this->id);
@@ -388,7 +376,7 @@ class CartRuleCore extends ObjectModel
         $free_shipping_only = false,
         $highlight_only = false
     ) {
-        if (!CartRule::isFeatureActive() || !CartRule::haveCartRuleToday($id_customer)) {
+        if (!CartRule::haveCartRuleToday($id_customer)) {
             return [];
         }
 
@@ -594,10 +582,6 @@ class CartRuleCore extends ObjectModel
      */
     public static function cartRuleExists($code)
     {
-        if (!CartRule::isFeatureActive()) {
-            return false;
-        }
-
         return (bool) Db::getInstance()->getValue('
 		SELECT `id_cart_rule`
 		FROM `' . _DB_PREFIX_ . 'cart_rule`
@@ -684,9 +668,6 @@ class CartRuleCore extends ObjectModel
      */
     public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true, $check_carrier = true, $useOrderPrices = false)
     {
-        if (!CartRule::isFeatureActive()) {
-            return false;
-        }
         $cart = $context->cart;
 
         // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
@@ -1161,10 +1142,6 @@ class CartRuleCore extends ObjectModel
      */
     public function getContextualValue($use_tax, Context $context = null, $filter = null, $package = null, $use_cache = true)
     {
-        if (!CartRule::isFeatureActive()) {
-            return 0;
-        }
-
         // set base price that will be used for percent reductions
         if (!empty($context->virtualTotalTaxIncluded) && !empty($context->virtualTotalTaxExcluded)) {
             $basePriceForPercentReduction = $use_tax ? $context->virtualTotalTaxIncluded : $context->virtualTotalTaxExcluded;
@@ -1653,7 +1630,7 @@ class CartRuleCore extends ObjectModel
         if ($context === null) {
             $context = Context::getContext();
         }
-        if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart)) {
+        if (!Validate::isLoadedObject($context->cart)) {
             return;
         }
 
@@ -1730,7 +1707,7 @@ class CartRuleCore extends ObjectModel
         if (!$context) {
             $context = Context::getContext();
         }
-        if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart)) {
+        if (!Validate::isLoadedObject($context->cart)) {
             return [];
         }
 
@@ -1747,6 +1724,8 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
+     * @deprecated Since 9.0.0 - not used anymore, it's active all the time.
+     *
      * Check if the CartRule feature is active
      * It becomes active after adding the first CartRule to the store.
      *
@@ -1754,9 +1733,7 @@ class CartRuleCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        $is_feature_active = (bool) Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
-
-        return $is_feature_active;
+        return true;
     }
 
     /**

@@ -5,7 +5,6 @@ Feature: Cart calculation with cart rules giving gift
 
   Scenario: 1 product in cart (out of stock), 1 cart rule give it as a gift, offering a gift (out of stock) and a global 10% discount
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
     Given product "product4" is out of stock
     Given there is a cart rule named "cartrule13" that applies a percent discount of 10.0% with priority 13, quantity of 1000 and quantity per user 1000
@@ -20,7 +19,6 @@ Feature: Cart calculation with cart rules giving gift
 
   Scenario: 2 products in cart, one cart rule offering a gift (out of stock) and a global 10% discount
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
     Given product "product4" is out of stock
@@ -37,7 +35,6 @@ Feature: Cart calculation with cart rules giving gift
 
   Scenario: 3 products in cart, one cart rule offering a gift and a global 10% discount
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
     Given there is a cart rule named "cartrule13" that applies a percent discount of 10.0% with priority 13, quantity of 1000 and quantity per user 1000
@@ -55,7 +52,6 @@ Feature: Cart calculation with cart rules giving gift
     but does not apply to already discounted products
 
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And product "product1" has a specific price named "discount" with a discount of 20.00 percent
     Given there is a product in the catalog named "product2" with a price of 11.00 and 1000 items in stock
@@ -75,7 +71,6 @@ Feature: Cart calculation with cart rules giving gift
 
   Scenario: 1 product in my cart, one cart rule offering the same product and a global 50% discount
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product_1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product_2" with a price of 35.567 and 1000 items in stock
     Given there is a cart rule named "cartrule14" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
@@ -98,7 +93,6 @@ Feature: Cart calculation with cart rules giving gift
 
   Scenario: 1 product in my cart, 2 same cart rules offering the same product as gift
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product_1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product_2" with a price of 35.567 and 1000 items in stock
     Given there is a cart rule named "cartrule16" that applies no discount with priority 1, quantity of 1000 and quantity per user 1000
@@ -123,7 +117,6 @@ Feature: Cart calculation with cart rules giving gift
 
   Scenario: 2 products in cart, one cart rule offering a gift (in stock) and a global 10% discount
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock

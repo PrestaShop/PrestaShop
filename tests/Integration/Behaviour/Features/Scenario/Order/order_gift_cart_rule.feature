@@ -15,7 +15,6 @@ Feature: Order from Back Office (BO)
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
-    And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
     And the available stock for product "Test Product Gifted" should be 100
     And I create an empty cart "dummy_cart" for customer "testCustomer"

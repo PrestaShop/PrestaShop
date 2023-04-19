@@ -5,7 +5,6 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
 
   Scenario: Empty cart, one cartRule
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a cart rule named "cartrule8" that applies an amount discount of 5.0 with priority 8, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule8" is restricted to product "product2"
@@ -17,7 +16,6 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
 
   Scenario: one product in cart, quantity 1, one specific 5€ cartRule on product2
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a cart rule named "cartrule8" that applies an amount discount of 5.0 with priority 8, quantity of 1000 and quantity per user 1000
@@ -30,7 +28,6 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
 
   Scenario: one product in cart, quantity 3, one specific 5€ cartRule on product #2
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a cart rule named "cartrule8" that applies an amount discount of 5.0 with priority 8, quantity of 1000 and quantity per user 1000
@@ -43,7 +40,6 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
 
   Scenario: 3 products in cart, several quantities, one specific 5€ cartRule on product #2
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
@@ -59,7 +55,6 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
 
   Scenario: 3 products in cart, several quantities, one specific 500€ cartRule on product #2
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock

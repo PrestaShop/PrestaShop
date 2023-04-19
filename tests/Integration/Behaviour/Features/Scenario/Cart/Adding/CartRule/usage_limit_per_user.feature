@@ -9,7 +9,6 @@ Feature: A cart rule's usage limit per user is detected
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And I am logged in as "test@prestashop.com" employee
-    And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And the module "dummy_payment" is installed
     And there is a cart rule named "limitedCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 2 and quantity per user 1
     And cart rule "limitedCartRule" has a discount code "foo1"

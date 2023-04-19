@@ -40,8 +40,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+    Given there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
     And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
     And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
     And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
@@ -96,8 +95,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+    Given there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
     And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
     And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
     And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
@@ -175,8 +173,7 @@ Feature: Order from Back Office (BO)
 #      | total_paid_real          | 0.0    |
 #      | total_shipping_tax_excl  | 7.0    |
 #      | total_shipping_tax_incl  | 7.42   |
-#    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-#    And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+#    Given there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
 #    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
 #    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
 #    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
@@ -240,8 +237,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
+    Given there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
     Given there is a cart rule named "CartRuleAmountOnWholeOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRuleAmountOnWholeOrder" is applied on every order
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -296,8 +292,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
+    Given there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
     Given there is a cart rule named "CartRuleAmountOnEveryOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRuleAmountOnEveryOrder" is applied on every order
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -368,8 +363,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
+    Given there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -442,8 +436,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
+    Given there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -517,8 +510,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
+    Given there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -607,7 +599,6 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     When I add discount to order "bo_order1" with following details:
       | name      | discount five-percent |
       | type      | percent               |

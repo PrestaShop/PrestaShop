@@ -319,7 +319,6 @@ class CartTest extends TestCase
         // Pre-existing cart rules might mess up our test
         Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'cart_rule SET active = 0');
         // Something might have disabled CartRules :)
-        Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
         Configuration::set('PS_GROUP_FEATURE_ACTIVE', true);
         Configuration::set('PS_ATCP_SHIPWRAP', false);
     }

@@ -15,8 +15,7 @@ Feature: Cart rule (percent) calculation with one cart rule
     And shop configuration for "PS_USE_ECOTAX" is set to 1
 
   Scenario:
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a tax named "tax4Percent" and rate 4.0%
+    Given there is a tax named "tax4Percent" and rate 4.0%
     And there is a tax rule named "taxRule4Percent" in country "country1" where tax "tax4Percent" is applied
     And I have an empty default cart
     ## Set Product
@@ -37,8 +36,7 @@ Feature: Cart rule (percent) calculation with one cart rule
     And my cart total should be 5.000 tax excluded
 
   Scenario:
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a tax named "tax4Percent" and rate 4.0%
+    Given there is a tax named "tax4Percent" and rate 4.0%
     And there is a tax rule named "taxRule4Percent" in country "country1" where tax "tax4Percent" is applied
     And I have an empty default cart
     ## Set Product
@@ -61,8 +59,7 @@ Feature: Cart rule (percent) calculation with one cart rule
     Then I should have a voucher named "cartRuleFiftyPercent" with 6.2 of discount
 
   Scenario:
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a tax named "tax4Percent" and rate 4.0%
+    Given there is a tax named "tax4Percent" and rate 4.0%
     And there is a tax rule named "taxRule4Percent" in country "country1" where tax "tax4Percent" is applied
     And Ecotax belongs to tax group "taxRule4Percent"
     And I have an empty default cart

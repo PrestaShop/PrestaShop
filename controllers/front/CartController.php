@@ -244,7 +244,7 @@ class CartControllerCore extends FrontController
                 $this->processChangeProductInCart();
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
-            } elseif (CartRule::isFeatureActive()) {
+            } else {
                 if (Tools::getIsset('addDiscount')) {
                     if (!($code = trim(Tools::getValue('discount_name')))) {
                         $this->errors[] = $this->trans(

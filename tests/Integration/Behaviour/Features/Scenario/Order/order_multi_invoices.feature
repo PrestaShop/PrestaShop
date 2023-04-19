@@ -398,7 +398,6 @@ Feature: Order from Back Office (BO)
 #      | shipping_cost_tax_incl | 14.84 |
 
   Scenario: I add products in two different invoices, a product has automatic discount when I move it to an order the discount is also moved
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product B"
     When I generate invoice for "bo_order1" order

@@ -5,7 +5,6 @@ Feature: Cart rule (amount) calculation with one cart rule
 
   Scenario: 4 products in cart, one is virtual, several quantities, one 5€ global voucher
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
@@ -24,7 +23,6 @@ Feature: Cart rule (amount) calculation with one cart rule
 
   Scenario: Only virtual product in my cart, one 5€ global voucher
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product8" with a price of 12.345 and 1000 items in stock
     Given product "product8" is virtual
     Given there is a cart rule named "cartrule4" that applies an amount discount of 5.0 with priority 4, quantity of 1000 and quantity per user 1000

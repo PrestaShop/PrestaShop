@@ -1597,7 +1597,7 @@ class FrontControllerCore extends Controller
                     ? $this->getTranslator()->trans('Unit price', [], 'Shop.Theme.Catalog')
                     : $this->getTranslator()->trans('Unit discount', [], 'Shop.Theme.Catalog'),
             ],
-            'voucher_enabled' => (int) CartRule::isFeatureActive(),
+            'voucher_enabled' => 1,
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
             'number_of_days_for_return' => (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
             'password_policy' => [

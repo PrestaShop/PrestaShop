@@ -93,10 +93,6 @@ class CartRuleCalculator
         $cartRule = $cartRuleData->getCartRule();
         $cart = $this->calculator->getCart();
 
-        if (!\CartRule::isFeatureActive()) {
-            return;
-        }
-
         // Free shipping on selected carriers
         if ($cartRule->free_shipping && $withFreeShipping) {
             $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();

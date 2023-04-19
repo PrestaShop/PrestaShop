@@ -11,7 +11,6 @@ Feature: Add cart rule in cart
   @bo-add-cart-rule
   Scenario: No product in cart should give a not valid cart rule insertion
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo1"
     Then I should have 0 different products in my cart
@@ -23,7 +22,6 @@ Feature: Add cart rule in cart
   @bo-add-cart-rule
   Scenario: 1 product in cart, cart rule is inserted correctly
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo1"
@@ -37,7 +35,6 @@ Feature: Add cart rule in cart
   @bo-add-cart-rule
   Scenario: 1 product in cart, cart rules are inserted correctly
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo1"
@@ -55,7 +52,6 @@ Feature: Add cart rule in cart
   @bo-add-cart-rule
   Scenario: 1 product in cart, double cart rule not inserted
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo1"
@@ -71,7 +67,6 @@ Feature: Add cart rule in cart
   @bo-add-cart-rule
   Scenario: 1 product in cart, cart rule giving gift, and global cart rule should be inserted without error
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
@@ -91,7 +86,6 @@ Feature: Add cart rule in cart
   @bo-add-cart-rule
   Scenario: 1 product in cart, cart rule giving gift out of stock, and global cart rule should be inserted without error (test PR #8361)
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
     Given product "product4" is out of stock

@@ -613,7 +613,7 @@ class CartPresenter implements PresenterInterface
         }
 
         return [
-            'allowed' => (int) CartRule::isFeatureActive(),
+            'allowed' => 1,
             'added' => $vouchers,
         ];
     }

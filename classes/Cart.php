@@ -464,7 +464,7 @@ class CartCore extends ObjectModel
         $virtual_context->cart = $this;
 
         // If the cart has not been saved, then there can't be any cart rule applied
-        if (!CartRule::isFeatureActive() || !$this->id) {
+        if (!$this->id) {
             return [];
         }
         if ($autoAdd) {
@@ -576,9 +576,6 @@ class CartCore extends ObjectModel
      */
     public function getDiscountsCustomer($id_cart_rule)
     {
-        if (!CartRule::isFeatureActive()) {
-            return 0;
-        }
         $cache_id = 'Cart::getDiscountsCustomer_' . (int) $this->id . '-' . (int) $id_cart_rule;
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance()->getValue('
@@ -2032,11 +2029,6 @@ class CartCore extends ObjectModel
         }
 
         // EARLY RETURNS
-
-        // if cart rules are not used
-        if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
-            return 0;
-        }
         // no shipping cost if is a cart with only virtuals products
         $virtual = $this->isVirtualCart();
         if ($virtual && $type == Cart::ONLY_SHIPPING) {

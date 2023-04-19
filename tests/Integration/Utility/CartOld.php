@@ -101,11 +101,6 @@ class CartOld extends Cart
 
         $with_shipping = in_array($type, [Cart::BOTH, Cart::ONLY_SHIPPING]);
 
-        // if cart rules are not used
-        if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
-            return 0;
-        }
-
         // no shipping cost if is a cart with only virtuals products
         $virtual = $this->isVirtualCart();
         if ($virtual && $type == Cart::ONLY_SHIPPING) {
@@ -252,7 +247,7 @@ class CartOld extends Cart
 
         $order_total_discount = 0;
         $order_shipping_discount = 0;
-        if (!in_array($type, [Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS]) && CartRule::isFeatureActive()) {
+        if (!in_array($type, [Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS])) {
             $cart_rules = $this->getTotalCalculationCartRules($type, $with_shipping);
 
             $package = [

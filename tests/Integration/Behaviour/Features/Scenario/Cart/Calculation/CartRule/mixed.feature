@@ -5,7 +5,6 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
 
   Scenario: Empty cart, 2 mixed cartRule
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a cart rule named "cartrule2" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule2" has a discount code "foo2"
     Given there is a cart rule named "cartrule4" that applies an amount discount of 5.0 with priority 4, quantity of 1000 and quantity per user 1000
@@ -18,7 +17,6 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
 
   Scenario: one product in cart, quantity 1, one 50% global cartRule, one 5€ global cartRule
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a cart rule named "cartrule2" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule2" has a discount code "foo2"
@@ -32,7 +30,6 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
 
   Scenario: one product in cart, quantity 1, one 50% global cartRule, one 500€ global cartRule
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a cart rule named "cartrule2" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule2" has a discount code "foo2"
@@ -46,7 +43,6 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
 
   Scenario: one product in cart, quantity 3, one 5€ global cartRule, one 50% global cartRule
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a cart rule named "cartrule4" that applies an amount discount of 5.0 with priority 4, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule4" has a discount code "foo4"
@@ -61,7 +57,6 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
 
   Scenario: one product in cart, quantity 3, one 500€ global cartRule, one 50% global cartRule
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a cart rule named "cartrule5" that applies an amount discount of 500.0 with priority 5, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule5" has a discount code "foo5"
@@ -75,7 +70,6 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
 
   Scenario: 3 products with several quantities in cart, one 5€ global cartRule, one 50% global cartRule
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock

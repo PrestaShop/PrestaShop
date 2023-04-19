@@ -5,7 +5,6 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to not al
 
   Scenario: multiple products in cart, several quantities, one 50% cartRule excluding already discounted
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given product "product1" has a specific price named "specificPrice1" with an amount discount of 3.0
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
@@ -23,7 +22,6 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to not al
 
   Scenario: multiple products in cart, several quantities, one 50% cartRule on selected product excluding already discounted
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given product "product1" has a specific price named "specificPrice1" with an amount discount of 3.0
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock

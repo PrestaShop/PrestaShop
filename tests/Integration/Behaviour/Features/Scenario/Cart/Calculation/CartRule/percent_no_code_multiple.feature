@@ -5,7 +5,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules without code
 
   Scenario: 3 products in cart, several quantities, 2x % global cartRules
     Given I have an empty default cart
-    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
