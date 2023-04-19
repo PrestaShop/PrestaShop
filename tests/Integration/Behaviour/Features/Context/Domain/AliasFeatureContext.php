@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Resources\DatabaseDump;
 
 class AliasFeatureContext extends AbstractDomainFeatureContext
@@ -72,7 +71,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $expectedEditableContacts = $this->mapToEditableAlias($data);
 
         /** @var AliasId[] $aliasIds */
-        $aliasIds = SharedStorage::getStorage()->get($reference);
+        $aliasIds = $this->getSharedStorage()->get($reference);
 
         foreach ($aliasIds as $aliasId) {
             /** @var AliasForEditing $aliasForEditing */
