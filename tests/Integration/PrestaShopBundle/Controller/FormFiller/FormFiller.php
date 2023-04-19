@@ -51,7 +51,7 @@ class FormFiller
             if (!is_array($formValue)) {
                 /** @var FormField $formField */
                 $formField = $form->get($fieldName);
-                $formField->setValue($formValue);
+                $formField->setValue((string) $formValue);
                 $this->enabledAssociatedField($form, $formField);
 
                 continue;
