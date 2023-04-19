@@ -174,7 +174,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'attr' => $editAttributes,
@@ -185,7 +185,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Reference', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'reference',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_details-tab',
@@ -204,7 +204,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_excluded',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_pricing-tab',
@@ -217,7 +217,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'price_tax_included',
                         'sortable' => false,
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_pricing-tab',
@@ -234,7 +234,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ->setOptions([
                             'field' => 'active',
                             'primary_field' => 'id_product',
-                            'route' => 'admin_products_v2_toggle_status_for_shop',
+                            'route' => 'admin_products_toggle_status_for_shop',
                             'route_param_name' => 'productId',
                             'extra_route_params' => [
                                 'shopId' => $shopId,
@@ -262,7 +262,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'id_field' => 'id_product',
                         'position_field' => 'position',
                         'update_method' => 'POST',
-                        'update_route' => 'admin_products_v2_update_position',
+                        'update_route' => 'admin_products_update_position',
                         'record_route_params' => [
                             'id_category' => 'id_category',
                         ],
@@ -288,7 +288,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_stock-tab',
@@ -343,7 +343,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Edit', [], 'Admin.Actions'))
             ->setIcon('edit')
             ->setOptions([
-                'route' => 'admin_products_v2_edit',
+                'route' => 'admin_products_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'clickable_row' => true,
@@ -353,7 +353,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Preview', [], 'Admin.Actions'))
             ->setIcon('remove_red_eye')
             ->setOptions([
-                'route' => 'admin_products_v2_preview',
+                'route' => 'admin_products_preview',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'target' => '_blank',
@@ -365,7 +365,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setIcon('content_copy')
             ->setOptions([
                 'method' => 'POST',
-                'route' => 'admin_products_v2_duplicate_shop',
+                'route' => 'admin_products_duplicate_shop',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'extra_route_params' => [
@@ -380,7 +380,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 $this->buildDeleteAction(
-                    'admin_products_v2_delete_from_shop',
+                    'admin_products_delete_from_shop',
                     'productId',
                     'id_product',
                     'POST',
@@ -399,10 +399,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         // We use only one variable for extra params because they happen to match for all use cases, they may need to be split in the future
         $extraRouteParams = [];
         if ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-            $deleteRouteName = 'admin_products_v2_delete_from_shop_group';
-            $duplicateRouteName = 'admin_products_v2_duplicate_shop_group';
-            $enableRouteName = 'admin_products_v2_enable_for_shop_group';
-            $disableRouteName = 'admin_products_v2_disable_for_shop_group';
+            $deleteRouteName = 'admin_products_delete_from_shop_group';
+            $duplicateRouteName = 'admin_products_duplicate_shop_group';
+            $enableRouteName = 'admin_products_enable_for_shop_group';
+            $disableRouteName = 'admin_products_disable_for_shop_group';
             $extraRouteParams = [
                 'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
             ];
@@ -412,10 +412,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             $disableLabel = $this->trans('Disable for group', [], 'Admin.Actions');
             $duplicateLabel = $this->trans('Duplicate group', [], 'Admin.Actions');
         } else {
-            $deleteRouteName = 'admin_products_v2_delete_from_all_shops';
-            $duplicateRouteName = 'admin_products_v2_duplicate_all_shops';
-            $enableRouteName = 'admin_products_v2_enable_for_all_shops';
-            $disableRouteName = 'admin_products_v2_disable_for_all_shops';
+            $deleteRouteName = 'admin_products_delete_from_all_shops';
+            $duplicateRouteName = 'admin_products_duplicate_all_shops';
+            $enableRouteName = 'admin_products_enable_for_all_shops';
+            $disableRouteName = 'admin_products_disable_for_all_shops';
 
             $deleteLabel = $this->trans('Delete from all stores', [], 'Admin.Actions');
             $enableLabel = $this->trans('Enable on all stores', [], 'Admin.Actions');
@@ -429,7 +429,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Edit', [], 'Admin.Actions'))
             ->setIcon('edit')
             ->setOptions([
-                'route' => 'admin_products_v2_edit',
+                'route' => 'admin_products_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'clickable_row' => true,
@@ -445,7 +445,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Edit', [], 'Admin.Actions'))
             ->setIcon('edit')
             ->setOptions([
-                'route' => 'admin_products_v2_edit',
+                'route' => 'admin_products_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'clickable_row' => true,
@@ -458,7 +458,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Preview', [], 'Admin.Actions'))
             ->setIcon('remove_red_eye')
             ->setOptions([
-                'route' => 'admin_products_v2_preview',
+                'route' => 'admin_products_preview',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'target' => '_blank',
@@ -585,7 +585,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
                         'reset_route' => 'admin_products_reset_grid_search',
-                        'redirect_route' => 'admin_products_v2_index',
+                        'redirect_route' => 'admin_products_index',
                     ])
                     ->setAssociatedColumn('actions')
             );
@@ -656,10 +656,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         if ($this->shopConstraintContext->getShopConstraint()->getShopId()) {
-            $bulkEnableRoute = 'admin_products_v2_bulk_enable_shop';
-            $bulkDisableRoute = 'admin_products_v2_bulk_disable_shop';
-            $bulkDuplicateRoute = 'admin_products_v2_bulk_duplicate_shop';
-            $bulkDeleteRoute = 'admin_products_v2_bulk_delete_from_shop';
+            $bulkEnableRoute = 'admin_products_bulk_enable_shop';
+            $bulkDisableRoute = 'admin_products_bulk_disable_shop';
+            $bulkDuplicateRoute = 'admin_products_bulk_duplicate_shop';
+            $bulkDeleteRoute = 'admin_products_bulk_delete_from_shop';
             $routeParams = [
                 'shopId' => $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue(),
             ];
@@ -675,10 +675,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 $bulkDeleteLabel = $this->trans('Delete selection', [], 'Admin.Actions');
             }
         } elseif ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-            $bulkEnableRoute = 'admin_products_v2_bulk_enable_shop_group';
-            $bulkDisableRoute = 'admin_products_v2_bulk_disable_shop_group';
-            $bulkDuplicateRoute = 'admin_products_v2_bulk_duplicate_shop_group';
-            $bulkDeleteRoute = 'admin_products_v2_bulk_delete_from_shop_group';
+            $bulkEnableRoute = 'admin_products_bulk_enable_shop_group';
+            $bulkDisableRoute = 'admin_products_bulk_disable_shop_group';
+            $bulkDuplicateRoute = 'admin_products_bulk_duplicate_shop_group';
+            $bulkDeleteRoute = 'admin_products_bulk_delete_from_shop_group';
             $routeParams = [
                 'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
             ];
@@ -687,10 +687,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             $bulkDuplicateLabel = $this->trans('Duplicate selection for group', [], 'Admin.Actions');
             $bulkDeleteLabel = $this->trans('Delete selection for group', [], 'Admin.Actions');
         } else {
-            $bulkEnableRoute = 'admin_products_v2_bulk_enable_all_shops';
-            $bulkDisableRoute = 'admin_products_v2_bulk_disable_all_shops';
-            $bulkDuplicateRoute = 'admin_products_v2_bulk_duplicate_all_shops';
-            $bulkDeleteRoute = 'admin_products_v2_bulk_delete_from_all_shops';
+            $bulkEnableRoute = 'admin_products_bulk_enable_all_shops';
+            $bulkDisableRoute = 'admin_products_bulk_disable_all_shops';
+            $bulkDuplicateRoute = 'admin_products_bulk_duplicate_all_shops';
+            $bulkDeleteRoute = 'admin_products_bulk_delete_from_all_shops';
             $routeParams = [];
             $bulkEnableLabel = $this->trans('Activate selection for all stores', [], 'Admin.Actions');
             $bulkDisableLabel = $this->trans('Deactivate selection for all stores', [], 'Admin.Actions');

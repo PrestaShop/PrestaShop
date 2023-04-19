@@ -100,14 +100,14 @@ class FooterType extends TranslatorAwareType
     {
         $productId = $options['product_id'];
 
-        $deleteUrl = $this->router->generate('admin_products_v2_delete_from_all_shops', [
+        $deleteUrl = $this->router->generate('admin_products_delete_from_all_shops', [
             'productId' => $productId,
         ]);
-        $duplicateUrl = $this->router->generate('admin_products_v2_duplicate_shop', [
+        $duplicateUrl = $this->router->generate('admin_products_duplicate_shop', [
             'productId' => $productId,
             'shopId' => $this->contextShopId,
         ]);
-        $editUrl = $this->router->generate('admin_products_v2_edit', [
+        $editUrl = $this->router->generate('admin_products_edit', [
             'productId' => $productId,
         ]);
         $productPreviewUrl = $this->productPreviewUrlProvider->getUrl($productId, $options['active']);
@@ -130,7 +130,7 @@ class FooterType extends TranslatorAwareType
                             'icon' => 'arrow_back_ios',
                             'attr' => [
                                 'class' => 'btn-outline-secondary border-white go-to-catalog-button',
-                                'href' => $this->router->generate('admin_products_v2_index', ['offset' => 'last', 'limit' => 'last']),
+                                'href' => $this->router->generate('admin_products_index', ['offset' => 'last', 'limit' => 'last']),
                             ],
                         ],
                     ],
@@ -142,7 +142,7 @@ class FooterType extends TranslatorAwareType
                             'type' => 'link',
                             'attr' => [
                                 'class' => 'btn-outline-secondary new-product-button',
-                                'href' => $this->router->generate('admin_products_v2_create', ['shopId' => $this->contextShopId]),
+                                'href' => $this->router->generate('admin_products_create', ['shopId' => $this->contextShopId]),
                             ],
                         ],
                     ],

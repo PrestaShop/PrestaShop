@@ -94,7 +94,7 @@ class ProductToolbarButtonsProvider implements ToolbarButtonsProviderInterface
                         'class' => 'toolbar-button btn-quicknav btn-sidebar',
                         'data-toggle' => 'sidebar',
                         'data-target' => '#right-sidebar',
-                        'data-url' => $this->router->generate('admin_products_v2_light_list'),
+                        'data-url' => $this->router->generate('admin_products_light_list'),
                     ],
                 ],
             ],

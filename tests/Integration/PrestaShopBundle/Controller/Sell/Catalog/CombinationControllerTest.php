@@ -93,7 +93,7 @@ class CombinationControllerTest extends FormGridControllerTestCase
             'create_product[type]' => ProductType::TYPE_COMBINATIONS,
         ];
 
-        $createEntityUrl = $this->router->generate('admin_products_v2_create');
+        $createEntityUrl = $this->router->generate('admin_products_create');
 
         $this->fillAndSubmitEntityForm($createEntityUrl, $formData, 'create_product_create');
         $formHandlerChecker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.product_form_handler');
@@ -345,7 +345,7 @@ class CombinationControllerTest extends FormGridControllerTestCase
     private function updateCombinationFromList(int $productId, array $formData): void
     {
         // Get token from product form page
-        $productCrawler = $this->client->request('GET', $this->router->generate('admin_products_v2_edit', ['productId' => $productId]));
+        $productCrawler = $this->client->request('GET', $this->router->generate('admin_products_edit', ['productId' => $productId]));
         $tokenCrawler = $productCrawler->filter('[name="combination_list[_token]"]');
 
         $tokenInput = $tokenCrawler->getNode(0);

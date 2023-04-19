@@ -1,4 +1,4 @@
-admin_products_v2_images_for_shop:
+admin_products_images_for_shop:
   path: /{productId}/images-for-shop/{shopId}
   methods: [ GET ]
   defaults:
@@ -14,7 +14,7 @@ admin_products_v2_images_for_shop:
     productId: \d+
     shopId: \d+
 
-admin_products_v2_product_shop_images:
+admin_products_product_shop_images:
   path: /{productId}/shopImages
   methods: [ GET, POST ]
   defaults:
@@ -29,7 +29,7 @@ admin_products_v2_product_shop_images:
   requirements:
     productId: \d+
 
-admin_products_v2_add_image:
+admin_products_add_image:
   path: /images/add
   methods: [ POST ]
   defaults:
@@ -42,7 +42,7 @@ admin_products_v2_add_image:
   options:
     expose: true
 
-admin_products_v2_update_image:
+admin_products_update_image:
   path: /images/{productImageId}/update
   methods: [ PATCH ]
   defaults:
@@ -57,7 +57,7 @@ admin_products_v2_update_image:
   requirements:
     productImageId: \d+
 
-admin_products_v2_delete_image:
+admin_products_delete_image:
   path: /images/{productImageId}/delete
   methods: [ POST ]
   defaults:

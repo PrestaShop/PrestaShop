@@ -185,7 +185,7 @@ class ProductController extends FrameworkBundleAdminController
             $definitionFactory,
             $request,
             $filterId,
-            'admin_products_v2_index',
+            'admin_products_index',
             ['product[filters][id_category]']
         );
     }
@@ -245,7 +245,7 @@ class ProductController extends FrameworkBundleAdminController
             $adminFiltersRepository->updateFilter($adminFilter);
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**
@@ -403,7 +403,7 @@ class ProductController extends FrameworkBundleAdminController
                     $redirectParams['setShopContext'] = 's-' . $createdData['shop_id'];
                 }
 
-                return $this->redirectToRoute('admin_products_v2_edit', $redirectParams);
+                return $this->redirectToRoute('admin_products_edit', $redirectParams);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -429,7 +429,7 @@ class ProductController extends FrameworkBundleAdminController
         if ($request->query->get('switchToShop')) {
             $this->addFlash('success', $this->trans('Your store context has been automatically modified.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_products_v2_edit', [
+            return $this->redirectToRoute('admin_products_edit', [
                 'productId' => $productId,
                 // Force shop context switching to selected shop for creation (handled in admin-dev/init.php and/or AdminController)
                 'setShopContext' => 's-' . $request->query->get('switchToShop'),
@@ -453,7 +453,7 @@ class ProductController extends FrameworkBundleAdminController
         } catch (ProductNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirectToRoute('admin_products_v2_index');
+            return $this->redirectToRoute('admin_products_index');
         }
 
         try {
@@ -464,7 +464,7 @@ class ProductController extends FrameworkBundleAdminController
                 if ($result->isValid()) {
                     $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                    return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+                    return $this->redirectToRoute('admin_products_edit', ['productId' => $productId]);
                 } else {
                     // Display root level errors with flash messages
                     foreach ($productForm->getErrors() as $error) {
@@ -502,7 +502,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**
@@ -525,7 +525,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**
@@ -548,7 +548,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**
@@ -616,7 +616,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Toggles product status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_index")
      *
      * @param int $productId
      * @param int $shopId
@@ -653,7 +653,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Enable product status for all shops and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_index")
      *
      * @param int $productId
      *
@@ -667,7 +667,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Enable product status for shop group and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_index")
      *
      * @param int $productId
      * @param int $shopGroupId
@@ -682,7 +682,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Disable product status for shop group and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_index")
      *
      * @param int $productId
      * @param int $shopGroupId
@@ -697,7 +697,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Disable product status for all shops and redirect to product list.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_index")
      *
      * @param int $productId
      *
@@ -713,12 +713,12 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     redirectQueryParamsToKeep={"id_category"},
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     redirectQueryParamsToKeep={"id_category"}
      * )
      *
@@ -739,10 +739,10 @@ class ProductController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirectToRoute('admin_products_v2_index');
+            return $this->redirectToRoute('admin_products_index');
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**
@@ -750,7 +750,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to delete this."
      * )
      *
@@ -782,7 +782,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -800,7 +800,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -819,7 +819,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -838,7 +838,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -856,7 +856,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -875,7 +875,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -894,7 +894,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -912,7 +912,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -931,7 +931,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_v2_index",
+     *     redirectRoute="admin_products_index",
      *     message="You do not have permission to edit this."
      * )
      *
@@ -983,7 +983,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function searchAssociationsAction(Request $request, string $languageCode): JsonResponse
+    public function searchProductsForAssociationAction(Request $request, string $languageCode): JsonResponse
     {
         $langRepository = $this->get('prestashop.core.admin.lang.repository');
         $lang = $langRepository->getOneByLocaleOrIsoCode($languageCode);
@@ -1178,10 +1178,10 @@ class ProductController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirectToRoute('admin_products_v2_index');
+            return $this->redirectToRoute('admin_products_index');
         }
 
-        return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
+        return $this->redirectToRoute('admin_products_edit', ['productId' => $newProductId->getValue()]);
     }
 
     /**
@@ -1256,7 +1256,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),
+            'href' => $this->generateUrl('admin_products_create', ['shopId' => $this->getShopIdFromShopContext()]),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product-button',
@@ -1289,7 +1289,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->redirectToRoute('admin_products_index');
     }
 
     /**

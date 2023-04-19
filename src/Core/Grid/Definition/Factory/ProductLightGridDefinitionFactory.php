@@ -84,7 +84,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setOptions([
                 'field' => 'id_product',
                 'sortable' => false,
-                'route' => 'admin_products_v2_edit',
+                'route' => 'admin_products_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
             ])
@@ -93,7 +93,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
-                'route' => 'admin_products_v2_edit',
+                'route' => 'admin_products_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'sortable' => false,
@@ -103,7 +103,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Price', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'price_tax_excluded',
-                'route' => 'admin_products_v2_edit',
+                'route' => 'admin_products_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
                 'route_fragment' => 'tab-product_pricing-tab',
@@ -116,7 +116,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'field' => 'quantity',
-                    'route' => 'admin_products_v2_edit',
+                    'route' => 'admin_products_edit',
                     'route_param_name' => 'productId',
                     'route_param_field' => 'id_product',
                     'route_fragment' => 'tab-product_stock-tab',

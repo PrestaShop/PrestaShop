@@ -136,7 +136,7 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'desc'
     ) {
         if ($this->shouldRedirectToV2()) {
-            return $this->redirectToRoute('admin_products_v2_index');
+            return $this->redirectToRoute('admin_products_index');
         }
 
         $language = $this->getContext()->language;
@@ -340,7 +340,7 @@ class ProductController extends FrameworkBundleAdminController
                 ]
             );
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
-            $product['url_v2'] = $this->generateUrl('admin_products_v2_edit', ['productId' => $product['id_product']]);
+            $product['url_v2'] = $this->generateUrl('admin_products_edit', ['productId' => $product['id_product']]);
         }
 
         //Drag and drop is ONLY activated when EXPLICITLY requested by the user
@@ -453,7 +453,7 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         if ($this->shouldRedirectToV2()) {
-            return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $id]);
+            return $this->redirectToRoute('admin_products_edit', ['productId' => $id]);
         }
 
         gc_disable();
