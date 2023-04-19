@@ -46,7 +46,6 @@ use PrestaShopDatabaseException;
 use PrestaShopException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
@@ -94,7 +93,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             );
 
             if (!empty($data['minimum_amount'])) {
-                $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
+                $currencyId = $this->getSharedStorage()->get($data['minimum_amount_currency']);
                 $command->setMinimumAmount(
                     $data['minimum_amount'],
                     $currencyId,
@@ -118,11 +117,11 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
             /** @var CartRuleId $cartRuleId */
             $cartRuleId = $this->getCommandBus()->handle($command);
-            SharedStorage::getStorage()->set($cartRuleReference, $cartRuleId->getValue());
+            $this->getSharedStorage()->set($cartRuleReference, $cartRuleId->getValue());
 
             if (!empty($data['code'])) {
                 // set cart rule id by code when it is not empty
-                SharedStorage::getStorage()->set($data['code'], $cartRuleId->getValue());
+                $this->getSharedStorage()->set($data['code'], $cartRuleId->getValue());
             }
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
@@ -139,7 +138,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function deleteCartRule(string $cartRuleReference): void
     {
         $this->getCommandBus()->handle(
-            new DeleteCartRuleCommand(SharedStorage::getStorage()->get($cartRuleReference))
+            new DeleteCartRuleCommand($this->getSharedStorage()->get($cartRuleReference))
         );
     }
 
@@ -193,7 +192,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function assertCartRuleEnabled(string $cartRuleReference): void
     {
         /** @var CartRuleForEditing $cartRule */
-        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing(SharedStorage::getStorage()->get($cartRuleReference)));
+        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)));
 
         Assert::assertTrue(
             $cartRule->getInformation()->isEnabled(),
@@ -211,7 +210,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function assertCartRuleDisabled(string $cartRuleReference): void
     {
         /** @var CartRuleForEditing $cartRule */
-        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing(SharedStorage::getStorage()->get($cartRuleReference)));
+        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)));
 
         Assert::assertFalse(
             $cartRule->getInformation()->isEnabled(),
@@ -230,10 +229,10 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function assertCartRuleDeleted(string $cartRuleReference): void
     {
         try {
-            $this->getQueryBus()->handle(new GetCartRuleForEditing(SharedStorage::getStorage()->get($cartRuleReference)));
+            $this->getQueryBus()->handle(new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)));
             throw new NoExceptionAlthoughExpectedException(sprintf('Cart rule "%s" was found, but it was expected to be deleted', $cartRuleReference));
         } catch (CartRuleNotFoundException $e) {
-            SharedStorage::getStorage()->clear($cartRuleReference);
+            $this->getSharedStorage()->clear($cartRuleReference);
         }
     }
 
