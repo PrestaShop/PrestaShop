@@ -28,103 +28,99 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-
-class EditableCartRuleReduction
+class CartRuleRestrictionsForEditing
 {
     /**
-     * @var DecimalNumber
+     * @var bool
      */
-    private $percent;
-
-    /**
-     * @var DecimalNumber
-     */
-    private $amount;
+    private $countryRestriction;
 
     /**
      * @var bool
      */
-    private $tax;
-
-    /**
-     * @var CurrencyId|null
-     */
-    private $currencyId;
-
-    /**
-     * @var ProductId|null
-     */
-    private $productId;
+    private $carrierRestriction;
 
     /**
      * @var bool
      */
-    private $excludeSpecial;
+    private $groupRestriction;
+
+    /**
+     * @var bool
+     */
+    private $cartRuleRestriction;
+
+    /**
+     * @var bool
+     */
+    private $productRestriction;
+
+    /**
+     * @var bool
+     */
+    private $shopRestriction;
 
     public function __construct(
-        DecimalNumber $percent,
-        DecimalNumber $amount,
-        bool $tax,
-        ?CurrencyId $currencyId,
-        ?ProductId $productId,
-        bool $excludeSpecial
+        bool $countryRestriction,
+        bool $carrierRestriction,
+        bool $groupRestriction,
+        bool $cartRuleRestriction,
+        bool $productRestriction,
+        bool $shopRestriction
     ) {
-        $this->percent = $percent;
-        $this->amount = $amount;
-        $this->tax = $tax;
-        $this->currencyId = $currencyId;
-        $this->productId = $productId;
-        $this->excludeSpecial = $excludeSpecial;
-    }
-
-    /**
-     * @return DecimalNumber
-     */
-    public function getPercent(): DecimalNumber
-    {
-        return $this->percent;
-    }
-
-    /**
-     * @return DecimalNumber
-     */
-    public function getAmount(): DecimalNumber
-    {
-        return $this->amount;
+        $this->countryRestriction = $countryRestriction;
+        $this->carrierRestriction = $carrierRestriction;
+        $this->groupRestriction = $groupRestriction;
+        $this->cartRuleRestriction = $cartRuleRestriction;
+        $this->productRestriction = $productRestriction;
+        $this->shopRestriction = $shopRestriction;
     }
 
     /**
      * @return bool
      */
-    public function isTax(): bool
+    public function isCountryRestriction(): bool
     {
-        return $this->tax;
-    }
-
-    /**
-     * @return CurrencyId|null
-     */
-    public function getCurrencyId(): ?CurrencyId
-    {
-        return $this->currencyId;
-    }
-
-    /**
-     * @return ProductId|null
-     */
-    public function getProductId(): ?ProductId
-    {
-        return $this->productId;
+        return $this->countryRestriction;
     }
 
     /**
      * @return bool
      */
-    public function isExcludeSpecial(): bool
+    public function isCarrierRestriction(): bool
     {
-        return $this->excludeSpecial;
+        return $this->carrierRestriction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGroupRestriction(): bool
+    {
+        return $this->groupRestriction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCartRuleRestriction(): bool
+    {
+        return $this->cartRuleRestriction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProductRestriction(): bool
+    {
+        return $this->productRestriction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShopRestriction(): bool
+    {
+        return $this->shopRestriction;
     }
 }

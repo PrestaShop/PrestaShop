@@ -178,16 +178,20 @@ class AddCartRuleCommand
         return $this->discountApplicationType;
     }
 
-    /**
-     * @param string $discountApplicationType
-     *
-     * @return AddCartRuleCommand
-     *
-     * @throws CartRuleConstraintException
-     */
-    public function setDiscountApplicationType(string $discountApplicationType): AddCartRuleCommand
+    public function setDiscountApplication(string $discountApplicationType, ?int $productId = null): AddCartRuleCommand
     {
         $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
+        if (DiscountApplicationType::SPECIFIC_PRODUCT === $discountApplicationType) {
+            if (!$productId) {
+                throw new CartRuleConstraintException(
+                    'ProductId is required for discount application "specific_product"',
+                    CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
+                );
+            }
+            $this->discountProductId = new ProductId($productId);
+        } else {
+            $this->discountProductId = null;
+        }
 
         return $this;
     }
@@ -198,18 +202,6 @@ class AddCartRuleCommand
     public function getDiscountProductId(): ?ProductId
     {
         return $this->discountProductId;
-    }
-
-    /**
-     * @param int $discountProductId
-     *
-     * @return AddCartRuleCommand
-     */
-    public function setDiscountProductId(int $discountProductId): AddCartRuleCommand
-    {
-        $this->discountProductId = new ProductId($discountProductId);
-
-        return $this;
     }
 
     /**
@@ -402,7 +394,10 @@ class AddCartRuleCommand
     private function setPriority(int $priority): AddCartRuleCommand
     {
         if (0 >= $priority) {
-            throw new CartRuleConstraintException(sprintf('Invalid cart rule priority "%s". Must be a positive integer.', var_export($priority, true)), CartRuleConstraintException::INVALID_PRIORITY);
+            throw new CartRuleConstraintException(
+                sprintf('Invalid cart rule priority "%s". Must be a positive integer.', $priority),
+                CartRuleConstraintException::INVALID_PRIORITY
+            );
         }
 
         $this->priority = $priority;

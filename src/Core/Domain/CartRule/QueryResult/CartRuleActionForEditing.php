@@ -28,10 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-
-class EditableCartRuleActions
+class CartRuleActionForEditing
 {
     /**
      * @var bool
@@ -39,28 +36,35 @@ class EditableCartRuleActions
     private $freeShipping;
 
     /**
-     * @var EditableCartRuleReduction
+     * @var CartRuleReductionForEditing
      */
     private $reduction;
 
     /**
-     * @var ProductId|null
+     * @var int|null
      */
     private $giftProductId;
 
     /**
-     * @var CombinationId|null
+     * @var int|null
      */
     private $giftCombinationId;
 
+    /**
+     * @var string
+     */
+    private $discountApplicationType;
+
     public function __construct(
         bool $freeShipping,
-        EditableCartRuleReduction $reduction,
-        ?ProductId $giftProductId,
-        ?CombinationId $giftCombinationId
+        CartRuleReductionForEditing $reduction,
+        string $discountApplicationType,
+        ?int $giftProductId,
+        ?int $giftCombinationId
     ) {
         $this->freeShipping = $freeShipping;
         $this->reduction = $reduction;
+        $this->discountApplicationType = $discountApplicationType;
         $this->giftProductId = $giftProductId;
         $this->giftCombinationId = $giftCombinationId;
     }
@@ -74,26 +78,34 @@ class EditableCartRuleActions
     }
 
     /**
-     * @return EditableCartRuleReduction
+     * @return CartRuleReductionForEditing
      */
-    public function getReduction(): EditableCartRuleReduction
+    public function getReduction(): CartRuleReductionForEditing
     {
         return $this->reduction;
     }
 
     /**
-     * @return ProductId|null
+     * @return int|null
      */
-    public function getGiftProductId(): ?ProductId
+    public function getGiftProductId(): ?int
     {
         return $this->giftProductId;
     }
 
     /**
-     * @return CombinationId|null
+     * @return int|null
      */
-    public function getGiftCombinationId(): ?CombinationId
+    public function getGiftCombinationId(): ?int
     {
         return $this->giftCombinationId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDiscountApplicationType(): string
+    {
+        return $this->discountApplicationType;
     }
 }

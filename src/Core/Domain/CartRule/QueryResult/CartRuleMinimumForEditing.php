@@ -29,9 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
-class EditableCartRuleMinimum
+class CartRuleMinimumForEditing
 {
     /**
      * @var DecimalNumber
@@ -44,7 +43,7 @@ class EditableCartRuleMinimum
     private $amountTax;
 
     /**
-     * @var CurrencyId
+     * @var int
      */
     private $currencyId;
 
@@ -56,7 +55,7 @@ class EditableCartRuleMinimum
     public function __construct(
         DecimalNumber $amount,
         bool $amountTax,
-        CurrencyId $currencyId,
+        int $currencyId,
         bool $shipping
     ) {
         $this->amount = $amount;
@@ -82,9 +81,9 @@ class EditableCartRuleMinimum
     }
 
     /**
-     * @return CurrencyId
+     * @return int
      */
-    public function getCurrencyId(): CurrencyId
+    public function getCurrencyId(): int
     {
         return $this->currencyId;
     }

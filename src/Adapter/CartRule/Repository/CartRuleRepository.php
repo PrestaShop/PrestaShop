@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\Repository;
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class CartRuleRepository extends AbstractObjectModelRepository
@@ -45,11 +48,39 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->cartRuleValidator = $cartRuleValidator;
     }
 
-    public function create(CartRule $cartRule): CartRule
+    public function add(CartRule $cartRule): CartRule
     {
         $this->cartRuleValidator->validate($cartRule);
         $this->addObjectModel($cartRule, CannotAddCartRuleException::class);
 
         return $cartRule;
+    }
+
+    public function get(CartRuleId $cartRuleId): CartRule
+    {
+        /** @var CartRule $cartRule */
+        $cartRule = $this->getObjectModel(
+            $cartRuleId->getValue(),
+            CartRule::class,
+            CartRuleNotFoundException::class
+        );
+
+        return $cartRule;
+    }
+
+    /**
+     * @param CartRule $cartRule
+     * @param array<int|string, string|int[]> $propertiesToUpdate
+     * @param int $errorCode
+     */
+    public function partialUpdate(CartRule $cartRule, array $propertiesToUpdate, int $errorCode = 0): void
+    {
+        $this->cartRuleValidator->validate($cartRule);
+        $this->partiallyUpdateObjectModel(
+            $cartRule,
+            $propertiesToUpdate,
+            CannotEditCartRuleException::class,
+            $errorCode
+        );
     }
 }

@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -60,7 +60,7 @@ class CartRuleFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        /** @var EditableCartRule $editableCartRule */
+        /** @var CartRuleForEditing $editableCartRule */
         $editableCartRule = $this->queryBus->handle(new GetCartRuleForEditing($id));
 
         //@todo: finish up in a dedicated PR when EditCartRuleCommand is introduced

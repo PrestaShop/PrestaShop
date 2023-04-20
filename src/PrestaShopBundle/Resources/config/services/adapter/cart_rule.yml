@@ -53,3 +53,9 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\EditCartRuleHandler:
+    autowire: true
+    public: false
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand }

@@ -584,7 +584,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function useDiscountByCodeOnCart(string $voucherCode, string $cartReference)
     {
         $cartId = SharedStorage::getStorage()->get($cartReference);
-        $cartRuleId = SharedStorage::getStorage()->get($voucherCode);
+        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         $this->getCommandBus()->handle(
             new AddCartRuleToCartCommand(

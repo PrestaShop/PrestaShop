@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --tags remove-cart-rule
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags cart-rule-usage-limit
 @restore-all-tables-before-feature
 @cart-rule-usage-limit
 

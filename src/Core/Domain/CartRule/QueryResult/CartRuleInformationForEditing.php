@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-class EditableCartRuleInformation
+class CartRuleInformationForEditing
 {
     /**
      * @var array
