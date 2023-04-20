@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CartRule\Action;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,6 +49,9 @@ class CartRuleType extends TranslatorAwareType
             ])
             ->add('actions', ActionsType::class, [
                 'label' => $this->trans('Actions', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Action(),
+                ],
             ])
         ;
     }

@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
  * It can optionally have free shipping and gift product.
  * It cannot have percentage discount.
  */
-final class AmountDiscountAction implements CartRuleActionInterface
+class AmountDiscountAction implements CartRuleActionInterface
 {
     /**
      * @var Money

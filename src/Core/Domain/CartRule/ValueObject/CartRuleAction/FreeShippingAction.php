@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -35,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
  * It cannot have percentage or amount discount.
  * It can optionally have gift product.
  */
-final class FreeShippingAction implements CartRuleActionInterface
+class FreeShippingAction implements CartRuleActionInterface
 {
     /**
      * @var GiftProduct|null
@@ -80,5 +81,10 @@ final class FreeShippingAction implements CartRuleActionInterface
     public function getGiftProduct(): ?GiftProduct
     {
         return $this->giftProduct;
+    }
+
+    public function getDiscountApplicationType(): ?DiscountApplicationType
+    {
+        return null;
     }
 }
