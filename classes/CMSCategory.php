@@ -674,17 +674,4 @@ class CMSCategoryCore extends ObjectModel
     {
         return Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `' . _DB_PREFIX_ . 'cms_category` WHERE `id_parent` = ' . (int) $id_category_parent);
     }
-
-    public static function getUrlRewriteInformations($id_category)
-    {
-        $sql = '
-		SELECT l.`id_lang`, c.`link_rewrite`
-		FROM `' . _DB_PREFIX_ . 'cms_category_lang` AS c
-		LEFT JOIN  `' . _DB_PREFIX_ . 'lang` AS l ON c.`id_lang` = l.`id_lang`
-		WHERE c.`id_cms_category` = ' . (int) $id_category . '
-		AND l.`active` = 1';
-        $arr_return = Db::getInstance()->executeS($sql);
-
-        return $arr_return;
-    }
 }
