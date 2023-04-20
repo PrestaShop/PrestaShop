@@ -243,6 +243,13 @@ class ModuleManager extends BOBasePage {
     );
   }
 
+  /**
+   * Uninstall/install module
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Module data to install/uninstall
+   * @param toInstall {boolean} True if we need to install module
+   * @return {Promise<string | null>}
+   */
   async installUninstallModule(page: Page, module: ModuleData, toInstall: boolean): Promise<string | null> {
     await this.closeGrowlMessage(page);
 
