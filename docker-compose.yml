@@ -37,7 +37,7 @@ services:
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
       PS_LANGUAGE: ${PS_LANGUAGE:-fr}
-      PS_DEV_MODE: ${PS_DEV_MODE:-0}
+      PS_DEV_MODE: ${PS_DEV_MODE:-1}
       PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
