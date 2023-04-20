@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
@@ -44,8 +43,6 @@ class CartRuleActionBuilder
 {
     public function build(array $formData): CartRuleActionInterface
     {
-        $this->assertRequiredData($formData);
-
         $actionsData = $formData['actions'];
         $freeShipping = (bool) $actionsData['free_shipping'];
         $giftProduct = null;
@@ -59,11 +56,11 @@ class CartRuleActionBuilder
         }
 
         if (!empty($actionsData['discount']['reduction']['value'])) {
-            $discountApplication = $actionsData['actions']['discount']['discount_application'];
+            $discountApplication = $actionsData['discount']['discount_application'];
             if ($discountApplication === DiscountApplicationType::SPECIFIC_PRODUCT) {
                 $discountApplicationType = new DiscountApplicationType(
                     $discountApplication,
-                    (int) $actionsData['actions']['discount']['specific_product'][0]['id']
+                    (int) $actionsData['discount']['specific_product'][0]['id']
                 );
             } else {
                 $discountApplicationType = new DiscountApplicationType($discountApplication);
@@ -72,7 +69,7 @@ class CartRuleActionBuilder
             $reductionData = $actionsData['discount']['reduction'];
             // creating this VO mostly just to fire the validation inside its constructor,
             // and we don't need to create DecimalNumbers manually when using in Discount objects
-            $reduction = new Reduction($reductionData['type'], $reductionData['value']);
+            $reduction = new Reduction($reductionData['type'], (string) $reductionData['value']);
 
             if ($reduction->getType() === Reduction::TYPE_AMOUNT) {
                 return new AmountDiscountAction(
@@ -98,12 +95,4 @@ class CartRuleActionBuilder
             return $freeShipping ? new FreeShippingAction($giftProduct) : new GiftProductAction($giftProduct);
         }
     }
-
-    // @todo: should move this check to handlers probably?
-//    private function assertRequiredData(array $formData): void
-//    {
-//        if (null === $this->reduction && null === $this->giftProduct && !$this->freeShipping) {
-//            throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
-//        }
-//    }
 }

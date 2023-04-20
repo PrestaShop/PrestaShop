@@ -168,14 +168,20 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
             return;
         }
 
-        // maps new VO values with the legacy values
-        $discountTypeValueMap = [
-            DiscountApplicationType::ORDER_WITHOUT_SHIPPING => LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING,
-            DiscountApplicationType::SELECTED_PRODUCTS => LegacyDiscountApplicationType::SELECTED_PRODUCTS,
-            DiscountApplicationType::CHEAPEST_PRODUCT => LegacyDiscountApplicationType::CHEAPEST_PRODUCT,
-            DiscountApplicationType::SPECIFIC_PRODUCT => $discountApplicationType->getProductId()->getValue(),
-        ];
+        switch ($discountApplicationType->getType()) {
+            case DiscountApplicationType::SELECTED_PRODUCTS:
+                $discountApplicationValue = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
+                break;
+            case DiscountApplicationType::CHEAPEST_PRODUCT:
+                $discountApplicationValue = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
+                break;
+            case DiscountApplicationType::SPECIFIC_PRODUCT:
+                $discountApplicationValue = $discountApplicationType->getProductId()->getValue();
+                break;
+            default:
+                $discountApplicationValue = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
+        }
 
-        $cartRule->reduction_product = $discountTypeValueMap[$discountApplicationType->getType()];
+        $cartRule->reduction_product = $discountApplicationValue;
     }
 }
