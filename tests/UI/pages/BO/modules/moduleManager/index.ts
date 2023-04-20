@@ -22,21 +22,35 @@ class ModuleManager extends BOBasePage {
 
   private readonly allModulesBlock: string;
 
+  private readonly moduleBlocks: string;
+
   private readonly moduleBlock: (moduleName: string) => string;
 
   private readonly disableModuleButton: (moduleName: string) => string;
 
   private readonly enableModuleButton: (moduleName: string) => string;
 
+  private readonly allModulesInstallModuleButton: (moduleName: string) => string;
+
   private readonly configureModuleButton: (moduleName: string) => string;
 
   private readonly actionsDropdownButton: (moduleName: string) => string;
+
+  private readonly installModuleButton: (moduleTag: string) => string;
+
+  private readonly uninstallModuleModalConfirmButton: (moduleTag: string) => string;
+
+  private readonly modalConfirmAction: (moduleTag: string) => string;
+
+  private readonly uninstallModuleButton: string;
 
   private readonly statusDropdownDiv: string;
 
   private readonly statusDropdownMenu: string;
 
   private readonly statusDropdownItemLink: (ref: number) => string;
+
+  private readonly filterByAllModulesButton: string;
 
   private readonly categoriesSelectDiv: string;
 
@@ -59,16 +73,25 @@ class ModuleManager extends BOBasePage {
     this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
     this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
     this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
+    this.moduleBlocks = 'div.module-short-list';
     this.moduleBlock = (moduleName: string) => `${this.allModulesBlock}[data-name='${moduleName}']`;
     this.disableModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
     this.enableModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)} button.module_action_menu_enable`;
+    this.allModulesInstallModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)}`
+      + ' button.module_action_menu_install';
+    this.actionsDropdownButton = (moduleName: string) => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
+    this.installModuleButton = (moduleTag: string) => `div[data-tech-name='${moduleTag}'] button.module_action_menu_install`;
     this.configureModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)}`
       + ' div.module-actions a[href*=\'/action/configure\']';
-    this.actionsDropdownButton = (moduleName: string) => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
+    this.uninstallModuleButton = 'div.btn-group.module-actions.show button.module_action_menu_uninstall';
+    this.modalConfirmAction = (moduleTag: string) => `#module-modal-confirm-${moduleTag}`;
+    this.uninstallModuleModalConfirmButton = (moduleTag: string) => `${this.modalConfirmAction(moduleTag)}-uninstall`
+      + ' div.modal-footer a.module_action_modal_uninstall';
     // Status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
     this.statusDropdownItemLink = (ref: number) => `${this.statusDropdownMenu} a[data-status-ref='${ref}']`;
+    this.filterByAllModulesButton = '.module-status-reset';
     // Categories
     this.categoriesSelectDiv = '#categories';
     this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
@@ -110,17 +133,53 @@ class ModuleManager extends BOBasePage {
   /**
    * Filter modules by status
    * @param page {Page} Browser tab
-   * @param status {boolean} Status to filter with
+   * @param status {string} Status to filter with
    * @return {Promise<void>}
    */
-  async filterByStatus(page: Page, status: boolean): Promise<void> {
+  async filterByStatus(page: Page, status: string): Promise<void> {
     // Open dropdown
     await page.click(this.statusDropdownDiv);
     await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='true']`);
 
     // Select dropdown item
-    await page.click(this.statusDropdownItemLink(status ? 1 : 0));
+    let statusSelector: string;
+
+    switch (status) {
+      case 'all-Modules':
+        statusSelector = this.filterByAllModulesButton;
+        break;
+
+      case 'enabled':
+        statusSelector = this.statusDropdownItemLink(1);
+        break;
+
+      case 'disabled':
+        statusSelector = this.statusDropdownItemLink(0);
+        break;
+
+      case 'uninstalled':
+        statusSelector = this.statusDropdownItemLink(2);
+        break;
+
+      case 'installed':
+        statusSelector = this.statusDropdownItemLink(3);
+        break;
+
+      default:
+        throw new Error(`Status ${status} was not exist!`);
+    }
+
+    await page.click(statusSelector);
     await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='false']`);
+  }
+
+  /**
+   * Get number of blocks
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
+   */
+  async getNumberOfBlocks(page: Page): Promise<number> {
+    return (await page.$$(this.moduleBlocks)).length;
   }
 
   /**
@@ -134,11 +193,22 @@ class ModuleManager extends BOBasePage {
   }
 
   /**
+   * Get status of module ( installed/uninstalled)
+   * @param page {Page} Browser tab
+   * @param moduleName {string} Name of the module
+   * @return {Promise<boolean>}
+   */
+  async isModuleInstalled(page: Page, moduleName: string): Promise<boolean> {
+    return this.elementNotVisible(page, this.allModulesInstallModuleButton(moduleName), 1000);
+  }
+
+  /**
    * Get all modules status
    * @param page {Page} Browser tab
-   * @returns {Promise<Array<{ name: string, status: boolean }[]>>}
+   * @param statusToFilterBy {string} Status to filter by
+   * @returns {Promise<Array<{ name: string, status: number }[]>>}
    */
-  async getAllModulesStatus(page: Page): Promise<{ name: string, status: boolean }[]> {
+  async getAllModulesStatus(page: Page, statusToFilterBy: string): Promise<{ name: string, status: boolean }[]> {
     const modulesStatus: { name: string, status: boolean }[] = [];
     const allModulesNames = await this.getAllModulesNames(page);
 
@@ -146,8 +216,15 @@ class ModuleManager extends BOBasePage {
       const moduleName: string | null = allModulesNames[i];
 
       if (typeof moduleName === 'string') {
-        const moduleStatus = await this.isModuleEnabled(page, moduleName);
-        modulesStatus.push({name: moduleName, status: moduleStatus});
+        if (statusToFilterBy === 'enabled' || statusToFilterBy === 'disabled') {
+          const moduleStatus = await this.isModuleEnabled(page, moduleName);
+          modulesStatus.push({name: moduleName, status: moduleStatus});
+        }
+
+        if (statusToFilterBy === 'installed' || statusToFilterBy === 'uninstalled') {
+          const moduleStatus = await this.isModuleInstalled(page, moduleName);
+          modulesStatus.push({name: moduleName, status: moduleStatus});
+        }
       }
     }
 
@@ -164,6 +241,23 @@ class ModuleManager extends BOBasePage {
       this.allModulesBlock,
       (all) => all.map((el) => el.getAttribute('data-name')),
     );
+  }
+
+  async installUninstallModule(page: Page, module: ModuleData, toInstall: boolean): Promise<string | null> {
+    await this.closeGrowlMessage(page);
+
+    if (toInstall) {
+      await this.waitForSelectorAndClick(page, this.installModuleButton(module.tag));
+    } else {
+      await Promise.all([
+        page.click(this.actionsDropdownButton(module.name)),
+        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.name)}[aria-expanded='true']`),
+      ]);
+      await this.waitForSelectorAndClick(page, this.uninstallModuleButton);
+      await this.waitForSelectorAndClick(page, this.uninstallModuleModalConfirmButton(module.tag));
+    }
+
+    return this.getGrowlMessageContent(page);
   }
 
   /**
