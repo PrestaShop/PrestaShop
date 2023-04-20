@@ -2094,6 +2094,7 @@ class AdminControllerCore extends Controller
                 $this->trans(
                     'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
                         [
+                            '_raw' => true,
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
                             '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
