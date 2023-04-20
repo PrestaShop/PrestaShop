@@ -23,36 +23,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CartRule;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CartRule\Discount;
-use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CartRule\DiscountValidator;
+use Symfony\Component\Validator\Constraint;
 
-class ActionsType extends TranslatorAwareType
+class Discount extends Constraint
 {
+    /**
+     * When discount type "specific_product" is selected, but the specific product is not provided
+     *
+     * @var string
+     */
+    public $missingSpecificProductMessage = 'Specific product must be selected for this discount application type';
+
+    /**
+     * When discount type "selected_products" is selected, but there are no selected product restrictions
+     *
+     * @var string
+     */
+    public $missingProductRestrictionsMessage = 'Product restrictions must be applied for this discount application type';
+
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function validatedBy(): string
     {
-        $builder
-            ->add('free_shipping', SwitchType::class, [
-                'required' => false,
-            ])
-            ->add('discount', DiscountType::class, [
-                'constraints' => [
-                    new Discount(),
-                ],
-            ])
-            ->add('gift_product', ProductSearchType::class, [
-                'include_combinations' => true,
-                'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),
-            ])
-        ;
+        return DiscountValidator::class;
     }
 }
