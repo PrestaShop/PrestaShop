@@ -140,7 +140,8 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
      */
     public function build(): CartRuleActionInterface
     {
-        $this->assertCartRuleActionsAreValid();
+        //@todo: whole class to be removed
+//        $this->assertCartRuleActionsAreValid();
 
         if (null === $this->reduction) {
             return $this->freeShipping ? new FreeShippingAction($this->giftProduct) : new GiftProductAction($this->giftProduct);
@@ -164,13 +165,13 @@ class CartRuleActionBuilder implements CartRuleActionBuilderInterface
         );
     }
 
-    /**
-     * @throws CartRuleConstraintException
-     */
-    private function assertCartRuleActionsAreValid(): void
-    {
-        if (null === $this->reduction && null === $this->giftProduct && !$this->freeShipping) {
-            throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
-        }
-    }
+//    /**
+//     * @throws CartRuleConstraintException
+//     */
+//    private function assertCartRuleActionsAreValid(): void
+//    {
+//        if (null === $this->reduction && null === $this->giftProduct && !$this->freeShipping) {
+//            throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
+//        }
+//    }
 }

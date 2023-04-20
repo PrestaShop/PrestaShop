@@ -38,19 +38,16 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
-class CartRuleFeatureContext extends AbstractDomainFeatureContext
+class CartRuleFeatureContext extends AbstractCartRuleFeatureContext
 {
     /**
      * @When I create cart rule :cartRuleReference with following properties:
@@ -68,16 +65,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $data = $this->localizeByRows($node);
 
         try {
-            $cartRuleAction = $this->createCartRuleAction(
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']),
-                $data['reduction_percentage'] ?? null,
-                isset($data['reduction_apply_to_discounted_products']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products']) : null,
-                $data['reduction_amount'] ?? null,
-                isset($data['reduction_currency']) ? $this->getSharedStorage()->get($data['reduction_currency']) : null,
-                $data['reduction_tax'] ?? null,
-                $data['gift_product_id'] ?? null,
-                $data['gift_product_attribute_id'] ?? null
-            );
+            $cartRuleAction = $this->buildCartRuleAction($data);
 
             $command = new AddCartRuleCommand(
                 $data['name'],
@@ -105,14 +93,6 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $command->setDescription($data['description'] ?? '');
             if (!empty($data['code'])) {
                 $command->setCode($data['code']);
-            }
-
-            if (isset($data['discount_application_type'])) {
-                $command->setDiscountApplication(
-                    $data['discount_application_type'],
-                    // if specific product type is provided and product is not, then command should throw exception
-                    isset($data['discount_product']) ? $this->getSharedStorage()->get($data['discount_product']) : null
-                );
             }
 
             /** @var CartRuleId $cartRuleId */
@@ -246,7 +226,6 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function assertCartRuleConstraintError(string $errorName): void
     {
         $errorMap = [
-            'missing action' => CartRuleConstraintException::MISSING_ACTION,
             'required specific product' => CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT,
             'non unique cart rule code' => CartRuleConstraintException::NON_UNIQUE_CODE,
         ];
@@ -255,55 +234,5 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             CartRuleConstraintException::class,
             $errorMap[$errorName]
         );
-    }
-
-    /**
-     * Create a cart rule action that can be used for cart rule creation.
-     *
-     * @param bool $isFreeShipping
-     * @param string|null $percentage
-     * @param bool|null $applyToDiscountedProducts
-     * @param string|null $amount
-     * @param int|null $amountCurrencyId
-     * @param bool|null $amountTaxIncluded
-     * @param int|null $giftProductId
-     * @param int|null $giftProductCombinationId
-     *
-     * @return CartRuleActionInterface
-     */
-    private function createCartRuleAction(
-        bool $isFreeShipping,
-        ?string $percentage = null,
-        ?bool $applyToDiscountedProducts = null,
-        ?string $amount = null,
-        ?int $amountCurrencyId = null,
-        ?bool $amountTaxIncluded = null,
-        ?int $giftProductId = null,
-        ?int $giftProductCombinationId = null
-    ): CartRuleActionInterface {
-        $builder = new CartRuleActionBuilder();
-
-        $builder->setFreeShipping($isFreeShipping);
-
-        if (null !== $percentage) {
-            $builder->setPercentageDiscount(
-                $percentage,
-                $applyToDiscountedProducts
-            );
-        }
-
-        if (null !== $amount) {
-            $builder->setAmountDiscount(
-                $amount,
-                $amountCurrencyId,
-                $amountTaxIncluded
-            );
-        }
-
-        if (null !== $giftProductId) {
-            $builder->setGiftProduct($giftProductId, $giftProductCombinationId);
-        }
-
-        return $builder->build();
     }
 }

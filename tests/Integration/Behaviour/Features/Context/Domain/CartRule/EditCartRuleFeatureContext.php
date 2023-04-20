@@ -38,10 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
+class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
 {
     /**
      * @When I edit cart rule :cartRuleReference with following properties:
@@ -311,7 +310,7 @@ class EditCartRuleFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
-        if ($cartRuleAction = $this->buildAction($data)) {
+        if ($cartRuleAction = $this->buildCartRuleAction($data)) {
             $command->setCartRuleAction($cartRuleAction);
         }
     }
