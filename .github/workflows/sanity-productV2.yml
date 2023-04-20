@@ -46,10 +46,11 @@ jobs:
       - name: Run tests
         run: npm install && npm run test:sanity:productV2:fast-fail
         env:
-          URL_FO: http://localhost/
+          URL_FO: https://localhost/
           DB_NAME: prestashop
           DB_PASSWD: password
           HEADLESS: true
+          ENABLE_SSL: true
           TAKE_SCREENSHOT_AFTER_FAIL: true
         working-directory: ./tests/UI
 

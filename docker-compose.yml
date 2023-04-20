@@ -17,6 +17,7 @@ services:
       MYSQL_DATABASE: prestashop
     restart: always
   prestashop-git:
+    hostname: ${PS_HOSTNAME:-localhost}
     build:
       dockerfile: .docker/Dockerfile
       context: .
@@ -36,11 +37,16 @@ services:
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
       PS_LANGUAGE: ${PS_LANGUAGE:-fr}
-      PS_DEV_MODE: ${PS_DEV_MODE:-0}
+      PS_DEV_MODE: ${PS_DEV_MODE:-1}
+      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
+      PS_ERASE_DB: ${PS_ERASE_DB:-0}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
       - "8001:80"
+      - "8002:443"
+    depends_on:
+      - mysql
     volumes:
       - ./:/var/www/html:delegated

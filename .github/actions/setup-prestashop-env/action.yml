@@ -43,6 +43,23 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
+    - name: Setup MkCert
+      shell: bash
+      run: |
+        ## Install MkCert
+        sudo apt install libnss3-tools
+        curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+        chmod +x mkcert-v*-linux-amd64
+        sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+        ## Generate certificate
+        mkcert localhost
+        ## Link certificate to Chrome Trust Store
+        mkdir -p $HOME/.pki/nssdb
+        certutil -d $HOME/.pki/nssdb -N
+        certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ./localhost.pem
+        ## Add self-signed certificate to Chrome Trust Store
+        mkcert -install
+
     - name: Setup Apache
       shell: bash
       run: sudo bash ./.github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
@@ -108,4 +125,5 @@ runs:
         --db_user="root" --db_password=${{ inputs.mysql-root-password }} \
          --prefix="tst_" --firstname="Marc" --lastname="Beier" \
         --password="$ADMIN_PASSWD" --email="demo@prestashop.com" \
-        --language="en" --country="fr"
+        --language="en" --country="fr" \
+        --ssl=1

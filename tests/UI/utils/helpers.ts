@@ -61,6 +61,8 @@ export default {
             width: global.BROWSER.width,
             height: global.BROWSER.height,
           },
+        // @todo : Remove it when Puppeteer will accept self signed certificates
+        ignoreHTTPSErrors: false,
       },
     );
   },
