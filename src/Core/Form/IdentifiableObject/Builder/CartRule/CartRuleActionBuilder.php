@@ -41,9 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 class CartRuleActionBuilder
 {
-    public function build(array $formData): CartRuleActionInterface
+    public function build(array $actionsData): CartRuleActionInterface
     {
-        $actionsData = $formData['actions'];
         $freeShipping = (bool) $actionsData['free_shipping'];
         $giftProduct = null;
 

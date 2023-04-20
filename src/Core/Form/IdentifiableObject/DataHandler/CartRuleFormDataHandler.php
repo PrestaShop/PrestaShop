@@ -72,7 +72,7 @@ class CartRuleFormDataHandler implements FormDataHandlerInterface
             DateTime::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, $dateRange['to']),
             (int) $conditionsData['total_available'],
             (int) $conditionsData['available_per_user'],
-            $this->cartRuleActionBuilder->build($data)
+            $this->cartRuleActionBuilder->build($data['actions'])
         );
 
         $command->setCode($informationData['code']);
