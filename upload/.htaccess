@@ -1,3 +1,10 @@
+<IfModule mod_headers.c>
+    <FilesMatch "\.pdf$">
+      Header set Content-Disposition "Attachment"
+      Header set X-Content-Type-Options "nosniff"
+    </FilesMatch>
+</IfModule>
+
 <IfModule !mod_rewrite.c>
   # Apache 2.2
   <IfModule !mod_authz_core.c>
