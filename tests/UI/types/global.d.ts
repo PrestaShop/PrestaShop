@@ -2,6 +2,7 @@
 
 type GlobalInstall = {
   URL: string
+  ENABLE_SSL: boolean
   LANGUAGE: string
   COUNTRY: string
   DB_SERVER: string

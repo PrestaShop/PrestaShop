@@ -115,13 +115,33 @@ jobs:
         if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
         run: cp ./app/config/security_test.yml ./app/config/security_prod.yml
 
+      # Certificate
+      - name: Generate a certificate
+        if: (env.GH_BRANCH == '8.1.x') || (env.GH_BRANCH == 'develop')
+        run: |
+          ## Install MkCert
+          sudo apt install libnss3-tools
+          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+          chmod +x mkcert-v*-linux-amd64
+          sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+          ## Generate certificate
+          mkcert -key-file ./${{ env.PS_DIR }}/.docker/ssl.key -cert-file ./${{ env.PS_DIR }}/.docker/ssl.crt localhost
+          ## Link certificate to Chrome Trust Store
+          mkdir -p $HOME/.pki/nssdb
+          certutil -d $HOME/.pki/nssdb -N
+          certutil -d sql:$HOME/.pki/nssdb -n localhost -A -t "TCu,Cu,Tu" -i ./${{ env.PS_DIR }}/.docker/ssl.crt
+          ## Add self-signed certificate to Chrome Trust Store
+          mkcert -install
+
       # Use docker to create shop
       - name: Build and run shop with docker
         timeout-minutes: 15
+        env:
+          URL_FO: ${{ env.GH_BRANCH == '8.0.x' && 'http://localhost:8001/' || 'https://localhost:8002/' }}
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) \
           docker-compose -f docker-compose.yml up -d --build
-          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:8001/en/)" != "200" ]]; do sleep 5; done'
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }en/)" != "200" ]]; do sleep 5; done'
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -137,7 +157,8 @@ jobs:
         continue-on-error: true
         working-directory: ${{ inputs.TESTS_DIR }}
         env:
-          URL_FO: 'http://localhost:8001/'
+          URL_FO: ${{ env.GH_BRANCH == '8.0.x' && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+          ENABLE_SSL: true
           SMTP_SERVER: '172.17.0.1'
         run: npm run ${{ env.TEST_CAMPAIGN }}
 

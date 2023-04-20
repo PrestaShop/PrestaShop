@@ -3,6 +3,8 @@ ARG VERSION
 
 FROM prestashop/base:$VERSION
 
+EXPOSE 443
+
 ARG GROUP_ID
 ARG USER_ID
 
