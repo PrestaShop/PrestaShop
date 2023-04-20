@@ -127,7 +127,7 @@ class PositionsListHandler {
       }
     });
 
-    self.$panelSelection.find('button').click(() => {
+    self.$panelSelection.find('button').on('click', () => {
       $('button[name="unhookform"]').trigger('click');
     });
 

@@ -134,6 +134,6 @@ class SqlManagerPage {
   }
 }
 
-$(document).ready(() => {
+$(() => {
   new SqlManagerPage();
 });

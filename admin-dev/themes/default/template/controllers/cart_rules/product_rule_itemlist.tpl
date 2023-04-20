@@ -52,7 +52,7 @@
 </div>
 
 <script type="text/javascript">
-	$('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_remove').click(function() { removeCartRuleOption(this); updateProductRuleShortDescription(this); });
-	$('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_add').click(function() { addCartRuleOption(this); updateProductRuleShortDescription(this); });
-	$(document).ready(function() { updateProductRuleShortDescription($('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_add')); });
+	$('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_remove').on('click', function() { removeCartRuleOption(this); updateProductRuleShortDescription(this); });
+	$('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_add').on('click', function() { addCartRuleOption(this); updateProductRuleShortDescription(this); });
+	$(function() { updateProductRuleShortDescription($('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_add')); });
 </script>

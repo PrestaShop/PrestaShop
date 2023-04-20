@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(function()
+$(function()
 {
-	$('#mainForm').submit(function() {
+	$('#mainForm').on('submit', function() {
 		$('#btNext').hide();
 	});
 

@@ -291,7 +291,7 @@
 													</div>
 												{/foreach}
 												<script type="text/javascript">
-													$(document).ready(function() {
+													$(function() {
 														$(".textarea-autosize").autosize();
 													});
 												</script>
@@ -381,7 +381,7 @@
 	var pathCSS = '{$smarty.const._THEME_CSS_DIR_|addslashes}';
 	var ad = '{$ad|addslashes}';
 
-	$(document).ready(function(){
+	$(function(){
 		{block name="autoload_tinyMCE"}
 			tinySetup({
 				editor_selector :"autoload_rte"

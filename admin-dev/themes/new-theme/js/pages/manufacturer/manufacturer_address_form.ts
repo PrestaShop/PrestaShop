@@ -29,7 +29,7 @@ import CountryDniRequiredToggler from '@components/country-dni-required-toggler'
 
 const {$} = window;
 
-$(document).ready(() => {
+$(() => {
   new CountryStateSelectionToggler(
     ManufacturerAddressMap.manufacturerAddressCountrySelect,
     ManufacturerAddressMap.manufacturerAddressStateSelect,

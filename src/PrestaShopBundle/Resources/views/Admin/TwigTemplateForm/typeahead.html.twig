@@ -128,7 +128,7 @@
                     }).show();
                 });
 
-                $('#{{ form.vars.id }}-curPackItemAdd').click(function(e){
+                $('#{{ form.vars.id }}-curPackItemAdd').on('click', function(e){
                     e.preventDefault();
                     if($(this).data('currentItem')){
                         var number = $('#{{ form.vars.id }}-curPackItemQty').val();
@@ -208,7 +208,7 @@
                                    '</table></div>'
                         }
                     }
-                }).bind('typeahead:select', function(ev, suggestion) {
+                }).on('typeahead:select', function(ev, suggestion) {
                     $('#{{ form.vars.id }}-curPackItemAdd').data('currentItem', suggestion);
                 });
             });
@@ -283,7 +283,7 @@
                         return '<div>'+ item.{{ mapping_name }} +'</div>'
                     }
                 }
-            }).bind('typeahead:select', function(ev, suggestion) {
+            }).on('typeahead:select', function(ev, suggestion) {
 
                 //if collection length is up to limit, return
                 if({{ limit }} != 0 && $('#{{ form.vars.id }}-data li').length >= {{ limit }}){
@@ -302,7 +302,7 @@
                 $('#{{ form.vars.id }}-data').show();
                 $('#{{ form.vars.id }}-data').append(html);
 
-            }).bind('typeahead:close', function(ev) {
+            }).on('typeahead:close', function(ev) {
                 $(ev.target).val('');
             });
         });

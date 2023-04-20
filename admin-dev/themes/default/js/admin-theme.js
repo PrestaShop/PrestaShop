@@ -52,11 +52,11 @@ function confirm_modal(
       + '</div>'
       + '</div>',
   );
-  confirmModal.find('#confirm-modal-left-button').click(() => {
+  confirmModal.find('#confirm-modal-left-button').on('click', () => {
     leftButtonCallback();
     confirmModal.modal('hide');
   });
-  confirmModal.find('#confirm-modal-right-button').click(() => {
+  confirmModal.find('#confirm-modal-right-button').on('click', () => {
     rightButtonCallback();
     confirmModal.modal('hide');
   });
@@ -85,7 +85,7 @@ function error_modal(heading, msg) {
       + '</div>'
       + '</div>',
   );
-  errorModal.find('#error_modal_right_button').click(() => {
+  errorModal.find('#error_modal_right_button').on('click', () => {
     errorModal.modal('hide');
   });
   errorModal.modal('show');
@@ -110,7 +110,7 @@ function scroll_if_anchor(href) {
     }
   }
 }
-$(document).ready(() => {
+$(() => {
   const $mainMenu = $('.main-menu');
   const $navBar = $('.nav-bar');
   const $body = $('body');
@@ -135,10 +135,13 @@ $(document).ready(() => {
 
   $('.nav-bar')
     .find('.link-levelone')
-    .hover(
+    .on(
+      'mouseenter',
       function () {
         $(this).addClass('-hover');
       },
+    ).on(
+      'mouseleave',
       function () {
         $(this).removeClass('-hover');
       },
@@ -378,7 +381,7 @@ $(document).ready(() => {
   });
 
   let timer;
-  $(window).scroll(() => {
+  $(window).on('scroll', () => {
     if (timer) {
       window.clearTimeout(timer);
     }
@@ -395,7 +398,7 @@ $(document).ready(() => {
       .focus();
   });
 
-  $('.page-sidebar-closed').click(() => {
+  $('.page-sidebar-closed').on('click', () => {
     $('.searchtab').removeClass('search-expanded');
   });
 
@@ -426,7 +429,7 @@ $(document).ready(() => {
   });
 
   // search with nav sidebar opened
-  $('.page-sidebar').click(() => {
+  $('.page-sidebar').on('click', () => {
     $('#header_search .form-group').removeClass('focus-search');
   });
 
@@ -457,7 +460,7 @@ $(document).ready(() => {
   $('body').on('click', 'a.anchor', scroll_if_anchor);
 
   // manage curency status switcher
-  $('#currencyStatus input').change(function () {
+  $('#currencyStatus input').on('change', function () {
     const parentZone = $(this)
       .parent()
       .parent()
@@ -474,7 +477,7 @@ $(document).ready(() => {
     }
   });
 
-  $('#currencyCronjobLiveExchangeRate input').change(function () {
+  $('#currencyCronjobLiveExchangeRate input').on('change', function () {
     let enable = 0;
     const parentZone = $(this)
       .parent()

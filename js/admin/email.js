@@ -27,7 +27,7 @@
  * /!\ This file is deprecated, it will be deleted in next major release /!\
  */
 
-$(document).ready(function() {
+$(function() {
 	if ($('input[name=PS_MAIL_METHOD]:checked').val() == 2)
 		$('#mail_fieldset_smtp').show();
 	else

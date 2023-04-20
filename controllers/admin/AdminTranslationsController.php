@@ -1573,7 +1573,7 @@ class AdminTranslationsControllerCore extends AdminController
         $str_output = '
         <script type="text/javascript">';
         if (Tools::getValue('type') == 'mails') {
-            $str_output .= '$(document).ready(function(){
+            $str_output .= '$(function(){
                 toggleDiv(\'' . $this->type_selected . '_div\'); toggleButtonValue(this.id, openAll, closeAll);
                 });';
         }

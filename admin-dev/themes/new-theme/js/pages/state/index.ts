@@ -55,6 +55,6 @@ class StatePage {
   }
 }
 
-$(document).ready(() => {
+$(() => {
   new StatePage();
 });

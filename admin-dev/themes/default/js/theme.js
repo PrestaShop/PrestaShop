@@ -29,7 +29,7 @@ import '@openfonts/ubuntu-condensed_latin';
 
 import PerfectScrollBar from 'perfect-scrollbar';
 
-$(document).ready(() => {
+$(() => {
   const $navBarOverflow = $('.nav-bar-overflow');
 
   if ($navBarOverflow.length > 0) {

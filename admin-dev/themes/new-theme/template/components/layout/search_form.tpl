@@ -55,7 +55,7 @@
 </form>
 
 <script type="text/javascript">
- $(document).ready(function(){
+ $(function(){
   {if isset($search_type) && $search_type}
     $('.search-option a[data-value='+{$search_type|intval}+']').click();
   {/if}

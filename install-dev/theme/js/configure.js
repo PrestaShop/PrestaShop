@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(function() {
+$(function() {
   checkTimeZone($('#infosCountry'));
   // When a country is changed
-  $('#infosCountry').change(function()
+  $('#infosCountry').on('change', function()
 	{
 	  checkTimeZone(this);
   });

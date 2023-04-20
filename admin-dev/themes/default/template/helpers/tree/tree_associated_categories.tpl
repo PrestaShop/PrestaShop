@@ -75,7 +75,7 @@
 		}
 	{/if}
 	{if isset($use_search) && $use_search == true}
-		$('#{$id|escape:'html':'UTF-8'}-categories-search').bind('typeahead:selected', function(obj, datum){
+		$('#{$id|escape:'html':'UTF-8'}-categories-search').on('typeahead:selected', function(obj, datum){
 			var match = $('#{$id|escape:'html':'UTF-8'}').find(':input[value="'+datum.id_category+'"]').first();
 			if (match.length)
 			{
@@ -130,9 +130,9 @@
 			}
 		});
 	{/if}
-	$(document).ready(function(){
+	$(function(){
 		$('#{$id|escape:'html':'UTF-8'}').tree('collapseAll');
-		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').click(treeClickFunc);
+		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').on('click', treeClickFunc);
 
 		{if isset($selected_categories)}
 			$('#no_default_category').hide();

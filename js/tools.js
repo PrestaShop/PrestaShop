@@ -737,10 +737,10 @@ function getStorageAvailable() {
 	}
 }
 
-$(document).ready(function()
+$(function()
 {
 	// Hide all elements with .hideOnSubmit class when parent form is submit
-	$('form').submit(function() {
+	$('form').on('submit', function() {
 		$(this).find('.hideOnSubmit').hide();
 	});
 

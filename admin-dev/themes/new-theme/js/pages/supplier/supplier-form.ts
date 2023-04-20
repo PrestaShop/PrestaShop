@@ -28,7 +28,7 @@ import SupplierMap from './supplier-map';
 
 const {$} = window;
 
-$(document).ready(() => {
+$(() => {
   new window.prestashop.component.ChoiceTree('#supplier_shop_association').enableAutoCheckChildren();
   new window.prestashop.component.CountryStateSelectionToggler(
     SupplierMap.supplierCountrySelect,

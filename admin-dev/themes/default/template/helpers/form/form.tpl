@@ -119,7 +119,7 @@
 															$().ready(function () {
 																var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
 																$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
-																$({/literal}'#{$table}{literal}_form').submit( function() {
+																$({/literal}'#{$table}{literal}_form').on('submit', function() {
 																	$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 																});
 															});
@@ -179,7 +179,7 @@
 									{/foreach}
 									{if isset($input.maxchar) && $input.maxchar}
 									<script type="text/javascript">
-									$(document).ready(function(){
+									$(function(){
 									{foreach from=$languages item=language}
 										countDown($("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"), $("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter"));
 									{/foreach}
@@ -196,7 +196,7 @@
 												$().ready(function () {
 													var input_id = '{/literal}{if isset($input.id)}{$input.id}{else}{$input.name}{/if}{literal}';
 													$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
-													$({/literal}'#{$table}{literal}_form').submit( function() {
+													$({/literal}'#{$table}{literal}_form').on('submit', function() {
 														$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 													});
 												});
@@ -240,7 +240,7 @@
 										{/if}
 										{if isset($input.maxchar) && $input.maxchar}
 										<script type="text/javascript">
-										$(document).ready(function(){
+										$(function(){
 											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
 										</script>
@@ -287,7 +287,7 @@
 									</div>
 									{if isset($input.maxchar) && $input.maxchar}
 									<script type="text/javascript">
-										$(document).ready(function() {
+										$(function() {
 											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
 									</script>
@@ -467,7 +467,7 @@
 										{/foreach}
 										{if isset($input.maxchar) && $input.maxchar}
 											<script type="text/javascript">
-											$(document).ready(function(){
+											$(function(){
 											{foreach from=$languages item=language}
 												countDown($("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"), $("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter"));
 											{/foreach}
@@ -483,7 +483,7 @@
 										<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name]|default|escape:'html':'UTF-8'}</textarea>
 										{if isset($input.maxchar) && $input.maxchar}
 											<script type="text/javascript">
-											$(document).ready(function(){
+											$(function(){
 												countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 											});
 											</script>
@@ -734,7 +734,7 @@
 	var pathCSS = '{$smarty.const._THEME_CSS_DIR_|addslashes}';
 	var ad = '{$ad|addslashes}';
 
-	$(document).ready(function(){
+	$(function(){
 		{block name="autoload_tinyMCE"}
 			tinySetup({
 				editor_selector :"autoload_rte"
@@ -767,15 +767,15 @@
 		allowEmployeeFormLang = {$allowEmployeeFormLang|intval};
 		displayFlags(languages, id_language, allowEmployeeFormLang);
 
-		$(document).ready(function() {
+		$(function() {
 
-			$(".show_checkbox").click(function () {
+			$(".show_checkbox").on('click', function () {
 				$(this).addClass('hidden')
 				$(this).siblings('.checkbox').removeClass('hidden');
 				$(this).siblings('.hide_checkbox').removeClass('hidden');
 				return false;
 			});
-			$(".hide_checkbox").click(function () {
+			$(".hide_checkbox").on('click', function () {
 				$(this).addClass('hidden')
 				$(this).siblings('.checkbox').addClass('hidden');
 				$(this).siblings('.show_checkbox').removeClass('hidden');
@@ -786,14 +786,14 @@
 				if ($('#id_country') && $('#id_state'))
 				{
 					ajaxStates({$fields_value.id_state});
-					$('#id_country').change(function() {
+					$('#id_country').on('change', function() {
 						ajaxStates();
 					});
 				}
 			{/if}
 
 			dniRequired();
-			$('#id_country').change(dniRequired);
+			$('#id_country').on('change', dniRequired);
 
 			if ($(".datepicker").length > 0)
 				$(".datepicker").datepicker({
