@@ -1361,23 +1361,22 @@ class CartCore extends ObjectModel
      * @return array quantity index     : number of product in cart without counting those of pack in cart
      *               deep_quantity index: number of product in cart counting those of pack in cart
      */
-    public function getProductQuantity($idProduct, $idProductAttribute = 0, $idCustomization = 0, $idAddressDelivery = 0)
+    public function getProductQuantity($idProduct, $idProductAttribute = 0, $idCustomization = 0, $idAddressDelivery = 0, $checkCustomizations = true)
     {
-        $productIsPack = Pack::isPack($idProduct);
         $defaultPackStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         $packStockTypesAllowed = [
             Pack::STOCK_TYPE_PRODUCTS_ONLY,
             Pack::STOCK_TYPE_PACK_BOTH,
         ];
         $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
-        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity
+        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity, cp.id_customization
           FROM `' . _DB_PREFIX_ . 'cart_product` cp';
-        $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
+        $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity, cp.id_customization
           FROM `' . _DB_PREFIX_ . 'cart_product` cp' .
             ' JOIN `' . _DB_PREFIX_ . 'pack` p ON cp.`id_product` = p.`id_product_pack`' .
             ' JOIN `' . _DB_PREFIX_ . 'product` pr ON p.`id_product_pack` = pr.`id_product`';
 
-        if ($idCustomization) {
+        if (!$checkCustomizations && $idCustomization) {
             $customizationJoin = '
                 LEFT JOIN `' . _DB_PREFIX_ . 'customization` c ON (
                     c.`id_product` = cp.`id_product`
@@ -1388,14 +1387,17 @@ class CartCore extends ObjectModel
         }
         $commonWhere = '
             WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute . '
-            AND cp.`id_customization` = ' . (int) $idCustomization . '
             AND cp.`id_cart` = ' . (int) $this->id;
+
+        if (!$checkCustomizations) {
+            $commonWhere.= ' AND cp.`id_customization` = ' . (int) $idCustomization;
+        }
 
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
             $commonWhere .= ' AND cp.`id_address_delivery` = ' . (int) $idAddressDelivery;
         }
 
-        if ($idCustomization) {
+        if (!$checkCustomizations && $idCustomization) {
             $commonWhere .= ' AND c.`id_customization` = ' . (int) $idCustomization;
         }
         $firstUnionSql .= $commonWhere;
@@ -1408,7 +1410,7 @@ class CartCore extends ObjectModel
         ))';
         $parentSql = 'SELECT
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
-            COALESCE(SUM(first_level_quantity), 0) as quantity
+            COALESCE(SUM(first_level_quantity), 0) as quantity, id_customization
           FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
 
         return Db::getInstance()->getRow($parentSql);
@@ -1560,7 +1562,8 @@ class CartCore extends ObjectModel
             $id_product,
             $id_product_attribute,
             (int) $id_customization,
-            (int) $id_address_delivery
+            (int) $id_address_delivery,
+			false
         );
 
         /* Update quantity if product already exist */
@@ -1579,7 +1582,8 @@ class CartCore extends ObjectModel
                 $cartFirstLevelProductQuantity = $this->getProductQuantity(
                     (int) $id_product,
                     (int) $id_product_attribute,
-                    $id_customization
+                    $id_customization,
+                    false
                 );
                 $updateQuantity = '- ' . $quantity;
 
