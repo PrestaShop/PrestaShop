@@ -12,6 +12,8 @@ parameters:
   translator.class: PrestaShopBundle\Translation\Translator
   translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
   prestashop_views: "%kernel.project_dir%/src/PrestaShopBundle/Resources/views"
+  # This is hard-coded for now but it should be dynamic wince admin folder name changes in prod environments
+  admin_themes_folder: "%kernel.project_dir%/admin-dev/themes"
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
   env(PS_LOG_MAX_FILES): '30'
@@ -85,6 +87,7 @@ twig:
     '%kernel.project_dir%/modules': Modules
     '%mail_themes_dir%': MailThemes
     '%prestashop_views%': PrestaShopCore
+    '%admin_themes_folder%': AdminThemes
   globals:
     webpack_server: false
     multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX

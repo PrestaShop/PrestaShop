@@ -144,3 +144,9 @@ services:
     alias: 'PrestaShopBundle\Twig\Extension\EntitySearchExtension'
     public: true
     deprecated: ~
+
+  PrestaShopBundle\Twig\Extension\SymfonyLayoutExtension:
+    autowire: true
+    arguments:
+      $shopConstraintContextInterface: '@prestashop.adapter.shop.context'
+      $configurators: !tagged prestashop.bridge.smarty_configurator

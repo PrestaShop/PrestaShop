@@ -1,0 +1,96 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale={{ viewport_scale|default('1') }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="NOFOLLOW, NOINDEX">
+
+<link rel="icon" type="image/x-icon" href="{{ img_dir }}favicon.ico" />
+<link rel="apple-touch-icon" href="{{ img_dir }}app_icon.png" />
+
+<title>
+  {% if meta_title is not empty %}{{ meta_title }} • {% endif %}
+  {{ shop_name }}
+</title>
+
+{% if display_header_javascript|default(true) %}
+<script type="text/javascript">
+  var help_class_name = '{{ controller_name|e('js') }}';
+  var iso_user = '{{ iso_user|e('js') }}';
+  var lang_is_rtl = '{{ lang_is_rtl|number_format }}';
+  var full_language_code = '{{ full_language_code|e('js') }}';
+  var full_cldr_language_code = '{{ full_cldr_language_code|e('js') }}';
+  var country_iso_code = '{{ country_iso_code|e('js') }}';
+  var _PS_VERSION_ = '{{ ps_version|e('js') }}';
+  var roundMode = {{ round_mode|number_format }};
+  var youEditFieldFor = {{ multi_shop_edit_for|e('js') }}'';
+  var new_order_msg = '{{ 'A new order has been placed on your shop.'|trans({}, 'Admin.Navigation.Header')|e('js') }}';
+  var order_number_msg = '{{ 'Order number:'|trans({}, 'Admin.Navigation.Header')|e('js') }} ';
+  var total_msg = '{{ 'Total:'|trans({}, 'Admin.Global')|e('js') }} ';
+  var from_msg = '{{ 'From:'|trans({}, 'Admin.Global')|e('js') }} ';
+  var see_order_msg = '{{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature')|e('js') }}';
+  var new_customer_msg = '{{ 'A new customer registered on your shop.'|trans({}, 'Admin.Navigation.Header')|e('js') }}';
+  var customer_name_msg = '{{ 'Customer name:'|trans({}, 'Admin.Navigation.Header')|e('js') }} ';
+  var new_msg = '{{ 'A new message was posted on your shop.'|trans({}, 'Admin.Navigation.Header')|e('js') }}';
+  var see_msg = '{{ 'Read this message'|trans({}, 'Admin.Navigation.Header')|e('js') }}';
+  var token = '{{ token|e('js') }}';
+  var currentIndex = '{{ current_index|e('js') }}';
+  var employee_token = '{{ employee_token|e('js') }}';
+  var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
+  var default_language = '{{ default_language|number_format }}';
+  var admin_modules_link = '{{ url('admin_module_manage')|e('js') }}'; admin_module_manage
+  var admin_notification_get_link = '{{ url('admin_common_notifications')|e('js') }}';
+  var admin_notification_push_link = adminNotificationPushLink = '{{ url('admin_common_notifications_ack') }}';
+  var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
+  var search_product_msg = '{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}';
+</script>
+{% endif %}
+
+{{ include('@AdminThemes/new-theme/public/preload.html.twig') }}
+
+{# Javascript files from legacy Controller::css_files #}
+{% for cssUri, cssMedia in css_files %}
+  <link href="{{ cssUri|e('html') }}" rel="stylesheet" type="text/css"/>
+{% endfor %}
+
+{# Javascript files from legacy Controller::js_files #}
+{% if js_files is not empty %}
+  {% for jsUrl in js_files %}
+    <script type="text/javascript" src="{{ jsUrl }}"></script>
+  {% endfor %}
+{% endif %}
+
+{# Javascript definitions from Media #}
+{% if js_def is not empty %}
+<script type="text/javascript">
+  {% for jsVar, jsValue in js_def %}
+    var {{ jsVar }} = {{ jsValue|json_encode }};
+  {% endfor %}
+</script>
+{% endif %}
+
+{% if display_header %}
+  {{ renderhook('displayBackOfficeHeader', {}) }}
+{% endif %}

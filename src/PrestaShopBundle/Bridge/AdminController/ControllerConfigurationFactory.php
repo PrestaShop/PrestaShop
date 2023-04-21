@@ -32,6 +32,7 @@ use Link;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use Tab;
 use Tools;
 
 /**
@@ -62,7 +63,6 @@ class ControllerConfigurationFactory
     }
 
     /**
-     * @param int $tabId
      * @param string $objectModelClassName
      * @param string $legacyControllerName
      * @param string $tableName
@@ -70,10 +70,9 @@ class ControllerConfigurationFactory
      * @return ControllerConfiguration
      */
     public function create(
-        int $tabId,
-        string $objectModelClassName,
         string $legacyControllerName,
-        string $tableName
+        string $objectModelClassName = '',
+        string $tableName = ''
     ): ControllerConfiguration {
         $employee = $this->userProvider->getUser();
         if (!$employee instanceof Employee) {
@@ -82,6 +81,18 @@ class ControllerConfigurationFactory
                     'Unexpected user type. Expected "%s", got "%s',
                     Employee::class,
                     $employee::class)
+            );
+        }
+
+        /* @phpstan-ignore-next-line */
+        $tabId = Tab::getIdFromClassName($legacyControllerName);
+
+        if (!$tabId) {
+            throw new BridgeException(
+                sprintf(
+                    'Tab not found by className "%s". Make sure that $legacyControllerName is correct',
+                    $legacyControllerName
+                )
             );
         }
 

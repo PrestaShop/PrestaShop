@@ -417,6 +417,7 @@ module.exports = {
         },
       },
     }),
+    // Smarty preload
     new HtmlWebpackPlugin({
       filename: 'preload.tpl',
       templateContent: '{{{preloadLinks}}}',
@@ -432,6 +433,19 @@ module.exports = {
       filter: /preload/,
       // eslint-disable-next-line
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{$admin_dir}')),
+    }),
+    // Twig preload
+    new HtmlWebpackPlugin({
+      filename: 'preload.html.twig',
+      templateContent: '{{{preloadLinks}}}',
+      inject: false,
+    }),
+    new FontPreloadPlugin({
+      index: 'preload.html.twig',
+      extensions: ['woff2'],
+      filter: /preload/,
+      // eslint-disable-next-line
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="([^"]+)"/g, 'href="{{ asset(\'themes/new-theme/public/$1\') }}"')),
     }),
     new CssoWebpackPlugin({
       forceMediaMerge: true,

@@ -30,8 +30,13 @@ namespace PrestaShopBundle\Bridge\AdminController\Listener;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
@@ -41,6 +46,9 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
  */
 class InitFrameworkBridgeControllerListener
 {
+    public const USE_SYMFONY_LAYOUT_ATTRIBUTE = 'use_symfony_layout';
+    public const CONTROLLER_CONFIGURATION_ATTRIBUTE = 'configuration_controller';
+
     /**
      * @var Context
      */
@@ -52,15 +60,39 @@ class InitFrameworkBridgeControllerListener
     private $localeRepository;
 
     /**
-     * @param LegacyContext $legacyContext
-     * @param Repository $localeRepository
+     * @var RequestStack
      */
+    private $requestStack;
+
+    /**
+     * @var FeatureFlagRepository
+     */
+    private $featureFlagRepository;
+
+    /**
+     * @var LegacyControllerBridgeFactory
+     */
+    private $controllerBridgeFactory;
+
+    /**
+     * @var ControllerConfigurationFactory
+     */
+    private $controllerConfigurationFactory;
+
     public function __construct(
         LegacyContext $legacyContext,
-        Repository $localeRepository
+        Repository $localeRepository,
+        RequestStack $requestStack,
+        FeatureFlagRepository $featureFlagRepository,
+        LegacyControllerBridgeFactory $controllerBridgeFactory,
+        ControllerConfigurationFactory $controllerConfigurationFactory
     ) {
         $this->context = $legacyContext->getContext();
         $this->localeRepository = $localeRepository;
+        $this->requestStack = $requestStack;
+        $this->featureFlagRepository = $featureFlagRepository;
+        $this->controllerBridgeFactory = $controllerBridgeFactory;
+        $this->controllerConfigurationFactory = $controllerConfigurationFactory;
     }
 
     /**
@@ -81,41 +113,57 @@ class InitFrameworkBridgeControllerListener
      */
     public function onKernelController(ControllerEvent $event): void
     {
-        if (!$this->supports($event)) {
-            return;
+        $legacyBridgeController = null;
+        $bridgeController = $this->getBridgeController($event);
+        if (null !== $bridgeController) {
+            $legacyBridgeController = $this->controllerBridgeFactory->create($bridgeController->getControllerConfiguration());
+        } elseif ($this->isUsingSymfonyLayout()) {
+            $legacyControllerName = $event->getRequest()->attributes->get('_legacy_controller');
+            if (!empty($legacyControllerName)) {
+                $event->getRequest()->attributes->set(self::USE_SYMFONY_LAYOUT_ATTRIBUTE, true);
+
+                $controllerConfiguration = $this->controllerConfigurationFactory->create($legacyControllerName);
+                $event->getRequest()->attributes->set(self::CONTROLLER_CONFIGURATION_ATTRIBUTE, $controllerConfiguration);
+                $legacyBridgeController = $this->controllerBridgeFactory->create($controllerConfiguration);
+                $legacyBridgeController->setMedia(true);
+            }
+        }
+
+        if (null !== $legacyBridgeController) {
+            $this->context->smarty->assign('link', $this->context->link);
+            $this->context->currentLocale = $this->localeRepository->getLocale(
+                $this->context->language->getLocale()
+            );
+            $this->context->controller = $legacyBridgeController;
+        }
+    }
+
+    private function isUsingSymfonyLayout(): bool
+    {
+        if ($this->requestStack->getCurrentRequest()->query->getBoolean('use_symfony_layout', false)) {
+            return true;
+        }
+
+        return $this->featureFlagRepository->isEnabled(FeatureFlagSettings::SYMFONY_LAYOUT);
+    }
+
+    private function getBridgeController(ControllerEvent $event): ?FrameworkBridgeControllerInterface
+    {
+        if (!is_array($event->getController()) || !isset($event->getController()[0])) {
+            return null;
+        }
+
+        if (!$event->getController()[0] instanceof FrameworkBridgeControllerInterface) {
+            return null;
         }
 
         /** @var FrameworkBridgeControllerInterface $controller */
         $controller = $event->getController()[0];
 
-        if (!is_string($controller::class)) {
-            return;
+        if (!is_string(get_class($controller))) {
+            return null;
         }
 
-        $this->context->smarty->assign('link', $this->context->link);
-
-        $this->context->currentLocale = $this->localeRepository->getLocale(
-            $this->context->language->getLocale()
-        );
-
-        $this->context->controller = $controller->getLegacyControllerBridge();
-    }
-
-    /**
-     * @param ControllerEvent $event
-     *
-     * @return bool
-     */
-    private function supports(ControllerEvent $event): bool
-    {
-        if (!is_array($event->getController()) || !isset($event->getController()[0])) {
-            return false;
-        }
-
-        if (!$event->getController()[0] instanceof FrameworkBridgeControllerInterface) {
-            return false;
-        }
-
-        return true;
+        return $controller;
     }
 }

@@ -1,0 +1,220 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<!DOCTYPE html>
+<html lang="{{ iso_user }}">
+<head>
+  {% block header %}
+    {{ include('@PrestaShop/Admin/Layout/header.html.twig') }}
+    {% block stylesheets %}{% endblock %}
+    {% block extra_stylesheets %}{% endblock %}
+  {% endblock %}
+</head>
+
+<body
+  class="lang-{{ iso_user }}{% if lang_is_rtl %} lang-rtl{% endif %} {{ controller_name|escape|lower }}{% if collapse_menu %} page-sidebar-closed{% endif %}{% if is_multishop|default(false) %} multishop-enabled{% endif %}{% if lite_display|default(false) %} light_display_layout{% endif %}{% if debug_mode|default(false) %} developer-mode{% endif %}"
+  {% if js_router_metadata is defined and js_router_metadata.base_url is defined %}data-base-url="{{ js_router_metadata.base_url }}"{% endif %}
+  {% if js_router_metadata is defined and js_router_metadata.token %}data-token="{$js_router_metadata.token}"{% endif %}
+>
+
+{# Layout header #}
+{% if display_header %}
+  {% block layout_header %}
+    <header id="header" class="d-print-none">
+      <nav id="header_infos" class="main-header">
+        <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
+
+        {# Logo #}
+        <i class="material-icons js-mobile-menu">menu</i>
+        <a id="header_logo" class="logo float-left" href="{{ default_tab_link }}"></a>
+        <span id="shop_version">{{ ps_version }}</span>
+
+        <div class="component" id="quick-access-container">
+          {# Include quick access component based on components/layout/quick_access.tpl #}
+          #TODO_QUICK_ACCESS_COMPONENT
+        </div>
+        <div class="component component-search" id="header-search-container">
+          <div class="component-search-body">
+            <div class="component-search-top">
+              {# Include search component based on components/layout/search_form.tpl #}
+              #TODO_SEARCH_COMPONENT
+              <button class="component-search-cancel d-none">
+                {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+
+            {# Include quick access component based on components/layout/mobile_quickaccess.tpl #}
+            #TODO_MOBILE_QUICK_ACCESS_COMPONENT
+          </div>
+
+          <div class="component-search-background d-none"></div>
+        </div>
+
+        {% if debug_mode|default(false) %}
+          <div class="component hide-mobile-sm" id="header-debug-mode-container">
+            <a class="link shop-state"
+               id="debug-mode"
+               data-toggle="pstooltip"
+               data-placement="bottom"
+               data-html="true"
+               title="<p class=&quot;text-left&quot;><strong>{{ 'Your shop is in debug mode.'|trans({}, 'Admin.Navigation.Notification') }}</strong></p><p class=&quot;text-left&quot;>{{ 'All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.'|trans({'[1]': '<strong>', '[/1]': '</strong>'}, 'Admin.Navigation.Notification') }}</p>"
+               href="{{ url('admin_performance') }}"
+            >
+              <i class="material-icons">bug_report</i>
+              <span>{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+            </a>
+          </div>
+        {% endif %}
+
+        {% if maintenance_mode|default(false) %}
+          {% set maintenanceTitle %}
+            <p class="text-left text-nowrap">
+              <strong>
+                {{ 'Your store is in maintenance mode.'|trans({}, 'Admin.Navigation.Notification') }}
+              </strong>
+            </p>
+            <p class="text-left">
+              {{ 'Your visitors and customers cannot access your store while in maintenance mode.'|trans({}, 'Admin.Navigation.Notification') }}
+            </p>
+            <p class="text-left">
+              {{ 'To manage the maintenance settings, go to Shop Parameters > Maintenance tab.'|trans({}, 'Admin.Navigation.Notification') }}
+            </p>
+            {% if maintenance_allow_admins|default(false) %}
+              <p class="text-left">
+                {{ 'Admins can access the store front office without storing their IP.'|trans({}, 'Admin.Navigation.Notification') }}
+              </p>
+            {% endif %}
+          {% endset %}
+          <div class="component hide-mobile-sm" id="header-maintenance-mode-container">
+            <a class="link shop-state"
+               id="maintenance-mode"
+               data-toggle="pstooltip"
+               data-placement="bottom"
+               data-html="true"
+               title="{{ maintenanceTitle|e('html') }}"
+               href="{{ url('admin_maintenance') }}"
+            >
+              <i class="material-icons"
+                 style="{% if maintenance_allow_admins|default(false) %}color: var(--green);{% endif %}"
+              >build</i>
+              <span>{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+            </a>
+          </div>
+        {% endif %}
+
+        <div class="header-right">
+          {% if hideLegacyStoreContextSelector is not defined or not hideLegacyStoreContextSelector %}
+            <div class="component" id="header-shop-list-container">
+              {# Include shop list component based on components/layout/shop_list.tpl #}
+              #TODO_SHOP_LIST_COMPONENT
+            </div>
+          {% endif %}
+          {% if show_new_orders or show_new_customers or show_new_messages %}
+            <div class="component header-right-component" id="header-notifications-container">
+              #TODO_NOTIFICATION_COMPONENT
+            </div>
+          {% endif %}
+
+          <div class="component" id="header-employee-container">
+            {# Include employee component based on components/layout/employee_dropdown.tpl #}
+            #TODO_EMPLOYEE_DROPDOWN_COMPONENT
+          </div>
+          {% if displayBackOfficeTop is defined %}
+            {{ displayBackOfficeTop }}
+          {% endif %}
+        </div>
+      </nav>
+    </header>
+
+    {# Include nav bar component based on 'components/layout/nav_bar.tpl' #}
+    #TODO_NAV_BAR_COMPONENT
+  {% endblock %}
+{% endif %}
+
+{# Page header toolbar #}
+{% if page_header_toolbar is defined %}
+  {{ page_header_toolbar }}
+{% endif %}
+
+<div id="main-div">
+  {% if install_dir_exists|default(false) %}
+    <div class="alert alert-warning">
+      {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
+    </div>
+  {% else %}
+    {% if modal_module_list is defined %}
+      {{ modal_module_list }}
+    {% endif %}
+
+    <div
+      class="{% if display_header %}content-div{% endif %}{% if page_header_toolbar|default(false) %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
+      {{ renderhook('displayAdminAfterHeader', {}) }}
+
+      {% if display_header %}
+        {#
+        Display messages based on
+          components/layout/error_messages.tpl
+          components/layout/information_messages.tpl
+          components/layout/confirmation_messages.tpl
+          components/layout/warning_messages.tpl
+        #}
+      {% endif %}
+
+      {# Page content blocks #}
+      {% block content_header %}{% endblock %}
+      {% block content %}{% endblock %}
+      {% block content_footer %}{% endblock %}
+      {% block sidebar_right %}{% endblock %}
+
+      {{ renderhook('displayAdminEndContent', {}) }}
+    </div>
+  {% endif %}
+</div>
+
+{% if lite_display|default(true) %}
+  {# Include non responsive component based on components/layout/non-responsive.tpl #}
+  #TODO_NON_RESPONSIVE_COMPONENT
+  <div class="mobile-layer"></div>
+
+  {% if display_footer %}
+    {# Include footer based on footer.tpl #}
+  {% endif %}
+{% endif %}
+
+{% if php_errors is defined %}
+  {# Include template based on error.tpl #}
+{% endif %}
+
+{% if lite_display|default(true) %}
+  {% if modals is defined %}
+    {{ modals }}
+  {% endif %}
+{% endif %}
+
+{# Javascript blocks #}
+{% block javascripts %}{% endblock %}
+{% block extra_javascripts %}{% endblock %}
+{% block translate_javascripts %}{% endblock %}
+</body>
+</html>

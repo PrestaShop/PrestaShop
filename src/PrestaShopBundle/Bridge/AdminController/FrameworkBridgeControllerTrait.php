@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\Exception\BridgeException;
+
 /* @phpstan-ignore-next-line */
-use Tab;
 
 /**
  * Contains reusable methods for horizontally migrated controllers, this trait is used to help implement the
@@ -84,21 +84,9 @@ trait FrameworkBridgeControllerTrait
             return $this->controllerConfiguration;
         }
 
-        /* @phpstan-ignore-next-line */
-        $tabId = Tab::getIdFromClassName($legacyControllerName);
-
-        if (!$tabId) {
-            throw new BridgeException(
-                sprintf(
-                    'Tab not found by className "%s". Make sure that $legacyControllerName is correct',
-                    $legacyControllerName
-                )
-            );
-        }
-
         $this->controllerConfiguration = $this
-            ->get('prestashop.bridge.admin_controller.controller_configuration_factory')
-            ->create($tabId, $objectModelClassName, $legacyControllerName, $tableName)
+            ->get(ControllerConfigurationFactory::class)
+            ->create($legacyControllerName, $objectModelClassName, $tableName)
         ;
 
         return $this->controllerConfiguration;

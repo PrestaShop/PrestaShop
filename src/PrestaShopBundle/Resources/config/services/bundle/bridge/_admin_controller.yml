@@ -2,23 +2,18 @@ services:
   _defaults:
     public: true
 
-  prestashop.bridge.admin_controller.controller_configuration_factory:
-    class: PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory
+  PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory:
     arguments:
       - '@PrestaShopBundle\Service\DataProvider\UserProvider'
       - '@=service("prestashop.adapter.legacy.context").getContext().link'
 
-  prestashop.bridge.admin_controller.legacy_controller_bridge_factory:
-    class: PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory
+  PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory:
     arguments:
       - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.core.hook.dispatcher'
 
-  prestashop.bridge.admin_controller.listener.init_framework_bridge_controller_listener:
-    class: PrestaShopBundle\Bridge\AdminController\Listener\InitFrameworkBridgeControllerListener
+  PrestaShopBundle\Bridge\AdminController\Listener\InitFrameworkBridgeControllerListener:
+    autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.controller }
-    arguments:
-      - '@prestashop.adapter.legacy.context'
-      - '@prestashop.core.localization.locale.repository'
