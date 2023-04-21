@@ -141,7 +141,7 @@ jobs:
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) \
           docker-compose -f docker-compose.yml up -d --build
-          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }en/)" != "200" ]]; do sleep 5; done'
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}en/)" != "200" ]]; do sleep 5; done'
 
       - name: Setup Node
         uses: actions/setup-node@v3
