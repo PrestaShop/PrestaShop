@@ -27,13 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
-use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
+use PrestaShop\PrestaShop\Adapter\CartRule\DiscountApplicationFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShopException;
 
 /**
@@ -46,10 +44,21 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
      */
     private $cartRuleRepository;
 
+    /**
+     * @var DiscountApplicationFiller
+     */
+    private $discountApplicationFiller;
+
+    /**
+     * @param CartRuleRepository $cartRuleRepository
+     * @param DiscountApplicationFiller $discountApplicationFiller
+     */
     public function __construct(
-        CartRuleRepository $cartRuleRepository
+        CartRuleRepository $cartRuleRepository,
+        DiscountApplicationFiller $discountApplicationFiller
     ) {
         $this->cartRuleRepository = $cartRuleRepository;
+        $this->discountApplicationFiller = $discountApplicationFiller;
     }
 
     /**
@@ -148,40 +157,6 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
             $cartRule->reduction_tax = false;
         }
 
-        $this->fillDiscountApplicationType(
-            $cartRule,
-            $cartRuleAction
-        );
-    }
-
-    /**
-     * @param CartRule $cartRule
-     * @param CartRuleActionInterface $cartRuleAction
-     */
-    private function fillDiscountApplicationType(
-        CartRule $cartRule,
-        CartRuleActionInterface $cartRuleAction
-    ): void {
-        $discountApplicationType = $cartRuleAction->getDiscountApplicationType();
-
-        if ((!$cartRuleAction->getAmountDiscount() && !$cartRuleAction->getPercentageDiscount()) || !$discountApplicationType) {
-            return;
-        }
-
-        switch ($discountApplicationType->getType()) {
-            case DiscountApplicationType::SELECTED_PRODUCTS:
-                $discountApplicationValue = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
-                break;
-            case DiscountApplicationType::CHEAPEST_PRODUCT:
-                $discountApplicationValue = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
-                break;
-            case DiscountApplicationType::SPECIFIC_PRODUCT:
-                $discountApplicationValue = $discountApplicationType->getProductId()->getValue();
-                break;
-            default:
-                $discountApplicationValue = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
-        }
-
-        $cartRule->reduction_product = $discountApplicationValue;
+        $this->discountApplicationFiller->fillDiscountApplicationType($cartRule, $cartRuleAction);
     }
 }

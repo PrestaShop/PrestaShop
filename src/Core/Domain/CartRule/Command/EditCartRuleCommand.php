@@ -343,32 +343,9 @@ class EditCartRuleCommand
         return $this->minimumAmountShippingIncluded;
     }
 
-    public function setDiscountApplication(string $discountApplicationType, ?int $productId = null): EditCartRuleCommand
-    {
-        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
-        if (DiscountApplicationType::SPECIFIC_PRODUCT === $discountApplicationType) {
-            if (!$productId) {
-                throw new CartRuleConstraintException(
-                    'ProductId is required for discount application "specific_product"',
-                    CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
-                );
-            }
-            $this->discountProductId = new ProductId($productId);
-        } else {
-            $this->discountProductId = null;
-        }
-
-        return $this;
-    }
-
     public function getDiscountProductId(): ?ProductId
     {
         return $this->discountProductId;
-    }
-
-    public function getDiscountApplicationType(): ?DiscountApplicationType
-    {
-        return $this->discountApplicationType;
     }
 
     public function setCartRuleAction(CartRuleActionInterface $cartRuleAction): EditCartRuleCommand

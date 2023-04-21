@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -302,55 +300,11 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             );
         }
 
-        if (isset($data['discount_application_type'])) {
-            $command->setDiscountApplication(
-                $data['discount_application_type'],
-                // if specific product type is provided and product is not, then command should throw exception
-                isset($data['discount_product']) ? $this->getSharedStorage()->get($data['discount_product']) : null
-            );
-        }
+        $cartRuleActionBuilder = $this->getCartRuleActionBuilder();
+        $formattedActionData = $this->formatDataForActionBuilder($data);
 
-        if ($cartRuleAction = $this->buildCartRuleAction($data)) {
-            $command->setCartRuleAction($cartRuleAction);
+        if ($cartRuleActionBuilder->supports($formattedActionData)) {
+            $command->setCartRuleAction($cartRuleActionBuilder->build($formattedActionData));
         }
-    }
-
-    private function buildAction(array $data): ?CartRuleActionInterface
-    {
-        $actionWasSet = false;
-        $builder = new CartRuleActionBuilder();
-
-        if (isset($data['free_shipping'])) {
-            $actionWasSet = true;
-            $builder->setFreeShipping(PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']));
-        }
-        if (isset($data['gift_product'])) {
-            $actionWasSet = true;
-            $builder->setGiftProduct(
-                $this->getSharedStorage()->get($data['gift_product']),
-                isset($data['gift_combination']) ? $this->getSharedStorage()->get($data['gift_combination']) : null
-            );
-        }
-        if (isset($data['reduction_percentage'])) {
-            $actionWasSet = true;
-            $builder->setPercentageDiscount(
-                $data['reduction_percentage'],
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products'])
-            );
-        }
-        if (isset($data['reduction_amount'])) {
-            $actionWasSet = true;
-            $builder->setAmountDiscount(
-                $data['reduction_amount'],
-                $this->getSharedStorage()->get($data['reduction_currency']),
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_tax'])
-            );
-        }
-
-        if (!$actionWasSet) {
-            return null;
-        }
-
-        return $builder->build();
     }
 }

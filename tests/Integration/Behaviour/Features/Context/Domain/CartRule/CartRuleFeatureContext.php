@@ -63,10 +63,7 @@ class CartRuleFeatureContext extends AbstractCartRuleFeatureContext
     public function createCartRuleWithReference(string $cartRuleReference, TableNode $node): void
     {
         $data = $this->localizeByRows($node);
-
         try {
-            $cartRuleAction = $this->buildCartRuleAction($data);
-
             $command = new AddCartRuleCommand(
                 $data['name'],
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
@@ -77,7 +74,7 @@ class CartRuleFeatureContext extends AbstractCartRuleFeatureContext
                 new DateTime($data['valid_to']),
                 $data['total_quantity'],
                 $data['quantity_per_user'],
-                $cartRuleAction
+                $this->getCartRuleActionBuilder()->build($this->formatDataForActionBuilder($data))
             );
 
             if (!empty($data['minimum_amount'])) {
@@ -228,6 +225,7 @@ class CartRuleFeatureContext extends AbstractCartRuleFeatureContext
         $errorMap = [
             'required specific product' => CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT,
             'non unique cart rule code' => CartRuleConstraintException::NON_UNIQUE_CODE,
+            'missing action' => CartRuleConstraintException::MISSING_ACTION,
         ];
 
         $this->assertLastErrorIs(

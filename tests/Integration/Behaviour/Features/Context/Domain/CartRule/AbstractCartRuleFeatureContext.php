@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule\CartRuleActionBuilder;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
@@ -36,17 +35,9 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @param array<string, mixed> $data
-     *
-     * @return CartRuleActionInterface
-     */
-    protected function buildCartRuleAction(array $data): CartRuleActionInterface
+    protected function getCartRuleActionBuilder(): CartRuleActionBuilder
     {
-        //@todo: how it should behave for edition?
-        // The edition command doesn't require changing the action, even though in form layer we will probably always provide all the same values.
-        // need to think about this more.
-        return (new CartRuleActionBuilder())->build($this->formatDataForActionBuilder($data));
+        return new CartRuleActionBuilder();
     }
 
     /**
@@ -54,10 +45,9 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
      *
      * @return array<string, mixed>
      */
-    private function formatDataForActionBuilder(array $data): array
+    protected function formatDataForActionBuilder(array $data): array
     {
-        $formattedData = [
-        ];
+        $formattedData = [];
 
         if (isset($data['free_shipping'])) {
             $formattedData['free_shipping'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
@@ -81,14 +71,13 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         }
 
         if (isset($data['discount_product'])) {
-            $formattedData['discount']['specific_product'] = (int) $data['discount_product'];
+            $formattedData['discount']['specific_product'][0]['id'] = (int) $this->getSharedStorage()->get($data['discount_product']);
         }
 
-        if (isset($data['gift_product_id'])) {
-            $formattedData['gift_product'][0] = (int) $data['gift_product_id'];
-
-            if (isset($data['gift_product_attribute_id'])) {
-                $formattedData['gift_product'][0]['combination_id'] = (int) $data['gift_product_attribute_id'];
+        if (isset($data['gift_product'])) {
+            $formattedData['gift_product'][0]['product_id'] = (int) $this->getSharedStorage()->get($data['gift_product']);
+            if (isset($data['gift_combination'])) {
+                $formattedData['gift_product'][0]['combination_id'] = $this->getSharedStorage()->get($data['gift_combination']);
             }
         }
 

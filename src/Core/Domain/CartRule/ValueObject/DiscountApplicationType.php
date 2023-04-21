@@ -86,17 +86,18 @@ class DiscountApplicationType
             throw new CartRuleConstraintException(sprintf('Invalid cart rule discount application type %s. Available types are: %s', var_export($type, true), implode(', ', self::AVAILABLE_TYPES)), CartRuleConstraintException::INVALID_DISCOUNT_APPLICATION_TYPE);
         }
 
-        if ($type === self::SPECIFIC_PRODUCT && !$productId) {
-            throw new CartRuleConstraintException(
-                'Provided Cart rule discount application type requires specific product',
-                CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
-            );
+        if ($type === self::SPECIFIC_PRODUCT) {
+            if (!$productId) {
+                throw new CartRuleConstraintException(
+                    'Provided Cart rule discount application type requires specific product',
+                    CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
+                );
+            }
+
+            $this->productId = new ProductId($productId);
         }
 
         $this->type = $type;
-        if ($productId) {
-            $this->productId = new ProductId($productId);
-        }
     }
 
     /**

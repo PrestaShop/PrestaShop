@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule;
 
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
@@ -38,33 +39,42 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class CartRuleActionBuilder
 {
+    /**
+     * @param array<string, mixed> $actionsData
+     *
+     * @return CartRuleActionInterface
+     */
     public function build(array $actionsData): CartRuleActionInterface
     {
-        $freeShipping = (bool) $actionsData['free_shipping'];
         $giftProduct = null;
-
         if (!empty($actionsData['gift_product'][0])) {
             $giftProductData = $actionsData['gift_product'][0];
             $giftProduct = new GiftProduct(
                 $giftProductData['product_id'],
-                (int) $giftProductData['combination_id'] ?: null
+                isset($giftProductData['combination_id']) ? (int) $giftProductData['combination_id'] : null
             );
         }
 
+        $freeShipping = false;
+        if (!empty($actionsData['free_shipping'])) {
+            $freeShipping = true;
+        }
+
         if (!empty($actionsData['discount']['reduction']['value'])) {
-            $discountApplication = $actionsData['discount']['discount_application'];
-            if ($discountApplication === DiscountApplicationType::SPECIFIC_PRODUCT) {
-                $discountApplicationType = new DiscountApplicationType(
-                    $discountApplication,
-                    (int) $actionsData['discount']['specific_product'][0]['id']
-                );
+            if (!empty($actionsData['discount']['specific_product'][0]['id'])) {
+                $specificProductId = (int) $actionsData['discount']['specific_product'][0]['id'];
             } else {
-                $discountApplicationType = new DiscountApplicationType($discountApplication);
+                $specificProductId = null;
             }
 
+            $discountApplicationType = new DiscountApplicationType(
+                $actionsData['discount']['discount_application'],
+                $specificProductId
+            );
             $reductionData = $actionsData['discount']['reduction'];
             // creating this VO mostly just to fire the validation inside its constructor,
             // and we don't need to create DecimalNumbers manually when using in Discount objects
@@ -90,8 +100,46 @@ class CartRuleActionBuilder
                     $giftProduct
                 );
             }
-        } else {
-            return $freeShipping ? new FreeShippingAction($giftProduct) : new GiftProductAction($giftProduct);
+        } elseif ($freeShipping) {
+            return new FreeShippingAction($giftProduct);
+        } elseif ($giftProduct) {
+            return new GiftProductAction($giftProduct);
         }
+
+        throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
+    }
+
+    /**
+     * Returns true when there are required keys to build action.
+     * It can be used for example in partial update action, when action data is not being updated.
+     *
+     * @param array<string, mixed> $data
+     *
+     * @return bool
+     */
+    public function supports(array $data): bool
+    {
+        $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->enableExceptionOnInvalidIndex()
+            ->getPropertyAccessor()
+        ;
+
+        if (array_key_exists('free_shipping', $data)) {
+            return true;
+        }
+
+        if ($propertyAccessor->isReadable($data, '[gift_product][0]')) {
+            return true;
+        }
+
+        if (
+            $propertyAccessor->isReadable($data, '[discount][reduction][value]')
+            && $propertyAccessor->isReadable($data, '[discount][reduction][type]')
+            && $propertyAccessor->isReadable($data, '[discount][discount_application]')
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
