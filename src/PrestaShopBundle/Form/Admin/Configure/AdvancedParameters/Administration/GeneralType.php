@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
-use Cookie;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -63,7 +63,7 @@ class GeneralType extends TranslatorAwareType
             ->add(self::FIELD_COOKIE_SAMESITE, ChoiceType::class, [
                 'label' => $this->trans('Cookie SameSite', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Allows you to declare if your cookie should be restricted to a first-party or same-site context.', 'Admin.Advparameters.Help'),
-                'choices' => Cookie::SAMESITE_AVAILABLE_VALUES,
+                'choices' => CookieOptions::SAMESITE_AVAILABLE_VALUES,
             ]);
     }
 

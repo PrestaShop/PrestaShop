@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Preferences;
 
-use Cookie;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 
 class PreferencesConfigurationTest extends TestCase
 {
@@ -123,7 +123,7 @@ class PreferencesConfigurationTest extends TestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                    ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
 
@@ -161,7 +161,7 @@ class PreferencesConfigurationTest extends TestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                    ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
         $this->mockConfiguration
