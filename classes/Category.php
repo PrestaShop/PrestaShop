@@ -1931,27 +1931,6 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Get URL Rewrite information.
-     *
-     * @param int $idCategory
-     *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
-     *
-     * @since 1.7.0
-     */
-    public static function getUrlRewriteInformation($idCategory)
-    {
-        $sql = new DbQuery();
-        $sql->select('l.`id_lang`, cl.`link_rewrite`');
-        $sql->from('category_link', 'cl');
-        $sql->leftJoin('lang', 'l', 'cl.`id_lang` = l.`id_lang`');
-        $sql->where('cl.`id_category` = ' . (int) $idCategory);
-        $sql->where('l.`active` = 1');
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-    }
-
-    /**
      * Return `nleft` and `nright` fields for a given category.
      *
      * @param int $id

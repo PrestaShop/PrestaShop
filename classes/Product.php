@@ -6784,25 +6784,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @param int $id_product Product identifier
-     *
-     * @return array
-     */
-    public static function getUrlRewriteInformations($id_product)
-    {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT pl.`id_lang`, pl.`link_rewrite`, p.`ean13`, cl.`link_rewrite` AS category_rewrite
-            FROM `' . _DB_PREFIX_ . 'product` p
-            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product`' . Shop::addSqlRestrictionOnLang('pl') . ')
-            ' . Shop::addSqlAssociation('product', 'p') . '
-            LEFT JOIN `' . _DB_PREFIX_ . 'lang` l ON (pl.`id_lang` = l.`id_lang`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (cl.`id_category` = product_shop.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`' . Shop::addSqlRestrictionOnLang('cl') . ')
-            WHERE p.`id_product` = ' . (int) $id_product . '
-            AND l.`active` = 1
-        ');
-    }
-
-    /**
      * @return int TaxRulesGroup identifier
      */
     public function getIdTaxRulesGroup()
