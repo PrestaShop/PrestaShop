@@ -1583,6 +1583,7 @@ class CartCore extends ObjectModel
                     (int) $id_product,
                     (int) $id_product_attribute,
                     $id_customization,
+                    0,
                     false
                 );
                 $updateQuantity = '- ' . $quantity;
