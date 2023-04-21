@@ -1563,7 +1563,7 @@ class CartCore extends ObjectModel
             $id_product_attribute,
             (int) $id_customization,
             (int) $id_address_delivery,
-			false
+            false
         );
 
         /* Update quantity if product already exist */
