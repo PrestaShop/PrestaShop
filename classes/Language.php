@@ -132,14 +132,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         'objectsNodeName' => 'languages',
     ];
 
-    protected $translationsFilesAndVars = [
-        'fields' => '_FIELDS',
-        'errors' => '_ERRORS',
-        'admin' => '_LANGADM',
-        'pdf' => '_LANGPDF',
-        'tabs' => 'tabs',
-    ];
-
     public static function resetStaticCache()
     {
         parent::resetStaticCache();
