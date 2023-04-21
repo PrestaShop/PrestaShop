@@ -12,6 +12,20 @@ import type {Page} from 'playwright';
 class ModuleManager extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly disableModuleSuccessMessage: (moduleTag: string) => string;
+
+  public readonly disableMobileSuccessMessage: (moduleTag: string) => string;
+
+  public readonly enableModuleSuccessMessage: (moduleTag: string) => string;
+
+  public readonly enableMobileSuccessMessage: (moduleTag: string) => string;
+
+  public readonly resetModuleSuccessMessage: (moduleTag: string) => string;
+
+  public readonly installModuleSuccessMessage: (moduleTag: string) => string;
+
+  public readonly uninstallModuleSuccessMessage: (moduleTag: string) => string;
+
   private readonly searchModuleTagInput: string;
 
   private readonly searchModuleButton: string;
@@ -24,25 +38,19 @@ class ModuleManager extends BOBasePage {
 
   private readonly moduleBlocks: string;
 
-  private readonly moduleBlock: (moduleName: string) => string;
+  private readonly moduleBlock: (moduleTag: string) => string;
 
-  private readonly disableModuleButton: (moduleName: string) => string;
+  private readonly actionModuleButton: (moduleTag: string, action: string) => string;
 
-  private readonly enableModuleButton: (moduleName: string) => string;
+  private readonly configureModuleButton: (moduleTag: string) => string;
 
-  private readonly allModulesInstallModuleButton: (moduleName: string) => string;
+  private readonly actionsDropdownButton: (moduleTag: string) => string;
 
-  private readonly configureModuleButton: (moduleName: string) => string;
+  private readonly actionModuleButtonInDropdownList: (action: string) => string;
 
-  private readonly actionsDropdownButton: (moduleName: string) => string;
-
-  private readonly installModuleButton: (moduleTag: string) => string;
-
-  private readonly uninstallModuleModalConfirmButton: (moduleTag: string) => string;
+  private readonly modalConfirmButton: (moduleTag: string, action: string) => string;
 
   private readonly modalConfirmAction: (moduleTag: string) => string;
-
-  private readonly uninstallModuleButton: string;
 
   private readonly statusDropdownDiv: string;
 
@@ -66,36 +74,51 @@ class ModuleManager extends BOBasePage {
     super();
 
     this.pageTitle = 'Module manager •';
+    this.disableModuleSuccessMessage = (moduleTag: string) => `Disable action on module ${moduleTag} succeeded.`;
+    this.disableMobileSuccessMessage = (moduleTag: string) => `Disable mobile action on module ${moduleTag} succeeded.`;
+    this.enableModuleSuccessMessage = (moduleTag: string) => `Enable action on module ${moduleTag} succeeded.`;
+    this.enableMobileSuccessMessage = (moduleTag: string) => `Enable mobile action on module ${moduleTag} succeeded.`;
+    this.resetModuleSuccessMessage = (moduleTag: string) => `Reset action on module ${moduleTag} succeeded.`;
+    this.installModuleSuccessMessage = (moduleTag: string) => `Install action on module ${moduleTag} succeeded.`;
+    this.uninstallModuleSuccessMessage = (moduleTag: string) => `Uninstall action on module ${moduleTag} succeeded.`;
 
-    // Selectors
+    // Header Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
-    this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
-    this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
-    this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
-    this.moduleBlocks = 'div.module-short-list';
-    this.moduleBlock = (moduleName: string) => `${this.allModulesBlock}[data-name='${moduleName}']`;
-    this.disableModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
-    this.enableModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)} button.module_action_menu_enable`;
-    this.allModulesInstallModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)}`
-      + ' button.module_action_menu_install';
-    this.actionsDropdownButton = (moduleName: string) => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
-    this.installModuleButton = (moduleTag: string) => `div[data-tech-name='${moduleTag}'] button.module_action_menu_install`;
-    this.configureModuleButton = (moduleName: string) => `${this.moduleBlock(moduleName)}`
-      + ' div.module-actions a[href*=\'/action/configure\']';
-    this.uninstallModuleButton = 'div.btn-group.module-actions.show button.module_action_menu_uninstall';
-    this.modalConfirmAction = (moduleTag: string) => `#module-modal-confirm-${moduleTag}`;
-    this.uninstallModuleModalConfirmButton = (moduleTag: string) => `${this.modalConfirmAction(moduleTag)}-uninstall`
-      + ' div.modal-footer a.module_action_modal_uninstall';
-    // Status dropdown selectors
+
+    // Filter by categories dropdown selectors
+    this.categoriesSelectDiv = '#categories';
+    this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
+    this.categoryDropdownItem = (cat: string) => `${this.categoriesDropdownDiv} a[data-category-display-name='${cat}']`;
+
+    // Filter by status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
     this.statusDropdownItemLink = (ref: number) => `${this.statusDropdownMenu} a[data-status-ref='${ref}']`;
     this.filterByAllModulesButton = '.module-status-reset';
-    // Categories
-    this.categoriesSelectDiv = '#categories';
-    this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
-    this.categoryDropdownItem = (cat: string) => `${this.categoriesDropdownDiv} a[data-category-display-name='${cat}']`;
+
+    // Modules list selectors
+    this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
+    this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
+    this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
+    this.moduleBlocks = 'div.module-short-list';
+    this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name='${moduleTag}']`;
+
+    // Module actions selector
+    this.actionModuleButton = (moduleTag: string, action: string) => `div[data-tech-name='${moduleTag}']`
+      + ` button.module_action_menu_${action}`;
+    this.configureModuleButton = (moduleTag: string) => `div[data-tech-name='${moduleTag}']`
+      + ' div.module-actions a[href*=\'/action/configure\']';
+
+    // Module actions in dropdown selectors
+    this.actionsDropdownButton = (moduleTag: string) => `div[data-tech-name='${moduleTag}'] button.dropdown-toggle`;
+    this.actionModuleButtonInDropdownList = (action: string) => 'div.btn-group.module-actions.show'
+      + ` button.module_action_menu_${action}`;
+
+    // Modal confirmation selectors
+    this.modalConfirmAction = (moduleTag: string) => `#module-modal-confirm-${moduleTag}`;
+    this.modalConfirmButton = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag)}-${action}`
+      + ` div.modal-footer a.module_action_modal_${action}`;
   }
 
   /*
@@ -111,23 +134,24 @@ class ModuleManager extends BOBasePage {
   async searchModule(page: Page, module: ModuleData): Promise<boolean> {
     await page.type(this.searchModuleTagInput, module.tag);
     await page.click(this.searchModuleButton);
-    return this.elementVisible(page, this.moduleBlock(module.name), 10000);
+
+    return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
   }
 
   /**
    * Click on button configure of a module
    * @param page {Page} Browser tab
-   * @param moduleName {string} Name of the module
+   * @param moduleTag {string} Technical name of the module
    * @return {Promise<void>}
    */
-  async goToConfigurationPage(page: Page, moduleName: string): Promise<void> {
-    if (await this.elementNotVisible(page, this.configureModuleButton(moduleName), 1000)) {
+  async goToConfigurationPage(page: Page, moduleTag: string): Promise<void> {
+    if (await this.elementNotVisible(page, this.configureModuleButton(moduleTag), 1000)) {
       await Promise.all([
-        page.click(this.actionsDropdownButton(moduleName)),
-        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
+        page.click(this.actionsDropdownButton(moduleTag)),
+        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(moduleTag)}[aria-expanded='true']`),
       ]);
     }
-    await page.click(this.configureModuleButton(moduleName));
+    await page.click(this.configureModuleButton(moduleTag));
   }
 
   /**
@@ -183,23 +207,14 @@ class ModuleManager extends BOBasePage {
   }
 
   /**
-   * Get status of module (enable/disable)
+   * Get status of module (enable/disable/installed/uninstalled)
    * @param page {Page} Browser tab
-   * @param moduleName {string} Name of the module
+   * @param moduleTag {string} Technical name of the module
+   * @param action {string} Status of the module to get
    * @return {Promise<boolean>}
    */
-  async isModuleEnabled(page: Page, moduleName: string): Promise<boolean> {
-    return this.elementNotVisible(page, this.enableModuleButton(moduleName), 1000);
-  }
-
-  /**
-   * Get status of module ( installed/uninstalled)
-   * @param page {Page} Browser tab
-   * @param moduleName {string} Name of the module
-   * @return {Promise<boolean>}
-   */
-  async isModuleInstalled(page: Page, moduleName: string): Promise<boolean> {
-    return this.elementNotVisible(page, this.allModulesInstallModuleButton(moduleName), 1000);
+  async isModuleStatus(page: Page, moduleTag: string, action: string): Promise<boolean> {
+    return this.elementNotVisible(page, this.actionModuleButton(moduleTag, action), 1000);
   }
 
   /**
@@ -210,21 +225,14 @@ class ModuleManager extends BOBasePage {
    */
   async getAllModulesStatus(page: Page, statusToFilterBy: string): Promise<{ name: string, status: boolean }[]> {
     const modulesStatus: { name: string, status: boolean }[] = [];
-    const allModulesNames = await this.getAllModulesNames(page);
+    const allModulesTechNames = await this.getAllModulesTechNames(page);
 
-    for (let i = 0; i < allModulesNames.length; i++) {
-      const moduleName: string | null = allModulesNames[i];
+    for (let i = 0; i < allModulesTechNames.length; i++) {
+      const moduleTag: string | null = allModulesTechNames[i];
 
-      if (typeof moduleName === 'string') {
-        if (statusToFilterBy === 'enabled' || statusToFilterBy === 'disabled') {
-          const moduleStatus = await this.isModuleEnabled(page, moduleName);
-          modulesStatus.push({name: moduleName, status: moduleStatus});
-        }
-
-        if (statusToFilterBy === 'installed' || statusToFilterBy === 'uninstalled') {
-          const moduleStatus = await this.isModuleInstalled(page, moduleName);
-          modulesStatus.push({name: moduleName, status: moduleStatus});
-        }
+      if (typeof moduleTag === 'string') {
+        const moduleStatus = await this.isModuleStatus(page, moduleTag, statusToFilterBy);
+        modulesStatus.push({name: moduleTag, status: moduleStatus});
       }
     }
 
@@ -236,32 +244,34 @@ class ModuleManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<Array<string>>}
    */
-  async getAllModulesNames(page: Page): Promise<(string | null)[]> {
+  async getAllModulesTechNames(page: Page): Promise<(string | null)[]> {
     return page.$$eval(
       this.allModulesBlock,
-      (all) => all.map((el) => el.getAttribute('data-name')),
+      (all) => all.map((el) => el.getAttribute('data-tech-name')),
     );
   }
 
   /**
-   * Uninstall/install module
+   * Uninstall/install/enable/disable/reset module
    * @param page {Page} Browser tab
    * @param module {ModuleData} Module data to install/uninstall
-   * @param toInstall {boolean} True if we need to install module
+   * @param action {string} Action install/uninstall/enable/disable/reset
    * @return {Promise<string | null>}
    */
-  async installUninstallModule(page: Page, module: ModuleData, toInstall: boolean): Promise<string | null> {
+  async setActionInModuleModule(page: Page, module: ModuleData, action: string): Promise<string | null> {
     await this.closeGrowlMessage(page);
 
-    if (toInstall) {
-      await this.waitForSelectorAndClick(page, this.installModuleButton(module.tag));
+    if (await this.elementVisible(page, this.actionModuleButton(module.tag, action))) {
+      await this.waitForSelectorAndClick(page, this.actionModuleButton(module.tag, action));
     } else {
       await Promise.all([
-        page.click(this.actionsDropdownButton(module.name)),
-        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.name)}[aria-expanded='true']`),
+        page.click(this.actionsDropdownButton(module.tag)),
+        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.tag)}[aria-expanded='true']`),
       ]);
-      await this.waitForSelectorAndClick(page, this.uninstallModuleButton);
-      await this.waitForSelectorAndClick(page, this.uninstallModuleModalConfirmButton(module.tag));
+      await this.waitForSelectorAndClick(page, this.actionModuleButtonInDropdownList(action));
+      if (action === 'disable' || action === 'uninstall' || action === 'reset') {
+        await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));
+      }
     }
 
     return this.getGrowlMessageContent(page);

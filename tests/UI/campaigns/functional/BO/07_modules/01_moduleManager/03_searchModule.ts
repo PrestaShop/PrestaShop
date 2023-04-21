@@ -53,6 +53,6 @@ describe('BO - Modules - Module Manager : Search module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
-    await expect(isModuleVisible).to.be.true;
+    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
   });
 });

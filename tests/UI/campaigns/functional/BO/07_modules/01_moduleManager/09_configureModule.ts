@@ -54,13 +54,13 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
-    await expect(isModuleVisible).to.be.true;
+    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
   });
 
   it('should go to module configuration page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.name);
+    await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.tag);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
     await expect(pageSubtitle).to.contains(Modules.contactForm.name);

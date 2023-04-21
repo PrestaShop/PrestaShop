@@ -53,27 +53,19 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
     it(`should uninstall the module '${Modules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.installUninstallModule(page, Modules.contactForm, false);
-      await expect(successMessage).to.eq(`Uninstall action on module ${Modules.contactForm.tag} succeeded.`);
+      const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.contactForm, 'uninstall');
+      await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
     });
-    [
-      {args: {status: 'enabled', result: true}},
-      {args: {status: 'enabled', result: true}},
-      {args: {status: 'disabled', result: false}},
-      {args: {status: 'installed', result: true}},
-      {args: {status: 'uninstalled', result: false}},
-    ].forEach((test, index: number) => {
-      it(`should filter by status : '${test.args.status}'`, async function () {
+
+    ['enabled', 'disabled', 'installed', 'uninstalled'].forEach((status: string, index: number) => {
+      it(`should filter by status : '${status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${index}`, baseContext);
 
-        await moduleManagerPage.filterByStatus(page, test.args.status);
+        await moduleManagerPage.filterByStatus(page, status);
 
-        const modules = await moduleManagerPage.getAllModulesStatus(page, test.args.status);
+        const modules = await moduleManagerPage.getAllModulesStatus(page, status);
         modules.map(
-          (module) => expect(
-            module.status,
-            `'${Modules.contactForm.name}' is not ${test.args.result ? 'enabled' : 'disabled'}`,
-          ).to.equal(test.args.result),
+          (module) => expect(module.status, `'${module.name}' is not ${status}`).to.be.true,
         );
       });
     });
@@ -81,8 +73,8 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
     it(`should install the module '${Modules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-      const successMessage = await moduleManagerPage.installUninstallModule(page, Modules.contactForm, true);
-      await expect(successMessage).to.eq(`Install action on module ${Modules.contactForm.tag} succeeded.`);
+      const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.contactForm, 'install');
+      await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
     });
 
     it('should show all modules and check the different blocks', async function () {
