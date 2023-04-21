@@ -186,7 +186,7 @@ class ModuleManager implements ModuleManagerInterface
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans(
-                'You are not allowed to upgrade the module %module%.',
+                'You are not allowed to update the module %module%.',
                 ['%module%' => $name],
                 'Admin.Modules.Notification'
             ));
