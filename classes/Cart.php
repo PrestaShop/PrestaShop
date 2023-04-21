@@ -1390,7 +1390,7 @@ class CartCore extends ObjectModel
             AND cp.`id_cart` = ' . (int) $this->id;
 
         if (!$checkCustomizations) {
-            $commonWhere.= ' AND cp.`id_customization` = ' . (int) $idCustomization;
+            $commonWhere .= ' AND cp.`id_customization` = ' . (int) $idCustomization;
         }
 
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
