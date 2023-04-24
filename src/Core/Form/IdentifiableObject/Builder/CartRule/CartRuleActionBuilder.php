@@ -84,7 +84,7 @@ class CartRuleActionBuilder
                 return new AmountDiscountAction(
                     new Money(
                         $reduction->getValue(),
-                        new CurrencyId($actionsData['currency']),
+                        new CurrencyId($reductionData['currency']),
                         (bool) $reductionData['include_tax']
                     ),
                     $freeShipping,
@@ -94,7 +94,7 @@ class CartRuleActionBuilder
             } else {
                 return new PercentageDiscountAction(
                     $reduction->getValue(),
-                    (bool) $actionsData['discount']['apply_to_discounted_products'],
+                    !empty($actionsData['discount']['apply_to_discounted_products']),
                     $freeShipping,
                     $discountApplicationType,
                     $giftProduct

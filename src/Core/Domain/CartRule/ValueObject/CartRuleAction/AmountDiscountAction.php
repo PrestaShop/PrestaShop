@@ -129,12 +129,16 @@ class AmountDiscountAction implements CartRuleActionInterface
      */
     private function assertDiscountApplicationType(DiscountApplicationType $discountApplicationType): void
     {
-        if (DiscountApplicationType::CHEAPEST_PRODUCT === $discountApplicationType->getType()) {
-            throw new CartRuleConstraintException('Cart rule, which is applied to cheapest product, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
-        }
+        $unsupportedTypeMessages = [
+            DiscountApplicationType::CHEAPEST_PRODUCT => 'Cart rule, which is applied to cheapest product, cannot be applied to amount discount type.',
+            DiscountApplicationType::SELECTED_PRODUCTS => 'Cart rule, which is applied to selected products, cannot be applied to amount discount type.',
+        ];
 
-        if (DiscountApplicationType::SELECTED_PRODUCTS === $discountApplicationType->getType()) {
-            throw new CartRuleConstraintException('Cart rule, which is applied to selected products, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
+        if (isset($unsupportedTypeMessages[$discountApplicationType->getType()])) {
+            throw new CartRuleConstraintException(
+                $unsupportedTypeMessages[$discountApplicationType->getType()],
+                CartRuleConstraintException::INVALID_DISCOUNT_APPLICATION_TYPE
+            );
         }
     }
 }
