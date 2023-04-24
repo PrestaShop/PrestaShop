@@ -97,6 +97,7 @@ jobs:
       PS_LANGUAGE: 'en'
       PS_INSTALL_AUTO: 1
       PS_DEV_MODE: 0
+      PS_ENABLE_SSL: ${{ matrix.BRANCH == '8.0.x' && '0' || '1' }}
       DB_SERVER: 'mysql'
       DB_NAME: 'prestashop'
       DB_PREFIX: 'tst_'
