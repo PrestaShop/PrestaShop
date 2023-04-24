@@ -82,5 +82,4 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
       await expect(successMessage).to.eq(test.args.message);
     });
   });
-
 });

@@ -56,28 +56,18 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
     await expect(isModuleVisible).to.be.true;
   });
 
-  ['disable', 'enable'].forEach((status: string) => {
-    it(`should ${status} the module`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${status}Module`, baseContext);
+  ['disableMobile', 'enableMobile', 'disable', 'enable'].forEach((status: string) => {
+    it(`should ${status}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', status, baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.contactForm, status);
+      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, status);
 
       if (status === 'disable') {
         await expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(Modules.contactForm.tag));
-      } else {
-        await expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.contactForm.tag));
-      }
-    });
-  });
-
-  ['disableMobile', 'enableMobile'].forEach((status: string) => {
-    it(`should ${status}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${status}Mobile`, baseContext);
-
-      const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.contactForm, status);
-
-      if (status === 'disableMobile') {
+      } else if (status === 'disableMobile') {
         await expect(successMessage).to.eq(moduleManagerPage.disableMobileSuccessMessage(Modules.contactForm.tag));
+      } else if (status === 'enable') {
+        await expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.contactForm.tag));
       } else {
         await expect(successMessage).to.eq(moduleManagerPage.enableMobileSuccessMessage(Modules.contactForm.tag));
       }

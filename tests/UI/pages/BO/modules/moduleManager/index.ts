@@ -52,7 +52,7 @@ class ModuleManager extends BOBasePage {
 
   private readonly moduleBlocks: string;
 
-  private readonly moduleBlock: (moduleTag: string) => string
+  private readonly moduleBlock: (moduleTag: string) => string;
 
   private readonly moduleCheckboxButton: (moduleTag: string) => string;
 
@@ -129,18 +129,18 @@ class ModuleManager extends BOBasePage {
     this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
     this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
     this.moduleBlocks = 'div.module-short-list';
-    this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name='${moduleTag}']`;
+    this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name=${moduleTag}]`;
     this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)}`
       + ' div.module-checkbox-bulk-list.md-checkbox label i';
 
     // Module actions selector
-    this.actionModuleButton = (moduleTag: string, action: string) => `div[data-tech-name='${moduleTag}']`
+    this.actionModuleButton = (moduleTag: string, action: string) => `div[data-tech-name=${moduleTag}]`
       + ` button.module_action_menu_${action}`;
-    this.configureModuleButton = (moduleTag: string) => `div[data-tech-name='${moduleTag}']`
+    this.configureModuleButton = (moduleTag: string) => `div[data-tech-name=${moduleTag}]`
       + ' div.module-actions a[href*=\'/action/configure\']';
 
     // Module actions in dropdown selectors
-    this.actionsDropdownButton = (moduleTag: string) => `div[data-tech-name='${moduleTag}'] button.dropdown-toggle`;
+    this.actionsDropdownButton = (moduleTag: string) => `div[data-tech-name=${moduleTag}] button.dropdown-toggle`;
     this.actionModuleButtonInDropdownList = (action: string) => 'div.btn-group.module-actions.show'
       + ` button.module_action_menu_${action}`;
 
@@ -323,16 +323,13 @@ class ModuleManager extends BOBasePage {
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @return {Promise<string | null>}
    */
-  async setActionInModuleModule(page: Page, module: ModuleData, action: string): Promise<string | null> {
+  async setActionInModule(page: Page, module: ModuleData, action: string): Promise<string | null> {
     await this.closeGrowlMessage(page);
-
-    if (await this.elementVisible(page, this.actionModuleButton(module.tag, action))) {
+    if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {
       await this.waitForSelectorAndClick(page, this.actionModuleButton(module.tag, action));
     } else {
-      await Promise.all([
-        page.click(this.actionsDropdownButton(module.tag)),
-        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.tag)}[aria-expanded='true']`),
-      ]);
+      await page.click(this.actionsDropdownButton(module.tag));
+      await this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.tag)}[aria-expanded='true']`);
       await this.waitForSelectorAndClick(page, this.actionModuleButtonInDropdownList(action));
       if (action === 'disable' || action === 'uninstall' || action === 'reset') {
         await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));

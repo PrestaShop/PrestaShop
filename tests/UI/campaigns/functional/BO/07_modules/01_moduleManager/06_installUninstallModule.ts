@@ -59,14 +59,14 @@ describe('BO - Modules - Module Manager : Install/Uninstall module', async () =>
   it(`should uninstall the module '${Modules.psEmailSubscription.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.psEmailSubscription, 'uninstall');
+    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'uninstall');
     await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psEmailSubscription.tag));
   });
 
   it(`should install the module '${Modules.psEmailSubscription.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.psEmailSubscription, 'install');
+    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'install');
     await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psEmailSubscription.tag));
   });
 

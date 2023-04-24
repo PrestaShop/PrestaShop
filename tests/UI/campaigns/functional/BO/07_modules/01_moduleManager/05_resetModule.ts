@@ -59,7 +59,7 @@ describe('BO - Modules - Module Manager : Reset module', async () => {
   it('should reset the module', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.contactForm, 'reset');
+    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'reset');
     await expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(Modules.contactForm.tag));
   });
 

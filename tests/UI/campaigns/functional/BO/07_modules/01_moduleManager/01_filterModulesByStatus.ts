@@ -53,8 +53,8 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
     it(`should uninstall the module '${Modules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.contactForm, 'uninstall');
-      await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
+      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'uninstall');
+      await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.contactForm.tag));
     });
 
     ['enabled', 'disabled', 'installed', 'uninstalled'].forEach((status: string, index: number) => {
@@ -73,7 +73,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
     it(`should install the module '${Modules.contactForm.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModuleModule(page, Modules.contactForm, 'install');
+      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'install');
       await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
     });
 
