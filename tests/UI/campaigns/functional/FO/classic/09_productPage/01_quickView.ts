@@ -409,8 +409,8 @@ describe('FO - product page : Product quick view', async () => {
 
         // Create products images
         await Promise.all([
-          files.generateImage(productData.coverImage ?? ''),
-          files.generateImage(productData.thumbImage ?? ''),
+          files.generateImage(productData.coverImage!),
+          files.generateImage(productData.thumbImage!),
         ]);
       });
 

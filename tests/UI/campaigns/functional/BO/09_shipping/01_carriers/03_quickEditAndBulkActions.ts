@@ -67,7 +67,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
   describe('Create 2 carriers in BO', async () => {
     const creationTests: number[] = new Array(2).fill(0, 0, 2);
     creationTests.forEach((test: number, index: number) => {
-      before(() => files.generateImage(`todelete${index}.jpg`));
+      before(() => files.generateImage(`todelete${index}`));
 
       const carrierData: CarrierData = new CarrierData({name: `todelete${index}`});
 

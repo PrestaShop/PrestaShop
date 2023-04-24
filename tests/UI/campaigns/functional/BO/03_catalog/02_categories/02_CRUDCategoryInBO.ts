@@ -43,9 +43,9 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
 
     // Create categories images
     await Promise.all([
-      files.generateImage(`${createCategoryData.name}.jpg`),
-      files.generateImage(`${createSubCategoryData.name}.jpg`),
-      files.generateImage(`${editCategoryData.name}.jpg`),
+      files.generateImage(createCategoryData.name),
+      files.generateImage(createSubCategoryData.name),
+      files.generateImage(editCategoryData.name),
     ]);
   });
 

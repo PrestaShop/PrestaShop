@@ -2,7 +2,7 @@ import ImportData from '@data/faker/import';
 
 import {createObjectCsvWriter} from 'csv-writer';
 import fs from 'fs';
-import imgGen from 'js-image-generator';
+import sharp from 'sharp';
 import path from 'path';
 import {getDocument, OPS, PDFDocumentProxy} from 'pdfjs-dist/legacy/build/pdf.js';
 import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
@@ -213,37 +213,49 @@ export default {
    * - PNG : copy existing file
    * - WebP : copy existing file
    * @param imageName {string} Filename/Filepath of the image
+   * @param extension {'jpg'|'png'|'webp'} Image extension / type
    * @param width {number} Width chosen for the image
    * @param height {number} Height chosen for the image
    * @param quality {number} Quality chosen for the image
    * @return {Promise<void>}
    */
-  async generateImage(imageName: string, width: number = 200, height: number = 200, quality: number = 1): Promise<void> {
-    const extension = this.getFileExtension(imageName);
+  async generateImage(
+    imageName: string,
+    extension: string = 'jpg',
+    width: number = 200,
+    height: number = 200,
+  ): Promise<void> {
+    const bufferImg = sharp({
+      create: {
+        width,
+        height,
+        channels: 4,
+        background: {
+          r: 255,
+          g: 0,
+          b: 0,
+          alpha: 0.5,
+        },
+      },
+    });
 
     switch (extension) {
       case 'jpg': {
-        await imgGen.generateImage(width, height, quality, (err: Error, image: object) => {
-          if ('data' in image) {
-            fs.writeFileSync(imageName, image.data);
-          }
-        });
+        await bufferImg
+          .jpeg()
+          .toFile(`${imageName}.${extension}`);
         break;
       }
       case 'png': {
-        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.png`, imageName, (err: NodeJS.ErrnoException|null) => {
-          if (err) {
-            throw err;
-          }
-        });
+        await bufferImg
+          .png()
+          .toFile(`${imageName}.${extension}`);
         break;
       }
       case 'webp': {
-        fs.copyFile(`${path.dirname(__dirname)}/data/files/sample.webp`, imageName, (err: NodeJS.ErrnoException|null) => {
-          if (err) {
-            throw err;
-          }
-        });
+        await bufferImg
+          .webp()
+          .toFile(`${imageName}.${extension}`);
         break;
       }
       default:
@@ -252,7 +264,7 @@ export default {
   },
 
   /**
-   * Returns the image type of a file
+   * Returns the image type of file
    * @param path {string} Path of the file
    * @return {Promise<string>}
    */

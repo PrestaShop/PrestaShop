@@ -162,7 +162,7 @@ describe('BO - Header : My profile', async () => {
 
     it('should upload a valid format image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkValidFormatImage', baseContext);
-      await files.generateImage('image.jpg');
+      await files.generateImage('image');
 
       employeeData.avatarFile = 'image.jpg';
 

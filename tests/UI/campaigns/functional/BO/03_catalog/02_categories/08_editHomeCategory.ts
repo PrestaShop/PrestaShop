@@ -39,7 +39,7 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     page = await helper.newTab(browserContext);
 
     // Create category image
-    await files.generateImage(`${editCategoryData.name}.jpg`);
+    await files.generateImage(editCategoryData.name);
   });
 
   after(async () => {

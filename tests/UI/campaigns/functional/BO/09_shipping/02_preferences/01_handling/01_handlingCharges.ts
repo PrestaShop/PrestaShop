@@ -64,7 +64,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     page = await helper.newTab(browserContext);
 
     // Create image
-    await files.generateImage(`${createCarrierData.name}.jpg`);
+    await files.generateImage(createCarrierData.name);
   });
 
   after(async () => {
