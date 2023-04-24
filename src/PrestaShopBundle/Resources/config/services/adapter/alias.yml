@@ -29,6 +29,15 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository'
 
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkDeleteAlias:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository'
+
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasStatusHandler:
     tags:
       - name: tactician.handler
