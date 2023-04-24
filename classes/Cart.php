@@ -1386,6 +1386,8 @@ class CartCore extends ObjectModel
             $firstUnionSql .= $customizationJoin;
             $secondUnionSql .= $customizationJoin;
         }
+        // Ignore customizations if $idCustomization is set to false
+        // This is necessary to get products with or without customizations
         $commonWhere = '
             WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute . '
               ' . ($idCustomization !== false ? ' AND cp.`id_customization` = ' . (int) $idCustomization : '') . '
