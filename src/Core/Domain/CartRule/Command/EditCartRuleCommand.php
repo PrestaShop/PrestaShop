@@ -33,12 +33,10 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 class EditCartRuleCommand
@@ -122,18 +120,6 @@ class EditCartRuleCommand
      * @var CartRuleActionInterface|null
      */
     private $cartRuleAction;
-
-    /**
-     * @var DiscountApplicationType|null
-     */
-    private $discountApplicationType;
-
-    /**
-     * This is the product to which discount is applied, when discount application type is "specific product".
-     *
-     * @var ProductId|null
-     */
-    private $discountProductId;
 
     public function __construct(
         int $cartRuleId
@@ -341,11 +327,6 @@ class EditCartRuleCommand
     public function isMinimumAmountShippingIncluded(): ?bool
     {
         return $this->minimumAmountShippingIncluded;
-    }
-
-    public function getDiscountProductId(): ?ProductId
-    {
-        return $this->discountProductId;
     }
 
     public function setCartRuleAction(CartRuleActionInterface $cartRuleAction): EditCartRuleCommand
