@@ -198,12 +198,20 @@ export default {
     return fileText.includes(text);
   },
 
+  /**
+   * Returns the extension of a file
+   * @param path {string}
+   * @return {string}
+   */
   getFileExtension(path: string): string {
     return path.substring(path.lastIndexOf('.') + 1, path.length) || path;
   },
 
   /**
-   * Generate image with js-image-generator
+   * Generate image relative to the extension :
+   * - JPG : js-image-generator
+   * - PNG : copy existing file
+   * - WebP : copy existing file
    * @param imageName {string} Filename/Filepath of the image
    * @param width {number} Width chosen for the image
    * @param height {number} Height chosen for the image
@@ -282,6 +290,12 @@ export default {
     });
   },
 
+  /**
+   * Download a file from an URL to a path file
+   * @param url {string} URL of the file
+   * @param path {string} Path of the file
+   * @return {Promise<void>}
+   */
   async downloadFile(url: string, path: string): Promise<void> {
     await new Promise((resolve, reject): void => {
       const httpsAgent: https.Agent = new https.Agent({

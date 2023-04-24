@@ -294,6 +294,12 @@ class Category extends FOBasePage {
     return this.getTextContent(page, this.categoryDescription, true);
   }
 
+  /**
+   * Returns the position of a specific product in a list
+   * @param page {Page} Browser tab
+   * @param idProduct {number} ID of a product
+   * @return {Promise<number|null>}
+   */
   async getNThChildFromIDProduct(page:Page, idProduct: number): Promise<number|null> {
     const productItemsLength = await this.getNumberOfProductsDisplayed(page);
 
