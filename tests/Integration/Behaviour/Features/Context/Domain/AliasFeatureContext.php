@@ -40,6 +40,9 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
+use PrestaShopBundle\Exception\NotImplementedException;
 use Tests\Resources\DatabaseDump;
 
 class AliasFeatureContext extends AbstractDomainFeatureContext
@@ -150,6 +153,52 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         } catch (AliasException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I delete alias :reference
+     *
+     * @param string $reference
+     */
+    public function deleteAliasFromDefaultShop(string $reference): void
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteAliasCommand(
+                $this->getSharedStorage()->get($reference)
+            ));
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete following aliases:
+     *
+     * @param TableNode $aliasesList
+     */
+    public function bulkDeleteProductsFromDefaultShop(TableNode $aliasesList): void
+    {
+        $aliasIds = [];
+
+        foreach ($aliasesList->getColumnsHash() as $aliasInfo) {
+            $aliasIds[] = $this->getSharedStorage()->get($aliasInfo['reference'])->getValue();
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteAliasCommand($aliasIds));
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then alias :reference should not exist anymore
+     *
+     * @param string $reference
+     */
+    public function assertAliasDoesNotExistAnymore(string $reference): void
+    {
+        throw new NotImplementedException();
     }
 
     /**
