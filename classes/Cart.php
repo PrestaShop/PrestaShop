@@ -1370,9 +1370,9 @@ class CartCore extends ObjectModel
             Pack::STOCK_TYPE_PACK_BOTH,
         ];
         $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
-        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity
+        $firstUnionSql = 'SELECT SUM(cp.`quantity`) as first_level_quantity, 0 as pack_quantity
           FROM `' . _DB_PREFIX_ . 'cart_product` cp';
-        $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
+        $secondUnionSql = 'SELECT 0 as first_level_quantity, SUM(cp.`quantity` * p.`quantity`) as pack_quantity
           FROM `' . _DB_PREFIX_ . 'cart_product` cp' .
             ' JOIN `' . _DB_PREFIX_ . 'pack` p ON cp.`id_product` = p.`id_product_pack`' .
             ' JOIN `' . _DB_PREFIX_ . 'product` pr ON p.`id_product_pack` = pr.`id_product`';
@@ -1388,7 +1388,7 @@ class CartCore extends ObjectModel
         }
         $commonWhere = '
             WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute . '
-            AND cp.`id_customization` = ' . (int) $idCustomization . '
+              ' . ($idCustomization !== false ? ' AND cp.`id_customization` = ' . (int) $idCustomization : '') . '
             AND cp.`id_cart` = ' . (int) $this->id;
 
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
@@ -1411,7 +1411,7 @@ class CartCore extends ObjectModel
             COALESCE(SUM(first_level_quantity), 0) as quantity
           FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
 
-        return Db::getInstance()->getRow($parentSql);
+        return Db::getInstance()->getRow($parentSql, false);
     }
 
     /**
@@ -1559,13 +1559,20 @@ class CartCore extends ObjectModel
         $cartProductQuantity = $this->getProductQuantity(
             $id_product,
             $id_product_attribute,
+            false,
+            (int) $id_address_delivery
+        );
+
+        $customizationQuantity = $this->getProductQuantity(
+            $id_product,
+            $id_product_attribute,
             (int) $id_customization,
             (int) $id_address_delivery
         );
 
         /* Update quantity if product already exist */
-        if (!empty($cartProductQuantity['quantity'])) {
-            $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
+        if (!empty($customizationQuantity['quantity'])) {
+            $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this, false);
             $availableOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product->id));
 
             if ($operator == 'up') {
@@ -1584,7 +1591,7 @@ class CartCore extends ObjectModel
                 $updateQuantity = '- ' . $quantity;
 
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
-                    || $cartProductQuantity['quantity'] - $quantity <= 0
+                    || $customizationQuantity['quantity'] - $quantity <= 0
                 ) {
                     return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval, $useOrderPrices);
                 }

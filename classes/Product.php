@@ -5739,7 +5739,8 @@ class ProductCore extends ObjectModel
             (int) $row['id_product'],
             0,
             isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
-            $context->cart
+            $context->cart,
+            false
         );
 
         $row['quantity_all_versions'] = $row['quantity'];
