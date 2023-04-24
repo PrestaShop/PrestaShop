@@ -30,6 +30,20 @@ class ModuleManager extends BOBasePage {
 
   private readonly searchModuleButton: string;
 
+  private readonly topMenuDiv: string;
+
+  private readonly bulkActionsButton: string;
+
+  private readonly bulkActionsDropDownButton: string;
+
+  private readonly bulkActionsDropDownList: string;
+
+  private readonly bulkActionName: (action: string) => string;
+
+  private readonly bulkActionsModal: string;
+
+  private readonly bulkActionsModalConfirmButton: string;
+
   private readonly modulesListBlock: string;
 
   private readonly modulesListBlockTitle: string;
@@ -38,7 +52,9 @@ class ModuleManager extends BOBasePage {
 
   private readonly moduleBlocks: string;
 
-  private readonly moduleBlock: (moduleTag: string) => string;
+  private readonly moduleBlock: (moduleTag: string) => string
+
+  private readonly moduleCheckboxButton: (moduleTag: string) => string;
 
   private readonly actionModuleButton: (moduleTag: string, action: string) => string;
 
@@ -86,6 +102,17 @@ class ModuleManager extends BOBasePage {
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
 
+    // Top menu
+    this.topMenuDiv = 'div.module-top-menu';
+    this.bulkActionsButton = `${this.topMenuDiv} div.module-top-menu-item:nth-child(3)`;
+    this.bulkActionsDropDownButton = '#bulk-actions-dropdown';
+    this.bulkActionsDropDownList = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector.items-list.js-items-list.show';
+    this.bulkActionName = (action: string) => `${this.bulkActionsDropDownList} a[data-display-name='${action}']`;
+
+    // Bulk actions modal
+    this.bulkActionsModal = '#module-modal-bulk-confirm';
+    this.bulkActionsModalConfirmButton = '#module-modal-confirm-bulk-ack';
+
     // Filter by categories dropdown selectors
     this.categoriesSelectDiv = '#categories';
     this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
@@ -103,6 +130,8 @@ class ModuleManager extends BOBasePage {
     this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
     this.moduleBlocks = 'div.module-short-list';
     this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name='${moduleTag}']`;
+    this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)}`
+      + ' div.module-checkbox-bulk-list.md-checkbox label i';
 
     // Module actions selector
     this.actionModuleButton = (moduleTag: string, action: string) => `div[data-tech-name='${moduleTag}']`
@@ -136,6 +165,42 @@ class ModuleManager extends BOBasePage {
     await page.click(this.searchModuleButton);
 
     return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
+  }
+
+  /**
+   * Is bulk actions button disabled
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  isBulkActionsButtonDisabled(page: Page): Promise<boolean> {
+    return this.elementVisible(page, `${this.bulkActionsButton}.disabled`, 1000);
+  }
+
+  /**
+   * Select module
+   * @param page {Page} Browser tab
+   * @param moduleTag {string} Technical name of the module
+   * @return {Promise<void>}
+   */
+  async selectModule(page: Page, moduleTag: string): Promise<void> {
+    await page.$eval(this.moduleCheckboxButton(moduleTag), (el: HTMLElement) => el.click());
+  }
+
+  /**
+   * Bulk actions
+   * @param page {Page} Browser tab
+   * @param action {string} Action to set with bulk actions
+   * @return {Promise<string | null>}
+   */
+  async bulkActions(page: Page, action: string): Promise<string | null> {
+    await this.closeGrowlMessage(page);
+
+    await page.click(this.bulkActionsDropDownButton);
+    await this.waitForSelectorAndClick(page, this.bulkActionName(action));
+
+    await this.waitForVisibleSelector(page, this.bulkActionsModal);
+    await this.waitForSelectorAndClick(page, this.bulkActionsModalConfirmButton);
+    return this.getGrowlMessageContent(page);
   }
 
   /**
