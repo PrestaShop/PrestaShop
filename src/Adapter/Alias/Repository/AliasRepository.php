@@ -156,6 +156,19 @@ class AliasRepository extends AbstractObjectModelRepository
         return $qb->execute()->fetchFirstColumn();
     }
 
+    public function delete(AliasId $aliasId): void
+    {
+        /** @var Alias $alias */
+        $alias = $this->getObjectModel(
+            $aliasId->getValue(),
+            Alias::class,
+            AliasNotFoundException::class
+        );
+
+        $alias->delete();
+    }
+
+
     /**
      * @param Alias $alias
      * @param string[] $propertiesToUpdate
