@@ -34,6 +34,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
+/**
+ * Validates that cart rule contains at least one action
+ */
 class ActionValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
@@ -50,6 +53,8 @@ class ActionValidator extends ConstraintValidator
             return;
         }
 
+        // in theory there are more required properties, but we already assume they are present when reduction value is present
+        // (the disabling switch and reduction value can be "broken" by user, therefor other values missing would mean developer error instead of constraint violation)
         if (!empty($value['disabling_switch_discount']) && !empty($value['discount']['reduction']['value'])) {
             return;
         }
