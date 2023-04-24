@@ -47,15 +47,14 @@ class DiscountValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'array');
         }
 
-        if (
-            DiscountApplicationType::SPECIFIC_PRODUCT === $value['discount_application']
-            && empty($value['specific_product'])
-        ) {
+        $discountApplicationType = $value['discount_application'];
+
+        if (DiscountApplicationType::SPECIFIC_PRODUCT === $discountApplicationType && empty($value['specific_product'][0]['id'])) {
             $this->buildViolation($constraint->missingSpecificProductMessage, '[specific_product]');
         }
 
         if (
-            DiscountApplicationType::SELECTED_PRODUCTS === $value['discount_application']
+            DiscountApplicationType::SELECTED_PRODUCTS === $discountApplicationType
             //@todo: restrictions are not implemented, so this will still adapt,
             //       but the point is to check if any products restrictions are applied
             //       also need to check more in depth if its legit with products only or also with categories/attributes etc.)

@@ -83,7 +83,7 @@ class ActionValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
-     * @dataProvider getDataViolatingConstraint
+     * @dataProvider getDataViolatingTheConstraint
      *
      * @return void
      */
@@ -95,7 +95,7 @@ class ActionValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation($constraint->message)->assertRaised();
     }
 
-    public function getDataViolatingConstraint(): iterable
+    public function getDataViolatingTheConstraint(): iterable
     {
         yield [[]];
         yield [['free_shipping' => false]];
