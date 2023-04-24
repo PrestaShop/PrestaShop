@@ -238,10 +238,6 @@
       });
    });
 </script>
-{if $show_toolbar}
-  {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
-  <div class="leadin">{block name="leadin"}{/block}</div>
-{/if}
 <div class="row">
   <div class="productTabs col-lg-2">
     <div class="tab list-group">
