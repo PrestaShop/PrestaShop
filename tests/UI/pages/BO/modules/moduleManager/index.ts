@@ -3,6 +3,7 @@ import BOBasePage from '@pages/BO/BObasePage';
 import ModuleData from '@data/faker/module';
 
 import type {Page} from 'playwright';
+import files from '@utils/files';
 
 /**
  * Module manager page, contains selectors and functions for the page
@@ -85,6 +86,12 @@ class ModuleManager extends BOBasePage {
   private readonly modalConfirmButton: (moduleTag: string, action: string) => string;
 
   private readonly modalConfirmAction: (moduleTag: string) => string;
+
+  private readonly uninstallModal: (moduleName: string) => string;
+
+  private readonly uninstallModalDeleteCheckbox: (moduleName: string) => string;
+
+  private readonly uninstallModalButtonConfirm: (moduleName: string) => string;
 
   private readonly statusDropdownDiv: string;
 
@@ -253,6 +260,52 @@ class ModuleManager extends BOBasePage {
 
     await this.waitForVisibleSelector(page, this.bulkActionsModal);
     await this.waitForSelectorAndClick(page, this.bulkActionsModalConfirmButton);
+    return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Click on button "Upload a module"
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async uploadModuleFromURL(page: Page, urlModule: string): Promise<string> {
+    // Download file
+    await files.downloadFile(urlModule, 'module.zip');
+
+    // Click on the button "Upload a module"
+    await page.click(this.uploadModuleButton);
+    // The modal appears
+    await this.elementVisible(page, this.uploadModuleModal);
+
+    await this.uploadOnFileChooser(page, this.uploadModuleModalManualLink, ['module.zip']);
+
+    const statusMessage: string = await this.getTextContent(page, this.uploadModuleModalSuccessMsg);
+
+    await page.click(this.uploadModuleModalCloseButton);
+
+    await files.deleteFile('module.zip');
+
+    return statusMessage;
+  }
+
+  /**
+   * Uninstall a module
+   * @param page {Page} Browser tab
+   * @param moduleName {string} Name of the module
+   * @param technicalModuleName {string} Name of the module
+   * @return {Promise<string|null>}
+   */
+  async uninstallModule(page: Page, moduleName: string, technicalModuleName: string): Promise<string|null> {
+    if (await this.elementNotVisible(page, this.uninstallModuleButton(moduleName), 1000)) {
+      await Promise.all([
+        page.click(this.actionsDropdownButton(moduleName)),
+        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
+      ]);
+    }
+    await page.click(this.uninstallModuleButton(moduleName));
+    await page.click(this.uninstallModalDeleteCheckbox(technicalModuleName), {timeout: 1000});
+    await page.click(this.uninstallModalButtonConfirm(technicalModuleName));
+
     return this.getGrowlMessageContent(page);
   }
 
