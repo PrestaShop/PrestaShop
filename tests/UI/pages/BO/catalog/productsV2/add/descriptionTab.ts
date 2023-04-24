@@ -17,6 +17,8 @@ class DescriptionTab extends BOBasePage {
 
   private readonly imagePreviewBlock: string;
 
+  private readonly imagePreviewCover: string;
+
   private readonly productSummary: string;
 
   private readonly productDescription: string;
@@ -33,6 +35,7 @@ class DescriptionTab extends BOBasePage {
     this.productImageDropZoneDiv = '#product-images-dropzone';
     this.openFileManagerDiv = `${this.productImageDropZoneDiv} div.dz-default.openfilemanager.dz-clickable`;
     this.imagePreviewBlock = `${this.productImageDropZoneDiv} div.dz-preview.openfilemanager`;
+    this.imagePreviewCover = `${this.productImageDropZoneDiv} div.dz-preview.is-cover`;
     this.productSummary = '#product_description_description_short';
     this.productDescription = '#product_description_description';
   }
@@ -102,6 +105,15 @@ class DescriptionTab extends BOBasePage {
 
     await this.setValueOnTinymceInput(page, this.productSummary, productData.summary);
     await this.setValueOnTinymceInput(page, this.productDescription, productData.description);
+  }
+
+  /**
+   * Get Product ID Image Cover
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductIDImageCover(page: Page): Promise<number> {
+    return parseInt(await page.getAttribute(this.imagePreviewCover, 'data-id') ?? '', 10);
   }
 }
 

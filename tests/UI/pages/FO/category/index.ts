@@ -55,6 +55,8 @@ class Category extends FOBasePage {
 
   private readonly quickViewModalDiv: string;
 
+  private readonly quickViewModalProductImageCover: string;
+
   private readonly categoryDescription: string;
 
   /**
@@ -95,6 +97,7 @@ class Category extends FOBasePage {
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
+    this.quickViewModalProductImageCover = `${this.quickViewModalDiv} div.product-cover picture`;
     this.categoryDescription = '#category-description';
   }
 
@@ -269,8 +272,17 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isQuickViewProductModalVisible(page: Page): Promise<boolean> {
+  async isQuickViewProductModalVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.quickViewModalDiv, 2000);
+  }
+
+  /**
+   * Returns the URL of the main image in the quickview
+   * @param page {Page} Browser tab
+   * @returns {Promise<string|null>}
+   */
+  async getQuickViewImageMain(page: Page): Promise<string|null> {
+    return this.getAttributeContent(page, `${this.quickViewModalProductImageCover} source`, 'srcset');
   }
 
   /**
@@ -280,6 +292,28 @@ class Category extends FOBasePage {
    */
   getCategoryDescription(page: Page): Promise<string> {
     return this.getTextContent(page, this.categoryDescription, true);
+  }
+
+  /**
+   * Returns the position of a specific product in a list
+   * @param page {Page} Browser tab
+   * @param idProduct {number} ID of a product
+   * @return {Promise<number|null>}
+   */
+  async getNThChildFromIDProduct(page:Page, idProduct: number): Promise<number|null> {
+    const productItemsLength = await this.getNumberOfProductsDisplayed(page);
+
+    for (let idx: number = 1; idx <= productItemsLength; idx++) {
+      const attributeIdProduct = await this.getAttributeContent(page, this.productArticle(idx), 'data-id-product');
+
+      if (attributeIdProduct) {
+        if (idProduct === parseInt(attributeIdProduct, 10)) {
+          return idx;
+        }
+      }
+    }
+
+    return null;
   }
 }
 

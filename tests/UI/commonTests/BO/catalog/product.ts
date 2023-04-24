@@ -15,6 +15,7 @@ import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import productsV2 from '@pages/BO/catalog/productsV2';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -133,6 +134,68 @@ function deleteProductTest(productData: ProductData, baseContext: string = 'comm
 }
 
 /**
+ * Function to delete product
+ * @param productData {ProductData} Data to set to delete product
+ * @param baseContext {string} String to identify the test
+ */
+function deleteProductV2Test(productData: ProductData, baseContext: string = 'commonTests-deleteProductV2Test'): void {
+  describe(`POST-TEST: Delete product '${productData.name}'`, async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      const pageTitle = await productsV2.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsV2.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+      await productsV2.resetFilter(page);
+
+      const numberOfProducts = await productsV2.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    it('should click on delete product button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
+
+      const isModalVisible: boolean = await productsV2.clickOnDeleteProductButton(page);
+      await expect(isModalVisible).to.be.true;
+    });
+
+    it('should delete product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+
+      const textMessage: string = await productsV2.clickOnConfirmDialogButton(page);
+      await expect(textMessage).to.equal(productsV2.successfulDeleteMessage);
+    });
+
+    it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      const numberOfProductsAfterReset: number = await productsV2.resetAndGetNumberOfLines(page);
+      await expect(numberOfProductsAfterReset).to.be.above(0);
+    });
+  });
+}
+
+/**
  * Function to bulk delete product
  * @param productName {string} Value to set on product name input
  * @param baseContext {string} String to identify the test
@@ -197,4 +260,6 @@ function bulkDeleteProductsTest(productName: string, baseContext: string = 'comm
   });
 }
 
-export {createProductTest, deleteProductTest, bulkDeleteProductsTest};
+export {
+  createProductTest, deleteProductTest, deleteProductV2Test, bulkDeleteProductsTest,
+};
