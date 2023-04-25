@@ -5750,7 +5750,8 @@ class ProductCore extends ObjectModel
                 (int) $row['id_product'],
                 $id_product_attribute,
                 isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
-                $context->cart
+                $context->cart,
+                false
             );
 
             $row['available_date'] = Product::getAvailableDate(
