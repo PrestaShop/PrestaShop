@@ -60,10 +60,12 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         }
 
         if (isset($data['reduction_amount'])) {
-            $formattedData['discount']['reduction']['value'] = $data['reduction_amount'];
-            $formattedData['discount']['reduction']['type'] = Reduction::TYPE_AMOUNT;
-            $formattedData['currency'] = $this->getSharedStorage()->get($data['reduction_currency']);
-            $formattedData['discount']['reduction']['include_tax'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_tax']);
+            $formattedData['discount']['reduction'] = [
+                'value' => $data['reduction_amount'],
+                'type' => Reduction::TYPE_AMOUNT,
+                'currency' => $this->getSharedStorage()->get($data['reduction_currency']),
+                'include_tax' => PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_tax']),
+            ];
         }
 
         if (isset($data['discount_application_type'])) {
