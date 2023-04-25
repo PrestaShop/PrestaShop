@@ -10,6 +10,12 @@ services:
     calls:
       - [ setTranslator, [ '@translator' ] ]
 
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractConfigurableGridDefinitionFactory:
+    abstract: true
+    autowire: true
+    calls:
+      - [ setTranslator, [ '@translator' ] ]
+
   prestashop.core.grid.definition.factory.logs:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
@@ -414,3 +420,8 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: true
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractConfigurableGridDefinitionFactory
+    autowire: true
+    public: true

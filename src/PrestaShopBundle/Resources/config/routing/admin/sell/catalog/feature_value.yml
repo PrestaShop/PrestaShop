@@ -8,3 +8,18 @@ admin_feature_values_index:
     _legacy_feature_flag: feature
   requirements:
     featureId: \d+
+
+admin_feature_values_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures
+    _legacy_feature_flag: feature
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory
+    redirectRoute: admin_feature_values_index
+    redirectQueryParamsToKeep:
+      - featureId
+  requirements:
+    featureId: \d+

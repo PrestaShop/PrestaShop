@@ -635,6 +635,14 @@ services:
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'feature'
 
+  prestashop.core.grid.data.factory.feature_value:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\FeatureValueQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'feature_value'
+
   prestashop.core.grid.data.factory.store:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:

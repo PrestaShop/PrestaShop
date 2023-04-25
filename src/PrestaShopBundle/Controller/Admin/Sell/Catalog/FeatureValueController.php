@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,10 +39,14 @@ class FeatureValueController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(Request $request, FeatureFilters $filters): Response
+    public function indexAction(Request $request, FeatureValueFilters $filters): Response
     {
         //@todo: render grid
-//        $featureGridFactory = $this->get('prestashop.core.grid.grid_factory.feature');
+        $featureValueGridFactory = $this->get('prestashop.core.grid.grid_factory.feature_value');
+        $grid = $featureValueGridFactory->getGrid($filters, [
+            'feature_id' => $filters->getFeatureId(),
+            'language_id' => $filters->getLanguageId(),
+        ]);
 //
 //        $showcaseCardIsClosed = $this->getQueryBus()->handle(
 //            new GetShowcaseCardIsClosed(
@@ -54,7 +58,7 @@ class FeatureValueController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            //            'featureGrid' => $this->presentGrid($featureGridFactory->getGrid($filters)),
+            'featureValueGrid' => $this->presentGrid($grid),
             //            'settingsTipMessage' => $this->getSettingsTipMessage(),
             //            'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
             //            'isShowcaseCardClosed' => $showcaseCardIsClosed,

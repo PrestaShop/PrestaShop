@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureExcep
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -140,6 +141,43 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
             'feature',
             FeatureNotFoundException::class
         );
+    }
+
+    /**
+     * @param FeatureId $featureId
+     * @param LanguageId $languageId
+     *
+     * @return string
+     *
+     * @throws FeatureNotFoundException
+     */
+    public function getFeatureName(FeatureId $featureId, LanguageId $languageId): string
+    {
+        $featureIdValue = $featureId->getValue();
+        $result = $this->connection->createQueryBuilder()
+            ->select('fl.name')
+            ->from($this->dbPrefix . 'feature', 'f')
+            ->innerJoin(
+                'f',
+                $this->dbPrefix . 'feature_lang',
+                'fl',
+                'f.id_feature = fl.id_feature'
+            )
+            ->andWhere('f.id_feature = :featureId')
+            ->andWhere('fl.id_lang = :languageId')
+            ->setParameters([
+                'featureId' => $featureIdValue,
+                'languageId' => $languageId->getValue(),
+            ])
+            ->execute()
+            ->fetchAssociative()
+        ;
+
+        if (!isset($result['name'])) {
+            throw new FeatureNotFoundException(sprintf('Feature with id "%d" name was not found', $featureIdValue));
+        }
+
+        return $result['name'];
     }
 
     /**

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,22 +22,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
+declare(strict_types=1);
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
-{% block content %}
-  {% block feature_values_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureValueGrid} %}
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-
-{#@todo: uncomment when feature_value.bundle.js is ready  <script src="{{ asset('themes/new-theme/public/feature.bundle.js') }}"></script>#}
-{% endblock %}
+/**
+ * This interface allows to configure grid definition with options during runtime
+ */
+interface ConfigurableGridDefinitionFactoryInterface extends FilterableGridDefinitionFactoryInterface
+{
+    public function configureOptions(array $options): void;
+}

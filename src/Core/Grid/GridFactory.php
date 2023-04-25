@@ -79,9 +79,9 @@ final class GridFactory implements GridFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getGrid(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria, array $options = [])
     {
-        $definition = $this->definitionFactory->getDefinition();
+        $definition = $this->definitionFactory->getDefinition($options);
         $data = $this->dataFactory->getData($searchCriteria);
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDataModifier', [
