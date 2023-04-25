@@ -103,7 +103,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
                 'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
-                'searchUrl' => $this->router->generate('admin_products_v2_search_associations', [
+                'searchUrl' => $this->router->generate('admin_products_search_products_for_association', [
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
                 ]),
@@ -113,7 +113,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
                 'placeholder' => $this->trans('To which category the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => $this->trans('If no category is selected the Main Category is used', 'Admin.Catalog.Help'),
-                'searchUrl' => $this->router->generate('admin_get_ajax_categories', ['query' => '__QUERY__']),
+                'searchUrl' => $this->router->generate('admin_categories_get_ajax_categories', ['query' => '__QUERY__']),
                 'filtered' => json_encode([$this->homeCategoryId]),
             ],
         ];

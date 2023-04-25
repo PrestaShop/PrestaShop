@@ -35,6 +35,8 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for suppliers page.
  */
 class SupplierController extends FrameworkBundleAdminController

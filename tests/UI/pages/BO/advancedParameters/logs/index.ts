@@ -43,6 +43,10 @@ class Logs extends BOBasePage {
 
   private readonly paginationPreviousLink: string;
 
+  private readonly sendEmailToInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on logs page
@@ -76,6 +80,10 @@ class Logs extends BOBasePage {
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
     this.paginationNextLink = `${this.gridPanel} [data-role=next-page-link]`;
     this.paginationPreviousLink = `${this.gridPanel} [data-role='previous-page-link']`;
+
+    // Logs by email selectors
+    this.sendEmailToInput = '#form_logs_email_receivers';
+    this.saveButton = '#main-div div.card-footer button';
   }
 
   /*
@@ -269,6 +277,21 @@ class Logs extends BOBasePage {
     await page.type(this.filterColumnInput('date_add_to'), dateTo);
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  // Methods for logs by email form
+
+  /**
+   * Set email
+   * @param page {Page} Browser tab
+   * @param email {string} Email to set in the input
+   * @returns {Promise<string>}
+   */
+  async setEmail(page: Page, email: string): Promise<string> {
+    await this.setValue(page, this.sendEmailToInput, email);
+    await this.waitForSelectorAndClick(page, this.saveButton);
+
+    return this.getAlertBlockContent(page);
   }
 }
 

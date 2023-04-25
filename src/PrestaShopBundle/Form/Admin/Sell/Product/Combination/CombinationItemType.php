@@ -225,7 +225,7 @@ class CombinationItemType extends TranslatorAwareType
                 'label' => $this->trans('Quantity', 'Admin.Global'),
             ])
             ->add('is_default', RadioType::class, [
-                'label' => false,
+                'label' => $this->trans('Default combination', 'Admin.Catalog.Feature'),
                 'attr' => [
                     'class' => 'combination-is-default-input',
                 ],

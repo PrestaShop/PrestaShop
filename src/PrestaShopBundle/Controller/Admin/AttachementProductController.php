@@ -32,6 +32,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for product attachments (in /product/form page).
  */
 class AttachementProductController extends FrameworkBundleAdminController

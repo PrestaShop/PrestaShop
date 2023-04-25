@@ -56,6 +56,8 @@ use Tools;
 use Validate;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller wrapper for new Architecture, about Product admin controller.
  */
 class AdminProductWrapper

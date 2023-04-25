@@ -90,6 +90,7 @@ class EditProductFormType extends TranslatorAwareType
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
+                'product_id' => $productId,
             ])
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
@@ -158,6 +159,9 @@ class EditProductFormType extends TranslatorAwareType
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
                 'use_default_themes' => false,
                 'toolbar_buttons' => [],
+                'toolbar_options' => [
+                    'use_inline_labels' => false,
+                ],
             ])
             ->setRequired([
                 'product_id',

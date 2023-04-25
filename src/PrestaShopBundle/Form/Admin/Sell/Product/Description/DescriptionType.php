@@ -130,6 +130,11 @@ class DescriptionType extends TranslatorAwareType
                 'entry_options' => [
                     'block_prefix' => 'related_product',
                 ],
+                'remote_url' => $this->router->generate('admin_products_search_products_for_association', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
+                'min_length' => 3,
                 'limit' => 0,
                 'filtered_identities' => $productId > 0 ? [$productId] : [],
             ])

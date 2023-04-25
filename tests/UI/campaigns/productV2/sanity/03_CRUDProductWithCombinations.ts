@@ -146,11 +146,11 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal('Successfully generated 4 combinations.');
     });
 
-    it('should close generate combinations modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal', baseContext);
+    it('combinations generation modal should be closed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
-      const isModalVisible: boolean = await combinationsTab.closeGenerateCombinationModal(page);
-      await expect(isModalVisible).to.be.true;
+      const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
+      await expect(isModalClosed).to.be.true;
     });
 
     it('should save the product', async function () {
@@ -228,11 +228,11 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal('Successfully generated 6 combinations.');
     });
 
-    it('should close generate combinations modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal2', baseContext);
+    it('combinations generation modal should be closed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
-      const isModalVisible: boolean = await combinationsTab.closeGenerateCombinationModal(page);
-      await expect(isModalVisible).to.be.true;
+      const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
+      await expect(isModalClosed).to.be.true;
     });
 
     it('should save the product', async function () {

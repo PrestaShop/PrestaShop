@@ -88,7 +88,7 @@ class VirtualProductFileType extends TranslatorAwareType
     {
         $virtualProductFileDownloadUrl = null;
         if (!empty($options['virtual_product_file_id'])) {
-            $virtualProductFileDownloadUrl = $this->router->generate('admin_products_v2_download_virtual_product_file', [
+            $virtualProductFileDownloadUrl = $this->router->generate('admin_products_download_virtual_product_file', [
                 'virtualProductFileId' => (int) $options['virtual_product_file_id'],
             ]);
         }

@@ -86,20 +86,24 @@ class ProductToolbarButtonsProvider implements ToolbarButtonsProviderInterface
             'product_list' => [
                 'type' => IconButtonType::class,
                 'options' => [
+                    'type' => 'button',
                     'icon' => 'list',
+                    'label' => $this->translator->trans('Product list', [], 'Admin.Catalog.Feature'),
                     'attr' => [
                         'title' => $this->translator->trans('Product list', [], 'Admin.Catalog.Feature'),
                         'class' => 'toolbar-button btn-quicknav btn-sidebar',
                         'data-toggle' => 'sidebar',
                         'data-target' => '#right-sidebar',
-                        'data-url' => $this->router->generate('admin_products_v2_light_list'),
+                        'data-url' => $this->router->generate('admin_products_light_list'),
                     ],
                 ],
             ],
             'help' => [
                 'type' => IconButtonType::class,
                 'options' => [
+                    'type' => 'button',
                     'icon' => 'help',
+                    'label' => $this->translator->trans('Help', [], 'Admin.Global'),
                     'attr' => [
                         'title' => $this->translator->trans('Help', [], 'Admin.Global'),
                         'class' => 'toolbar-button btn-quicknav btn-sidebar',
@@ -122,6 +126,7 @@ class ProductToolbarButtonsProvider implements ToolbarButtonsProviderInterface
                         'options' => [
                             'type' => 'link',
                             'icon' => 'assessment',
+                            'label' => $this->translator->trans('Sales', [], 'Admin.Global'),
                             'attr' => [
                                 'title' => $this->translator->trans('Sales', [], 'Admin.Global'),
                                 'href' => $statsLink,

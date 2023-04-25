@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for the Feature pages.
  */
 class FeatureController extends FrameworkBundleAdminController

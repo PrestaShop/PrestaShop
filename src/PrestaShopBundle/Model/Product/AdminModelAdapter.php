@@ -45,6 +45,8 @@ use ProductDownload;
 use Symfony\Component\Routing\Router;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * This form class is responsible to map the form data to the product object.
  */
 class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter

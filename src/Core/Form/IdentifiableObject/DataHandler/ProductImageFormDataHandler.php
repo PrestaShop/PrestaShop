@@ -80,7 +80,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        if ($data['shop_id']) {
+        if (!empty($data['shop_id'])) {
             $shopConstraint = ShopConstraint::shop((int) $data['shop_id']);
         } else {
             $shopConstraint = ShopConstraint::allShops();

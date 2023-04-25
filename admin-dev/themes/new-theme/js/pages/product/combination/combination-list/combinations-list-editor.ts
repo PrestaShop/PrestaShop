@@ -55,6 +55,8 @@ export default class CombinationsListEditor {
 
   private readonly $paginatedList: JQuery;
 
+  private readonly $productForm: JQuery;
+
   private readonly editionDisabledElements: string[] = [
     CombinationsMap.bulkActionsDropdownBtn,
     CombinationsMap.tableRow.isSelectedCombination,
@@ -63,6 +65,16 @@ export default class CombinationsListEditor {
     CombinationsMap.filtersSelectorButtons,
     CombinationsMap.generateCombinationsButton,
     CombinationsMap.list.rowActionButtons,
+    ProductMap.toggleTab,
+    ProductMap.productLocalizedNameInput,
+    ProductMap.productNameLocaleSelector,
+    ProductMap.productType.headerPreviewButton,
+    ProductMap.onlineSwitch,
+  ];
+
+  private readonly editionHiddenElements: string[] = [
+    CombinationsMap.availabilityContainer,
+    ProductMap.footer.container,
   ];
 
   private editionMode: boolean = false;
@@ -80,6 +92,7 @@ export default class CombinationsListEditor {
 
     this.$combinationsFormContainer = $(CombinationsMap.combinationsFormContainer);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
+    this.$productForm = $(ProductMap.productForm);
     this.savedInputValues = {};
 
     this.init();
@@ -156,6 +169,7 @@ export default class CombinationsListEditor {
 
     this.editionMode = true;
     this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
+    this.$productForm.addClass(CombinationsMap.list.editionModeClass);
     this.disableElements();
     this.eventEmitter.emit(CombinationEvents.listEditionMode, this.editionMode);
   }
@@ -169,8 +183,12 @@ export default class CombinationsListEditor {
       $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
         const $disabledElement = $(disabledElement);
         $disabledElement.data('previousDisabled', $disabledElement.is(':disabled'));
-        $disabledElement.prop('disabled', true);
+        $disabledElement.data('previousDisabledClass', $disabledElement.hasClass('disabled'));
+        $disabledElement.prop('disabled', true).addClass('disabled');
       });
+    });
+    this.editionHiddenElements.forEach((hiddenSelector: string) => {
+      $(hiddenSelector).slideUp();
     });
     this.renderer.setSorting(false);
   }
@@ -181,18 +199,26 @@ export default class CombinationsListEditor {
     }
 
     this.$paginatedList.removeClass(CombinationsMap.list.editionModeClass);
+    this.$productForm.removeClass(CombinationsMap.list.editionModeClass);
+    this.enableElements();
+    this.editionMode = false;
+    this.eventEmitter.emit(CombinationEvents.listEditionMode, this.editionMode);
+  }
 
+  private enableElements(): void {
     // Re-enabled disabled elements
     this.editionDisabledElements.forEach((disabledSelector: string) => {
       const $disabledElements = $(disabledSelector);
       $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
         const $disabledElement = $(disabledElement);
         $disabledElement.prop('disabled', $disabledElement.data('previousDisabled'));
+        $disabledElement.toggleClass('disabled', $disabledElement.data('previousDisabledClass'));
       });
     });
+    this.editionHiddenElements.forEach((hiddenSelector: string) => {
+      $(hiddenSelector).slideDown();
+    });
     this.renderer.setSorting(true);
-    this.editionMode = false;
-    this.eventEmitter.emit(CombinationEvents.listEditionMode, this.editionMode);
   }
 
   private resetEdition(): void {

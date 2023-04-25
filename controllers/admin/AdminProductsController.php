@@ -28,6 +28,8 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * @property Product|null $object
  */
 class AdminProductsControllerCore extends AdminController

@@ -32,6 +32,8 @@ use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Used to export list of Products in CSV in the Product list page.
  * For internal use only.
  */

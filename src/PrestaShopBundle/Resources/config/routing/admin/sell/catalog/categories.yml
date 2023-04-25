@@ -156,3 +156,14 @@ admin_categories_get_categories_tree:
     _legacy_controller: AdminCategories
   options:
     expose: true
+
+admin_categories_get_ajax_categories:
+  path: /list/{limit}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::getAjaxCategoriesAction
+    _legacy_controller: AdminCategories
+    _format: json
+    limit: 20
+  requirements:
+    limit: \d+
