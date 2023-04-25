@@ -38,11 +38,6 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
     /**
      * @var CommandBusInterface
      */
-    private $queryBus;
-
-    /**
-     * @var CommandBusInterface
-     */
     private $commandBus;
 
     public static function setUpBeforeClass(): void
@@ -68,9 +63,9 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $this->queryBus = self::$container->get('prestashop.core.query_bus');
         $this->commandBus = self::$container->get('prestashop.core.command_bus');
     }
+
     public function testUnauthorizedFunctionInSelect(): void
     {
         $this->expectException(SqlRequestConstraintException::class);
