@@ -1413,7 +1413,7 @@ class CartCore extends ObjectModel
             COALESCE(SUM(first_level_quantity), 0) as quantity
           FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
 
-        return Db::getInstance()->getRow($parentSql, false);
+        return Db::getInstance()->getRow($parentSql);
     }
 
     /**
