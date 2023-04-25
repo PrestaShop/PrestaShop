@@ -1561,19 +1561,12 @@ class CartCore extends ObjectModel
         $cartProductQuantity = $this->getProductQuantity(
             $id_product,
             $id_product_attribute,
-            false,
-            (int) $id_address_delivery
-        );
-
-        $customizationQuantity = $this->getProductQuantity(
-            $id_product,
-            $id_product_attribute,
             (int) $id_customization,
             (int) $id_address_delivery
         );
 
         /* Update quantity if product already exist */
-        if (!empty($customizationQuantity['quantity'])) {
+        if (!empty($cartProductQuantity['quantity'])) {
             $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this, false);
             $availableOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product->id));
 
@@ -1593,7 +1586,7 @@ class CartCore extends ObjectModel
                 $updateQuantity = '- ' . $quantity;
 
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
-                    || $customizationQuantity['quantity'] - $quantity <= 0
+                    || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
                     return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval, $useOrderPrices);
                 }
