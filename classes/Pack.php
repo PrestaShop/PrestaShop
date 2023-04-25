@@ -237,7 +237,7 @@ class PackCore extends Product
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param CartCore|null $cart
-     * @param int|null $idCustomization Product customization id (optional)
+     * @param int|null|bool $idCustomization Product customization id (optional)
      *
      * @return int
      *
