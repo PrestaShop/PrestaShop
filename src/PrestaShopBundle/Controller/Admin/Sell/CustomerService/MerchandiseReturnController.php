@@ -130,14 +130,17 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         }
         $allowPrintingOrderReturnPdf =
             $editableOrderReturn->getOrderReturnStateId() === OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID;
-
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
             'allowPrintingOrderReturnPdf' => $allowPrintingOrderReturnPdf,
             'editableOrderReturn' => $editableOrderReturn,
             'orderReturnForm' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Return merchandise authorization (RMA)', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans(
+                'Editing merchandise return %orderReturnId%',
+                'Admin.Navigation.Menu',
+                ['%orderReturnId%' => $orderReturnId]
+            ),
         ]);
     }
 
