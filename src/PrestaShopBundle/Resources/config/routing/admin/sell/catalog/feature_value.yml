@@ -1,0 +1,10 @@
+admin_feature_values_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::indexAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures
+    _legacy_feature_flag: feature
+  requirements:
+    featureId: \d+
