@@ -101,9 +101,15 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
 
     public function getGlobals(): array
     {
-        $request = $this->requestStack->getCurrentRequest();
         $legacyLayoutVariables = [];
-        $useSymfonyLayout = $request->attributes->getBoolean(InitFrameworkBridgeControllerListener::USE_SYMFONY_LAYOUT_ATTRIBUTE, false);
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request) {
+            $useSymfonyLayout = $request->attributes->getBoolean(InitFrameworkBridgeControllerListener::USE_SYMFONY_LAYOUT_ATTRIBUTE, false);
+        } else {
+            // During install (or even more generally CLI environment) the request is not accessible
+            $useSymfonyLayout = false;
+        }
+
         if ($useSymfonyLayout) {
             $controllerConfiguration = $request->attributes->get(InitFrameworkBridgeControllerListener::CONTROLLER_CONFIGURATION_ATTRIBUTE);
             if ($controllerConfiguration instanceof ControllerConfiguration) {
