@@ -24,6 +24,23 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.9 - (2023-20-04)
+####################################
+- Back Office:
+  - Improvement:
+    - #32140: Fix CVE 2023-25170 on 1.7.8.x (by @mflasquin)
+    - #32105: Release/manual verifications 1789 (by @mflasquin)
+  - Bug fix:
+    - #GHSA-8r4m-5p6p-52rp Fix arbitrary file ready through sql manager (found by truff@projet7.org / Sébastien Cantos)
+- Core:
+  - Improvement:
+    - #GHSA-fh7r-996q-gvcp: Possible XSS injection through Validate::isCleanHTML method (by @	matthieu-rolland)
+    - #GHSA-p379-cxqh-q822 Fix executeS method making sure it does selection only (found by truff@projet7.org / Sébastien Cantos)
+- Tests:
+  - Improvement:
+    - #32144: Nightly : Migrate from nightly.prestashop.com to nightly.prestashop-project.org (by @Progi1984)
+
+####################################
 #   v1.7.8.8 - (2022-12-07)
 ####################################
 - Back Office:
