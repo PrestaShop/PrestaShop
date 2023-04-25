@@ -1355,7 +1355,7 @@ class CartCore extends ObjectModel
      *
      * @param int $idProduct Product ID
      * @param int $idProductAttribute ProductAttribute ID
-     * @param int $idCustomization Customization ID
+     * @param int|bool $idCustomization Customization ID
      * @param int $idAddressDelivery Delivery Address ID
      *
      * @return array quantity index     : number of product in cart without counting those of pack in cart
