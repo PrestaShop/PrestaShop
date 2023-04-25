@@ -38,11 +38,22 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DescriptionType extends TranslatorAwareType
 {
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var string
+     */
+    private $employeeIsoCode;
+
     /**
      * @var int
      */
@@ -51,14 +62,20 @@ class DescriptionType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
+     * @param RouterInterface $router
+     * @param string $employeeIsoCode
      * @param int $shortDescriptionMaxLength
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        RouterInterface $router,
+        string $employeeIsoCode,
         int $shortDescriptionMaxLength
     ) {
         parent::__construct($translator, $locales);
+        $this->router = $router;
+        $this->employeeIsoCode = $employeeIsoCode;
         $this->shortDescriptionMaxLength = $shortDescriptionMaxLength;
     }
 
