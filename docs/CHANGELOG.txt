@@ -24,6 +24,30 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.0.4 - (2023-04-13)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #32028: Fix module active flag with group & shop contexts (by @boherm)
+    - #32028: Fix module active flag with group & shop contexts (by @boherm)
+    - #31411: Display error message when language file is missing (by @Prestaworks)
+    - #31390: Ignore attribute_quantity if stock management disabled (by @bibips)
+    - GHSA-8r4m-5p6p-52rp Fix arbitrary file ready through sql manager
+- Core:
+  - Improvement:
+    - #31285: Allow JS action after module import (by @sowbiba)
+  - Bug fix:
+    - GHSA-fh7r-996q-gvcp Fix possible XSS injection through Validate::isCleanHTML method
+    - GHSA-p379-cxqh-q822 Fix executeS method making sure it does selection only (found by truff@projet7.org / Sébastien Cantos)
+- Installer:
+  - Bug fix:
+    - #32112: Handle fallback in Tools::clearSf2Cache when container is not available (by @jolelievre)
+- Web Services:
+  - Bug fix:
+    - #32044: Fix WS error: add product with empty unit-price (by @boherm)
+
+####################################
 #   v8.0.3 - (2023-03-01)
 ####################################
 
