@@ -56,6 +56,17 @@ class FeatureValueGridFactory extends GridFactory
      */
     private $featureRepository;
 
+    /**
+     * @param GridDefinitionFactoryInterface $definitionFactory
+     * @param GridDataFactoryInterface $dataFactory
+     * @param GridFilterFormFactoryInterface $filterFormFactory
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param FeatureRepository $featureRepository
+     *
+     * @todo: after following ADR https://github.com/PrestaShop/ADR/pull/33,
+     *        the Addapter/FeatureRepository usage should be replaced by interface
+     *        and FeatureValueGridFactory should be removed from phpstan-disallowed-calls.neon "allowIn" section
+     */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataFactoryInterface $dataFactory,
