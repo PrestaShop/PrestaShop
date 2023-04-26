@@ -90,7 +90,7 @@ class ProductSearchType extends TranslatorAwareType
                 },
                 'remote_url' => static function (Options $options) use ($router, $languageIsoCode): string {
                     if ($options->offsetGet('include_combinations') === true) {
-                        return $router->generate('admin_products_v2_search_combinations', [
+                        return $router->generate('admin_products_search_combinations_for_association', [
                             'languageCode' => $languageIsoCode,
                             'query' => '__QUERY__',
                             'filters' => $options['filters'],
