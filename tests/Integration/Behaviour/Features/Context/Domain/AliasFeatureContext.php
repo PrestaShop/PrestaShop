@@ -162,12 +162,15 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteAliasFromDefaultShop(string $reference): void
     {
-        try {
-            $this->getCommandBus()->handle(new DeleteAliasCommand(
-                $this->getSharedStorage()->get($reference)
-            ));
-        } catch (AliasException $e) {
-            $this->setLastException($e);
+        /** @var AliasId[] $aliasIds */
+        $aliasIds = $this->getSharedStorage()->get($reference);
+
+        foreach ($aliasIds as $aliasId) {
+            try {
+                $this->getCommandBus()->handle(new DeleteAliasCommand($aliasId));
+            } catch (AliasException $e) {
+                $this->setLastException($e);
+            }
         }
     }
 
