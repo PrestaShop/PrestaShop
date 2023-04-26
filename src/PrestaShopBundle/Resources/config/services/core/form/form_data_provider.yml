@@ -230,6 +230,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApplicationFormDataProvider:
     arguments:
       - '@prestashop.core.command_bus'
+    autowire: true
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRulesGroupFormDataProvider:
     arguments:

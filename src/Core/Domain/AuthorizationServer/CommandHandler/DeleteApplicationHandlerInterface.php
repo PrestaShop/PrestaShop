@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\DeleteApplicat
 
 /**
  * Defines contract for DeleteApplicationHandler
+ *
+ * @experimental
  */
 interface DeleteApplicationHandlerInterface
 {

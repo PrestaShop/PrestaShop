@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception;
 
 /**
  * Is thrown when application deletion failed
+ *
+ * @experimental
  */
 class DeleteApplicationException extends ApplicationException
 {

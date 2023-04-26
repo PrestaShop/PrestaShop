@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 
 /**
  * Deletes application
+ *
+ * @experimental
  */
 class DeleteApplicationCommand
 {

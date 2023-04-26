@@ -37,6 +37,8 @@ use PrestaShopBundle\Entity\AuthorizedApplication;
 
 /**
  * Handles command which delete application
+ *
+ * @experimental
  */
 class DeleteApplicationHandler implements DeleteApplicationHandlerInterface
 {

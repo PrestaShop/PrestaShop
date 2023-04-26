@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
+/**
+ * @experimental
+ */
 interface ApiAccessRepositoryInterface
 {
     /**
