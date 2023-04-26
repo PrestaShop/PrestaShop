@@ -512,16 +512,14 @@ services:
       $paymentModulesChoiceProvider: '@prestashop.adapter.form.choice_provider.installed_payment_modules'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType:
-  PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType:
-  PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType:
-  PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductItemType:
+
+  PrestaShopBundle\Form\Admin\Sell\Product\:
+    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Form/Admin/Sell/Product/*"
 
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
       $formChoiceProvider: '@prestashop.core.form.choice_provider.product_type_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\HeaderType:
   PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType:
     arguments:
       $shortDescriptionMaxLength: '@=service("prestashop.adapter.legacy.configuration").get("PS_PRODUCT_SHORT_DESC_LIMIT")'
@@ -530,42 +528,30 @@ services:
     arguments:
       $manufacturerChoiceProvider: '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType:
     arguments:
       $defaultCategoryChoiceProvider: '@prestashop.adapter.form.choice_provider.product_default_category_choice_provider'
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTagsCollectionType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\ProductCategoryType:
   PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType:
     arguments:
       $productConditionChoiceProvider: '@prestashop.core.form.choice_provider.product_condition_choice_provider'
       $isFeatureEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Details\FeaturesType:
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
     arguments:
       $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
       $featureValueListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Details\CustomizationsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectorType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType:
     arguments:
       $packStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType:
     arguments:
       $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
       $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
+
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
@@ -578,20 +564,10 @@ services:
       $carrierChoiceProvider: '@prestashop.core.form.choice_provider.carrier_by_reference_id'
       $additionalDeliveryTimeNoteTypesProvider: '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DimensionsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DeliveryTimeNotesType:
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\RetailPriceType:
     arguments:
       $contextLocale: '@prestashop.core.localization.locale.context_locale'
       $taxRuleGroupChoicesProvider: '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\UnitPriceType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriceSummaryType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricesType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\CatalogPriceRulesType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType:
     arguments:
@@ -600,8 +576,6 @@ services:
       $specificPriceCombinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
       $combinationNameBuilder: '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceImpactType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ProductSpecificPricePriorityType:
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType:
     arguments:
       $priorityChoiceProvider: '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
@@ -616,16 +590,12 @@ services:
       $friendlyUrlEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_REWRITING_SETTINGS')"
       $forceFriendlyUrl: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FORCE_FRIENDLY_PRODUCT')"
 
-  PrestaShopBundle\Form\Admin\Sell\Product\SEO\SerpType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Stock\PackedProductType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\RedirectOptionType:
     arguments:
       $targetTransformer: '@PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer'
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
       $homeCategoryId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType:
   PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType:
     arguments:
       $productVisibilityChoiceProvider: '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
@@ -637,8 +607,6 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType:
     arguments:
       $supplierNameByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierType:
     arguments:
@@ -654,26 +622,16 @@ services:
       $productUrlProvider: '@prestashop.adapter.shop.url.product_provider'
       $productPreviewUrlProvider: '@prestashop.adapter.shop.url.product_preview_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer:
-
   # Combination form types
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationManagerType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationAvailabilityType:
     arguments:
       $outOfStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationFormType:
     arguments:
       $combinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationHeaderType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType:
     arguments:
       $taxComputer: '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
@@ -683,15 +641,9 @@ services:
     arguments:
       $imagesChoiceProvider: '@prestashop.core.form.choice_provider.product_images_choice_provider'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationStockType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\LowStockThresholdType:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType:
     arguments:
       $productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationReferencesType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationImagesType:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType:
     arguments:
@@ -713,8 +665,6 @@ services:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType:
 
   PrestaShopBundle\Form\Admin\Type\EntitySearchInputType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType:
-  PrestaShopBundle\Form\Admin\Sell\Product\Options\AttachedFileType:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\PasswordPolicyType:
   PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType:
@@ -747,11 +697,8 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.hook'
 
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener:
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener:
   PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener:
   PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener:
-  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener:
 
   PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider:
     arguments:
