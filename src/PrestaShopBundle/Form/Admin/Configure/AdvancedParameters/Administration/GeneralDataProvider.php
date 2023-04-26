@@ -33,9 +33,8 @@ use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationErro
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShopBundle\Form\Exception\FormDataProviderException;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\FormDataProviderException;
 
 /**
  * This class is responsible of managing the data manipulated using general form
