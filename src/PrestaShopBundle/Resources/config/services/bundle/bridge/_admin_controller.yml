@@ -17,3 +17,6 @@ services:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.controller }
+
+  PrestaShopBundle\Bridge\SymfonyLayoutFeature:
+    autowire: true

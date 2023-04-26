@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Listener\InitFrameworkBridgeControllerListener;
 use PrestaShopBundle\Bridge\Smarty\ConfiguratorInterface;
+use PrestaShopBundle\Bridge\SymfonyLayoutFeature;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tab;
@@ -83,13 +84,19 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
      */
     private $configurators;
 
+    /**
+     * @var SymfonyLayoutFeature
+     */
+    private $symfonyLayoutFeature;
+
     public function __construct(
         LegacyContext $context,
         RequestStack $requestStack,
         ShopConstraintContextInterface $shopConstraintContextInterface,
         TranslatorInterface $translator,
         Configuration $configuration,
-        iterable $configurators
+        iterable $configurators,
+        SymfonyLayoutFeature $symfonyLayoutFeature
     ) {
         $this->context = $context;
         $this->requestStack = $requestStack;
@@ -97,20 +104,15 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
         $this->translator = $translator;
         $this->configuration = $configuration;
         $this->configurators = $configurators;
+        $this->symfonyLayoutFeature = $symfonyLayoutFeature;
     }
 
     public function getGlobals(): array
     {
         $legacyLayoutVariables = [];
-        $request = $this->requestStack->getCurrentRequest();
-        if ($request) {
-            $useSymfonyLayout = $request->attributes->getBoolean(InitFrameworkBridgeControllerListener::USE_SYMFONY_LAYOUT_ATTRIBUTE, false);
-        } else {
-            // During install (or even more generally CLI environment) the request is not accessible
-            $useSymfonyLayout = false;
-        }
-
-        if ($useSymfonyLayout) {
+        $useSymfonyLayout = $this->symfonyLayoutFeature->isEnabled();
+        if ($this->symfonyLayoutFeature->isEnabled()) {
+            $request = $this->requestStack->getCurrentRequest();
             $controllerConfiguration = $request->attributes->get(InitFrameworkBridgeControllerListener::CONTROLLER_CONFIGURATION_ATTRIBUTE);
             if ($controllerConfiguration instanceof ControllerConfiguration) {
                 foreach ($this->configurators as $configurator) {

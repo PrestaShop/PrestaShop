@@ -30,11 +30,11 @@ namespace PrestaShopBundle\Bridge\AdminController\Listener;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory;
+use PrestaShopBundle\Bridge\SymfonyLayoutFeature;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -46,7 +46,6 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
  */
 class InitFrameworkBridgeControllerListener
 {
-    public const USE_SYMFONY_LAYOUT_ATTRIBUTE = 'use_symfony_layout';
     public const CONTROLLER_CONFIGURATION_ATTRIBUTE = 'configuration_controller';
 
     /**
@@ -60,16 +59,6 @@ class InitFrameworkBridgeControllerListener
     private $localeRepository;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var FeatureFlagRepository
-     */
-    private $featureFlagRepository;
-
-    /**
      * @var LegacyControllerBridgeFactory
      */
     private $controllerBridgeFactory;
@@ -79,20 +68,23 @@ class InitFrameworkBridgeControllerListener
      */
     private $controllerConfigurationFactory;
 
+    /**
+     * @var SymfonyLayoutFeature
+     */
+    private $symfonyLayoutFeature;
+
     public function __construct(
         LegacyContext $legacyContext,
         Repository $localeRepository,
-        RequestStack $requestStack,
-        FeatureFlagRepository $featureFlagRepository,
         LegacyControllerBridgeFactory $controllerBridgeFactory,
-        ControllerConfigurationFactory $controllerConfigurationFactory
+        ControllerConfigurationFactory $controllerConfigurationFactory,
+        SymfonyLayoutFeature $symfonyLayoutFeature
     ) {
         $this->context = $legacyContext->getContext();
         $this->localeRepository = $localeRepository;
-        $this->requestStack = $requestStack;
-        $this->featureFlagRepository = $featureFlagRepository;
         $this->controllerBridgeFactory = $controllerBridgeFactory;
         $this->controllerConfigurationFactory = $controllerConfigurationFactory;
+        $this->symfonyLayoutFeature = $symfonyLayoutFeature;
     }
 
     /**
@@ -117,11 +109,11 @@ class InitFrameworkBridgeControllerListener
         $bridgeController = $this->getBridgeController($event);
         if (null !== $bridgeController) {
             $legacyBridgeController = $this->controllerBridgeFactory->create($bridgeController->getControllerConfiguration());
-        } elseif ($this->isUsingSymfonyLayout()) {
+        } elseif ($this->symfonyLayoutFeature->isEnabled()) {
             $legacyControllerName = $event->getRequest()->attributes->get('_legacy_controller');
             if (!empty($legacyControllerName)) {
-                $event->getRequest()->attributes->set(self::USE_SYMFONY_LAYOUT_ATTRIBUTE, true);
-
+                // Set the controller configuration as request attribute so that it can be accessed in many places,
+                // especially the SymfonyLayoutExtension
                 $controllerConfiguration = $this->controllerConfigurationFactory->create($legacyControllerName);
                 $event->getRequest()->attributes->set(self::CONTROLLER_CONFIGURATION_ATTRIBUTE, $controllerConfiguration);
                 $legacyBridgeController = $this->controllerBridgeFactory->create($controllerConfiguration);
@@ -136,15 +128,6 @@ class InitFrameworkBridgeControllerListener
             );
             $this->context->controller = $legacyBridgeController;
         }
-    }
-
-    private function isUsingSymfonyLayout(): bool
-    {
-        if ($this->requestStack->getCurrentRequest()->query->getBoolean('use_symfony_layout', false)) {
-            return true;
-        }
-
-        return $this->featureFlagRepository->isEnabled(FeatureFlagSettings::SYMFONY_LAYOUT);
     }
 
     private function getBridgeController(ControllerEvent $event): ?FrameworkBridgeControllerInterface
