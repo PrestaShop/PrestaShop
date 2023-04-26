@@ -184,7 +184,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $aliasIds = [];
 
         foreach ($aliasesList->getColumnsHash() as $aliasInfo) {
-            $aliasIds[] = $this->getSharedStorage()->get($aliasInfo['reference'])->getValue();
+            $aliasIds[] = $this->getSharedStorage()->get($aliasInfo['reference'])[0]->getValue();
         }
 
         try {
