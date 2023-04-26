@@ -68,12 +68,12 @@
 
               {if $enableSidebar}
 
-                <a class="toolbar-button d-inline-block d-md-none" href="#"
+                <a class="toolbar-button btn-sidebar d-inline-block d-md-none" href="#"
                    title="{l s='Help' d='Admin.Global'}"
                    data-toggle="sidebar"
                    data-target="#right-sidebar"
                    data-url="{$help_link|escape}"
-                   id="product_form_open_help"
+                   id="product_form_open_help_mobile"
                 >
                   <i class="material-icons">help_outline</i>
                 </a>
