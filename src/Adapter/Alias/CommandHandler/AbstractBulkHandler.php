@@ -42,6 +42,7 @@ abstract class AbstractBulkHandler
      * @param mixed|null $command
      *
      * @return array<int, mixed>
+     *
      * @throws BulkAliasException
      */
     protected function handleBulkAction(array $aliasIds, $command = null): array
