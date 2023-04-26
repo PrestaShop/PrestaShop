@@ -93,10 +93,11 @@ class ResponseBuilder
         Request $request,
         $filterId,
         $redirectRoute,
-        array $queryParamsToKeep = []
+        array $queryParamsToKeep = [],
+        array $gridOptions = []
     ) {
         /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition();
+        $definition = $definitionFactory->getDefinition($gridOptions);
 
         /** @var FormInterface $filtersForm */
         $filtersForm = $this->filterFormFactory->create($definition);

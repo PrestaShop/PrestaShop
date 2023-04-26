@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +21,25 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+const {$} = window;
 
-{% block content %}
-  {% block feature_values_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': featureValueGrid} %}
-  {% endblock %}
-{% endblock %}
+$(() => {
+  const grid = new Grid('feature_value');
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/feature_value.bundle.js') }}"></script>
-{% endblock %}
+  grid.addExtension(new ExportToSqlManagerExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new ReloadListActionExtension());
+  grid.addExtension(new SortingExtension());
+  grid.addExtension(new SubmitRowActionExtension());
+});

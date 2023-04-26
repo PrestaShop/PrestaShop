@@ -106,11 +106,6 @@ class FeatureValueGridDefinitionFactory extends AbstractConfigurableGridDefiniti
     protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
-//            ->add((new BulkActionColumn('bulk'))
-//            ->setOptions([
-//                'bulk_field' => 'id_feature',
-//            ])
-//            )
             ->add((new DataColumn('id_feature_value'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
@@ -122,62 +117,10 @@ class FeatureValueGridDefinitionFactory extends AbstractConfigurableGridDefiniti
             ->setOptions([
                 'field' => 'value',
             ])
-//            )
-//            ->add((new DataColumn('values_count'))
-//            ->setName($this->trans('Values', [], 'Admin.Catalog.Feature'))
-//            ->setOptions([
-//                'field' => 'values_count',
-//            ])
-//            )
-//            // @todo: position action is not implemented yet
-//            //        Uncomment Position column and delete position DataColumn when its done.
-//            ->add((new DataColumn('position'))
-//            ->setName($this->trans('Position', [], 'Admin.Global'))
-//            ->setOptions(['field' => 'position'])
-//            )
-//            ->add((new PositionColumn('position'))
-//            ->setName($this->trans('Position', [], 'Admin.Global'))
-//            ->setOptions([
-//                'id_field' => 'id_feature',
-//                'position_field' => 'position',
-//                'update_method' => 'POST',
-//                'update_route' => 'admin_features_update_position',
-//            ])
             )
             ->add((new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
-//            ->setOptions([
-//                'actions' => (new RowActionCollection())
-//                    // @todo: view action is not implemented yet
-//                    // ->add((new LinkRowAction('view'))
-//                    // ->setName($this->trans('View', [], 'Admin.Actions'))
-//                    // ->setIcon('zoom_in')
-//                    // ->setOptions([
-//                    // 'route' => 'admin_features_view',
-//                    // 'route_param_name' => 'featureId',
-//                    // 'route_param_field' => 'id_feature',
-//                    // 'clickable_row' => true,
-//                    // ])
-//                    // )
-//                    ->add((new LinkRowAction('edit'))
-//                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
-//                    ->setIcon('edit')
-//                    ->setOptions([
-//                        'route' => 'admin_features_edit',
-//                        'route_param_name' => 'featureId',
-//                        'route_param_field' => 'id_feature',
-//                    ])
-//                    ),
-//                // @todo: delete aciton is not implemented yet
-//                // ->add(
-//                // $this->buildDeleteAction(
-//                // 'admin_features_delete',
-//                // 'featureId',
-//                // 'id_feature',
-//                // Request::METHOD_DELETE
-//                // )
-//                // ),
-//            ])
+            // @todo: actions will be added in dedicated PR
             );
     }
 
@@ -263,10 +206,7 @@ class FeatureValueGridDefinitionFactory extends AbstractConfigurableGridDefiniti
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
+        // @todo: bulk actions will be added in dedicated PR
         return new BulkActionCollection();
-        // @todo: bulk delete action is not implemented yet
-        // return (new BulkActionCollection())
-        // ->add($this->buildBulkDeleteAction('admin_features_bulk_delete'))
-        // ;
     }
 }
