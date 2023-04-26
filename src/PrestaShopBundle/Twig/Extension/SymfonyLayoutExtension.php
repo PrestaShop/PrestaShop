@@ -184,6 +184,7 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
             'meta_title' => $metaTitle,
             'multi_shop_edit_for' => $editFieldFor,
             'employee_token' => $employeeToken,
+            'baseAdminUrl' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
         ];
     }
 

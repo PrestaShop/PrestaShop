@@ -100,8 +100,8 @@ class CommonController extends FrameworkBundleAdminController
      * You must add a JS file to the list of JS for view rendering: pagination.js
      *
      * The final way to render a paginator is the following:
-     * {% render controller('PrestaShopBundle\\Controller\\Admin\\CommonController::paginationAction',
-     *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters}) %}
+     * {{ render(controller('PrestaShopBundle\\Controller\\Admin\\CommonController::paginationAction',
+     *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters})) }}
      *
      * @param Request $request
      * @param int $limit

@@ -57,8 +57,13 @@
         <div class="component component-search" id="header-search-container">
           <div class="component-search-body">
             <div class="component-search-top">
-              {# Include search component based on components/layout/search_form.tpl #}
-              #TODO_SEARCH_COMPONENT
+              {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+                'smartyTemplate': 'components/layout/search_form.tpl',
+                'smartyVariables': {
+                  'baseAdminUrl': baseAdminUrl,
+                  'bo_query': bo_query,
+                }
+              })) }}
               <button class="component-search-cancel d-none">
                 {{ 'Cancel'|trans({}, 'Admin.Actions') }}
               </button>
