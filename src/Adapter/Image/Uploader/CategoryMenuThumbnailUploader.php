@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use HelperImageUploader;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
@@ -47,11 +47,20 @@ final class CategoryMenuThumbnailUploader extends AbstractImageUploader implemen
     private $cacheClearer;
 
     /**
-     * @param CacheClearerInterface $cacheClearer
+     * @var MenuThumbnailAvailableKeyProvider
      */
-    public function __construct(CacheClearerInterface $cacheClearer)
-    {
+    private $menuThumbnailAvailableKeyProvider;
+
+    /**
+     * @param CacheClearerInterface $cacheClearer
+     * @param MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
+     */
+    public function __construct(
+        CacheClearerInterface $cacheClearer,
+        MenuThumbnailAvailableKeyProvider $menuThumbnailAvailableKeyProvider
+    ) {
         $this->cacheClearer = $cacheClearer;
+        $this->menuThumbnailAvailableKeyProvider = $menuThumbnailAvailableKeyProvider;
     }
 
     /**
@@ -62,19 +71,8 @@ final class CategoryMenuThumbnailUploader extends AbstractImageUploader implemen
     public function upload($categoryId, UploadedFile $uploadedImage)
     {
         $this->checkImageIsAllowedForUpload($uploadedImage);
-        //Get total of image already present in directory
-        $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
-        $usedKeys = [];
 
-        foreach ($files as $file) {
-            $matches = [];
-
-            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
-                $usedKeys[] = (int) $matches[1];
-            }
-        }
-
-        $availableKeys = array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
+        $availableKeys = $this->menuThumbnailAvailableKeyProvider->getAvailableKeys($categoryId);
 
         // HelperImageUploader::process() expects
         // uploaded file to be available in $_FILES

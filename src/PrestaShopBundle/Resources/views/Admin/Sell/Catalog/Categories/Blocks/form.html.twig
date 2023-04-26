@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme categoryForm '@PrestaShop/Admin/Sell/Catalog/Categories/FormTheme/category.html.twig' %}
 
 {% block category_form_block %}
 {{ form_start(categoryForm, {'attr': {'data-id': categoryId|default(0)}}) }}
@@ -33,158 +33,7 @@
   </h3>
   <div class="card-body">
     <div class="form-wrapper">
-      {{ form_errors(categoryForm) }}
-
-      {{ ps.form_group_row(categoryForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Global'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
-
-      <div class="form-group row">
-        {{ ps.label_with_help(('Displayed'|trans({}, 'Admin.Global')), ('Click on "%displayed_label%" to index the category on your shop.'|trans({'%displayed_label%': 'Displayed'|trans({}, 'Admin.Global')}, 'Admin.Catalog.Help'))) }}
-        <div class="col-sm">
-          {{ form_widget(categoryForm.active) }}
-          <small class="form-text">
-            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.'|trans({
-              '[1]': '<a href="' ~ path('admin_module_manage') ~ '" target="_blank" rel="noopener noreferrer nofollow">',
-              '[/1]': '</a>'
-            }, 'Admin.Catalog.Help')|raw }}
-          </small>
-        </div>
-      </div>
-
-      {% if categoryForm.id_parent is defined %}
-      <div class="form-group row">
-        <label class="form-control-label">
-          {% if categoryForm.vars.required %}
-            <span class="text-danger">*</span>
-          {% endif %}
-
-          {{ 'Parent category'|trans({}, 'Admin.Catalog.Feature') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(categoryForm.id_parent) }}
-        </div>
-      </div>
-      {% endif %}
-
-      {{ ps.form_group_row(categoryForm.description, {}, {
-        'label': 'Description'|trans({}, 'Admin.Global'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
-
-      {{ ps.form_group_row(categoryForm.additional_description, {}, {
-        'label': 'Additional description'|trans({}, 'Admin.Catalog.Feature'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Category cover image'|trans({}, 'Admin.Catalog.Feature') }}
-        </label>
-        <div class="col-sm">
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig' %}
-
-          {{ form_widget(categoryForm.cover_image) }}
-
-          <small class="form-text">
-            {{ 'This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.'|trans({}, 'Admin.Catalog.Help') }}
-          </small>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Category thumbnail'|trans({}, 'Admin.Catalog.Feature') }}
-        </label>
-        <div class="col-sm">
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
-
-          {{ form_widget(categoryForm.thumbnail_image) }}
-
-          <small class="form-text">
-            {{ 'Displays a small image in the parent category\'s page, if the theme allows it.'|trans({}, 'Admin.Catalog.Help') }}
-          </small>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Menu thumbnails'|trans({}, 'Admin.Catalog.Feature') }}
-        </label>
-        <div class="col-sm">
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/menu_thumbnail_images.html.twig' %}
-
-          {% if allowMenuThumbnailsUpload %}
-            {{ form_widget(categoryForm.menu_thumbnail_images) }}
-          {% else %}
-            <div class="d-none">
-              {{ form_widget(categoryForm.menu_thumbnail_images) }}
-            </div>
-
-            <div class="alert alert-warning" role="alert">
-              <p class="alert-text">
-                {{ 'You have reached the limit (%s) of files to upload, please remove files to continue uploading'|trans({'%s': maxMenuThumbnails}, 'Admin.Catalog.Notification') }}
-              </p>
-            </div>
-          {% endif %}
-          <small class="form-text">
-            {{ 'The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.'|trans({}, 'Admin.Catalog.Help') }}
-          </small>
-        </div>
-      </div>
-
-      {{ renderhook('displayBackOfficeCategory') }}
-
-      {# Do not display category preview while creating a category #}
-      {% if categoryUrl is not null %}
-        {% block category_tool_serp %}
-          <div class="form-group row">
-            <label class="form-control-label">{{ 'SEO preview'|trans({}, 'Admin.Global') }}</label>
-            <div class="col-sm">
-              <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
-              <small class="form-text">
-                {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
-              </small>
-            </div>
-          </div>
-        {% endblock %}
-      {% endif %}
-
-      <div class="form-group row">
-        {{ ps.label_with_help(('Meta title'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
-        <div class="col-sm">
-          {{ form_widget(categoryForm.meta_title) }}
-        </div>
-      </div>
-
-      <div class="form-group row">
-        {{ ps.label_with_help(('Meta description'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
-        <div class="col-sm">
-          {{ form_widget(categoryForm.meta_description) }}
-        </div>
-      </div>
-
-      {% set metaKeywordHelp %}
-        {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
-      {% endset %}
-
-      {{ ps.form_group_row(categoryForm.meta_keyword, {}, {
-        'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-        'help': metaKeywordHelp
-      }) }}
-
-      {{ ps.form_group_row(categoryForm.link_rewrite, {}, {
-        'label': 'Friendly URL'|trans({}, 'Admin.Global'),
-        'help': 'Only letters, numbers, underscore (_) and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help')
-      }) }}
-
-      {{ ps.form_group_row(categoryForm.group_association, {}, {
-        'label': 'Group access'|trans({}, 'Admin.Catalog.Feature'),
-        'help': 'Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help')
-      }) }}
-
+      {{ form_widget(categoryForm) }}
       <div class="form-group row">
         <label class="form-control-label"></label>
         <div class="col-sm">
@@ -199,21 +48,6 @@
           </div>
         </div>
       </div>
-
-      {% if categoryForm.shop_association is defined %}
-        <div class="form-group row">
-          <label class="form-control-label">
-            {{ 'Store association'|trans({}, 'Admin.Global') }}
-          </label>
-          <div class="col-sm">
-            {{ form_widget(categoryForm.shop_association) }}
-          </div>
-        </div>
-      {% endif %}
-
-      {% block category_form_rest %}
-        {{ form_rest(categoryForm) }}
-      {% endblock %}
     </div>
   </div>
   <div class="card-footer">

@@ -22,16 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/form.html.twig' with {
-    'categoryForm': editCategoryForm,
-  } %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/javascripts.html.twig' %}
-{% endblock %}
+{% block category_seo_preview_widget %}
+    <div id="serp-app" data-category-url="{{ data }}"></div>
+    <small class="form-text">
+      {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
+    </small>
+{% endblock category_seo_preview_widget %}

@@ -36,6 +36,7 @@ import DateRange from '@js/components/form/date-range';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import DisablingSwitch from '@components/form/disabling-switch';
 import GeneratableInput from '@js/components/generatable-input';
+import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 import Grid from '@components/grid/grid';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
 import MultipleChoiceTable from '@js/components/multiple-choice-table';
@@ -152,6 +153,7 @@ const initPrestashopComponents = (): void => {
     MultistoreConfigField,
     PreviewOpener,
     Router,
+    TextWithRecommendedLengthCounter,
     ShopSelector,
     TaggableField,
     TextWithLengthCounter,

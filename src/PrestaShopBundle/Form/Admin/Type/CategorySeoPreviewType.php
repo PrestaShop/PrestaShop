@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,29 +22,25 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
+declare(strict_types=1);
 
-{% block category_cover_image %}
-  {% if coverImage is defined and coverImage is not null %}
-    <div>
-      <form action="">
-        <figure class="figure">
-          <img src="{{ coverImage.path }}" class="figure-img img-fluid img-thumbnail">
-          <figcaption class="figure-caption">
-            <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ coverImage.size }}</p>
-            <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
-                    data-form-submit-url="{{ path('admin_categories_delete_cover_image', {'categoryId': app.request.get('categoryId')}) }}"
-                    data-form-csrf-token="{{ csrf_token('delete-cover-image') }}"
-                    type="button"
-            >
-              <i class="material-icons">
-                delete_forever
-              </i>
-              {{ 'Delete'|trans({}, 'Admin.Actions') }}
-            </button>
-          </figcaption>
-        </figure>
-      </form>
-    </div>
-  {% endif %}
-{% endblock %}
+namespace PrestaShopBundle\Form\Admin\Type;
+
+use Symfony\Component\Form\AbstractType;
+
+/**
+ * This type is used to show seo preview for category
+ */
+class CategorySeoPreviewType extends AbstractType
+{
+    /**
+     * Returns the block prefix of this type.
+     *
+     * @return string The prefix name
+     */
+    public function getBlockPrefix()
+    {
+        return 'category_seo_preview';
+    }
+}

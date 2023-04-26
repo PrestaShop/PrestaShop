@@ -170,10 +170,20 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        $configuration = $this->getConfiguration();
         $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
         $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
 
         $parentId = (int) $request->query->get('id_parent', $this->getConfiguration()->getInt('PS_HOME_CATEGORY'));
+
+        /*
+         * Parent category can be root category only if you specifically click to add root category.
+         * In all other cases it should be at least home category(Or one of it's children).
+         */
+        $configRootCategory = $configuration->getInt('PS_ROOT_CATEGORY');
+        if ($parentId === $configRootCategory) {
+            $parentId = $configuration->getInt('PS_HOME_CATEGORY');
+        }
 
         $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
         $categoryForm->handleRequest($request);
@@ -197,6 +207,8 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig',
             [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => true,
                 'categoryForm' => $categoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
@@ -246,12 +258,12 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig',
             [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => true,
                 'rootCategoryForm' => $rootCategoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
                 'layoutTitle' => $this->trans('New category', 'Admin.Navigation.Menu'),
-                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl(0, '{friendly-url}'),
             ]
         );
     }
@@ -327,14 +339,13 @@ class CategoryController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
             [
                 'categoryId' => $categoryId,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
-                'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                 'contextLangId' => $this->getContextLangId(),
                 'editCategoryForm' => $categoryForm->createView(),
                 'editableCategory' => $editableCategory,
                 'defaultGroups' => $defaultGroups,
-                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl($categoryId, '{friendly-url}'),
                 'layoutTitle' => $this->trans(
                     'Editing category %category_name%',
                     'Admin.Navigation.Menu',
@@ -406,15 +417,14 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig',
             [
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
                 'categoryId' => $categoryId,
-                'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
                 'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                 'contextLangId' => $this->getContextLangId(),
                 'editRootCategoryForm' => $rootCategoryForm->createView(),
                 'editableCategory' => $editableCategory,
                 'defaultGroups' => $defaultGroups,
-                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl($categoryId, '{friendly-url}'),
                 'layoutTitle' => $this->trans(
                     'Editing category %category_name%',
                     'Admin.Navigation.Menu',

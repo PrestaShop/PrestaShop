@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,27 +22,40 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% block category_menu_thumbnails %}
-  {% if menuThumbnailImages is defined and menuThumbnailImages is not empty %}
-    <div>
-      {% for menuThumbnail in menuThumbnailImages %}
-        <figure class="figure">
-          <img src="{{ menuThumbnail.path }}" class="figure-img img-fluid img-thumbnail">
-          <figcaption class="figure-caption">
-            <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
-                    data-form-submit-url="{{ path('admin_categories_delete_menu_thumbnail', {'categoryId': editableCategory.id.value, 'menuThumbnailId': menuThumbnail.id}) }}"
-                    data-form-csrf-token="{{ csrf_token('delete-menu-thumbnail') }}"
-            >
-              <i class="material-icons">
-                delete_forever
-              </i>
-              {{ 'Delete'|trans({}, 'Admin.Actions') }}
-            </button>
-          </figcaption>
-        </figure>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endblock %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Category\Provider;
+
+use Symfony\Component\Finder\Finder;
+
+/**
+ * Finds used thumb images for specific category id
+ */
+class CategoryImageFinder extends Finder
+{
+    /**
+     * @var string
+     */
+    private $categoryImgDir;
+
+    /**
+     * @param string $categoryImgDir
+     */
+    public function __construct(string $categoryImgDir)
+    {
+        parent::__construct();
+        $this->categoryImgDir = $categoryImgDir;
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return Finder
+     */
+    public function findMenuThumbnails(int $categoryId): Finder
+    {
+        return $this->files()->name('/^' . $categoryId . '-([0-9])?_thumb.jpg/i')->in($this->categoryImgDir);
+    }
+}

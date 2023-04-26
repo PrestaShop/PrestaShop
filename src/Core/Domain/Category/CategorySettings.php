@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +22,27 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% block category_thumbnail_image %}
-  {% if thumbnailImage is defined and thumbnailImage is not null %}
-    <div>
-      <figure class="figure">
-        <img src="{{ thumbnailImage.path }}" class="figure-img img-fluid img-thumbnail">
-        <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ thumbnailImage.size }}</figcaption>
-      </figure>
-    </div>
-  {% endif %}
-{% endblock %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Category;
+
+/**
+ * Defines settings for category.
+ * If related Value Object does not exist, then various settings (e.g. regex, length constraints) are saved here
+ */
+class CategorySettings
+{
+    /**
+     * Class not supposed to be initialized, it only serves as static storage
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * Bellow constants define maximum allowed length of category properties
+     */
+    public const MAX_TITLE_LENGTH = 128;
+}
