@@ -161,6 +161,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async searchModule(page: Page, module: ModuleData): Promise<boolean> {
+    await this.reloadPage(page);
     await page.type(this.searchModuleTagInput, module.tag);
     await page.click(this.searchModuleButton);
 
@@ -325,8 +326,12 @@ class ModuleManager extends BOBasePage {
    */
   async setActionInModule(page: Page, module: ModuleData, action: string): Promise<string | null> {
     await this.closeGrowlMessage(page);
+
     if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {
       await this.waitForSelectorAndClick(page, this.actionModuleButton(module.tag, action));
+      if (action === 'disable' || action === 'uninstall' || action === 'reset') {
+        await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));
+      }
     } else {
       await page.click(this.actionsDropdownButton(module.tag));
       await this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.tag)}[aria-expanded='true']`);

@@ -49,29 +49,49 @@ describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
     await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.contactForm.name}`, async function () {
+  [
+    {
+      args: {
+        title: 'disable mobile',
+        action: 'disableMobile',
+        message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag),
+      },
+    },
+    {
+      args: {
+        title: 'enable mobile',
+        action: 'enableMobile',
+        message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag),
+      },
+    },
+    {
+      args: {
+        title: 'disable the module',
+        action: 'disable',
+        message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag),
+      },
+    },
+  ].forEach((test) => {
+    it(`should ${test.args.title}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', test.args.action, baseContext);
+
+      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.availableQuantities, test.args.action);
+      await expect(successMessage).to.eq(test.args.message);
+    });
+  });
+
+  it(`should search the module ${Modules.availableQuantities.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.availableQuantities);
     await expect(isModuleVisible).to.be.true;
   });
 
-  ['disableMobile', 'enableMobile', 'disable', 'enable'].forEach((status: string) => {
-    it(`should ${status}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', status, baseContext);
+  it('should enable the module', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'enableModule', baseContext);
 
-      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, status);
-
-      if (status === 'disable') {
-        await expect(successMessage).to.eq(moduleManagerPage.disableModuleSuccessMessage(Modules.contactForm.tag));
-      } else if (status === 'disableMobile') {
-        await expect(successMessage).to.eq(moduleManagerPage.disableMobileSuccessMessage(Modules.contactForm.tag));
-      } else if (status === 'enable') {
-        await expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.contactForm.tag));
-      } else {
-        await expect(successMessage).to.eq(moduleManagerPage.enableMobileSuccessMessage(Modules.contactForm.tag));
-      }
-    });
+    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.availableQuantities, 'enable');
+    await expect(successMessage).to.eq(moduleManagerPage.enableModuleSuccessMessage(Modules.availableQuantities.tag));
   });
 
   it('should show all modules', async function () {
