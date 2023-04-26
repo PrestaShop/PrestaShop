@@ -328,6 +328,13 @@ class ControllerConfiguration
     public $multiShopContextGroup = true;
 
     /**
+     * Some controllers are forced to be rendered in All shops context always.
+     *
+     * @var bool
+     */
+    public $lockedToAllShopContext = false;
+
+    /**
      * @see AdminController::redirect_after
      *
      * @var string

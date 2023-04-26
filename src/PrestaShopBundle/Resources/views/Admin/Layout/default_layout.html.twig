@@ -206,8 +206,8 @@
 {% endif %}
 
 {# Page header toolbar #}
-{% if page_header_toolbar is defined %}
-  {{ page_header_toolbar }}
+{% if show_page_header_toolbar and not lite_display %}
+  {{ include('@PrestaShop/Admin/Layout/page_header_toolbar.html.twig') }}
 {% endif %}
 
 <div id="main-div">

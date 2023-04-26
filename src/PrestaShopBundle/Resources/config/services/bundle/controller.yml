@@ -122,8 +122,7 @@ services:
   prestashop.core.api.improve.design.postions.controller:
     alias: PrestaShopBundle\Controller\Api\Improve\Design\PositionsController
 
-  prestashop.core.admin.multistore:
-    class: PrestaShopBundle\Controller\Admin\MultistoreController
+  PrestaShopBundle\Controller\Admin\MultistoreController:
     parent: PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController
     public: true
     properties:
@@ -133,3 +132,7 @@ services:
       productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     calls:
       - [ setContainer, [ '@service_container' ] ]
+
+  prestashop.core.admin.multistore:
+    alias: PrestaShopBundle\Controller\Admin\MultistoreController
+    deprecated: 'The "%alias_id%" service alias is deprecated in version 9.0 and will be removed in next major version.'

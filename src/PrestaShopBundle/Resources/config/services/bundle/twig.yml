@@ -148,5 +148,4 @@ services:
   PrestaShopBundle\Twig\Extension\SymfonyLayoutExtension:
     autowire: true
     arguments:
-      $shopConstraintContextInterface: '@prestashop.adapter.shop.context'
       $configurators: !tagged prestashop.bridge.smarty_configurator

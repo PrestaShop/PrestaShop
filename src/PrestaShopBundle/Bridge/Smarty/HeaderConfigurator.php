@@ -202,7 +202,30 @@ class HeaderConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['shop_name'] = $this->configuration->get('PS_SHOP_NAME');
         $controllerConfiguration->templateVars['tabs'] = $tabs;
         $controllerConfiguration->templateVars['version'] = _PS_VERSION_;
+
+        // Compatibility with legacy behavior.
+        // Some controllers can only be used in "All stores" context.
+        // This makes sure that user cannot switch shop contexts
+        // when in one of pages (controller) below.
+        $controllers = [
+            'AdminAccess',
+            'AdminFeatureFlag',
+            'AdminLanguages',
+            'AdminProfiles',
+            'AdminSpecificPriceRule',
+            'AdminStatuses',
+            'AdminSecurity',
+            'AdminSecuritySessionEmployee',
+            'AdminSecuritySessionCustomer',
+            'AdminTranslations',
+        ];
+
+        if (in_array($controllerConfiguration->legacyControllerName, $controllers)) {
+            $controllerConfiguration->multiShopContext = Shop::CONTEXT_ALL;
+            $controllerConfiguration->lockedToAllShopContext = true;
+        }
         $controllerConfiguration->templateVars['multishop_context'] = $controllerConfiguration->multiShopContext;
+        $controllerConfiguration->templateVars['force_all_shop_context'] = $controllerConfiguration->lockedToAllShopContext;
 
         Media::addJsDef(
             [

@@ -142,6 +142,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         'multishop_context' => 'controllerConfiguration.multiShopContext',
         'multishop_context_group' => 'controllerConfiguration.multiShopContextGroup',
         'redirect_after' => 'controllerConfiguration.redirectAfter',
+        'lockedToAllShopContext' => 'controllerConfiguration.lockedToAllShopContext',
     ];
 
     /**

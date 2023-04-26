@@ -48,3 +48,7 @@ services:
       - '@PrestaShop\PrestaShop\Core\Help\Documentation'
       - "@=service('prestashop.adapter.environment').isDebug()"
     tags: [ 'prestashop.bridge.smarty_configurator' ]
+
+  PrestaShopBundle\Bridge\Smarty\LayoutConfigurator:
+    autowire: true
+    tags: [ 'prestashop.bridge.smarty_configurator' ]

@@ -28,20 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Extension;
 
-use HelperShop;
-use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Smarty\ConfiguratorInterface;
 use PrestaShopBundle\Bridge\SymfonyLayoutFeature;
 use PrestaShopBundle\EventListener\ContextShopListener;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Tab;
-use Tools;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -66,21 +59,6 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
     private $requestStack;
 
     /**
-     * @var ShopConstraint
-     */
-    private $contextShopConstraint;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * @var ConfiguratorInterface[]
      */
     private $configurators;
@@ -93,25 +71,20 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
     public function __construct(
         LegacyContext $context,
         RequestStack $requestStack,
-        ShopConstraintContextInterface $shopConstraintContextInterface,
-        TranslatorInterface $translator,
-        Configuration $configuration,
         iterable $configurators,
         SymfonyLayoutFeature $symfonyLayoutFeature
     ) {
         $this->context = $context;
         $this->requestStack = $requestStack;
-        $this->contextShopConstraint = $shopConstraintContextInterface->getShopConstraint();
-        $this->translator = $translator;
-        $this->configuration = $configuration;
         $this->configurators = $configurators;
         $this->symfonyLayoutFeature = $symfonyLayoutFeature;
     }
 
     public function getGlobals(): array
     {
-        $legacyLayoutVariables = [];
         $useSymfonyLayout = $this->symfonyLayoutFeature->isEnabled();
+        $layoutVariables = [];
+
         if ($this->symfonyLayoutFeature->isEnabled()) {
             $request = $this->requestStack->getCurrentRequest();
             $controllerConfiguration = $request->attributes->get(ContextShopListener::CONTROLLER_CONFIGURATION_ATTRIBUTE);
@@ -119,83 +92,55 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
                 foreach ($this->configurators as $configurator) {
                     $configurator->configure($controllerConfiguration);
                 }
-                $legacyLayoutVariables = $this->getLegacyLayoutVariables($controllerConfiguration);
+                $layoutVariables = $controllerConfiguration->templateVars + $this->renderSmartyContent($controllerConfiguration);
             }
         }
 
-        return $legacyLayoutVariables + [
+        return $layoutVariables + [
             'use_legacy_layout' => !$useSymfonyLayout,
             'use_symfony_layout' => $useSymfonyLayout,
         ];
     }
 
-    /**
-     * This method is responsible for returning all the variables previously handled by the AdminLegacyLayoutControllerCore
-     * to render the legacy layout. This is a quick solution to make the new layout compatible and working without thinking
-     * too much about what is needed. This should probably be replaced or refactored piece by piece.
-     *
-     * @return array
-     */
-    private function getLegacyLayoutVariables(ControllerConfiguration $controllerConfiguration): array
+    private function renderSmartyContent(ControllerConfiguration $controllerConfiguration): array
     {
-        $link = $this->context->getContext()->link;
+        $smarty = $this->context->getSmarty();
+        $smarty->assign($this->globalVariables);
+        $smarty->setTemplateDir([
+            _PS_BO_ALL_THEMES_DIR_ . 'new-theme' . DIRECTORY_SEPARATOR . 'template',
+            _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
+        ]);
 
-        $metaTitle = '';
-        if (!empty($controllerConfiguration->metaTitle)) {
-            $metaTitle = strip_tags(implode(' ' . $this->getConfiguration('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->metaTitle));
-        } elseif (!empty($controllerConfiguration->toolbarTitle)) {
-            $metaTitle = strip_tags(implode(' ' . $this->getConfiguration('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->toolbarTitle));
+        $module_list_dir = $smarty->getTemplateDir(0) . 'helpers' . DIRECTORY_SEPARATOR . 'modules_list' . DIRECTORY_SEPARATOR;
+        $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
+        if ($controllerConfiguration->showPageHeaderToolbar && !$controllerConfiguration->liteDisplay) {
+            if (!empty($modal_module_list)) {
+                $controllerConfiguration->templateVars['modal_module_list'] = $smarty->fetch($modal_module_list);
+            }
         }
 
-        $shopName = $this->getConfiguration('PS_SHOP_NAME');
-        if ($this->contextShopConstraint->getShopId()) {
-            $editFieldFor = sprintf(
-                '%s <b>%s</b>',
-                $this->translator->trans('This field will be modified for this shop:', [], 'Admin.Notifications.Info'),
-                $shopName
-            );
-        } elseif ($this->contextShopConstraint->getShopGroupId()) {
-            $editFieldFor = sprintf(
-                '%s <b>%s</b>',
-                $this->translator->trans('This field will be modified for all shops in this shop group:', [], 'Admin.Notifications.Info'),
-                $shopName
-            );
-        } else {
-            $editFieldFor = $this->translator->trans('This field will be modified for all your shops.', [], 'Admin.Notifications.Info');
-        }
-
-        $employee = $this->context->getContext()->employee;
-        if (isset($employee)) {
-            $employeeToken = Tools::getAdminToken(
-                'AdminEmployees' .
-                (int) Tab::getIdFromClassName('AdminEmployees') .
-                (int) $employee->id
-            );
-        } else {
-            $employeeToken = '';
-        }
-        $helperShop = new HelperShop();
-
-        return $controllerConfiguration->templateVars + [
-            'current_index' => $controllerConfiguration->legacyCurrentIndex,
-            'display_header' => $controllerConfiguration->displayHeader,
-            'display_header_javascript' => $controllerConfiguration->displayHeaderJavascript,
-            'display_footer' => $controllerConfiguration->displayFooter,
-            'js_def' => Media::getJsDef(),
-            'toggle_navigation_url' => $link->getAdminLink('AdminEmployees', true, [], [
-                'action' => 'toggleMenu',
-            ]),
-            'meta_title' => $metaTitle,
-            'multi_shop_edit_for' => $editFieldFor,
-            'employee_token' => $employeeToken,
-            'baseAdminUrl' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
-            'shop_list' => $helperShop->getRenderedShopList(),
-            'current_shop_name' => $helperShop->getCurrentShopName(),
+        return [
+            'modal' => $this->renderModal($controllerConfiguration),
         ];
     }
 
-    private function getConfiguration(string $configurationName): string
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return string
+     */
+    private function renderModal(ControllerConfiguration $controllerConfiguration): string
     {
-        return $this->configuration->get($configurationName, null, $this->contextShopConstraint);
+        $smarty = $this->context->getSmarty();
+
+        $modalRender = '';
+        if (is_array($controllerConfiguration->modals) && count($controllerConfiguration->modals)) {
+            foreach ($controllerConfiguration->modals as $modal) {
+                $smarty->assign($modal);
+                $modalRender .= $smarty->fetch('modal.tpl');
+            }
+        }
+
+        return $modalRender;
     }
 }
