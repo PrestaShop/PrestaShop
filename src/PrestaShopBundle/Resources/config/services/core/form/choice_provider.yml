@@ -32,14 +32,6 @@ services:
   prestashop.core.form.choice_provider.country_by_id:
     alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider
 
-  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
-    public: false
-    arguments:
-      - '@prestashop.adapter.data_provider.currency'
-
-  prestashop.core.form.choice_provider.currency_by_id:
-    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider
-
   prestashop.core.form.choice_provider.timezone_by_name:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'
     arguments:
