@@ -98,7 +98,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
     public function add(AttributeGroup $attributeGroup, int $errorCode = 0): AttributeGroupId
     {
         $this->validator->validate($attributeGroup);
-        $id = $this->addObjectModel($attributeGroup, CannotAddAttributeGroupException::class, $errorCode);
+        $id = $this->addObjectModel($attributeGroup, CannotAddAttributeGroupException::class);
 
         return new AttributeGroupId($id);
     }

@@ -88,8 +88,8 @@ class AttributeGroupController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
-        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
+        $attributeGroupFormBuilder = $this->get(AttributeGroupFormBuilder::class);
+        $attributeFormHandler = $this->get(AttributeGroupFormHandler::class);
 
         $attributeGroupForm = $attributeGroupFormBuilder->getForm();
         $attributeGroupForm->handleRequest($request);

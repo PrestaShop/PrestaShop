@@ -53,11 +53,10 @@ final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEd
      */
     public function handle(GetAttributeGroupForEditing $query): EditableAttributeGroup
     {
-        $attributeGroupId = $query->getAttributeGroupId();
-        $attributeGroup = $this->attributeGroupRepository->get($attributeGroupId);
+        $attributeGroup = $this->attributeGroupRepository->get($query->getAttributeGroupId());
 
         return new EditableAttributeGroup(
-            $attributeGroupId,
+            $query->getAttributeGroupId(),
             $attributeGroup->name,
             $attributeGroup->public_name,
             $attributeGroup->group_type,
