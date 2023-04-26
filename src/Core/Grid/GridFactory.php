@@ -36,27 +36,27 @@ use Symfony\Component\DependencyInjection\Container;
 /**
  * Class GridFactory is responsible for creating final Grid instance.
  */
-final class GridFactory implements GridFactoryInterface
+class GridFactory implements GridFactoryInterface
 {
     /**
      * @var GridDefinitionFactoryInterface
      */
-    private $definitionFactory;
+    protected $definitionFactory;
 
     /**
      * @var GridDataFactoryInterface
      */
-    private $dataFactory;
+    protected $dataFactory;
 
     /**
      * @var GridFilterFormFactoryInterface
      */
-    private $filterFormFactory;
+    protected $filterFormFactory;
 
     /**
      * @var HookDispatcherInterface
      */
-    private $hookDispatcher;
+    protected $hookDispatcher;
 
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
@@ -79,9 +79,9 @@ final class GridFactory implements GridFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getGrid(SearchCriteriaInterface $searchCriteria, array $options = [])
+    public function getGrid(SearchCriteriaInterface $searchCriteria)
     {
-        $definition = $this->definitionFactory->getDefinition($options);
+        $definition = $this->definitionFactory->getDefinition();
         $data = $this->dataFactory->getData($searchCriteria);
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDataModifier', [

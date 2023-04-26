@@ -13,9 +13,13 @@ admin_feature_values_search:
   path: /
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::searchAction
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory
+    redirectRoute: admin_feature_values_index
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures
     _legacy_feature_flag: feature
+    redirectQueryParamsToKeep:
+      - 'featureId'
   requirements:
     featureId: \d+

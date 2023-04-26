@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -63,12 +64,8 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     /**
      * {@inheritdoc}
      */
-    final public function getDefinition(array $options = [])
+    public function getDefinition(): GridDefinitionInterface
     {
-        if ($this instanceof ConfigurableGridDefinitionFactoryInterface) {
-            $this->configureOptions($options);
-        }
-
         $definition = new GridDefinition(
             $this->getId(),
             $this->getName(),
@@ -91,21 +88,21 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      *
      * @return string
      */
-    abstract protected function getId();
+    abstract protected function getId(): string;
 
     /**
      * Get translated grid name.
      *
      * @return string
      */
-    abstract protected function getName();
+    abstract protected function getName(): string;
 
     /**
      * Get defined columns for grid.
      *
      * @return ColumnCollectionInterface
      */
-    abstract protected function getColumns();
+    abstract protected function getColumns(): ColumnCollectionInterface;
 
     /**
      * Get defined grid actions.
@@ -113,7 +110,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      *
      * @return GridActionCollectionInterface
      */
-    protected function getGridActions()
+    protected function getGridActions(): GridActionCollectionInterface
     {
         return new GridActionCollection();
     }
@@ -124,7 +121,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      *
      * @return BulkActionCollectionInterface
      */
-    protected function getBulkActions()
+    protected function getBulkActions(): BulkActionCollectionInterface
     {
         return new BulkActionCollection();
     }
@@ -135,7 +132,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      *
      * @return ViewOptionsCollectionInterface
      */
-    protected function getViewOptions()
+    protected function getViewOptions(): ViewOptionsCollectionInterface
     {
         return new ViewOptionsCollection();
     }
@@ -146,7 +143,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      *
      * @return FilterCollectionInterface
      */
-    protected function getFilters()
+    protected function getFilters(): FilterCollectionInterface
     {
         return new FilterCollection();
     }

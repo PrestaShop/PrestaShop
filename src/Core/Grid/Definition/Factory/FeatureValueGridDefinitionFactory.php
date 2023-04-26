@@ -27,9 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
-use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -40,44 +37,33 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FeatureValueGridDefinitionFactory extends AbstractConfigurableGridDefinitionFactory
+/**
+ * @see FeatureValueGridFactory - it modifies grid definition to adapt values which depends on request filters (like name and some filter columns)
+ */
+class FeatureValueGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     public const GRID_ID = 'feature_value';
 
-    protected $options = [];
-
-    /**
-     * @var FeatureRepository
-     */
-    private $featureRepository;
-
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        FeatureRepository $featureRepository
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->featureRepository = $featureRepository;
-    }
-
-    public function configureOptions(array $options): void
+    public function getDefinition(): GridDefinitionInterface
     {
-        $optionsResolver = new OptionsResolver();
-        $optionsResolver
-            ->setRequired(['feature_id', 'language_id'])
-            ->setAllowedTypes('feature_id', 'int')
-            ->setAllowedTypes('language_id', 'int')
-        ;
-
-        $this->options = $optionsResolver->resolve($options);
+        return new GridDefinition(
+            $this->getId(),
+            $this->getName(),
+            $this->getColumns(),
+            $this->getFilters(),
+            $this->getGridActions(),
+            $this->getBulkActions(),
+            $this->getViewOptions()
+        );
     }
 
     /**
@@ -93,11 +79,8 @@ class FeatureValueGridDefinitionFactory extends AbstractConfigurableGridDefiniti
      */
     protected function getName(): string
     {
-        //@todo: repository should be wrapped in interface (should be clear after ADR https://github.com/PrestaShop/ADR/pull/33 is finished)
-        return $this->featureRepository->getFeatureName(
-            new FeatureId($this->options['feature_id']),
-            new LanguageId($this->options['language_id'])
-        );
+        // the name is overriden in FeatureValueGridFactory to be the dynamic Feature name instead
+        return 'Features';
     }
 
     /**
@@ -166,6 +149,7 @@ class FeatureValueGridDefinitionFactory extends AbstractConfigurableGridDefiniti
      */
     protected function getFilters(): FilterCollectionInterface
     {
+        // some filters (which depends on request filters) are added inside FeatureValueGridFactory
         return (new FilterCollection())
             ->add((new Filter('id_feature_value', NumberType::class))
             ->setTypeOptions([
@@ -184,20 +168,6 @@ class FeatureValueGridDefinitionFactory extends AbstractConfigurableGridDefiniti
                 ],
             ])
             ->setAssociatedColumn('value')
-            )
-            ->add((new Filter('actions', SearchAndResetType::class))
-            ->setAssociatedColumn('actions')
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_feature_values_index',
-                'redirect_route_params' => [
-                    'featureId' => $this->options['feature_id'],
-                ],
-            ])
-            ->setAssociatedColumn('actions')
             );
     }
 

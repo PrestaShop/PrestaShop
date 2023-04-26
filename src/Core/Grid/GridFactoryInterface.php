@@ -40,5 +40,5 @@ interface GridFactoryInterface
      *
      * @return GridInterface
      */
-    public function getGrid(SearchCriteriaInterface $searchCriteria, array $options = []);
+    public function getGrid(SearchCriteriaInterface $searchCriteria);
 }

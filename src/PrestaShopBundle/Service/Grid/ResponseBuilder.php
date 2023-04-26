@@ -33,6 +33,7 @@ use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 
@@ -93,11 +94,10 @@ class ResponseBuilder
         Request $request,
         $filterId,
         $redirectRoute,
-        array $queryParamsToKeep = [],
-        array $gridOptions = []
+        array $queryParamsToKeep = []
     ) {
         /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition($gridOptions);
+        $definition = $definitionFactory->getDefinition();
 
         /** @var FormInterface $filtersForm */
         $filtersForm = $this->filterFormFactory->create($definition);
@@ -134,7 +134,7 @@ class ResponseBuilder
 
         $redirectUrl = $this->router->generate($redirectRoute, $redirectParams);
 
-        return new RedirectResponse($redirectUrl, 302);
+        return new RedirectResponse($redirectUrl, Response::HTTP_FOUND);
     }
 
     /**

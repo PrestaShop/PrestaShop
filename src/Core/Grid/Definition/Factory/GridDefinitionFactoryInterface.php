@@ -38,5 +38,5 @@ interface GridDefinitionFactoryInterface
      *
      * @return GridDefinitionInterface
      */
-    public function getDefinition(array $options = []);
+    public function getDefinition();
 }

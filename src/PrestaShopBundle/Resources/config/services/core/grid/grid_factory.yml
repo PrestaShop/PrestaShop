@@ -10,7 +10,6 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
-
   prestashop.core.grid.factory.email_logs:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
@@ -513,13 +512,12 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
-  prestashop.core.grid.grid_factory.feature_value:
-    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+  PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory:
+    autowire: true
     arguments:
-      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory'
-      - '@prestashop.core.grid.data.factory.feature_value'
-      - '@prestashop.core.grid.filter.form_factory'
-      - '@prestashop.core.hook.dispatcher'
+      $definitionFactory: '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory'
+      $dataFactory: '@prestashop.core.grid.data.factory.feature_value'
+      $filterFormFactory: '@prestashop.core.grid.filter.form_factory'
 
   prestashop.core.grid.grid_factory.store:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'

@@ -28,13 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\FeatureValueFiltersBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -45,17 +42,12 @@ class FeatureValueController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, FeatureValueFilters $filters): Response
     {
-        $featureId = $filters->getFeatureId();
-        $featureValueGridFactory = $this->get('prestashop.core.grid.grid_factory.feature_value');
-        $grid = $featureValueGridFactory->getGrid($filters, [
-            'feature_id' => $featureId,
-            'language_id' => $filters->getLanguageId(),
-        ]);
+        $featureValueGridFactory = $this->get(FeatureValueGridFactory::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/FeatureValue/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'featureValueGrid' => $this->presentGrid($grid),
+            'featureValueGrid' => $this->presentGrid($featureValueGridFactory->getGrid($filters)),
             // @todo: uncomment when add action is migrated
             //            'layoutHeaderToolbarBtn' => [
             //                'add_feature_value' => [
@@ -65,34 +57,5 @@ class FeatureValueController extends FrameworkBundleAdminController
             //                ],
             //            ],
         ]);
-    }
-
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request, FeatureValueFilters $filters): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-        /** @var FeatureValueFiltersBuilder $featureValueFiltersBuilder */
-        $featureValueFiltersBuilder = $this->get(FeatureValueFiltersBuilder::class);
-        /** @var FeatureValueGridDefinitionFactory $gridDefinitionFactory */
-        $gridDefinitionFactory = $this->get(FeatureValueGridDefinitionFactory::class);
-        /* @var FeatureValueFilters $filters */
-//        $filters = $featureValueFiltersBuilder->buildFilters(new FeatureValueFilters($request->request->all()));
-
-        return $responseBuilder->buildSearchResponse(
-            $gridDefinitionFactory,
-            $request,
-            FeatureValueGridDefinitionFactory::GRID_ID,
-            'admin_feature_values_index',
-            ['featureId'],
-            [
-                'feature_id' => $filters->getFeatureId(),
-                'language_id' => $filters->getLanguageId(),
-            ]
-        );
     }
 }
