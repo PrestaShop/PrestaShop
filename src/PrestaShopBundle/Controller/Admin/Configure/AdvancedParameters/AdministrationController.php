@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Administration" page display.
+ * Responsible for "Configure > Advanced Parameters > Administration" page display.
  */
 class AdministrationController extends FrameworkBundleAdminController
 {
