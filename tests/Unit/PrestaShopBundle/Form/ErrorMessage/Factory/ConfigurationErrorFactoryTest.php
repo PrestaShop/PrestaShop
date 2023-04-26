@@ -32,9 +32,9 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory;
@@ -65,7 +65,7 @@ class ConfigurationErrorFactoryTest extends TestCase
                     '%s is invalid. Please enter an integer lower than %s.',
                     [
                         'Field',
-                        GeneralDataProvider::MAX_COOKIE_VALUE,
+                        CookieOptions::MAX_COOKIE_VALUE,
                     ],
                     'Admin.Notifications.Error',
                     null,

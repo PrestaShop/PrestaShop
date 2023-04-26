@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\ErrorMessage\Factory;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory\ConfigurationErrorMessageProviderInterface;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -66,7 +67,7 @@ class AdministrationConfigurationErrorMessageProvider implements ConfigurationEr
                     '%s is invalid. Please enter an integer lower than %s.',
                     [
                         $label,
-                        GeneralDataProvider::MAX_COOKIE_VALUE,
+                        CookieOptions::MAX_COOKIE_VALUE,
                     ],
                     'Admin.Notifications.Error'
                 );

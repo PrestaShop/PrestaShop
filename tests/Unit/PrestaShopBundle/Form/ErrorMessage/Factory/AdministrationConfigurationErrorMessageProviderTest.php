@@ -30,7 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -51,7 +51,7 @@ class AdministrationConfigurationErrorMessageProviderTest extends TestCase
                     '%s is invalid. Please enter an integer lower than %s.',
                     [
                         self::COOKIE_FIELD_NAME,
-                        GeneralDataProvider::MAX_COOKIE_VALUE,
+                        CookieOptions::MAX_COOKIE_VALUE,
                     ],
                     'Admin.Notifications.Error',
                     null,

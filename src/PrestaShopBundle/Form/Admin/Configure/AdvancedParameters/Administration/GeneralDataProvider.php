@@ -121,7 +121,7 @@ final class GeneralDataProvider implements FormDataProviderInterface
                 $errors->add(new CommonConfigurationError(CommonConfigurationError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
             }
 
-            if ($backOfficeLifeTimeCookie > self::MAX_COOKIE_VALUE) {
+            if ($backOfficeLifeTimeCookie > CookieOptions::MAX_COOKIE_VALUE) {
                 $errors->add(new AdministrationConfigurationError(AdministrationConfigurationError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
             }
         }
