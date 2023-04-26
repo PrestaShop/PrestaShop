@@ -23,19 +23,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
-/**
- * Thrown when Feature data is not valid.
- */
-class FeatureConstraintException extends FeatureException
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\DeleteFeatureHandlerInterface;
+
+class DeleteFeatureHandler implements DeleteFeatureHandlerInterface
 {
-    public const INVALID_ID = 1;
+    /**
+     * @var FeatureRepository
+     */
+    private $featureRepository;
 
-    public const INVALID_NAME = 2;
+    public function __construct(
+        FeatureRepository $featureRepository
+    ) {
+        $this->featureRepository = $featureRepository;
+    }
 
-    public const INVALID_POSITION = 3;
-
-    public const INVALID_SHOP_ASSOCIATION = 4;
+    public function handle(DeleteFeatureCommand $command): void
+    {
+        $this->featureRepository->delete($command->getFeatureId());
+    }
 }

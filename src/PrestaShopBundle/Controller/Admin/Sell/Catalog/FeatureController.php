@@ -29,6 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
@@ -211,6 +215,46 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $featureId
+     *
+     * @return Response
+     */
+    public function deleteAction(int $featureId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteFeatureCommand($featureId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_features_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function bulkDeleteAction(Request $request): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteFeatureCommand($this->getBulkActionIds($request, 'feature_bulk')));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_features_index');
+    }
+
+    /**
      * @param array $parameters
      *
      * @return Response
@@ -242,17 +286,22 @@ class FeatureController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             FeatureConstraintException::class => [
-                FeatureConstraintException::EMPTY_NAME => $this->trans(
-                    'The field %field_name% is required at least in your default language.',
-                    'Admin.Notifications.Error',
-                    ['%field_name%' => $this->trans('Name', 'Admin.Global')]
-                ),
                 FeatureConstraintException::INVALID_NAME => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
                 ),
             ],
+            BulkFeatureException::class => [
+                BulkFeatureException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CannotDeleteFeatureException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 

@@ -23,19 +23,30 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Feature\Validate;
 
-/**
- * Thrown when Feature data is not valid.
- */
-class FeatureConstraintException extends FeatureException
+use Feature;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+
+class FeatureValidator extends AbstractObjectModelValidator
 {
-    public const INVALID_ID = 1;
+    public function validate(Feature $feature): void
+    {
+        $this->validateObjectModelProperty(
+            $feature,
+            'position',
+            FeatureConstraintException::class,
+            FeatureConstraintException::INVALID_POSITION
+        );
 
-    public const INVALID_NAME = 2;
-
-    public const INVALID_POSITION = 3;
-
-    public const INVALID_SHOP_ASSOCIATION = 4;
+        $this->validateObjectModelLocalizedProperty(
+            $feature,
+            'name',
+            FeatureConstraintException::class,
+            FeatureConstraintException::INVALID_NAME
+        );
+    }
 }

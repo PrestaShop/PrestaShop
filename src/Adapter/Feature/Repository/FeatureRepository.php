@@ -30,18 +30,23 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Feature;
+use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValidator;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
 /**
  * Methods to access data storage for FeatureValue
  */
-class FeatureRepository extends AbstractObjectModelRepository
+class FeatureRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var Connection
@@ -54,15 +59,72 @@ class FeatureRepository extends AbstractObjectModelRepository
     protected $dbPrefix;
 
     /**
+     * @var FeatureValidator
+     */
+    private $featureValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param FeatureValidator $featureValidator
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        FeatureValidator $featureValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->featureValidator = $featureValidator;
+    }
+
+    public function get(FeatureId $featureId): Feature
+    {
+        /** @var Feature $feature */
+        $feature = $this->getObjectModel(
+            $featureId->getValue(),
+            Feature::class,
+            FeatureNotFoundException::class
+        );
+
+        return $feature;
+    }
+
+    /**
+     * @param array<int, string> $localizedNames
+     * @param ShopId[] $associatedShopIds
+     *
+     * @return Feature
+     */
+    public function create(
+        array $localizedNames,
+        array $associatedShopIds
+    ): Feature {
+        $feature = new Feature();
+        $feature->name = $localizedNames;
+
+        $this->featureValidator->validate($feature);
+        $this->addObjectModelToShops($feature, $associatedShopIds, CannotAddFeatureException::class);
+
+        return $feature;
+    }
+
+    /**
+     * @param Feature $feature
+     *
+     * @return void
+     *
+     * @throws CoreException
+     */
+    public function update(Feature $feature): void
+    {
+        $this->featureValidator->validate($feature);
+        $this->updateObjectModel($feature, CannotEditFeatureException::class);
+    }
+
+    public function delete(FeatureId $featureId): void
+    {
+        $this->deleteObjectModel($this->get($featureId), CannotDeleteFeatureException::class);
     }
 
     /**
@@ -169,21 +231,6 @@ class FeatureRepository extends AbstractObjectModelRepository
         return array_map(static function (array $result): ShopId {
             return new ShopId((int) $result['id_shop']);
         }, $qb->execute()->fetchAllAssociative());
-    }
-
-    /**
-     * @param array|null $filters
-     *
-     * @return int
-     */
-    public function getFeaturesCount(?array $filters = []): int
-    {
-        $qb = $this->getFeaturesQueryBuilder($filters)
-            ->select('COUNT(f.id_feature_value) AS total_feature_values')
-            ->addGroupBy('f.id_feature_value')
-        ;
-
-        return (int) $qb->execute()->fetch()['total_feature_values'];
     }
 
     /**

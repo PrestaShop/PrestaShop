@@ -23,19 +23,43 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
-/**
- * Thrown when Feature data is not valid.
- */
-class FeatureConstraintException extends FeatureException
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use Throwable;
+
+class BulkFeatureException extends FeatureException implements BulkCommandExceptionInterface
 {
-    public const INVALID_ID = 1;
+    public const FAILED_BULK_DELETE = 1;
 
-    public const INVALID_NAME = 2;
+    /**
+     * @var Throwable[]
+     */
+    private $exceptions;
 
-    public const INVALID_POSITION = 3;
+    /**
+     * @param Throwable[] $exceptions
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct(
+        array $exceptions,
+        string $message = 'Errors occurred during Feature bulk action',
+        int $code = 0,
+        Throwable $previous = null
+    ) {
+        $this->exceptions = $exceptions;
+        parent::__construct($message, $code, $previous);
+    }
 
-    public const INVALID_SHOP_ASSOCIATION = 4;
+    /**
+     * {@inheritDoc}
+     */
+    public function getExceptions(): array
+    {
+        return $this->exceptions;
+    }
 }

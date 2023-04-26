@@ -23,19 +23,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\EditFeatureHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\BulkDeleteFeatureHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
-/**
- * Handles feature editing.
- */
-class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatureHandlerInterface
+class BulkDeleteFeatureHandler extends AbstractBulkCommandHandler implements BulkDeleteFeatureHandlerInterface
 {
     /**
      * @var FeatureRepository
@@ -48,24 +49,36 @@ class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatu
         $this->featureRepository = $featureRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(EditFeatureCommand $command): void
+    public function handle(BulkDeleteFeatureCommand $command): void
     {
-        $feature = $this->featureRepository->get($command->getFeatureId());
+        $this->handleBulkAction($command->getFeatureIds(), FeatureException::class);
+    }
 
-        if (null !== $command->getLocalizedNames()) {
-            $feature->name = $command->getLocalizedNames();
-        }
+    /**
+     * @param FeatureId $id
+     */
+    protected function handleSingleAction($id): void
+    {
+        $this->featureRepository->delete($id);
+    }
 
-        $this->featureRepository->update($feature);
+    /**
+     * {@inheritDoc}
+     */
+    protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface
+    {
+        return new BulkFeatureException(
+            $coughtExceptions,
+            'Errors occurred during Feature bulk delete action',
+            BulkFeatureException::FAILED_BULK_DELETE
+        );
+    }
 
-        // ObjectModel::update doesn't seem to remove unassociated shops, so we must always update them manually afterwards
-        if (null !== $command->getAssociatedShopIds()) {
-            $this->associateWithShops($feature, array_map(static function (ShopId $shopId) {
-                return $shopId->getValue();
-            }, $command->getAssociatedShopIds()));
-        }
+    /**
+     * {@inheritDoc}
+     */
+    protected function supports($id): bool
+    {
+        return $id instanceof FeatureId;
     }
 }

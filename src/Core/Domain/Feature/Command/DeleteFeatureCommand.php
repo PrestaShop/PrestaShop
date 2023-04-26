@@ -23,19 +23,30 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Command;
 
-/**
- * Thrown when Feature data is not valid.
- */
-class FeatureConstraintException extends FeatureException
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+
+class DeleteFeatureCommand
 {
-    public const INVALID_ID = 1;
+    /**
+     * @var FeatureId
+     */
+    private $featureId;
 
-    public const INVALID_NAME = 2;
+    public function __construct(
+        int $featureId
+    ) {
+        $this->featureId = new FeatureId($featureId);
+    }
 
-    public const INVALID_POSITION = 3;
-
-    public const INVALID_SHOP_ASSOCIATION = 4;
+    /**
+     * @return FeatureId
+     */
+    public function getFeatureId(): FeatureId
+    {
+        return $this->featureId;
+    }
 }

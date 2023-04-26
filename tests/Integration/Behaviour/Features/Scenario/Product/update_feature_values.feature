@@ -8,12 +8,16 @@ Feature: Update product details from Back Office (BO)
   I need to be able to update product feature values from BO
 
   Background:
-    Given language "language1" with locale "en-US" exists
-    And language "language2" with locale "fr-FR" exists
+    Given language "en" with locale "en-US" exists
+    And language "fr" with locale "fr-FR" exists
     And language with iso code "en" is the default one
+    And shop "shop1" with name "test_shop" exists
     When I create product feature "element" with specified properties:
-      | name | Nature Element |
-    Then product feature "element" name should be "Nature Element"
+      | name[en-US]      | Nature Element |
+      | associated shops | shop1          |
+    Then product feature "element" should have following details:
+      | name[en-US] | Nature Element |
+      | name[fr-FR] | Nature Element |
     When I create feature value "fire" for feature "element" with following properties:
       | value[en-US] | Fire |
       | value[fr-FR] | Feu  |
@@ -27,8 +31,11 @@ Feature: Update product details from Back Office (BO)
       | value[en-US] | Earth |
       | value[fr-FR] | Terre |
     When I create product feature "emotion" with specified properties:
-      | name | Emotion |
-    Then product feature "emotion" name should be "Emotion"
+      | name[en-US]      | Emotion |
+      | associated shops | shop1   |
+    Then product feature "emotion" should have following details:
+      | name[en-US] | Emotion |
+      | name[fr-FR] | Emotion |
     When I create feature value "joy" for feature "emotion" with following properties:
       | value[en-US] | Joy  |
       | value[fr-FR] | Joie |
@@ -45,21 +52,21 @@ Feature: Update product details from Back Office (BO)
       | value[en-US] | Disgust |
       | value[fr-FR] | Dégout  |
 
-    Scenario: I can associate predefined feature values to a product
-      Given I add product "fireMagicBook" with following information:
-        | name[en-US] | Fire Magic Book |
-        | type        | standard        |
-      Then product "fireMagicBook" should have no feature values
-      When I set to product "fireMagicBook" the following feature values:
-        | feature | feature_value |
-        | emotion | joy           |
-        | emotion | anger         |
-        | element | fire          |
-      Then product "fireMagicBook" should have following feature values:
-        | feature | feature_value |
-        | emotion | joy           |
-        | emotion | anger         |
-        | element | fire          |
+  Scenario: I can associate predefined feature values to a product
+    Given I add product "fireMagicBook" with following information:
+      | name[en-US] | Fire Magic Book |
+      | type        | standard        |
+    Then product "fireMagicBook" should have no feature values
+    When I set to product "fireMagicBook" the following feature values:
+      | feature | feature_value |
+      | emotion | joy           |
+      | emotion | anger         |
+      | element | fire          |
+    Then product "fireMagicBook" should have following feature values:
+      | feature | feature_value |
+      | emotion | joy           |
+      | emotion | anger         |
+      | element | fire          |
 
   Scenario: I can create and edit custom feature values to a product
     Given I add product "darkMagicBook" with following information:

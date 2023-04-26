@@ -23,12 +23,34 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Command;
 
-/**
- * Thrown when invalid feature id is used
- */
-class InvalidFeatureIdException extends FeatureException
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+
+class BulkDeleteFeatureCommand
 {
+    /**
+     * @var FeatureId[]
+     */
+    private $featureIds;
+
+    /**
+     * @param int[] $featureIds
+     */
+    public function __construct(array $featureIds)
+    {
+        foreach ($featureIds as $featureId) {
+            $this->featureIds[] = new FeatureId($featureId);
+        }
+    }
+
+    /**
+     * @return FeatureId[]
+     */
+    public function getFeatureIds(): array
+    {
+        return $this->featureIds;
+    }
 }

@@ -24,18 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
-/**
- * Thrown when Feature data is not valid.
- */
-class FeatureConstraintException extends FeatureException
+use Throwable;
+
+interface BulkCommandExceptionInterface extends Throwable
 {
-    public const INVALID_ID = 1;
-
-    public const INVALID_NAME = 2;
-
-    public const INVALID_POSITION = 3;
-
-    public const INVALID_SHOP_ASSOCIATION = 4;
+    /**
+     * @return Throwable[]
+     */
+    public function getExceptions(): array;
 }

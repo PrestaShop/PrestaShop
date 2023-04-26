@@ -6,11 +6,15 @@ services:
       $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureHandler:
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand
 
   PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureHandler:
+    autowire: true
+    public: false
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand
@@ -42,9 +46,25 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing
 
+  PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureHandler:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand
+
+  PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\BulkDeleteFeatureHandler:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand
+
   PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValidator: ~
 
   PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator: ~
 

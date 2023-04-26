@@ -62,3 +62,21 @@ admin_features_update_position:
     _legacy_controller: AdminFeatures
     position_definition: prestashop.core.grid.feature.position_definition
     redirect_route: admin_features_index
+
+admin_features_delete:
+  path: /{featureId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::deleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+
+admin_features_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::bulkDeleteAction
+    _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+

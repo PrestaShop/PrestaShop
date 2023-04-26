@@ -23,19 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
-/**
- * Thrown when Feature data is not valid.
- */
-class FeatureConstraintException extends FeatureException
+class CannotDeleteFeatureException extends FeatureException
 {
-    public const INVALID_ID = 1;
-
-    public const INVALID_NAME = 2;
-
-    public const INVALID_POSITION = 3;
-
-    public const INVALID_SHOP_ASSOCIATION = 4;
 }
