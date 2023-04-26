@@ -328,6 +328,13 @@ class ControllerConfiguration
     public $multiShopContextGroup = true;
 
     /**
+     * @see AdminController::redirect_after
+     *
+     * @var string
+     */
+    public $redirectAfter;
+
+    /**
      * Currently logged in employee (the current user)
      *
      * @var Employee

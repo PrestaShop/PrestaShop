@@ -121,3 +121,8 @@ services:
       - "@prestashop.adapter.shop.context"
     tags:
       - { name: kernel.event_listener, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\ContextShopListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

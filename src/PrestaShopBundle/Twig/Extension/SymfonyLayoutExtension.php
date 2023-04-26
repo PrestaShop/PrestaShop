@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use PrestaShopBundle\Bridge\AdminController\Listener\InitFrameworkBridgeControllerListener;
 use PrestaShopBundle\Bridge\Smarty\ConfiguratorInterface;
 use PrestaShopBundle\Bridge\SymfonyLayoutFeature;
+use PrestaShopBundle\EventListener\ContextShopListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tab;
@@ -46,9 +46,9 @@ use Twig\Extension\GlobalsInterface;
 
 /**
  * Handles twig variables for pure symfony layout (that replaces the old legacy layout),
- * it is tightly coupled with InitFrameworkBridgeControllerListener which is responsible
- * for creating the ControllerConfiguration and set the ControllerBridge on Context->controller,
- * the controller configuration is then accessible via a request attribute.
+ * it is tightly coupled with ContextShopListener which is responsible for creating the ControllerConfiguration
+ * and set the ControllerBridge on Context->controller, the controller configuration is then accessible via a request
+ * attribute.
  *
  * These components/listeners were initially created for horizontal migration (which has been
  * abandoned since) but it turns out they fit the need we have for Symfony layout especially
@@ -113,7 +113,7 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
         $useSymfonyLayout = $this->symfonyLayoutFeature->isEnabled();
         if ($this->symfonyLayoutFeature->isEnabled()) {
             $request = $this->requestStack->getCurrentRequest();
-            $controllerConfiguration = $request->attributes->get(InitFrameworkBridgeControllerListener::CONTROLLER_CONFIGURATION_ATTRIBUTE);
+            $controllerConfiguration = $request->attributes->get(ContextShopListener::CONTROLLER_CONFIGURATION_ATTRIBUTE);
             if ($controllerConfiguration instanceof ControllerConfiguration) {
                 foreach ($this->configurators as $configurator) {
                     $configurator->configure($controllerConfiguration);

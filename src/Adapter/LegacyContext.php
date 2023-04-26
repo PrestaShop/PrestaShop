@@ -32,6 +32,7 @@ use Context;
 use Currency;
 use Employee;
 use Language;
+use PrestaShopBundle\Bridge\SymfonyLayoutFeature;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
@@ -57,15 +58,23 @@ class LegacyContext
     private $tools;
 
     /**
-     * @param string|null $mailThemesUri
+     * @var SymfonyLayoutFeature|null
+     */
+    private $symfonyLayoutFeature;
+
+    /**
+     * @param $mailThemesUri
      * @param Tools|null $tools
+     * @param SymfonyLayoutFeature|null $symfonyLayoutFeature
      */
     public function __construct(
         $mailThemesUri = null,
-        Tools $tools = null
+        Tools $tools = null,
+        SymfonyLayoutFeature $symfonyLayoutFeature = null
     ) {
         $this->mailThemesUri = $mailThemesUri;
         $this->tools = null !== $tools ? $tools : new Tools();
+        $this->symfonyLayoutFeature = $symfonyLayoutFeature;
     }
 
     /**
@@ -81,7 +90,11 @@ class LegacyContext
         if (null === static::$instance) {
             $legacyContext = Context::getContext();
 
-            if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
+            // This getter initialises a legacy admin controller, in the process of migrating the layout the Context::controller shouldn't be created
+            // by this method, this responsibility lies in the ContextShopListener that create a bridge admin controller, so when Symfony layout is
+            // enabled we skip this step to avoid instantiating multiple legacy controllers
+            $symfonyLayoutEnabled = $this->symfonyLayoutFeature && $this->symfonyLayoutFeature->isEnabled();
+            if (!$symfonyLayoutEnabled && $legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
                 //init real legacy shop context
                 $adminController = new AdminController();
                 $adminController->initShopContext();
