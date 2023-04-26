@@ -51,8 +51,15 @@
         <span id="shop_version">{{ ps_version }}</span>
 
         <div class="component" id="quick-access-container">
-          {# Include quick access component based on components/layout/quick_access.tpl #}
-          #TODO_QUICK_ACCESS_COMPONENT
+          {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+            'smartyTemplate': 'components/layout/quick_access.tpl',
+            'smartyVariables': {
+              'quick_access': quick_access,
+              'quick_access_current_link_icon': quick_access_current_link_icon,
+              'quick_access_current_link_name': quick_access_current_link_name,
+              'link': link,
+            }
+          })) }}
         </div>
         <div class="component component-search" id="header-search-container">
           <div class="component-search-body">
@@ -70,7 +77,15 @@
             </div>
 
             {# Include quick access component based on components/layout/mobile_quickaccess.tpl #}
-            #TODO_MOBILE_QUICK_ACCESS_COMPONENT
+            {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+              'smartyTemplate': 'components/layout/mobile_quickaccess.tpl',
+              'smartyVariables': {
+                'quick_access': quick_access,
+                'quick_access_current_link_icon': quick_access_current_link_icon,
+                'quick_access_current_link_name': quick_access_current_link_name,
+                'link': link,
+              }
+            })) }}
           </div>
 
           <div class="component-search-background d-none"></div>
@@ -131,19 +146,44 @@
         <div class="header-right">
           {% if hideLegacyStoreContextSelector is not defined or not hideLegacyStoreContextSelector %}
             <div class="component" id="header-shop-list-container">
-              {# Include shop list component based on components/layout/shop_list.tpl #}
-              #TODO_SHOP_LIST_COMPONENT
+              {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+                'smartyTemplate': 'components/layout/shop_list.tpl',
+                'smartyVariables': {
+                  'base_url': base_url,
+                  'is_multishop': is_multishop,
+                  'shop_list': shop_list,
+                  'multishop_context': multishop_context,
+                  'current_shop_name': current_shop_name,
+                }
+              })) }}
             </div>
           {% endif %}
           {% if show_new_orders or show_new_customers or show_new_messages %}
             <div class="component header-right-component" id="header-notifications-container">
-              #TODO_NOTIFICATION_COMPONENT
+              {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+                'smartyTemplate': 'components/layout/notifications_center.tpl',
+                'smartyVariables': {
+                  'show_new_orders': show_new_orders,
+                  'show_new_customers': show_new_customers,
+                  'show_new_messages': show_new_messages,
+                  'no_order_tip': no_order_tip,
+                  'no_customer_tip': no_customer_tip,
+                  'no_customer_message_tip': no_customer_message_tip,
+                }
+              })) }}
             </div>
           {% endif %}
 
           <div class="component" id="header-employee-container">
-            {# Include employee component based on components/layout/employee_dropdown.tpl #}
-            #TODO_EMPLOYEE_DROPDOWN_COMPONENT
+            {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+              'smartyTemplate': 'components/layout/employee_dropdown.tpl',
+              'smartyVariables': {
+                'employee': employee,
+                'link': link,
+                'displayBackOfficeEmployeeMenu': displayBackOfficeEmployeeMenu,
+                'logout_link': logout_link,
+              }
+            })) }}
           </div>
           {% if displayBackOfficeTop is defined %}
             {{ displayBackOfficeTop }}
@@ -152,8 +192,16 @@
       </nav>
     </header>
 
-    {# Include nav bar component based on 'components/layout/nav_bar.tpl' #}
-    #TODO_NAV_BAR_COMPONENT
+    {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+      'smartyTemplate': 'components/layout/nav_bar.tpl',
+      'smartyVariables': {
+        'toggle_navigation_url': toggle_navigation_url,
+        'default_tab_link': default_tab_link,
+        'ps_version': ps_version,
+        'collapse_menu': collapse_menu,
+        'tabs': tabs,
+      }
+    })) }}
   {% endblock %}
 {% endif %}
 
@@ -177,13 +225,31 @@
       {{ renderhook('displayAdminAfterHeader', {}) }}
 
       {% if display_header %}
-        {#
-        Display messages based on
-          components/layout/error_messages.tpl
-          components/layout/information_messages.tpl
-          components/layout/confirmation_messages.tpl
-          components/layout/warning_messages.tpl
-        #}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/error_messages.tpl',
+          'smartyVariables': {
+            'errors': errors|default([]),
+            'disableDefaultErrorOutPut': disableDefaultErrorOutPut|default(false),
+          }
+        })) }}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/information_messages.tpl',
+          'smartyVariables': {
+            'informations': informations|default([]),
+          }
+        })) }}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/confirmation_messages.tpl',
+          'smartyVariables': {
+            'confirmations': confirmations|default([]),
+          }
+        })) }}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/warning_messages.tpl',
+          'smartyVariables': {
+            'warnings': warnings|default([]),
+          }
+        })) }}
       {% endif %}
 
       {# Page content blocks #}
@@ -198,18 +264,25 @@
 </div>
 
 {% if lite_display|default(true) %}
-  {# Include non responsive component based on components/layout/non-responsive.tpl #}
-  #TODO_NON_RESPONSIVE_COMPONENT
+  {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+    'smartyTemplate': 'components/layout/non-responsive.tpl',
+    'smartyVariables': {
+      'default_tab_link': default_tab_link,
+    }
+  })) }}
   <div class="mobile-layer"></div>
 
   {% if display_footer %}
-    {# Include footer based on footer.tpl #}
+    {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {'smartyTemplate': 'footer.tpl'})) }}
   {% endif %}
 {% endif %}
 
-{% if php_errors is defined %}
-  {# Include template based on error.tpl #}
-{% endif %}
+{{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+  'smartyTemplate': 'error.tpl',
+  'smartyVariables': {
+    'php_errors': php_errors|default([])
+  }
+})) }}
 
 {% if lite_display|default(true) %}
   {% if modals is defined %}

@@ -51,7 +51,7 @@ class LegacyController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function smartyComponentAction(string $smartyTemplate, array $smartyVariables): Response
+    public function smartyComponentAction(string $smartyTemplate, array $smartyVariables = []): Response
     {
         global $smarty;
         $legacyContext = $this->get(LegacyContext::class);

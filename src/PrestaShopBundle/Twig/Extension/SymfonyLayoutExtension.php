@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Extension;
 
+use HelperShop;
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -173,6 +174,7 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
         } else {
             $employeeToken = '';
         }
+        $helperShop = new HelperShop();
 
         return $controllerConfiguration->templateVars + [
             'current_index' => $controllerConfiguration->legacyCurrentIndex,
@@ -187,6 +189,8 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
             'multi_shop_edit_for' => $editFieldFor,
             'employee_token' => $employeeToken,
             'baseAdminUrl' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
+            'shop_list' => $helperShop->getRenderedShopList(),
+            'current_shop_name' => $helperShop->getCurrentShopName(),
         ];
     }
 
