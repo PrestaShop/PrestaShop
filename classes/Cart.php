@@ -1363,7 +1363,6 @@ class CartCore extends ObjectModel
      */
     public function getProductQuantity($idProduct, $idProductAttribute = 0, $idCustomization = 0, $idAddressDelivery = 0)
     {
-        $productIsPack = Pack::isPack($idProduct);
         $defaultPackStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         $packStockTypesAllowed = [
             Pack::STOCK_TYPE_PRODUCTS_ONLY,
