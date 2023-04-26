@@ -96,6 +96,7 @@ class PaymentModuleCountryRestrictionsType extends AbstractPaymentModuleRestrict
      * Get multiple country choices for payment modules.
      *
      * @param array $countryChoices
+     *
      * @return array
      */
     private function getCountryChoicesForPaymentModules(array $countryChoices): array

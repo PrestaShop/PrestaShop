@@ -85,6 +85,7 @@ class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestric
      * Get multiple currency choices for payment modules.
      *
      * @param array $currencyChoices
+     *
      * @return array
      */
     private function getCurrencyChoicesForPaymentModules(array $currencyChoices): array
@@ -114,6 +115,7 @@ class PaymentModuleCurrencyRestrictionsType extends AbstractPaymentModuleRestric
      * Get currency choices with specific additional choices.
      *
      * @param array $currencyChoices
+     *
      * @return array
      */
     private function getCurrencyChoices(array $currencyChoices): array
