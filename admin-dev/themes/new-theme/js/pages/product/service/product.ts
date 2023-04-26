@@ -32,7 +32,7 @@ export interface QuantityResult {
 }
 
 export const getProductQuantity = async (productId: number, shopId: number): Promise<Response> => fetch(
-  router.generate('admin_products_v2_quantity', {
+  router.generate('admin_products_quantity', {
     productId,
     shopId,
   }),

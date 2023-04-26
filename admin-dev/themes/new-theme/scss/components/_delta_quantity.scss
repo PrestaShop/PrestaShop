@@ -38,9 +38,12 @@ $component-name: delta-quantity;
   }
 
   label {
-    min-width: 200px;
+    min-width: 240px;
     margin: 0 0.3125rem;
+    overflow: hidden;
     line-height: 39px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .modify-all-shops {

@@ -32,6 +32,8 @@ use Product;
 use StockAvailable;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
  */
 class ProductDataProvider

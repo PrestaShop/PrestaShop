@@ -43,6 +43,8 @@ use StockAvailable;
 use Validate;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * This class will update/insert/delete data from DB / ORM about Product, for both Front and Admin interfaces.
  */
 class AdminProductDataUpdater implements ProductInterface

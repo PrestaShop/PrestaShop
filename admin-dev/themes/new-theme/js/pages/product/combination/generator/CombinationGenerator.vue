@@ -245,6 +245,7 @@
           });
           this.selectedAttributeGroups = {};
           this.hasGeneratedCombinations = true;
+          this.closeModal();
         } catch (error: any) {
           if (error.responseJSON && error.responseJSON?.error) {
             $.growl.error({message: error.responseJSON.error});

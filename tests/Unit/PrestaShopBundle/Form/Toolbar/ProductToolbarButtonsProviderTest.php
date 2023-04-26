@@ -43,7 +43,9 @@ class ProductToolbarButtonsProviderTest extends TestCase
         'product_list' => [
             'type' => IconButtonType::class,
             'options' => [
+                'type' => 'button',
                 'icon' => 'list',
+                'label' => 'Product list',
                 'attr' => [
                     'title' => 'Product list',
                     'class' => 'toolbar-button btn-quicknav btn-sidebar',
@@ -56,7 +58,9 @@ class ProductToolbarButtonsProviderTest extends TestCase
         'help' => [
             'type' => IconButtonType::class,
             'options' => [
+                'type' => 'button',
                 'icon' => 'help',
+                'label' => 'Help',
                 'attr' => [
                     'title' => 'Help',
                     'class' => 'toolbar-button btn-quicknav btn-sidebar',
@@ -74,6 +78,7 @@ class ProductToolbarButtonsProviderTest extends TestCase
             'options' => [
                 'type' => 'link',
                 'icon' => 'assessment',
+                'label' => 'Sales',
                 'attr' => [
                     'title' => 'Sales',
                     'href' => 'http://local.stats',
@@ -111,7 +116,7 @@ class ProductToolbarButtonsProviderTest extends TestCase
         $routerMock
             ->expects($this->once())
             ->method('generate')
-            ->with('admin_products_v2_light_list')
+            ->with('admin_products_light_list')
             ->willReturn('http://local.light_product_list')
         ;
         $helpProviderMock = $this->getMockBuilder(HelpProvider::class)

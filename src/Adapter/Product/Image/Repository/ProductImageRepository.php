@@ -392,11 +392,9 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         $newImage = clone $sourceImage;
         unset($newImage->id, $newImage->id_image);
         $newImage->id_product = $newProductId->getValue();
-        $newImage->cover = null;
+        $newImage->cover = $sourceImage->cover;
 
         $this->addObjectModelToShops($newImage, $associatedShopIds, CannotAddProductImageException::class);
-
-        $this->updateMissingCovers($newProductId);
 
         return $newImage;
     }
@@ -526,6 +524,21 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         return $result ? new ImageId((int) $result) : null;
     }
 
+    public function findCoverImageIdGlobal(ProductId $productId): ?ImageId
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('id_image')
+            ->from($this->dbPrefix . 'image')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->andWhere('cover = 1')
+            ->execute()
+            ->fetchOne()
+        ;
+
+        return $result ? new ImageId((int) $result) : null;
+    }
+
     public function associateImageToShop(Image $image, ShopId $shopId): void
     {
         $this->connection->createQueryBuilder()
@@ -566,6 +579,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
 
         foreach ($results as $image) {
             $coverId = $this->findCoverImageId($productId, new ShopId((int) $image['id_shop']));
+            $coverIdGlobal = $this->findCoverImageIdGlobal($productId);
             if ($coverId !== null && $coverId->getValue() === (int) $image['id_image']) {
                 continue;
             }
@@ -589,6 +603,17 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
                 ->setParameter('shopId', (int) $image['id_shop'])
                 ->execute()
             ;
+
+            if ($coverIdGlobal === null) {
+                $this->connection->createQueryBuilder()
+                    ->update($this->dbPrefix . 'image')
+                    ->set('cover', ':cover')
+                    ->setParameter('cover', $newValue)
+                    ->andWhere('id_image = :imageId')
+                    ->setParameter('imageId', (int) $image['id_image'])
+                    ->execute()
+                ;
+            }
         }
     }
 

@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Product;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Allow the export of a list of products.
  */
 interface ProductExporterInterface

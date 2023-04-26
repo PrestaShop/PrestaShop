@@ -23,7 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div id="combination-edit-modal">
+  <div
+    id="combination-edit-modal"
+    :class="{ 'history-collapsed': historyCollapsed }"
+  >
     <modal
       class="combination-modal"
       v-if="selectedCombinationId !== null"
@@ -53,15 +56,15 @@
           type="button"
           class="btn btn-secondary btn-close"
           @click.prevent.stop="tryClose"
-          :aria-label="$t('modal.close')"
+          :aria-label="cancelLabel"
           :disabled="submittingCombinationForm"
         >
-          {{ $t('modal.cancel') }}
+          {{ cancelLabel }}
         </button>
 
         <button
           type="button"
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary btn-previous-combination"
           @click.prevent.stop="showPrevious"
           :aria-label="$t('modal.previous')"
           :disabled="
@@ -69,16 +72,16 @@
           "
         >
           <i class="material-icons rtl-flip">keyboard_arrow_left</i>
-          {{ $t('modal.previous') }}
+          <span class="btn-label">{{ $t('modal.previous') }}</span>
         </button>
         <button
           type="button"
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary btn-next-combination"
           @click.prevent.stop="showNext"
           :aria-label="$t('modal.next')"
           :disabled="nextCombinationId === null || submittingCombinationForm"
         >
-          {{ $t('modal.next') }}
+          <span class="btn-label">{{ $t('modal.next') }}</span>
           <i class="material-icons rtl-flip">keyboard_arrow_right</i>
         </button>
         <button
@@ -106,6 +109,7 @@
           @selectCombination="selectCombination"
           :selected-combination-id="selectedCombinationId"
           :empty-image-url="emptyImageUrl"
+          @collapsed="(collapsed) => { this.historyCollapsed = collapsed; }"
         />
       </template>
     </modal>
@@ -165,6 +169,7 @@
     temporarySelection: number | null,
     isFormUpdated: boolean,
     isClosing: boolean,
+    historyCollapsed: boolean,
   }
 
   const {$} = window;
@@ -192,6 +197,7 @@
         temporarySelection: null,
         isFormUpdated: false,
         isClosing: false,
+        historyCollapsed: true,
       };
     },
     props: {
@@ -214,6 +220,11 @@
       this.watchEditButtons();
       this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds());
       this.eventEmitter.on(CombinationEvents.listRendered, () => this.initCombinationIds());
+    },
+    computed: {
+      cancelLabel(): string {
+        return this.isFormUpdated ? this.$t('modal.cancel') : this.$t('modal.close');
+      },
     },
     methods: {
       watchEditButtons(): void {
@@ -425,83 +436,114 @@
 <style lang="scss" type="text/scss">
 @import '~@scss/config/_settings.scss';
 
-#combination-edit-modal .combination-modal {
-  .modal {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .modal-dialog {
-    max-width: 990px;
-    width: 90%;
-    height: 95%;
-    margin: 0;
-
-    .modal-header {
-      display: none;
+#combination-edit-modal {
+  .combination-modal {
+    .modal {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
     }
 
-    .modal-content {
-      height: 100%;
-      padding: 0;
-      margin: 0 1rem;
-      overflow: hidden;
+    .modal-dialog {
+      max-width: 990px;
+      width: 90%;
+      height: 95%;
+      margin: 0;
 
-      .modal-body {
+      .modal-header {
+        display: none;
+      }
+
+      .modal-content {
+        height: 100%;
         padding: 0;
         margin: 0;
-        background: #eaebec;
+        overflow: hidden;
 
-        .combination-loading {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1;
-          background: rgba(255, 255, 255, 0.8);
-        }
-
-        .combination-iframe {
+        .modal-body {
           padding: 0;
           margin: 0;
-          border: 0;
-          outline: none;
-          vertical-align: top;
-          width: 100%;
-          height: 100%;
-          display: block;
+          background: #eaebec;
 
-          .card {
-            margin-bottom: 0;
+          .combination-loading {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.8);
+          }
+
+          .combination-iframe {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            outline: none;
+            vertical-align: top;
+            width: 100%;
+            height: 100%;
+            display: block;
+
+            .card {
+              margin-bottom: 0;
+            }
+          }
+        }
+
+        .modal-footer {
+          margin: 0;
+          padding: 0.6rem 1rem;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+
+          .btn-close {
+            margin-right: auto;
           }
         }
       }
-
-      .modal-footer {
-        margin: 0;
-        padding: 0.6rem 1rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-
-        .btn-close {
-          margin-right: auto;
-        }
-      }
     }
   }
 
-  .history {
-    max-width: 400px;
-    width: 100%;
-    min-height: calc(100% - 3.5rem);
-    top: 50%;
-    transform: translateY(-50%);
-    height: 95%;
-    margin-right: 1rem;
+  &.history-collapsed {
+    .modal-content {
+      border-top-right-radius: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 1299.98px) {
+  #combination-edit-modal {
+    .combination-modal {
+      .modal-dialog {
+        width: 100%;
+        height: 100%;
+
+        .btn-previous-combination,
+        .btn-next-combination {
+          padding: 0.5rem;
+
+          .btn-label {
+            display: none;
+          }
+
+          .material-icons {
+            display: block;
+            font-size: 1.7rem;
+            color: #6c868e;
+          }
+        }
+
+        .btn-previous-combination.disabled,
+        .btn-next-combination.disabled {
+          .material-icons {
+            color: #b3c7cd;
+          }
+        }
+      }
+    }
   }
 }
 </style>

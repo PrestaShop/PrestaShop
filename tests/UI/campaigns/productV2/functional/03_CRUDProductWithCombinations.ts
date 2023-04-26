@@ -26,7 +26,6 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductData from '@data/faker/product';
-import Employees from '@data/demo/employees';
 
 const baseContext: string = 'productV2_functional_CRUDProductWithCombinations';
 
@@ -243,11 +242,11 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(40));
     });
 
-    it('should close generate combinations modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal', baseContext);
+    it('combinations generation modal should be closed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
-      const isModalVisible = await combinationsTab.closeGenerateCombinationModal(page);
-      await expect(isModalVisible).to.be.true;
+      const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
+      await expect(isModalClosed).to.be.true;
     });
   });
 
@@ -279,7 +278,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       const result = await combinationsTab.getRecentStockMovements(page);
       await Promise.all([
         await expect(result.dateTime).to.contains(todayDate),
-        await expect(result.employee).to.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`),
+        await expect(result.employee).to.equal(`${global.BO.FIRSTNAME} ${global.BO.LASTNAME}`),
         await expect(result.quantity).to.equal(secondCombinationData.quantity),
       ]);
     });
@@ -610,11 +609,11 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(6));
     });
 
-    it('should close generate combinations modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal2', baseContext);
+    it('combinations generation modal should be closed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
-      const isModalVisible = await combinationsTab.closeGenerateCombinationModal(page);
-      await expect(isModalVisible).to.be.true;
+      const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
+      await expect(isModalClosed).to.be.true;
     });
 
     it('should save the product', async function () {

@@ -36,7 +36,7 @@
     data-modal-title="{{ modalTitle }}"
     data-shop-selector="{{ form_row(shopSelector.createView())|e('html_attr') }}"
     data-shop-ids="{{ productShopIds|join(',') }}"
-    href="{{ path('admin_products_v2_edit', {productId: productId}) }}"
+    href="{{ path('admin_products_edit', {productId: productId}) }}"
   >
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true"><i class="material-icons">close</i></span>

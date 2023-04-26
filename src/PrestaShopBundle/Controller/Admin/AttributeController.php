@@ -33,6 +33,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Admin controller for the attribute / attribute group.
  */
 class AttributeController extends FrameworkBundleAdminController

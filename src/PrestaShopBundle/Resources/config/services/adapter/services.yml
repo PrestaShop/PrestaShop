@@ -114,6 +114,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - "@router"
       - '@PrestaShopBundle\Utils\FloatParser'
+    deprecated: ~
 
   prestashop.adapter.translation_route_finder:
     class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder

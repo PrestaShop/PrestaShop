@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Model;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * This form class is responsible to map the form data to the posted object.
  *
  * For this parent class, only hook sub fields are handled.

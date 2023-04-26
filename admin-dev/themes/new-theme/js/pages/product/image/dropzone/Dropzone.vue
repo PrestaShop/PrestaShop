@@ -193,7 +193,7 @@
       return {
         dropzone: <any>null,
         configuration: {
-          url: router.generate('admin_products_v2_add_image'),
+          url: router.generate('admin_products_add_image'),
           clickable: DropzoneMap.configuration.fileManager,
           previewTemplate: undefined,
           thumbnailWidth: 130,

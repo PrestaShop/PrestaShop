@@ -26,6 +26,7 @@
 define('_PS_IN_TEST_', true);
 define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
+require_once dirname(__DIR__, 2) . '/vendor/smarty/smarty/libs/functions.php';
 require_once dirname(__DIR__, 2) . '/admin-dev/bootstrap.php';
 
 /*

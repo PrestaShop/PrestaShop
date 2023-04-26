@@ -35,7 +35,6 @@ use Employee;
 use Mail;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
-use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Entity\StockMvt;
@@ -382,7 +381,7 @@ class StockManager
      */
     private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = [])
     {
-        $product = (new ProductDataProvider())->getProductInstance($productId);
+        $product = new Product($productId);
 
         if ($product->id) {
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');

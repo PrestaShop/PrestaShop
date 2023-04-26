@@ -7,21 +7,21 @@ _images:
 _specific_prices:
   resource: 'specific_price.yml'
 
-admin_products_v2_index:
+admin_products_index:
   path: /
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::indexAction
     _legacy_controller: AdminProducts
 
-admin_products_v2_light_list:
+admin_products_light_list:
   path: /light-list
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::lightListAction
     _legacy_controller: AdminProducts
 
-admin_products_v2_preview:
+admin_products_preview:
   path: /{productId}/preview/{shopId}
   methods: [ GET ]
   defaults:
@@ -66,7 +66,7 @@ admin_products_grid_shop_previews:
     productId: \d+
     shopGroupId: \d+
 
-admin_products_v2_create:
+admin_products_create:
   path: /create
   methods: [ GET, POST ]
   defaults:
@@ -76,7 +76,7 @@ admin_products_v2_create:
       - AdminProducts:addproduct
       - AdminProducts:add
 
-admin_products_v2_edit:
+admin_products_edit:
   path: /{productId}/edit
   methods: [ GET, POST, PATCH ]
   defaults:
@@ -107,7 +107,7 @@ admin_products_select_shops:
   options:
     expose: true
 
-admin_products_v2_download_virtual_product_file:
+admin_products_download_virtual_product_file:
   path: /virtual-product-file/{virtualProductFileId}
   methods: [ GET ]
   defaults:
@@ -116,8 +116,8 @@ admin_products_v2_download_virtual_product_file:
   requirements:
     virtualProductFileId: \d+
 
-admin_products_v2_delete_from_all_shops:
-  path: /{productId}/delete
+admin_products_delete_from_all_shops:
+  path: /{productId}/delete-from-all-shops
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromAllShopsAction
@@ -129,7 +129,7 @@ admin_products_v2_delete_from_all_shops:
   requirements:
     productId: \d+
 
-admin_products_v2_delete_from_shop_group:
+admin_products_delete_from_shop_group:
   path: /{productId}/delete-from-shop-group/{shopGroupId}
   methods: [ POST, DELETE ]
   defaults:
@@ -139,7 +139,7 @@ admin_products_v2_delete_from_shop_group:
     productId: \d+
     shopGroupId: \d+
 
-admin_products_v2_delete_from_shop:
+admin_products_delete_from_shop:
   path: /{productId}/delete-from-shop/{shopId}
   methods: [ POST, DELETE ]
   defaults:
@@ -149,7 +149,7 @@ admin_products_v2_delete_from_shop:
     productId: \d+
     shopId: \d+
 
-admin_products_v2_duplicate_all_shops:
+admin_products_duplicate_all_shops:
   path: /{productId}/duplicate-all-shops
   methods: [ POST ]
   defaults:
@@ -162,7 +162,7 @@ admin_products_v2_duplicate_all_shops:
   requirements:
     productId: \d+
 
-admin_products_v2_duplicate_shop:
+admin_products_duplicate_shop:
   path: /{productId}/duplicate-shop/{shopId}
   methods: [ POST ]
   defaults:
@@ -176,7 +176,7 @@ admin_products_v2_duplicate_shop:
     productId: \d+
     shopId: \d+
 
-admin_products_v2_duplicate_shop_group:
+admin_products_duplicate_shop_group:
   path: /{productId}/duplicate-shop-group/{shopGroupId}
   methods: [ POST ]
   defaults:
@@ -190,7 +190,7 @@ admin_products_v2_duplicate_shop_group:
     productId: \d+
     shopGroupId: \d+
 
-admin_products_v2_toggle_status_for_shop:
+admin_products_toggle_status_for_shop:
   path: /{productId}/toggle-status-for-shop/{shopId}
   methods: [ POST ]
   defaults:
@@ -204,7 +204,7 @@ admin_products_v2_toggle_status_for_shop:
     productId: \d+
     shopId: \d+
 
-admin_products_v2_enable_for_all_shops:
+admin_products_enable_for_all_shops:
   path: /{productId}/enable-for-all-shops
   methods: [ GET ]
   defaults:
@@ -213,7 +213,7 @@ admin_products_v2_enable_for_all_shops:
   requirements:
     productId: \d+
 
-admin_products_v2_enable_for_shop_group:
+admin_products_enable_for_shop_group:
   path: /{productId}/enable-for-shop-group/{shopGroupId}
   methods: [ GET ]
   defaults:
@@ -223,7 +223,7 @@ admin_products_v2_enable_for_shop_group:
     productId: \d+
     shopGroupId: \d+
 
-admin_products_v2_disable_for_all_shops:
+admin_products_disable_for_all_shops:
   path: /{productId}/disable-for-all-shops
   methods: [ GET ]
   defaults:
@@ -232,7 +232,7 @@ admin_products_v2_disable_for_all_shops:
   requirements:
     productId: \d+
 
-admin_products_v2_disable_for_shop_group:
+admin_products_disable_for_shop_group:
   path: /{productId}/disable-for-shop-group/{shopGroupId}
   methods: [ GET ]
   defaults:
@@ -243,7 +243,7 @@ admin_products_v2_disable_for_shop_group:
     productId: \d+
     shopGroupId: \d+
 
-admin_products_v2_update_position:
+admin_products_update_position:
   path: /update_position
   methods: [ POST ]
   defaults:
@@ -256,7 +256,7 @@ admin_products_v2_update_position:
   requirements:
     productId: \d+
 
-admin_products_v2_bulk_enable_all_shops:
+admin_products_bulk_enable_all_shops:
   path: /bulk-enable-all-shops
   methods: [ POST ]
   defaults:
@@ -269,7 +269,7 @@ admin_products_v2_bulk_enable_all_shops:
   options:
     expose: true
 
-admin_products_v2_bulk_enable_shop:
+admin_products_bulk_enable_shop:
   path: /bulk-enable-shop/{shopId}
   methods: [ POST ]
   defaults:
@@ -283,7 +283,7 @@ admin_products_v2_bulk_enable_shop:
   options:
     expose: true
 
-admin_products_v2_bulk_enable_shop_group:
+admin_products_bulk_enable_shop_group:
   path: /bulk-enable-shop-group/{shopGroupId}
   methods: [ POST ]
   defaults:
@@ -297,7 +297,7 @@ admin_products_v2_bulk_enable_shop_group:
   options:
     expose: true
 
-admin_products_v2_bulk_disable_all_shops:
+admin_products_bulk_disable_all_shops:
   path: /bulk-disable-for-all-shops
   methods: [ POST ]
   defaults:
@@ -310,7 +310,7 @@ admin_products_v2_bulk_disable_all_shops:
   options:
     expose: true
 
-admin_products_v2_bulk_disable_shop:
+admin_products_bulk_disable_shop:
   path: /bulk-disable-shop/{shopId}
   methods: [ POST ]
   defaults:
@@ -324,7 +324,7 @@ admin_products_v2_bulk_disable_shop:
   options:
     expose: true
 
-admin_products_v2_bulk_disable_shop_group:
+admin_products_bulk_disable_shop_group:
   path: /bulk-disable-shop-group/{shopGroupId}
   methods: [ POST ]
   defaults:
@@ -338,7 +338,7 @@ admin_products_v2_bulk_disable_shop_group:
   options:
     expose: true
 
-admin_products_v2_bulk_duplicate_all_shops:
+admin_products_bulk_duplicate_all_shops:
   path: /bulk-duplicate-all-shops
   methods: [ POST ]
   defaults:
@@ -353,7 +353,7 @@ admin_products_v2_bulk_duplicate_all_shops:
   options:
     expose: true
 
-admin_products_v2_bulk_duplicate_shop:
+admin_products_bulk_duplicate_shop:
   path: /bulk-duplicate-shop/{shopId}
   methods: [ POST ]
   defaults:
@@ -369,7 +369,7 @@ admin_products_v2_bulk_duplicate_shop:
   options:
     expose: true
 
-admin_products_v2_bulk_duplicate_shop_group:
+admin_products_bulk_duplicate_shop_group:
   path: /bulk-duplicate-shop-group/{shopGroupId}
   methods: [ POST ]
   defaults:
@@ -385,7 +385,7 @@ admin_products_v2_bulk_duplicate_shop_group:
   options:
     expose: true
 
-admin_products_v2_bulk_delete_from_all_shops:
+admin_products_bulk_delete_from_all_shops:
   path: /bulk-delete-from-all-shops
   methods: [ POST, DELETE ]
   defaults:
@@ -400,7 +400,7 @@ admin_products_v2_bulk_delete_from_all_shops:
   options:
     expose: true
 
-admin_products_v2_bulk_delete_from_shop:
+admin_products_bulk_delete_from_shop:
   path: /bulk-delete-from-shop/{shopId}
   methods: [ POST, DELETE ]
   defaults:
@@ -416,7 +416,7 @@ admin_products_v2_bulk_delete_from_shop:
   options:
     expose: true
 
-admin_products_v2_bulk_delete_from_shop_group:
+admin_products_bulk_delete_from_shop_group:
   path: /bulk-delete-from-shop-group/{shopGroupId}
   methods: [ POST, DELETE ]
   defaults:
@@ -432,25 +432,25 @@ admin_products_v2_bulk_delete_from_shop_group:
   options:
     expose: true
 
-admin_products_v2_search_associations:
+admin_products_search_products_for_association:
   path: /search/{languageCode}
   methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchAssociationsAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchProductsForAssociationAction
     _legacy_controller: AdminProducts
   requirements:
     languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
 
-admin_products_v2_search_combinations:
+admin_products_search_combinations_for_association:
   path: /search/combination/{languageCode}
   methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::searchCombinationProductsAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::searchCombinationsForAssociationAction
     _legacy_controller: AdminProducts
   requirements:
     languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
 
-admin_products_v2_search_product_combinations:
+admin_products_search_product_combinations:
   path: /{productId}/search-product-combinations/{shopId}/{languageId}
   methods: [ GET ]
   defaults:
@@ -465,7 +465,7 @@ admin_products_v2_search_product_combinations:
   options:
     expose: true
 
-admin_products_v2_quantity:
+admin_products_quantity:
   path: /{productId}/quantity/{shopId}
   methods: [ GET ]
   defaults:

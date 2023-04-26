@@ -73,7 +73,7 @@ export default class CreateProductModal {
           }
 
           if (dataAttributes.productId) {
-            const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});
+            const editUrl = this.router.generate('admin_products_edit', {productId: dataAttributes.productId});
             // Keep showing loading until the page is refreshed
             iframeModal.showLoading();
             window.location.href = editUrl;

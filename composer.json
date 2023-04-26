@@ -130,7 +130,7 @@
         "prestashop/statsstock": "^2",
         "prestashop/translationtools-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^5.1",
-        "smarty/smarty": "^4.1.0",
+        "smarty/smarty": "^4.3.1",
         "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~6.2",
         "symfony/monolog-bundle": "^3.7.0",

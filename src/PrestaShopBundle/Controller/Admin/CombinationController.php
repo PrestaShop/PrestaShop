@@ -31,6 +31,9 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @deprecated since 8.1 and will be removed in next major.
+ */
 class CombinationController extends FrameworkBundleAdminController
 {
     /**

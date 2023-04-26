@@ -45,6 +45,8 @@ use StockAvailable;
 use Tools;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major.
+ *
  * Data provider for new Architecture, about Product object model.
  *
  * This class will provide data from DB / ORM about Products for the Admin interface.
