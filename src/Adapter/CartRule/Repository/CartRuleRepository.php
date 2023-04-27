@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CartRule\Repository;
 
 use CartRule;
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\CartRule\Validate\CartRuleValidator;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
@@ -41,11 +42,24 @@ class CartRuleRepository extends AbstractObjectModelRepository
      * @var CartRuleValidator
      */
     private $cartRuleValidator;
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
 
     public function __construct(
-        CartRuleValidator $cartRuleValidator
+        CartRuleValidator $cartRuleValidator,
+        Connection $connection,
+        string $dbPrefix
     ) {
         $this->cartRuleValidator = $cartRuleValidator;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     public function add(CartRule $cartRule): CartRule
@@ -54,6 +68,26 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->addObjectModel($cartRule, CannotAddCartRuleException::class);
 
         return $cartRule;
+    }
+
+    public function assertAllCartRulesExists(array $cartRuleIds): void
+    {
+        $cartRuleIdsClause = implode(',', array_map(static function (CartRuleId $cartRuleId): int {
+            return $cartRuleId->getValue();
+        }, $cartRuleIds));
+
+        $countResult = $this->connection->createQueryBuilder()
+            ->select('COUNT(id_cart_rule) AS cart_rules_count')
+            ->from($this->dbPrefix . 'cart_rule')
+            ->where('id_cart_rule IN (:cartRuleIds)')
+            ->setParameter('cartRuleIds', $cartRuleIdsClause)
+            ->execute()
+            ->fetchAssociative()
+        ;
+
+        if (!isset($countResult['cart_rules_count']) || count($cartRuleIds) !== (int) $countResult['cart_rules_count']) {
+            throw new CartRuleNotFoundException('Failed to assert that all provided cart rules exists');
+        }
     }
 
     public function get(CartRuleId $cartRuleId): CartRule
@@ -82,5 +116,42 @@ class CartRuleRepository extends AbstractObjectModelRepository
             CannotEditCartRuleException::class,
             $errorCode
         );
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     * @param CartRuleId[] $restrictedCartRuleIds
+     *
+     * @return void
+     */
+    public function restrictCartRules(CartRuleId $cartRuleId, array $restrictedCartRuleIds): void
+    {
+        if (empty($restrictedCartRuleIds)) {
+            return;
+        }
+
+        $insertValues = [];
+        foreach ($restrictedCartRuleIds as $restrictedCartRuleId) {
+            $insertValues[] = sprintf('(%d,%d)', $cartRuleId->getValue(), $restrictedCartRuleId->getValue());
+        }
+
+        $this->removeRestrictedCartRules($cartRuleId);
+        $this->connection->executeStatement(
+            sprintf(
+                'INSERT INTO %s (`id_cart_rule_1`, `id_cart_rule_2`) VALUES %s',
+                $this->dbPrefix . 'cart_rule_combination',
+                implode(',', $insertValues)
+            )
+        );
+    }
+
+    private function removeRestrictedCartRules(CartRuleId $cartRuleId): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_combination', 'crc')
+            ->where('crc.cart_rule_1 = :cartRuleId OR crc.cart_rule_2 = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
     }
 }

@@ -53,6 +53,9 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository:
     autowire: true
     public: false
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%env(DB_PREFIX)%'
 
   PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\EditCartRuleHandler:
     autowire: true
@@ -63,3 +66,9 @@ services:
   PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\RestrictCartRulesHandler:
+    autowire: true
+    public: false
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\RestrictCartRulesCommand }
