@@ -31,7 +31,7 @@ import SortingExtension from '@components/grid/extension/sorting-extension';
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
-import SubmitRowActionExtension from "@components/grid/extension/action/row/submit-row-action-extension";
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
 const {$} = window;
 
