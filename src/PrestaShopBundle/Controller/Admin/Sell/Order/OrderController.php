@@ -82,6 +82,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhrase
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
@@ -249,7 +250,7 @@ class OrderController extends FrameworkBundleAdminController
                 'shop_id' => $shopContextChecker->getContextShopID(),
             ]
         );
-        $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
+        $currencies = $this->get(CurrencyByIdChoiceProvider::class)->getChoices();
 
         $configuration = $this->getConfiguration();
 

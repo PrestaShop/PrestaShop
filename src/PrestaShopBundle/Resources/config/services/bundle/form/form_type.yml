@@ -36,7 +36,6 @@ services:
       $isSingleShopContext: '@=service("prestashop.adapter.shop.context").isShopContext()'
       $categoryDataProvider: '@prestashop.adapter.data_provider.category'
       $ecoTaxGroupId: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
-      $defaultCurrencySymbol: '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
       $router: '@router'
       $isCombinationsUsed: '@=service("prestashop.adapter.combination_feature").isUsed()'
       $availableLocales: "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
@@ -207,7 +206,6 @@ services:
     arguments:
       $languageChoices: '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
-      $currencyChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
       $timezoneChoices: '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType:
@@ -228,7 +226,7 @@ services:
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       $carrierChoices: '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
-      $currencyChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+      $currencyChoices: '@=service("PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider").getChoices()'
       $countryDataProvider: '@prestashop.adapter.data_provider.country'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType:
@@ -431,11 +429,9 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType:
     arguments:
-      $currencyByIdChoices: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
       $countryByIdChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       $groupByIdChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       $shopByIdChoices: '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
-      $currencyByIdChoicesAttributes: '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoicesAttributes()'
 
   PrestaShopBundle\Form\Admin\Type\PriceReductionType:
     arguments:
@@ -473,7 +469,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType:
     arguments:
-      $currencyChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
+      $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType:
   PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType:
@@ -616,7 +612,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType:
     arguments:
-      $currencyByIdChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
       $countryByIdChoiceProvider: '@prestashop.core.form.choice_provider.country_by_id'
       $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
       $shopByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
@@ -652,7 +647,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierType:
     arguments:
-      $currencyByIdChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
       $defaultCurrencyIsoCode: "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
 
   PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType:
@@ -718,7 +712,6 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType:
     arguments:
-      $currencyChoiceProvider: '@prestashop.core.form.choice_provider.currency_by_id'
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType:
