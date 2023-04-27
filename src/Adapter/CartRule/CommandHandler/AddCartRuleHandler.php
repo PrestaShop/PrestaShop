@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
-use PrestaShop\PrestaShop\Adapter\CartRule\DiscountApplicationFiller;
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
@@ -45,20 +45,20 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
     private $cartRuleRepository;
 
     /**
-     * @var DiscountApplicationFiller
+     * @var CartRuleActionFiller
      */
-    private $discountApplicationFiller;
+    private $cartRuleActionFiller;
 
     /**
      * @param CartRuleRepository $cartRuleRepository
-     * @param DiscountApplicationFiller $discountApplicationFiller
+     * @param CartRuleActionFiller $cartRuleActionFiller
      */
     public function __construct(
         CartRuleRepository $cartRuleRepository,
-        DiscountApplicationFiller $discountApplicationFiller
+        CartRuleActionFiller $cartRuleActionFiller
     ) {
         $this->cartRuleRepository = $cartRuleRepository;
-        $this->discountApplicationFiller = $discountApplicationFiller;
+        $this->cartRuleActionFiller = $cartRuleActionFiller;
     }
 
     /**
@@ -92,7 +92,7 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->active = $command->isActive();
 
         $this->fillCartRuleConditionsFromCommandData($cartRule, $command);
-        $this->fillCartRuleActionsFromCommandData($cartRule, $command);
+        $this->cartRuleActionFiller->fillUpdatableProperties($cartRule, $command->getCartRuleAction());
 
         return $cartRule;
     }
@@ -120,43 +120,5 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
 
         $cartRule->quantity = $command->getTotalQuantity();
         $cartRule->quantity_per_user = $command->getQuantityPerUser();
-    }
-
-    /**
-     * Fills cart rule with actions data from command.
-     *
-     * @param CartRule $cartRule
-     * @param AddCartRuleCommand $command
-     */
-    private function fillCartRuleActionsFromCommandData(CartRule $cartRule, AddCartRuleCommand $command): void
-    {
-        $cartRuleAction = $command->getCartRuleAction();
-        $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
-
-        $giftProduct = $cartRuleAction->getGiftProduct();
-        if ($giftProduct) {
-            $cartRule->gift_product = $giftProduct->getProductId()->getValue();
-            $cartRule->gift_product_attribute = $giftProduct->getCombinationId() ? $giftProduct->getCombinationId()->getValue() : null;
-        }
-
-        $amountDiscount = $cartRuleAction->getAmountDiscount();
-        if ($amountDiscount) {
-            $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
-            $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
-            $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
-            $cartRule->reduction_percent = null;
-            $cartRule->reduction_exclude_special = false;
-        }
-
-        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
-        if ($percentageDiscount) {
-            $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
-            $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
-            $cartRule->reduction_amount = null;
-            $cartRule->reduction_currency = 0;
-            $cartRule->reduction_tax = false;
-        }
-
-        $this->discountApplicationFiller->fillDiscountApplicationType($cartRule, $cartRuleAction);
     }
 }

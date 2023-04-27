@@ -28,11 +28,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
-use PrestaShop\PrestaShop\Adapter\CartRule\DiscountApplicationFiller;
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\EditCartRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class EditCartRuleHandler implements EditCartRuleHandlerInterface
@@ -43,16 +42,16 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
     private $cartRuleRepository;
 
     /**
-     * @var DiscountApplicationFiller
+     * @var CartRuleActionFiller
      */
-    private $discountApplicationFiller;
+    private $cartRuleActionFiller;
 
     public function __construct(
         CartRuleRepository $cartRuleRepository,
-        DiscountApplicationFiller $discountApplicationFiller
+        CartRuleActionFiller $cartRuleActionFiller
     ) {
         $this->cartRuleRepository = $cartRuleRepository;
-        $this->discountApplicationFiller = $discountApplicationFiller;
+        $this->cartRuleActionFiller = $cartRuleActionFiller;
     }
 
     public function handle(EditCartRuleCommand $command): void
@@ -166,7 +165,7 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
      * @param CartRule $cartRule
      * @param EditCartRuleCommand $command
      *
-     * @return array<int|string, string|int[]> updatable properties
+     * @return string[] updatable properties
      */
     private function fillActions(CartRule $cartRule, EditCartRuleCommand $command): array
     {
@@ -176,52 +175,6 @@ class EditCartRuleHandler implements EditCartRuleHandlerInterface
             return [];
         }
 
-        $updatableProperties = [];
-        $amountDiscount = $cartRuleAction->getAmountDiscount();
-        if (null !== $amountDiscount) {
-            $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
-            $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
-            $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
-            $cartRule->reduction_percent = 0;
-            $cartRule->reduction_exclude_special = false;
-            $cartRule->reduction_product = DiscountApplicationType::ORDER_WITHOUT_SHIPPING;
-            $updatableProperties[] = 'reduction_amount';
-            $updatableProperties[] = 'reduction_currency';
-            $updatableProperties[] = 'reduction_percent';
-            $updatableProperties[] = 'reduction_exclude_special';
-            $updatableProperties[] = 'reduction_product';
-        }
-
-        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
-        if (null !== $percentageDiscount) {
-            $cartRule->reduction_percent = (string) $percentageDiscount->getPercentage();
-            $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
-            $cartRule->reduction_amount = 0;
-            $cartRule->reduction_currency = 0;
-            $cartRule->reduction_tax = false;
-            $updatableProperties[] = 'reduction_amount';
-            $updatableProperties[] = 'reduction_currency';
-            $updatableProperties[] = 'reduction_tax';
-            $updatableProperties[] = 'reduction_percent';
-            $updatableProperties[] = 'reduction_exclude_special';
-        }
-
-        $giftProduct = $cartRuleAction->getGiftProduct();
-        if (null !== $giftProduct) {
-            $cartRule->gift_product = $giftProduct->getProductId()->getValue();
-            $cartRule->gift_product_attribute = $giftProduct->getCombinationId() ? $giftProduct->getCombinationId()->getValue() : null;
-            $updatableProperties[] = 'gift_product';
-            $updatableProperties[] = 'gift_product_attribute';
-        }
-
-        $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
-        $updatableProperties[] = 'free_shipping';
-
-        if (null !== $cartRuleAction->getDiscountApplicationType()) {
-            $this->discountApplicationFiller->fillDiscountApplicationType($cartRule, $cartRuleAction);
-            $updatableProperties[] = 'reduction_product';
-        }
-
-        return $updatableProperties;
+        return $this->cartRuleActionFiller->fillUpdatableProperties($cartRule, $cartRuleAction);
     }
 }
