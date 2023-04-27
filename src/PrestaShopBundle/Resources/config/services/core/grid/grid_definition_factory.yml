@@ -70,7 +70,6 @@ services:
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
       - '@=service("prestashop.adapter.feature.group_feature").isActive()'
-      - '@=service("prestashop.adapter.form.choice_provider.group_by_id_choice_provider").getChoices()'
     public: true
 
   prestashop.core.grid.definition.factory.customer.discount:

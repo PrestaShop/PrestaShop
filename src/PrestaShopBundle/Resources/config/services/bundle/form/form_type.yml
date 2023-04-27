@@ -342,7 +342,6 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType:
   PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType:
     arguments:
-      $groupChoices: '@=service("prestashop.adapter.form.choice_provider.group_by_id_choice_provider").getChoices()'
       $riskChoices: '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
       $isB2bFeatureEnabled: '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       $isPartnerOffersEnabled: '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
@@ -435,6 +434,7 @@ services:
     arguments:
       $eventSubscriber: '@PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
 
+  PrestaShopBundle\Form\Admin\Sell\Customer\GroupType:
   PrestaShopBundle\Form\Admin\Sell\Customer\GenderType:
   PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType:

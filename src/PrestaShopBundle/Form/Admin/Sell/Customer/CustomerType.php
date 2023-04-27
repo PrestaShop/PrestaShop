@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
@@ -62,11 +63,6 @@ use Validate;
 class CustomerType extends TranslatorAwareType
 {
     /**
-     * @var array
-     */
-    private $groupChoices;
-
-    /**
      * @var bool
      */
     private $isB2bFeatureEnabled;
@@ -90,18 +86,25 @@ class CustomerType extends TranslatorAwareType
      * @var FormCloner
      */
     protected $formCloner;
+    /**
+     * @var GroupByIdChoiceProvider
+     */
+    private $groupByIdChoiceProvider;
 
     /**
-     * @param array $groupChoices
+     * @param TranslatorInterface $translator
+     * @param GroupByIdChoiceProvider $groupByIdChoiceProvider
+     * @param array $locales
      * @param array $riskChoices
      * @param bool $isB2bFeatureEnabled
      * @param bool $isPartnerOffersEnabled
      * @param ConfigurationInterface $configuration
+     * @param FormCloner $formCloner
      */
     public function __construct(
         TranslatorInterface $translator,
+        GroupByIdChoiceProvider $groupByIdChoiceProvider,
         array $locales,
-        array $groupChoices,
         array $riskChoices,
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
@@ -109,12 +112,12 @@ class CustomerType extends TranslatorAwareType
         FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
-        $this->groupChoices = $groupChoices;
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->riskChoices = $riskChoices;
         $this->isPartnerOffersEnabled = $isPartnerOffersEnabled;
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
+        $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
     }
 
     /**
@@ -293,9 +296,9 @@ class CustomerType extends TranslatorAwareType
                     'Admin.Orderscustomers.Help'
                 ),
                 'empty_data' => [],
-                'choices' => $this->groupChoices,
+                'choices' => $this->groupByIdChoiceProvider->getChoices(),
             ])
-            ->add('default_group_id', ChoiceType::class, [
+            ->add('default_group_id', GroupType::class, [
                 'label' => $this->trans('Default customer group', 'Admin.Orderscustomers.Feature'),
                 'help' => sprintf(
                     '%s %s',
@@ -309,8 +312,6 @@ class CustomerType extends TranslatorAwareType
                     )
                 ),
                 'required' => false,
-                'placeholder' => null,
-                'choices' => $this->groupChoices,
                 'autocomplete' => true,
             ])
         ;

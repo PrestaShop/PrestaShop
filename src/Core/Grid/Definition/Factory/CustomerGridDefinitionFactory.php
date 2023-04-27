@@ -46,10 +46,10 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\GenderType;
+use PrestaShopBundle\Form\Admin\Sell\Customer\GroupType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -76,11 +76,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $isGroupsFeatureEnabled;
 
     /**
-     * @var array
-     */
-    private $groupChoices;
-
-    /**
      * @var string
      */
     private $contextDateFormat;
@@ -91,22 +86,19 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @param bool $isMultistoreFeatureEnabled
      * @param string $contextDateFormat
      * @param bool $isGroupsFeatureEnabled
-     * @param array $groupChoices
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
         string $contextDateFormat,
-        bool $isGroupsFeatureEnabled = true,
-        array $groupChoices = []
+        bool $isGroupsFeatureEnabled = true
     ) {
         parent::__construct($hookDispatcher);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->contextDateFormat = $contextDateFormat;
         $this->isGroupsFeatureEnabled = $isGroupsFeatureEnabled;
-        $this->groupChoices = $groupChoices;
     }
 
     /**
@@ -399,13 +391,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 
         if ($this->isGroupsFeatureEnabled) {
             $filters->add(
-                (new Filter('default_group', ChoiceType::class))
+                (new Filter('default_group', GroupType::class))
                     ->setTypeOptions([
-                        'choices' => $this->groupChoices,
-                        'expanded' => false,
-                        'multiple' => false,
                         'required' => false,
-                        'choice_translation_domain' => false,
                     ])
                     ->setAssociatedColumn('default_group')
                 );

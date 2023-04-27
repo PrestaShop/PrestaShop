@@ -20,11 +20,14 @@ services:
     alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
     deprecated: ~
 
-  prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider:
+    autowire: true
     arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      $contextLangId: '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
+    alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
+    deprecated: ~
 
   prestashop.adapter.form.choice_provider.risk_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\RiskByIdChoiceProvider'
