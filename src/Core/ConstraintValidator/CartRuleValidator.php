@@ -47,12 +47,18 @@ class CartRuleValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'array');
         }
 
-        $this->validateDiscounts($value, $constraint);
         $this->validateActions($value, $constraint);
+        $this->validateDiscounts($value, $constraint);
     }
 
     private function validateDiscounts(array $formData, CartRule $constraint): void
     {
+        // actions supposed to be validated already with validateActions method,
+        // so in case discount is missing it means only free shipping or gift product action is applied
+        if (!isset($formData['actions']['discount'])) {
+            return;
+        }
+
         $discountData = $formData['actions']['discount'];
         $discountApplicationType = $discountData['discount_application'];
 
@@ -77,9 +83,13 @@ class CartRuleValidator extends ConstraintValidator
             return;
         }
 
+        if (!empty($formData['actions']['gift_product'][0]['product_id'])) {
+            return;
+        }
+
         // in theory there are more required properties, but we already assume they are present when reduction value is present
         // (the disabling switch and reduction value can be violated by user, therefor other values missing would mean developer error instead of constraint violation)
-        if (!empty($formData['actions']['disabling_switch_discount']) && !empty($formData['discount']['reduction']['value'])) {
+        if (!empty($formData['actions']['disabling_switch_discount']) && !empty($formData['actions']['discount']['reduction']['value'])) {
             return;
         }
 
