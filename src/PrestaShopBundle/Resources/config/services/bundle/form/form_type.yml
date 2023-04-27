@@ -40,7 +40,7 @@ services:
       $isCombinationsUsed: '@=service("prestashop.adapter.combination_feature").isUsed()'
       $availableLocales: "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
-      $translator: '@translator'
+      $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
 
   PrestaShopBundle\Form\Admin\Sell\CartRule\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
@@ -50,6 +50,16 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Category/*"
   PrestaShopBundle\Form\Admin\Type\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Type/*"
+  PrestaShopBundle\Form\Admin\AdvancedParameters\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/AdvancedParameters/*"
+  PrestaShopBundle\Form\Admin\Catalog\Category\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Catalog/Category/*"
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/*"
+  PrestaShopBundle\Form\Admin\Improve\International\Localization\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/International/Localization/*"
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/*"
 
   PrestaShopBundle\Form\Admin\Type\DatePickerType:
     arguments:
@@ -161,24 +171,9 @@ services:
       $invoiceModelChoiceProvider: '@prestashop.core.form.choice_provider.invoice_model_by_name'
       $nextInvoiceNumber: '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
 
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType:
-  PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType:
-    arguments:
-      $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
-
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType:
     arguments:
       $currentIp: '@=service("request_stack").getCurrentRequest().getClientIp()'
-
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType:
 
   PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType:
   PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType:
@@ -186,12 +181,6 @@ services:
       $carriers: '@=service("prestashop.adapter.data_provider.carrier").getActiveCarriersChoices()'
       $orderByChoices: '@=service("prestashop.adapter.data_provider.carrier").getOrderByChoices()'
       $orderWayChoices: '@=service("prestashop.adapter.data_provider.carrier").getOrderWayChoices()'
-
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType:
     arguments:
@@ -238,9 +227,6 @@ services:
       $mailMethodChoiceProvider: '@prestashop.core.form.choice_provider.mail_method'
       $contactsChoiceProvider: '@prestashop.core.form.choice_provider.contact_by_id'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\DkimConfigurationType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType:
   PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType:
     arguments:
       $translationTypeChoices: '@=service("prestashop.core.form.choice_provider.translation_type").getChoices()'
@@ -277,16 +263,10 @@ services:
     arguments:
       $defaultRouteProvider: '@prestashop.adapter.data_provider.default_route'
 
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SEOOptionsType:
-
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType:
     arguments:
       $defaultPageChoices: '@=service("prestashop.core.form.choice_provider.default_meta_page_name").getChoices()'
       $modulePageChoices: '@=service("prestashop.core.form.choice_provider.module_meta_page_name").getChoices()'
-
-  PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType:
-  PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType:
-  PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType:
 
   PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType:
     arguments:
@@ -309,7 +289,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\CountryChoiceType:
     arguments:
-      - '@prestashop.core.form.choice_provider.country_by_id'
+      $countriesChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutsCustomizationType:
     arguments:
@@ -331,9 +311,6 @@ services:
       $shopRepository: '@prestashop.core.admin.shop.repository'
       $shopGroups: "@=service('prestashop.core.admin.shop_group.repository').findActive()"
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupOptionsType:
-
   PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType:
     arguments:
       $customerRequiredFieldsChoices: '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
@@ -344,7 +321,6 @@ services:
       $riskChoices: '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
       $isB2bFeatureEnabled: '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       $isPartnerOffersEnabled: '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
-      $formCloner: '@form.form_cloner'
 
   PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType:
     arguments:
@@ -368,8 +344,6 @@ services:
     arguments:
       $taxAddressTypeChoiceProvider: '@=service("prestashop.core.form.choice_provider.tax_address_type_choice_provider")'
       $taxRuleGroupChoiceProvider: '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
-
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType:
     arguments:
@@ -506,8 +480,6 @@ services:
       $orderStatesChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
       $paymentModulesChoiceProvider: '@prestashop.adapter.form.choice_provider.installed_payment_modules'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType:
-
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
       $formChoiceProvider: '@prestashop.core.form.choice_provider.product_type_choice_provider'
@@ -626,7 +598,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType:
     arguments:
-      $taxComputer: '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
       $contextLocale: '@prestashop.core.localization.locale.context_locale'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationImagesChoiceType:
@@ -641,20 +612,11 @@ services:
     arguments:
       $themeCatalog: "@prestashop.core.mail_template.theme_catalog"
 
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates\OrderReturnStateType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType:
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\SearchEngines\SearchEngineType:
-
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType:
     arguments:
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType:
-
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType:
-  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\PasswordPolicyType:
   PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType:
 
   PrestaShopBundle\Form\Admin\Type\ZoneChoiceType:
@@ -694,10 +656,8 @@ services:
       $resourceChoices: '@=service("prestashop.adapter.form.choice_provider.resources_choice_provider").getChoices()'
       $permissionChoices: '@=service("prestashop.core.form.choice_provider.permissions_choice_provider").getChoices()'
 
-  PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType:
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
 
-  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\TitleType:
 
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:
