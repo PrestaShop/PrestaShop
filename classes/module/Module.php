@@ -511,22 +511,25 @@ abstract class ModuleCore implements ModuleInterface
     {
         // Store information if a module has been upgraded (memory optimization)
         if ($upgrade_detail['available_upgrade']) {
+            $translator = Context::getContext()->getTranslator();
             if ($upgrade_detail['success']) {
-                $this->_confirmations[] = Context::getContext()->getTranslator()->trans('Current version: %s', [$this->version], 'Admin.Modules.Notification');
-                $this->_confirmations[] = Context::getContext()->getTranslator()->trans('%d file upgrade applied', [$upgrade_detail['number_upgraded']], 'Admin.Modules.Notification');
-            } else {
-                if (!$upgrade_detail['number_upgraded']) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('No upgrade has been applied', [], 'Admin.Modules.Notification');
-                } else {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Upgraded from: %s to %s', [$upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']], 'Admin.Modules.Notification');
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('%d upgrade left', [$upgrade_detail['number_upgrade_left']], 'Admin.Modules.Notification');
-                }
+                $this->_confirmations[] = $translator->trans('Current version: %s', [$this->version], 'Admin.Modules.Notification');
+                $this->_confirmations[] = $translator->trans('%d file update applied', [$upgrade_detail['number_upgraded']], 'Admin.Modules.Notification');
 
-                if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate']) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Module %s cannot be upgraded this time: please refresh this page to update it.', [$this->name], 'Admin.Modules.Notification');
-                } else {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('To prevent any problem, this module has been turned off', [], 'Admin.Modules.Notification');
-                }
+                return;
+            }
+
+            if (!$upgrade_detail['number_upgraded']) {
+                $this->_errors[] = $translator->trans('No update has been applied', [], 'Admin.Modules.Notification');
+            } else {
+                $this->_errors[] = $translator->trans('Updated from: %s to %s', [$upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']], 'Admin.Modules.Notification');
+                $this->_errors[] = $translator->trans('%d update left', [$upgrade_detail['number_upgrade_left']], 'Admin.Modules.Notification');
+            }
+
+            if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate']) {
+                $this->_errors[] = $translator->trans('Module %s cannot be updated this time: please refresh this page to update it.', [$this->name], 'Admin.Modules.Notification');
+            } else {
+                $this->_errors[] = $translator->trans('To prevent any problem, this module has been turned off', [], 'Admin.Modules.Notification');
             }
         }
     }

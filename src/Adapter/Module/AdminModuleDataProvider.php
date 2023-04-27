@@ -69,10 +69,10 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_UNINSTALL => 'Uninstall',
         Module::ACTION_ENABLE => 'Enable',
         Module::ACTION_DISABLE => 'Disable',
-        Module::ACTION_ENABLE_MOBILE => 'Enable mobile',
-        Module::ACTION_DISABLE_MOBILE => 'Disable mobile',
+        Module::ACTION_ENABLE_MOBILE => 'Enable Mobile',
+        Module::ACTION_DISABLE_MOBILE => 'Disable Mobile',
         Module::ACTION_RESET => 'Reset',
-        Module::ACTION_UPGRADE => 'Upgrade',
+        Module::ACTION_UPGRADE => 'Update',
         Module::ACTION_CONFIGURE => 'Configure',
         Module::ACTION_DELETE => 'Delete',
     ];
