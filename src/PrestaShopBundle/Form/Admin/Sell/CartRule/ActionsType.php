@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CartRule;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CartRule\Discount;
 use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -44,11 +43,7 @@ class ActionsType extends TranslatorAwareType
             ->add('free_shipping', SwitchType::class, [
                 'required' => false,
             ])
-            ->add('discount', DiscountType::class, [
-                'constraints' => [
-                    new Discount(),
-                ],
-            ])
+            ->add('discount', DiscountType::class)
             ->add('gift_product', ProductSearchType::class, [
                 'include_combinations' => true,
                 'label' => $this->trans('Send a free gift', 'Admin.Catalog.Feature'),

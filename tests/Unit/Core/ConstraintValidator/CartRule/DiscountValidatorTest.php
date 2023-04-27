@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\ConstraintValidator\CartRule;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\CartRule\DiscountValidator;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CartRule\Discount;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CartRuleValidator;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CartRule;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
@@ -60,7 +60,7 @@ class DiscountValidatorTest extends ConstraintValidatorTestCase
      */
     public function testValidDataDoesNotViolateTheConstraint(array $data): void
     {
-        $this->validator->validate($data, new Discount());
+        $this->validator->validate($data, new CartRule());
 
         $this->assertNoViolation();
         $this->context->getViolations();
@@ -73,7 +73,7 @@ class DiscountValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItBuildsViolation($data, string $expectedViolation, string $expectedErrorPath): void
     {
-        $constraint = new Discount();
+        $constraint = new CartRule();
         $this->validator->validate($data, $constraint);
 
         $violation = $this->buildViolation($expectedViolation)
@@ -106,7 +106,7 @@ class DiscountValidatorTest extends ConstraintValidatorTestCase
     public function testItThrowsExceptionWhenInvalidValueTypeIsProvided($value): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->validator->validate($value, new Discount());
+        $this->validator->validate($value, new CartRule());
     }
 
     public function getUnsupportedConstraints(): iterable
@@ -156,7 +156,7 @@ class DiscountValidatorTest extends ConstraintValidatorTestCase
 
     public function getDataViolatingTheConstraint(): iterable
     {
-        $constraint = new Discount();
+        $constraint = new CartRule();
 
         yield [
             ['discount_application' => DiscountApplicationType::SPECIFIC_PRODUCT],
@@ -210,8 +210,8 @@ class DiscountValidatorTest extends ConstraintValidatorTestCase
 //        ];
     }
 
-    protected function createValidator(): DiscountValidator
+    protected function createValidator(): CartRuleValidator
     {
-        return new DiscountValidator();
+        return new CartRuleValidator();
     }
 }

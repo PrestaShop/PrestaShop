@@ -26,20 +26,39 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CartRule;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\CartRule\ActionValidator;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CartRuleValidator;
 use Symfony\Component\Validator\Constraint;
 
-class Action extends Constraint
+class CartRule extends Constraint
 {
     /**
+     * When discount type "specific_product" is selected, but the specific product is not provided
+     *
      * @var string
      */
-    public $message = 'Cart rule must have at least one action';
+    public $missingSpecificProductMessage = 'Specific product must be selected for this discount application type';
 
+    /**
+     * When discount type "selected_products" is selected, but there are no selected product restrictions
+     *
+     * @var string
+     */
+    public $missingProductRestrictionsMessage = 'Product restrictions must be applied for this discount application type';
+
+    /**
+     * When cart rule has no actions
+     *
+     * @var string
+     */
+    public $missingActionsMessage = 'Cart rule must have at least one action';
+
+    /**
+     * {@inheritDoc}
+     */
     public function validatedBy(): string
     {
-        return ActionValidator::class;
+        return CartRuleValidator::class;
     }
 }
