@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\ViewableApplication;
@@ -57,10 +56,6 @@ class GetApplicationForViewingHandler implements GetApplicationForViewingHandler
     public function handle(GetApplicationForViewing $query): ViewableApplication
     {
         $application = $this->applicationRepository->getById($query->getApplicationId());
-
-        if ($application === null) {
-            throw new ApplicationNotFoundException(sprintf('Application with id "%d" was not found.', $query->getApplicationId()->getValue()));
-        }
 
         return new ViewableApplication($query->getApplicationId(), $application->getName(), $application->getDescription());
     }
