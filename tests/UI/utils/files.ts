@@ -82,9 +82,10 @@ export default {
    * Check text in PDF
    * @param filePath {string} Path of the PDF file
    * @param text {string} Text to check on the file
+   * @param deleteComma {boolean} True if we need to delete comma
    * @returns {Promise<boolean>}
    */
-  async isTextInPDF(filePath: string, text: string): Promise<boolean> {
+  async isTextInPDF(filePath: string, text: string, deleteComma: boolean = false): Promise<boolean> {
     const pdf = await getDocument({
       url: filePath,
       standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
@@ -97,6 +98,10 @@ export default {
     }
 
     const pageTexts = await Promise.all(pageTextPromises);
+
+    if (deleteComma) {
+      return (pageTexts.join(' ').split(',').join('').indexOf(text) !== -1);
+    }
 
     return (pageTexts.join(' ').indexOf(text) !== -1);
   },
