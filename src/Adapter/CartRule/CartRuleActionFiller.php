@@ -52,25 +52,24 @@ class CartRuleActionFiller
             $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
             $cartRule->reduction_percent = 0;
             $cartRule->reduction_exclude_special = false;
-            $cartRule->reduction_product = DiscountApplicationType::ORDER_WITHOUT_SHIPPING;
             $updatableProperties[] = 'reduction_amount';
-            $updatableProperties[] = 'reduction_currency';
             $updatableProperties[] = 'reduction_percent';
+            $updatableProperties[] = 'reduction_currency';
+            $updatableProperties[] = 'reduction_tax';
             $updatableProperties[] = 'reduction_exclude_special';
-            $updatableProperties[] = 'reduction_product';
         }
 
         $percentageDiscount = $cartRuleAction->getPercentageDiscount();
         if (null !== $percentageDiscount) {
-            $cartRule->reduction_percent = (string) $percentageDiscount->getPercentage();
+            $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
             $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
             $cartRule->reduction_amount = 0;
             $cartRule->reduction_currency = 0;
             $cartRule->reduction_tax = false;
             $updatableProperties[] = 'reduction_amount';
+            $updatableProperties[] = 'reduction_percent';
             $updatableProperties[] = 'reduction_currency';
             $updatableProperties[] = 'reduction_tax';
-            $updatableProperties[] = 'reduction_percent';
             $updatableProperties[] = 'reduction_exclude_special';
         }
 
@@ -78,12 +77,15 @@ class CartRuleActionFiller
         if (null !== $giftProduct) {
             $cartRule->gift_product = $giftProduct->getProductId()->getValue();
             $cartRule->gift_product_attribute = $giftProduct->getCombinationId() ? $giftProduct->getCombinationId()->getValue() : null;
-            $updatableProperties[] = 'gift_product';
-            $updatableProperties[] = 'gift_product_attribute';
+        } else {
+            $cartRule->gift_product = null;
+            $cartRule->gift_product_attribute = null;
         }
 
         $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
         $updatableProperties[] = 'free_shipping';
+        $updatableProperties[] = 'gift_product';
+        $updatableProperties[] = 'gift_product_attribute';
 
         if (null !== $cartRuleAction->getDiscountApplicationType()) {
             $this->fillDiscountApplicationType($cartRule, $cartRuleAction);
