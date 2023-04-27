@@ -98,7 +98,7 @@ jobs:
       PS_INSTALL_AUTO: 1
       PS_DEV_MODE: 0
       PS_ENABLE_SSL: ${{ matrix.BRANCH == '8.0.x' && '0' || '1' }}
-      PS_DOMAIN: ${{ github.event.inputs.base_branch == '8.0.x' && 'localhost:8001' || 'localhost:8002' }}
+      PS_DOMAIN: ${{ github.event.inputs.BRANCH == '8.0.x' && 'localhost:8001' || 'localhost:8002' }}
       DB_SERVER: 'mysql'
       DB_NAME: 'prestashop'
       DB_PREFIX: 'tst_'
