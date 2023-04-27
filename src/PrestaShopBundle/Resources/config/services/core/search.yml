@@ -56,6 +56,5 @@ services:
     tags: [ 'core.typed_filters_builder' ]
 
   PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\FeatureValueFiltersBuilder:
+    autowire: true
     tags: [ 'core.typed_filters_builder' ]
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder;
 
+use PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
@@ -39,14 +40,14 @@ class FeatureValueFiltersBuilder extends AbstractFiltersBuilder implements Typed
     private $request;
 
     /**
-     * @var int
+     * @var ContextLanguageProviderInterface
      */
-    private $contextLangId;
+    private $contextLanguageProvider;
 
     public function __construct(
-        int $contextLangId
+        ContextLanguageProviderInterface $contextLanguageProvider
     ) {
-        $this->contextLangId = $contextLangId;
+        $this->contextLanguageProvider = $contextLanguageProvider;
     }
 
     /**
@@ -70,7 +71,7 @@ class FeatureValueFiltersBuilder extends AbstractFiltersBuilder implements Typed
         }
 
         $filterParameters['filters']['feature_id'] = $this->getFeatureId();
-        $filterParameters['filters']['language_id'] = $this->contextLangId;
+        $filterParameters['filters']['language_id'] = $this->contextLanguageProvider->getLanguageId()->getValue();
 
         return new FeatureValueFilters($filterParameters);
     }
