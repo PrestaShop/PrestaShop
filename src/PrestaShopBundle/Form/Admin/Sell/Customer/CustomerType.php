@@ -64,11 +64,6 @@ class CustomerType extends TranslatorAwareType
     /**
      * @var array
      */
-    private $genderChoices;
-
-    /**
-     * @var array
-     */
     private $groupChoices;
 
     /**
@@ -97,7 +92,6 @@ class CustomerType extends TranslatorAwareType
     protected $formCloner;
 
     /**
-     * @param array $genderChoices
      * @param array $groupChoices
      * @param array $riskChoices
      * @param bool $isB2bFeatureEnabled
@@ -107,7 +101,6 @@ class CustomerType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $genderChoices,
         array $groupChoices,
         array $riskChoices,
         $isB2bFeatureEnabled,
@@ -116,7 +109,6 @@ class CustomerType extends TranslatorAwareType
         FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
-        $this->genderChoices = $genderChoices;
         $this->groupChoices = $groupChoices;
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->riskChoices = $riskChoices;
@@ -176,13 +168,10 @@ class CustomerType extends TranslatorAwareType
         }
 
         $builder
-            ->add('gender_id', ChoiceType::class, [
-                'choices' => $this->genderChoices,
-                'multiple' => false,
+            ->add('gender_id', GenderType::class, [
                 'expanded' => true,
                 'required' => false,
                 'placeholder' => null,
-                'label' => $this->trans('Social title', 'Admin.Global'),
             ])
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'Admin.Global'),

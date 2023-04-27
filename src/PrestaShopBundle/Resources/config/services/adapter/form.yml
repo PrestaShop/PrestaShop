@@ -14,8 +14,11 @@ services:
       - '@=service("prestashop.adapter.data_provider.category").getRootCategory().id'
       - false
 
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider:
+
   prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
+    alias: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
+    deprecated: ~
 
   prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
