@@ -636,7 +636,7 @@ class ProductCore extends ObjectModel
             ],
             'images' => [
                 'resource' => 'image',
-                'fields' => ['id' => []],
+                'fields' => ['id' => [],'image_url' => []],
             ],
             'combinations' => [
                 'resource' => 'combination',
@@ -7262,13 +7262,27 @@ class ProductCore extends ObjectModel
      * @return array
      */
     public function getWsImages()
-    {
-        return Db::getInstance()->executeS('
-            SELECT i.`id_image` as id
+    {		
+        $get_images = Db::getInstance()->executeS('
+            SELECT i.`id_image` as id, i.id_product
             FROM `' . _DB_PREFIX_ . 'image` i
             ' . Shop::addSqlAssociation('image', 'i') . '
             WHERE i.`id_product` = ' . (int) $this->id . '
-            ORDER BY i.`position`');
+            ORDER BY i.`position`');	
+	
+            $custom_ws = array();		
+            foreach ($get_images as $images){
+		$protocol_link = Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode() ? 'https://' : 'http://';
+		$use_ssl = Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode() ? true : false;
+		$protocol_content = $use_ssl ? 'https://' : 'http://';
+		$id_product = $images['id_product'];
+		$image = Image::getCover($id_product);
+		$product = new Product($id_product, false, Context::getContext()->language->id);
+		$link = new Link($protocol_link, $protocol_content);
+		$image_link = $link->getImageLink($product->link_rewrite, $images['id'], '');
+		$custom_ws[] = array('id' => $images['id'], 'image_url' => $image_link); 
+            }
+		return $custom_ws;
     }
 
     /**
