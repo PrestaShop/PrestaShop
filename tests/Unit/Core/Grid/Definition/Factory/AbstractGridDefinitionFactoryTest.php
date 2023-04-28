@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AbstractGridDefinitionFactoryTest extends TestCase
 {
@@ -51,7 +52,10 @@ class AbstractGridDefinitionFactoryTest extends TestCase
             )
         ;
 
-        $definitionFactory = $this->getMockForAbstractClass(AbstractGridDefinitionFactory::class, [$hookDispatcherMock]);
+        $definitionFactory = $this->getMockForAbstractClass(
+            AbstractGridDefinitionFactory::class,
+            [$hookDispatcherMock, $this->mockTranslator()]
+        );
 
         $definitionFactory
             ->expects($this->once())
@@ -95,5 +99,16 @@ class AbstractGridDefinitionFactoryTest extends TestCase
             ->willReturn($id);
 
         return $column;
+    }
+
+    private function mockTranslator(): TranslatorInterface
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        return $translator;
     }
 }
