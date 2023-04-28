@@ -31,10 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Configuration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * @method getInt($key, $default = 0, ShopConstraint $shopConstraint = null)
- * @method getBoolean($key, $default = false, ShopConstraint $shopConstraint = null)
- */
 interface ShopConfigurationInterface extends ConfigurationInterface
 {
     /**
@@ -45,6 +41,24 @@ interface ShopConfigurationInterface extends ConfigurationInterface
      * @return mixed
      */
     public function get($key, $default = null, ShopConstraint $shopConstraint = null);
+
+    /**
+     * @param string $key
+     * @param bool $default
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return mixed
+     */
+    public function getBoolean(string $key, bool $default = false, ShopConstraint $shopConstraint = null);
+
+    /**
+     * @param string $key
+     * @param int $default
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return mixed
+     */
+    public function getInt(string $key, int $default = 0, ShopConstraint $shopConstraint = null);
 
     /**
      * @param string $key
