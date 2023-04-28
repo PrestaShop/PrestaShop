@@ -45,6 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class responsible for providing columns, filters, actions for catalog price rule list.
@@ -54,9 +55,10 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     public const GRID_ID = 'catalog_price_rule';
 
     public function __construct(
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
     }
 
     /**

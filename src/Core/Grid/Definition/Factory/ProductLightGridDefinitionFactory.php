@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -51,9 +52,10 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         ConfigurationInterface $configuration
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->configuration = $configuration;
     }
 

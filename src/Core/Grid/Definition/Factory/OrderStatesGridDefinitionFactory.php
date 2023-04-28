@@ -48,6 +48,7 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class OrderStatesGridDefinitionFactory defines order_states grid structure.
@@ -66,9 +67,10 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         DeleteOrderStatesAccessibilityChecker $deleteOrderStatesAccessibilityChecker
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
 
         $this->deleteOrderStatesAccessibilityChecker = $deleteOrderStatesAccessibilityChecker;
     }

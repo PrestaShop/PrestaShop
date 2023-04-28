@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CategoryGridDefinitionFactory builds Grid definition for Categories listing.
@@ -78,10 +79,11 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
         $this->multistoreContextChecker = $multistoreContextChecker;
     }

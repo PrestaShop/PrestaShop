@@ -47,6 +47,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TitleGridDefinitionFactory creates definition for title grid.
@@ -65,9 +66,10 @@ class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         GenderChoiceProvider $genderChoiceProvider
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->genderChoiceProvider = $genderChoiceProvider;
     }
 

@@ -54,6 +54,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -79,11 +80,12 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher = null,
+        TranslatorInterface $translator,
         ContactTypeChoiceProvider $contactTypeProvider,
         FormChoiceProviderInterface $shopNameByIdChoiceProvider,
         CustomerThreadStatusesChoiceProvider $customerThreadStatusesChoiceProvider
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->contactTypeProvider = $contactTypeProvider;
         $this->shopNameByIdChoiceProvider = $shopNameByIdChoiceProvider;
         $this->customerThreadStatusesChoiceProvider = $customerThreadStatusesChoiceProvider;

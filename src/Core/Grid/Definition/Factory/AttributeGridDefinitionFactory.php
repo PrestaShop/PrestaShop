@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Defines grid for attributes group > attributes list
@@ -74,10 +75,11 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         $attributeGroupId,
         AttributeGroupViewDataProviderInterface $attributeGroupViewDataProvider
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->attributeGroupId = $attributeGroupId;
         $this->attributeGroupViewDataProvider = $attributeGroupViewDataProvider;
     }

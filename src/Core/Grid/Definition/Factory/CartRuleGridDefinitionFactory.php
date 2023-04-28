@@ -48,6 +48,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class responsible for providing columns, filters, actions for cart price rule list.
@@ -66,9 +67,10 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         string $contextDateFormat
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->contextDateFormat = $contextDateFormat;
     }
 

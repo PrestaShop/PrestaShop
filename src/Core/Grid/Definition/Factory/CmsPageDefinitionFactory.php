@@ -49,6 +49,7 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class responsible for providing columns, filters, actions for cms page list.
@@ -82,12 +83,13 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         CommandBusInterface $queryBus,
         RequestStack $requestStack,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         $isMultiStoreFeatureUsed
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
 
         $this->queryBus = $queryBus;
 

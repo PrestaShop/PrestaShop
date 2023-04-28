@@ -52,6 +52,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CustomerGridDefinitionFactory defines customers grid structure.
@@ -89,12 +90,13 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
         string $contextDateFormat,
         bool $isGroupsFeatureEnabled = true
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->contextDateFormat = $contextDateFormat;

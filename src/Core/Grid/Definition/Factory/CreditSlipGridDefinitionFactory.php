@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Defines grid for credit slip listing
@@ -56,9 +57,12 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
      * @param HookDispatcherInterface $hookDispatcher
      * @param string $dateFormat The format in which date column values should be shown
      */
-    public function __construct(HookDispatcherInterface $hookDispatcher, $dateFormat)
-    {
-        parent::__construct($hookDispatcher);
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
+        $dateFormat
+    ) {
+        parent::__construct($hookDispatcher, $translator);
         $this->dateFormat = $dateFormat;
     }
 

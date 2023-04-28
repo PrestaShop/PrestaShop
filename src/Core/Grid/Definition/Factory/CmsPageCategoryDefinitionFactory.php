@@ -48,6 +48,7 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CmsPageCategoryDefinitionFactory builds Grid definition for Cms page category listing.
@@ -82,11 +83,12 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         RequestStack $requestStack,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         $isMultiStoreFeatureUsed
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->setCmsPageCategoryParentId($requestStack);
 
         $this->multistoreContextChecker = $multistoreContextChecker;

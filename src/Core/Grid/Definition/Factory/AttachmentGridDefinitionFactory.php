@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Defines attachments list grid
@@ -55,9 +56,11 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
     /**
      * @param HookDispatcherInterface $hookDispatcher
      */
-    public function __construct(HookDispatcherInterface $hookDispatcher)
-    {
-        parent::__construct($hookDispatcher);
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator
+    ) {
+        parent::__construct($hookDispatcher, $translator);
     }
 
     /**

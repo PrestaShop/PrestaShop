@@ -1,5 +1,6 @@
 services:
   _defaults:
+    # most of grid definition factories must remain public to be accessed by CommonController:searchGridAction
     public: true
     autowire: true
     bind:
@@ -7,56 +8,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory:
     abstract: true
-    calls:
-      - [ setTranslator, [ '@translator' ] ]
-
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BackupDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerDiscountGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerCartGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerOrderGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerBoughtProductGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerViewedProductGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfileGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithoutCombinationGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRulesGroupGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGroupsGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SearchEngineGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductLightGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StateGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TitleGridDefinitionFactory: ~
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductShopsGridDefinitionFactory:
     arguments:
@@ -112,15 +63,58 @@ services:
     arguments:
       $shopNameByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
 
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BackupDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerDiscountGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerCartGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerOrderGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerBoughtProductGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerViewedProductGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfileGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithoutCombinationGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRulesGroupGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGroupsGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SearchEngineGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductLightGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StateGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TitleGridDefinitionFactory: ~
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory: ~
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRuleGridDefinitionFactory: ~
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory:
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory:
-    # must remain public to be accessed by CommonController:searchGridAction
-    public: true
-
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory:
-    public: true
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory: ~
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory: ~
 
   # deprecated services
   prestashop.core.grid.definition.factory.abstract_grid_definition:
@@ -270,7 +264,6 @@ services:
   prestashop.core.grid.definition.factory.order_message:
     alias: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory
     deprecated: ~
-    public: true
 
   prestashop.core.grid.definition.factory.attachment:
     alias: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory

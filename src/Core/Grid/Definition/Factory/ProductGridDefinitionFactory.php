@@ -62,6 +62,7 @@ use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Defines products grid name, its columns, actions, bulk actions and filters.
@@ -104,6 +105,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         ConfigurationInterface $configuration,
         FeatureInterface $multistoreFeature,
         ShopConstraintContextInterface $shopConstraintContext,
@@ -111,7 +113,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         ProductSingleShopAssociatedAccessibilityChecker $singleShopChecker,
         ProductMultipleShopsAssociatedAccessibilityChecker $multipleShopsChecker
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->configuration = $configuration;
         $this->multistoreFeature = $multistoreFeature;
         $this->shopConstraintContext = $shopConstraintContext;

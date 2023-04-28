@@ -33,11 +33,12 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CustomerViewedProductGridDefinitionFactory defines customer's viewed products grid structure.
  */
-final class CustomerViewedProductGridDefinitionFactory extends AbstractGridDefinitionFactory
+class CustomerViewedProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use DeleteActionTrait;
 
@@ -54,9 +55,10 @@ final class CustomerViewedProductGridDefinitionFactory extends AbstractGridDefin
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         $contextDateFormat
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
         $this->contextDateFormat = $contextDateFormat;
     }
 

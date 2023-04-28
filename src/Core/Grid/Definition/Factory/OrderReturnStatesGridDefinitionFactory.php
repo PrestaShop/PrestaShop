@@ -46,6 +46,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class OrderReturnStatesGridDefinitionFactory defines return_states grid structure.
@@ -64,9 +65,10 @@ final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitio
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         DeleteOrderReturnStatesAccessibilityChecker $deleteOrderReturnStatesAccessibilityChecker
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
 
         $this->deleteOrderReturnStatesAccessibilityChecker = $deleteOrderReturnStatesAccessibilityChecker;
     }

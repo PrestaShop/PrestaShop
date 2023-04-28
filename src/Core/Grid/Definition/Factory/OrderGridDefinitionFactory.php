@@ -59,6 +59,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Creates definition for Orders grid
@@ -114,6 +115,7 @@ class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
+        TranslatorInterface $translator,
         ConfigurationInterface $configuration,
         FormChoiceProviderInterface $orderCountriesChoiceProvider,
         $contextDateFormat,
@@ -122,7 +124,7 @@ class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
         PrintDeliverySlipAccessibilityChecker $printDeliverySlipAccessibilityChecker,
         OrderStateByIdChoiceProvider $orderStatesChoiceProvider
     ) {
-        parent::__construct($dispatcher);
+        parent::__construct($dispatcher, $translator);
 
         $this->configuration = $configuration;
         $this->orderCountriesChoiceProvider = $orderCountriesChoiceProvider;

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CustomerAddressGridDefinitionFactory defines customer's addresses grid structure.
@@ -51,9 +52,12 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
      */
     private $backUrl;
 
-    public function __construct(HookDispatcherInterface $hookDispatcher, ?Request $currentRequest)
-    {
-        parent::__construct($hookDispatcher);
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
+        ?Request $currentRequest
+    ) {
+        parent::__construct($hookDispatcher, $translator);
         $this->backUrl = $currentRequest ? $currentRequest->getUri() : '';
     }
 

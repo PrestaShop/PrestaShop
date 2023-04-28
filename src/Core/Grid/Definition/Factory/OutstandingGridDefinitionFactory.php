@@ -44,6 +44,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Risk;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Created definition for Outstanding grid.
@@ -75,11 +76,12 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator,
         ConfigurationInterface $configuration,
         int $languageId,
         string $contextDateFormat
     ) {
-        parent::__construct($hookDispatcher);
+        parent::__construct($hookDispatcher, $translator);
 
         $this->configuration = $configuration;
         $this->contextDateFormat = $contextDateFormat;

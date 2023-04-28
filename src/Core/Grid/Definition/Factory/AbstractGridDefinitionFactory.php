@@ -37,28 +37,34 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class AbstractGridDefinitionFactory implements grid definition creation.
  */
 abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInterface
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var HookDispatcherInterface
      */
     protected $hookDispatcher;
 
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
+     * @param TranslatorInterface $translator
      */
     public function __construct(
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        TranslatorInterface $translator
     ) {
         $this->hookDispatcher = $hookDispatcher;
+        $this->translator = $translator;
     }
 
     /**
@@ -146,5 +152,13 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected function getFilters()
     {
         return new FilterCollection();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function trans($id, array $options, $domain)
+    {
+        return $this->translator->trans($id, $options, $domain);
     }
 }

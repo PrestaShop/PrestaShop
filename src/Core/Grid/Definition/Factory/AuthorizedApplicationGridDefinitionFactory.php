@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use DeleteActionTrait;
+
     public const GRID_ID = 'authorized_application';
 
     /**
