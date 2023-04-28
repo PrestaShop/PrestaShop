@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Db;
 use Module as LegacyModule;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
@@ -224,9 +226,22 @@ class Module implements ModuleInterface
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function isActive(ShopContext $shopContext = null): bool
     {
-        return (bool) $this->database->get('active');
+        if ($shopContext === null || $shopContext->isAllShopContext()) {
+            return (bool) $this->database->get('active');
+        }
+
+        $sql = sprintf(
+            'SELECT * FROM %smodule_shop WHERE `id_module` = %s AND `id_shop` IN (%s)',
+            _DB_PREFIX_,
+            $this->database->get('id'),
+            implode(', ', $shopContext->getContextListShopID())
+        );
+
+        $res = Db::getInstance()->executeS($sql);
+
+        return !empty($res);
     }
 
     public function isActiveOnMobile(): bool
