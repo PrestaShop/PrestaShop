@@ -20,16 +20,20 @@ services:
   # deprecated services
   prestashop.core.grid.action.row.accessibility_checker.print_invoice:
     alias: PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\PrintInvoiceAccessibilityChecker
+    public: true
     deprecated: ~
 
   prestashop.core.grid.action.row.accessibility_checker.print_delivery_slip:
     alias: PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\PrintDeliverySlipAccessibilityChecker
+    public: true
     deprecated: ~
 
   prestashop.core.grid.action.row.accessibility_checker.delete_order_states:
     alias: PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteOrderStatesAccessibilityChecker
+    public: true
     deprecated: ~
 
   prestashop.core.grid.action.row.accessibility_checker.delete_order_return_states:
     alias: PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteOrderReturnStatesAccessibilityChecker
+    public: true
     deprecated: ~
