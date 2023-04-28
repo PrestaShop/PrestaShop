@@ -31,20 +31,21 @@ Feature: Add cart rule
       | minimum_amount_tax_included      | false               |
       | minimum_amount_shipping_included | false               |
     And cart rule "cart_rule_1" should have the following properties:
-      | name[en-US]        | cart rule 1         |
-      | highlight          | true                |
-      | is_active          | true                |
-      | allow_partial_use  | true                |
-      | priority           | 1                   |
-      | valid_from         | 2019-01-01 11:05:00 |
-      | valid_to           | 2019-12-01 00:00:00 |
-      | total_quantity     | 11                  |
-      | quantity_per_user  | 3                   |
-      | free_shipping      | true                |
-      | minimum_amount     |                     |
+      | name[en-US]           | cart rule 1         |
+      | highlight             | true                |
+      | is_active             | true                |
+      | allow_partial_use     | true                |
+      | priority              | 1                   |
+      | valid_from            | 2019-01-01 11:05:00 |
+      | valid_to              | 2019-12-01 00:00:00 |
+      | total_quantity        | 11                  |
+      | quantity_per_user     | 3                   |
+      | free_shipping         | true                |
+      | minimum_amount        |                     |
       # when currency is not provided the default one is used
-      | reduction_currency | usd                 |
-      | code               |                     |
+      | reduction_currency    | usd                 |
+      | code                  |                     |
+      | restricted cart rules |                     |
 
   Scenario: I edit cart rule and change various properties
     When I edit cart rule cart_rule_1 with following properties:
@@ -291,16 +292,18 @@ Feature: Add cart rule
       | quantity_per_user | 2                   |
       | free_shipping     | true                |
       | code              | testcode2           |
+    And cart rule cart_rule_2 should have the following properties:
+      | code | testcode2 |
     When I edit cart rule cart_rule_2 with following properties:
-      | code              | testcode1           |
+      | code | testcode1 |
     Then I should get cart rule error about "non unique cart rule code"
     And cart rule cart_rule_2 should have the following properties:
-      | code              | testcode2           |
+      | code | testcode2 |
     # make sure we do not raise error when cart rule is submitted with the same code as it was before
     When I edit cart rule cart_rule_2 with following properties:
-      | code              | testcode2           |
+      | code | testcode2 |
     Then cart rule cart_rule_2 should have the following properties:
-      | code              | testcode2           |
+      | code | testcode2 |
 
   Scenario: Disable cart rule
     When I create cart rule "cart_rule_1" with following properties:

@@ -128,11 +128,16 @@ class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements Ge
             }
         }
 
+        $restrictedCartRules = [];
+        if ($cartRule->cart_rule_restriction) {
+            $restrictedCartRules = $this->cartRuleRepository->getRestrictedCartRuleIds(new CartRuleId((int) $cartRule->id));
+        }
+
         $cartRuleRestrictions = new CartRuleRestrictionsForEditing(
             (bool) $cartRule->country_restriction,
             (bool) $cartRule->carrier_restriction,
             (bool) $cartRule->group_restriction,
-            $this->cartRuleRepository->getRestrictedCartRuleIds(new CartRuleId((int) $cartRule->id)),
+            $restrictedCartRules,
             (bool) $cartRule->product_restriction,
             (bool) $cartRule->shop_restriction
         );
