@@ -24,25 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
+namespace PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler;
 
-use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\AddAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
 
 /**
- * Class TranslateMailsBodyType manages the form allowing to select a language
- * and translate Emails body content.
+ * Describes add attribute group command handler
  */
-class TranslateMailsBodyType extends TranslatorAwareType
+interface AddAttributeHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param AddAttributeCommand $command
+     *
+     * @return AttributeId
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('language', LocaleChoiceType::class)
-        ;
-    }
+    public function handle(AddAttributeCommand $command): AttributeId;
 }

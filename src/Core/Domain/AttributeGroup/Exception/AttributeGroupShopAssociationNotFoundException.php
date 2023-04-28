@@ -24,25 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
-
-use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
 /**
- * Class TranslateMailsBodyType manages the form allowing to select a language
- * and translate Emails body content.
+ * Is thrown when required attribute group cannot be found
  */
-class TranslateMailsBodyType extends TranslatorAwareType
+class AttributeGroupShopAssociationNotFoundException extends AttributeGroupException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('language', LocaleChoiceType::class)
-        ;
-    }
 }

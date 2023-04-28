@@ -24,25 +24,49 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
+declare(strict_types=1);
 
-use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\InvalidAttributeIdException;
 
 /**
- * Class TranslateMailsBodyType manages the form allowing to select a language
- * and translate Emails body content.
+ * Defines Attribute group ID with its constraints.
  */
-class TranslateMailsBodyType extends TranslatorAwareType
+class AttributeId
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $attributeId;
+
+    /**
+     * @param int $attributeId
+     */
+    public function __construct(int $attributeId)
     {
-        $builder
-            ->add('language', LocaleChoiceType::class)
-        ;
+        $this->assertIntegerIsGreaterThanZero($attributeId);
+
+        $this->attributeId = $attributeId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->attributeId;
+    }
+
+    /**
+     * @param int $attributeId
+     *
+     * @throws InvalidAttributeIdException
+     */
+    private function assertIntegerIsGreaterThanZero(int $attributeId): void
+    {
+        if (0 > $attributeId) {
+            throw new InvalidAttributeIdException(sprintf('Invalid attribute id %s supplied. Attribute group id must be positive integer.', $attributeId));
+        }
     }
 }

@@ -24,25 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
+declare(strict_types=1);
 
-use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
 
-/**
- * Class TranslateMailsBodyType manages the form allowing to select a language
- * and translate Emails body content.
- */
-class TranslateMailsBodyType extends TranslatorAwareType
+class AttributeConstraintException extends AttributeException
 {
     /**
-     * {@inheritdoc}
+     * Code is used when feature does not have name.
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('language', LocaleChoiceType::class)
-        ;
-    }
+    public const EMPTY_NAME = 1;
+
+    /**
+     * Used when feature name is invalid.
+     */
+    public const INVALID_NAME = 2;
 }

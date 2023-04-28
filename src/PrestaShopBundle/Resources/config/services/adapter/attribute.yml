@@ -16,3 +16,21 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\AddAttributeHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attribute\Command\AddAttributeCommand
+
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attribute\Command\EditAttributeCommand
+
+  PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attribute\Query\GetAttributeForEditing

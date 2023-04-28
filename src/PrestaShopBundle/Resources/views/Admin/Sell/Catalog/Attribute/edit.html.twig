@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,27 +21,20 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
+{% set layoutTitle = 'Edit: %name%'|trans({'%name%': attributeName}, 'Admin.Actions') %}
 
-use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-/**
- * Class TranslateMailsBodyType manages the form allowing to select a language
- * and translate Emails body content.
- */
-class TranslateMailsBodyType extends TranslatorAwareType
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('language', LocaleChoiceType::class)
-        ;
-    }
-}
+{% block content %}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Attribute/Blocks/form.html.twig' with {
+    attributeGroupId: attributeGroupId,
+    attributeForm: attributeForm
+  } %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Attribute/Blocks/form_javascripts.html.twig' %}
+{% endblock %}
