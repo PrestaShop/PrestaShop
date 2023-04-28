@@ -50,7 +50,7 @@ trait FrameworkControllerSmartyTrait
         $controllerBridge->setMedia($isNewTheme);
 
         return $this
-            ->get('prestashop.bridge.smarty.smarty_bridge')
+            ->get(SmartyBridge::class)
             ->render($content, $this->getControllerConfiguration(), $response)
         ;
     }

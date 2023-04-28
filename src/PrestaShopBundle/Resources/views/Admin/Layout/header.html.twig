@@ -45,7 +45,7 @@
   var country_iso_code = '{{ country_iso_code|e('js') }}';
   var _PS_VERSION_ = '{{ ps_version|e('js') }}';
   var roundMode = {{ round_mode|number_format }};
-  var youEditFieldFor = {{ multi_shop_edit_for|e('js') }}'';
+  var youEditFieldFor = '{{ multi_shop_edit_for|e('js') }}';
   var new_order_msg = '{{ 'A new order has been placed on your shop.'|trans({}, 'Admin.Navigation.Header')|e('js') }}';
   var order_number_msg = '{{ 'Order number:'|trans({}, 'Admin.Navigation.Header')|e('js') }} ';
   var total_msg = '{{ 'Total:'|trans({}, 'Admin.Global')|e('js') }} ';
@@ -60,7 +60,7 @@
   var employee_token = '{{ employee_token|e('js') }}';
   var choose_language_translate = '{{ 'Choose language:'|trans({}, 'Admin.Actions') }}';
   var default_language = '{{ default_language|number_format }}';
-  var admin_modules_link = '{{ url('admin_module_manage')|e('js') }}'; admin_module_manage
+  var admin_modules_link = '{{ url('admin_module_manage')|e('js') }}';
   var admin_notification_get_link = '{{ url('admin_common_notifications')|e('js') }}';
   var admin_notification_push_link = adminNotificationPushLink = '{{ url('admin_common_notifications_ack') }}';
   var update_success_msg = '{{ 'Update successful'|trans({}, 'Admin.Notifications.Success') }}';
@@ -86,7 +86,7 @@
 {% if js_def is not empty %}
 <script type="text/javascript">
   {% for jsVar, jsValue in js_def %}
-    var {{ jsVar }} = {{ jsValue|json_encode }};
+    var {{ jsVar }} = {{ jsValue|json_encode|raw }};
   {% endfor %}
 </script>
 {% endif %}

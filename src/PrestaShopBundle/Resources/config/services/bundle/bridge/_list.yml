@@ -20,7 +20,7 @@ services:
       - '@PrestaShopBundle\Service\DataProvider\UserProvider'
       - '@prestashop.hook.dispatcher'
       - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.bridge.smarty.breadcrumbs_and_title_configurator'
+      - '@PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator'
 
   prestashop.bridge.helper.listing.helper_bridge.feature_helper_list_bridge:
     class: PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\FeatureHelperListBridge

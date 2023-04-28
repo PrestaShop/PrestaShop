@@ -2,53 +2,52 @@ services:
   _defaults:
     public: true
 
-  prestashop.bridge.smarty.smarty_bridge:
-    class: PrestaShopBundle\Bridge\Smarty\SmartyBridge
+  PrestaShopBundle\Bridge\Smarty\SmartyBridge:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.legacy.configuration"
       - !tagged prestashop.bridge.smarty_configurator
 
-  prestashop.bridge.smarty.breadcrumbs_and_title_configurator:
-    class: PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator
+  PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.legacy.configuration"
     tags: [ 'prestashop.bridge.smarty_configurator' ]
 
-  prestashop.bridge.smarty.footer_configurator:
-    class: PrestaShopBundle\Bridge\Smarty\FooterConfigurator
-    arguments:
-      - "@prestashop.adapter.legacy.context"
-    tags: [ 'prestashop.bridge.smarty_configurator' ]
-
-  prestashop.bridge.smarty.header_configurator:
-    class: PrestaShopBundle\Bridge\Smarty\HeaderConfigurator
+  PrestaShopBundle\Bridge\Smarty\HeaderConfigurator:
     arguments:
       - "@translator"
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
       - "@prestashop.adapter.legacy.configuration"
+    tags:
+      # Header configurator must be executed early as it executes hooks that may add JS or CSS files
+      - { name: 'prestashop.bridge.smarty_configurator', priority: 42 }
+
+  PrestaShopBundle\Bridge\Smarty\ModalConfigurator:
     tags: [ 'prestashop.bridge.smarty_configurator' ]
 
-  prestashop.bridge.smarty.modal_configurator:
-    class: PrestaShopBundle\Bridge\Smarty\ModalConfigurator
-    tags: [ 'prestashop.bridge.smarty_configurator' ]
-
-  prestashop.bridge.smarty.notification_configurator:
-    class: PrestaShopBundle\Bridge\Smarty\NotificationsConfigurator
+  PrestaShopBundle\Bridge\Smarty\NotificationsConfigurator:
     arguments:
       - "@prestashop.adapter.legacy.configuration"
     tags: [ 'prestashop.bridge.smarty_configurator' ]
 
-  prestashop.bridge.smarty.toolbar_flags_configurator:
-    class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator
+  PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator:
     arguments:
       - "@prestashop.adapter.legacy.configuration"
       - '@PrestaShop\PrestaShop\Core\Help\Documentation'
       - "@=service('prestashop.adapter.environment').isDebug()"
     tags: [ 'prestashop.bridge.smarty_configurator' ]
 
+  PrestaShopBundle\Bridge\Smarty\FooterConfigurator:
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+    tags:
+      # Footer configurator must be executed late to make sure js and css files are up to date
+      - { name: 'prestashop.bridge.smarty_configurator', priority: -5 }
+
   PrestaShopBundle\Bridge\Smarty\LayoutConfigurator:
     autowire: true
-    tags: [ 'prestashop.bridge.smarty_configurator' ]
+    tags:
+      # Layout configurator should be the last one executed
+      - { name: 'prestashop.bridge.smarty_configurator', priority: -10 }

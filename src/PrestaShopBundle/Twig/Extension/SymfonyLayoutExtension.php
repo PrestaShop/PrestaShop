@@ -105,7 +105,7 @@ class SymfonyLayoutExtension extends AbstractExtension implements GlobalsInterfa
     private function renderSmartyContent(ControllerConfiguration $controllerConfiguration): array
     {
         $smarty = $this->context->getSmarty();
-        $smarty->assign($this->globalVariables);
+        $smarty->assign($controllerConfiguration->templateVars);
         $smarty->setTemplateDir([
             _PS_BO_ALL_THEMES_DIR_ . 'new-theme' . DIRECTORY_SEPARATOR . 'template',
             _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
