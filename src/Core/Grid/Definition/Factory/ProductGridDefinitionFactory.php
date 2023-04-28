@@ -34,7 +34,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\AjaxBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultipleShopsAssociatedAccessibilityChecker;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductSingleShopAssociatedAccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -92,12 +93,12 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $formFactory;
 
     /**
-     * @var AccessibilityCheckerInterface
+     * @var ProductSingleShopAssociatedAccessibilityChecker
      */
     private $singleShopChecker;
 
     /**
-     * @var AccessibilityCheckerInterface
+     * @var ProductMultipleShopsAssociatedAccessibilityChecker
      */
     private $multipleShopsChecker;
 
@@ -107,8 +108,8 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         FeatureInterface $multistoreFeature,
         ShopConstraintContextInterface $shopConstraintContext,
         FormFactoryInterface $formFactory,
-        AccessibilityCheckerInterface $singleShopChecker,
-        AccessibilityCheckerInterface $multipleShopsChecker
+        ProductSingleShopAssociatedAccessibilityChecker $singleShopChecker,
+        ProductMultipleShopsAssociatedAccessibilityChecker $multipleShopsChecker
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;

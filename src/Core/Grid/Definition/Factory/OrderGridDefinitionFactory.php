@@ -28,12 +28,14 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ButtonBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ModalFormSubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\PrintDeliverySlipAccessibilityChecker;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\PrintInvoiceAccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
@@ -61,7 +63,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Creates definition for Orders grid
  */
-final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
+class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     public const GRID_ID = 'order';
 
@@ -76,11 +78,6 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
     private $orderCountriesChoiceProvider;
 
     /**
-     * @var FormChoiceProviderInterface
-     */
-    private $orderStatusesChoiceProvider;
-
-    /**
      * @var string
      */
     private $contextDateFormat;
@@ -89,18 +86,19 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
      * @var FeatureInterface
      */
     private $multistoreFeature;
+
     /**
-     * @var FormChoiceProviderInterface
+     * @var OrderStateByIdChoiceProvider
      */
     private $orderStatesChoiceProvider;
 
     /**
-     * @var AccessibilityCheckerInterface
+     * @var PrintInvoiceAccessibilityChecker
      */
     private $printInvoiceAccessibilityChecker;
 
     /**
-     * @var AccessibilityCheckerInterface
+     * @var PrintDeliverySlipAccessibilityChecker
      */
     private $printDeliverySlipAccessibilityChecker;
 
@@ -108,29 +106,26 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
      * @param HookDispatcherInterface $dispatcher
      * @param ConfigurationInterface $configuration
      * @param FormChoiceProviderInterface $orderCountriesChoiceProvider
-     * @param FormChoiceProviderInterface $orderStatusesChoiceProvider
      * @param string $contextDateFormat
      * @param FeatureInterface $multistoreFeature
-     * @param AccessibilityCheckerInterface $printInvoiceAccessibilityChecker
-     * @param AccessibilityCheckerInterface $printDeliverySlipAccessibilityChecker
-     * @param FormChoiceProviderInterface $orderStatesChoiceProvider
+     * @param PrintInvoiceAccessibilityChecker $printInvoiceAccessibilityChecker
+     * @param PrintDeliverySlipAccessibilityChecker $printDeliverySlipAccessibilityChecker
+     * @param OrderStateByIdChoiceProvider $orderStatesChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
         ConfigurationInterface $configuration,
         FormChoiceProviderInterface $orderCountriesChoiceProvider,
-        FormChoiceProviderInterface $orderStatusesChoiceProvider,
         $contextDateFormat,
         FeatureInterface $multistoreFeature,
-        AccessibilityCheckerInterface $printInvoiceAccessibilityChecker,
-        AccessibilityCheckerInterface $printDeliverySlipAccessibilityChecker,
-        FormChoiceProviderInterface $orderStatesChoiceProvider
+        PrintInvoiceAccessibilityChecker $printInvoiceAccessibilityChecker,
+        PrintDeliverySlipAccessibilityChecker $printDeliverySlipAccessibilityChecker,
+        OrderStateByIdChoiceProvider $orderStatesChoiceProvider
     ) {
         parent::__construct($dispatcher);
 
         $this->configuration = $configuration;
         $this->orderCountriesChoiceProvider = $orderCountriesChoiceProvider;
-        $this->orderStatusesChoiceProvider = $orderStatusesChoiceProvider;
         $this->contextDateFormat = $contextDateFormat;
         $this->multistoreFeature = $multistoreFeature;
         $this->printInvoiceAccessibilityChecker = $printInvoiceAccessibilityChecker;
@@ -344,7 +339,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ->add((new Filter('osname', ChoiceType::class))
             ->setTypeOptions([
                 'required' => false,
-                'choices' => $this->orderStatusesChoiceProvider->getChoices(),
+                'choices' => $this->orderStatesChoiceProvider->getChoices(),
                 'translation_domain' => false,
             ])
             ->setAssociatedColumn('osname')

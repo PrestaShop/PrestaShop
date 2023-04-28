@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -59,12 +59,14 @@ class TitleGridDefinitionFactory extends AbstractGridDefinitionFactory
     public const GRID_ID = 'title';
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var GenderChoiceProvider
      */
     private $genderChoiceProvider;
 
-    public function __construct(HookDispatcherInterface $hookDispatcher, FormChoiceProviderInterface $genderChoiceProvider)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        GenderChoiceProvider $genderChoiceProvider
+    ) {
         parent::__construct($hookDispatcher);
         $this->genderChoiceProvider = $genderChoiceProvider;
     }

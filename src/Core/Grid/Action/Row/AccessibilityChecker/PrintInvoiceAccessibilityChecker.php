@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 /**
  * Checks if print invoice option can be visible in order list.
  */
-final class PrintInvoiceAccessibilityChecker implements AccessibilityCheckerInterface
+class PrintInvoiceAccessibilityChecker implements AccessibilityCheckerInterface
 {
     /**
      * {@inheritdoc}

@@ -2,10 +2,9 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.form.choice_provider.language_by_id:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
-    arguments:
-      - '@prestashop.adapter.data_provider.language'
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider:
+    autowire: true
+    public: false
 
   prestashop.core.form.choice_provider.all_languages:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider'
@@ -56,13 +55,12 @@ services:
       - '@prestashop.adapter.data_provider.carrier'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
-  prestashop.core.form.choice_provider.order_state_by_id:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider:
+    autowire: true
+    public: false
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-      - '@prestashop.adapter.data_provider.order_state'
-      - '@PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator'
-      - '@translator'
+      $languageId: '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      $orderStateDataProvider: '@prestashop.adapter.data_provider.order_state'
 
   prestashop.core.form.choice_provider.invoice_model_by_name:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider'
@@ -296,20 +294,18 @@ services:
     arguments:
       - '@translator'
 
-  prestashop.core.form.choice_provider.gender_choice_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider'
-    arguments:
-      - '@translator'
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider:
+    autowire: true
+    public: false
 
-  prestashop.core.form.choice_provider.contact_type_choice_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider'
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider:
+    autowire: true
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      $langId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
-  prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider'
-    arguments:
-      - '@translator'
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider:
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ReductionTypeChoiceProvider:
     autowire: true
@@ -341,4 +337,24 @@ services:
   prestashop.core.form.choice_provider.tax_inclusion:
     alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider
     public: true
+    deprecated: ~
+
+  prestashop.core.form.choice_provider.language_by_id:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider
+    deprecated: ~
+
+  prestashop.core.form.choice_provider.order_state_by_id:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider
+    deprecated: ~
+
+  prestashop.core.form.choice_provider.gender_choice_provider:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider
+    deprecated: ~
+
+  prestashop.core.form.choice_provider.contact_type_choice_provider:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider
+    deprecated: ~
+
+  prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider:
+    alias: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider
     deprecated: ~

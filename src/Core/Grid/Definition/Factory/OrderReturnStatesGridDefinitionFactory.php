@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteOrderReturnStatesAccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
@@ -58,13 +58,13 @@ final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitio
     public const GRID_ID = 'order_return_states';
 
     /**
-     * @var AccessibilityCheckerInterface
+     * @var DeleteOrderReturnStatesAccessibilityChecker
      */
     protected $deleteOrderReturnStatesAccessibilityChecker;
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        AccessibilityCheckerInterface $deleteOrderReturnStatesAccessibilityChecker
+        DeleteOrderReturnStatesAccessibilityChecker $deleteOrderReturnStatesAccessibilityChecker
     ) {
         parent::__construct($hookDispatcher);
 

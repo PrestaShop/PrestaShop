@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -55,17 +55,17 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     public const GRID_ID = 'email_logs';
 
     /**
-     * @var ConfigurableFormChoiceProviderInterface
+     * @var LanguageByIdChoiceProvider
      */
     private $languageChoiceProvider;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param ConfigurableFormChoiceProviderInterface $languageChoiceProvider
+     * @param LanguageByIdChoiceProvider $languageChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        ConfigurableFormChoiceProviderInterface $languageChoiceProvider
+        LanguageByIdChoiceProvider $languageChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->languageChoiceProvider = $languageChoiceProvider;

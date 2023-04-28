@@ -134,8 +134,9 @@ services:
       - '@prestashop.adapter.multistore_feature'
       - '@prestashop.core.form.choice_provider.invoice_model_by_name'
 
-  prestashop.adapter.data_provider.language:
-    class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
+  PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider:
+    autowire: true
+    public: false
 
   prestashop.adapter.language.activator:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
@@ -293,3 +294,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  # deprecated services
+  prestashop.adapter.data_provider.language:
+    alias: PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider
+    deprecated: ~

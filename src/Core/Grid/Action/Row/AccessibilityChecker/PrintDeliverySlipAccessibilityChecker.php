@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 /**
  * Checks if print delivery slip option can be visible in order list.
  */
-final class PrintDeliverySlipAccessibilityChecker implements AccessibilityCheckerInterface
+class PrintDeliverySlipAccessibilityChecker implements AccessibilityCheckerInterface
 {
     /**
      * {@inheritdoc}

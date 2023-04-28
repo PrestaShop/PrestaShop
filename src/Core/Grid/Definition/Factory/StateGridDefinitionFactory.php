@@ -56,7 +56,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * State grid definition
  */
-final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
+class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;

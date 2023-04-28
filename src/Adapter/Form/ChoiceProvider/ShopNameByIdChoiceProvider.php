@@ -32,7 +32,7 @@ use Shop;
 /**
  * Provides shop names by name => id value pairs
  */
-final class ShopNameByIdChoiceProvider implements FormChoiceProviderInterface
+class ShopNameByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * {@inheritdoc}

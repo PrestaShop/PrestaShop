@@ -55,8 +55,9 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     /**
      * @param HookDispatcherInterface $hookDispatcher
      */
-    public function __construct(HookDispatcherInterface $hookDispatcher)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->hookDispatcher = $hookDispatcher;
     }
 
