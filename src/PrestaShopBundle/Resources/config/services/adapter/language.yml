@@ -79,5 +79,3 @@ services:
     public: false
     arguments:
       $context: '@prestashop.adapter.legacy.context'
-
-  PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface: '@PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider'

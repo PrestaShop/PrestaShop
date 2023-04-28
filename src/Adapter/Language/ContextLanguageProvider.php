@@ -29,10 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface;
 
+/**
+ * @experimental This will be refactored once the Context replacement architecture has been decided
+ */
 class ContextLanguageProvider implements ContextLanguageProviderInterface
 {
     /**
@@ -46,7 +48,7 @@ class ContextLanguageProvider implements ContextLanguageProviderInterface
         $this->context = $context;
     }
 
-    public function getLanguageId(): LanguageId
+    public function getLanguageId(): int
     {
         $langId = (int) $this->context->getContext()->language->id;
 
@@ -54,6 +56,6 @@ class ContextLanguageProvider implements ContextLanguageProviderInterface
             throw new CoreException('Context language is missing');
         }
 
-        return new LanguageId($langId);
+        return $langId;
     }
 }

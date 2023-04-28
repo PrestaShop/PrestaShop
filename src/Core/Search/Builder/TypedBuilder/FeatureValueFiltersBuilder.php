@@ -71,7 +71,7 @@ class FeatureValueFiltersBuilder extends AbstractFiltersBuilder implements Typed
         }
 
         $filterParameters['filters']['feature_id'] = $this->getFeatureId();
-        $filterParameters['filters']['language_id'] = $this->contextLanguageProvider->getLanguageId()->getValue();
+        $filterParameters['filters']['language_id'] = $this->contextLanguageProvider->getLanguageId();
 
         return new FeatureValueFilters($filterParameters);
     }

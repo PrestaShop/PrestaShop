@@ -28,9 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Language;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-
+/**
+ * @experimental This will be refactored once the Context replacement architecture has been decided
+ */
 interface ContextLanguageProviderInterface
 {
-    public function getLanguageId(): LanguageId;
+    public function getLanguageId(): int;
 }
