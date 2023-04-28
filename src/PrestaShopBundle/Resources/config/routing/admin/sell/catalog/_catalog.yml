@@ -30,10 +30,6 @@ _features:
   resource: "features.yml"
   prefix: /features
 
-_feature_values:
-  resource: "feature_value.yml"
-  prefix: /features/{featureId}/values/
-
 _attributes:
   resource: "attribute.yml"
   prefix: /attribute-groups/{attributeGroupId}/attributes/

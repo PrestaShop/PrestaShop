@@ -1,4 +1,4 @@
-# @todo: legacy links can be uncommented when page is fully migrated.
+# @todo: feature flag can be removed once page is fully migrated
 admin_features_index:
   path: /
   methods: [ GET ]
@@ -21,7 +21,6 @@ admin_features_search:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminFeatures
-    # _legacy_link: AdminFeatures
     gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory
     redirectRoute: admin_features_index
 
@@ -78,5 +77,31 @@ admin_features_bulk_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::bulkDeleteAction
     _legacy_controller: AdminFeatures
+  requirements:
+    featureId: \d+
+
+admin_feature_values_index:
+  path: /{featureId}/values
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureValueController::indexAction
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures
+    _legacy_feature_flag: feature
+  requirements:
+    featureId: \d+
+
+admin_feature_values_search:
+  path: /{featureId}/values
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory
+    redirectRoute: admin_feature_values_index
+    _legacy_controller: AdminFeatures
+    _legacy_link: AdminFeatures
+    _legacy_feature_flag: feature
+    redirectQueryParamsToKeep:
+      - 'featureId'
   requirements:
     featureId: \d+
