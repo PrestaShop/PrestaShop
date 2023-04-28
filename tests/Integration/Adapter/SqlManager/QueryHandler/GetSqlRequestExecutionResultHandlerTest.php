@@ -29,6 +29,7 @@ namespace Tests\Integration\Adapter\SqlManager\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
@@ -103,5 +104,11 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
         /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
         $sqlRequestExecutionResult = $this->queryBus->handle($query);
         self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+    }
+
+    public function testUnauthorizedFunctionInSelect(): void
+    {
+        $this->expectException(SqlRequestConstraintException::class);
+        $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT load_file(\'/etc/passwd\') FROM ps_zone;'));
     }
 }

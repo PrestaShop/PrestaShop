@@ -291,7 +291,9 @@ class AddCurrency extends LocalizationBasePage {
 
     const isVisible = this.elementVisible(page, `${this.restoreDefaultSettingsModal}.show`, 2000);
 
-    await this.elementVisible(page, `${this.restoreDefaultSettingsButton}:not(.spinner)`);
+    await this.elementVisible(page, `${this.restoreDefaultSettingsButton}:not(.spinner)`, 2000);
+
+    await this.elementNotVisible(page, `${this.restoreDefaultSettingsModal}.show`, 2000);
 
     return isVisible;
   }
