@@ -77,7 +77,6 @@ class SqlTranslationLoader implements LoaderInterface
             SELECT `key`, `translation`, `domain`
             FROM `' . _DB_PREFIX_ . 'translation`
             WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'];
-
         $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
 
         $catalogue = new MessageCatalogue($locale);
