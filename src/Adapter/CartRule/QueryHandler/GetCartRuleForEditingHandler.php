@@ -33,6 +33,7 @@ use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
+use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleInformationFo
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleMinimumForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleReductionForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleRestrictionsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
@@ -52,8 +54,19 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
 /**
  * Handles command which gets catalog price rule for editing using legacy object model
  */
-final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements GetCartRuleForEditingHandlerInterface
+class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements GetCartRuleForEditingHandlerInterface
 {
+    /**
+     * @var CartRuleRepository
+     */
+    private $cartRuleRepository;
+
+    public function __construct(
+        CartRuleRepository $cartRuleRepository
+    ) {
+        $this->cartRuleRepository = $cartRuleRepository;
+    }
+
     /**
      * @param GetCartRuleForEditing $query
      *
@@ -119,7 +132,7 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
             (bool) $cartRule->country_restriction,
             (bool) $cartRule->carrier_restriction,
             (bool) $cartRule->group_restriction,
-            (bool) $cartRule->cart_rule_restriction,
+            $this->cartRuleRepository->getRestrictedCartRuleIds(new CartRuleId((int) $cartRule->id)),
             (bool) $cartRule->product_restriction,
             (bool) $cartRule->shop_restriction
         );

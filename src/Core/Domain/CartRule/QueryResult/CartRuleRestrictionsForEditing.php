@@ -46,9 +46,9 @@ class CartRuleRestrictionsForEditing
     private $groupRestriction;
 
     /**
-     * @var bool
+     * @var int[]
      */
-    private $cartRuleRestriction;
+    private $restrictedCartRuleIds;
 
     /**
      * @var bool
@@ -64,14 +64,14 @@ class CartRuleRestrictionsForEditing
         bool $countryRestriction,
         bool $carrierRestriction,
         bool $groupRestriction,
-        bool $cartRuleRestriction,
+        array $restrictedCartRuleIds,
         bool $productRestriction,
         bool $shopRestriction
     ) {
         $this->countryRestriction = $countryRestriction;
         $this->carrierRestriction = $carrierRestriction;
         $this->groupRestriction = $groupRestriction;
-        $this->cartRuleRestriction = $cartRuleRestriction;
+        $this->restrictedCartRuleIds = $restrictedCartRuleIds;
         $this->productRestriction = $productRestriction;
         $this->shopRestriction = $shopRestriction;
     }
@@ -101,11 +101,11 @@ class CartRuleRestrictionsForEditing
     }
 
     /**
-     * @return bool
+     * @return int[]
      */
-    public function isCartRuleRestriction(): bool
+    public function getRestrictedCartRuleIds(): array
     {
-        return $this->cartRuleRestriction;
+        return $this->restrictedCartRuleIds;
     }
 
     /**

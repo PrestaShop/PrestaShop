@@ -120,6 +120,38 @@ class CartRuleRepository extends AbstractObjectModelRepository
 
     /**
      * @param CartRuleId $cartRuleId
+     *
+     * @return int[]
+     */
+    public function getRestrictedCartRuleIds(CartRuleId $cartRuleId): array
+    {
+        $cartRuleIdValue = $cartRuleId->getValue();
+        $results = $this->connection->createQueryBuilder()
+            ->select('crc.cart_rule_1')
+            ->from($this->dbPrefix . 'cart_rule_combination', 'crc')
+            ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleIdValue)
+            ->execute()
+            ->fetchAssociative()
+        ;
+
+        if (empty($results)) {
+            return [];
+        }
+
+        $cartRuleIds = [];
+        foreach ($results as $result) {
+            $cartRule1 = (int) $result['id_cart_rule_1'];
+            $cartRule2 = (int) $result['id_cart_rule_2'];
+            // if one column is the id of current cart rule then we append the other column value to array
+            $cartRuleIds[] = $cartRule1 === $cartRuleIdValue ? $cartRule2 : $cartRule1;
+        }
+
+        return $cartRuleIds;
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
      * @param CartRuleId[] $restrictedCartRuleIds
      *
      * @return void
@@ -149,7 +181,7 @@ class CartRuleRepository extends AbstractObjectModelRepository
     {
         $this->connection->createQueryBuilder()
             ->delete($this->dbPrefix . 'cart_rule_combination', 'crc')
-            ->where('crc.cart_rule_1 = :cartRuleId OR crc.cart_rule_2 = :cartRuleId')
+            ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()
         ;
