@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -40,13 +41,13 @@ final class CleanHtmlValidator extends ConstraintValidator
     private const EMBEDDABLE_HTML_PATTERN = '/<[\s]*(i?frame|form|input|embed|object)/ims';
 
     /**
-     * @var bool
+     * @var ShopConfigurationInterface
      */
-    private $allowEmbeddableHtml;
+    private $shopConfiguration;
 
-    public function __construct(bool $allowEmbeddableHtml)
+    public function __construct(ShopConfigurationInterface $shopConfiguration)
     {
-        $this->allowEmbeddableHtml = $allowEmbeddableHtml;
+        $this->shopConfiguration = $shopConfiguration;
     }
 
     /**
@@ -69,7 +70,7 @@ final class CleanHtmlValidator extends ConstraintValidator
         $containsScriptTags = preg_match('/<[\s]*script/ims', $value) || preg_match('/.*script\:/ims', $value);
         $containsJavascriptEvents = preg_match('/(' . $this->getJavascriptEvents() . ')[\s]*=/ims', $value);
 
-        $iframe = !$this->allowEmbeddableHtml && preg_match(self::EMBEDDABLE_HTML_PATTERN, $value);
+        $iframe = !$this->shopConfiguration->getBoolean('PS_ALLOW_HTML_IFRAME') && preg_match(self::EMBEDDABLE_HTML_PATTERN, $value);
         if ($containsScriptTags || $containsJavascriptEvents || $iframe) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')

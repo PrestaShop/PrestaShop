@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -37,16 +38,13 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class DefaultLanguageValidator extends ConstraintValidator
 {
     /**
-     * @var int
+     * @var ShopConfigurationInterface
      */
-    private $defaultLanguageId;
+    private $configuration;
 
-    /**
-     * @param int $defaultLanguageId
-     */
-    public function __construct($defaultLanguageId)
+    public function __construct(ShopConfigurationInterface $configuration)
     {
-        $this->defaultLanguageId = $defaultLanguageId;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -62,7 +60,7 @@ class DefaultLanguageValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'array');
         }
 
-        if (empty($value[$this->defaultLanguageId])) {
+        if (empty($value[$this->configuration->getInt('PS_LANG_DEFAULT')])) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter(

@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class CleanHtmlWithIframeValidatorTest extends ConstraintValidatorTestCase
@@ -110,6 +111,11 @@ class CleanHtmlWithIframeValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new CleanHtmlValidator(true);
+        $mock = $this->createMock(ShopConfigurationInterface::class);
+        $mock->expects($this->any())
+            ->method('get')
+            ->willReturn(false);
+
+        return new CleanHtmlValidator($mock);
     }
 }

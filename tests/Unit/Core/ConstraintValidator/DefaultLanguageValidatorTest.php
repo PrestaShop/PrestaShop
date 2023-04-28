@@ -28,6 +28,7 @@ namespace Tests\Unit\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\DefaultLanguageValidator;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
@@ -130,6 +131,11 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new DefaultLanguageValidator($this->defaultLanguageId);
+        $mock = $this->createMock(ShopConfigurationInterface::class);
+        $mock->expects($this->any())
+            ->method('getInt')
+            ->willReturn(1);
+
+        return new DefaultLanguageValidator($mock);
     }
 }
