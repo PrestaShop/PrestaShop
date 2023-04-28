@@ -443,7 +443,7 @@ class AdminProductsControllerCore extends AdminController
                 $language = Language::getLanguage((int) $lang);
 
                 if (!Validate::isCleanHtml($description)) {
-                    $_FILES['attachment_file']['error'][] = $this->trans('Invalid description for %s language', [$language['name']], 'Admin.Catalog.Notification');
+                    $_FILES['attachment_file']['error'][] = $this->trans('Invalid description for %s language.', [$language['name']], 'Admin.Catalog.Notification');
                 }
             }
 
@@ -946,7 +946,7 @@ class AdminProductsControllerCore extends AdminController
 
         foreach ($id_specific_prices as $key => $id_specific_price) {
             if ($reduction_types[$key] == 'percentage' && ((float) $reductions[$key] <= 0 || (float) $reductions[$key] > 100)) {
-                $this->errors[] = $this->trans('Submitted reduction value (0-100) is out-of-range', [], 'Admin.Catalog.Notification');
+                $this->errors[] = $this->trans('The submitted reduction value (0-100) is out-of-range.', [], 'Admin.Catalog.Notification');
             } elseif ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key])) {
                 $specific_price = new SpecificPrice((int) ($id_specific_price));
                 $specific_price->id_shop = (int) $id_shops[$key];
@@ -1001,11 +1001,11 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if (($price == '-1') && ((float) $reduction == '0')) {
-            $this->errors[] = $this->trans('No reduction value has been submitted', [], 'Admin.Catalog.Notification');
+            $this->errors[] = $this->trans('No reduction value has been submitted.', [], 'Admin.Catalog.Notification');
         } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
             $this->errors[] = $this->trans('Invalid date range', [], 'Admin.Notifications.Error');
         } elseif ($reduction_type == 'percentage' && ((float) $reduction <= 0 || (float) $reduction > 100)) {
-            $this->errors[] = $this->trans('Submitted reduction value (0-100) is out-of-range', [], 'Admin.Catalog.Notification');
+            $this->errors[] = $this->trans('The submitted reduction value (0-100) is out-of-range.', [], 'Admin.Catalog.Notification');
         } elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
             $specificPrice = new SpecificPrice();
             $specificPrice->id_product = (int) $id_product;

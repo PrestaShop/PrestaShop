@@ -77,7 +77,7 @@ final class NewsletterRegistrationsKpi implements KpiInterface
         $helper->color = 'color3';
 
         $helper->title = $this->translator->trans('Newsletter Registrations', [], 'Admin.Orderscustomers.Feature');
-        $helper->subtitle = $this->translator->trans('All Time', [], 'Admin.Global');
+        $helper->subtitle = $this->translator->trans('All time', [], 'Admin.Global');
 
         if (false !== $this->kpiConfiguration->get('NEWSLETTER_REGISTRATIONS')) {
             $helper->value = $this->kpiConfiguration->get('NEWSLETTER_REGISTRATIONS');
