@@ -59,3 +59,8 @@ services:
       - '@prestashop.adapter.data_provider.language'
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\FeatureFlagCommand:
+    autowire: true
+    tags:
+      - 'console.command'
