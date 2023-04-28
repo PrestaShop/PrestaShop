@@ -673,6 +673,8 @@ class AdminControllerCore extends Controller
                 break;
         }
 
+        Hook::exec('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$breadcrumbs2], null, true);
+
         $this->context->smarty->assign([
             'breadcrumbs2' => $breadcrumbs2,
             'quick_access_current_link_name' => Tools::safeOutput($breadcrumbs2['tab']['name'] . ' - ' . $breadcrumbs2['action']['name']),
