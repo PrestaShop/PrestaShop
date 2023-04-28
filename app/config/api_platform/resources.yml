@@ -1,8 +1,10 @@
 resources:
-  PrestaShopBundle\Api\Resource\HookStatus:
+  PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus:
     operations:
       ApiPlatform\Metadata\Get:
-        provider: PrestaShopBundle\Api\StateProvider\HookStatusProvider
+        provider: PrestaShopBundle\Api\Provider\QueryProvider
+        extraProperties:
+          query: PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus
         uriTemplate: '/hook-status/{id}'
         requirements:
           id: '\d+'

@@ -32,7 +32,7 @@ use ApiPlatform\Metadata\Get;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShopBundle\Api\StateProvider\HookStatusProvider;
+use PrestaShopBundle\Api\Provider\QueryProvider;
 
 class HookStatusProviderTest extends TestCase
 {
@@ -71,8 +71,9 @@ class HookStatusProviderTest extends TestCase
 
     public function testProvideHookStatus(): void
     {
-        $hookStatusProvider = new HookStatusProvider($this->queryBus);
+        $hookStatusProvider = new QueryProvider($this->queryBus);
         $get = new Get();
+        $get->withExtraProperties(['query' => "PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus"]);
         self::assertEquals(false, $hookStatusProvider->provide($get, ['id' => 1])->isActive());
         self::assertEquals(true, $hookStatusProvider->provide($get, ['id' => 2])->isActive());
     }

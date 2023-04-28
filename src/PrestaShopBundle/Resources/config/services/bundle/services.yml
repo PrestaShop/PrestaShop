@@ -104,7 +104,7 @@ services:
     public: false
     tags: [ 'container.env_var_processor' ]
 
-  PrestaShopBundle\Api\StateProvider\HookStatusProvider:
+  PrestaShopBundle\Api\Provider\QueryProvider:
     tags: [ 'api_platform.state_provider' ]
     public: false
     autowire: true

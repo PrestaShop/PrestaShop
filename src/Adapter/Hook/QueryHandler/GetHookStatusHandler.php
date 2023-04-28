@@ -32,6 +32,7 @@ use Hook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 
 /**
  * @internal
@@ -50,6 +51,6 @@ final class GetHookStatusHandler implements GetHookStatusHandlerInterface
             throw new HookNotFoundException(sprintf('Hook with id "%d" was not found.', $hookId));
         }
 
-        return (bool) $hook->active;
+        return new HookStatus($hook->id, (bool) $hook->active);
     }
 }
