@@ -32,7 +32,7 @@ use Context;
 use Currency;
 use Employee;
 use Language;
-use PrestaShopBundle\Bridge\SymfonyLayoutFeature;
+use PrestaShopBundle\Bridge\SymfonyLayoutFeatureInterface;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
@@ -58,19 +58,19 @@ class LegacyContext
     private $tools;
 
     /**
-     * @var SymfonyLayoutFeature|null
+     * @var SymfonyLayoutFeatureInterface|null
      */
     private $symfonyLayoutFeature;
 
     /**
      * @param $mailThemesUri
      * @param Tools|null $tools
-     * @param SymfonyLayoutFeature|null $symfonyLayoutFeature
+     * @param SymfonyLayoutFeatureInterface|null $symfonyLayoutFeature
      */
     public function __construct(
         $mailThemesUri = null,
         Tools $tools = null,
-        SymfonyLayoutFeature $symfonyLayoutFeature = null
+        SymfonyLayoutFeatureInterface $symfonyLayoutFeature = null
     ) {
         $this->mailThemesUri = $mailThemesUri;
         $this->tools = null !== $tools ? $tools : new Tools();

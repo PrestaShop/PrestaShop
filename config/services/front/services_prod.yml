@@ -57,3 +57,6 @@ services:
       class: PrestaShopBundle\Translation\TranslatorLanguageLoader
       arguments:
         - '@prestashop.adapter.module.repository.module_repository'
+
+    PrestaShopBundle\Bridge\SymfonyLayoutFeatureInterface:
+      class: PrestaShopBundle\Bridge\DisabledSymfonyLayoutFeature

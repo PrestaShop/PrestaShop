@@ -17,7 +17,7 @@ services:
     arguments:
       - "%mail_themes_uri%"
       - '@PrestaShop\PrestaShop\Adapter\Tools'
-      - '@PrestaShopBundle\Bridge\SymfonyLayoutFeature'
+      - '@PrestaShopBundle\Bridge\SymfonyLayoutFeatureInterface'
 
   prestashop.adapter.legacy.context:
     alias: PrestaShop\PrestaShop\Adapter\LegacyContext

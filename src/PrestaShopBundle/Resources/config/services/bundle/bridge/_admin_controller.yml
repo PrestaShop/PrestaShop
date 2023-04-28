@@ -20,3 +20,5 @@ services:
 
   PrestaShopBundle\Bridge\SymfonyLayoutFeature:
     autowire: true
+
+  PrestaShopBundle\Bridge\SymfonyLayoutFeatureInterface: '@PrestaShopBundle\Bridge\SymfonyLayoutFeature'

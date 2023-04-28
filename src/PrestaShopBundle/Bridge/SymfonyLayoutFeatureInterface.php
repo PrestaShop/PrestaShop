@@ -28,41 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
-use Symfony\Component\HttpFoundation\RequestStack;
-
-/**
- * This service is used to detect if Symfony layout is enabled, it can be globally enabled via a feature flag
- * or punctually via a query parameter.
- */
-class SymfonyLayoutFeature implements SymfonyLayoutFeatureInterface
+interface SymfonyLayoutFeatureInterface
 {
-    /**
-     * @var FeatureFlagRepository
-     */
-    private $featureFlagRepository;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    public function __construct(
-        FeatureFlagRepository $featureFlagRepository,
-        RequestStack $requestStack
-    ) {
-        $this->featureFlagRepository = $featureFlagRepository;
-        $this->requestStack = $requestStack;
-    }
-
-    public function isEnabled(): bool
-    {
-        if ($this->requestStack->getCurrentRequest() &&
-            $this->requestStack->getCurrentRequest()->query->getBoolean('use_symfony_layout', false)) {
-            return true;
-        }
-
-        return $this->featureFlagRepository->isEnabled(FeatureFlagSettings::SYMFONY_LAYOUT);
-    }
+    public function isEnabled(): bool;
 }

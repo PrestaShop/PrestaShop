@@ -1,2 +1,6 @@
 imports:
     - { resource: ../common.yml }
+
+services:
+  PrestaShopBundle\Bridge\SymfonyLayoutFeatureInterface:
+    class: PrestaShopBundle\Bridge\DisabledSymfonyLayoutFeature
