@@ -40,6 +40,7 @@ class CurrencyChoiceType extends AbstractType
      * @var CurrencyByIdChoiceProvider
      */
     private $currencyByIdChoiceProvider;
+
     /**
      * @var CurrencyDataProviderInterface
      */
@@ -86,6 +87,8 @@ class CurrencyChoiceType extends AbstractType
             'placeholder' => false,
             'attr' => [
                 'data-default-currency-symbol' => $this->currencyDataProvider->getDefaultCurrencySymbol(),
+                'data-minimumResultsForSearch' => '7',
+                'data-toggle' => 'select2',
             ],
         ]);
     }
