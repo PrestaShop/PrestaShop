@@ -226,7 +226,6 @@ services:
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       $carrierChoices: '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
-      $currencyChoices: '@=service("PrestaShop\\PrestaShop\\Core\\Form\\ChoiceProvider\\CurrencyByIdChoiceProvider").getChoices()'
       $countryDataProvider: '@prestashop.adapter.data_provider.country'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType:
