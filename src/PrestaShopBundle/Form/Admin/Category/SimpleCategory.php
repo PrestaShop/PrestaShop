@@ -95,10 +95,7 @@ class SimpleCategory extends CommonAbstractType
             ->add('id_parent', ChoiceType::class, [
                 'choices' => $this->categories,
                 'required' => true,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
                 'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature'),
             ]);
     }

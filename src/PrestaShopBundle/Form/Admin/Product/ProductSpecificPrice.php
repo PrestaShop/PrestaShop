@@ -173,10 +173,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 'choices' => $this->currencies,
                 'required' => false,
                 'label' => false,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
                 'placeholder' => $this->translator->trans('All currencies', [], 'Admin.Global'),
             ]
         )
@@ -187,10 +184,7 @@ class ProductSpecificPrice extends CommonAbstractType
                     'choices' => $this->countries,
                     'required' => false,
                     'label' => false,
-                    'attr' => [
-                        'data-toggle' => 'select2',
-                        'data-minimumResultsForSearch' => '7',
-                    ],
+                    'autocomplete' => true,
                     'placeholder' => $this->translator->trans('All countries', [], 'Admin.Global'),
                 ]
             )
@@ -201,10 +195,7 @@ class ProductSpecificPrice extends CommonAbstractType
                     'choices' => $this->groups,
                     'required' => false,
                     'label' => false,
-                    'attr' => [
-                        'data-toggle' => 'select2',
-                        'data-minimumResultsForSearch' => '7',
-                    ],
+                    'autocomplete' => true,
                     'placeholder' => $this->translator->trans('All groups', [], 'Admin.Global'),
                 ]
             )

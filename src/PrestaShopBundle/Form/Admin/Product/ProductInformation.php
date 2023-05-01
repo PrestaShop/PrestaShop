@@ -291,10 +291,7 @@ class ProductInformation extends CommonAbstractType
             ->add('id_manufacturer', FormType\ChoiceType::class, [
                 'choices' => $this->manufacturers,
                 'required' => false,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
                 'label' => $this->translator->trans('Brand', [], 'Admin.Catalog.Feature'),
                 'placeholder' => $this->translator->trans('Choose a brand', [], 'Admin.Catalog.Feature'),
             ])

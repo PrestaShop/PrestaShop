@@ -192,10 +192,7 @@ class ProductPrice extends CommonAbstractType
                             'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
                         ];
                     },
-                    'attr' => [
-                        'data-toggle' => 'select2',
-                        'data-minimumResultsForSearch' => '7',
-                    ],
+                    'autocomplete' => true,
                     'label' => $this->translator->trans('Tax rule', [], 'Admin.Catalog.Feature'),
                 ]
             )
