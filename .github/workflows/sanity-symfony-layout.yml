@@ -1,8 +1,5 @@
 name: UI tests (Symfony layout)
-on:
-  pull_request_target:
-    types: [opened, labeled, unlabeled, synchronize]
-
+on: [ push, pull_request ]
 permissions:
   contents: read   #   to fetch code (actions/checkout)
 concurrency:
@@ -10,8 +7,6 @@ concurrency:
   cancel-in-progress: true
 jobs:
   sanity:
-    # Only trigger this job when the label 'Symfony layout' is set on the PR
-    if: github.event.label.name == 'Symfony layout'
     permissions:
       contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
@@ -36,7 +31,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Enable Symfony layout
-        run: php ./vendor/bin/console prestashop:feature-flag enable symfony_layout
+        run: php ./bin/console prestashop:feature-flag enable symfony_layout
 
       - name: Cache Playwright browsers
         uses: actions/cache@v3
