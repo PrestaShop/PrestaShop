@@ -32,11 +32,12 @@
   {% endblock %}
 </head>
 
+{# Should be handled somewhere else and set as global variable, the twig function won't be useful anymore then #}
 {% set js_router_metadata = js_router_metadata() %}
 <body
   class="lang-{{ iso_user }}{% if lang_is_rtl %} lang-rtl{% endif %} {{ controller_name|escape|lower }}{% if collapse_menu %} page-sidebar-closed{% endif %}{% if is_multishop|default(false) %} multishop-enabled{% endif %}{% if lite_display|default(false) %} light_display_layout{% endif %}{% if debug_mode|default(false) %} developer-mode{% endif %}"
   {% if js_router_metadata is defined and js_router_metadata.base_url is defined %}data-base-url="{{ js_router_metadata.base_url }}"{% endif %}
-  {% if js_router_metadata is defined and js_router_metadata.token %}data-token="{$js_router_metadata.token}"{% endif %}
+  {% if js_router_metadata is defined and js_router_metadata.token %}data-token="{{ js_router_metadata.token }}"{% endif %}
 >
 
 {# Layout header #}
