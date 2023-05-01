@@ -77,6 +77,14 @@ class CurrencyChoiceType extends AbstractType
             return $currencies;
         });
 
+        $resolver->addNormalizer('attr', function (Options $options, array $attr) {
+            $attr['data-default-currency-symbol'] = $this->currencyDataProvider->getDefaultCurrencySymbol();
+            $attr['data-minimumResultsForSearch'] = '7';
+            $attr['data-toggle'] = 'select2';
+
+            return $attr;
+        });
+
         $resolver->setDefaults([
             'required' => false,
             'add_all_currencies_option' => false,
@@ -85,11 +93,6 @@ class CurrencyChoiceType extends AbstractType
             'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
             'label' => 'Currency',
             'placeholder' => false,
-            'attr' => [
-                'data-default-currency-symbol' => $this->currencyDataProvider->getDefaultCurrencySymbol(),
-                'data-minimumResultsForSearch' => '7',
-                'data-toggle' => 'select2',
-            ],
         ]);
     }
 }
