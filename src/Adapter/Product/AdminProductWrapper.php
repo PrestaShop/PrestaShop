@@ -41,7 +41,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Form\Extension\CustomMoneyTypeExtension;
+use PrestaShopBundle\Form\FormHelper;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -145,7 +145,7 @@ class AdminProductWrapper
         // This is VERY UGLY, but since ti ComputingPrecision can never return enough decimals for now we have no
         // choice but to hard code this one to make sure enough precision is saved in the DB or it results in errors
         // of 1 cent in the shop
-        $computingPrecision = CustomMoneyTypeExtension::PRESTASHOP_DECIMALS;
+        $computingPrecision = FormHelper::DEFAULT_PRICE_PRECISION;
         if (!isset($combinationValues['attribute_ecotax']) || 0.0 === (float) $combinationValues['attribute_ecotax']) {
             $combinationValues['attribute_ecotax'] = 0;
         } else {
