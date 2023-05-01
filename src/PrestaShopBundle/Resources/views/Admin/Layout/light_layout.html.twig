@@ -1,0 +1,108 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<!DOCTYPE html>
+<html lang="{{ iso_user }}">
+<head>
+  {% block header %}
+    {{ include('@PrestaShop/Admin/Layout/header.html.twig') }}
+    <link href="{{ asset('themes/new-theme/public/light_theme.css') }}" rel="stylesheet" type="text/css">
+    {% block stylesheets %}{% endblock %}
+    {% block extra_stylesheets %}{% endblock %}
+  {% endblock %}
+</head>
+
+{# Should be handled somewhere else and set as global variable, the twig function won't be useful anymore then #}
+{% set js_router_metadata = js_router_metadata() %}
+<body
+  class="lang-{{ iso_user }}{%if lang_is_rtl %} lang-rtl{% endif %} {{ controller_name|escape|lower }}{% if collapse_menu %} page-sidebar-closed{% endif %}{% if debug_mode|default(false) %} developer-mode{% endif %}"
+  {% if js_router_metadata is defined and js_router_metadata.base_url is defined %}data-base-url="{{ js_router_metadata.base_url }}"{% endif %}
+  {% if js_router_metadata is defined and js_router_metadata.token %}data-token="{{ js_router_metadata.token }}"{% endif %}
+>
+
+<div id="main-div" class="light_display_layout">
+  {% if install_dir_exists|default(false) %}
+  <div class="alert alert-warning">
+    {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
+  </div>
+  {% else %}
+    {% if modal_module_list is defined %}
+      {{ modal_module_list }}
+    {% endif %}
+
+    <div class="-notoolbar">
+      {{ renderhook('displayAdminAfterHeader', {}) }}
+
+      {% if display_header %}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/error_messages.tpl',
+          'smartyVariables': {
+            'errors': errors|default([]),
+            'disableDefaultErrorOutPut': disableDefaultErrorOutPut|default(false),
+          }
+        })) }}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/information_messages.tpl',
+          'smartyVariables': {
+            'informations': informations|default([]),
+          }
+        })) }}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/confirmation_messages.tpl',
+          'smartyVariables': {
+            'confirmations': confirmations|default([]),
+          }
+        })) }}
+        {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+          'smartyTemplate': 'components/layout/warning_messages.tpl',
+          'smartyVariables': {
+            'warnings': warnings|default([]),
+          }
+        })) }}
+      {% endif %}
+
+      {# Page content blocks #}
+      {% block content_header %}{% endblock %}
+      {% block content %}{% endblock %}
+      {% block content_footer %}{% endblock %}
+      {% block sidebar_right %}{% endblock %}
+
+      {{ renderhook('displayAdminEndContent', {}) }}
+    </div>
+  {% endif %}
+</div>
+
+{{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
+  'smartyTemplate': 'error.tpl',
+  'smartyVariables': {
+    'php_errors': php_errors|default([])
+  }
+})) }}
+
+{# Javascript blocks #}
+{% block javascripts %}{% endblock %}
+{% block extra_javascripts %}{% endblock %}
+{% block translate_javascripts %}{% endblock %}
+</body>
+</html>

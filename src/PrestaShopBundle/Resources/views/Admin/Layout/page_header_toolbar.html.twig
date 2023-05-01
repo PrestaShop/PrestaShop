@@ -43,7 +43,7 @@
       </nav>
     {% endblock %}
 
-    {% set persistent_help_btn = help_link is defined and help_link != false and layoutHeaderToolbarBtn is empty %}
+    {% set persistent_help_btn = help_link is defined and help_link != false and layoutHeaderToolbarBtn|default([]) is empty %}
     <div class="title-row {%if persistent_help_btn %}flex-nowrap flex-md-wrap{% endif %}">
       {% block page_title %}
         <h1 class="title">
@@ -55,53 +55,54 @@
         <div class="toolbar-icons{% if persistent_help_btn %} toolbar-icons--persistent{% endif %}">
           <div class="wrapper">
             {{ renderhook('displayDashboardToolbarTopMenu', {}) }}
-            {% for key, btn in layoutHeaderToolbarBtn %}
-              {% if key != 'back' and key != 'modules-list' %}
+            {% if layoutHeaderToolbarBtn|default([]) is not empty %}
+              {% for key, btn in layoutHeaderToolbarBtn %}
+                {% if key != 'back' and key != 'modules-list' %}
+                  {# TODO: REFACTOR ALL THIS THINGS #}
+                  <a
+                    class="btn {% if btn.class is defined and btn.class %}{{ btn.class|escape }}{% else %}btn-primary{% endif %}{% if btn.target|default(false) %} _blank{% endif %}{% if btn.disabled|default(false) %} disabled auto-pointer-events{% endif %} pointer"
+                    {% if btn.href is defined %}
+                    id="page-header-desc-{{ table }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ key }}{% endif %}"
+                    href="{{ btn.href|escape }}"
+                    {% endif %}
+                    title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"
+                    {% if btn.js|default(false) %}
+                    onclick="{{ btn.js }}"
+                    {% endif %}
+                    {% if btn.modal_target|default(false) %}
+                    data-target="{{ btn.modal_target }}"
+                    data-toggle="modal"
+                    {% endif %}
+                    {% if btn.help is defined %}
+                    data-toggle="pstooltip"
+                    data-placement="bottom"
+                    {% endif %}
+                    {% if btn.data_attributes|default(false) %}
+                    {% for attribute_name, attribute_value in btn.data_attributes %}
+                    data-{{ attribute_name }}="{{ attribute_value }}"
+                    {% endfor %}
+                    {% endif %}
+                  >
+                    {% if btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
+                    {{ btn.desc|escape }}
+                  </a>
+                {% endif %}
+              {% endfor %}
+              {% if layoutHeaderToolbarBtn['modules-list'] is defined %}
                 {# TODO: REFACTOR ALL THIS THINGS #}
                 <a
-                  class="btn {% if btn.class is defined and btn.class %}{{ btn.class|escape }}{% else %}btn-primary{% endif %}{% if btn.target|default(false) %} _blank{% endif %}{% if btn.disabled|default(false) %} disabled auto-pointer-events{% endif %} pointer"
-                  {% if btn.href is defined %}
-                  id="page-header-desc-{{ table }}-{% if btn.imgclass is defined %}{{ btn.imgclass|escape }}{% else %}{{ key }}{% endif %}"
-                  href="{{ btn.href|escape }}"
-                  {% endif %}
-                  title="{% if btn.help is defined %}{{ btn.help }}{% else %}{{ btn.desc|escape }}{% endif %}"
-                  {% if btn.js|default(false) %}
-                  onclick="{{ btn.js }}"
-                  {% endif %}
-                  {% if btn.modal_target|default(false) %}
-                  data-target="{{ btn.modal_target }}"
-                  data-toggle="modal"
-                  {% endif %}
-                  {% if btn.help is defined %}
-                  data-toggle="pstooltip"
-                  data-placement="bottom"
-                  {% endif %}
-                  {% if btn.data_attributes|default(false) %}
-                  {% for attribute_name, attribute_value in btn.data_attributes %}
-                  data-{{ attribute_name }}="{{ attribute_value }}"
-                  {% endfor %}
-                  {% endif %}
+                  class="btn btn-outline-secondary {% if layoutHeaderToolbarBtn['modules-list'].target|default(false) %} _blank{% endif %}"
+                  id="page-header-desc-{{ table }}-{% if layoutHeaderToolbarBtn['modules-list'].imgclass is defined %}{{ layoutHeaderToolbarBtn['modules-list'].imgclass }}{% else %}modules-list{% endif %}"
+                  {% if layoutHeaderToolbarBtn['modules-list'].href is defined %}href="{{ layoutHeaderToolbarBtn['modules-list'].href }}"{% endif %}
+                  title="{{ layoutHeaderToolbarBtn['modules-list'].desc }}"
+                  {% if layoutHeaderToolbarBtn['modules-list'].js|default(false) %}onclick="{{ layoutHeaderToolbarBtn['modules-list'].js }}"{% endif %}
                 >
-                  {% if btn.icon is not empty %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
-                  {{ btn.desc|escape }}
+                  {{ layoutHeaderToolbarBtn['modules-list'].desc }}
                 </a>
               {% endif %}
-            {% endfor %}
-            {% if layoutHeaderToolbarBtn['modules-list'] is defined %}
-              {# TODO: REFACTOR ALL THIS THINGS #}
-              <a
-                class="btn btn-outline-secondary {% if layoutHeaderToolbarBtn['modules-list'].target|default(false) %} _blank{% endif %}"
-                id="page-header-desc-{{ table }}-{% if layoutHeaderToolbarBtn['modules-list'].imgclass is defined %}{{ layoutHeaderToolbarBtn['modules-list'].imgclass }}{% else %}modules-list{% endif %}"
-                {% if layoutHeaderToolbarBtn['modules-list'].href is defined %}href="{{ layoutHeaderToolbarBtn['modules-list'].href }}"{% endif %}
-                title="{{ layoutHeaderToolbarBtn['modules-list'].desc }}"
-                {% if layoutHeaderToolbarBtn['modules-list'].js|default(false) %}onclick="{{ layoutHeaderToolbarBtn['modules-list'].js }}"{% endif %}
-              >
-                {{ layoutHeaderToolbarBtn['modules-list'].desc }}
-              </a>
             {% endif %}
-
             {% if help_link|default(false) %}
-              {% if enableSidebar %}
+              {% if enableSidebar|default(false) %}
                 <a class="toolbar-button btn-sidebar d-inline-block d-md-none" href="#"
                    title="{{ 'Help'|trans({}, 'Admin.Global') }}"
                    data-toggle="sidebar"
@@ -170,7 +171,7 @@
     </div>
   {% endif %}
 
-  {% if layoutHeaderToolbarBtn is not empty %}
+  {% if layoutHeaderToolbarBtn|default([]) is not empty %}
     <div class="btn-floating">
       <button class="btn btn-primary collapsed" data-toggle="collapse" data-target=".btn-floating-container" aria-expanded="false">
         <i class="material-icons">add</i>

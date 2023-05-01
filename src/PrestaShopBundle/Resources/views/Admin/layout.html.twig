@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {% extends use_symfony_layout
-  ? '@PrestaShop/Admin/Layout/default_layout.html.twig'
+  ? lightDisplay|default(false) ? '@PrestaShop/Admin/Layout/light_layout.html.twig' : '@PrestaShop/Admin/Layout/default_layout.html.twig'
   : template_from_string(
     getLegacyLayout(
       app.request.attributes.get('_legacy_controller'),

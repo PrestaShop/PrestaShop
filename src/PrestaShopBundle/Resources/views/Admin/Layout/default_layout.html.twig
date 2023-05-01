@@ -208,7 +208,7 @@
 {% endif %}
 
 {# Page header toolbar #}
-{% if show_page_header_toolbar and not lite_display %}
+{% if showContentHeader and not liteDisplay %}
   {{ include('@PrestaShop/Admin/Layout/page_header_toolbar.html.twig') }}
 {% endif %}
 
@@ -223,7 +223,7 @@
     {% endif %}
 
     <div
-      class="{% if display_header %}content-div{% endif %}{% if page_header_toolbar|default(false) %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
+      class="{% if display_header %}content-div{% endif %}{% if page_header_toolbar is not defined %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
       {{ renderhook('displayAdminAfterHeader', {}) }}
 
       {% if display_header %}
@@ -254,6 +254,9 @@
         })) }}
       {% endif %}
 
+      <div id="ajax_confirmation" class="alert alert-success" style="display: none;"></div>
+      <div id="content-message-box"></div>
+
       {# Page content blocks #}
       {% block content_header %}{% endblock %}
       {% block content %}{% endblock %}
@@ -265,7 +268,7 @@
   {% endif %}
 </div>
 
-{% if lite_display|default(true) %}
+{% if lite_display is not defined or lite_display is same as(false) %}
   {{ render(controller('PrestaShopBundle\\Controller\\Admin\\LegacyController::smartyComponentAction', {
     'smartyTemplate': 'components/layout/non-responsive.tpl',
     'smartyVariables': {
@@ -286,7 +289,7 @@
   }
 })) }}
 
-{% if lite_display|default(true) %}
+{% if lite_display is not defined or lite_display is same as(false) %}
   {% if modals is defined %}
     {{ modals }}
   {% endif %}
