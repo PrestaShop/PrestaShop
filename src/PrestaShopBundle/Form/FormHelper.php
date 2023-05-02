@@ -39,7 +39,7 @@ class FormHelper
      *
      * @return array
      */
-    public static function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
+    private static function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
         $new_list = [];
         foreach ($list as $item) {

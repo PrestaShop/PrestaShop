@@ -83,14 +83,17 @@ abstract class CommonAbstractType extends AbstractType
     {
         @trigger_error(
             sprintf(
-                '%s is deprecated since version 9.0 and will be removed in the next major version. Use %s::%s instead.',
-                __METHOD__,
-                FormHelper::class,
-                'formatDataDuplicateChoicesList()'
+                '%s is deprecated since version 9.0 and will be removed in the next major version. There is no replacement for this method.',
+                __METHOD__
             ),
             E_USER_DEPRECATED
         );
 
-        return FormHelper::formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
+        $new_list = [];
+        foreach ($list as $item) {
+            $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];
+        }
+
+        return $new_list;
     }
 }
