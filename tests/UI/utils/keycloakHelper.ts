@@ -1,5 +1,21 @@
 import {APIRequestContext, APIResponse, Page} from 'playwright';
 
+const selLoginUsernameInput: string = '#username';
+const selLoginPasswordInput: string = '#password';
+const selLoginButton: string = '#kc-login';
+const selPageTitle: string = 'h1';
+const selNavbarClients: string = '#nav-item-clients';
+const selClientsCreateClientButton: string = '#kc-main-content-page-container .pf-c-tab-content .pf-c-toolbar__content a';
+const selCreateClientClientId: string = '#kc-client-id';
+const selCreateClientName: string = '#kc-name';
+const selCreateClientNextPageButton: string = 'button[data-testid="next"]';
+const selCreateClientAuthentificationSwitch: string = '#kc-authentication-switch';
+const selCreateClientAuthorizationSwitch: string = '#kc-authorization-switch';
+const selCreateClientSwitchToggle = (selSwitch: string): string => `${selSwitch} + span.pf-c-switch__toggle`;
+const selCreateClientFlowStandardCheckbox : string = '#kc-flow-standard';
+const selCreateClientFlowDirectCheckbox : string = '#kc-flow-direct';
+const selCreateClientSaveButton: string = 'button[data-testid="save"]';
+
 /**
  * @description Helper to use Keycloak
  */
@@ -14,9 +30,9 @@ export default {
   async login(page: Page, username: string, password: string): Promise<void> {
     await page.goto(`${global.keycloakConfig.keycloakServer}/admin/`);
 
-    await page.fill('#username', username);
-    await page.fill('#password', password);
-    await page.click('#kc-login');
+    await page.fill(selLoginUsernameInput, username);
+    await page.fill(selLoginPasswordInput, password);
+    await page.click(selLoginButton);
   },
 
   /**
@@ -25,7 +41,7 @@ export default {
    * @return {Promise<string>}
    */
   async getPageTitle(page: Page): Promise<string> {
-    const textContent = await page.textContent('h1');
+    const textContent = await page.textContent(selPageTitle);
 
     return (textContent ?? '').replace(/\s+/g, ' ').trim();
   },
@@ -36,7 +52,7 @@ export default {
    * @return {Promise<void>}
    */
   async goToManageClientsPage(page: Page): Promise<void> {
-    await page.click('#nav-item-clients');
+    await page.click(selNavbarClients);
   },
 
   /**
@@ -45,7 +61,7 @@ export default {
    * @return {Promise<void>}
    */
   async goToCreateClientPage(page: Page): Promise<void> {
-    await page.click('#kc-main-content-page-container .pf-c-tab-content .pf-c-toolbar__content a');
+    await page.click(selClientsCreateClientButton);
   },
 
   /**
@@ -64,21 +80,21 @@ export default {
     withClientAuth: boolean,
     withAuthorization: boolean,
   ): Promise<void> {
-    await page.fill('#kc-client-id', clientId);
-    await page.fill('#kc-name', name);
-    await page.click('button[data-testid="next"]');
+    await page.fill(selCreateClientClientId, clientId);
+    await page.fill(selCreateClientName, name);
+    await page.click(selCreateClientNextPageButton);
 
-    if (withClientAuth !== (await page.isChecked('#kc-authentication-switch'))) {
-      // The selector is not visible, that why '+ i' is required here
-      await page.$eval('#kc-authentication-switch + span.pf-c-switch__toggle', (el: HTMLInputElement) => el.click());
+    if (withClientAuth !== (await page.isChecked(selCreateClientAuthentificationSwitch))) {
+      // The sel is not visible, that why '+ i' is required here
+      await page.$eval(selCreateClientSwitchToggle(selCreateClientAuthentificationSwitch), (el: HTMLInputElement) => el.click());
     }
-    if (withAuthorization !== (await page.isChecked('#kc-authorization-switch'))) {
-      // The selector is not visible, that why '+ i' is required here
-      await page.$eval('#kc-authorization-switch + span.pf-c-switch__toggle', (el: HTMLInputElement) => el.click());
+    if (withAuthorization !== (await page.isChecked(selCreateClientAuthorizationSwitch))) {
+      // The sel is not visible, that why '+ i' is required here
+      await page.$eval(selCreateClientSwitchToggle(selCreateClientAuthorizationSwitch), (el: HTMLInputElement) => el.click());
     }
-    await page.setChecked('#kc-flow-standard', false);
-    await page.setChecked('#kc-flow-direct', false);
-    await page.click('button[data-testid="save"]');
+    await page.setChecked(selCreateClientFlowStandardCheckbox, false);
+    await page.setChecked(selCreateClientFlowDirectCheckbox, false);
+    await page.click(selCreateClientSaveButton);
     await page.waitForNavigation({timeout: 3000});
   },
 
@@ -92,8 +108,8 @@ export default {
       '/realms/master/protocol/openid-connect/token',
       {
         form: {
-          username: 'admin',
-          password: 'admin',
+          username: global.keycloakConfig.keycloakAdminUser,
+          password: global.keycloakConfig.keycloakAdminPass,
           grant_type: 'password',
         },
         headers: {
