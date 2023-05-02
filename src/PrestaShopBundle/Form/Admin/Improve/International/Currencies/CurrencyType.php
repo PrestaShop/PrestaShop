@@ -99,7 +99,7 @@ class CurrencyType extends TranslatorAwareType
                     'required' => false,
                     'placeholder' => '--',
                     'autocomplete' => true,
-                    'autocomplete_mininum_choices' => 1,
+                    'autocomplete_minimum_choices' => 1,
                 ])
                 ->add('unofficial', CheckboxType::class, [
                     'required' => false,

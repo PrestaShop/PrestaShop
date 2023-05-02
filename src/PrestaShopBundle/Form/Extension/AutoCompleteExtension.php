@@ -50,15 +50,15 @@ class AutoCompleteExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefined('autocomplete');
-        $resolver->setDefined('autocomplete_mininum_choices');
+        $resolver->setDefined('autocomplete_minimum_choices');
 
         $resolver->setAllowedTypes('autocomplete', 'bool');
-        $resolver->setAllowedTypes('autocomplete_mininum_choices', 'int');
+        $resolver->setAllowedTypes('autocomplete_minimum_choices', 'int');
 
         $resolver->setNormalizer('attr', function (Options $options, ?array $attr) {
             if (isset($options['autocomplete']) && $options['autocomplete']) {
                 $attr['data-toggle'] = 'select2';
-                $attr['data-minimumResultsForSearch'] = $options['autocomplete_mininum_choices'] ?? self::DEFAULT_MINIMUM_INPUT_LENGTH;
+                $attr['data-minimumResultsForSearch'] = $options['autocomplete_minimum_choices'] ?? self::DEFAULT_MINIMUM_INPUT_LENGTH;
             }
 
             return $attr;
