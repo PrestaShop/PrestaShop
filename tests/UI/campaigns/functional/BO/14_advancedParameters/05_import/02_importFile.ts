@@ -16,6 +16,7 @@ import ImportCategories from '@data/import/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import languages from "@data/demo/languages";
 
 const baseContext: string = 'functional_BO_advancedParameters_import_importFile';
 
@@ -106,6 +107,8 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
 
     it('should go to next import file step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
+
+      await importPage.selectFileLanguage(page, languages.french.name);
 
       const panelTitle = await importPage.goToImportNextStep(page);
       await expect(panelTitle).contain(importPage.importPanelTitle);

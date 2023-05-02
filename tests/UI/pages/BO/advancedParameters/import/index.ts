@@ -30,6 +30,8 @@ class Import extends BOBasePage {
 
   private readonly importFileSecondStepPanelTitle: string;
 
+  private readonly languageSelect: string;
+
   private readonly importProgressModal: string;
 
   private readonly progressValidateBarInfo: string;
@@ -62,6 +64,7 @@ class Import extends BOBasePage {
     this.confirmationModalAlert = '#import_details_finished';
     this.importModalCloseButton = '#import_close_button';
     this.fileTypeSelector = '#entity';
+    this.languageSelect = '#iso_lang';
     this.importFileSecondStepPanelTitle = '#container-customer > h3';
     this.importProgressModal = '#importProgress';
     this.progressValidateBarInfo = '#validate_progressbar_done';
@@ -80,7 +83,7 @@ class Import extends BOBasePage {
    * @param type {string} Type of the data to import
    * @return {Promise<string|null>}
    */
-  downloadSampleFile(page: Page, type: string): Promise<string|null> {
+  downloadSampleFile(page: Page, type: string): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.downloadSampleFileLink(type));
   }
 
@@ -117,13 +120,17 @@ class Import extends BOBasePage {
     await this.setChecked(page, this.forceAllIDNumber(toEnable ? 1 : 0));
   }
 
+  async selectFileLanguage(page: Page, language: string): Promise<void> {
+    await this.selectByVisibleText(page, '#iso_lang', language);
+  }
+
   /**
    * Go to 'Next step' of import
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async goToImportNextStep(page: Page): Promise<string> {
-    await page.click(this.nextStepButton);
+    await this.clickAndWaitForNavigation(page, this.nextStepButton);
 
     return this.getTextContent(page, this.importFileSecondStepPanelTitle);
   }
