@@ -631,6 +631,10 @@ services:
       $countriesChoiceProvider: '@prestashop.core.form.choice_provider.configurable_country_by_id'
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
+  PrestaShopBundle\Form\Admin\Type\DisablingSwitchType:
+  PrestaShopBundle\Form\Admin\Type\FormattedTextareaType:
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\AliasType:
+
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener:
     arguments:
       $featureValuesChoiceProvider: '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'

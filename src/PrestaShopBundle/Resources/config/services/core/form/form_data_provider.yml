@@ -244,3 +244,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider:
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AliasFormDataProvider:
+    arguments:
+      - '@prestashop.core.query_bus'

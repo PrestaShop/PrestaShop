@@ -25,3 +25,11 @@ admin_alias_search_search_term_action:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::searchAliasesForAssociationAction
 #    _legacy_controller: AdminSearchConf
 #    _legacy_link: AdminSearchConf
+
+admin_alias_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchController::createAction'
+    # _legacy_controller: AdminSearchConf
+    # _legacy_link: AdminSearchConf
