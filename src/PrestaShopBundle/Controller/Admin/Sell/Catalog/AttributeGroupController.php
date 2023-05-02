@@ -88,8 +88,8 @@ class AttributeGroupController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $attributeGroupFormBuilder = $this->get(AttributeGroupFormBuilder::class);
-        $attributeFormHandler = $this->get(AttributeGroupFormHandler::class);
+        $attributeGroupFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder');
+        $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeGroupFormHandler');
 
         $attributeGroupForm = $attributeGroupFormBuilder->getForm();
         $attributeGroupForm->handleRequest($request);
@@ -145,13 +145,16 @@ class AttributeGroupController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
+        $formData = $attributeGroupForm->getData();
+        $attributeGroupName = $formData['name'][$this->getContextLangId()] ?? reset($formData['name']);
+
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/AttributeGroup/edit.html.twig',
             [
                 'layoutTitle' => $this->trans(
                     'Editing attribute %name%',
                     'Admin.Navigation.Menu',
-                    ['%name%' => $attributeGroupForm->getData()['name'][$this->getContextLangId()]]
+                    ['%name%' => $attributeGroupName]
                 ),
                 'attributeGroupForm' => $attributeGroupForm->createView(),
                 'attributeGroupId' => $attributeGroupId,

@@ -61,7 +61,7 @@ class EditableAttributeGroup
     private $type;
 
     /**
-     * @param AttributeGroupId $attributeGroupId
+     * @param int $attributeGroupId
      * @param string[] $name
      * @param array $publicName
      * @param string $type

@@ -23,17 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import AttributeGroupFormMap from '@pages/attribute-group/form/attribute-group-form-map';
-
-const {$} = window;
-
-$(() => {
-  window.prestashop.component.initComponents(
-    [
-      'TranslatableInput',
-      'TranslatableField',
-    ],
-  );
-
-  new window.prestashop.component.ChoiceTree(AttributeGroupFormMap.attributeGroupShopAssociationInput).enableAutoCheckChildren();
-});
+/**
+ * Defines all selectors that are used in customers address add/edit form.
+ */
+export default {
+  attributeGroupShopAssociationInput: '#attribute_group_shop_association',
+};

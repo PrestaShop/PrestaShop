@@ -101,32 +101,6 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then attribute group :reference :field should be :value
-     */
-    public function assertFieldValue(string $reference, string $field, string $value): void
-    {
-        $attributeGroupId = SharedStorage::getStorage()->get($reference);
-        $attributeGroup = new \AttributeGroup($attributeGroupId);
-
-        if ($attributeGroup->$field !== $value) {
-            throw new RuntimeException(sprintf('Attribute group "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field, $field, $value));
-        }
-    }
-
-    /**
-     * @Then attribute group :reference :field in default language should be :value
-     */
-    public function assertFieldWithLangValue(string $reference, string $field, string $value): void
-    {
-        $attributeGroupId = $this->referenceToId($reference);
-        $attributeGroup = new \AttributeGroup($attributeGroupId);
-
-        if ($attributeGroup->$field[$this->getDefaultLangId()] !== $value) {
-            throw new RuntimeException(sprintf('Attribute group "%s" has "%s" %s, but "%s" was expected.', $reference, $attributeGroup->$field[$this->getDefaultLangId()], $field, $value));
-        }
-    }
-
-    /**
      * @Then attribute group :reference should have the following properties:
      *
      * @param string $reference

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\InvalidAttributeGroupTypeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
 
@@ -63,17 +64,21 @@ class EditAttributeGroupCommand
     private $type;
 
     /**
+     * @param int $attributeGroupId
      * @param string[] $localizedNames
+     * @param array $localizedPublicNames
+     * @param string $type
      * @param int[] $shopAssociation
      *
      * @throws AttributeGroupConstraintException
+     * @throws InvalidAttributeGroupTypeException
      */
     public function __construct(
         int $attributeGroupId,
         array $localizedNames,
         array $localizedPublicNames,
-        AttributeGroupType $type,
-        array $shopAssociation = null
+        string $type,
+        array $shopAssociation
     ) {
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
         $this->assertNamesAreValid(
@@ -88,7 +93,7 @@ class EditAttributeGroupCommand
         );
         $this->localizedNames = $localizedNames;
         $this->localizedPublicNames = $localizedPublicNames;
-        $this->type = $type;
+        $this->type = new AttributeGroupType($type);
         $this->shopAssociation = $shopAssociation;
     }
 
