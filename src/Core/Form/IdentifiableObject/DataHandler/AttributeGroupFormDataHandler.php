@@ -78,7 +78,7 @@ final class AttributeGroupFormDataHandler implements FormDataHandlerInterface
             $data['name'],
             $data['public_name'],
             $data['group_type'],
-            $data['shop_association'] ?? []
+            $data['shop_association']
         ));
     }
 }
