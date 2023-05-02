@@ -906,9 +906,9 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable2', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, 'Last connections,,Origin request, ,Page viewed, ,'
-          + `Time on the page, ,IP address, ,Date,,${connectionOrigin}0, ,${ipAddress}, ,${secondLastVisitDate},0, ,`
-          + `${ipAddress}, ,${lastVisitDate}`);
+        const isVisible = await files.isTextInPDF(filePath, 'Last connectionsOrigin request Page viewed '
+          + `Time on the page IP address Date${connectionOrigin.split(',').join('')}0 ${ipAddress} ${secondLastVisitDate}0 `
+          + `${ipAddress} ${lastVisitDate}`, true);
         await expect(isVisible, 'The data in Last connections table is not correct!').to.be.true;
       });
     });
