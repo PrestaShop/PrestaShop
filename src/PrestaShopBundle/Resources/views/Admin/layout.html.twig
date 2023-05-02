@@ -22,22 +22,39 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+
+{#
+ # Preset reuired twig variables so they can be used for legacy layout and symfony layout, default values are defined in case the controller
+ # did not set them.
+ #}
+{% set layoutTitle = layoutTitle|default('') %}
+{% set layoutHeaderToolbarBtn = layoutHeaderToolbarBtn|default([]) %}
+{% set layoutDisplayType = layoutDisplayType|default('') %}
+{% set showContentHeader = showContentHeader|default(true) %}
+{% set headerTabContent = headerTabContent|default('') %}
+{% set enableSidebar = enableSidebar|default(false) %}
+{% set help_link = help_link|default('') %}
+{% set meta_title = meta_title|default('') %}
+{% set use_regular_h1_structure = use_regular_h1_structure|default(true) %}
+{% set legacyBaseLayout = legacyBaseLayout|default('layout.tpl') %}
+{% set liteDisplay = liteDisplay|default(false) %}
+
 {% extends use_symfony_layout
   ? lightDisplay|default(false) ? '@PrestaShop/Admin/Layout/light_layout.html.twig' : '@PrestaShop/Admin/Layout/default_layout.html.twig'
   : template_from_string(
     getLegacyLayout(
       app.request.attributes.get('_legacy_controller'),
-      layoutTitle is defined ? layoutTitle : '',
-      layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
-      layoutDisplayType is defined ? layoutDisplayType : '',
-      showContentHeader is defined ? showContentHeader : true,
-      headerTabContent is defined ? headerTabContent : '',
-      enableSidebar is defined ? enableSidebar : false,
-      help_link is defined ? help_link : '',
+      layoutTitle,
+      layoutHeaderToolbarBtn,
+      layoutDisplayType,
+      showContentHeader,
+      headerTabContent,
+      enableSidebar,
+      help_link,
       js_router_metadata(),
-      meta_title is defined ? meta_title : '',
-      use_regular_h1_structure is defined ? use_regular_h1_structure : true,
-      legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'
+      meta_title,
+      use_regular_h1_structure,
+      legacyBaseLayout
     )
   )
 %}
