@@ -28,10 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CurrencyChoiceType extends ChoiceType
+class CurrencyChoiceType extends AbstractType
 {
     /**
      * @var CurrencyByIdChoiceProvider
@@ -41,8 +42,12 @@ class CurrencyChoiceType extends ChoiceType
     public function __construct(
         CurrencyByIdChoiceProvider $currencyByIdChoiceProvider
     ) {
-        parent::__construct();
         $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
+    }
+
+    public function getParent(): string
+    {
+        return ChoiceType::class;
     }
 
     /**
@@ -50,8 +55,6 @@ class CurrencyChoiceType extends ChoiceType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
             'choices' => $this->currencyByIdChoiceProvider->getChoices(),
             'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
