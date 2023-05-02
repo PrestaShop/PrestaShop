@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
 
+use AttributeGroup;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Command\AddAttributeGroupCommand;
@@ -54,7 +55,7 @@ final class AddAttributeGroupHandler extends AbstractObjectModelHandler implemen
      */
     public function handle(AddAttributeGroupCommand $command): AttributeGroupId
     {
-        $attributeGroup = new \AttributeGroup();
+        $attributeGroup = new AttributeGroup();
 
         $attributeGroup->name = $command->getLocalizedNames();
         $attributeGroup->public_name = $command->getLocalizedPublicNames();

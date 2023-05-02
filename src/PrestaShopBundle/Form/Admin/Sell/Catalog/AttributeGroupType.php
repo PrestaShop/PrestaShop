@@ -71,12 +71,6 @@ class AttributeGroupType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attributeTypes = [
-            $this->trans('Drop-down list', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_SELECT,
-            $this->trans('Radio buttons', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_RADIO,
-            $this->trans('Color or texture', 'Admin.Catalog.Feature') => GroupType::ATTRIBUTE_GROUP_TYPE_COLOR,
-        ];
-
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
@@ -109,7 +103,11 @@ class AttributeGroupType extends TranslatorAwareType
             ->add('group_type', ChoiceType::class, [
                 'label' => $this->trans('Attribute type', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('The way the attribute\'s values will be presented to the customers in the product\'s page.', 'Admin.Catalog.Help'),
-                'choices' => $attributeTypes,
+                'choices' => [
+                    $this->trans('Drop-down list', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_SELECT,
+                    $this->trans('Radio buttons', 'Admin.Global') => GroupType::ATTRIBUTE_GROUP_TYPE_RADIO,
+                    $this->trans('Color or texture', 'Admin.Catalog.Feature') => GroupType::ATTRIBUTE_GROUP_TYPE_COLOR,
+                ],
             ]);
 
         if ($this->isMultistoreEnabled) {
