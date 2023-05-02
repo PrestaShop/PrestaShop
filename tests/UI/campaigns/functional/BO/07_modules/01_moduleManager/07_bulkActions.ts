@@ -9,11 +9,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
-import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
-
 // Import data
 import Modules from '@data/demo/modules';
+
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_bulkActions';
 
@@ -66,13 +66,38 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
   });
 
   [
-    {args: {action: 'Disable', message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag)}},
+    {
+      args: {
+        action: 'Disable',
+        message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag)
+      }
+    },
     {args: {action: 'Enable', message: moduleManagerPage.enableModuleSuccessMessage(Modules.availableQuantities.tag)}},
-    {args: {action: 'Uninstall', message: moduleManagerPage.uninstallModuleSuccessMessage(Modules.availableQuantities.tag)}},
-    {args: {action: 'Install', message: moduleManagerPage.installModuleSuccessMessage(Modules.availableQuantities.tag)}},
+    {
+      args: {
+        action: 'Uninstall',
+        message: moduleManagerPage.uninstallModuleSuccessMessage(Modules.availableQuantities.tag)
+      }
+    },
+    {
+      args: {
+        action: 'Install',
+        message: moduleManagerPage.installModuleSuccessMessage(Modules.availableQuantities.tag)
+      }
+    },
     {args: {action: 'Reset', message: moduleManagerPage.resetModuleSuccessMessage(Modules.availableQuantities.tag)}},
-    {args: {action: 'Disable Mobile', message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag)}},
-    {args: {action: 'Enable Mobile', message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag)}},
+    {
+      args: {
+        action: 'Disable Mobile',
+        message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag)
+      }
+    },
+    {
+      args: {
+        action: 'Enable Mobile',
+        message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag)
+      }
+    },
 
   ].forEach((test, index: number) => {
     it(`should '${test.args.action}' with bulk actions`, async function () {

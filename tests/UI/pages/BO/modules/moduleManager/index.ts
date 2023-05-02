@@ -173,7 +173,7 @@ class ModuleManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isBulkActionsButtonDisabled(page: Page): Promise<boolean> {
+  async isBulkActionsButtonDisabled(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.bulkActionsButton}.disabled`, 1000);
   }
 

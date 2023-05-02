@@ -9,11 +9,11 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
-import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
-
 // Import data
 import Modules from '@data/demo/modules';
+
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_modules_moduleManager_filterModulesByStatus';
 
