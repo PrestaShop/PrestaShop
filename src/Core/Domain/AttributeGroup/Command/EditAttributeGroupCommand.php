@@ -73,7 +73,7 @@ class EditAttributeGroupCommand
         array $localizedNames,
         array $localizedPublicNames,
         AttributeGroupType $type,
-        array $shopAssociation = []
+        array $shopAssociation = null
     ) {
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
         $this->assertNamesAreValid(

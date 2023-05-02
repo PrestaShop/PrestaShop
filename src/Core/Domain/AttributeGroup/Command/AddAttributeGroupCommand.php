@@ -64,7 +64,7 @@ class AddAttributeGroupCommand
      *
      * @throws AttributeGroupConstraintException
      */
-    public function __construct(array $localizedNames, array $localizedPublicNames, AttributeGroupType $type, array $shopAssociation = [])
+    public function __construct(array $localizedNames, array $localizedPublicNames, string $type, array $shopAssociation)
     {
         $this->assertNamesAreValid(
             $localizedNames,
@@ -79,7 +79,7 @@ class AddAttributeGroupCommand
 
         $this->localizedNames = $localizedNames;
         $this->localizedPublicNames = $localizedPublicNames;
-        $this->type = $type;
+        $this->type = new AttributeGroupType ($type);
         $this->shopAssociation = $shopAssociation;
     }
 
