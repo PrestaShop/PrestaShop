@@ -89,7 +89,6 @@ class SqlTranslationLoader implements LoaderInterface
             $themeTranslations = Db::getInstance()->executeS($selectThemeTranslationsQuery) ?: [];
             $this->addTranslationsToCatalogue($themeTranslations, $catalogue);
         }
-        
         return $catalogue;
     }
 
