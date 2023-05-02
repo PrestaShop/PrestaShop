@@ -74,7 +74,7 @@ class EditableAttributeGroup
         string $type,
         array $associatedShopIds
     ) {
-        $this->attributeGroupId = $attributeGroupId;
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
         $this->name = $name;
         $this->associatedShopIds = $associatedShopIds;
         $this->publicName = $publicName;

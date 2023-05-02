@@ -53,7 +53,7 @@ final class EditAttributeGroupHandler extends AbstractObjectModelHandler impleme
      */
     public function handle(EditAttributeGroupCommand $command): void
     {
-        $attributeGroup = $this->attributeGroupRepository->get($command->getAttributeGroupId()->getValue());
+        $attributeGroup = $this->attributeGroupRepository->get($command->getAttributeGroupId());
 
         $attributeGroup->name = $command->getLocalizedNames();
         $attributeGroup->public_name = $command->getLocalizedPublicNames();

@@ -56,7 +56,7 @@ final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEd
         $attributeGroup = $this->attributeGroupRepository->get($query->getAttributeGroupId());
 
         return new EditableAttributeGroup(
-            $query->getAttributeGroupId(),
+            $query->getAttributeGroupId()->getValue(),
             $attributeGroup->name,
             $attributeGroup->public_name,
             $attributeGroup->group_type,

@@ -513,7 +513,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
         $command = new AddAttributeGroupCommand(
             $localizedNames,
             $localizedPublicNames,
-            (new AttributeGroupType($type)),
+            $type,
             [$this->getDefaultShopId()]
         );
 
@@ -541,7 +541,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             $attributeGroupId,
             $localizedNames,
             $localizedPublicNames,
-            (new AttributeGroupType($type)),
+            $type,
             [$this->getDefaultShopId()]
         );
 
