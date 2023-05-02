@@ -4,29 +4,59 @@ import {APIRequestContext, APIResponse, Page} from 'playwright';
  * @description Helper to use Keycloak
  */
 export default {
-
+  /**
+   * Login to Keycloak Server Admin Panel
+   * @param {Page} page
+   * @param {string} username
+   * @param {string} password
+   * @return {Promise<void>}
+   */
   async login(page: Page, username: string, password: string): Promise<void> {
-    await page.goto('http://127.0.0.1:8003/admin/');
+    await page.goto(`${global.keycloakConfig.keycloakServer}/admin/`);
 
     await page.fill('#username', username);
     await page.fill('#password', password);
     await page.click('#kc-login');
   },
 
+  /**
+   * Returns the title of the page
+   * @param {Page} page
+   * @return {Promise<string>}
+   */
   async getPageTitle(page: Page): Promise<string> {
     const textContent = await page.textContent('h1');
 
     return (textContent ?? '').replace(/\s+/g, ' ').trim();
   },
 
+  /**
+   * Go to the 'Manage > Clients' page
+   * @param {Page} page
+   * @return {Promise<void>}
+   */
   async goToManageClientsPage(page: Page): Promise<void> {
     await page.click('#nav-item-clients');
   },
 
+  /**
+   * Go to the 'Create client' page
+   * @param {Page} page
+   * @return {Promise<void>}
+   */
   async goToCreateClientPage(page: Page): Promise<void> {
     await page.click('#kc-main-content-page-container .pf-c-tab-content .pf-c-toolbar__content a');
   },
 
+  /**
+   * Fill the form for creating a client and check it
+   * @param {Page} page
+   * @param {string} clientId
+   * @param {string} name
+   * @param {boolean} withClientAuth
+   * @param {boolean} withAuthorization
+   * @return {Promise<void>}
+   */
   async createClient(
     page: Page,
     clientId: string,
@@ -52,6 +82,11 @@ export default {
     await page.waitForNavigation({timeout: 3000});
   },
 
+  /**
+   * Use the Keycloak Admin API and fetch the client secret
+   * @param {APIRequestContext} apiContext
+   * @return {Promise<string>}
+   */
   async getClientSecret(apiContext: APIRequestContext): Promise<string> {
     const apiResponseAuth: APIResponse = await apiContext.post(
       '/realms/master/protocol/openid-connect/token',
@@ -74,7 +109,7 @@ export default {
       '/admin/realms/master/clients',
       {
         params: {
-          clientId: 'prestashop_client_id',
+          clientId: global.keycloakConfig.keycloakClientId,
         },
         headers: {
           Authorization: `Bearer ${adminAccessToken}`,

@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import {APIRequestContext, request} from 'playwright';
-import {installKeycloak, createKeycloakClient, uninstallKeycloak} from '@commonTests/API/keycloak';
+import createKeycloakClient from '@commonTests/API/keycloak';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_authorizationEndpoint';
 
@@ -19,7 +19,7 @@ describe('API : Authorization Endpoint', async () => {
       ignoreHTTPSErrors: true,
     });
     apiContextKeycloak = await request.newContext({
-      baseURL: 'http://127.0.0.1:8003',
+      baseURL: global.keycloakConfig.keycloakServer,
       // @todo : Remove it when Puppeteer will accept self signed certificates
       ignoreHTTPSErrors: true,
     });
@@ -112,7 +112,7 @@ describe('API : Authorization Endpoint', async () => {
         const accessTokenKeycloak: string = await keycloakHelper.getClientSecret(apiContextKeycloak);
         const apiResponse = await apiContextKeycloak.post('/realms/master/protocol/openid-connect/token', {
           form: {
-            client_id: 'prestashop_client_id',
+            client_id: global.keycloakConfig.keycloakClientId,
             client_secret: accessTokenKeycloak,
             grant_type: 'client_credentials',
           },
