@@ -66,6 +66,15 @@ class ControllerConfiguration
     public $legacyControllerName;
 
     /**
+     * Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin'.
+     *
+     * @see Controller::$controller_type
+     *
+     * @var string
+     */
+    public $controllerType;
+
+    /**
      * Url referring to related legacy page (e.g. http://prestashop.local/admin-dev/index.php?controller=AdminFeatures&token=fooBar).
      *
      * @see AdminController::$currentIndex
@@ -370,6 +379,7 @@ class ControllerConfiguration
         $this->legacyControllerName = $legacyControllerName;
         $this->tableName = $tableName;
         $this->templateFolder = $templateFolder;
+        $this->build();
     }
 
     /**
@@ -402,5 +412,17 @@ class ControllerConfiguration
     public function getUser(): Employee
     {
         return $this->user;
+    }
+
+    /**
+     * Prepare configuration values that can be deduced from initial constructor parameters.
+     */
+    private function build(): void
+    {
+        if (strpos('Admin', $this->legacyControllerName) === 0) {
+            $this->controllerType = 'admin';
+        } else {
+            $this->controllerType = 'front';
+        }
     }
 }

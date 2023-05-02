@@ -80,6 +80,7 @@ use Tools;
  * @property array $modals
  * @property int $multishop_context
  * @property bool $multishop_context_group
+ * @property string $controller_type
  */
 class LegacyControllerBridge implements LegacyControllerBridgeInterface
 {
@@ -143,6 +144,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         'multishop_context_group' => 'controllerConfiguration.multiShopContextGroup',
         'redirect_after' => 'controllerConfiguration.redirectAfter',
         'lockedToAllShopContext' => 'controllerConfiguration.lockedToAllShopContext',
+        'controller_type' => 'controllerConfiguration.controllerType',
     ];
 
     /**
@@ -413,7 +415,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     private function &getPropertyReference(string $name)
     {
         if (!isset($this->propertiesMap[$name])) {
-            throw new InvalidArgumentException(sprintf('No mapping found for %s', $name));
+            throw new InvalidArgumentException(sprintf('%s: No mapping found for %s', static::class, $name));
         }
 
         $propertyPath = explode('.', $this->propertiesMap[$name]);
