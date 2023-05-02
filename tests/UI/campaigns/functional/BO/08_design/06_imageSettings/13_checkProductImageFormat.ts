@@ -147,6 +147,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         it('should go to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToBoProducts${arg.extOriginal}`, baseContext);
 
+          page = await categoryPage.closePage(browserContext, page, 0);
           await categoryPage.goToBO(page);
 
           const pageTitle = await dashboardPage.getPageTitle(page);
@@ -292,7 +293,6 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       it('should check that the main image of the quick view is a WebP', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${arg.extOriginal}`, baseContext);
 
-        // https://github.com/PrestaShop/PrestaShop/issues/32265
         const quickViewImageMain = await categoryPage.getQuickViewImageMain(page);
         await expect(quickViewImageMain).to.be.not.null;
 

@@ -18,14 +18,14 @@ let numberOfCategories: number;
 
 /**
  * Function to bulk delete categories
- * @param categoryData {object} Category to delete
+ * @param categoryData {{ filterBy: string, value: string }} Category to delete
  * @param baseContext {string} String to identify the test
  */
 function bulkDeleteCategoriesTest(
-  categoryData: object,
+  categoryData: { filterBy: string, value: string },
   baseContext: string = 'commonTests-bulkDeleteCategoriesTest',
 ): void {
-  describe('POST-TEST: BUlk delete categories', async () => {
+  describe(`POST-TEST: Bulk delete categories (filtered by ${categoryData.filterBy} "${categoryData.value}")`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
