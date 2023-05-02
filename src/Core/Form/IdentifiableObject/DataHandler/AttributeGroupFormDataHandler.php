@@ -61,8 +61,8 @@ final class AttributeGroupFormDataHandler implements FormDataHandlerInterface
         $attributeGroupId = $this->commandBus->handle(new AddAttributeGroupCommand(
             $data['name'],
             $data['public_name'],
-            (new AttributeGroupType($data['group_type'])),
-            $data['shop_association'] ?? []
+            $data['group_type'],
+            $data['shop_association']
         ));
 
         return $attributeGroupId->getValue();
@@ -78,7 +78,7 @@ final class AttributeGroupFormDataHandler implements FormDataHandlerInterface
             (int) $id,
             $data['name'],
             $data['public_name'],
-            (new AttributeGroupType($data['group_type'])),
+            $data['group_type'],
             $data['shop_association'] ?? []
         ));
     }
