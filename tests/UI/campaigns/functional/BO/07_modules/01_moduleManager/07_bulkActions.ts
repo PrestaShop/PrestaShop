@@ -69,34 +69,34 @@ describe('BO - Modules - Module Manager : Bulk actions', async () => {
     {
       args: {
         action: 'Disable',
-        message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag)
-      }
+        message: moduleManagerPage.disableModuleSuccessMessage(Modules.availableQuantities.tag),
+      },
     },
     {args: {action: 'Enable', message: moduleManagerPage.enableModuleSuccessMessage(Modules.availableQuantities.tag)}},
     {
       args: {
         action: 'Uninstall',
-        message: moduleManagerPage.uninstallModuleSuccessMessage(Modules.availableQuantities.tag)
-      }
+        message: moduleManagerPage.uninstallModuleSuccessMessage(Modules.availableQuantities.tag),
+      },
     },
     {
       args: {
         action: 'Install',
-        message: moduleManagerPage.installModuleSuccessMessage(Modules.availableQuantities.tag)
-      }
+        message: moduleManagerPage.installModuleSuccessMessage(Modules.availableQuantities.tag),
+      },
     },
     {args: {action: 'Reset', message: moduleManagerPage.resetModuleSuccessMessage(Modules.availableQuantities.tag)}},
     {
       args: {
         action: 'Disable Mobile',
-        message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag)
-      }
+        message: moduleManagerPage.disableMobileSuccessMessage(Modules.availableQuantities.tag),
+      },
     },
     {
       args: {
         action: 'Enable Mobile',
-        message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag)
-      }
+        message: moduleManagerPage.enableMobileSuccessMessage(Modules.availableQuantities.tag),
+      },
     },
 
   ].forEach((test, index: number) => {
