@@ -24,18 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\EditAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
- * Describes a service that handles attribute group edit command.
+ * Retrieves attribute group data for editing
  */
-interface EditAttributeHandlerInterface
+class GetAttributeForEditing
 {
     /**
-     * @param EditAttributeCommand $command
+     * @var AttributeId
      */
-    public function handle(EditAttributeCommand $command): AttributeId;
+    private $attributeId;
+
+    /**
+     * @param int $attributeId
+     */
+    public function __construct(int $attributeId)
+    {
+        $this->attributeId = new AttributeId($attributeId);
+    }
+
+    /**
+     * @return AttributeId
+     */
+    public function getAttributeId(): AttributeId
+    {
+        return $this->attributeId;
+    }
 }

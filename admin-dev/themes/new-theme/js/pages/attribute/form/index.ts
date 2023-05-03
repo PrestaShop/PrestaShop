@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,15 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+import AttributeFormMap from '@pages/attribute/form/attribute-form-map';
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
+const {$} = window;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+$(() => {
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+    ],
+  );
 
-/**
- * Thrown in Attribute Group context.
- */
-class AttributeException extends DomainException
-{
-}
+  new window.prestashop.component.ChoiceTree(AttributeFormMap.attributeShopAssociationInput).enableAutoCheckChildren();
+});

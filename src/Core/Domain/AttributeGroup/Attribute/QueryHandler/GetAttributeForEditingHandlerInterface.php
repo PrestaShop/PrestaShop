@@ -24,10 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 
-class InvalidAttributeIdException extends AttributeException
+/**
+ * Describes attribute for editing handler.
+ */
+interface GetAttributeForEditingHandlerInterface
 {
+    /**
+     * @param GetAttributeForEditing $query
+     *
+     * @return EditableAttribute
+     */
+    public function handle(GetAttributeForEditing $query): EditableAttribute;
 }

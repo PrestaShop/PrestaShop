@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,19 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
-
-class AttributeConstraintException extends AttributeException
-{
-    /**
-     * Code is used when feature does not have name.
-     */
-    public const EMPTY_NAME = 1;
-
-    /**
-     * Used when feature name is invalid.
-     */
-    public const INVALID_NAME = 2;
-}
+/**
+ * Defines all selectors that are used in attribute address add/edit form.
+ */
+export default {
+  attributeShopAssociationInput: '#attribute__shop_association',
+};

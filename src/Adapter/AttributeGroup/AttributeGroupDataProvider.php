@@ -24,20 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup;
 
-use Combination;
-use Context;
-use Db;
+use AttributeGroup;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use Product;
-use ProductAttribute;
-use Shop;
 
 /**
  * This class will provide data from DB / ORM about Attribute groups.
@@ -59,6 +56,7 @@ class AttributeGroupDataProvider
 
     /**
      * @param ShopId $shopId
+     *
      * @return array
      *
      * @throws InvalidShopConstraintException
@@ -71,7 +69,7 @@ class AttributeGroupDataProvider
         $groups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
         $return = [];
 
-        /** @var \AttributeGroup $group */
+        /** @var AttributeGroup $group */
         foreach ($groups as $group) {
             $return[sprintf('%s (%d)', $group->name[$languageId->getValue()], $group->id)] = $group->id;
         }

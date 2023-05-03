@@ -26,13 +26,8 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\AttributeGroup;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
 
-class AttributeGroupSettings
+class CannotUpdateAttributeException extends AttributeException
 {
-    public const ATTRIBUTE_GROUP_TYPE_SELECT = 'select';
-
-    public const ATTRIBUTE_GROUP_TYPE_RADIO = 'radio';
-
-    public const ATTRIBUTE_GROUP_TYPE_COLOR = 'color';
 }

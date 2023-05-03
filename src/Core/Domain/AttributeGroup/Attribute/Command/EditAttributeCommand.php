@@ -26,14 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Adds new attribute group
+ * Edit existing attribute
  */
 class EditAttributeCommand
 {
@@ -63,19 +64,20 @@ class EditAttributeCommand
     private $shopAssociation;
 
     /**
-     * @param AttributeId $attributeId
-     * @param AttributeGroupId $attributeGroupId
+     * @param int $attributeId
+     * @param int $attributeGroupId
      * @param array $localizedValue
      * @param string $color
      * @param int[] $shopAssociation
      *
      * @throws AttributeConstraintException
+     * @throws AttributeGroupConstraintException
      */
-    public function __construct(AttributeId $attributeId, AttributeGroupId $attributeGroupId, array $localizedValue, string $color, array $shopAssociation = [])
+    public function __construct(int $attributeId, int $attributeGroupId, array $localizedValue, string $color, array $shopAssociation = [])
     {
         $this->assertValuesAreValid($localizedValue);
-        $this->attributeId = $attributeId;
-        $this->attributeGroupId = $attributeGroupId;
+        $this->attributeId = new AttributeId($attributeId);
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
         $this->localizedValue = $localizedValue;
         $this->color = $color;
         $this->shopAssociation = $shopAssociation;
@@ -120,7 +122,6 @@ class EditAttributeCommand
     {
         return $this->shopAssociation;
     }
-
 
     /**
      * Asserts that attribute group's names are valid.

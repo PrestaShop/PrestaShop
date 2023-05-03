@@ -24,10 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
-class CannotUpdateAttributeException extends AttributeException
+/**
+ * Describes add attribute command handler
+ */
+interface AddAttributeHandlerInterface
 {
+    /**
+     * @param AddAttributeCommand $command
+     *
+     * @return AttributeId
+     */
+    public function handle(AddAttributeCommand $command): AttributeId;
 }

@@ -29,10 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\AddAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\EditAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
  * Handles data of submitted Attribute Group form.
@@ -57,15 +56,15 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        /** @var AttributeGroupId $attributeGroupId */
-        $attributeGroupId = $this->commandBus->handle(new AddAttributeCommand(
-            (new AttributeGroupId($data['attribute_group'])),
+        /** @var AttributeId $attributeId */
+        $attributeId = $this->commandBus->handle(new AddAttributeCommand(
+            $data['attribute_group'],
             $data['value'],
-            $data['color'],
-            $data['shop_association'] ?? []
+            $data['color'] ?: '',
+            $data['shop_association']
         ));
 
-        return $attributeGroupId->getValue();
+        return $attributeId->getValue();
     }
 
     /**
@@ -73,15 +72,12 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        /** @var AttributeGroupId $attributeGroupId */
-        $attributeGroupId = $this->commandBus->handle(new EditAttributeCommand(
-            (new AttributeId($id)),
-            (new AttributeGroupId($data['attribute_group'])),
+        $this->commandBus->handle(new EditAttributeCommand(
+            $id,
+            $data['attribute_group'],
             $data['value'],
             $data['color'],
-            $data['shop_association'] ?? []
+            $data['shop_association']
         ));
-
-        return $attributeGroupId->getValue();
     }
 }

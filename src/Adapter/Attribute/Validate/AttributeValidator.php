@@ -26,33 +26,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Query;
+namespace PrestaShop\PrestaShop\Adapter\Attribute\Validate;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use ProductAttribute;
 
 /**
- * Retrieves attribute group data for editing
+ * Validates attribute properties using legacy object model
  */
-class GetAttributeForEditing
+class AttributeValidator extends AbstractObjectModelValidator
 {
     /**
-     * @var AttributeId
+     * @param ProductAttribute $attribute
+     *
+     * @throws CoreException
      */
-    private $attributeId;
-
-    /**
-     * @param int $attributeId
-     */
-    public function __construct(int $attributeId)
+    public function validate(ProductAttribute $attribute): void
     {
-        $this->attributeId = new AttributeId($attributeId);
-    }
-
-    /**
-     * @return AttributeId
-     */
-    public function getAttributeId(): AttributeId
-    {
-        return $this->attributeId;
+        $this->validateObjectModelLocalizedProperty($attribute, 'name', AttributeConstraintException::class, AttributeConstraintException::INVALID_NAME);
     }
 }

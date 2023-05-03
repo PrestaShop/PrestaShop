@@ -160,6 +160,7 @@ class AttributeController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Attribute/create.html.twig',
             [
+                'layoutTitle' => $this->trans('New attribute value', 'Admin.Navigation.Menu'),
                 'attributeForm' => $attributeForm->createView(),
                 'attributeGroupId' => $attributeGroupId,
             ]
@@ -182,12 +183,11 @@ class AttributeController extends FrameworkBundleAdminController
         $attributeFormBuilder = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeFormBuilder');
         $attributeFormHandler = $this->get('PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\AttributeFormHandler');
 
-
-        $attributeForm = $attributeFormBuilder->getFormFor($attributeId, ['attribute_group' => $attributeGroupId]);
-
-        $attributeName = $attributeForm->getData()['value'][$this->getContextLangId()];
-
-        $attributeForm->handleRequest($request);
+        $attributeForm = $attributeFormBuilder->getFormFor($attributeId, ['attribute_group' => $attributeGroupId])
+            ->handleRequest($request);
+        //$attributeForm;
+        $formData = $attributeForm->getData();
+        $attributeName = $formData['value'][$this->getContextLangId()] ?? reset($formData['value']);
 
         try {
             $handlerResult = $attributeFormHandler->handleFor($attributeId, $attributeForm);
@@ -204,7 +204,11 @@ class AttributeController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Attribute/edit.html.twig',
             [
-                'attributeName' => $attributeName,
+                'layoutTitle' => $this->trans(
+                    'Editing attribute %name%',
+                    'Admin.Navigation.Menu',
+                    ['%name%' => $attributeName]
+                ),
                 'attributeForm' => $attributeForm->createView(),
                 'attributeGroupId' => $attributeGroupId,
             ]

@@ -28,12 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShop\PrestaShop\Core\Attribute\AttributeGroupSettings;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Query\GetAttributeForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\QueryResult\EditableAttribute;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupForEditing;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\EditableAttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 
 class AttributeFormDataProvider implements FormDataProviderInterface
 {
@@ -66,7 +63,6 @@ class AttributeFormDataProvider implements FormDataProviderInterface
 
     public function getDefaultData()
     {
-        return [
-        ];
+        return [];
     }
 }

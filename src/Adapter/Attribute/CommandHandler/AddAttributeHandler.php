@@ -28,18 +28,27 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\AddAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler\AddAttributeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\CannotAddAttributeException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\AddAttributeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 
 /**
  * Handles adding of attribute value using legacy logic.
  */
 final class AddAttributeHandler extends AbstractObjectModelHandler implements AddAttributeHandlerInterface
 {
+    /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    public function __construct(AttributeRepository $attributeRepository)
+    {
+        $this->attributeRepository = $attributeRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,22 +58,12 @@ final class AddAttributeHandler extends AbstractObjectModelHandler implements Ad
 
         $attribute->name = $command->getLocalizedValue();
         $attribute->color = $command->getColor();
-        $attribute->id_attribute_group =$command->getAttributeGroupId()->getValue();
+        $attribute->id_attribute_group = $command->getAttributeGroupId()->getValue();
 
-        if (false === $attribute->validateFields(false)) {
-            throw new AttributeConstraintException('Invalid attribute data');
-        }
-
-        if (false === $attribute->validateFieldsLang(false)) {
-            throw new AttributeConstraintException('Invalid attribute data', AttributeConstraintException::INVALID_NAME);
-        }
-
-        if (false === $attribute->add()) {
-            throw new CannotAddAttributeException('Unable to create new attribute');
-        }
+        $id = $this->attributeRepository->add($attribute);
 
         $this->associateWithShops($attribute, $command->getShopAssociation());
 
-        return new AttributeId((int) $attribute->id);
+        return $id;
     }
 }

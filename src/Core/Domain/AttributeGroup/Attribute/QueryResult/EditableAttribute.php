@@ -26,16 +26,21 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Adds new attribute group
+ * Stores attributes data that's needed for editing.
  */
-class AddAttributeCommand
+class EditableAttribute
 {
+    /**
+     * @var AttributeId
+     */
+    private $attributeId;
+
     /**
      * @var AttributeGroupId
      */
@@ -44,7 +49,7 @@ class AddAttributeCommand
     /**
      * @var array
      */
-    private $localizedValue;
+    private $value;
 
     /**
      * @var string
@@ -54,23 +59,35 @@ class AddAttributeCommand
     /**
      * @var int[]
      */
-    private $shopAssociation;
+    private $shopAssociationIds;
 
     /**
+     * @param AttributeId $attributeId
      * @param AttributeGroupId $attributeGroupId
-     * @param array $localizedValue
+     * @param array $value
      * @param string $color
-     * @param int[] $shopAssociation
-     *
-     * @throws AttributeConstraintException
+     * @param int[] $shopAssociationIds
      */
-    public function __construct(AttributeGroupId $attributeGroupId, array $localizedValue, string $color, array $shopAssociation = [])
-    {
-        $this->assertValuesAreValid($localizedValue);
+    public function __construct(
+        AttributeId $attributeId,
+        AttributeGroupId $attributeGroupId,
+        array $value,
+        string $color,
+        array $shopAssociationIds
+    ) {
+        $this->attributeId = $attributeId;
         $this->attributeGroupId = $attributeGroupId;
-        $this->localizedValue = $localizedValue;
+        $this->value = $value;
         $this->color = $color;
-        $this->shopAssociation = $shopAssociation;
+        $this->shopAssociationIds = $shopAssociationIds;
+    }
+
+    /**
+     * @return AttributeId
+     */
+    public function getAttributeId(): AttributeId
+    {
+        return $this->attributeId;
     }
 
     /**
@@ -84,9 +101,9 @@ class AddAttributeCommand
     /**
      * @return array
      */
-    public function getLocalizedValue(): array
+    public function getValue(): array
     {
-        return $this->localizedValue;
+        return $this->value;
     }
 
     /**
@@ -100,23 +117,8 @@ class AddAttributeCommand
     /**
      * @return int[]
      */
-    public function getShopAssociation(): array
+    public function getShopAssociationIds(): array
     {
-        return $this->shopAssociation;
-    }
-
-
-    /**
-     * Asserts that attribute group's names are valid.
-     *
-     * @param string[] $names
-     *
-     * @throws AttributeConstraintException
-     */
-    private function assertValuesAreValid(array $names): void
-    {
-        if (empty($names)) {
-            throw new AttributeConstraintException('Attribute name cannot be empty', AttributeConstraintException::EMPTY_NAME);
-        }
+        return $this->shopAssociationIds;
     }
 }

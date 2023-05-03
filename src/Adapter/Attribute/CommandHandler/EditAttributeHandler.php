@@ -28,12 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\EditAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\CommandHandler\EditAttributeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\CannotUpdateAttributeException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler\EditAttributeHandlerInterface;
 
 /**
  * Handles editing of attribute groups using legacy logic.
@@ -41,9 +39,19 @@ use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
 final class EditAttributeHandler extends AbstractObjectModelHandler implements EditAttributeHandlerInterface
 {
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    public function __construct(AttributeRepository $attributeRepository)
+    {
+        $this->attributeRepository = $attributeRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function handle(EditAttributeCommand $command): AttributeId
+    public function handle(EditAttributeCommand $command): void
     {
         $attribute = new \ProductAttribute($command->getAttributeId()->getValue());
 
@@ -51,20 +59,7 @@ final class EditAttributeHandler extends AbstractObjectModelHandler implements E
         $attribute->color = $command->getColor();
         $attribute->id_attribute_group = $command->getAttributeGroupId()->getValue();
 
-        if (false === $attribute->validateFields(false)) {
-            throw new AttributeConstraintException('Invalid attribute data');
-        }
-
-        if (false === $attribute->validateFieldsLang(false)) {
-            throw new AttributeConstraintException('Invalid attribute data', AttributeConstraintException::INVALID_NAME);
-        }
-
-        if (false === $attribute->update()) {
-            throw new CannotUpdateAttributeException('Unable to update attribute');
-        }
-
+        $this->attributeRepository->update($attribute);
         $this->associateWithShops($attribute, $command->getShopAssociation());
-
-        return new AttributeId((int) $attribute->id);
     }
 }

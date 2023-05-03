@@ -29,13 +29,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\AddAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Command\EditAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Query\GetAttributeForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -128,10 +127,8 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
      * @param int $attributeGroupId
      * @param string $valueDefaultLanguage
      * @param string $color
-     * @return AttributeId
      *
-     * @throws AttributeConstraintException
-     * @throws AttributeGroupConstraintException
+     * @return AttributeId
      */
     private function createAttributeUsingCommand(
         int $attributeGroupId,
@@ -139,7 +136,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         string $color
     ): AttributeId {
         $command = new AddAttributeCommand(
-            (new AttributeGroupId($attributeGroupId)),
+            $attributeGroupId,
             [$this->defaultLangId => $valueDefaultLanguage],
             $color,
             [$this->defaultShopId]
@@ -153,9 +150,9 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
      * @param int $attributeGroupId
      * @param string $valueDefaultLanguage
      * @param string $color
+     *
      * @return AttributeId
      *
-     * @throws AttributeConstraintException
      * @throws AttributeGroupConstraintException
      */
     private function editAttributeUsingCommand(
@@ -165,8 +162,8 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         string $color
     ): AttributeId {
         $command = new EditAttributeCommand(
-            (new AttributeId($attributeId)),
-            (new AttributeGroupId($attributeGroupId)),
+            $attributeId,
+            $attributeGroupId,
             [$this->defaultLangId => $valueDefaultLanguage],
             $color,
             [$this->defaultShopId]

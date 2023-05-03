@@ -29,12 +29,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupDataProvider;
-use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupSettings;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
-use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupType;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -52,11 +52,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class AttributeType extends TranslatorAwareType
 {
-    /**
-     * @var bool
-     */
-    private $isMultistoreEnabled;
-
     /**
      * @var AttributeGroupRepository
      */
@@ -87,7 +82,6 @@ class AttributeType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        bool $isMultistoreEnabled,
         AttributeGroupRepository $attributeGroupRepository,
         AttributeGroupDataProvider $attributeGroupDataProvider,
         int $contextShopId,
@@ -95,7 +89,6 @@ class AttributeType extends TranslatorAwareType
     ) {
         parent::__construct($translator, $locales);
 
-        $this->isMultistoreEnabled = $isMultistoreEnabled;
         $this->attributeGroupRepository = $attributeGroupRepository;
         $this->contextShopId = $contextShopId;
         $this->attributeGroupDataProvider = $attributeGroupDataProvider;
@@ -119,7 +112,7 @@ class AttributeType extends TranslatorAwareType
                 'choices' => $this->attributeGroupDataProvider->getAttributeGroupChoices(
                     new ShopId($this->contextShopId),
                     new LanguageId($this->contextLangId)
-                )
+                ),
             ])
             ->add('value', TranslatableType::class, [
                 'type' => TextType::class,
@@ -134,30 +127,27 @@ class AttributeType extends TranslatorAwareType
                 'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
-        ]);
-        if ($attributeGroup->group_type === AttributeGroupSettings::ATTRIBUTE_GROUP_TYPE_COLOR) {
+            ]);
+        if ($attributeGroup->group_type === AttributeGroupType::ATTRIBUTE_GROUP_TYPE_COLOR) {
             $builder->add('color', ColorType::class, [
                 'label' => $this->trans('Color', 'Admin.Global'),
                 'required' => false,
             ])->add('texture', FileType::class, [
                 'label' => $this->trans('Texture', 'Admin.Global'),
                 'required' => false,
-
             ]);
         }
 
-        if ($this->isMultistoreEnabled) {
-            $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global'),
-                'required' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans(
-                            'This field cannot be empty.', 'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ]);
-        }
+        $builder->add('shop_association', ShopChoiceTreeType::class, [
+            'label' => $this->trans('Shop association', 'Admin.Global'),
+            'required' => false,
+            'constraints' => [
+                new NotBlank([
+                    'message' => $this->trans(
+                        'This field cannot be empty.', 'Admin.Notifications.Error'
+                    ),
+                ]),
+            ],
+        ]);
     }
 }

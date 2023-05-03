@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository;
 use AttributeGroup;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupShopAssociationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -58,7 +58,6 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
     }
-
 
     /**
      * @param AttributeGroupId $attributeGroupId

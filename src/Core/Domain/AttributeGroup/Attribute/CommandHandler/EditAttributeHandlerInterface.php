@@ -24,20 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Query\GetAttributeForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\QueryResult\EditableAttribute;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
 
 /**
- * Describes attribute group for editing handler.
+ * Describes a service that handles attribute edit command.
  */
-interface GetAttributeForEditingHandlerInterface
+interface EditAttributeHandlerInterface
 {
     /**
-     * @param GetAttributeForEditing $query
-     *
-     * @return EditableAttribute
+     * @param EditAttributeCommand $command
      */
-    public function handle(GetAttributeForEditing $query): EditableAttribute;
+    public function handle(EditAttributeCommand $command): void;
 }

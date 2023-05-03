@@ -26,8 +26,8 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception;
 
-class CannotAddAttributeException extends AttributeException
+class InvalidAttributeIdException extends AttributeException
 {
 }

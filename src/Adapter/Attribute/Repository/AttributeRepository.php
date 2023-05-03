@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotAddAttributeException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -38,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use ProductAttribute;
 use RuntimeException;
@@ -56,17 +59,73 @@ class AttributeRepository extends AbstractObjectModelRepository
      * @var string
      */
     private $dbPrefix;
+    /**
+     * @var AttributeValidator
+     */
+    private $attributeValidator;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param AttributeValidator $attributeValidator
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        AttributeValidator $attributeValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->attributeValidator = $attributeValidator;
+    }
+
+    /**
+     * @param AttributeId $attributeId
+     *
+     * @return ProductAttribute
+     *
+     * @throws AttributeNotFoundException
+     * @throws CoreException
+     */
+    public function get(AttributeId $attributeId): ProductAttribute
+    {
+        /** @var ProductAttribute $attribute */
+        $attribute = $this->getObjectModel(
+            $attributeId->getValue(),
+            ProductAttribute::class,
+            AttributeNotFoundException::class
+        );
+
+        return $attribute;
+    }
+
+    /**
+     * @param ProductAttribute $attribute
+     *
+     * @return AttributeId
+     *
+     * @throws CoreException
+     */
+    public function add(ProductAttribute $attribute): AttributeId
+    {
+        $this->attributeValidator->validate($attribute);
+        $id = $this->addObjectModel($attribute, CannotAddAttributeException::class);
+
+        return new AttributeId($id);
+    }
+
+    /**
+     * @param ProductAttribute $attribute
+     * @param int $errorCode
+     *
+     * @return void
+     *
+     * @throws CoreException
+     */
+    public function update(ProductAttribute $attribute, int $errorCode = 0): void
+    {
+        $this->attributeValidator->validate($attribute);
+        $this->updateObjectModel($attribute, CannotAddAttributeException::class, $errorCode);
     }
 
     /**

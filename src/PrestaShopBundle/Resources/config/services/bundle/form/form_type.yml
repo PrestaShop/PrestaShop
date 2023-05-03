@@ -472,7 +472,6 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeType:
     public: true
     arguments:
-      $isMultistoreEnabled: '@=service("prestashop.adapter.multistore_feature").isActive()'
       $attributeGroupRepository: '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
       $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
       $contextLangId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"

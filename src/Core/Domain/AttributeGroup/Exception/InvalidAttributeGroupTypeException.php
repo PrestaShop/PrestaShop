@@ -24,49 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\InvalidAttributeIdException;
-
-/**
- * Defines Attribute group ID with its constraints.
- */
-class AttributeId
+class InvalidAttributeGroupTypeException extends AttributeGroupException
 {
-    /**
-     * @var int
-     */
-    private $attributeId;
-
-    /**
-     * @param int $attributeId
-     */
-    public function __construct(int $attributeId)
-    {
-        $this->assertIntegerIsGreaterThanZero($attributeId);
-
-        $this->attributeId = $attributeId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->attributeId;
-    }
-
-    /**
-     * @param int $attributeId
-     *
-     * @throws InvalidAttributeIdException
-     */
-    private function assertIntegerIsGreaterThanZero(int $attributeId): void
-    {
-        if (0 > $attributeId) {
-            throw new InvalidAttributeIdException(sprintf('Invalid attribute id %s supplied. Attribute group id must be positive integer.', $attributeId));
-        }
-    }
 }

@@ -23,14 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% set layoutTitle = 'Add a new attribute'|trans({}, 'Admin.Catalog.attribute') %}
-
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
     {% include '@PrestaShop/Admin/Sell/Catalog/Attribute/Blocks/form.html.twig' with {
-      attributeId: null,
-      attributeForm: attributeForm
+      attributeGroupId: attributeGroupId,
+      attributeForm: attributeForm,
     } %}
 {% endblock %}
 

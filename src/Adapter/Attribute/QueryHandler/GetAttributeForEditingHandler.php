@@ -24,19 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Exception\AttributeException;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\Query\GetAttributeForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\QueryHandler\GetAttributeForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\QueryResult\EditableAttribute;
-use PrestaShop\PrestaShop\Core\Domain\Attribute\ValueObject\AttributeId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryHandler\GetAttributeForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShopException;
-use ProductAttribute;
 
 /**
  * Handles query which gets attribute group for editing
@@ -44,12 +38,22 @@ use ProductAttribute;
 final class GetAttributeForEditingHandler implements GetAttributeForEditingHandlerInterface
 {
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    public function __construct(AttributeRepository $attributeRepository)
+    {
+        $this->attributeRepository = $attributeRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(GetAttributeForEditing $query): EditableAttribute
     {
         $attributeId = $query->getAttributeId();
-        $attribute = $this->getAttribute($attributeId);
+        $attribute = $this->attributeRepository->get($attributeId);
 
         return new EditableAttribute(
             $attributeId,
@@ -58,30 +62,5 @@ final class GetAttributeForEditingHandler implements GetAttributeForEditingHandl
             $attribute->color,
             $attribute->getAssociatedShops()
         );
-    }
-
-    /**
-     * Gets legacy Attribute group
-     *
-     * @param AttributeId $attributeId
-     *
-     * @return ProductAttribute
-     *
-     * @throws AttributeException
-     * @throws AttributeNotFoundException
-     */
-    protected function getAttribute(AttributeId $attributeId): ProductAttribute
-    {
-        try {
-            $attribute = new ProductAttribute($attributeId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new AttributeException('Failed to create new attribute', 0, $e);
-        }
-
-        if ($attribute->id !== $attributeId->getValue()) {
-            throw new AttributeNotFoundException(sprintf('Attribute with id "%s" was not found.', $attributeId->getValue()));
-        }
-
-        return $attribute;
     }
 }
