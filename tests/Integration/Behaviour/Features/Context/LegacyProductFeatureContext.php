@@ -162,6 +162,19 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When I add the following products to my cart:
+     */
+    public function addProductsToCart(TableNode $tableNode): void
+    {
+        foreach ($tableNode->getColumnsHash() as $productRow) {
+            $this->getCurrentCart()->updateQty(
+                (int) $productRow['quantity'],
+                $this->getSharedStorage()->get($productRow['id reference'])
+            );
+        }
+    }
+
+    /**
      * @When /^I change quantity of product "(.+)" in my cart with quantity (\d+) and operator (up|down|nothing), result of change is (OK|KO)$/
      */
     public function iChangeProductQuantityInMyCart($productName, $productQuantity, $operator, $expectedStr)
