@@ -114,10 +114,10 @@ class AliasRepository extends AbstractObjectModelRepository
     public function aliasExists(string $alias, string $searchTerm): bool
     {
         $qb = $this->connection->createQueryBuilder()
-            ->addSelect('*')
+            ->addSelect('a.id_alias')
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :search')
-            ->AndWhere('a.alias = :alias')
+            ->andWhere('a.alias = :alias')
             ->setParameter('search', $searchTerm)
             ->setParameter('alias', $alias)
         ;
