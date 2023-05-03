@@ -304,7 +304,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function display(): void
     {
-        $memoryLimit = Tools::getMemoryLimit();
         // We fill the process step used for Ajax queries
         $this->process_steps[] = ['key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create file parameters', [], 'Install')];
         $this->process_steps[] = ['key' => 'installDatabase', 'lang' => $this->translator->trans('Create database tables', [], 'Install')];
