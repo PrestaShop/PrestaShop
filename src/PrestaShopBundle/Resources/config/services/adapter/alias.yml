@@ -15,7 +15,7 @@ services:
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator'
 
-  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAlias:
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAliasHandler:
     autowire: true
     public: false
     tags:
