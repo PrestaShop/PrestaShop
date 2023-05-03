@@ -3,7 +3,7 @@ ul.entities-list {
 }
 
 .entity-search-widget {
-  @import '_twitter_typeahead.scss';
+  @import "twitter_typeahead";
 
   .entities-list {
     max-width: 100%;
