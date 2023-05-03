@@ -80,7 +80,7 @@ class AliasRepository extends AbstractObjectModelRepository
         $aliasIds = [];
 
         foreach ($aliases as $searchAlias) {
-            // As search term is not a primary key, we need st
+            // As search term is not a primary key, we need make sure that alias and search combination does not exist
             if ($this->aliasExists($searchAlias, $searchTerm)) {
                 continue;
             }
