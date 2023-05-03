@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import contactUsPage from '@pages/FO/contactUs';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 
 // Import demo data

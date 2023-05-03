@@ -19,7 +19,7 @@ import customerServicePage from '@pages/BO/customerService/customerService';
 import dashboardPage from '@pages/BO/dashboard';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import {createAccountPage} from '@pages/FO/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 import ordersPage from '@pages/BO/orders';

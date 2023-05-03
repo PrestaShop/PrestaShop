@@ -17,7 +17,7 @@ import foProductPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
@@ -281,14 +281,14 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
         await homePage.goToMyAccountPage(page);
-        const pageTitle: string = await foMyAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+        const pageTitle: string = await myAccountPage.getPageTitle(page);
+        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
       });
 
       it('should go to order history page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-        await foMyAccountPage.goToHistoryAndDetailsPage(page);
+        await myAccountPage.goToHistoryAndDetailsPage(page);
 
         const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
         await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
