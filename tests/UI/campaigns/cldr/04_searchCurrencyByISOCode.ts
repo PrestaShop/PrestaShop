@@ -137,6 +137,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Filter
     await currenciesPage.filterTable(page, 'input', 'iso_code', 'PY');
+    await currenciesPage.sortTable(page, 'iso_code', 'asc');
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -144,10 +145,10 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check currencies
     const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumnRow1).to.contains(Currencies.pyg.isoCode);
+    await expect(textColumnRow1).to.contains(Currencies.jpy.isoCode);
 
     const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
-    await expect(textColumnRow2).to.contains(Currencies.jpy.isoCode);
+    await expect(textColumnRow2).to.contains(Currencies.pyg.isoCode);
   });
 
   it('should filter by iso code "P"', async function () {
@@ -155,6 +156,7 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Filter
     await currenciesPage.filterTable(page, 'input', 'iso_code', 'P');
+    await currenciesPage.sortTable(page, 'iso_code', 'asc');
 
     // Check number of currencies
     const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
@@ -162,13 +164,13 @@ describe('CLDR : Search a currency by ISO code', async () => {
 
     // Check currencies
     const textColumnRow1 = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumnRow1).to.contains(Currencies.pyg.isoCode);
+    await expect(textColumnRow1).to.contains(Currencies.gbp.isoCode);
 
     const textColumnRow2 = await currenciesPage.getTextColumnFromTableCurrency(page, 2, 'iso_code');
     await expect(textColumnRow2).to.contains(Currencies.jpy.isoCode);
 
     const textColumnRow3 = await currenciesPage.getTextColumnFromTableCurrency(page, 3, 'iso_code');
-    await expect(textColumnRow3).to.contains(Currencies.gbp.isoCode);
+    await expect(textColumnRow3).to.contains(Currencies.pyg.isoCode);
   });
 
   it('should filter by iso code "ABC"', async function () {
