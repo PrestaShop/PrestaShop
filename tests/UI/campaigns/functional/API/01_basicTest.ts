@@ -1,8 +1,9 @@
 // Import utils
+import helpers from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
-import {request, APIRequestContext} from 'playwright';
+import type {APIRequestContext} from 'playwright';
 
 const baseContext: string = 'functional_API_basicTest';
 
@@ -10,11 +11,7 @@ describe('API : Basic Test', async () => {
   let apiContext: APIRequestContext;
 
   before(async () => {
-    apiContext = await request.newContext({
-      baseURL: global.BO.URL,
-      // @todo : Remove it when Puppeteer will accept self signed certificates
-      ignoreHTTPSErrors: true,
-    });
+    apiContext = await helpers.createAPIContext(global.BO.URL);
   });
 
   describe('Basic Test', async () => {

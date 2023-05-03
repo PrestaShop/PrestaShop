@@ -1,5 +1,5 @@
 // Import data
-import WebserviceCreator from '@data/types/webservice';
+import {WebserviceCreator, WebservicePermission} from '@data/types/webservice';
 
 import {faker} from '@faker-js/faker';
 
@@ -14,6 +14,8 @@ export default class WebserviceData {
 
   public readonly status: boolean;
 
+  public readonly permissions: WebservicePermission[];
+
   /**
    * Constructor for class WebserviceData
    * @param webserviceToCreate {WebserviceCreator} Could be used to force the value of some members
@@ -27,5 +29,8 @@ export default class WebserviceData {
 
     /** @type {boolean} Status of the webservice */
     this.status = webserviceToCreate.status === undefined ? true : webserviceToCreate.status;
+
+    /** @type {WebservicePermission[]} Permissions of the webservice */
+    this.permissions = webserviceToCreate.permissions === undefined ? [] : webserviceToCreate.permissions;
   }
 }
