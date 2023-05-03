@@ -60,7 +60,7 @@ final class AttributeFormDataHandler implements FormDataHandlerInterface
         $attributeId = $this->commandBus->handle(new AddAttributeCommand(
             $data['attribute_group'],
             $data['value'],
-            $data['color'] ?: '',
+            $data['color'] ?? '',
             $data['shop_association']
         ));
 
