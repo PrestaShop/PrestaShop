@@ -29,55 +29,59 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Doctrine\DBAL\Driver\Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
+use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use Tests\Resources\DatabaseDump;
 
 class AliasFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I add alias :reference with following information:
+     * @When I add alias with following information:
      *
-     * @param string $reference
      * @param TableNode $table
      */
-    public function addAlias(string $reference, TableNode $table): void
+    public function addAlias(TableNode $table): void
     {
         $data = $table->getRowsHash();
 
         $aliases = array_map('trim', explode(',', $data['alias']));
 
-        /** @var AliasId[] $aliasIds */
-        $aliasIds = $this->getCommandBus()->handle(new AddAliasCommand(
+        $this->getCommandBus()->handle(new AddAliasCommand(
             $aliases,
             $data['search']
         ));
-
-        $this->getSharedStorage()->set($reference, $aliasIds);
     }
 
     /**
-     * @Then alias :reference should have the following details:
+     * @Then following aliases should exist:
      *
-     * @param string $reference
      * @param TableNode $table
+     *
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
      */
-    public function assertAlias(string $reference, TableNode $table): void
+    public function assertAlias(TableNode $table): void
     {
-        $data = $table->getRowsHash();
-        $expectedEditableContacts = $this->mapToEditableAlias($data);
+        $data = $table->getColumnsHash();
 
-        /** @var AliasId[] $aliasIds */
-        $aliasIds = $this->getSharedStorage()->get($reference);
+        /** @var AliasQueryBuilder $aliasQueryBuilder */
+        $aliasQueryBuilder = $this->getContainer()->get(AliasQueryBuilder::class);
+        $qb = $aliasQueryBuilder->getSearchQueryBuilder(AliasFilters::buildDefaults());
+        $aliases = $qb->execute()->fetchAllAssociative();
 
-        foreach ($aliasIds as $aliasId) {
-            /** @var AliasForEditing $aliasForEditing */
-            $aliasForEditing = $this->getQueryBus()->handle(new GetAliasForEditing($aliasId->getValue()));
+        Assert::assertEquals(
+            count($data),
+            count($aliases),
+            'Unexpected aliases count'
+        );
 
-            Assert::assertEquals($aliasForEditing, $expectedEditableContacts);
+        $idsByIdReferences = $this->assertAliasProperties($data, $aliases);
+
+        foreach ($idsByIdReferences as $reference => $id) {
+            $this->getSharedStorage()->set($reference, $id);
         }
     }
 
@@ -90,15 +94,34 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param array $data
+     * @param array $expectedData
+     * @param array $aliases
      *
-     * @return AliasForEditing
+     * @return array
      */
-    private function mapToEditableAlias(array $data): AliasForEditing
+    private function assertAliasProperties(array $expectedData, array $aliases): array
     {
-        return new AliasForEditing(
-            explode(',', $data['alias']),
-            $data['search']
-        );
+        $idsByIdReferences = [];
+        foreach ($aliases as $key => $alias) {
+            $expectedAlias = $expectedData[$key];
+
+            Assert::assertSame(
+                $alias['alias'],
+                $expectedAlias['alias'],
+                'Unexpected alias reference'
+            );
+
+            Assert::assertSame(
+                $alias['search'],
+                $expectedAlias['search'],
+                'Unexpected alias reference'
+            );
+
+            if (!empty($expectedAlias['id reference'])) {
+                $idsByIdReferences[$expectedAlias['id reference']] = $alias['id_alias'];
+            }
+        }
+
+        return $idsByIdReferences;
     }
 }
