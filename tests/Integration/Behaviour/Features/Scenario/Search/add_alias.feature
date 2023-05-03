@@ -23,6 +23,8 @@ Feature: Add basic alias from Back Office (BO)
       | alias  | alias2,aliases2 |
       | search | alias 2         |
 
+  # @TODO implement check for alias that was already saved with same search term
+
   Scenario: I add a multiple aliases with same search field and basic information
     When I add alias "alias3" with following information:
       | alias  | alias3,aliases3 |
