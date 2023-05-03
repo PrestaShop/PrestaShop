@@ -433,8 +433,6 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType: ~
   PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType: ~
   PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType:
-    arguments:
-      $isMultistoreEnabled: '@=service("prestashop.adapter.multistore_feature").isActive()'
     tags:
       - { name: form.type }
 

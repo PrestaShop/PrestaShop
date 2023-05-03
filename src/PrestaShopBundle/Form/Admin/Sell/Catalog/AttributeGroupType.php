@@ -47,23 +47,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class AttributeGroupType extends TranslatorAwareType
 {
     /**
-     * @var bool
-     */
-    private $isMultistoreEnabled;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param bool $isMultistoreEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
-        bool $isMultistoreEnabled
+        array $locales
     ) {
         parent::__construct($translator, $locales);
-
-        $this->isMultistoreEnabled = $isMultistoreEnabled;
     }
 
     /**
@@ -119,7 +110,6 @@ class AttributeGroupType extends TranslatorAwareType
                     ]),
                 ],
             ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void
