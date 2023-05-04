@@ -26,9 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class LocalUnitsType is responsible for building 'Improve > International > Localization' page
@@ -36,6 +39,8 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class LocalUnitsType extends TranslatorAwareType
 {
+    public const LOCAL_UNIT_LENGTH = 5;
+
     /**
      * {@inheritdoc}
      */
@@ -51,6 +56,21 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_WEIGHT_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('distance_unit', TextType::class, [
                 'label' => $this->trans(
@@ -61,6 +81,21 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_DISTANCE_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('volume_unit', TextType::class, [
                 'label' => $this->trans(
@@ -71,6 +106,21 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_VOLUME_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('dimension_unit', TextType::class, [
                 'label' => $this->trans(
@@ -81,6 +131,31 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_DIMENSION_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

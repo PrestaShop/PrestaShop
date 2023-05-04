@@ -26,68 +26,62 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Localization;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class LocalUnitsConfiguration is responsible for 'Improve > International > Localization' page
  * 'Local units' form data.
  */
-class LocalUnitsConfiguration implements DataConfigurationInterface
+class LocalUnitsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['weight_unit', 'distance_unit', 'volume_unit', 'dimension_unit'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'weight_unit' => $this->configuration->get('PS_WEIGHT_UNIT'),
-            'distance_unit' => $this->configuration->get('PS_DISTANCE_UNIT'),
-            'volume_unit' => $this->configuration->get('PS_VOLUME_UNIT'),
-            'dimension_unit' => $this->configuration->get('PS_DIMENSION_UNIT'),
+            'weight_unit' => $this->configuration->get('PS_WEIGHT_UNIT', null, $shopConstraint),
+            'distance_unit' => $this->configuration->get('PS_DISTANCE_UNIT', null, $shopConstraint),
+            'volume_unit' => $this->configuration->get('PS_VOLUME_UNIT', null, $shopConstraint),
+            'dimension_unit' => $this->configuration->get('PS_DIMENSION_UNIT', null, $shopConstraint),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $config)
+    public function updateConfiguration(array $configuration)
     {
         $errors = [];
 
-        if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_WEIGHT_UNIT', $config['weight_unit']);
-            $this->configuration->set('PS_DISTANCE_UNIT', $config['distance_unit']);
-            $this->configuration->set('PS_VOLUME_UNIT', $config['volume_unit']);
-            $this->configuration->set('PS_DIMENSION_UNIT', $config['dimension_unit']);
+        if ($this->validateConfiguration($configuration)) {
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_WEIGHT_UNIT', 'weight_unit', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_DISTANCE_UNIT', 'distance_unit', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_VOLUME_UNIT', 'volume_unit', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_DIMENSION_UNIT', 'dimension_unit', $configuration, $shopConstraint);
         }
 
         return $errors;
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $config['weight_unit'],
-            $config['distance_unit'],
-            $config['volume_unit'],
-            $config['dimension_unit']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('weight_unit', 'string')
+            ->setAllowedTypes('distance_unit', 'string')
+            ->setAllowedTypes('volume_unit', 'string')
+            ->setAllowedTypes('dimension_unit', 'string');
+
+        return $resolver;
     }
 }

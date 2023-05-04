@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,6 +52,7 @@ class AdvancedConfigurationType extends TranslatorAwareType
                     'The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_LOCALE_LANGUAGE',
             ])
             ->add('country_identifier', TextType::class, [
                 'label' => $this->trans(
@@ -61,6 +63,17 @@ class AdvancedConfigurationType extends TranslatorAwareType
                     'The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_LOCALE_COUNTRY',
             ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

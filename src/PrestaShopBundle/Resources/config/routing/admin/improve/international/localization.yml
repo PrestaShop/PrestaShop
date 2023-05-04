@@ -8,7 +8,7 @@ admin_localization_index:
 
 admin_localization_configuration_save:
   path: /configuration
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\LocalizationController::processConfigurationFormAction
     _legacy_controller: AdminLocalization
@@ -16,14 +16,14 @@ admin_localization_configuration_save:
 
 admin_localization_local_units_save:
   path: /local-units
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\LocalizationController::processLocalUnitsFormAction
     _legacy_controller: AdminLocalization
 
 admin_localization_advanced_save:
   path: /advanced
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\LocalizationController::processAdvancedFormAction
     _legacy_controller: AdminLocalization

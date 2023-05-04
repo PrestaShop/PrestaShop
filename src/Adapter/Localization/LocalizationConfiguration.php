@@ -28,19 +28,26 @@ namespace PrestaShop\PrestaShop\Adapter\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class LocalizationConfiguration is responsible for 'Improve > International > Localization' page
  * 'Configuration' form data.
  */
-class LocalizationConfiguration implements DataConfigurationInterface
+class LocalizationConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    private const CONFIGURATION_FIELDS = [
+        'default_language',
+        'detect_language_from_browser',
+        'detect_country_from_browser',
+        'default_country',
+        'default_currency',
+        'timezone',
+    ];
 
     /**
      * @var LanguageActivatorInterface
@@ -54,15 +61,20 @@ class LocalizationConfiguration implements DataConfigurationInterface
 
     /**
      * @param Configuration $configuration
+     * @param Context $shopContext
+     * @param FeatureInterface $multistoreFeature
      * @param LanguageActivatorInterface $languageActivator
      * @param CurrencyManager $currencyManager
      */
     public function __construct(
         Configuration $configuration,
+        Context $shopContext,
+        FeatureInterface $multistoreFeature,
         LanguageActivatorInterface $languageActivator,
         CurrencyManager $currencyManager
     ) {
-        $this->configuration = $configuration;
+        parent::__construct($configuration, $shopContext, $multistoreFeature);
+
         $this->languageActivator = $languageActivator;
         $this->currencyManager = $currencyManager;
     }
@@ -72,55 +84,61 @@ class LocalizationConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'default_language' => $this->configuration->getInt('PS_LANG_DEFAULT'),
-            'detect_language_from_browser' => $this->configuration->getBoolean('PS_DETECT_LANG'),
-            'default_country' => $this->configuration->getInt('PS_COUNTRY_DEFAULT'),
-            'detect_country_from_browser' => $this->configuration->getBoolean('PS_DETECT_COUNTRY'),
-            'default_currency' => $this->configuration->getInt('PS_CURRENCY_DEFAULT'),
-            'timezone' => $this->configuration->get('PS_TIMEZONE'),
+            'default_language' => (int) $this->configuration->get('PS_LANG_DEFAULT', 1, $shopConstraint),
+            'detect_language_from_browser' => (bool) $this->configuration->get('PS_DETECT_LANG', false, $shopConstraint),
+            'default_country' => (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, $shopConstraint),
+            'detect_country_from_browser' => (bool) $this->configuration->get('PS_DETECT_COUNTRY', false, $shopConstraint),
+            'default_currency' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $shopConstraint),
+            'timezone' => $this->configuration->get('PS_TIMEZONE', null, $shopConstraint),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $config)
+    public function updateConfiguration(array $configuration)
     {
         $errors = [];
 
-        if ($this->validateConfiguration($config)) {
-            $this->languageActivator->enable((int) $config['default_language']);
+        if ($this->validateConfiguration($configuration)) {
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->languageActivator->enable((int) $configuration['default_language']);
 
             // only update currency related data if it has changed
             $currentConfig = $this->getConfiguration();
-            if ($currentConfig['default_currency'] != $config['default_currency']) {
-                $this->configuration->set('PS_CURRENCY_DEFAULT', (int) $config['default_currency']);
+            if ($currentConfig['default_currency'] != $configuration['default_currency']) {
+                $this->updateConfigurationValue('PS_CURRENCY_DEFAULT', 'default_currency', $configuration, $shopConstraint);
                 $this->currencyManager->updateDefaultCurrency();
             }
 
-            $this->configuration->set('PS_LANG_DEFAULT', (int) $config['default_language']);
-            $this->configuration->set('PS_DETECT_LANG', (int) $config['detect_language_from_browser']);
-            $this->configuration->set('PS_COUNTRY_DEFAULT', (int) $config['default_country']);
-            $this->configuration->set('PS_DETECT_COUNTRY', (int) $config['detect_country_from_browser']);
-            $this->configuration->set('PS_TIMEZONE', $config['timezone']);
+            $this->updateConfigurationValue('PS_LANG_DEFAULT', 'default_language', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_DETECT_LANG', 'detect_language_from_browser', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_COUNTRY_DEFAULT', 'default_country', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_DETECT_COUNTRY', 'detect_country_from_browser', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_TIMEZONE', 'timezone', $configuration, $shopConstraint);
         }
 
         return $errors;
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $config['default_language'],
-            $config['detect_language_from_browser'],
-            $config['default_country'],
-            $config['detect_country_from_browser'],
-            $config['default_currency'],
-            $config['timezone']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('default_language', 'int')
+            ->setAllowedTypes('detect_language_from_browser', 'bool')
+            ->setAllowedTypes('detect_country_from_browser', 'bool')
+            ->setAllowedTypes('default_country', 'int')
+            ->setAllowedTypes('default_currency', 'int')
+            ->setAllowedTypes('timezone', 'string');
+
+        return $resolver;
     }
 }

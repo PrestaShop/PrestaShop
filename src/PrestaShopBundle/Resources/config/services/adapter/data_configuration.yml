@@ -163,6 +163,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.language.activator'
       - '@prestashop.adapter.manager.currency'
 
@@ -170,11 +172,15 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.localization_advanced.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Localization\AdvancedConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.geolocation_by_ip_address.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'

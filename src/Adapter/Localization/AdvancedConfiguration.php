@@ -26,62 +26,56 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Localization;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class AdvancedConfiguration is responsible for 'Improve > International > Localization' page
  * 'Advanced' form data.
  */
-class AdvancedConfiguration implements DataConfigurationInterface
+class AdvancedConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['language_identifier', 'country_identifier'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'language_identifier' => $this->configuration->get('PS_LOCALE_LANGUAGE'),
-            'country_identifier' => $this->configuration->get('PS_LOCALE_COUNTRY'),
+            'language_identifier' => $this->configuration->get('PS_LOCALE_LANGUAGE', null, $shopConstraint),
+            'country_identifier' => $this->configuration->get('PS_LOCALE_COUNTRY', null, $shopConstraint),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $config)
+    public function updateConfiguration(array $configuration)
     {
         $errors = [];
 
-        if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_LOCALE_LANGUAGE', $config['language_identifier']);
-            $this->configuration->set('PS_LOCALE_COUNTRY', $config['country_identifier']);
+        if ($this->validateConfiguration($configuration)) {
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_LOCALE_LANGUAGE', 'language_identifier', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_LOCALE_COUNTRY', 'country_identifier', $configuration, $shopConstraint);
         }
 
         return $errors;
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $config['language_identifier'],
-            $config['country_identifier']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('language_identifier', 'string')
+            ->setAllowedTypes('country_identifier', 'string');
+
+        return $resolver;
     }
 }

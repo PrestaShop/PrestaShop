@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -100,6 +101,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'data-minimumResultsForSearch' => '7',
                     'data-toggle' => 'select2',
                 ],
+                'multistore_configuration_key' => 'PS_LANG_DEFAULT',
             ])
             ->add('detect_language_from_browser', SwitchType::class, [
                 'label' => $this->trans(
@@ -110,6 +112,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'Set browser language as default language.',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_DETECT_LANG',
             ])
             ->add('default_country', ChoiceType::class, [
                 'label' => $this->trans(
@@ -126,6 +129,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'data-minimumResultsForSearch' => '7',
                     'data-toggle' => 'select2',
                 ],
+                'multistore_configuration_key' => 'PS_COUNTRY_DEFAULT',
             ])
             ->add('detect_country_from_browser', SwitchType::class, [
                 'label' => $this->trans(
@@ -136,6 +140,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'Set country corresponding to browser language.',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_DETECT_COUNTRY',
             ]
             )
             ->add('default_currency', ChoiceType::class, [
@@ -154,6 +159,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'data-minimumResultsForSearch' => '7',
                     'data-toggle' => 'select2',
                 ],
+                'multistore_configuration_key' => 'PS_CURRENCY_DEFAULT',
             ])
             ->add('timezone', ChoiceType::class, [
                 'label' => $this->trans(
@@ -166,6 +172,17 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'data-minimumResultsForSearch' => '7',
                     'data-toggle' => 'select2',
                 ],
+                'multistore_configuration_key' => 'PS_TIMEZONE',
             ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
