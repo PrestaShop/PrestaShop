@@ -34,6 +34,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\RestrictCartRulesCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
@@ -100,8 +101,6 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      */
     public function assertCartRuleProperties(string $cartRuleReference, TableNode $tableNode): void
     {
-        $cartRuleId = $this->getSharedStorage()->get($cartRuleReference);
-
         /** @var CartRuleForEditing $editableCartRule */
         $editableCartRule = $this->getQueryBus()->handle(
             new GetCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference))
@@ -287,6 +286,29 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
                 'Unexpected cart rule restrictions'
             );
         }
+    }
+
+    /**
+     * @When I restrict following cart rules for cart rule :cartRuleReference:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $tableNode
+     *
+     * @return void
+     */
+    public function restrictCartRuleCombinations(string $cartRuleReference, TableNode $tableNode): void
+    {
+        $restrictedCartRuleIds = [];
+        foreach ($tableNode->getColumn(0) as $restrictedCartRuleReference) {
+            $restrictedCartRuleIds[] = $this->getSharedStorage()->get($restrictedCartRuleReference);
+        }
+
+        $this->getCommandBus()->handle(
+            new RestrictCartRulesCommand(
+                $this->getSharedStorage()->get($cartRuleReference),
+                $restrictedCartRuleIds
+            )
+        );
     }
 
     /**

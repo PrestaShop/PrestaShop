@@ -419,15 +419,21 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then cart rule referenced as :cartRuleReference can be applied to my cart
+     * @Then /^cart rule referenced as "(.+)" (can|cannot) be applied to my cart$/
+     *
+     * @param string $cartRuleReference
+     * @param bool $canBeApplied this property is transformed from string to bool automatically
+     *
+     * @see StringToBoolTransformContext
      */
-    public function assertCartRuleByReferenceCanBeAppliedToCart(string $cartRuleReference)
+    public function assertCartRuleByReferenceCanBeAppliedToCart(string $cartRuleReference, bool $canBeApplied)
     {
         $cartRule = new CartRule($this->getSharedStorage()->get($cartRuleReference));
 
-        Assert::assertTrue(
+        Assert::assertSame(
+            $canBeApplied,
             $cartRule->checkValidity(Context::getContext(), false, false),
-            sprintf('Cart rule referenced as "%s" cannot be applied to cart', $cartRuleReference)
+            sprintf('Cart rule referenced as "%s" %s be applied to cart', $cartRuleReference, $canBeApplied ? 'cannot' : 'can')
         );
     }
 

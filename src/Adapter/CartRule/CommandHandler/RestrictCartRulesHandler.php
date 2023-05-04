@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\RestrictCartRulesCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\RestrictCartRulesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use CartRule;
 
 class RestrictCartRulesHandler implements RestrictCartRulesHandlerInterface
 {
@@ -47,11 +49,24 @@ class RestrictCartRulesHandler implements RestrictCartRulesHandlerInterface
 
     public function handle(RestrictCartRulesCommand $command): void
     {
-        $cartRule = $this->cartRuleRepository->get($command->getCartRuleId());
+        $cartRuleId = $command->getCartRuleId();
+        $cartRule = $this->cartRuleRepository->get($cartRuleId);
         $this->cartRuleRepository->assertAllCartRulesExists($command->getRestrictedCartRuleIds());
-        $this->cartRuleRepository->restrictCartRules($command->getCartRuleId(), $command->getRestrictedCartRuleIds());
-        $cartRule->cart_rule_restriction = !empty($command->getRestrictedCartRuleIds());
+        $this->cartRuleRepository->restrictCartRules($cartRuleId, $command->getRestrictedCartRuleIds());
+        $hasRestrictions = !empty($command->getRestrictedCartRuleIds());
 
+        $this->updateRestrictionProperty($cartRule, $hasRestrictions);
+
+        // update cart_rule_restriction property for all the cart rules that have been affected
+        foreach ($this->cartRuleRepository->getRestrictedCartRuleIds($cartRuleId) as $restrictedCartRuleId) {
+            $affectedCartRule = $this->cartRuleRepository->get(new CartRuleId($restrictedCartRuleId));
+            $this->updateRestrictionProperty($affectedCartRule, $hasRestrictions);
+        }
+    }
+
+    private function updateRestrictionProperty(CartRule $cartRule, bool $hasRestrictions): void
+    {
+        $cartRule->cart_rule_restriction = $hasRestrictions;
         $this->cartRuleRepository->partialUpdate(
             $cartRule,
             ['cart_rule_restriction']

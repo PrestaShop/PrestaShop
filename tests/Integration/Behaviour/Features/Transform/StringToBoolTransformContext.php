@@ -36,7 +36,7 @@ use Behat\Behat\Context\Context;
 class StringToBoolTransformContext implements Context
 {
     /**
-     * @Transform /^(enabled|enable|included|should|includes)$/
+     * @Transform /^(enabled|enable|included|should|includes|can)$/
      *
      * @param string $string
      *
@@ -48,7 +48,7 @@ class StringToBoolTransformContext implements Context
     }
 
     /**
-     * @Transform /^(disabled|disable|excluded|should not|excludes)$/
+     * @Transform /^(disabled|disable|excluded|should not|excludes|cannot)$/
      *
      * @param string $string
      *

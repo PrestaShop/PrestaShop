@@ -127,12 +127,12 @@ class CartRuleRepository extends AbstractObjectModelRepository
     {
         $cartRuleIdValue = $cartRuleId->getValue();
         $results = $this->connection->createQueryBuilder()
-            ->select('crc.id_cart_rule_1')
+            ->select('crc.id_cart_rule_1, crc.id_cart_rule_2')
             ->from($this->dbPrefix . 'cart_rule_combination', 'crc')
             ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleIdValue)
             ->execute()
-            ->fetchAssociative()
+            ->fetchAllAssociative()
         ;
 
         if (empty($results)) {
