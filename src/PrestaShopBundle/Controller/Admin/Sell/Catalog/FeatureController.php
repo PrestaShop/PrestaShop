@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,6 +51,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FeatureController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */

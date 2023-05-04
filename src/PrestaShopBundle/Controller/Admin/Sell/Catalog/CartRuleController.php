@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleForm
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -57,6 +58,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CartRuleController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * Displays cart rule listing page.
      *

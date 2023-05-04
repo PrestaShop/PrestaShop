@@ -65,6 +65,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFact
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
@@ -98,6 +99,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class ProductController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * Used to validate connected user authorizations.
      */
