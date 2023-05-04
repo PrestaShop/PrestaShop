@@ -38,7 +38,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
   // Variable used to create customers csv file
   const fileName: string = 'customers.csv';
 
-  // Pre-condition: Import list of categories
+  // Pre-condition: Import list of customers
   importFileTest(fileName, ImportCustomers.entity, `${baseContext}_preTest_1`);
 
   // before and after functions

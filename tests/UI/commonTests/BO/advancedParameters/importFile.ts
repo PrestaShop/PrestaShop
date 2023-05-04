@@ -11,6 +11,7 @@ import importPage from '@pages/BO/advancedParameters/import';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import languages from "@data/demo/languages";
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -68,6 +69,8 @@ function importFileTest(
 
     it('should go to next import file step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
+
+      await importPage.selectFileLanguage(page, languages.french.name);
 
       const panelTitle = await importPage.goToImportNextStep(page);
       await expect(panelTitle).contain(importPage.importPanelTitle);
