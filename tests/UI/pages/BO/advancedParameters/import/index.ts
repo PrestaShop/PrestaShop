@@ -120,8 +120,14 @@ class Import extends BOBasePage {
     await this.setChecked(page, this.forceAllIDNumber(toEnable ? 1 : 0));
   }
 
+  /**
+   * select language
+   * @param page {Page} Browser tab
+   * @param language {string} The file language
+   * @returns {Promise<void>}
+   */
   async selectFileLanguage(page: Page, language: string): Promise<void> {
-    await this.selectByVisibleText(page, '#iso_lang', language);
+    await this.selectByVisibleText(page, this.languageSelect, language);
   }
 
   /**
