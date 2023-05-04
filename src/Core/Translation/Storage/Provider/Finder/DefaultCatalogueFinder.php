@@ -106,7 +106,7 @@ class DefaultCatalogueFinder extends AbstractCatalogueFinder
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
-                $messageCatalogue->set($translationKey, '', $domain);
+                $messageCatalogue->set((string) $translationKey, '', $domain);
             }
         }
 
