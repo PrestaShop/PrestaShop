@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShopBundle\Entity\LanguageInterface as LangInterface;
+use PrestaShop\PrestaShop\Core\Model\LanguageInterface as LangInterface;
 
 /**
  * @ORM\Table()

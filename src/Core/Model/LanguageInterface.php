@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Entity;
+namespace PrestaShop\PrestaShop\Core\Model;
 
 use Doctrine\Common\Collections\Collection;
 

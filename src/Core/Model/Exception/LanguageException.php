@@ -24,21 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Model\Exception;
 
-namespace PrestaShopBundle\Repository;
-
-use PrestaShopBundle\Entity\LanguageInterface;
-
-interface LanguageRepositoryInterface
+/**
+ * LanguageException is base exception for language subdomain
+ */
+class LanguageException extends \RuntimeException
 {
-    public function getLanguage(int $id): LanguageInterface;
-
-    public function getLanguageByIsoCode(string $isoCode): LanguageInterface;
-
-    public function getLanguageByLocale(string $locale): LanguageInterface;
-
-    public function findAll(): array;
-
-    public function findBy(array $filters = [], array $sortBy = [], ?int $limit = null, ?int $offset = null): array;
 }

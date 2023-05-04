@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Repository;
 
-use PrestaShopBundle\Entity\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Model\Exception\LanguageNotFoundException;
+use PrestaShop\PrestaShop\Core\Model\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Model\Repository\LanguageRepositoryInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository as Repository;
 
 class LanguageRepository implements LanguageRepositoryInterface
@@ -46,26 +48,56 @@ class LanguageRepository implements LanguageRepositoryInterface
 
     public function getLanguage(int $id): LanguageInterface
     {
-        return $this->repository->find($id);
+        $language = $this->repository->find($id);
+
+        if (!empty($language)) {
+            return $language;
+        }
+
+        throw new LanguageNotFoundException(sprintf('Language with ID %d not found', $id));
     }
 
     public function getLanguageByIsoCode(string $isoCode): LanguageInterface
     {
-        return $this->repository->searchLanguage(self::ISO_CODE, $isoCode);
+        $language = $this->repository->searchLanguage(self::ISO_CODE, $isoCode);
+
+        if (!empty($language)) {
+            return $language;
+        }
+
+        throw new LanguageNotFoundException(sprintf('Language with iso code %s not found', $isoCode));
     }
 
     public function getLanguageByLocale(string $locale): LanguageInterface
     {
-        return $this->repository->searchLanguage(self::LOCALE, $locale);
+        $language = $this->repository->searchLanguage(self::LOCALE, $locale);
+
+        if (!empty($language)) {
+            return $language;
+        }
+
+        throw new LanguageNotFoundException(sprintf('Language with locale %s not found', $locale));
     }
 
     public function findAll(): array
     {
-        return $this->repository->findAll();
+        $languages = $this->repository->findAll();
+
+        if (!empty($languages)) {
+            return $languages;
+        }
+
+        throw new LanguageNotFoundException('No languages were found');
     }
 
     public function findBy(array $filters = [], array $sortBy = [], ?int $limit = null, ?int $offset = null): array
     {
-        return $this->repository->findBy($filters, $sortBy, $limit, $offset);
+        $languages = $this->repository->findBy($filters, $sortBy, $limit, $offset);
+
+        if (!empty($languages)) {
+            return $languages;
+        }
+
+        throw new LanguageNotFoundException('No languages were found');
     }
 }
