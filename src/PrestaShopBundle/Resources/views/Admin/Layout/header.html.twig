@@ -30,10 +30,13 @@
 <link rel="icon" type="image/x-icon" href="{{ img_dir }}favicon.ico" />
 <link rel="apple-touch-icon" href="{{ img_dir }}app_icon.png" />
 
-<title>
-  {% if meta_title is not empty %}{{ meta_title }} • {% endif %}
-  {{ shop_name }}
-</title>
+{# If layoutTitle is forced it is used by default #}
+{% if layoutTitle|default(false) is not empty %}
+  {% set metaTitle = layoutTitle %}
+{% else %}
+  {% set metaTitle = meta_title|default('') %}
+{% endif %}
+<title>{% if metaTitle is not empty %}{{ metaTitle }} • {% endif %}{{ shop_name }}</title>
 
 {% if display_header_javascript|default(true) %}
 <script type="text/javascript">

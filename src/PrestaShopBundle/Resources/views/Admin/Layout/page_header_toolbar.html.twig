@@ -45,9 +45,18 @@
 
     {% set persistent_help_btn = help_link is defined and help_link != false and layoutHeaderToolbarBtn|default([]) is empty %}
     <div class="title-row {%if persistent_help_btn %}flex-nowrap flex-md-wrap{% endif %}">
+      {# If layoutTitle is forced it is used by default #}
+      {% if layoutTitle|default(false) is not empty %}
+        {% set pageTitle = layoutTitle %}
+      {% elseif title is iterable %}
+        {% set pageTitle = title|last %}
+      {% else %}
+        {% set pageTitle = title %}
+      {% endif %}
+
       {% block page_title %}
         <h1 class="title">
-          {% if title is iterable %}{{ title|last|escape }}{% else %}{{ title|escape }}{% endif %}
+          {{ pageTitle }}
         </h1>
       {% endblock %}
 
