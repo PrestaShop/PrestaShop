@@ -13,10 +13,10 @@ import categoriesPage from '@pages/BO/catalog/categories';
 
 // Import data
 import ImportCategories from '@data/import/categories';
+import languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import languages from "@data/demo/languages";
 
 const baseContext: string = 'functional_BO_advancedParameters_import_importFile';
 
