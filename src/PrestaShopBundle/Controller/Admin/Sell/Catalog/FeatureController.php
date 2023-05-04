@@ -292,7 +292,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     {
         return [
             FeatureNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             FeatureConstraintException::class => [

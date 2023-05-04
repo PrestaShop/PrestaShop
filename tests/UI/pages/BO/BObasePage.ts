@@ -264,7 +264,7 @@ export default class BOBasePage extends CommonPage {
     this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateMessage = 'Successful update';
     this.successfulDeleteMessage = 'Successful deletion';
-    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted';
+    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
     // Access denied message
     this.accessDeniedMessage = 'Access denied';

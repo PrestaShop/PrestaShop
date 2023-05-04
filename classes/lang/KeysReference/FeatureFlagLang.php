@@ -43,7 +43,7 @@ trans('Access the new product page, even in a multistore context. This is a work
 
 // Legacy link feature flags
 trans('Attribute groups', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated attribute groups page.', 'Admin.Advparameters.Help');
+trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
 
 // Authorization server feature flag
 trans('Authorization server', 'Admin.Advparameters.Feature');

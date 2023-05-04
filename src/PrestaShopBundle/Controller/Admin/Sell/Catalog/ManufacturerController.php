@@ -702,7 +702,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 ),
             ],
             ManufacturerNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             MemoryLimitException::class => $this->trans(
@@ -728,7 +728,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 ),
             ],
             AddressNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             InvalidAddressFieldException::class => $this->trans(

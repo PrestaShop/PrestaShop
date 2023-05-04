@@ -238,7 +238,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
     {
         return [
             AttributeGroupNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             DeleteAttributeGroupException::class => [

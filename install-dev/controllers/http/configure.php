@@ -207,7 +207,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             6 => $this->translator->trans('Cars', [], 'Install'),
             7 => $this->translator->trans('Computer Hardware and Software', [], 'Install'),
             8 => $this->translator->trans('Download', [], 'Install'),
-            9 => $this->translator->trans('Fashion and accessories', [], 'Install'),
+            9 => $this->translator->trans('Fashion and Accessories', [], 'Install'),
             10 => $this->translator->trans('Flowers, Gifts and Crafts', [], 'Install'),
             11 => $this->translator->trans('Food and beverage', [], 'Install'),
             12 => $this->translator->trans('HiFi, Photo and Video', [], 'Install'),

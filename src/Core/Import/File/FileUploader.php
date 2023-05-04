@@ -131,7 +131,7 @@ final class FileUploader
         }
 
         if (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $uploadedFile->getClientOriginalName())) {
-            $error = $this->translator->trans('The extension of your file should be .csv.', [], 'Admin.Advparameters.Notification');
+            $error = $this->translator->trans('The extension of your file should be ".csv".', [], 'Admin.Advparameters.Notification');
         }
 
         return $error;
