@@ -762,10 +762,9 @@ class ImageManagerCore
     /**
      * copyImg copy an image located in $url and save it in a path
      * according to $entity->$id_entity .
-     * $id_image is used if we need to add a watermark.
      *
      * @param int $id_entity id of product or category (set in entity)
-     * @param int $id_image (default null) id of the image if watermark enabled
+     * @param int $id_image (default null) id of the image
      * @param string $url path or url to use
      * @param string $entity 'products' or 'categories'
      * @param bool $regenerate
@@ -775,7 +774,6 @@ class ImageManagerCore
     public static function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true)
     {
         $tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'ps_import');
-        $watermark_types = explode(',', Configuration::get('WATERMARK_TYPES'));
 
         switch ($entity) {
             default:

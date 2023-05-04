@@ -447,12 +447,6 @@ class ImageCore extends ObjectModel
                             _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
                         $newPath . '-' . $imageType['name'] . '.jpg'
                         );
-                        if (Configuration::get('WATERMARK_HASH')) {
-                            $oldImagePath = _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';
-                            if (file_exists($oldImagePath)) {
-                                copy($oldImagePath, $newPath . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg');
-                            }
-                        }
                     }
                 }
 
@@ -649,9 +643,6 @@ class ImageCore extends ObjectModel
             }
         }
 
-        // Delete watermark image
-        $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-watermark.' . $this->image_format;
-        $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-watermark2x.' . $this->image_format;
         // delete index.php
         $filesToDelete[] = $this->image_dir . $this->getImgFolder() . 'index.php';
         // delete fileType
@@ -938,9 +929,6 @@ class ImageCore extends ObjectModel
         $configuration = SymfonyContainer::getInstance()->get('prestashop.adapter.legacy.configuration');
         $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '.' . $imageFormat;
         $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '2x.' . $imageFormat;
-        if ($configuration->get('WATERMARK_HASH')) {
-            $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '-' . $configuration->get('WATERMARK_HASH') . '.' . $imageFormat;
-        }
 
         return $filesToDelete;
     }
