@@ -169,15 +169,6 @@ abstract class AbstractImageUploader
             return false;
         }
 
-        if ((bool) Configuration::get('PS_HIGHT_DPI') && !ImageManager::resize(
-            $imageDir . $id . '.jpg',
-            $imageDir . $id . '-' . stripslashes($imageType['name']) . '2x' . $ext,
-            (int) $width * 2,
-            (int) $height * 2
-        )) {
-            return false;
-        }
-
         return true;
     }
 }

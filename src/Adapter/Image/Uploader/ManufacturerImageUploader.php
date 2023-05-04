@@ -77,7 +77,6 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
     private function generateDifferentSizeImages($manufacturerId)
     {
         $resized = true;
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         try {
             /* Generate images with different size */
@@ -93,15 +92,6 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
                         (int) $imageType['width'],
                         (int) $imageType['height']
                     );
-
-                    if ($generateHighDpiImages) {
-                        $resized &= ImageManager::resize(
-                            _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
-                            _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '2x.jpg',
-                            (int) $imageType['width'] * 2,
-                            (int) $imageType['height'] * 2
-                        );
-                    }
                 }
 
                 $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';

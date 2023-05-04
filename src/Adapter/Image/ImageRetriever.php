@@ -179,10 +179,6 @@ class ImageRetriever
 
         $urls = [];
 
-        // Should we generate all sizes also in double the resolution?
-        // Obsolete solution, will be removed
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
-
         // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
         $originalImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
@@ -216,11 +212,8 @@ class ImageRetriever
             $sources = [];
 
             foreach ($configuredImageFormats as $imageFormat) {
-                // Generate the thumbnail and optionally a high DPI version
+                // Generate the thumbnail
                 $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
-                if ($generateHighDpiImages) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
-                }
 
                 // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
@@ -277,20 +270,12 @@ class ImageRetriever
      * @param int $idImage
      * @param array $imageTypeData
      * @param string $imageFormat
-     * @param bool $hdpi
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
-
-        if ($hdpi) {
-            $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $imageFormat);
-            $imageTypeData['width'] *= 2;
-            $imageTypeData['height'] *= 2;
-        }
-
         $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
             $fileName,

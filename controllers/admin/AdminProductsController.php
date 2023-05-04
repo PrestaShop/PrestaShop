@@ -2877,10 +2877,6 @@ class AdminProductsControllerCore extends AdminController
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
-
-                    // Should we generate high DPI images?
-                    $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
                     $sfContainer = SymfonyContainer::getInstance();
 
                     /*
@@ -2910,21 +2906,6 @@ class AdminProductsControllerCore extends AdminController
                                 $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
 
                                 continue;
-                            }
-
-                            if ($generate_hight_dpi_images) {
-                                if (!ImageManager::resize(
-                                    $file['save_path'],
-                                    $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
-                                    (int) $imageType['width'] * 2,
-                                    (int) $imageType['height'] * 2,
-                                    $imageFormat,
-                                    $forceFormat
-                                )) {
-                                    $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
-
-                                    continue;
-                                }
                             }
                         }
                     }
