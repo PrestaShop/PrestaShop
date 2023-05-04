@@ -70,7 +70,7 @@ function importFileTest(
     it('should go to next import file step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
 
-      await importPage.selectFileLanguage(page, languages.french.name);
+      await importPage.selectFileLanguage(page, languages.english.name);
 
       const panelTitle = await importPage.goToImportNextStep(page);
       await expect(panelTitle).contain(importPage.importPanelTitle);
