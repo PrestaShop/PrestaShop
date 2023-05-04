@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fda43e2dea4c6509fedd75ca8545c67",
+    "content-hash": "ec498f0b29723830cd993c9e00f1fd90",
     "packages": [
         {
             "name": "api-platform/core",
@@ -10162,16 +10162,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v5.4.20",
+            "version": "v5.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "7f9c726f539739637a7ffcbc6bf1062e2a432160"
+                "reference": "7644fac86711ee76c9726f7a810e6b2b563e48d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/7f9c726f539739637a7ffcbc6bf1062e2a432160",
-                "reference": "7f9c726f539739637a7ffcbc6bf1062e2a432160",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/7644fac86711ee76c9726f7a810e6b2b563e48d0",
+                "reference": "7644fac86711ee76c9726f7a810e6b2b563e48d0",
                 "shasum": ""
             },
             "require": {
@@ -10207,7 +10207,7 @@
                 "masterminds/html5": "<2.6",
                 "ocramius/proxy-manager": "<2.1",
                 "phpdocumentor/reflection-docblock": "<3.2.2",
-                "phpdocumentor/type-resolver": "<1.4.0|>=1.7.0",
+                "phpdocumentor/type-resolver": "<1.4.0",
                 "phpunit/phpunit": "<5.4.3"
             },
             "provide": {
@@ -10362,7 +10362,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/symfony/issues",
-                "source": "https://github.com/symfony/symfony/tree/v5.4.20"
+                "source": "https://github.com/symfony/symfony/tree/v5.4.23"
             },
             "funding": [
                 {
@@ -10378,7 +10378,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-01T08:19:01+00:00"
+            "time": "2023-04-28T13:30:08+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
