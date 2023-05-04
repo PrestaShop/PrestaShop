@@ -11,7 +11,7 @@ import importPage from '@pages/BO/advancedParameters/import';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import languages from "@data/demo/languages";
+import languages from '@data/demo/languages';
 
 let browserContext: BrowserContext;
 let page: Page;
