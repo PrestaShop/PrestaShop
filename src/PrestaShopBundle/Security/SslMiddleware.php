@@ -42,7 +42,6 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  * If PS_SSL_ENABLED & (PS_SSL_ENABLED_EVERYWHERE | REFERER is HTTPS)
  * Then redirect to the equivalent URL to HTTPS.
  * If the request is an API call, we always redirect to HTTPS and to TLSv1.2+ if we detect a previous version
- * Warning : will lose post data,
  */
 class SslMiddleware
 {
@@ -72,12 +71,21 @@ class SslMiddleware
             return;
         }
 
+        //If It's an API call and not using https, redirect to https
+        if ($this->isApi($event->getRequest()) && !$event->getRequest()->isSecure()) {
+            $this->redirectToSsl($event);
+
+            return;
+        }
+
+        //If It's an API call and not using TLS 1.2+, display error message
         if ($this->isApi($event->getRequest())) {
             $this->upgradeProtocol($event);
 
             return;
         }
 
+        //If It's Sf route and SSL enabled and forced, redirect to https
         $enabled = (1 === (int) $this->configuration->get('PS_SSL_ENABLED'));
         $forced = (1 === (int) $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE'));
         $serverParams = $event->getRequest()->server;
@@ -90,8 +98,9 @@ class SslMiddleware
 
     private function redirectToSsl(RequestEvent $event): void
     {
+        $status = $event->getRequest()->isMethod('GET') ? 302 : 308;
         $redirect = str_replace('http://', 'https://', $event->getRequest()->getUri());
-        $event->setResponse(new RedirectResponse($redirect));
+        $event->setResponse(new RedirectResponse($redirect, $status));
     }
 
     private function isSSLrequirementsMet(Request $request): bool
