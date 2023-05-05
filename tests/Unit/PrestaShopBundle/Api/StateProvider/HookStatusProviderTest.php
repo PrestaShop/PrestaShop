@@ -32,7 +32,9 @@ use ApiPlatform\Metadata\Get;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
+use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShopBundle\Api\Provider\QueryProvider;
+use RuntimeException;
 
 class HookStatusProviderTest extends TestCase
 {
@@ -56,25 +58,27 @@ class HookStatusProviderTest extends TestCase
         ;
     }
 
-    private function createResultBasedOnQuery(GetHookStatus $query): bool
+    private function createResultBasedOnQuery(GetHookStatus $query): HookStatus
     {
         if ($query->getHookId()->getValue() === 1) {
-            return false;
+            return new HookStatus($query->getHookId()->getValue(), false);
         }
 
         if ($query->getHookId()->getValue() === 2) {
-            return true;
+            return new HookStatus($query->getHookId()->getValue(), true);
         }
 
-        return true;
+        throw new RuntimeException(sprintf('Hook "%s" was not expected in query bus mock', $query->getHookId()->getValue()));
     }
 
     public function testProvideHookStatus(): void
     {
         $hookStatusProvider = new QueryProvider($this->queryBus);
         $get = new Get();
-        $get->withExtraProperties(['query' => "PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus"]);
+        $get = $get->withExtraProperties(['query' => "PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus"]);
+        // @phpstan-ignore-next-line
         self::assertEquals(false, $hookStatusProvider->provide($get, ['id' => 1])->isActive());
-        self::assertEquals(true, $hookStatusProvider->provide($get, ['id' => 2])->isActive());
+        // @phpstan-ignore-next-line
+        self::assertTrue($hookStatusProvider->provide($get, ['id' => 2])->isActive());
     }
 }
