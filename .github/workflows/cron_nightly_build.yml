@@ -34,7 +34,7 @@ jobs:
             node: 14
 
     env:
-      PHP_VERSION: '7.4'
+      PHP_VERSION: '8.1'
       NODE_VERSION: ${{ matrix.node }}
       RELEASE_DIR: '/tmp/ps-release'
       GH_BRANCH: ${{ matrix.BRANCH }}

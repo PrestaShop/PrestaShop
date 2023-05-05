@@ -29,7 +29,7 @@ jobs:
             node: 16
 
     env:
-      PHP_VERSION: '7.4'
+      PHP_VERSION: '8.1'
       NODE_VERSION: ${{ matrix.node }}
       GH_BRANCH: ${{ matrix.BRANCH }}
 
