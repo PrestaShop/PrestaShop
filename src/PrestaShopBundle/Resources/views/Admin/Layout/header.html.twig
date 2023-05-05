@@ -30,8 +30,10 @@
 <link rel="icon" type="image/x-icon" href="{{ img_dir }}favicon.ico" />
 <link rel="apple-touch-icon" href="{{ img_dir }}app_icon.png" />
 
-{# If layoutTitle is forced it is used by default #}
-{% if layoutTitle|default(false) is not empty %}
+{# If metaTitle is explicitely set it is used, if not layoutTitle is the second best choice, lastly legacy meta_title may be used #}
+{% if metaTitle|default(false) is not empty %}
+  {% set metaTitle = metaTitle %}
+{% elseif layoutTitle|default(false) is not empty %}
   {% set metaTitle = layoutTitle %}
 {% else %}
   {% set metaTitle = meta_title|default('') %}

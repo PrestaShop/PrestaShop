@@ -27,17 +27,18 @@
  # Preset reuired twig variables so they can be used for legacy layout and symfony layout, default values are defined in case the controller
  # did not set them.
  #}
-{% set layoutTitle = layoutTitle|default('') %}
-{% set layoutHeaderToolbarBtn = layoutHeaderToolbarBtn|default([]) %}
-{% set layoutDisplayType = layoutDisplayType|default('') %}
-{% set showContentHeader = showContentHeader|default(true) %}
-{% set headerTabContent = headerTabContent|default('') %}
-{% set enableSidebar = enableSidebar|default(false) %}
-{% set help_link = help_link|default('') %}
-{% set meta_title = meta_title|default('') %}
-{% set use_regular_h1_structure = use_regular_h1_structure|default(true) %}
-{% set legacyBaseLayout = legacyBaseLayout|default('layout.tpl') %}
-{% set liteDisplay = liteDisplay|default(false) %}
+{% set layoutTitle = layoutTitle is defined ? layoutTitle : '' %}
+{% set layoutHeaderToolbarBtn = layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : []  %}
+{% set layoutDisplayType = layoutDisplayType is defined ? layoutDisplayType : ''  %}
+{% set showContentHeader = showContentHeader is defined ? showContentHeader : true  %}
+{% set headerTabContent = headerTabContent is defined ? headerTabContent : ''  %}
+{% set enableSidebar = enableSidebar is defined ? enableSidebar : false  %}
+{% set help_link = help_link is defined ? help_link : ''  %}
+{% set metaTitle = metaTitle is defined ? metaTitle : (meta_title is defined ? meta_title : '')  %}
+{# This one is only used for Order special title, once the Symfony layout is used as default it should be removed and order view should override page_title block instead #}
+{% set use_regular_h1_structure = use_regular_h1_structure is defined ? use_regular_h1_structure : true  %}
+{% set legacyBaseLayout = legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'  %}
+{% set liteDisplay = liteDisplay is defined ? liteDisplay : false %}
 
 {% extends use_symfony_layout
   ? lightDisplay|default(false) ? '@PrestaShop/Admin/Layout/light_layout.html.twig' : '@PrestaShop/Admin/Layout/default_layout.html.twig'
@@ -52,7 +53,7 @@
       enableSidebar,
       help_link,
       js_router_metadata(),
-      meta_title,
+      metaTitle,
       use_regular_h1_structure,
       legacyBaseLayout
     )

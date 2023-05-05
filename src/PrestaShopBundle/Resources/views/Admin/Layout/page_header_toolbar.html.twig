@@ -45,19 +45,23 @@
 
     {% set persistent_help_btn = help_link is defined and help_link != false and layoutHeaderToolbarBtn|default([]) is empty %}
     <div class="title-row {%if persistent_help_btn %}flex-nowrap flex-md-wrap{% endif %}">
-      {# If layoutTitle is forced it is used by default #}
-      {% if layoutTitle|default(false) is not empty %}
-        {% set pageTitle = layoutTitle %}
-      {% elseif title is iterable %}
-        {% set pageTitle = title|last %}
-      {% else %}
-        {% set pageTitle = title %}
-      {% endif %}
-
       {% block page_title %}
+        {# If layoutTitle is forced it is used by default #}
+        {% if layoutTitle|default(false) is not empty %}
+          {% set pageTitle = layoutTitle %}
+        {% elseif title is iterable %}
+          {% set pageTitle = title|last %}
+        {% else %}
+          {% set pageTitle = title %}
+        {% endif %}
+
+        {% if use_regular_h1_structure %}
         <h1 class="title">
           {{ pageTitle }}
         </h1>
+        {% else %}
+          {{ pageTitle }}
+        {% endif %}
       {% endblock %}
 
       {% block toolbar_box %}
