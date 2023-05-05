@@ -44,7 +44,7 @@ jobs:
         working-directory: ./tests/UI
 
       - name: Run tests
-        run: npm ci && npm run test:sanity:fast-fail
+        run: npm ci && npm run test:sanity:fast-fail && npm run test:sanity:productV2:fast-fail
         working-directory: ./tests/UI
         env:
           ENABLE_SSL: true
