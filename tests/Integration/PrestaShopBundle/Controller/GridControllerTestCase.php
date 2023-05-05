@@ -61,17 +61,12 @@ abstract class GridControllerTestCase extends WebTestCase
     {
         parent::setUpBeforeClass();
         DatabaseDump::restoreTables(['admin_filter']);
-        // Token generation feature doesn't work correctly in env test because the request (required for correct
-        // token generation) so we decide to disable this feature for grid controller tests (since this is not the
-        // core of what we intend to test)
-        putenv('_TOKEN_=disabled');
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         DatabaseDump::restoreTables(['admin_filter']);
-        putenv('_TOKEN_=false');
     }
 
     public function setUp(): void
@@ -80,6 +75,11 @@ abstract class GridControllerTestCase extends WebTestCase
         $this->client = static::createClient();
         $this->router = $this->client->getContainer()->get('router');
         $this->formFiller = new FormFiller();
+        //Since symfony 5.4, the session is fetch from the request stack
+        //We do need a request in the request stack to be able to use the configured session.
+        //With this line we ensure to have a request in the request stack at any time
+        //For more details see TokenStorageSession::getSession()
+        $this->client->request('GET', '/');
     }
 
     /**
