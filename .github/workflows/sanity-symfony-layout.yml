@@ -30,8 +30,8 @@ jobs:
           npm-version: '7'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable Symfony layout
-        run: php ./bin/console prestashop:feature-flag enable symfony_layout
+      - name: Enable Symfony layout via .env file
+        run: echo 'USE_SYMFONY_LAYOUT=true' >> .env
 
       - name: Cache Playwright browsers
         uses: actions/cache@v3
@@ -48,7 +48,6 @@ jobs:
         working-directory: ./tests/UI
         env:
           ENABLE_SSL: true
-          USE_SYMFONY_LAYOUT: true
 
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}

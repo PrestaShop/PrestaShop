@@ -78,7 +78,7 @@ describe('Install Prestashop', async () => {
     await expect(stepTitle).to.contain(installPage.fourthStepEnTitle);
   });
 
-  it('should fill shop Information form and go to step \'Content Configuration\'', async function () {
+  it('should fill shop Information form and go to step \'Content of your store\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContentConfiguration', baseContext);
 
     await installPage.fillInformationForm(page);

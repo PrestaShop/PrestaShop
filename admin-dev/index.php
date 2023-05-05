@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShopBundle\Api\Api;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -70,6 +71,13 @@ $apcLoader->register(true);
 if (_PS_MODE_DEV_) {
     Debug::enable();
 }
+
+// Loads .env file from the root of project if present
+$dotEnvFile = dirname(__FILE__, 2) . '/.env';
+if (file_exists($dotEnvFile)) {
+    (new Dotenv(false))->loadEnv($dotEnvFile);
+}
+
 require_once __DIR__ . '/../app/AppKernel.php';
 
 $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
