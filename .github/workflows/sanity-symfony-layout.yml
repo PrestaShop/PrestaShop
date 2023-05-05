@@ -48,6 +48,7 @@ jobs:
         working-directory: ./tests/UI
         env:
           ENABLE_SSL: true
+          USE_SYMFONY_LAYOUT: true
 
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}

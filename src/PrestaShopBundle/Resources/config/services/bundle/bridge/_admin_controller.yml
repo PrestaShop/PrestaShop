@@ -20,5 +20,7 @@ services:
 
   PrestaShopBundle\Bridge\SymfonyLayoutFeature:
     autowire: true
+    arguments:
+      $enabledByEnv: '%env(bool:USE_SYMFONY_LAYOUT)%'
 
   PrestaShopBundle\Bridge\SymfonyLayoutFeatureInterface: '@PrestaShopBundle\Bridge\SymfonyLayoutFeature'
