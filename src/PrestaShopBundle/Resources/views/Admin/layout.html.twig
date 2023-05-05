@@ -27,6 +27,23 @@
  # Preset reuired twig variables so they can be used for legacy layout and symfony layout, default values are defined in case the controller
  # did not set them.
  #}
+
+{# If metaTitle is explicitely set the it is used as is #}
+{% if metaTitle is not defined or metaTitle is empty %}
+  {# First fallback is explicitely set meta_title (legacy variable name) #}
+  {% if meta_title is defined and meta_title is not empty %}
+    {% set metaTitle = meta_title  %}
+  {# Second fallback is when layoutTitle is explicitely set (this must be check before a fallback value is set on layoutTitle #}
+  {% elseif layoutTitle is defined and layoutTitle is not empty %}
+    {% set metaTitle = layoutTitle %}
+  {# Last fallback is the tab name from the breadcrumbs #}
+  {% elseif breadcrumbs2.tab.name is defined %}
+    {% set metaTitle = breadcrumbs2.tab.name %}
+  {% else %}
+    {% set metaTitle = '' %}
+  {% endif %}
+{% endif %}
+
 {% set layoutTitle = layoutTitle is defined ? layoutTitle : '' %}
 {% set layoutHeaderToolbarBtn = layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : []  %}
 {% set layoutDisplayType = layoutDisplayType is defined ? layoutDisplayType : ''  %}
@@ -34,7 +51,6 @@
 {% set headerTabContent = headerTabContent is defined ? headerTabContent : ''  %}
 {% set enableSidebar = enableSidebar is defined ? enableSidebar : false  %}
 {% set help_link = help_link is defined ? help_link : ''  %}
-{% set metaTitle = metaTitle is defined ? metaTitle : (meta_title is defined ? meta_title : '')  %}
 {# This one is only used for Order special title, once the Symfony layout is used as default it should be removed and order view should override page_title block instead #}
 {% set use_regular_h1_structure = use_regular_h1_structure is defined ? use_regular_h1_structure : true  %}
 {% set legacyBaseLayout = legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'  %}

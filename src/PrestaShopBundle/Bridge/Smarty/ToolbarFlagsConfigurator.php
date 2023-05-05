@@ -109,7 +109,7 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
      *
      * @return void
      */
-    public function initToolbar(ControllerConfiguration $controllerConfiguration): void
+    private function initToolbar(ControllerConfiguration $controllerConfiguration): void
     {
     }
 
@@ -118,7 +118,7 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
      *
      * @return void
      */
-    public function initPageHeaderToolbar(ControllerConfiguration $controllerConfiguration): void
+    private function initPageHeaderToolbar(ControllerConfiguration $controllerConfiguration): void
     {
         if (empty($this->toolbarTitle)) {
             $this->initToolbarTitle($controllerConfiguration);
@@ -140,7 +140,7 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
      *
      * @return void
      */
-    public function initToolbarTitle(ControllerConfiguration $controllerConfiguration): void
+    private function initToolbarTitle(ControllerConfiguration $controllerConfiguration): void
     {
         $controllerConfiguration->toolbarTitle = array_unique($controllerConfiguration->breadcrumbs);
     }

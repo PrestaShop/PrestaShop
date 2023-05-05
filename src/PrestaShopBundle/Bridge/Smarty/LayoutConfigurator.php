@@ -74,13 +74,6 @@ class LayoutConfigurator implements ConfiguratorInterface
 
     public function configure(ControllerConfiguration $controllerConfiguration)
     {
-        $metaTitle = '';
-        if (!empty($controllerConfiguration->metaTitle)) {
-            $metaTitle = strip_tags(implode(' ' . $this->configuration->get('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->metaTitle));
-        } elseif (!empty($controllerConfiguration->toolbarTitle)) {
-            $metaTitle = strip_tags(implode(' ' . $this->configuration->get('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->toolbarTitle));
-        }
-
         $shopName = $this->configuration->get('PS_SHOP_NAME');
         $shopConstraint = $this->shopConstraintContext->getShopConstraint();
         if ($shopConstraint->getShopId()) {
@@ -121,17 +114,11 @@ class LayoutConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['shop_list'] = $helperShop->getRenderedShopList();
 
         $controllerConfiguration->templateVars['current_index'] = $controllerConfiguration->legacyCurrentIndex;
-        $controllerConfiguration->templateVars['meta_title'] = $metaTitle;
         $controllerConfiguration->templateVars['multi_shop_edit_for'] = $editFieldFor;
         $controllerConfiguration->templateVars['employee_token'] = $employeeToken;
         $controllerConfiguration->templateVars['baseAdminUrl'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
         $controllerConfiguration->templateVars['shop_list'] = $helperShop->getRenderedShopList();
         $controllerConfiguration->templateVars['current_shop_name'] = $helperShop->getCurrentShopName();
-
-        if (!$controllerConfiguration->metaTitle) {
-            $controllerConfiguration->metaTitle = $controllerConfiguration->toolbarTitle;
-        }
-        $controllerConfiguration->templateVars['meta_title'] = strip_tags(implode(' ' . $this->configuration->get('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->metaTitle));
 
         /* @see ControllerConfiguration::$errors */
         /* @see ControllerConfiguration::$warnings */
