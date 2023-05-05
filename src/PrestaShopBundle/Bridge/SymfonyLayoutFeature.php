@@ -68,9 +68,8 @@ class SymfonyLayoutFeature implements SymfonyLayoutFeatureInterface
         // When parameter is specified in the url it overrides the other settings, this helps developer debug more easily
         // by forcing the layout via a query parameter
         if ($this->requestStack->getCurrentRequest() &&
-            $this->requestStack->getCurrentRequest()->query->has('use_symfony_layout') &&
-            $this->requestStack->getCurrentRequest()->query->getBoolean('use_symfony_layout')) {
-            return true;
+            $this->requestStack->getCurrentRequest()->query->has('use_symfony_layout')) {
+            return $this->requestStack->getCurrentRequest()->query->getBoolean('use_symfony_layout');
         }
 
         // In case USE_SYMFONY_LAYOUT has been set to true/on/yes/1 then it has priority over the feature flag from DB
