@@ -127,10 +127,6 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\PricesAssertionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         language:
             paths:
                 - "%paths.base%/Features/Scenario/Language"

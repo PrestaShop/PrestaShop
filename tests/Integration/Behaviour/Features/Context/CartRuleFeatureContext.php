@@ -37,7 +37,6 @@ use DateInterval;
 use DateTime;
 use Db;
 use Order;
-use PHPUnit\Framework\Assert;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -416,35 +415,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         if (!$result) {
             throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
-    }
-
-    /**
-     * @Then /^cart rule referenced as "(.+)" (can|cannot) be applied to my cart$/
-     *
-     * @param string $cartRuleReference
-     * @param bool $canBeApplied this property is transformed from string to bool automatically
-     *
-     * @see StringToBoolTransformContext
-     */
-    public function assertCartRuleByReferenceCanBeAppliedToCart(string $cartRuleReference, bool $canBeApplied)
-    {
-        $cartRule = new CartRule($this->getSharedStorage()->get($cartRuleReference));
-
-        Assert::assertSame(
-            $canBeApplied,
-            $cartRule->checkValidity(Context::getContext(), false, false),
-            sprintf('Cart rule referenced as "%s" %s be applied to cart', $cartRuleReference, $canBeApplied ? 'cannot' : 'can')
-        );
-    }
-
-    /**
-     * @When I apply the discount code :cartRuleCode to my cart
-     *
-     * @param string $cartRuleCode
-     */
-    public function addCartRuleByCodeToCurrentCart(string $cartRuleCode): void
-    {
-        $this->getCurrentCart()->addCartRule($this->getSharedStorage()->get($cartRuleCode));
     }
 
     /**

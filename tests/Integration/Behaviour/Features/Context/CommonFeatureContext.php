@@ -131,6 +131,8 @@ use Zone;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
+    use SharedStorageTrait;
+
     /**
      * Shared storage key for last thrown exception
      */

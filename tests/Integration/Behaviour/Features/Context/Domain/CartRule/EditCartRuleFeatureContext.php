@@ -296,7 +296,7 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      *
      * @return void
      */
-    public function restrictCartRuleCombinations(string $cartRuleReference, TableNode $tableNode): void
+    public function restrictCartRules(string $cartRuleReference, TableNode $tableNode): void
     {
         $restrictedCartRuleIds = [];
         foreach ($tableNode->getColumn(0) as $restrictedCartRuleReference) {
