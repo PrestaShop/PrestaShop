@@ -85,14 +85,6 @@ services:
       - '@filesystem'
       - '@prestashop.adapter.legacy.configuration'
 
-  prestashop.adapter.category.command_handler.delete_category_menu_thumbnail_image_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryMenuThumbnailImageHandler
-    autoconfigure: true
-    arguments:
-      - '@filesystem'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
-
   prestashop.adapter.category.command_handler.update_category_position_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoryPositionHandler
     autoconfigure: true

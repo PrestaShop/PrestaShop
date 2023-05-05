@@ -34,17 +34,14 @@ describe('BO - Design - Image Settings - Check category image format', async () 
   const categoryDataJPG: CategoryData = new CategoryData({
     coverImage: 'coverJPG.jpg',
     thumbnailImage: 'thumbJPG.jpg',
-    metaImage: 'metaJPG.jpg',
   });
   const categoryDataPNG: CategoryData = new CategoryData({
     coverImage: 'coverPNG.png',
     thumbnailImage: 'thumbPNG.png',
-    metaImage: 'metaPNG.png',
   });
   const categoryDataWEBP: CategoryData = new CategoryData({
     coverImage: 'coverWEBP.webp',
     thumbnailImage: 'thumbWEBP.webp',
-    metaImage: 'metaWEBP.webp',
   });
 
   // Pre-condition: Enable Multiple image formats
@@ -58,13 +55,10 @@ describe('BO - Design - Image Settings - Check category image format', async () 
     await Promise.all([
       categoryDataJPG.coverImage,
       categoryDataJPG.thumbnailImage,
-      categoryDataJPG.metaImage,
       categoryDataPNG.coverImage,
       categoryDataPNG.thumbnailImage,
-      categoryDataPNG.metaImage,
       categoryDataWEBP.coverImage,
       categoryDataWEBP.thumbnailImage,
-      categoryDataWEBP.metaImage,
     ].map(async (image: string|null) => {
       if (image) {
         await files.generateImage(image);
@@ -78,13 +72,10 @@ describe('BO - Design - Image Settings - Check category image format', async () 
     await Promise.all([
       categoryDataJPG.coverImage,
       categoryDataJPG.thumbnailImage,
-      categoryDataJPG.metaImage,
       categoryDataPNG.coverImage,
       categoryDataPNG.thumbnailImage,
-      categoryDataPNG.metaImage,
       categoryDataWEBP.coverImage,
       categoryDataWEBP.thumbnailImage,
-      categoryDataWEBP.metaImage,
     ].map(async (image: string|null) => {
       if (image) {
         await files.deleteFile(image);
@@ -243,27 +234,6 @@ describe('BO - Design - Image Settings - Check category image format', async () 
 
           const imageTypeCoverJPG = await files.getImageType(pathImageCoverJPG);
           await expect(imageTypeCoverJPG).to.be.eq(arg.extImageType);
-
-          // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
-          /*
-          // Check the WebP file
-          const pathImageWEBP: string = `${files.getRootPath()}/img/c/${idCategory}-large_default.webp`;
-
-          const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
-          await expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.be.true;
-
-          const imageTypeWEBP = await files.getImageType(pathImageWEBP);
-          await expect(imageTypeWEBP).to.be.eq('webp');
-          */
-
-          // Check the thumbnail image file
-          const pathImageThumbJPG: string = `${files.getRootPath()}/img/c/${idCategory}-0_thumb.jpg`;
-
-          const fileExistsThumbJPG = await files.doesFileExist(pathImageThumbJPG);
-          await expect(fileExistsThumbJPG, `The file ${pathImageThumbJPG} doesn't exist!`).to.be.true;
-
-          const imageTypeThumbJPG = await files.getImageType(pathImageThumbJPG);
-          await expect(imageTypeThumbJPG).to.be.eq(arg.extOriginal);
 
           // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
           /*

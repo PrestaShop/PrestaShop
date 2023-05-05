@@ -46,8 +46,6 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
       - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
-      - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
 
   prestashop.core.form.identifiable_object.data_handler.root_category_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler'
@@ -55,8 +53,6 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
       - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
-      - '@PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider'
 
   prestashop.core.form.identifiable_object.data_handler.contact_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ContactFormDataHandler'

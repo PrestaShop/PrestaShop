@@ -36,5 +36,4 @@ class CannotDeleteImageException extends CategoryException
      */
     public const COVER_IMAGE = 1;
     public const THUMBNAIL_IMAGE = 2;
-    public const MENU_THUMBNAIL_IMAGE = 3;
 }

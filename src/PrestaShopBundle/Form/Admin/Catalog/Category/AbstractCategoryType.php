@@ -32,9 +32,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
-use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\CategorySeoPreviewType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -47,7 +45,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -190,21 +187,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
                 'can_be_deleted' => false,
                 'show_size' => true,
-            ])
-            ->add('menu_thumbnail_images', ImageWithPreviewType::class, [
-                'label' => $this->trans('Menu thumbnails', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('It will display a thumbnail representing the category in the menu, if the theme allows it.', 'Admin.Catalog.Help'),
-                'multiple' => true,
-                'required' => false,
-                'can_be_deleted' => true,
-                'warning_message' => $this->trans(
-                    'You have reached the limit (%limit%) of files to upload, please remove files to continue uploading',
-                    'Admin.Catalog.Notification',
-                    [
-                        '%limit%' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
-                    ]
-                ),
-                'csrf_delete_token_id' => 'delete-menu-thumbnail',
             ])
             ->add('seo_preview', CategorySeoPreviewType::class,
                 [
@@ -351,17 +333,5 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'label' => $this->trans('Store association', 'Admin.Global'),
             ]);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults([
-                'disable_menu_thumbnails_upload' => null,
-            ])
-            ->setAllowedTypes('disable_menu_thumbnails_upload', ['bool', 'null']);
     }
 }

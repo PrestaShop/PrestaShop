@@ -687,19 +687,6 @@ Feature: Category Management
     When I upload thumbnail image "thumb1" named "app_icon.png" to category "category19"
     Then category "category19" should have a thumbnail image
 
-  Scenario: Assert and delete category menu thumbnail images
-    Given I add new category "category20" with following details:
-      | name[en-US]         | not important |
-      | name[fr-FR]         | not important |
-      | active              | true          |
-      | parent category     | home          |
-      | link rewrite[en-US] | not-important |
-      | link rewrite[en-US] | not-important |
-    Then category "category20" does not have menu thumbnail image
-    When I upload menu thumbnail image "menu_thumb1" named "app_icon.png" to category "category20"
-    When I delete category "category20" menu thumbnail image
-    Then category "category20" does not have menu thumbnail image
-
   # enabled seems to be the same as displayed
   Scenario: Update category status
     Given I add new category "category21" with following details:
