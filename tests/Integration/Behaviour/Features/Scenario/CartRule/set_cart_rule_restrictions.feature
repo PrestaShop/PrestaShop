@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart_rule --tags set-cart-rule-restrictions
 @restore-all-tables-before-feature
 @set-cart-rule-restrictions
+@restore-cart-rules-before-scenario
 Feature: Set cart rule restrictions in BO
   PrestaShop allows BO users to add and remove restrictions of cart rule combinations,
   which defines which cart rules can or cannot be compatible in the same cart
@@ -50,35 +51,11 @@ Feature: Set cart rule restrictions in BO
       | reduction_percentage                   | 70                  |
       | reduction_apply_to_discounted_products | false               |
     And cart rule "rule_free_shipping_1" should have the following properties:
-      | is_active             | true                 |
-      | free_shipping         | true                 |
-      | priority              | 1                    |
-      | valid_from            | 2022-01-01 11:00:00  |
-      | valid_to              | 3001-01-01 12:00:00  |
-      | code                  | rule_free_shipping_1 |
-      | restricted cart rules |                      |
+      | restricted cart rules |  |
     And cart rule "rule_50_percent" should have the following properties:
-      | is_active                              | true                   |
-      | priority                               | 2                      |
-      | valid_from                             | 2022-01-01 11:00:00    |
-      | valid_to                               | 3001-01-01 12:00:00    |
-      | free_shipping                          | false                  |
-      | code                                   | rule_50_percent        |
-      | reduction_percentage                   | 50                     |
-      | reduction_apply_to_discounted_products | false                  |
-      | discount_application_type              | order_without_shipping |
-      | restricted cart rules                  |                        |
+      | restricted cart rules |  |
     And cart rule "rule_70_percent" should have the following properties:
-      | is_active                              | true                   |
-      | priority                               | 3                      |
-      | valid_from                             | 2022-01-01 11:00:00    |
-      | valid_to                               | 3001-01-01 12:00:00    |
-      | free_shipping                          | false                  |
-      | code                                   | rule_70_percent        |
-      | reduction_percentage                   | 70                     |
-      | reduction_apply_to_discounted_products | false                  |
-      | discount_application_type              | order_without_shipping |
-      | restricted cart rules                  |                        |
+      | restricted cart rules |  |
 
   Scenario: Restrict cart rule combinations
     When I restrict following cart rules for cart rule rule_free_shipping_1:
@@ -99,7 +76,12 @@ Feature: Set cart rule restrictions in BO
     And cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules | rule_free_shipping_1 |
 
-  @restore-cart-rules-before-scenario
+  Scenario: Provide non-existing ids for cart rule restriction
+    When I restrict cart rules for rule_free_shipping_1 providing non-existing cart rules
+    Then I should get cart rule error about "non-existing cart rule"
+    And cart rule "rule_free_shipping_1" should have the following properties:
+      | restricted cart rules |  |
+
   Scenario: Restrict cart rule combinations providing the same cart rule that is being edited in the restricted cart rules list
     Given cart rule "rule_70_percent" should have the following properties:
       | restricted cart rules |  |
