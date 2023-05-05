@@ -327,9 +327,10 @@ services:
     autowire: true
     public: false
 
+  # Should be public as used in some controllers
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
     autowire: true
-    public: false
+    public: true
 
   # deprecated services
   prestashop.core.form.choice_provider.currency_by_id:
