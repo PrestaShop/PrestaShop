@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 class RestrictCartRulesCommand
@@ -51,9 +52,7 @@ class RestrictCartRulesCommand
         array $restrictedCartRuleIds
     ) {
         $this->cartRuleId = new CartRuleId($cartRuleId);
-        $this->restrictedCartRuleIds = array_map(static function (int $cartRuleId): CartRuleId {
-            return new CartRuleId($cartRuleId);
-        }, $restrictedCartRuleIds);
+        $this->setRestrictedCartRuleIds($cartRuleId, $restrictedCartRuleIds);
     }
 
     /**
@@ -70,5 +69,27 @@ class RestrictCartRulesCommand
     public function getRestrictedCartRuleIds(): array
     {
         return $this->restrictedCartRuleIds;
+    }
+
+    /**
+     * @param int $cartRuleId
+     * @param int[] $restrictedCartRuleIds
+     *
+     * @return void
+     *
+     * @throws CartRuleConstraintException
+     */
+    private function setRestrictedCartRuleIds(int $cartRuleId, array $restrictedCartRuleIds): void
+    {
+        foreach ($restrictedCartRuleIds as $restrictedCartRuleId) {
+            if ($restrictedCartRuleId === $cartRuleId) {
+                throw new CartRuleConstraintException(
+                    'Restricted CartRule ids cannot contain id of current cart rule',
+                    CartRuleConstraintException::INVALID_CART_RULE_RESTRICTION
+                );
+            }
+
+            $this->restrictedCartRuleIds[] = new CartRuleId($restrictedCartRuleId);
+        }
     }
 }

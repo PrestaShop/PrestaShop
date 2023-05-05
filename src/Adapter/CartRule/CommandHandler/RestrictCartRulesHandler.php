@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
+use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\RestrictCartRulesCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\RestrictCartRulesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
-use CartRule;
 
 class RestrictCartRulesHandler implements RestrictCartRulesHandlerInterface
 {

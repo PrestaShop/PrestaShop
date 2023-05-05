@@ -303,12 +303,16 @@ class EditCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             $restrictedCartRuleIds[] = $this->getSharedStorage()->get($restrictedCartRuleReference);
         }
 
-        $this->getCommandBus()->handle(
-            new RestrictCartRulesCommand(
-                $this->getSharedStorage()->get($cartRuleReference),
-                $restrictedCartRuleIds
-            )
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new RestrictCartRulesCommand(
+                    $this->getSharedStorage()->get($cartRuleReference),
+                    $restrictedCartRuleIds
+                )
+            );
+        } catch (CartRuleConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**

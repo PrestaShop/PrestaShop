@@ -72,20 +72,22 @@ class CartRuleRepository extends AbstractObjectModelRepository
 
     public function assertAllCartRulesExists(array $cartRuleIds): void
     {
-        $cartRuleIdsClause = implode(',', array_map(static function (CartRuleId $cartRuleId): int {
+        $cartRuleIds = array_map(static function (CartRuleId $cartRuleId): int {
             return $cartRuleId->getValue();
-        }, $cartRuleIds));
+        }, $cartRuleIds);
 
-        $countResult = $this->connection->createQueryBuilder()
+        $qb = $this->connection->createQueryBuilder();
+
+        $result = $qb
             ->select('COUNT(id_cart_rule) AS cart_rules_count')
             ->from($this->dbPrefix . 'cart_rule')
-            ->where('id_cart_rule IN (:cartRuleIds)')
-            ->setParameter('cartRuleIds', $cartRuleIdsClause)
+            ->where($qb->expr()->in('id_cart_rule', ':cartRuleIds'))
+            ->setParameter('cartRuleIds', $cartRuleIds, Connection::PARAM_INT_ARRAY)
             ->execute()
             ->fetchAssociative()
         ;
 
-        if (!isset($countResult['cart_rules_count']) || count($cartRuleIds) !== (int) $countResult['cart_rules_count']) {
+        if (!isset($result['cart_rules_count']) || count($cartRuleIds) !== (int) $result['cart_rules_count']) {
             throw new CartRuleNotFoundException('Failed to assert that all provided cart rules exists');
         }
     }
