@@ -72,7 +72,7 @@ class ControllerConfigurationFactory
     public function create(
         string $legacyControllerName,
         string $objectModelClassName = '',
-        string $tableName = ''
+        string $tableName = 'configuration'
     ): ControllerConfiguration {
         $employee = $this->userProvider->getUser();
         if (!$employee instanceof Employee) {
