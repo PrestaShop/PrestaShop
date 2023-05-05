@@ -56,6 +56,12 @@ class ModuleManager extends BOBasePage {
 
   private readonly moduleCheckboxButton: (moduleTag: string) => string;
 
+  private readonly seeMoreButton: (blockName: string) => string;
+
+  private readonly seeLessButton: (blockName: string) => string;
+
+  private readonly moduleListBlock: (blockName: string) => string;
+
   private readonly actionModuleButton: (moduleTag: string, action: string) => string;
 
   private readonly configureModuleButton: (moduleTag: string) => string;
@@ -132,6 +138,9 @@ class ModuleManager extends BOBasePage {
     this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name=${moduleTag}]`;
     this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)}`
       + ' div.module-checkbox-bulk-list.md-checkbox label i';
+    this.seeMoreButton = (blockName: string) => `#main-div div.module-short-list button.see-more[data-category=${blockName}]`;
+    this.seeLessButton = (blockName: string) => `#main-div div.module-short-list button.see-less[data-category=${blockName}]`;
+    this.moduleListBlock = (blockName: string) => `#modules-list-container-${blockName} div.module-item-list`;
 
     // Module actions selector
     this.actionModuleButton = (moduleTag: string, action: string) => `div[data-tech-name=${moduleTag}]`
@@ -371,6 +380,40 @@ class ModuleManager extends BOBasePage {
     const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, (all) => all.map((el) => el.textContent));
 
     return modulesBlocks[position - 1];
+  }
+
+  /**
+   * Click on see more button
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<boolean>}
+   */
+  async clickOnSeeMoreButton(page: Page, blockName: string): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.seeMoreButton(blockName));
+
+    return this.elementVisible(page, this.seeLessButton(blockName), 1000);
+  }
+
+  /**
+   * Click on see less button
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<boolean>}
+   */
+  async clickOnSeeLessButton(page: Page, blockName: string): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.seeLessButton(blockName));
+
+    return this.elementVisible(page, this.seeMoreButton(blockName), 1000);
+  }
+
+  /**
+   * Get number of modules in block
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<number>}
+   */
+  async getNumberOfModulesInBlock(page: Page, blockName: string): Promise<number> {
+    return (await page.$$(this.moduleListBlock(blockName))).length;
   }
 }
 
