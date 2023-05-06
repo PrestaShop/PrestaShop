@@ -25,7 +25,7 @@
 <div class="col-lg-12 bootstrap">
 	<div class="col-lg-6">
 		{l s='Unselected' d='Admin.Global'}
-		<input type="text" id="search_unselected" placeholder="Buscar...">
+		<input type="text" id="search_unselected_{$product_rule_group_id|intval}_{$product_rule_id|intval}_1" placeholder="{l s='Search' d='Admin.labels'}">
 		<select multiple size="20" id="product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_1">
 			{foreach from=$product_rule_itemlist.unselected item='item'}
 				<option value="{$item.id|intval}" title="{$item.name|escape:'html':'UTF-8'}">&nbsp;{$item.name|escape:'html':'UTF-8'}</option>
@@ -57,24 +57,17 @@
 	$('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_add').on('click', function() { addCartRuleOption(this); updateProductRuleShortDescription(this); });
 	$(function() { updateProductRuleShortDescription($('#product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_add')); });
 </script>
-<script>
-
-	var input = document.getElementById("search_unselected");
+<script> 
+	var input = document.getElementById("search_unselected_{$product_rule_group_id|intval}_{$product_rule_id|intval}_1");
 	var select = document.getElementById("product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_1");
 	input.addEventListener("input", function() {
-
+ 
 		var filter = input.value.toUpperCase();
 		var options = select.getElementsByTagName("option");
 		for (var i = 0; i < options.length; i++) {
-
-			var text = options[i].textContent || options[i].innerText;
+ 			var text = options[i].textContent || options[i].innerText;
 			text = text.toUpperCase();
-
-			if (text.indexOf(filter) > -1) {
-				options[i].style.display = "";
-			} else {
-				options[i].style.display = "none";
-			}
+			options[i].style.display = (text.indexOf(filter) > -1) ? '' : 'none';
 		}
 	});
 </script>
