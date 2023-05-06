@@ -56,6 +56,7 @@ GitHub contributors:
 - Amit Kumar Tiwari
 - Amoifr
 - Anas Mammeri
+- Anant Negi
 - anat
 - Anatole
 - Anders Bilfeldt

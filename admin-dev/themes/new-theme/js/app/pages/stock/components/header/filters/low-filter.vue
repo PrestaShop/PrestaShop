@@ -68,6 +68,9 @@
   import PSCheckbox from '@app/widgets/ps-checkbox.vue';
   import {defineComponent} from 'vue';
   import translate from '@app/pages/stock/mixins/translate';
+  import {
+    omit,
+  } from 'lodash';
 
   export default defineComponent({
     props: {
@@ -90,8 +93,13 @@
       },
       stockExportUrl(): string {
         const filtersClone = {...this.filters};
-        const params = $.param(filtersClone);
-
+        if(filtersClone.suppliers) {
+          filtersClone.supplier_id = filtersClone.suppliers
+        }
+        if(filtersClone.categories) {
+          filtersClone.category_id = filtersClone.categories
+        }
+        const params = $.param(omit(filtersClone, ['suppliers', 'categories']));
         return `${window.data.stockExportUrl}&${params}`;
       },
     },
