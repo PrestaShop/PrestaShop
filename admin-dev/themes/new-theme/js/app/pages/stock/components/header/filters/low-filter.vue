@@ -93,13 +93,16 @@
       },
       stockExportUrl(): string {
         const filtersClone = {...this.filters};
-        if(filtersClone.suppliers) {
-          filtersClone.supplier_id = filtersClone.suppliers
+
+        if (filtersClone.suppliers) {
+          filtersClone.supplier_id = filtersClone.suppliers;
         }
-        if(filtersClone.categories) {
-          filtersClone.category_id = filtersClone.categories
+        if (filtersClone.categories) {
+          filtersClone.category_id = filtersClone.categories;
         }
+
         const params = $.param(omit(filtersClone, ['suppliers', 'categories']));
+
         return `${window.data.stockExportUrl}&${params}`;
       },
     },
