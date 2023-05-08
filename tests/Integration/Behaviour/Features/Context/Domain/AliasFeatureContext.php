@@ -109,10 +109,10 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param array $expectedData
-     * @param array $aliases
+     * @param object[] $expectedData
+     * @param array[] $aliases
      *
-     * @return array
+     * @return string[]
      */
     private function assertAliasProperties(array $expectedData, array $aliases): array
     {
