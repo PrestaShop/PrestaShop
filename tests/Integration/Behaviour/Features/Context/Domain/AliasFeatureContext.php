@@ -91,6 +91,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that alias cannot be empty
      * @Then I should get error that search term cannot be empty
      *
      * @return void

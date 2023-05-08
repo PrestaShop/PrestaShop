@@ -75,7 +75,7 @@ Feature: Add basic alias from Back Office (BO)
     When I add alias with following information:
       | alias   |      |
       | search  | blue |
-    Then I should get error that search term cannot be empty
+    Then I should get error that alias cannot be empty
     Then following aliases should exist:
       | id reference | alias    | search |
       | alias1       | bloose   | blouse |
