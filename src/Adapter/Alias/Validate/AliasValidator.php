@@ -57,7 +57,7 @@ class AliasValidator extends AbstractObjectModelValidator
      * @param string $propertyName
      * @param int $errorCode
      *
-     * @throws AliasConstraintException|CoreException
+     * @throws AliasConstraintException
      */
     private function validateAliasProperty(Alias $alias, string $propertyName, int $errorCode = 0): void
     {
