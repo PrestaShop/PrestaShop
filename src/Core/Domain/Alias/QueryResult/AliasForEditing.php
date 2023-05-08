@@ -45,10 +45,10 @@ class AliasForEditing
 
     public function __construct(
         array $aliases,
-        string $search
+        string $searchTerm
     ) {
         $this->aliases = $aliases;
-        $this->searchTerm = $search;
+        $this->searchTerm = $searchTerm;
     }
 
     /**
