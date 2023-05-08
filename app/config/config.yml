@@ -100,8 +100,8 @@ swiftmailer:
   spool: { type: memory }
 
 api_platform:
-  title: PrestaShop API
-  version: 1.0.0
+  title: Backoffice API
+  version: 0.1.0
   enable_entrypoint: false
   mapping:
     paths:

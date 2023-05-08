@@ -41,19 +41,19 @@ describe('API : Resource Endpoint', async () => {
       accessTokenExpired = api.setAccessTokenAsExpired(accessToken);
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 without access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 without access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1');
+      const apiResponse = await apiContext.get('api/hook-status/1');
       await expect(apiResponse.status()).to.eq(401);
       await expect(api.hasResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.true;
       await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 with invalid access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 with invalid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1', {
+      const apiResponse = await apiContext.get('api/hook-status/1', {
         headers: {
           Authorization: 'Bearer INVALIDTOKEN',
         },
@@ -63,10 +63,10 @@ describe('API : Resource Endpoint', async () => {
       await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 with expired access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 with expired access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1', {
+      const apiResponse = await apiContext.get('api/hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessTokenExpired}`,
         },
@@ -76,10 +76,10 @@ describe('API : Resource Endpoint', async () => {
       await expect(api.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /admin-dev/new-api/hook-status/1 with valid access token', async function () {
+    it('should request the endpoint /admin-dev/api/hook-status/1 with valid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithValidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('new-api/hook-status/1', {
+      const apiResponse = await apiContext.get('api/hook-status/1', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
