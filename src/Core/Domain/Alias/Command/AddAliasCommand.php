@@ -101,8 +101,6 @@ class AddAliasCommand
             return;
         }
 
-        throw new InvalidArgumentException(
-            sprintf('Alias parameter search term must not be empty')
-        );
+        throw new InvalidArgumentException('Alias parameter search term must not be empty');
     }
 }
