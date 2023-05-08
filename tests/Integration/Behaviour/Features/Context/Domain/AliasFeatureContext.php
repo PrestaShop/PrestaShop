@@ -29,13 +29,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Doctrine\DBAL\Driver\Exception;
+use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
-use PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DatabaseDump;
 
@@ -50,10 +49,14 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
-        $this->getCommandBus()->handle(new AddAliasCommand(
-            PrimitiveUtils::castStringArrayIntoArray($data['alias']),
-            $data['search']
-        ));
+        try {
+            $this->getCommandBus()->handle(new AddAliasCommand(
+                PrimitiveUtils::castStringArrayIntoArray($data['alias']),
+                $data['search']
+            ));
+        } catch (Exception $exception) {
+            $this->setLastException($exception);
+        }
     }
 
     /**
@@ -85,6 +88,16 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         foreach ($idsByIdReferences as $reference => $id) {
             $this->getSharedStorage()->set($reference, $id);
         }
+    }
+
+    /**
+     * @Then I should get error that alias constraint is invalid
+     *
+     * @return void
+     */
+    public function assertLastErrorIsInvalidAliasConstraint(): void
+    {
+        $this->assertLastErrorIs(AliasConstraintException::class);
     }
 
     /**

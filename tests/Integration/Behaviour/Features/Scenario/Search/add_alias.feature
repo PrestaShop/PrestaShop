@@ -39,6 +39,13 @@ Feature: Add basic alias from Back Office (BO)
       | alias6       | blu    | blue   |
 
   Scenario: I add a multiple aliases with duplicate search field
+    Given following aliases should exist:
+      | id reference | alias  | search |
+      | alias1       | bloose | blouse |
+      | alias2       | blues  | blouse |
+      | alias3       | large  | big    |
+      | alias5       | bliu   | blue   |
+      | alias6       | blu    | blue   |
     When I add alias with following information:
       | alias   | bliu,sapphire |
       | search  | blue          |
@@ -55,6 +62,35 @@ Feature: Add basic alias from Back Office (BO)
       | alias   | blah |
       | search  | blue |
     Then following aliases should exist:
+      | id reference | alias    | search |
+      | alias1       | bloose   | blouse |
+      | alias2       | blues    | blouse |
+      | alias3       | large    | big    |
+      | alias5       | bliu     | blue   |
+      | alias6       | blu      | blue   |
+      | alias7       | sapphire | blue   |
+      | alias8       | blah     | blue   |
+
+  Scenario: I add alias with empty alias field
+    When I add alias with following information:
+      | alias   |      |
+      | search  | blue |
+    Then following aliases should exist:
+      | id reference | alias    | search |
+      | alias1       | bloose   | blouse |
+      | alias2       | blues    | blouse |
+      | alias3       | large    | big    |
+      | alias5       | bliu     | blue   |
+      | alias6       | blu      | blue   |
+      | alias7       | sapphire | blue   |
+      | alias8       | blah     | blue   |
+
+  Scenario: I add alias with empty search field
+    When I add alias with following information:
+      | alias   | blu |
+      | search  |     |
+    Then I should get error that alias constraint is invalid
+    And following aliases should exist:
       | id reference | alias    | search |
       | alias1       | bloose   | blouse |
       | alias2       | blues    | blouse |
