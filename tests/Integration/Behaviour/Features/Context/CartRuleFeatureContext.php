@@ -456,6 +456,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @todo: What is this method supposed to assert. Especially in cases when it checks customer id 0??
      * @When /^at least one cart rule applies today for customer with id (\d+)$/
      */
     public function someCartRulesExistTodayForCustomerWithId($customerId)
