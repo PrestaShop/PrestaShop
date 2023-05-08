@@ -1,8 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags cart-rule-usage-limit
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags bo-cart-rule-usage-limit
 @restore-all-tables-before-feature
-@cart-rule-usage-limit
-
-Feature: A cart rule's usage limit per user is detected
+@bo-cart-rule-usage-limit
+Feature: Apply cart rule to cart from Back Office (BO)
+  As an employee
+  I must be able to correctly apply various cart rules to cart when creating order in BO
 
   Background:
     Given country "US" is enabled

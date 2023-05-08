@@ -1,6 +1,6 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags apply-cart-rule
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags fo-apply-cart-rule
 @restore-all-tables-before-feature
-@apply-cart-rule
+@fo-apply-cart-rule
 Feature: Apply cart rule to cart
   As a customer
   I must be able to apply cart rules to my cart

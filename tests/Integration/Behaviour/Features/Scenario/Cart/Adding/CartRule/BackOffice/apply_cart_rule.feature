@@ -3,7 +3,7 @@
 @bo-apply-cart-rule
 Feature: Apply cart rule to cart from Back Office (BO)
   As an employee
-  I must be able to correctly apply cart rules to carts in BO
+  I must be able to correctly apply various cart rules to cart when creating order in BO
 
   Background:
     And there is customer "testCustomer" with email "pub@prestashop.com"
