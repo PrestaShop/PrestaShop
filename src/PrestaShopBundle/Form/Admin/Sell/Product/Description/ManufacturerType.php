@@ -37,8 +37,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ManufacturerType extends AbstractType
 {
-    private const MANUFACTURER_MIN_RESULTS_FOR_SEARCH = 7;
-
     /**
      * @var TranslatorInterface
      */
@@ -83,10 +81,7 @@ class ManufacturerType extends AbstractType
             // placeholder false is important to avoid empty option in select input despite required being false
             'placeholder' => false,
             'choices' => $choices,
-            'attr' => [
-                'data-toggle' => 'select2',
-                'data-minimumResultsForSearch' => self::MANUFACTURER_MIN_RESULTS_FOR_SEARCH,
-            ],
+            'autocomplete' => true,
         ]);
     }
 

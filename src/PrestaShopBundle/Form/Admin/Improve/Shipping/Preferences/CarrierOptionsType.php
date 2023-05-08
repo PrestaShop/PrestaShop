@@ -91,10 +91,7 @@ class CarrierOptionsType extends TranslatorAwareType
                     'Admin.Shipping.Help'
                 ),
                 'multistore_configuration_key' => 'PS_CARRIER_DEFAULT',
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
             ])
             ->add('carrier_default_order_by', ChoiceType::class, [
                 'choices' => $this->orderByChoices,

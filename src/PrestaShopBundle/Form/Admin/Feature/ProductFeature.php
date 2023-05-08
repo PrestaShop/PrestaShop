@@ -77,10 +77,9 @@ class ProductFeature extends CommonAbstractType
             'label' => $this->translator->trans('Feature', [], 'Admin.Catalog.Feature'),
             'choices' => $this->features,
             'required' => false,
+            'autocomplete' => true,
             'attr' => [
                 'data-action' => $this->router->generate('admin_feature_get_feature_values', ['idFeature' => 1]),
-                'data-toggle' => 'select2',
-                'data-minimumResultsForSearch' => '7',
                 'class' => 'feature-selector',
             ],
             'placeholder' => $this->translator->trans('Choose a feature', [], 'Admin.Catalog.Feature'),
@@ -88,10 +87,7 @@ class ProductFeature extends CommonAbstractType
             ->add('value', FormType\ChoiceType::class, [
                 'label' => $this->translator->trans('Pre-defined value', [], 'Admin.Catalog.Feature'),
                 'required' => false,
-                'attr' => [
-                    'class' => 'feature-value-selector',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
                 'placeholder' => $this->translator->trans('Choose a value', [], 'Admin.Catalog.Feature'),
                 'disabled' => true,
             ])
@@ -148,10 +144,9 @@ class ProductFeature extends CommonAbstractType
         $form->add('value', FormType\ChoiceType::class, [
             'label' => $this->translator->trans('Pre-defined value', [], 'Admin.Catalog.Feature'),
             'required' => false,
+            'autocomplete' => true,
             'attr' => [
                 'class' => 'feature-value-selector',
-                'data-minimumResultsForSearch' => '7',
-                'data-toggle' => 'select2',
             ],
             'choices' => $choices,
             'placeholder' => $this->translator->trans('Choose a value', [], 'Admin.Catalog.Feature'),

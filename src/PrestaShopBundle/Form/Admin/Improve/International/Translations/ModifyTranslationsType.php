@@ -137,10 +137,7 @@ class ModifyTranslationsType extends TranslatorAwareType
                     'class' => 'js-module-form-group d-none',
                 ],
                 'placeholder' => '---',
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
                 'choices' => $this->moduleChoices,
                 'choice_translation_domain' => false,
             ])

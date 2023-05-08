@@ -89,10 +89,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ),
                 'choices' => $this->languageChoices,
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
             ])
             ->add('detect_language_from_browser', SwitchType::class, [
                 'label' => $this->trans(
@@ -115,10 +112,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ),
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
             ])
             ->add('detect_country_from_browser', SwitchType::class, [
                 'label' => $this->trans(
@@ -140,6 +134,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'The default currency used in your shop.',
                     'Admin.International.Help'
                 ),
+                'autocomplete' => true,
                 'attr' => [
                     'data-warning-message' => 'Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.',
                 ],
@@ -151,10 +146,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ),
                 'choices' => $this->timezoneChoices,
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
             ]);
     }
 }

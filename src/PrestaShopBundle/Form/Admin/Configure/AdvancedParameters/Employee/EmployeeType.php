@@ -232,10 +232,7 @@ final class EmployeeType extends AbstractType
                     [],
                     'Admin.Advparameters.Help'
                 ),
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
                 'choices' => $this->tabChoices,
             ])
         ;

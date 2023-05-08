@@ -170,9 +170,8 @@ class RetailPriceType extends TranslatorAwareType
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'choice_attr' => $this->taxRuleGroupChoicesProvider->getChoicesAttributes(),
+                'autocomplete' => true,
                 'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
                     'data-tax-enabled' => $this->isTaxEnabled,
                 ],
                 'row_attr' => [
