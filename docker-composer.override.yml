@@ -1,0 +1,15 @@
+version: '2.1'
+
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: prestashop
+      MYSQL_ROOT_PASSWORD: prestashop
+    restart: unless-stopped
+    depends_on:
+      - mysql
