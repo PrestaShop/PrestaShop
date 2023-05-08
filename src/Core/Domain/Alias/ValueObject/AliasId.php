@@ -67,7 +67,7 @@ class AliasId
     {
         if (0 >= $aliasId) {
             throw new AliasConstraintException(
-                sprintf('Invalid alias id %s supplied. alias id must be positive integer.', $aliasId),
+                sprintf('Invalid alias id %d supplied. Alias id must be a positive integer.', $aliasId),
                 AliasConstraintException::INVALID_ID
             );
         }
