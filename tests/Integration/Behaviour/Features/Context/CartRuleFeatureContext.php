@@ -37,10 +37,15 @@ use DateInterval;
 use DateTime;
 use Db;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use RuntimeException;
+use Validate;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
+    use SharedStorageTrait;
+    use LastExceptionTrait;
 
     /**
      * @var CartRule[]
@@ -407,6 +412,50 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When /^I apply the discount code "(.+)"$/
+     *
+     * @param string $code
+     *
+     * @return void
+     */
+    public function applyCartRuleByCode(string $code): void
+    {
+        $cartRuleId = $this->getSharedStorage()->get($code);
+        $cartRule = new CartRule($cartRuleId);
+
+        if (!Validate::isLoadedObject($cartRule)) {
+            throw new RuntimeException(sprintf('Failed to load cart rule %d', $cartRule->id));
+        }
+
+        if ($errorMessage = $cartRule->checkValidity(Context::getContext())) {
+            // checkValidity method doesn't throw exception, but returns string
+            // so we map it to error code and reuse the LastExceptionTrait to be able to assert the exception on next step
+            $this->setLastException(
+                new CartRuleValidityException($errorMessage, $this->getCartRuleValidityCodeByMessage($errorMessage))
+            );
+
+            return;
+        }
+
+        $this->getCurrentCart()->addCartRule((int) $cartRule->id);
+    }
+
+    /**
+     * @Then I should get cart rule validation error saying :expectedMessage
+     *
+     * @param string $expectedMessage
+     *
+     * @return void
+     */
+    public function assertCartRuleValidationError(string $expectedMessage): void
+    {
+        $this->assertLastErrorIs(
+            CartRuleValidityException::class,
+            $this->getCartRuleValidityCodeByMessage($expectedMessage)
+        );
+    }
+
+    /**
      * @When /^at least one cart rule applies today for customer with id (\d+)$/
      */
     public function someCartRulesExistTodayForCustomerWithId($customerId)
@@ -516,5 +565,49 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         if ($result != $expectedErrorMessage) {
             throw new \RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
         }
+    }
+
+    /**
+     * Legacy cart rule validation returns errors as strings (CartRule::checkVBalidity()),
+     * so to identify lastError in steps we will use this custom map,
+     * which will eventually allow us to reuse LastExceptionTrait and assert exceptions by codes
+     *
+     * @return int[]
+     */
+    private function getCartRuleValidityCodeByMessage(string $message): int
+    {
+        $map = [
+            'This voucher is disabled' => 100,
+            'This voucher has already been used' => 101,
+            'This voucher is not valid yet' => 102,
+            'This voucher has expired' => 103,
+            'You cannot use this voucher anymore (usage limit reached)' => 104,
+            'You cannot use this voucher' => 105,
+            'You must choose a delivery address before applying this voucher to your order' => 106,
+            'You cannot use this voucher in your country of delivery' => 107,
+            'You must choose a carrier before applying this voucher to your order' => 108,
+            'You cannot use this voucher with this carrier' => 109,
+            'You cannot use this voucher on products on sale' => 110,
+            'You cannot use this voucher in an empty cart' => 111,
+            'You cannot use this voucher with these products' => 112,
+            'The minimum amount to benefit from this promo code is' => 113,
+            'This voucher is already in your cart' => 114,
+            'This voucher is not combinable with an other voucher already in your cart:' => 115,
+            'Cart is empty' => 116,
+        ];
+
+        foreach ($map as $errorPart => $code) {
+            // @todo:
+            //     some of these errors have %s placeholders, so we just match the most part of it,
+            //     it should be convenient enough for now, but will need improvement later
+            if (0 === strpos($message, $errorPart)) {
+                return $code;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Invalid error-code mapping in test. Couldn\'t find the code for message "%s"',
+            $message
+        ));
     }
 }

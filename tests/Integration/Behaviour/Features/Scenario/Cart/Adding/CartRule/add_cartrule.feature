@@ -9,14 +9,14 @@ Feature: Add cart rule in cart
     And country "US" is enabled
 
   @bo-add-cart-rule
-  Scenario: No product in cart should give a not valid cart rule insertion
+  Scenario: Adding a cart rule to an empty cart should not be possible
     Given I have an empty default cart
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo1"
     Then I should have 0 different products in my cart
-    Then cart rule "cartrule1" cannot be applied to my cart
-    When I use the discount "cartrule1"
+    When I apply the discount code "foo1"
+    Then I should get cart rule validation error saying "Cart is empty"
     When at least one cart rule applies today for customer with id 0
     Then I should have 0 products in my cart
 
@@ -29,8 +29,11 @@ Feature: Add cart rule in cart
     Given cart rule "cartrule1" has a discount code "foo1"
     When I add 1 items of product "product1" in my cart
     Then I should have 1 different products in my cart
-    Then cart rule "cartrule1" can be applied to my cart
-    When I use the discount "cartrule1"
+    # 19.812 product +7 shipping (1 cent probably lost on price convertion?)
+    And my cart total should be precisely 26.81 tax excluded
+    When I apply the discount code "foo1"
+    # @todo: products discounted by 50% and then shipping is added. So (19.812/2)+7. Need to add shipping assertion to make it clearer
+    Then my cart total should be precisely 16.9 tax excluded
     When at least one cart rule applies today for customer with id 0
     Then I should have 1 products in my cart
 
