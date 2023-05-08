@@ -75,6 +75,7 @@ Feature: Add basic alias from Back Office (BO)
     When I add alias with following information:
       | alias   |      |
       | search  | blue |
+    Then I should get error that alias constraint is invalid
     Then following aliases should exist:
       | id reference | alias    | search |
       | alias1       | bloose   | blouse |

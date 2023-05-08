@@ -32,7 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -97,7 +97,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidAliasConstraint(): void
     {
-        $this->assertLastErrorIs(AliasConstraintException::class);
+        $this->assertLastErrorIs(InvalidArgumentException::class);
     }
 
     /**

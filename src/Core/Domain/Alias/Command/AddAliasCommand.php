@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Command;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+
 /**
  * Adds new alias with given data
  */
@@ -49,6 +51,9 @@ class AddAliasCommand
      */
     public function __construct(array $aliases, string $searchTerm)
     {
+        $this->assertArrayNotEmpty($aliases);
+        $this->assertStringNotEmpty($searchTerm);
+
         $this->aliases = $aliases;
         $this->searchTerm = $searchTerm;
     }
@@ -67,5 +72,37 @@ class AddAliasCommand
     public function getSearchTerm(): string
     {
         return $this->searchTerm;
+    }
+
+    /**
+     * @param string[] $aliasId
+     *
+     * @throws InvalidArgumentException
+     */
+    private function assertArrayNotEmpty(array $array): void
+    {
+        if (!empty($array)) {
+            return;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf('Alias parameter aliases must not be empty')
+        );
+    }
+
+    /**
+     * @param string $aliasId
+     *
+     * @throws InvalidArgumentException
+     */
+    private function assertStringNotEmpty(string $string): void
+    {
+        if (!empty($string)) {
+            return;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf('Alias parameter search term must not be empty')
+        );
     }
 }
