@@ -22,6 +22,11 @@ Feature: Add basic alias from Back Office (BO)
       | alias3       | large  | big    |
 
   Scenario: I add a multiple aliases with basic information
+    Given following aliases should exist:
+      | id reference | alias  | search |
+      | alias1       | bloose | blouse |
+      | alias2       | blues  | blouse |
+      | alias3       | large  | big    |
     When I add alias with following information:
       | alias   | bliu,blu |
       | search  | blue     |
@@ -45,3 +50,16 @@ Feature: Add basic alias from Back Office (BO)
       | alias5       | bliu     | blue   |
       | alias6       | blu      | blue   |
       | alias7       | sapphire | blue   |
+
+    When I add alias with following information:
+      | alias   | blah |
+      | search  | blue |
+    Then following aliases should exist:
+      | id reference | alias    | search |
+      | alias1       | bloose   | blouse |
+      | alias2       | blues    | blouse |
+      | alias3       | large    | big    |
+      | alias5       | bliu     | blue   |
+      | alias6       | blu      | blue   |
+      | alias7       | sapphire | blue   |
+      | alias8       | blah     | blue   |
