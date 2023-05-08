@@ -56,10 +56,7 @@ class GroupType extends AbstractType
             'placeholder' => null,
             'choices' => $this->groupByIdChoiceProvider->getChoices(),
             'choice_translation_domain' => false,
-            'attr' => [
-                'data-toggle' => 'select2',
-                'data-minimumResultsForSearch' => '7',
-            ],
+            'autocomplete' => true,
         ]);
     }
 }
