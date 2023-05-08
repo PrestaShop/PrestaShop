@@ -51,12 +51,11 @@ class GetAliasForEditingHandler implements GetAliasForEditingHandlerInterface
 
     public function handle(GetAliasForEditing $query): AliasForEditing
     {
-        $alias = $this->aliasRepository->get($query->getAliasId());
-        $aliases = $this->aliasRepository->getAliasesBySearchTerm($alias->search);
+        $searchTerm = $this->aliasRepository->get($query->getAliasId())->search;
 
         return new AliasForEditing(
-            $aliases,
-            $alias->search
+            $this->aliasRepository->getAliasesBySearchTerm($searchTerm),
+            $searchTerm
         );
     }
 }
