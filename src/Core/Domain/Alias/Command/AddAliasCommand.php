@@ -85,9 +85,7 @@ class AddAliasCommand
             return;
         }
 
-        throw new InvalidArgumentException(
-            sprintf('Alias parameter aliases must not be empty')
-        );
+        throw new InvalidArgumentException('Alias parameter aliases must not be empty');
     }
 
     /**
