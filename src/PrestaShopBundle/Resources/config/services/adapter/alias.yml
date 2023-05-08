@@ -7,9 +7,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository:
     arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator'
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAliasHandler:
     tags:
