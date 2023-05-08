@@ -33,7 +33,10 @@ use Doctrine\DBAL\Driver\Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
+use PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DatabaseDump;
 
 class AliasFeatureContext extends AbstractDomainFeatureContext
@@ -47,10 +50,8 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
-        $aliases = array_map('trim', explode(',', $data['alias']));
-
         $this->getCommandBus()->handle(new AddAliasCommand(
-            $aliases,
+            PrimitiveUtils::castStringArrayIntoArray($data['alias']),
             $data['search']
         ));
     }
@@ -63,22 +64,26 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      * @throws Exception
      * @throws \Doctrine\DBAL\Exception
      */
-    public function assertAlias(TableNode $table): void
+    public function assertAliasesList(TableNode $table): void
     {
-        $data = $table->getColumnsHash();
+        $expectedAliases = $table->getColumnsHash();
 
         /** @var AliasQueryBuilder $aliasQueryBuilder */
         $aliasQueryBuilder = $this->getContainer()->get(AliasQueryBuilder::class);
-        $qb = $aliasQueryBuilder->getSearchQueryBuilder(AliasFilters::buildDefaults());
-        $aliases = $qb->execute()->fetchAllAssociative();
+        $aliases = $aliasQueryBuilder
+            ->getSearchQueryBuilder(new Filters([
+                'limit' => null,
+                'offset' => 0,
+                'orderBy' => 'id_alias',
+                'sortOrder' => 'asc',
+                'filters' => [],
+            ]))
+            ->execute()
+            ->fetchAllAssociative();
 
-        Assert::assertEquals(
-            count($data),
-            count($aliases),
-            'Unexpected aliases count'
-        );
+        Assert::assertCount(count($expectedAliases), $aliases, 'Unexpected aliases count');
 
-        $idsByIdReferences = $this->assertAliasProperties($data, $aliases);
+        $idsByIdReferences = $this->assertAliasProperties($expectedAliases, $aliases);
 
         foreach ($idsByIdReferences as $reference => $id) {
             $this->getSharedStorage()->set($reference, $id);
@@ -88,7 +93,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     /**
      * @BeforeFeature @restore-aliases-before-feature
      */
-    public static function restoreAliasTablesBeforeFeature(): void
+    public static function restoreAliasTables(): void
     {
         DatabaseDump::restoreTables(['alias']);
     }
