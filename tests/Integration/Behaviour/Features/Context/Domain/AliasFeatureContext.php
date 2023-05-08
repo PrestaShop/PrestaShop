@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -54,7 +53,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
                 PrimitiveUtils::castStringArrayIntoArray($data['alias']),
                 $data['search']
             ));
-        } catch (Exception $exception) {
+        } catch (InvalidArgumentException $exception) {
             $this->setLastException($exception);
         }
     }
