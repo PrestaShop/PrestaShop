@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Alias\Repository;
 
 use Alias;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Exception;
 use PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotAddAliasException;
@@ -99,6 +98,11 @@ class AliasRepository extends AbstractObjectModelRepository
         return $aliasIds;
     }
 
+    /**
+     * @param AliasId $aliasId
+     *
+     * @return Alias
+     */
     public function get(AliasId $aliasId): Alias
     {
         /** @var Alias $alias */
@@ -111,10 +115,16 @@ class AliasRepository extends AbstractObjectModelRepository
         return $alias;
     }
 
+    /**
+     * @param string $alias
+     * @param string $searchTerm
+     *
+     * @return bool
+     */
     public function aliasExists(string $alias, string $searchTerm): bool
     {
         $qb = $this->connection->createQueryBuilder()
-            ->addSelect('a.id_alias')
+            ->select('a.id_alias')
             ->from($this->dbPrefix . 'alias', 'a')
             ->where('a.search = :search')
             ->andWhere('a.alias = :alias')
@@ -129,9 +139,6 @@ class AliasRepository extends AbstractObjectModelRepository
      * @param string $searchTerm
      *
      * @return string[]
-     *
-     * @throws Exception
-     * @throws \Doctrine\DBAL\Exception
      */
     public function getAliasesBySearchTerm(string $searchTerm): array
     {
