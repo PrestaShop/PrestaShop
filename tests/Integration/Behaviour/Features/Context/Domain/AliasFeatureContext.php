@@ -60,9 +60,6 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      * @Then following aliases should exist:
      *
      * @param TableNode $table
-     *
-     * @throws Exception
-     * @throws \Doctrine\DBAL\Exception
      */
     public function assertAliasesList(TableNode $table): void
     {
