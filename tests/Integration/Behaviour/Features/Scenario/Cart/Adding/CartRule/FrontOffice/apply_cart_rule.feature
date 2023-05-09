@@ -6,7 +6,7 @@ Feature: Apply cart rule to cart
   I must be able to apply cart rules to my cart
 
   Background:
-    And there is customer "testCustomer" with email "pub@prestashop.com"
+    Given there is customer "testCustomer" with email "pub@prestashop.com"
     And country "US" is enabled
 
   Scenario: Adding a cart rule to an empty cart should not be possible
@@ -28,10 +28,9 @@ Feature: Apply cart rule to cart
     Given cart rule "cartrule1" has a discount code "foo1"
     When I add 1 items of product "product1" in my cart
     Then I should have 1 different products in my cart
-    # 19.812 product +7 shipping (1 cent probably lost on price convertion?)
+    And total cart shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
     When I apply the discount code "foo1"
-    # @todo: products discounted by 50% and then shipping is added. So (19.812/2)+7. Need to add shipping assertion to make it clearer
     Then my cart total should be 16.9 tax excluded
     When at least one cart rule applies today for customer with id 0
     Then I should have 1 products in my cart
@@ -46,6 +45,7 @@ Feature: Apply cart rule to cart
     Given cart rule "cartrule2" has a discount code "foo2"
     When I add 1 items of product "product1" in my cart
     Then I should have 1 different products in my cart
+    And total cart shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
     When I apply the discount code "foo1"
     Then my cart total should be 16.9 tax excluded
@@ -63,6 +63,7 @@ Feature: Apply cart rule to cart
     Given cart rule "cartrule1" has a discount code "foo1"
     When I add 1 items of product "product1" in my cart
     Then I should have 1 different products in my cart
+    And total cart shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
     When I apply the discount code "foo1"
     Then my cart total should be 16.9 tax excluded
@@ -83,6 +84,7 @@ Feature: Apply cart rule to cart
     And cart rule "cartrule12" offers a gift product "product3"
     And I add 1 items of product "product1" in my cart
     And I should have 1 different products in my cart
+    And total cart shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
     When I apply the discount code "foo12"
     Then my cart total should be 24.8 tax excluded
@@ -105,6 +107,7 @@ Feature: Apply cart rule to cart
     And cart rule "cartrule13" offers a gift product "product4"
     And I add 1 items of product "product1" in my cart
     And I should have 1 different products in my cart
+    And total cart shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
     When I apply the discount code "foo13"
     Then my cart total should be 24.8 tax excluded

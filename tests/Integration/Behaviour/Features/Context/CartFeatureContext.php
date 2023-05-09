@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Cart;
 use Context;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use Tests\Integration\Utility\CartOld;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
@@ -200,6 +201,18 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         if ($expectedTotal != $shippingFees) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $shippingFees));
         }
+    }
+
+    /**
+     * @Then /^total cart shipping fees should be (\d+\.\d+) tax (excluded|included)?$/
+     */
+    public function assertTotalCartShipping(string $expectedShipping, bool $taxIncluded): void
+    {
+        $cart = $this->getCurrentCart();
+        $expectedTotal = new DecimalNumber($expectedShipping);
+        $actualTotal = new DecimalNumber((string) $cart->getOrderTotal($taxIncluded, Cart::ONLY_SHIPPING));
+
+        Assert::assertSame((string) $expectedTotal, (string) $actualTotal, 'Unexpected total cart shipping');
     }
 
     /**
