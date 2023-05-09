@@ -236,7 +236,7 @@
             <div class="col-md-12 mt-1">
               <label class="form-control-label">{{ "Tax rule"|trans({}, 'Admin.Catalog.Feature') }}</label>
               {{ render(
-                      controller('PrestaShopBundle:Admin/Common:renderField', {
+                      controller('PrestaShopBundle\\Controller\\Admin\\CommonController:renderFieldAction', {
                         'formName': 'step2',
                         'formType': 'PrestaShopBundle\\Form\\Admin\\Product\\ProductPrice',
                         'fieldName': 'id_tax_rules_group',

@@ -42,16 +42,15 @@
         <span class="form-control-label" id="categories-tree-expand"><i class="material-icons">expand_more</i>{{ "Expand"|trans({}, 'Admin.Actions') }}</span>
         <span class="form-control-label" id="categories-tree-reduce"><i class="material-icons">expand_less</i>{{ "Collapse"|trans({}, 'Admin.Actions') }}</span>
       </div>
+      {{ form_errors(form.categories) }}
       {{ form_widget(form.categories, {'defaultCategory': true, defaultHidden: true}) }} {# see bootstrap_4_layout.html.twig #}
     </div>
   </fieldset>
-  {{ form_errors(form.categories) }}
-  {{ form_widget(form.categories) }} {# see bootstrap_4_layout.html.twig #}
 </div>
 <div id="add-categories">
   <h2>
     {{ "Create a new category"|trans({}, 'Admin.Catalog.Feature') }}
-    <span class="help-box" 
+    <span class="help-box"
           data-toggle="popover"
           data-content="{{ "If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it."|trans({}, 'Admin.Catalog.Help') }}" >
     </span>
