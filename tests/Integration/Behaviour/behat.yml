@@ -571,3 +571,9 @@ default:
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\AuthorizationServerFeatureContext
+        alias:
+          paths:
+            - "%paths.base%/Features/Scenario/Search"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\Domain\AliasFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext

@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator: ~
+
+  PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddAliasHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand
+
+  PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\GetAliasForEditingHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
