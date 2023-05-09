@@ -17,4 +17,8 @@ export default {
     tag: 'statsstock',
     name: 'Available quantities',
   }),
+  keycloak: new ModuleData({
+    tag: 'keycloak_connector_demo',
+    name: 'Keycloak OAuth2 connector demo',
+  }),
 };

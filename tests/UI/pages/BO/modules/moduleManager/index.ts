@@ -26,6 +26,8 @@ class ModuleManager extends BOBasePage {
 
   public readonly uninstallModuleSuccessMessage: (moduleTag: string) => string;
 
+  public readonly uploadModuleSuccessMessage: string;
+
   private readonly searchModuleTagInput: string;
 
   private readonly searchModuleButton: string;
@@ -103,6 +105,7 @@ class ModuleManager extends BOBasePage {
     this.resetModuleSuccessMessage = (moduleTag: string) => `Reset action on module ${moduleTag} succeeded.`;
     this.installModuleSuccessMessage = (moduleTag: string) => `Install action on module ${moduleTag} succeeded.`;
     this.uninstallModuleSuccessMessage = (moduleTag: string) => `Uninstall action on module ${moduleTag} succeeded.`;
+    this.uploadModuleSuccessMessage = 'Module installed!';
 
     // Header Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
@@ -162,6 +165,20 @@ class ModuleManager extends BOBasePage {
   /*
   Methods
    */
+
+  async uploadModule(page: Page, file: string): Promise<string | null> {
+    await this.waitForSelectorAndClick(page, '#page-header-desc-configuration-add_module');
+
+    await this.uploadOnFileChooser(page, '#importDropzone > div.module-import-start > p.module-import-start-main-text > a', file);
+
+    return this.getTextContent(page, '#importDropzone > div.module-import-success > p.module-import-success-msg');
+  }
+
+  async closeUploadModuleModal(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, '#module-modal-import-closing-cross');
+
+    return this.elementNotVisible(page, '#importDropzone', 1000);
+  }
 
   /**
    * Search Module in Page module Catalog
