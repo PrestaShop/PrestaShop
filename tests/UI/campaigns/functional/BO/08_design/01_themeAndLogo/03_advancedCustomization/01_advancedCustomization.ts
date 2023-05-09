@@ -244,7 +244,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       const linkParentChildPage = await advancedCustomizationPage.getHowToUseParentsChildThemesLink(page);
       await expect(linkParentChildPage)
         .to
-        .contains('https://devdocs.prestashop.com/1.7/themes/reference/template_inheritance/parent_child_feature/');
+        .contains('https://devdocs.prestashop-project.org/1.7/themes/reference/template_inheritance/parent_child_feature/');
     });
   });
 });

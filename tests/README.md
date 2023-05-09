@@ -28,7 +28,7 @@ We use [Mocha](https://mochajs.org/), [Playwright](https://github.com/microsoft/
 
 ## How to write e2e tests
 
-Please refer to our [documentation](https://devdocs.prestashop.com/8/testing/ui-tests/how-to-contribute-and-create-ui-tests/).
+Please refer to our [documentation](https://devdocs.prestashop-project.org/8/testing/ui-tests/how-to-contribute-and-create-ui-tests/).
 
 # Unit tests
 
