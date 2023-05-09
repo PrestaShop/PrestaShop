@@ -69,6 +69,10 @@ services:
     arguments:
       - '@prestashop.bundle.form.data_transformer.idn_converter'
 
+  PrestaShopBundle\Form\Admin\Type\GeoCoordinatesType:
+    arguments:
+        - "@translator"
+
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
   PrestaShopBundle\Form\Admin\Category\SimpleCategory:
     deprecated: ~
