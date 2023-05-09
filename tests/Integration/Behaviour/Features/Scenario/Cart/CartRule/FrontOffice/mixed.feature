@@ -1,4 +1,6 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags fo-cart-rule-mixed
 @restore-all-tables-before-feature
+@fo-cart-rule-mixed
 Feature: Cart rule (mixed) calculation with multiple cart rules
   As a customer
   I must be able to have correct cart total when adding cart rules
@@ -91,3 +93,48 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     Then my cart total should be 82.205 tax included
     #known to fail on previous
     #Then my cart total using previous calculation method should be 82.205 tax included
+
+  Scenario: Percentage reduction cart rule and gift product cart rule applied to the same cart
+    Given I have an empty default cart
+    And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
+    And there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And cart rule "cartrule1" has a discount code "foo1"
+    And there is a cart rule named "cartrule12" that applies a percent discount of 10.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And cart rule "cartrule12" has a discount code "foo12"
+    And cart rule "cartrule12" offers a gift product "product3"
+    And I add 1 items of product "product1" in my cart
+    And I should have 1 different products in my cart
+    And total cart shipping fees should be 7.0 tax excluded
+    And my cart total should be 26.8 tax excluded
+    When I apply the discount code "foo12"
+    Then my cart total should be 24.8 tax excluded
+    And I should have 2 products in my cart
+    When I apply the discount code "foo1"
+    Then my cart total should be 15.9 tax excluded
+    And I should have 2 products in my cart
+    And at least one cart rule applies today for customer with id 0
+
+  Scenario: 1 product in cart, cart rule giving gift out of stock, and global cart rule should be inserted without error (test PR #8361)
+    Given I have an empty default cart
+    And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
+    And product "product4" is out of stock
+    And there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And cart rule "cartrule1" has a discount code "foo1"
+    And there is a cart rule named "cartrule13" that applies a percent discount of 10.0% with priority 13, quantity of 1000 and quantity per user 1000
+    And cart rule "cartrule13" has a discount code "foo13"
+    And cart rule "cartrule13" offers a gift product "product4"
+    And I add 1 items of product "product1" in my cart
+    And I should have 1 different products in my cart
+    And total cart shipping fees should be 7.0 tax excluded
+    And my cart total should be 26.8 tax excluded
+    When I apply the discount code "foo13"
+    Then my cart total should be 24.8 tax excluded
+    Then cart rule "cartrule1" can be applied to my cart
+    When I apply the discount code "foo1"
+    Then my cart total should be 15.9 tax excluded
+    And I should have 1 products in my cart
+    And at least one cart rule applies today for customer with id 0
