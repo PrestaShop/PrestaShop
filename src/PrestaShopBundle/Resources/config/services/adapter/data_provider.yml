@@ -107,11 +107,17 @@ services:
     calls:
       - [ "setEmployeeId", [ "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0" ] ]
 
-  prestashop.categories_provider:
-    class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+  prestashop.categories_provider_builder:
+    class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProviderBuilder
     arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.addon.theme.repository'
       - "%prestashop.addons.categories%"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.theme_name?service('prestashop.core.addon.theme.repository').getInstanceByName(service('prestashop.adapter.legacy.context').getContext().shop.theme_name).getModulesToEnable():[]"
+
+  prestashop.categories_provider:
+    lazy: true
+    class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+    factory: [ '@prestashop.categories_provider_builder', 'build' ]
 
   prestashop.adapter.data_provider.default_route:
     class: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider
