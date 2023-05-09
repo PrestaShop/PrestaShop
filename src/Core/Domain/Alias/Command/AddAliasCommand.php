@@ -75,7 +75,7 @@ class AddAliasCommand
     }
 
     /**
-     * @param string[] $aliasId
+     * @param string[] $array
      *
      * @throws InvalidArgumentException
      */
@@ -89,7 +89,7 @@ class AddAliasCommand
     }
 
     /**
-     * @param string $aliasId
+     * @param string $string
      *
      * @throws InvalidArgumentException
      */
