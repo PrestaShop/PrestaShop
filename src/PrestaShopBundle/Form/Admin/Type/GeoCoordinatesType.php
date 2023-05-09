@@ -28,10 +28,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 /**
  * This form class is responsible to create a geolocation latitude/longitude coordinates field.
