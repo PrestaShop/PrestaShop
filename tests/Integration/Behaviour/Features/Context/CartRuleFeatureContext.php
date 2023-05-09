@@ -573,7 +573,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      * so to identify lastError in steps we will use this custom map,
      * which will eventually allow us to reuse LastExceptionTrait and assert exceptions by codes
      *
-     * @return int[]
+     * @return int
      */
     private function getCartRuleValidityCodeByMessage(string $message): int
     {
