@@ -525,7 +525,7 @@ class MailCore extends ObjectModel
             }
             ShopUrl::cacheMainDomainForShop((int) $idShop);
             /* don't attach the logo as */
-            if (isset($logo)) {
+            if (isset($logo) && $configuration['PS_MAIL_TYPE'] != Mail::TYPE_TEXT) {
                 $templateVars['{shop_logo}'] = $message->embed(\Swift_Image::fromPath($logo));
             }
 
