@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags bo-delete-product
 @restore-all-tables-before-feature
+@bo-delete-product
 Feature: Delete product from cart in Back Office (BO)
   As a BO user I must be able to delete products from cart
   Background:
@@ -9,7 +10,6 @@ Feature: Delete product from cart in Back Office (BO)
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
 
-  @bo-delete-product
   Scenario: Delete standard product from cart
     Given I create an empty cart "dummy_cart" for customer "testCustomer"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
@@ -17,7 +17,6 @@ Feature: Delete product from cart in Back Office (BO)
     When I delete product "Mug The best is yet to come" from cart "dummy_cart"
     Then cart "dummy_cart" should not contain product "Mug The best is yet to come"
 
-  @bo-delete-product
   Scenario: Delete standard product from cart when cart has another identical product added as a gift
     Given I create an empty cart "dummy_cart_2" for customer "testCustomer"
     And I add 2 products "Mountain fox notebook" to the cart "dummy_cart_2"

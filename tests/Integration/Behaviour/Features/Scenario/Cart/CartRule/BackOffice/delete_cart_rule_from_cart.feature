@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags bo-delete-cart-rule
 @restore-all-tables-before-feature
+@bo-delete-cart-rule
 Feature: Delete cart rule from cart in Back Office (BO)
   As a BO user I must be able to delete cart rules from cart
   Background:
@@ -10,7 +11,6 @@ Feature: Delete cart rule from cart in Back Office (BO)
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
 
-  @bo-delete-cart-rule
   Scenario: Delete cart rule with gift product
     Given I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And product "Mug The best is yet to come" quantity in cart "dummy_cart" should be 2 excluding gift products
@@ -19,7 +19,6 @@ Feature: Delete cart rule from cart in Back Office (BO)
     When I delete voucher "giftFoxNotebook" from cart "dummy_cart"
     Then cart "dummy_cart" should not contain gift product "Mountain fox notebook"
 
-  @bo-delete-cart-rule
   Scenario: Delete cart rule with gift product when same product as gift already exists in cart
     Given I create an empty cart "dummy_cart_2" for customer "testCustomer"
     And I add 3 products "Mountain fox notebook" to the cart "dummy_cart_2"
