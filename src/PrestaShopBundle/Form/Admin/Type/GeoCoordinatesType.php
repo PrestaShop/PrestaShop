@@ -85,6 +85,8 @@ class GeoCoordinatesType extends AbstractType
         $resolver->setDefaults([
             'label_latitude' => $this->translator->trans('Latitude', [], 'Admin.Global'),
             'label_longitude' => $this->translator->trans('Longitude', [], 'Admin.Global'),
+            'compound' => true,
+            'inherit_data' => true,
         ]);
         $resolver
             ->setAllowedTypes('label_latitude', 'string')

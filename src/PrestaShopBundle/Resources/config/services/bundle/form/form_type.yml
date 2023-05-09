@@ -73,6 +73,7 @@ services:
     arguments:
         - "@translator"
 
+  PrestaShopBundle\Form\Admin\Type\LocaleChoiceType:
   PrestaShopBundle\Form\Admin\Type\DateRangeType:
   PrestaShopBundle\Form\Admin\Category\SimpleCategory:
     deprecated: ~
