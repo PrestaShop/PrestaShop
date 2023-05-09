@@ -32,6 +32,16 @@ class ModuleManager extends BOBasePage {
 
   private readonly searchModuleButton: string;
 
+  private readonly uploadModuleButton: string;
+
+  private readonly uploadModal: string;
+
+  private readonly uploadModuleLink: string;
+
+  private readonly uploadModuleModalSuccessMessage: string;
+
+  private readonly uploadModuleModalCloseButton: string;
+
   private readonly topMenuDiv: string;
 
   private readonly bulkActionsButton: string;
@@ -110,6 +120,11 @@ class ModuleManager extends BOBasePage {
     // Header Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
+    this.uploadModuleButton = '#page-header-desc-configuration-add_module';
+    this.uploadModal = '#importDropzone';
+    this.uploadModuleLink = `${this.uploadModal} div.module-import-start p.module-import-start-main-text a`;
+    this.uploadModuleModalSuccessMessage = `${this.uploadModal} div.module-import-success p.module-import-success-msg`;
+    this.uploadModuleModalCloseButton = '#module-modal-import-closing-cross';
 
     // Top menu
     this.topMenuDiv = 'div.module-top-menu';
@@ -166,18 +181,29 @@ class ModuleManager extends BOBasePage {
   Methods
    */
 
+  /**
+   * Upload module
+   * @param page {Page} Browser tab
+   * @param file {string} File to upload
+   * @return {Promise<string>}
+   */
   async uploadModule(page: Page, file: string): Promise<string | null> {
-    await this.waitForSelectorAndClick(page, '#page-header-desc-configuration-add_module');
+    await this.waitForSelectorAndClick(page, this.uploadModuleButton);
 
-    await this.uploadOnFileChooser(page, '#importDropzone > div.module-import-start > p.module-import-start-main-text > a', file);
+    await this.uploadOnFileChooser(page, this.uploadModuleLink, file);
 
-    return this.getTextContent(page, '#importDropzone > div.module-import-success > p.module-import-success-msg');
+    return this.getTextContent(page, this.uploadModuleModalSuccessMessage);
   }
 
+  /**
+   * Close upload module modal
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
   async closeUploadModuleModal(page: Page): Promise<boolean> {
-    await this.waitForSelectorAndClick(page, '#module-modal-import-closing-cross');
+    await this.waitForSelectorAndClick(page, this.uploadModuleModalCloseButton);
 
-    return this.elementNotVisible(page, '#importDropzone', 1000);
+    return this.elementNotVisible(page, this.uploadModal, 1000);
   }
 
   /**
