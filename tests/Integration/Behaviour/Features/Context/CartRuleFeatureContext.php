@@ -37,8 +37,10 @@ use DateInterval;
 use DateTime;
 use Db;
 use Order;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use RuntimeException;
+use Tests\Resources\DatabaseDump;
 use Validate;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
@@ -456,7 +458,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @todo: What is this method supposed to assert. Especially in cases when it checks customer id 0??
      * @When /^at least one cart rule applies today for customer with id (\d+)$/
      */
     public function someCartRulesExistTodayForCustomerWithId($customerId)
@@ -465,6 +466,46 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         if (!$result) {
             throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
+    }
+
+    /**
+     * @Given discount code :cartRuleReference is not applied to my cart
+     *
+     * @param string $code
+     *
+     * @return void
+     */
+    public function assertDiscountCodeIsNotAppliedToCurrentCart(string $code): void
+    {
+        $cartRuleId = $this->getSharedStorage()->get($code);
+
+        /** @var array<string, mixed> $cartRule */
+        foreach ($this->getCurrentCart()->getCartRules() as $cartRule) {
+            if ((int) $cartRule['id_cart_rule'] === $cartRuleId) {
+                throw new RuntimeException(sprintf('Cart rule with code "%s" is applied to current cart', $code));
+            }
+        }
+    }
+
+    /**
+     * @Given discount code :cartRuleReference is applied to my cart
+     *
+     * @param string $code
+     *
+     * @return void
+     */
+    public function assertDiscountCodeIsAppliedToCurrentCart(string $code): void
+    {
+        $cartRuleId = $this->getSharedStorage()->get($code);
+
+        /** @var array<string, mixed> $cartRule */
+        foreach ($this->getCurrentCart()->getCartRules() as $cartRule) {
+            if ((int) $cartRule['id_cart_rule'] === $cartRuleId) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('Cart rule with code "%s" is not applied to current cart', $code));
     }
 
     /**
@@ -566,6 +607,29 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         if ($result != $expectedErrorMessage) {
             throw new \RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
         }
+    }
+
+    /**
+     * @BeforeScenario @restore-cart-rules-before-scenario
+     *
+     * @return void
+     */
+    public static function restoreCartRules(): void
+    {
+        DatabaseDump::restoreTables(['cart_rule', 'cart_rule_shop']);
+        DatabaseDump::restoreTables([
+            'cart_rule',
+            'cart_rule_shop',
+            'cart_rule_lang',
+            'cart_cart_rule',
+            'cart_rule_carrier',
+            'cart_rule_combination',
+            'cart_rule_country',
+            'cart_rule_group',
+            'cart_rule_product_rule',
+            'cart_rule_product_rule_group',
+            'cart_rule_product_rule_value',
+        ]);
     }
 
     /**
