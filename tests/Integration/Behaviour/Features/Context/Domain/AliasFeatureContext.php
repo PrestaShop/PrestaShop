@@ -31,6 +31,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\ToggleAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -90,6 +92,27 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I toggle alias with following information:
+     *
+     * @param TableNode $table
+     */
+    public function toggleAlias(TableNode $table): void
+    {
+        $aliasReferences = $table->getColumnsHash();
+
+        foreach ($aliasReferences as $aliasReference) {
+            /** @var string $aliasId */
+            $aliasId = $this->getSharedStorage()->get($aliasReference['id reference']);
+
+            try {
+                $this->getCommandBus()->handle(new ToggleAliasCommand(new AliasId((int) $aliasId)));
+            } catch (InvalidArgumentException $exception) {
+                $this->setLastException($exception);
+            }
+        }
+    }
+
+    /**
      * @Then I should get error that alias cannot be empty
      * @Then I should get error that search term cannot be empty
      *
@@ -131,6 +154,14 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
                 $expectedAlias['search'],
                 'Unexpected alias reference'
             );
+
+            if (!empty($expectedAlias['active'])) {
+                Assert::assertSame(
+                    $alias['active'],
+                    $expectedAlias['active'],
+                    'Unexpected alias active field'
+                );
+            }
 
             if (!empty($expectedAlias['id reference'])) {
                 $idsByIdReferences[$expectedAlias['id reference']] = $alias['id_alias'];
