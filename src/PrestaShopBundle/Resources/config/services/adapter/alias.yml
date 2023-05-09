@@ -19,3 +19,8 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\ToggleAliasHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\ToggleAliasCommand
