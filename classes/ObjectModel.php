@@ -1967,7 +1967,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             /** @var PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration $imageFormatConfiguration */
             $imageFormatConfiguration = ServiceLocator::get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
-            $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();            
+            $configuredImageFormats = $imageFormatConfiguration->getGenerationFormats();
 
             $types = ImageType::getImagesTypes();
             foreach ($types as $image_type) {
