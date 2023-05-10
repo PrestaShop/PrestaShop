@@ -28,16 +28,20 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use AttributeGroup;
 use Behat\Gherkin\Node\TableNode;
+use Language;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\AddAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\EditAttributeCommand;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Query\GetAttributeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\EditableAttribute;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\AttributeGroupConstraintException;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
@@ -60,12 +64,39 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @TODO temporary so tests for attributes can be created, since they need attribute group.
+     * Proper attribute group creation and behat implementation are done in PR #31502
+     * and should be used from there once it's merged.
+     *
+     * @When I create attribute group :reference with specified properties:
+     */
+    public function createAttributeGroup(string $reference, TableNode $node): void
+    {
+        $properties = $node->getRowsHash();
+        $attributeGroup = new AttributeGroup();
+        $name = [];
+        $publicName = [];
+        foreach (Language::getLanguages() as $language) {
+            $name[$language['id_lang']] = $properties['name'];
+            $publicName[$language['id_lang']] = $properties['public_name'];
+        }
+
+        $attributeGroup->public_name = $publicName;
+        $attributeGroup->name = $name;
+        $attributeGroup->group_type = $properties['type'];
+        $attributeGroup->add();
+
+        $this->getSharedStorage()->set($reference, (int) $attributeGroup->id);
+    }
+
+    /**
      * @When I create attribute :reference with specified properties:
      */
     public function createAttribute(string $reference, TableNode $node): void
     {
-        $properties = $node->getRowsHash();
-        $attributeId = $this->createAttributeUsingCommand($properties['attribute_group_id'], $properties['value'], $properties['color']);
+        $properties = $this->localizeByRows($node);
+        $attributeGroupId = $this->referenceToId($properties['attribute_group']);
+        $attributeId = $this->createAttributeUsingCommand($attributeGroupId, $properties['value'], $properties['color']);
 
         $this->getSharedStorage()->set($reference, $attributeId->getValue());
     }
@@ -75,69 +106,46 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
      */
     public function editAttribute(string $reference, TableNode $node): void
     {
-        $attributeId = SharedStorage::getStorage()->get($reference);
+        $properties = $this->localizeByRows($node);
 
-        $properties = $node->getRowsHash();
-        $this->editAttributeUsingCommand($attributeId, $properties['attribute_group_id'], $properties['value'], $properties['color']);
+        $attributeId = $this->referenceToId($reference);
+        $attributeGroupId = $this->referenceToId($properties['attribute_group']);
+        $this->editAttributeUsingCommand($attributeId, $attributeGroupId, $properties['value'], $properties['color']);
     }
 
     /**
-     * @Then attribute  :reference should be deleted
+     * @Then attribute :reference should have the following properties:
+     *
+     * @param string $reference
+     * @param TableNode $tableNode
      */
-    public function assertAttributeIsDeleted(string $reference): void
+    public function assertAttributeGroupProperties(string $reference, TableNode $tableNode): void
     {
-        $attributeId = SharedStorage::getStorage()->get($reference);
-
-        try {
-            $this->getQueryBus()->handle(new GetAttributeForEditing($attributeId));
-
-            throw new NoExceptionAlthoughExpectedException(sprintf('Attribute %s exists, but it was expected to be deleted', $reference));
-        } catch (AttributeNotFoundException $e) {
-            SharedStorage::getStorage()->clear($reference);
-        }
-    }
-
-    /**
-     * @Then attribute :reference :field should be :value
-     */
-    public function assertFieldValue(string $reference, string $field, string $value): void
-    {
-        $attributeId = SharedStorage::getStorage()->get($reference);
-        $attribute = new \Attribute($attributeId);
-
-        if ($attribute->$field !== $value) {
-            throw new RuntimeException(sprintf('Attribute "%s" has "%s" %s, but "%s" was expected.', $reference, $attribute->$field, $field, $value));
-        }
-    }
-
-    /**
-     * @Then attribute :reference :field in default language should be :value
-     */
-    public function assertFieldWithLangValue(string $reference, string $field, string $value): void
-    {
-        $attributeId = SharedStorage::getStorage()->get($reference);
-        $attribute = new \Attribute($attributeId);
-
-        if ($attribute->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf('Attribute  "%s" has "%s" %s, but "%s" was expected.', $reference, $attribute->$field[$this->defaultLangId], $field, $value));
-        }
+        $attribute = $this->getAttribute($reference);
+        $data = $this->localizeByRows($tableNode);
+        $attributeGroupId = $this->referenceToId($data['attribute_group']);
+        Assert::assertEquals($data['value'], $attribute->getValue());
+        Assert::assertEquals($data['color'], $attribute->getColor());
+        Assert::assertEquals($attributeGroupId, $attribute->getAttributeGroupId()->getValue());
     }
 
     /**
      * @param int $attributeGroupId
-     * @param string $valueDefaultLanguage
+     * @param array $localizedValues
      * @param string $color
      *
      * @return AttributeId
+     *
+     * @throws AttributeConstraintException
      */
     private function createAttributeUsingCommand(
         int $attributeGroupId,
-        string $valueDefaultLanguage,
+        array $localizedValues,
         string $color
     ): AttributeId {
         $command = new AddAttributeCommand(
             $attributeGroupId,
-            [$this->defaultLangId => $valueDefaultLanguage],
+            $localizedValues,
             $color,
             [$this->defaultShopId]
         );
@@ -148,27 +156,66 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param int $attributeId
      * @param int $attributeGroupId
-     * @param string $valueDefaultLanguage
+     * @param array $localizedValue
      * @param string $color
      *
-     * @return AttributeId
+     * @return void
      *
      * @throws AttributeGroupConstraintException
+     * @throws AttributeConstraintException
      */
     private function editAttributeUsingCommand(
         int $attributeId,
         int $attributeGroupId,
-        string $valueDefaultLanguage,
+        array $localizedValue,
         string $color
-    ): AttributeId {
+    ): void {
         $command = new EditAttributeCommand(
             $attributeId,
             $attributeGroupId,
-            [$this->defaultLangId => $valueDefaultLanguage],
+            $localizedValue,
             $color,
             [$this->defaultShopId]
         );
 
-        return $this->getCommandBus()->handle($command);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I delete attribute :reference
+     */
+    public function deleteAttribute(string $reference): void
+    {
+        $attributeId = $this->referenceToId($reference);
+
+        $this->getCommandBus()->handle(new DeleteAttributeCommand($attributeId));
+    }
+
+    /**
+     * @Then attribute :reference should be deleted
+     */
+    public function assertAttributeIsDeleted(string $reference): void
+    {
+        $attributeId = $this->referenceToId($reference);
+
+        try {
+            $this->getQueryBus()->handle(new GetAttributeForEditing($attributeId));
+
+            throw new NoExceptionAlthoughExpectedException(sprintf('Attribute %s exists, but it was expected to be deleted', $reference));
+        } catch (AttributeNotFoundException $e) {
+            $this->getSharedStorage()->clear($reference);
+        }
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return EditableAttribute
+     */
+    private function getAttribute(string $reference): EditableAttribute
+    {
+        $id = $this->referenceToId($reference);
+
+        return $this->getCommandBus()->handle(new GetAttributeForEditing($id));
     }
 }
