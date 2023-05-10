@@ -2,6 +2,7 @@
 import CommonPage from '@pages/commonPage';
 
 import {Frame, Page} from 'playwright';
+import {expect} from 'chai';
 
 /**
  * BO parent page, contains functions that can be used on all BO page
@@ -899,8 +900,12 @@ export default class BOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async closeSfToolBar(page: Frame|Page): Promise<void> {
-    if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
-      await page.click(this.sfCloseToolbarLink);
+    const toolbarSelector = `${this.sfToolbarMainContentDiv}[style='display: block;']`;
+
+    if (await this.elementVisible(page, toolbarSelector, 1000)) {
+      await this.waitForSelectorAndClick(page, this.sfCloseToolbarLink);
+      const toolbarStillVisible = await this.elementVisible(page, toolbarSelector, 1000);
+      await expect(toolbarStillVisible).to.be.false;
     }
   }
 
