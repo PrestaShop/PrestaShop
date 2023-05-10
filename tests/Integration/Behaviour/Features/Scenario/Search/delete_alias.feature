@@ -43,10 +43,7 @@ Feature: Delete aliases from Back Office (BO)
       | alias2       | blues  | blouse |
       | alias3       | large  | big    |
       | alias4       | huge   | big    |
-    And I bulk delete following aliases:
-      | reference |
-      | alias3    |
-      | alias4    |
+    And I bulk delete aliases "alias3,alias4"
     Given following aliases should exist:
       | id reference | alias  | search |
       | alias1       | bloose | blouse |

@@ -172,20 +172,16 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I bulk delete following aliases:
+     * @When I bulk delete aliases :aliasReferences
      *
      * @param TableNode $aliasesList
      */
-    public function bulkDeleteAlias(TableNode $aliasesList): void
+    public function bulkDeleteAlias(string $aliasReferences): void
     {
-        $aliasIds = [];
-
-        foreach ($aliasesList->getColumnsHash() as $aliasInfo) {
-            $aliasIds[] = (int) $this->getSharedStorage()->get($aliasInfo['reference']);
-        }
-
         try {
-            $this->getCommandBus()->handle(new BulkDeleteAliasCommand($aliasIds));
+            $this->getCommandBus()->handle(new BulkDeleteAliasCommand(
+                array_map('intval', $this->referencesToIds($aliasReferences))
+            ));
         } catch (AliasException $e) {
             $this->setLastException($e);
         }
