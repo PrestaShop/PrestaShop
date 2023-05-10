@@ -76,6 +76,8 @@ class PositionsControllerTest extends TestCase
 
         parent::setUp();
 
+        $this->client = self::createClient();
+
         // Unregister all modules hooked on displayHome
         Db::getInstance()->execute(sprintf(
             'DELETE FROM `%shook_module` WHERE `id_hook` = %d',
@@ -117,7 +119,6 @@ class PositionsControllerTest extends TestCase
         $this->secondModuleId = $moduleRepository->getModule('bankwire')->database->get('id');
         $this->hookId = Hook::getIdByName('displayHome');
 
-        $this->client = self::createClient();
         $this->router = self::getContainer()->get('router');
     }
 
