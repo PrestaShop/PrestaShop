@@ -788,11 +788,10 @@ class CartRuleCore extends ObjectModel
 
         if ($this->reduction_exclude_special) {
             $products = $cart->getProducts();
-            $is_ok = false;
+            $is_ok = true;
             foreach ($products as $product) {
-                if (!$product['reduction_applies']) {
-                    $is_ok = true;
-
+                if ($product['reduction_applies']) {
+                    $is_ok = false;
                     break;
                 }
             }
