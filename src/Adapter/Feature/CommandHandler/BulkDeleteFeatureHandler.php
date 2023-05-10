@@ -68,10 +68,10 @@ class BulkDeleteFeatureHandler extends AbstractBulkCommandHandler implements Bul
     /**
      * {@inheritDoc}
      */
-    protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface
+    protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
     {
         return new BulkFeatureException(
-            $coughtExceptions,
+            $caughtExceptions,
             'Errors occurred during Feature bulk delete action',
             BulkFeatureException::FAILED_BULK_DELETE
         );

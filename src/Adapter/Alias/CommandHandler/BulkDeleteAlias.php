@@ -29,15 +29,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\BulkDeleteAliasHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Handles command which deletes aliases in bulk action
  */
-class BulkDeleteAlias extends AbstractBulkHandler implements BulkDeleteAliasHandlerInterface
+class BulkDeleteAlias extends AbstractBulkCommandHandler implements BulkDeleteAliasHandlerInterface
 {
     /**
      * @var AliasRepository
@@ -54,28 +59,36 @@ class BulkDeleteAlias extends AbstractBulkHandler implements BulkDeleteAliasHand
      */
     public function handle(BulkDeleteAliasCommand $command): void
     {
-        $this->handleBulkAction($command->getAliasIds(), $command);
+        $this->handleBulkAction($command->getAliasIds(), AliasException::class);
     }
 
     /**
-     * @param AliasId $aliasId
-     * @param BulkDeleteAliasCommand $command
+     * @param AliasId $id
      *
      * @return void
-     *
-     * @throws InvalidArgumentException
      */
-    protected function handleSingleAction(AliasId $aliasId, $command = null)
+    protected function handleSingleAction($id): void
     {
-        if (!($command instanceof BulkDeleteAliasCommand)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected argument $command of type "%s". Got "%s"',
-                    BulkDeleteAliasCommand::class,
-                    var_export($command, true)
-                ));
-        }
+        $this->aliasRepository->delete($id);
+    }
 
-        $this->aliasRepository->delete($aliasId);
+    /**
+     * {@inheritDoc}
+     */
+    protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
+    {
+        return new BulkAliasException(
+            $caughtExceptions,
+            'Errors occurred during Feature bulk delete action',
+            BulkFeatureException::FAILED_BULK_DELETE
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function supports($id): bool
+    {
+        return $id instanceof AliasId;
     }
 }

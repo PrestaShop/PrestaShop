@@ -71,11 +71,11 @@ abstract class AbstractBulkCommandHandler
     }
 
     /**
-     * @param Throwable[] $coughtExceptions
+     * @param Throwable[] $caughtExceptions
      *
      * @return BulkCommandExceptionInterface
      */
-    abstract protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface;
+    abstract protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface;
 
     /**
      * @param mixed $id

@@ -173,9 +173,9 @@ class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
         $this->handleBulkAction($ids, $exceptionToCatch, $command);
     }
 
-    protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface
+    protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
     {
-        return new BulkFeatureException($coughtExceptions, 'test bulk action failed');
+        return new BulkFeatureException($caughtExceptions, 'test bulk action failed');
     }
 
     /**
