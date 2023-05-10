@@ -104,7 +104,6 @@ class AddCountry extends BOBasePage {
 
   /**
    * Get the value of an input
-   *
    * @param page {Page} Browser tab
    * @param input {string} ID of the input
    * @returns {Promise<string>}
@@ -136,8 +135,7 @@ class AddCountry extends BOBasePage {
   }
 
   /**
-   * Get the value of an select
-   *
+   * Get the value of a select
    * @param page {Page} Browser tab
    * @param input {string} ID of the input
    * @returns {Promise<string>}
@@ -161,7 +159,6 @@ class AddCountry extends BOBasePage {
 
   /**
    * Get the value of an input
-   *
    * @param page {Page} Browser tab
    * @param input {string} ID of the input
    * @returns {Promise<string>}

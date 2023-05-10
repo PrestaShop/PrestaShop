@@ -444,8 +444,9 @@ class WebService extends BOBasePage {
   /* Form methods */
   /**
    * Set the webservice status
-   * @param page
-   * @param status
+   * @param page {Page} Browser tab
+   * @param status {boolean} Status of the Webservice
+   * @returns {Promise<string>}
    */
   async setWebserviceStatus(page: Page, status: boolean): Promise<string> {
     await this.setChecked(page, this.enableWebserviceToggleInput(status ? 1 : 0));

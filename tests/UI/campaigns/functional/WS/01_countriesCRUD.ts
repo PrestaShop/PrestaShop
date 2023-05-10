@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import ws from '@utils/ws';
 
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
@@ -18,8 +19,6 @@ import {WebservicePermission} from '@data/types/webservice';
 
 import {expect} from 'chai';
 import type {APIRequestContext, BrowserContext, Page} from 'playwright';
-import {DOMParser} from '@xmldom/xmldom';
-import * as xpath from 'xpath-ts';
 
 const baseContext: string = 'functional_WS_countriesCRUD';
 
@@ -29,7 +28,6 @@ describe('WS - Countries : CRUD', async () => {
   let page: Page;
   let wsKey: string = '';
 
-  const domParser: DOMParser = new DOMParser();
   const wsKeyDescription: string = 'Webservice Key - Countries';
   const wsKeyPermissions: WebservicePermission[] = [
     {
@@ -145,16 +143,14 @@ describe('WS - Countries : CRUD', async () => {
         });
         await expect(apiResponse.status()).to.eq(200);
 
-        const txtResponse: string = await apiResponse.text();
-        const xmlDocument: Document = domParser.parseFromString(txtResponse);
-        const docElement: HTMLElement = xmlDocument.documentElement;
-        expect(docElement.nodeName).to.be.eq('prestashop');
+        const xml: string = await apiResponse.text();
+        expect(ws.getWSRootNodeName(xml)).to.be.eq('prestashop');
 
-        const rootNodes: Node[] = xpath.select('/prestashop/*', xmlDocument) as Node[];
+        const rootNodes = ws.getWSNodes(xml, '/prestashop/*');
         expect(rootNodes.length).to.be.eq(1);
         expect(rootNodes[0].nodeName).to.be.eq('countries');
 
-        const countriesNode: Element[] = xpath.select('/prestashop/countries/*', xmlDocument) as Element[];
+        const countriesNode = ws.getWSNodes(xml, '/prestashop/countries/*');
         expect(countriesNode.length).to.be.gt(0);
 
         for (let c: number = 0; c < countriesNode.length; c++) {
@@ -188,17 +184,15 @@ describe('WS - Countries : CRUD', async () => {
         });
         await expect(apiResponse.status()).to.eq(201);
 
-        const txtResponse: string = await apiResponse.text();
-        const xmlDocument: Document = domParser.parseFromString(txtResponse);
-        const docElement: HTMLElement = xmlDocument.documentElement;
-        expect(docElement.nodeName).to.be.eq('prestashop');
+        const xml: string = await apiResponse.text();
+        expect(ws.getWSRootNodeName(xml)).to.be.eq('prestashop');
 
-        const rootNodes: Node[] = xpath.select('/prestashop/*', xmlDocument) as Node[];
+        const rootNodes = ws.getWSNodes(xml, '/prestashop/*');
         expect(rootNodes.length).to.be.eq(1);
         expect(rootNodes[0].nodeName).to.be.eq('country');
 
         // Attribute : id
-        countryNodeID = xpath.select1('string(/prestashop/country/id)', xmlDocument) as string;
+        countryNodeID = ws.getWSNodeValue(xml, '/prestashop/country/id');
         expect(countryNodeID).to.be.eq(parseInt(countryNodeID, 10).toString());
       });
 
@@ -212,52 +206,33 @@ describe('WS - Countries : CRUD', async () => {
         });
         await expect(apiResponse.status()).to.eq(200);
 
-        const txtResponse: string = await apiResponse.text();
-        const xmlDocument: Document = domParser.parseFromString(txtResponse);
-        const docElement: HTMLElement = xmlDocument.documentElement;
-        expect(docElement.nodeName).to.be.eq('prestashop');
+        const xml: string = await apiResponse.text();
+        expect(ws.getWSRootNodeName(xml)).to.be.eq('prestashop');
 
-        const rootNodes: Node[] = xpath.select('/prestashop/*', xmlDocument) as Node[];
+        const rootNodes = ws.getWSNodes(xml, '/prestashop/*');
         expect(rootNodes.length).to.be.eq(1);
         expect(rootNodes[0].nodeName).to.be.eq('country');
 
-        const objectNodes: Element[] = xpath.select('/prestashop/country/*', xmlDocument) as Element[];
+        const objectNodes = ws.getWSNodes(xml, '/prestashop/country/*');
         expect(objectNodes.length).to.be.gt(0);
-
-        const createDocument: Document = domParser.parseFromString(xmlCreate);
 
         // Check nodes are equal to them done in Create
         for (let o: number = 0; o < objectNodes.length; o++) {
-          const objectNode: Element = objectNodes[o];
+          const oNode: Element = objectNodes[o];
 
-          if (objectNode.nodeName === 'id') {
-            expect(objectNode.textContent).to.be.eq(countryNodeID);
-          } else if (objectNode.nodeName === 'name') {
-            const objectNodeValueEN: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="1"])`,
-              createDocument,
-            ) as string;
-            const createNodeValueEN: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="1"])`,
-              xmlDocument,
-            ) as string;
+          if (oNode.nodeName === 'id') {
+            expect(oNode.textContent).to.be.eq(countryNodeID);
+          } else if (oNode.nodeName === 'name') {
+            const objectNodeValueEN = ws.getWSNodeValue(xmlCreate, `/prestashop/country/${oNode.nodeName}/language[@id="1"]`);
+            const createNodeValueEN = ws.getWSNodeValue(xmlCreate, `/prestashop/country/${oNode.nodeName}/language[@id="1"]`);
             expect(objectNodeValueEN).to.be.eq(createNodeValueEN);
 
-            const objectNodeValueFR: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="2"])`,
-              createDocument,
-            ) as string;
-            const createNodeValueFR: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="2"])`,
-              xmlDocument,
-            ) as string;
+            const objectNodeValueFR = ws.getWSNodeValue(xmlCreate, `/prestashop/country/${oNode.nodeName}/language[@id="2"]`);
+            const createNodeValueFR = ws.getWSNodeValue(xmlCreate, `/prestashop/country/${oNode.nodeName}/language[@id="2"]`);
             expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
           } else {
-            const objectNodeValue: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName})`,
-              createDocument,
-            ) as string;
-            expect(objectNode.textContent).to.be.eq(objectNodeValue);
+            const objectNodeValue: string = ws.getWSNodeValue(xmlCreate, `/prestashop/country/${oNode.nodeName}`);
+            expect(oNode.textContent).to.be.eq(objectNodeValue);
           }
         }
       });
@@ -312,52 +287,47 @@ describe('WS - Countries : CRUD', async () => {
       it('should check all values', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkEditCountryValues', baseContext);
 
-        const createDocument: Document = domParser.parseFromString(xmlCreate);
-
-        const xmlValueIDZone = xpath.select1('string(/prestashop/country/id_zone)', createDocument) as string;
+        const xmlValueIDZone = ws.getWSNodeValue(xmlCreate, '/prestashop/country/id_zone');
         const valueIDZone = await addCountryPage.getSelectValue(page, 'id_zone');
         expect(valueIDZone).to.be.eq(xmlValueIDZone);
 
-        const xmlValueIDCurrency = xpath.select1('string(/prestashop/country/id_currency)', createDocument) as string;
+        const xmlValueIDCurrency = ws.getWSNodeValue(xmlCreate, '/prestashop/country/id_currency');
         const valueIDCurrency = await addCountryPage.getSelectValue(page, 'id_currency');
         expect(valueIDCurrency).to.be.eq(xmlValueIDCurrency);
 
-        const xmlValueCallPrefix = xpath.select1('string(/prestashop/country/call_prefix)', createDocument) as string;
+        const xmlValueCallPrefix = ws.getWSNodeValue(xmlCreate, '/prestashop/country/call_prefix');
         const valueCallPrefix = await addCountryPage.getInputValue(page, 'call_prefix');
         expect(valueCallPrefix).to.be.eq(xmlValueCallPrefix);
 
-        const xmlValueIsoCode = xpath.select1('string(/prestashop/country/iso_code)', createDocument) as string;
+        const xmlValueIsoCode = ws.getWSNodeValue(xmlCreate, '/prestashop/country/iso_code');
         const valueIsoCode = await addCountryPage.getInputValue(page, 'iso_code');
         expect(valueIsoCode).to.be.eq(xmlValueIsoCode);
 
-        const xmlValueActive = xpath.select1('string(/prestashop/country/active)', createDocument) as string;
+        const xmlValueActive = ws.getWSNodeValue(xmlCreate, '/prestashop/country/active');
         const valueActive = (await addCountryPage.isCheckboxChecked(page, 'active')) ? '1' : '0';
         expect(valueActive).to.be.eq(xmlValueActive);
 
-        const xmlValueContainsStates = xpath.select1('string(/prestashop/country/contains_states)', createDocument) as string;
+        const xmlValueContainsStates = ws.getWSNodeValue(xmlCreate, '/prestashop/country/contains_states');
         const valueContainsStates = (await addCountryPage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
         expect(valueContainsStates).to.be.eq(xmlValueContainsStates);
 
-        const xmlValueNeedIDNumber = xpath.select1(
-          'string(/prestashop/country/need_identification_number)',
-          createDocument,
-        ) as string;
+        const xmlValueNeedIDNumber = ws.getWSNodeValue(xmlCreate, '/prestashop/country/need_identification_number');
         const valueNeedIDNumber = (await addCountryPage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
         expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
 
-        const xmlValueNeedZipCode = xpath.select1('string(/prestashop/country/need_zip_code)', createDocument) as string;
+        const xmlValueNeedZipCode = ws.getWSNodeValue(xmlCreate, '/prestashop/country/need_zip_code');
         const valueNeedZipCode = (await addCountryPage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
         expect(valueNeedZipCode).to.be.eq(xmlValueNeedZipCode);
 
-        const xmlValueZipCode = xpath.select1('string(/prestashop/country/zip_code_format)', createDocument) as string;
+        const xmlValueZipCode = ws.getWSNodeValue(xmlCreate, '/prestashop/country/zip_code_format');
         const valueZipCode = await addCountryPage.getInputValue(page, 'zipCodeFormat');
         expect(valueZipCode).to.be.eq(xmlValueZipCode);
 
-        const xmlValueNameEn = xpath.select1('string(/prestashop/country/name/language[@id="1"])', createDocument) as string;
+        const xmlValueNameEn = ws.getWSNodeValue(xmlCreate, '/prestashop/country/name/language[@id="1"]');
         const valueNameEn = (await addCountryPage.getInputValue(page, 'nameEn'));
         expect(valueNameEn).to.be.eq(xmlValueNameEn);
 
-        const xmlValueNameFr = xpath.select1('string(/prestashop/country/name/language[@id="2"])', createDocument) as string;
+        const xmlValueNameFr = ws.getWSNodeValue(xmlCreate, '/prestashop/country/name/language[@id="2"]');
         const valueNameFr = (await addCountryPage.getInputValue(page, 'nameFr'));
         expect(valueNameFr).to.be.eq(xmlValueNameFr);
       });
@@ -391,17 +361,15 @@ describe('WS - Countries : CRUD', async () => {
         });
         await expect(apiResponse.status()).to.eq(200);
 
-        const txtResponse: string = await apiResponse.text();
-        const xmlDocument: Document = domParser.parseFromString(txtResponse);
-        const docElement: HTMLElement = xmlDocument.documentElement;
-        expect(docElement.nodeName).to.be.eq('prestashop');
+        const xml: string = await apiResponse.text();
+        expect(ws.getWSRootNodeName(xml)).to.be.eq('prestashop');
 
-        const rootNodes: Node[] = xpath.select('/prestashop/*', xmlDocument) as Node[];
+        const rootNodes = ws.getWSNodes(xml, '/prestashop/*');
         expect(rootNodes.length).to.be.eq(1);
         expect(rootNodes[0].nodeName).to.be.eq('country');
 
         // Attribute : id
-        const countryUpdateNodeID = xpath.select1('string(/prestashop/country/id)', xmlDocument) as string;
+        const countryUpdateNodeID = ws.getWSNodeValue(xml, '/prestashop/country/id');
         expect(countryUpdateNodeID).to.be.eq(countryNodeID);
       });
 
@@ -415,52 +383,35 @@ describe('WS - Countries : CRUD', async () => {
         });
         await expect(apiResponse.status()).to.eq(200);
 
-        const txtResponse: string = await apiResponse.text();
-        const xmlDocument: Document = domParser.parseFromString(txtResponse);
-        const docElement: HTMLElement = xmlDocument.documentElement;
-        expect(docElement.nodeName).to.be.eq('prestashop');
+        const xml: string = await apiResponse.text();
+        const xmlUId = xmlUpdate.replace('{fetchedId}', countryNodeID);
 
-        const rootNodes: Node[] = xpath.select('/prestashop/*', xmlDocument) as Node[];
+        expect(ws.getWSRootNodeName(xml)).to.be.eq('prestashop');
+
+        const rootNodes = ws.getWSNodes(xml, '/prestashop/*');
         expect(rootNodes.length).to.be.eq(1);
         expect(rootNodes[0].nodeName).to.be.eq('country');
 
-        const objectNodes: Element[] = xpath.select('/prestashop/country/*', xmlDocument) as Element[];
+        const objectNodes = ws.getWSNodes(xml, '/prestashop/country/*');
         expect(objectNodes.length).to.be.gt(0);
-
-        const updateDocument: Document = domParser.parseFromString(xmlUpdate.replace('{fetchedId}', countryNodeID));
 
         // Check nodes are equal to them done in Create
         for (let o: number = 0; o < objectNodes.length; o++) {
-          const objectNode: Element = objectNodes[o];
+          const oNode: Element = objectNodes[o];
 
-          if (objectNode.nodeName === 'id') {
-            expect(objectNode.textContent).to.be.eq(countryNodeID);
-          } else if (objectNode.nodeName === 'name') {
-            const objectNodeValueEN: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="1"])`,
-              updateDocument,
-            ) as string;
-            const createNodeValueEN: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="1"])`,
-              xmlDocument,
-            ) as string;
+          if (oNode.nodeName === 'id') {
+            expect(oNode.textContent).to.be.eq(countryNodeID);
+          } else if (oNode.nodeName === 'name') {
+            const objectNodeValueEN = ws.getWSNodeValue(xmlUId, `/prestashop/country/${oNode.nodeName}/language[@id="1"]`);
+            const createNodeValueEN = ws.getWSNodeValue(xml, `/prestashop/country/${oNode.nodeName}/language[@id="1"]`);
             expect(objectNodeValueEN).to.be.eq(createNodeValueEN);
 
-            const objectNodeValueFR: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="2"])`,
-              updateDocument,
-            ) as string;
-            const createNodeValueFR: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName}/language[@id="2"])`,
-              xmlDocument,
-            ) as string;
+            const objectNodeValueFR = ws.getWSNodeValue(xmlUId, `/prestashop/country/${oNode.nodeName}/language[@id="2"]`);
+            const createNodeValueFR = ws.getWSNodeValue(xml, `/prestashop/country/${oNode.nodeName}/language[@id="2"]`);
             expect(objectNodeValueFR).to.be.eq(createNodeValueFR);
           } else {
-            const objectNodeValue: string = xpath.select1(
-              `string(/prestashop/country/${objectNode.nodeName})`,
-              updateDocument,
-            ) as string;
-            expect(objectNode.textContent).to.be.eq(objectNodeValue);
+            const objectNodeValue = ws.getWSNodeValue(xmlUId, `/prestashop/country/${oNode.nodeName}`);
+            expect(oNode.textContent).to.be.eq(objectNodeValue);
           }
         }
       });
@@ -492,52 +443,49 @@ describe('WS - Countries : CRUD', async () => {
       it('should check all values', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkEditCountryValues', baseContext);
 
-        const updateDocument: Document = domParser.parseFromString(xmlUpdate.replace('{fetchedId}', countryNodeID));
+        const xmlUId = xmlUpdate.replace('{fetchedId}', countryNodeID);
 
-        const xmlValueIDZone = xpath.select1('string(/prestashop/country/id_zone)', updateDocument) as string;
+        const xmlValueIDZone = ws.getWSNodeValue(xmlUId, '/prestashop/country/id_zone');
         const valueIDZone = await addCountryPage.getSelectValue(page, 'id_zone');
         expect(valueIDZone).to.be.eq(xmlValueIDZone);
 
-        const xmlValueIDCurrency = xpath.select1('string(/prestashop/country/id_currency)', updateDocument) as string;
+        const xmlValueIDCurrency = ws.getWSNodeValue(xmlUId, '/prestashop/country/id_currency');
         const valueIDCurrency = await addCountryPage.getSelectValue(page, 'id_currency');
         expect(valueIDCurrency).to.be.eq(xmlValueIDCurrency);
 
-        const xmlValueCallPrefix = xpath.select1('string(/prestashop/country/call_prefix)', updateDocument) as string;
+        const xmlValueCallPrefix = ws.getWSNodeValue(xmlUId, '/prestashop/country/call_prefix');
         const valueCallPrefix = await addCountryPage.getInputValue(page, 'call_prefix');
         expect(valueCallPrefix).to.be.eq(xmlValueCallPrefix);
 
-        const xmlValueIsoCode = xpath.select1('string(/prestashop/country/iso_code)', updateDocument) as string;
+        const xmlValueIsoCode = ws.getWSNodeValue(xmlUId, '/prestashop/country/iso_code');
         const valueIsoCode = await addCountryPage.getInputValue(page, 'iso_code');
         expect(valueIsoCode).to.be.eq(xmlValueIsoCode);
 
-        const xmlValueActive = xpath.select1('string(/prestashop/country/active)', updateDocument) as string;
+        const xmlValueActive = ws.getWSNodeValue(xmlUId, '/prestashop/country/active');
         const valueActive = (await addCountryPage.isCheckboxChecked(page, 'active')) ? '1' : '0';
         expect(valueActive).to.be.eq(xmlValueActive);
 
-        const xmlValueContainsStates = xpath.select1('string(/prestashop/country/contains_states)', updateDocument) as string;
+        const xmlValueContainsStates = ws.getWSNodeValue(xmlUId, '/prestashop/country/contains_states');
         const valueContainsStates = (await addCountryPage.isCheckboxChecked(page, 'contains_states')) ? '1' : '0';
         expect(valueContainsStates).to.be.eq(xmlValueContainsStates);
 
-        const xmlValueNeedIDNumber = xpath.select1(
-          'string(/prestashop/country/need_identification_number)',
-          updateDocument,
-        ) as string;
+        const xmlValueNeedIDNumber = ws.getWSNodeValue(xmlUId, '/prestashop/country/need_identification_number');
         const valueNeedIDNumber = (await addCountryPage.isCheckboxChecked(page, 'need_identification_number')) ? '1' : '0';
         expect(valueNeedIDNumber).to.be.eq(xmlValueNeedIDNumber);
 
-        const xmlValueNeedZipCode = xpath.select1('string(/prestashop/country/need_zip_code)', updateDocument) as string;
+        const xmlValueNeedZipCode = ws.getWSNodeValue(xmlUId, '/prestashop/country/need_zip_code');
         const valueNeedZipCode = (await addCountryPage.isCheckboxChecked(page, 'need_zip_code')) ? '1' : '0';
         expect(valueNeedZipCode).to.be.eq(xmlValueNeedZipCode);
 
-        const xmlValueZipCode = xpath.select1('string(/prestashop/country/zip_code_format)', updateDocument) as string;
+        const xmlValueZipCode = ws.getWSNodeValue(xmlUId, '/prestashop/country/zip_code_format');
         const valueZipCode = await addCountryPage.getInputValue(page, 'zipCodeFormat');
         expect(valueZipCode).to.be.eq(xmlValueZipCode);
 
-        const xmlValueNameEn = xpath.select1('string(/prestashop/country/name/language[@id="1"])', updateDocument) as string;
+        const xmlValueNameEn = ws.getWSNodeValue(xmlUId, '/prestashop/country/name/language[@id="1"]');
         const valueNameEn = (await addCountryPage.getInputValue(page, 'nameEn'));
         expect(valueNameEn).to.be.eq(xmlValueNameEn);
 
-        const xmlValueNameFr = xpath.select1('string(/prestashop/country/name/language[@id="2"])', updateDocument) as string;
+        const xmlValueNameFr = ws.getWSNodeValue(xmlUId, '/prestashop/country/name/language[@id="2"]');
         const valueNameFr = (await addCountryPage.getInputValue(page, 'nameFr'));
         expect(valueNameFr).to.be.eq(xmlValueNameFr);
       });
