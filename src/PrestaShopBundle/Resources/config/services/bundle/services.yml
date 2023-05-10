@@ -42,12 +42,6 @@ services:
     class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
     arguments: [ "%database_prefix%" ]
 
-  prestashop.service.product:
-    class: PrestaShopBundle\Service\ProductService
-    arguments:
-      - "@prestashop.adapter.data_provider.product"
-    deprecated: ~
-
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService
     properties:

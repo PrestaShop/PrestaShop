@@ -92,24 +92,6 @@ services:
   prestashop.core.module.updater:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
 
-  prestashop.adapter.admin.model.product:
-    class: PrestaShopBundle\Model\Product\AdminModelAdapter
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\LegacyContext'
-      - '@PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper'
-      - '@PrestaShop\PrestaShop\Adapter\Tools'
-      - "@prestashop.adapter.data_provider.product"
-      - "@prestashop.adapter.data_provider.supplier"
-      - "@prestashop.adapter.data_provider.warehouse"
-      - "@prestashop.adapter.data_provider.feature"
-      - "@prestashop.adapter.data_provider.pack"
-      - "@prestashop.adapter.shop.context"
-      - "@prestashop.adapter.data_provider.tax"
-      - '@prestashop.adapter.legacy.configuration'
-      - "@router"
-      - '@PrestaShopBundle\Utils\FloatParser'
-    deprecated: ~
-
   prestashop.adapter.translation_route_finder:
     class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder
     arguments:
