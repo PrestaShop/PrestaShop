@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -78,7 +79,7 @@ class PricingType extends TranslatorAwareType
                 'label' => $this->trans('Cost price', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'label_subtitle' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'currency' => $this->defaultCurrencyIsoCode,
                 'modify_all_shops' => true,
                 'constraints' => [

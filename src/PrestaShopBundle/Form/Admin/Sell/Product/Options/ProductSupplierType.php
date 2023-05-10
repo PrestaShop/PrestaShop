@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -113,8 +114,8 @@ class ProductSupplierType extends TranslatorAwareType
             ->add('price_tax_excluded', MoneyType::class, [
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'currency' => $this->defaultCurrencyIsoCode,
-                'scale' => self::PRESTASHOP_DECIMALS,
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'scale' => FormHelper::DEFAULT_PRICE_PRECISION,
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),

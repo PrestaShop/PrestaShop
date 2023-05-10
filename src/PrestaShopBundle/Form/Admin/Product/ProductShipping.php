@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -174,7 +175,7 @@ class ProductShipping extends CommonAbstractType
                 FormType\NumberType::class,
                 [
                     'unit' => $this->weightUnit,
-                    'scale' => static::PRESTASHOP_WEIGHT_DECIMALS,
+                    'scale' => FormHelper::DEFAULT_WEIGHT_PRECISION,
                     'required' => false,
                     'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
                     'constraints' => [

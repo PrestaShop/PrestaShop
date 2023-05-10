@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -72,7 +73,7 @@ class UnitPriceType extends TranslatorAwareType
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
@@ -88,7 +89,7 @@ class UnitPriceType extends TranslatorAwareType
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax incl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),

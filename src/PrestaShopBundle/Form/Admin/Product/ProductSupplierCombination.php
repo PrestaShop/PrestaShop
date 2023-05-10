@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -84,7 +85,7 @@ class ProductSupplierCombination extends CommonAbstractType
                 'product_price_currency',
                 FormType\ChoiceType::class,
                 [
-                    'choices' => $this->formatDataChoicesList($this->currencyDataProvider->getCurrencies(), 'id_currency'),
+                    'choices' => FormHelper::formatDataChoicesList($this->currencyDataProvider->getCurrencies(), 'id_currency'),
                     'required' => true,
                     'attr' => [
                         'class' => 'custom-select',

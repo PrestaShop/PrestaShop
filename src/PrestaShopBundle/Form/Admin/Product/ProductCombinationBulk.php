@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -69,7 +70,7 @@ class ProductCombinationBulk extends CommonAbstractType
         $builder->add('cost_price', MoneyType::class, [
             'required' => false,
             'label' => $this->translator->trans('Cost Price', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+            'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
             'currency' => $isoCode,
         ])
             ->add('impact_on_weight', NumberType::class, [

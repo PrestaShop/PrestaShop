@@ -28,8 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Feature;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -60,7 +60,7 @@ class ProductFeature extends CommonAbstractType
         $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
         $this->featureDataProvider = $featureDataProvider;
-        $this->features = $this->formatDataChoicesList(
+        $this->features = FormHelper::formatDataChoicesList(
             $this->featureDataProvider->getFeatures($this->locales[0]['id_lang']),
             'id_feature'
         );
@@ -108,7 +108,7 @@ class ProductFeature extends CommonAbstractType
                 return;
             }
 
-            $choices = $this->formatDataChoicesList(
+            $choices = FormHelper::formatDataChoicesList(
                 $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
@@ -125,7 +125,7 @@ class ProductFeature extends CommonAbstractType
                 return;
             }
 
-            $choices = $this->formatDataChoicesList(
+            $choices = FormHelper::formatDataChoicesList(
                 $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
