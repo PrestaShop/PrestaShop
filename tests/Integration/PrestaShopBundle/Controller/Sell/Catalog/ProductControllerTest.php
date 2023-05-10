@@ -47,7 +47,7 @@ class ProductControllerTest extends FormGridControllerTestCase
     private const TEST_NAME = 'testProductName';
     private const TEST_QUANTITY = 987;
     private const TEST_MINIMAL_QUANTITY = 2;
-    private const TEST_RETAIL_PRICE_TAX_EXCLUDED = '87,700000';
+    private const TEST_RETAIL_PRICE_TAX_EXCLUDED = 87.7;
 
     /**
      * @var bool
@@ -172,7 +172,7 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[options][visibility][visibility]' => ProductVisibility::VISIBLE_IN_CATALOG,
             'product[options][visibility][available_for_order]' => true,
             'product[options][visibility][show_price]' => true,
-            'product[options][visibility][online_only]' => '0',
+            'product[options][visibility][online_only]' => false,
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
             'product[stock][options][stock_location]' => 'test stock location',
@@ -184,6 +184,7 @@ class ProductControllerTest extends FormGridControllerTestCase
             // tax included value should be calculated for viewing only, so it doesn't matter what its value is before submit
             'product[pricing][retail_price][price_tax_included]' => 1992491249214,
             'product[pricing][retail_price][tax_rules_group_id]' => 1,
+            'product[pricing][on_sale]' => false,
             'product[pricing][wholesale_price]' => 30.5,
             'product[seo][meta_title][1]' => 'meta title 1',
             'product[seo][meta_description][1]' => 'meta description 1',
@@ -212,11 +213,11 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[details][references][reference]' => 'reference1',
             'product[details][show_condition]' => true,
             'product[details][condition]' => ProductCondition::NEW,
-            'product[shipping][dimensions][width]' => '10,4',
-            'product[shipping][dimensions][height]' => '10,2',
-            'product[shipping][dimensions][depth]' => '5,5',
+            'product[shipping][dimensions][width]' => 10.4,
+            'product[shipping][dimensions][height]' => 10.2,
+            'product[shipping][dimensions][depth]' => 5.5,
             'product[shipping][dimensions][weight]' => 2,
-            'product[shipping][additional_shipping_cost]' => '20,400000',
+            'product[shipping][additional_shipping_cost]' => 20.4,
             'product[shipping][delivery_time_note_type]' => DeliveryTimeNoteType::TYPE_SPECIFIC,
             'product[shipping][delivery_time_notes][in_stock][1]' => 'in stock notes1',
             'product[shipping][delivery_time_notes][out_of_stock][1]' => 'out of stock notes1',
@@ -235,9 +236,9 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[pricing][retail_price][price_tax_excluded]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
             'product[pricing][retail_price][tax_rules_group_id]' => 1,
             // tax rules group with id 1 value is 4%, so tax incl = retail_price_tax_excluded + (retail_price_tax_excluded*0.04)
-            'product[pricing][retail_price][price_tax_included]' => '91,208000',
+            'product[pricing][retail_price][price_tax_included]' => 91.208,
             'product[pricing][on_sale]' => false,
-            'product[pricing][wholesale_price]' => '30,500000',
+            'product[pricing][wholesale_price]' => 30.5,
             'product[seo][meta_title][1]' => 'meta title 1',
             'product[seo][meta_description][1]' => 'meta description 1',
             'product[seo][link_rewrite][1]' => 'link-rewrite-1',
