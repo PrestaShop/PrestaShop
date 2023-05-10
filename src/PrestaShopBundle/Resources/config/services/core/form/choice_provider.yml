@@ -22,10 +22,8 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LocalizationPackByIsoCodeChoiceProvider:
     arguments:
-      - '@prestashop.core.localization.pack.loader.remote'
-      - '@prestashop.core.localization.pack.loader.local'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@translator'
+      $remoteLocalizationPackLoader: '@PrestaShop\PrestaShop\Core\Localization\Pack\Loader\RemoteLocalizationPackLoader'
+      $localLocalizationPackLoader: '@PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalLocalizationPackLoader'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\NonInstalledLocalizationChoiceProvider:
     arguments:
@@ -93,8 +91,6 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeZipChoiceProvider:
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider:
     arguments:
