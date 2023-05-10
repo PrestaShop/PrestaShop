@@ -70,7 +70,7 @@ export default class themeAndLogoBasePage extends BOBasePage {
   }
 
   /**
-   * Close growl message and return its value
+   * Close growl message
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
