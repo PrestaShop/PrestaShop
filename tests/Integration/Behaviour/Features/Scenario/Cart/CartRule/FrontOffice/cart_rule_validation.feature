@@ -11,13 +11,6 @@ Feature: Cart rule application is validated before it is applied to cart
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And I create cart rule "cart_rule_1" with following properties:
       | name[en-US]                            | cartrule1              |
-      | description                            | provides 50% discount  |
-      | highlight                              | true                   |
-      | is_active                              | true                   |
-      | allow_partial_use                      | true                   |
-      | priority                               | 1                      |
-      | valid_from                             | 2000-01-01 11:05:00    |
-      | valid_to                               | 3000-12-01 00:00:00    |
       | total_quantity                         | 1000                   |
       | quantity_per_user                      | 1000                   |
       | free_shipping                          | false                  |
@@ -27,13 +20,6 @@ Feature: Cart rule application is validated before it is applied to cart
       | discount_application_type              | order_without_shipping |
     And I create cart rule "cart_rule_2" with following properties:
       | name[en-US]                            | cartrule2              |
-      | description                            | provides 10$ discount  |
-      | highlight                              | true                   |
-      | is_active                              | true                   |
-      | allow_partial_use                      | true                   |
-      | priority                               | 1                      |
-      | valid_from                             | 2000-01-01 11:05:00    |
-      | valid_to                               | 3000-12-01 00:00:00    |
       | total_quantity                         | 10                     |
       | quantity_per_user                      | 10                     |
       | free_shipping                          | false                  |
@@ -45,13 +31,6 @@ Feature: Cart rule application is validated before it is applied to cart
       | discount_application_type              | order_without_shipping |
     And I create cart rule "cart_rule_3" with following properties:
       | name[en-US]       | cartrule3              |
-      | description       | provides free shipping |
-      | highlight         | true                   |
-      | is_active         | true                   |
-      | allow_partial_use | true                   |
-      | priority          | 1                      |
-      | valid_from        | 2000-01-01 11:05:00    |
-      | valid_to          | 3000-12-01 00:00:00    |
       | total_quantity    | 10                     |
       | quantity_per_user | 10                     |
       | free_shipping     | true                   |

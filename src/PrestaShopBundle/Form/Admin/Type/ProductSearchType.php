@@ -98,7 +98,7 @@ class ProductSearchType extends TranslatorAwareType
                             'filters' => $options['filters'],
                         ]);
                     } else {
-                        return $router->generate('admin_products_v2_search_associations', [
+                        return $router->generate('admin_products_search_products_for_association', [
                             'languageCode' => $languageIsoCode,
                             'query' => '__QUERY__',
                         ]);

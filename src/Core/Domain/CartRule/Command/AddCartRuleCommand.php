@@ -213,12 +213,12 @@ class AddCartRuleCommand
         return $this;
     }
 
-    public function getValidFrom(): DateTime
+    public function getValidFrom(): ?DateTime
     {
         return $this->validFrom;
     }
 
-    public function getValidTo(): DateTime
+    public function getValidTo(): ?DateTime
     {
         return $this->validTo;
     }
