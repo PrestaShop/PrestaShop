@@ -196,6 +196,7 @@ class ModuleManagerBuilder
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$categoriesProvider,
                 self::$moduleDataProvider,
+                new \PrestaShop\PrestaShop\Adapter\Shop\Context(),
                 Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
