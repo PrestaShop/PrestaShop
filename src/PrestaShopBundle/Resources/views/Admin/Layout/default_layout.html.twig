@@ -223,7 +223,7 @@
     {% endif %}
 
     <div
-      class="{% if display_header %}content-div{% endif %}{% if showContentHeader|default(true) is same as(false) %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
+      class="{% if display_header %}content-div{% endif %}{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
       {{ renderhook('displayAdminAfterHeader', {}) }}
 
       {% if display_header %}

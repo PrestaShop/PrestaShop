@@ -193,7 +193,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // Pagination
-        $paginationParameters = $request->attributes->all();
+        $paginationParameters = $request->attributes->get('_route_params');
         $paginationParameters['_route'] = 'admin_product_catalog';
         $categoriesForm = $this->createForm(ProductCategories::class);
         if (!empty($combinedFilterParameters['filter_category'])) {
