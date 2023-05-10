@@ -50,7 +50,7 @@ final class PackStockTypeChoiceProvider implements FormChoiceProviderInterface
      */
     public function __construct(
         TranslatorInterface $translator,
-        ShopConfigurationInterface $shopConfiguration,
+        ShopConfigurationInterface $shopConfiguration
     ) {
         $this->translator = $translator;
         $this->shopConfiguration = $shopConfiguration;
@@ -66,7 +66,7 @@ final class PackStockTypeChoiceProvider implements FormChoiceProviderInterface
         $defaultLabel = sprintf(
             '%s (%s)',
             $this->translator->trans('Default', [], 'Admin.Global'),
-            array_search($this->shopConfiguration->getInt('PS_PACK_STOCK_TYPE'), $choices, true)
+            array_search((int) $this->shopConfiguration->get('PS_PACK_STOCK_TYPE'), $choices, true)
         );
 
         $choices[$defaultLabel] = PackStockType::STOCK_TYPE_DEFAULT;

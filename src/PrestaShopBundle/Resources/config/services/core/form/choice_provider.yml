@@ -9,7 +9,15 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\:
     resource: '../../../Core/Form/ChoiceProvider/*'
 
+  # Todo: migrate controllers to use DI and make this private.
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
+    public: true
+
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider:
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider:
+    arguments:
+      $combinationFeature: '@PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider:
     arguments:
@@ -116,18 +124,6 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesChoiceProvider:
     arguments:
       - '@prestashop.adapter.order_message.order_message_provider'
-
-  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DeliveryTimeNoteTypesProvider:
-    arguments:
-      - '@translator'
-      - '@router'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-
-  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider:
-    arguments:
-      - '@translator'
-      - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ORDER_OUT_OF_STOCK")'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider:
     arguments:
