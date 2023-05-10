@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\ToggleAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
@@ -95,6 +96,8 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      * @When I toggle alias with following information:
      *
      * @param TableNode $table
+     *
+     * @throws AliasConstraintException
      */
     public function toggleAlias(TableNode $table): void
     {
@@ -157,8 +160,8 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
             if (!empty($expectedAlias['active'])) {
                 Assert::assertSame(
-                    $alias['active'],
-                    $expectedAlias['active'],
+                    (int) $alias['active'],
+                    (int) $expectedAlias['active'],
                     'Unexpected alias active field'
                 );
             }
