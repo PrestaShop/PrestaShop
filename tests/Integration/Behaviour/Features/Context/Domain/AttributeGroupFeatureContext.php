@@ -75,7 +75,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I delete attribute group :reference
      */
-    public function deleteManufacturer(string $reference): void
+    public function deleteAttributeGroup(string $reference): void
     {
         $attributeGroupId = $this->referenceToId($reference);
 

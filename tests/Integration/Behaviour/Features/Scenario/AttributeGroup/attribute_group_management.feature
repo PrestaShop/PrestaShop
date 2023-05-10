@@ -4,7 +4,7 @@
 Feature: Attribute group management
   PrestaShop allows BO users to manage product attribute groups
   As a BO user
-  I must be able to create, edit and delete product features
+  I must be able to create, edit and delete attribute groups
 
   Background:
     Given shop "shop1" with name "test_shop" exists
