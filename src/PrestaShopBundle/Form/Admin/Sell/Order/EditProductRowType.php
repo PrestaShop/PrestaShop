@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\QuantityType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -100,10 +101,9 @@ class EditProductRowType extends TranslatorAwareType
                     'class' => 'editProductPriceTaxIncl',
                 ],
             ])
-            ->add('quantity', NumberType::class, [
+            ->add('quantity', QuantityType::class, [
                 'label' => false,
                 'data' => 1,
-                'scale' => 0,
                 'attr' => [
                     'min' => 1,
                     'class' => 'editProductQuantity',

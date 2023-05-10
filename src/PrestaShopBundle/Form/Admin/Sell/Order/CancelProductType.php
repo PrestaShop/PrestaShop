@@ -28,10 +28,10 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
+use PrestaShopBundle\Form\Admin\Type\QuantityType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,13 +55,12 @@ class CancelProductType extends TranslatorAwareType
                         ],
                     ]
                 )
-                ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
+                ->add('quantity_' . $product->getOrderDetailId(), QuantityType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $this->trans('Quantity', 'Admin.Global', []),
+                    'label' => $this->trans('Quantity', 'Admin.Global'),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
-                    'scale' => 0,
                     'unit' => '/ ' . $product->getQuantity(),
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), TextType::class, [

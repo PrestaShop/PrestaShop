@@ -780,6 +780,7 @@ services:
   PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType:
   PrestaShopBundle\Form\Admin\Type\ShippingInclusionChoiceType:
   PrestaShopBundle\Form\Admin\Type\ProductSearchType:
+  PrestaShopBundle\Form\Admin\Type\QuantityType:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\TitleType:
 

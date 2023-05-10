@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
+use PrestaShopBundle\Form\Admin\Type\QuantityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -117,19 +118,7 @@ class CatalogPriceRuleType extends AbstractType
                 'placeholder' => false,
                 'choices' => $this->getModifiedGroupChoices(),
             ])
-            ->add('from_quantity', NumberType::class, [
-                'scale' => 0,
-                'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => $this->translator->trans(
-                            '%s is invalid.',
-                            [],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
+            ->add('from_quantity', QuantityType::class)
             ->add('price', NumberType::class, [
                 'required' => false,
                 'scale' => 6,
