@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
@@ -42,17 +42,17 @@ class ProductTypeChoiceProvider implements FormChoiceProviderInterface, FormChoi
     private $translator;
 
     /**
-     * @var Configuration
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
     /**
      * @param TranslatorInterface $translator
-     * @param Configuration $configuration
+     * @param ShopConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
-        Configuration $configuration
+        ShopConfigurationInterface $configuration
     ) {
         $this->translator = $translator;
         $this->configuration = $configuration;

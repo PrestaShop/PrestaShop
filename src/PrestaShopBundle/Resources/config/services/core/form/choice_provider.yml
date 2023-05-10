@@ -2,6 +2,9 @@ services:
   _defaults:
     public: false
     autowire: true
+    bind:
+      $langId: '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      $themeCollection: '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider:
     arguments:
@@ -12,9 +15,6 @@ services:
       - '@=service("prestashop.adapter.data_provider.language").getLanguages(false)'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-      - '@prestashop.adapter.data_provider.country'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider:
     arguments:
@@ -34,26 +34,18 @@ services:
       - '@prestashop.adapter.data_provider.language'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-      - '@prestashop.adapter.data_provider.country'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider:
     arguments:
       - '@prestashop.adapter.data_provider.group'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider:
     arguments:
       - '@prestashop.adapter.data_provider.carrier'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider:
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-      - '@prestashop.adapter.data_provider.order_state'
-      - '@PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator'
-      - '@translator'
+      $orderStateDataProvider: '@prestashop.adapter.data_provider.order_state'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider:
     arguments:
@@ -64,18 +56,14 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactByIdChoiceProvider:
     arguments:
       - '@prestashop.adapter.contact.repository'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TranslationTypeChoiceProvider:
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\EmailContentTypeChoiceProvider:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider:
-    arguments:
-      - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoiceProvider:
-    arguments:
-      - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider:
     arguments:
@@ -159,7 +147,6 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerAddressesChoiceProvider:
     arguments:
       - '@prestashop.adapter.data_provider.customer'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesNameChoiceProvider:
     arguments:
@@ -186,12 +173,7 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ORDER_OUT_OF_STOCK")'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider:
-    arguments:
-      - '@translator'
-      - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomizationFieldTypeChoiceProvider:
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider:
     arguments:
       - '@prestashop.core.command_bus'
@@ -199,27 +181,12 @@ services:
       - "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider:
-    arguments:
-      - '@translator'
-      - '@prestashop.adapter.legacy.configuration'
-
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider:
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdConfigurableChoiceProvider:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-      - '@prestashop.adapter.data_provider.country'
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\SpecificPricePriorityChoiceProvider:
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider:
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider:
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider:
-
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ReductionTypeChoiceProvider:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DiscountApplicationChoiceProvider:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider:
