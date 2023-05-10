@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use PrestaShopBundle\Exception\NotImplementedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DatabaseDump;
 
@@ -182,7 +181,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $aliasIds = [];
 
         foreach ($aliasesList->getColumnsHash() as $aliasInfo) {
-            $aliasIds[] = $this->getSharedStorage()->get($aliasInfo['reference'])[0]->getValue();
+            $aliasIds[] = (int) $this->getSharedStorage()->get($aliasInfo['reference']);
         }
 
         try {
