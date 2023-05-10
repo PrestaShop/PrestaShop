@@ -33,7 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 
 /**
  * This abstract class helps us build a bulk handler since the principle is often very similar, it might not be
- * compatible with all the handlers, but it helps for many. The exact copy of Product Abstract Bulk Handler.
+ * compatible with all the handlers, but it helps for many. The exact copy of Product Abstract Bulk Handler
+ *
+ * @see PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AbstracBulkHandler
  */
 abstract class AbstractBulkHandler
 {
