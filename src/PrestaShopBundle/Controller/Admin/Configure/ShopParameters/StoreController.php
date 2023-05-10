@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotDeleteStoreException
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class StoreController extends FrameworkBundleAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
