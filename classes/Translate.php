@@ -229,7 +229,7 @@ class TranslateCore
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
-        $str = $_LANGPDF['PDF' . $key] ?? $string;
+        $str = (array_key_exists('PDF' . $key, $_LANGPDF) ? $_LANGPDF['PDF' . $key] : $string);
 
         if (
             $sprintf !== null &&
