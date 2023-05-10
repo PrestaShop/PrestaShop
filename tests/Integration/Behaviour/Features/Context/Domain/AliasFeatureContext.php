@@ -160,17 +160,15 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $reference
      */
-    public function deleteAliasFromDefaultShop(string $reference): void
+    public function deleteAlias(string $reference): void
     {
-        /** @var AliasId[] $aliasIds */
-        $aliasIds = $this->getSharedStorage()->get($reference);
+        /** @var string[] $aliasId */
+        $aliasId = $this->getSharedStorage()->get($reference);
 
-        foreach ($aliasIds as $aliasId) {
-            try {
-                $this->getCommandBus()->handle(new DeleteAliasCommand($aliasId));
-            } catch (AliasException $e) {
-                $this->setLastException($e);
-            }
+        try {
+            $this->getCommandBus()->handle(new DeleteAliasCommand(new AliasId((int) $aliasId)));
+        } catch (AliasException $e) {
+            $this->setLastException($e);
         }
     }
 
@@ -179,7 +177,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $aliasesList
      */
-    public function bulkDeleteProductsFromDefaultShop(TableNode $aliasesList): void
+    public function bulkDeleteAlias(TableNode $aliasesList): void
     {
         $aliasIds = [];
 
@@ -192,16 +190,6 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         } catch (AliasException $e) {
             $this->setLastException($e);
         }
-    }
-
-    /**
-     * @Then alias :reference should not exist anymore
-     *
-     * @param string $reference
-     */
-    public function assertAliasDoesNotExistAnymore(string $reference): void
-    {
-        throw new NotImplementedException();
     }
 
     /**
