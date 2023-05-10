@@ -142,9 +142,7 @@ services:
 
   prestashop.adapter.language.language_pack_installer:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller'
-    arguments:
-      - '@translator'
-      - '@prestashop.core.foundation.version'
+    autowire: true
 
   prestashop.adapter.language.validator:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'

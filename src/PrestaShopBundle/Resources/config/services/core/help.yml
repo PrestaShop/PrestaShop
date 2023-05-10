@@ -6,9 +6,9 @@ services:
   PrestaShop\PrestaShop\Core\Help\Documentation:
     public: true
     class: PrestaShop\PrestaShop\Core\Help\Documentation
+    autowire: true
     arguments:
-      - "@prestashop.core.foundation.version"
-      - "https://help.prestashop-project.org/"
+      $host: "https://help.prestashop-project.org/"
 
   prestashop.core.help.documentation:
     alias: PrestaShop\PrestaShop\Core\Help\Documentation
