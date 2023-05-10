@@ -158,14 +158,7 @@ class AliasRepository extends AbstractObjectModelRepository
 
     public function delete(AliasId $aliasId): void
     {
-        /** @var Alias $alias */
-        $alias = $this->getObjectModel(
-            $aliasId->getValue(),
-            Alias::class,
-            AliasNotFoundException::class
-        );
-
-        $alias->delete();
+        $this->get($aliasId)->delete();
     }
 
 
