@@ -83,4 +83,11 @@ describe('BO - Modules - Module Manager : Upload module', async () => {
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.keycloak);
     await expect(isModuleVisible, 'Module is not visible!').to.be.true;
   });
+
+  it(`should uninstall the module '${Modules.keycloak.name}'`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
+
+    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.keycloak, 'uninstall');
+    await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.keycloak.tag));
+  });
 });
