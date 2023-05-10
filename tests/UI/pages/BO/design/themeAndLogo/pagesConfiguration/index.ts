@@ -53,9 +53,9 @@ class PagesConfigurationPage extends themeAndLogoBasePage {
   /* Methods */
 
   /**
-   * enable/disable
+   * Install/uninstall/enable/disable/reset module
    * @param page {Page} Browser tab
-   * @param module {ModuleData} Module data to install/uninstall
+   * @param module {ModuleData} Module data to install/uninstall/enable/disable/reset
    * @param action {string} Action install/uninstall/enable/disable/reset
    * @return {Promise<string | null>}
    */
