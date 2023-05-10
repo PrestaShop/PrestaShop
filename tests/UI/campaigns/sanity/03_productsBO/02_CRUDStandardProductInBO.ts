@@ -91,6 +91,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     it('should create product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
+      await productsPage.closeSfToolBar(page);
       await productsPage.goToAddProductPage(page);
 
       const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
