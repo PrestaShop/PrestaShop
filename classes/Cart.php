@@ -1369,6 +1369,7 @@ class CartCore extends ObjectModel
             Pack::STOCK_TYPE_PACK_BOTH,
         ];
         $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
+        // We need to SUM up cp.`quantity` because multiple rows could be returned when id_customization filtering is skipped.
         $firstUnionSql = 'SELECT SUM(cp.`quantity`) as first_level_quantity, 0 as pack_quantity
           FROM `' . _DB_PREFIX_ . 'cart_product` cp';
         $secondUnionSql = 'SELECT 0 as first_level_quantity, SUM(cp.`quantity` * p.`quantity`) as pack_quantity
