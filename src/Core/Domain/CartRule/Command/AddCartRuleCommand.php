@@ -43,6 +43,16 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 class AddCartRuleCommand
 {
     /**
+     * @var array<int, string>
+     */
+    private $localizedNames;
+
+    /**
+     * @var CartRuleAction
+     */
+    private $cartRuleAction;
+
+    /**
      * @var string
      */
     private $description = '';
@@ -68,140 +78,98 @@ class AddCartRuleCommand
     private $customerId;
 
     /**
-     * @var array
+     * @var bool
      */
-    private $localizedNames;
+    private $highlightInCart = false;
 
     /**
      * @var bool
      */
-    private $highlightInCart;
-
-    /**
-     * @var bool
-     */
-    private $allowPartialUse;
+    private $allowPartialUse = true;
 
     /**
      * @var int
      */
-    private $priority;
+    private $priority = 1;
 
     /**
      * @var bool
      */
-    private $isActive;
+    private $active = true;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
     private $validFrom;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
     private $validTo;
 
     /**
      * @var int
      */
-    private $totalQuantity;
+    private $totalQuantity = 1;
 
     /**
      * @var int
      */
-    private $quantityPerUser;
+    private $quantityPerUser = 1;
 
-    /**
-     * @var CartRuleAction
-     */
-    private $cartRuleAction;
-
-    /**
-     * @param array $localizedNames
-     * @param bool $highlightInCart
-     * @param bool $allowPartialUse
-     * @param int $priority
-     * @param bool $isActive
-     * @param DateTime $validFrom
-     * @param DateTime $validTo
-     * @param int $totalQuantity
-     * @param int $quantityPerUser
-     * @param CartRuleAction $cartRuleAction
-     *
-     * @throws CartRuleConstraintException
-     */
     public function __construct(
         array $localizedNames,
-        bool $highlightInCart,
-        bool $allowPartialUse,
-        int $priority,
-        bool $isActive,
-        DateTime $validFrom,
-        DateTime $validTo,
-        int $totalQuantity,
-        int $quantityPerUser,
         CartRuleAction $cartRuleAction
     ) {
-        $this->assertDateRangeIsValid($validFrom, $validTo);
         $this->setLocalizedNames($localizedNames);
-        $this->setPriority($priority);
-        $this->setTotalQuantity($totalQuantity);
-        $this->setQuantityPerUser($quantityPerUser);
-        $this->highlightInCart = $highlightInCart;
-        $this->allowPartialUse = $allowPartialUse;
-        $this->isActive = $isActive;
-        $this->validFrom = $validFrom;
-        $this->validTo = $validTo;
         $this->cartRuleAction = $cartRuleAction;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return CustomerId|null
-     */
     public function getCustomerId(): ?CustomerId
     {
         return $this->customerId;
     }
 
     /**
-     * @return array
+     * @return array<int, string>
      */
     public function getLocalizedNames(): array
     {
         return $this->localizedNames;
     }
 
-    /**
-     * @return bool
-     */
     public function isHighlightInCart(): bool
     {
         return $this->highlightInCart;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAllowPartialUse(): bool
+    public function setHighlightInCart(bool $highlight): AddCartRuleCommand
+    {
+        $this->highlightInCart = $highlight;
+
+        return $this;
+    }
+
+    public function allowPartialUse(): bool
     {
         return $this->allowPartialUse;
+    }
+
+    public function setAllowPartialUse(bool $allow): AddCartRuleCommand
+    {
+        $this->allowPartialUse = $allow;
+
+        return $this;
     }
 
     /**
@@ -213,58 +181,94 @@ class AddCartRuleCommand
     }
 
     /**
-     * @return bool
+     * @param int $priority
+     *
+     * @return AddCartRuleCommand
+     *
+     * @throws CartRuleConstraintException
      */
-    public function isActive(): bool
+    public function setPriority(int $priority): AddCartRuleCommand
     {
-        return $this->isActive;
+        if (0 >= $priority) {
+            throw new CartRuleConstraintException(
+                sprintf('Invalid cart rule priority "%s". Must be a positive integer.', $priority),
+                CartRuleConstraintException::INVALID_PRIORITY
+            );
+        }
+
+        $this->priority = $priority;
+
+        return $this;
     }
 
-    /**
-     * @return DateTime
-     */
+    public function active(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): AddCartRuleCommand
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
     public function getValidFrom(): DateTime
     {
         return $this->validFrom;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getValidTo(): DateTime
     {
         return $this->validTo;
     }
 
-    /**
-     * @return int
-     */
+    public function setValidDateRange(DateTime $from, DateTime $to): AddCartRuleCommand
+    {
+        $this->assertDateRangeIsValid($from, $to);
+        $this->validFrom = $from;
+        $this->validTo = $to;
+
+        return $this;
+    }
+
     public function getTotalQuantity(): int
     {
         return $this->totalQuantity;
     }
 
-    /**
-     * @return int
-     */
+    public function setTotalQuantity(int $quantity): AddCartRuleCommand
+    {
+        if (0 > $quantity) {
+            throw new CartRuleConstraintException(sprintf('Quantity cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY);
+        }
+
+        $this->totalQuantity = $quantity;
+
+        return $this;
+    }
+
     public function getQuantityPerUser(): int
     {
         return $this->quantityPerUser;
     }
 
-    /**
-     * @return CartRuleAction
-     */
+    public function setQuantityPerUser(int $quantity): AddCartRuleCommand
+    {
+        if (0 > $quantity) {
+            throw new CartRuleConstraintException(sprintf('Quantity per user cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY_PER_USER);
+        }
+
+        $this->quantityPerUser = $quantity;
+
+        return $this;
+    }
+
     public function getCartRuleAction(): CartRuleAction
     {
         return $this->cartRuleAction;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return AddCartRuleCommand
-     */
     public function setDescription(string $description): AddCartRuleCommand
     {
         $this->description = $description;
@@ -272,11 +276,6 @@ class AddCartRuleCommand
         return $this;
     }
 
-    /**
-     * @param string $code
-     *
-     * @return AddCartRuleCommand
-     */
     public function setCode(string $code): AddCartRuleCommand
     {
         $this->code = $code;
@@ -284,11 +283,6 @@ class AddCartRuleCommand
         return $this;
     }
 
-    /**
-     * @param int $customerId
-     *
-     * @return AddCartRuleCommand
-     */
     public function setCustomerId(int $customerId): AddCartRuleCommand
     {
         $this->customerId = new CustomerId($customerId);
@@ -336,69 +330,6 @@ class AddCartRuleCommand
         return $this;
     }
 
-    /**
-     * @param int $priority
-     *
-     * @return AddCartRuleCommand
-     *
-     * @throws CartRuleConstraintException
-     */
-    private function setPriority(int $priority): AddCartRuleCommand
-    {
-        if (0 >= $priority) {
-            throw new CartRuleConstraintException(
-                sprintf('Invalid cart rule priority "%s". Must be a positive integer.', $priority),
-                CartRuleConstraintException::INVALID_PRIORITY
-            );
-        }
-
-        $this->priority = $priority;
-
-        return $this;
-    }
-
-    /**
-     * @param int $quantity
-     *
-     * @return AddCartRuleCommand
-     *
-     * @throws CartRuleConstraintException
-     */
-    private function setTotalQuantity(int $quantity): AddCartRuleCommand
-    {
-        if (0 > $quantity) {
-            throw new CartRuleConstraintException(sprintf('Quantity cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY);
-        }
-
-        $this->totalQuantity = $quantity;
-
-        return $this;
-    }
-
-    /**
-     * @param int $quantity
-     *
-     * @return AddCartRuleCommand
-     *
-     * @throws CartRuleConstraintException
-     */
-    private function setQuantityPerUser(int $quantity): AddCartRuleCommand
-    {
-        if (0 > $quantity) {
-            throw new CartRuleConstraintException(sprintf('Quantity per user cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY_PER_USER);
-        }
-
-        $this->quantityPerUser = $quantity;
-
-        return $this;
-    }
-
-    /**
-     * @param DateTime $dateFrom
-     * @param DateTime $dateTo
-     *
-     * @throws CartRuleConstraintException
-     */
     private function assertDateRangeIsValid(DateTime $dateFrom, DateTime $dateTo): void
     {
         if ($dateFrom > $dateTo) {

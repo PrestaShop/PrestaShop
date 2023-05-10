@@ -28,10 +28,12 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopException;
 
 /**
@@ -87,9 +89,9 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->description = $command->getDescription();
         $cartRule->code = $command->getCode();
         $cartRule->highlight = $command->isHighlightInCart();
-        $cartRule->partial_use = $command->isAllowPartialUse();
+        $cartRule->partial_use = $command->allowPartialUse();
         $cartRule->priority = $command->getPriority();
-        $cartRule->active = $command->isActive();
+        $cartRule->active = $command->active();
 
         $this->fillCartRuleConditionsFromCommandData($cartRule, $command);
         $this->cartRuleActionFiller->fillUpdatableProperties($cartRule, $command->getCartRuleAction());
@@ -107,8 +109,15 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
     {
         $cartRule->id_customer = null !== $command->getCustomerId() ? $command->getCustomerId()->getValue() : null;
 
-        $cartRule->date_from = $command->getValidFrom()->format('Y-m-d H:i:s');
-        $cartRule->date_to = $command->getValidTo()->format('Y-m-d H:i:s');
+        if (null === $command->getValidFrom() || null === $command->getValidTo()) {
+            $now = new DateTimeImmutable();
+
+            $cartRule->date_from = $now->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $cartRule->date_to = $now->modify('+1 month')->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        } else {
+            $cartRule->date_from = $command->getValidFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $cartRule->date_to = $command->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        }
 
         $minimumAmount = $command->getMinimumAmount();
         if ($minimumAmount) {
