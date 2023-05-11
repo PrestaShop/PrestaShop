@@ -226,6 +226,11 @@
         <target>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
         <note>Line: 197</note>
       </trans-unit>
+      <trans-unit id="2a08dc363eacc877e145bd670893f942">
+        <source>Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
+        <target>Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
+        <note>Line: 197</note>
+      </trans-unit>
       <trans-unit id="48da3cf2897b7f486bdf8657354a3667">
         <source><![CDATA[Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></source>
         <target><![CDATA[Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></target>
