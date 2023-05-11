@@ -172,13 +172,21 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleWithProductRuleRestriction(string $cartRuleName, string $categoryName, int $quantity)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
+        if ($this->getSharedStorage()->exists($cartRuleName)) {
+            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
+            //       it is not ideal, but for now it should work, until restrictions are migrated.
+            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
+        } else {
+            $this->checkCartRuleWithNameExists($cartRuleName);
+            $cartRuleId = $this->cartRules[$cartRuleName]->id;
+        }
+
         $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
         $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
 
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) ' .
-            'VALUES (' . (int) $this->cartRules[$cartRuleName]->id . ', ' . $quantity . ')'
+            'VALUES (' . (int) $cartRuleId . ', ' . $quantity . ')'
         );
         $idProductRuleGroup = Db::getInstance()->Insert_ID();
 
@@ -186,7 +194,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule` (`id_product_rule_group`, `type`) ' .
             'VALUES (' . (int) $idProductRuleGroup . ', "categories")'
         );
-        $idProductRule = Db::getInstance()->Insert_ID();
 
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) ' .
@@ -224,18 +231,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         string $productName,
         int $quantity = 1
     ): void {
-        $this->checkCartRuleWithNameExists($cartRuleName);
+        if ($this->getSharedStorage()->exists($cartRuleName)) {
+            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
+            //       it is not ideal, but for now it should work, until restrictions are migrated.
+            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
+        } else {
+            $this->checkCartRuleWithNameExists($cartRuleName);
+            $cartRuleId = $this->cartRules[$cartRuleName]->id;
+        }
         $this->productFeatureContext->checkProductWithNameExists($productName);
-
         $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
-        $this->cartRules[$cartRuleName]->product_restriction = true;
-        $this->cartRules[$cartRuleName]->reduction_product = $restrictedProduct->id;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = new CartRule($cartRuleId);
+        $cartRule->product_restriction = true;
+        $cartRule->reduction_product = $restrictedProduct->id;
+        $cartRule->save();
+        $this->cartRules[$cartRuleName] = $cartRule;
 
         // The reduction_product is not enough, we need to define product rules for condition (this is done by the controller usually)
         Db::getInstance()->insert(
             'cart_rule_product_rule_group',
-            ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => $quantity]
+            ['id_cart_rule' => $cartRuleId, 'quantity' => $quantity]
         );
         $productRuleGroupId = Db::getInstance()->Insert_ID();
         Db::getInstance()->insert(
@@ -488,24 +503,27 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given discount code :cartRuleReference is applied to my cart
+     * @Given cart rule :referenceOrCode is applied to my cart
+     * @Given discount :referenceOrCode is applied to my cart
      *
-     * @param string $code
+     * @param string $referenceOrCode
      *
      * @return void
      */
-    public function assertDiscountCodeIsAppliedToCurrentCart(string $code): void
+    public function assertCartRuleIsAppliedToCurrentCart(string $referenceOrCode): void
     {
-        $cartRuleId = $this->getSharedStorage()->get($code);
+        $cartRuleId = $this->getSharedStorage()->get($referenceOrCode);
 
+        Cache::clean('Cart::getCartRules_*');
+        $cartRules = $this->getCurrentCart()->getCartRules();
         /** @var array<string, mixed> $cartRule */
-        foreach ($this->getCurrentCart()->getCartRules() as $cartRule) {
+        foreach ($cartRules as $cartRule) {
             if ((int) $cartRule['id_cart_rule'] === $cartRuleId) {
                 return;
             }
         }
 
-        throw new RuntimeException(sprintf('Cart rule with code "%s" is not applied to current cart', $code));
+        throw new RuntimeException(sprintf('Cart rule with code or reference "%s" is not applied to current cart', $referenceOrCode));
     }
 
     /**

@@ -78,7 +78,7 @@ Feature: Cart rule application is validated before it is applied to cart
     And my cart total should be 26.8 tax excluded
     And discount code "foo1" is not applied to my cart
     And I apply the discount code "foo1"
-    And discount code "foo1" is applied to my cart
+    And discount "foo1" is applied to my cart
     And my cart total should be 16.9 tax excluded
     When I apply the discount code "foo1"
     Then I should get cart rule validation error saying "This voucher is already in your cart"

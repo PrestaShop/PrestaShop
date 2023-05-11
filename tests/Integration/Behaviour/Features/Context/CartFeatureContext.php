@@ -210,6 +210,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $cart = $this->getCurrentCart();
         $expectedTotal = new DecimalNumber($expectedShipping);
+        // using ONLY_SHIPPING will not reduce discounts, so this method is not suitable to assert free_shipping discount application
         $actualTotal = new DecimalNumber((string) $cart->getOrderTotal($taxIncluded, Cart::ONLY_SHIPPING));
 
         Assert::assertSame((string) $expectedTotal, (string) $actualTotal, 'Unexpected total cart shipping');
