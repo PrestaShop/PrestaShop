@@ -1,0 +1,38 @@
+name: Waiting for UX PM DEV
+on:
+  pull_request:
+    types:
+      - labeled
+jobs:
+  add-comment:
+    if: (github.event.label.name == 'Waiting for UX' || github.event.label.name == 'Waiting for PM' || github.event.label.name == 'Waiting for dev')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Changes requested
+        run:
+          echo "PR was flagged as waiting for UX, we'll move it in Waiting for PM/UX/Dev Maintainers column"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+
+      - uses: actions/checkout@v2
+        with:
+          name: prestashop/kanbanbot
+
+      - name: Install dependencies
+        run: |
+          composer self-update --2.2
+          composer install --no-interaction
+
+      - name: Test PHP
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
+          ORGANIZATION: PrestaShop
+          PROJECT: PrestaShop
+          PROJECT_NUMBER: 17
+          PR_ID: ${{ github.event.pull_request.node_id }}
+        run:
+          php bin/console kanbanbot:waiting-for-ux-pm-dev

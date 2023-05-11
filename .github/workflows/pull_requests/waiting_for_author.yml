@@ -1,0 +1,42 @@
+name: Waiting for author
+
+on:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types:
+      - labeled
+
+jobs:
+  approved:
+    if: (github.event.label.name == 'Waiting for author' || github.event.review.state == 'changes_requested')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Changes requested
+        run:
+          echo "PR was not approved, changes requested"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+
+      - uses: actions/checkout@v2
+        with:
+          name: prestashop/kanbanbot
+
+      - name: Install dependencies
+        run: |
+          composer self-update --2.2
+          composer install --no-interaction
+
+      - name: Test PHP
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
+          ORGANIZATION: PrestaShop
+          PROJECT: PrestaShop
+          PROJECT_NUMBER: 17
+          PR_ID: ${{ github.event.pull_request.node_id }}
+        run:
+          php bin/console kanbanbot:waiting-for-author
