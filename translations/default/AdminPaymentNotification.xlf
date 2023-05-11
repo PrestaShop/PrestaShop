@@ -44,16 +44,12 @@
       <trans-unit id="ed13b3693357ebed3751cb71cb639e65">
         <source>No carrier</source>
         <target>No carrier</target>
-        <note>Line: 667</note>
+        <note>Line: 668</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/MailTemplate/MailPreviewVariablesBuilder.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="26beb437d3323bd4bfb0811b3e891315">
         <source>%d image(s)</source>
         <target>%d image(s)</target>
-        <note>Line: 393</note>
+        <note>Line: 472</note>
       </trans-unit>
     </body>
   </file>

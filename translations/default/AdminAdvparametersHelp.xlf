@@ -5,12 +5,77 @@
       <trans-unit id="37ab5632ec67e80fb6778e6dd6e6bdec">
         <source>This page benefits from increased performance and includes new features such as a new combination management system.</source>
         <target>This page benefits from increased performance and includes new features such as a new combination management system.</target>
-        <note>Line: 36</note>
+        <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="8d5b22a3a4421322149a37aba0ece176">
         <source>Access the new product page, even in a multistore context. This is a work in progress and some features are not available.</source>
         <target>Access the new product page, even in a multistore context. This is a work in progress and some features are not available.</target>
-        <note>Line: 40</note>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="b5c5b3a0a7208392aaf2c4d23a81879c">
+        <source>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</source>
+        <target>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="a536359574c27ee963de828ff56241c7">
+        <source>Enable or disable the migrated attribute page.</source>
+        <target>Enable or disable the migrated attribute page.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="51efb19669aecfbc211f5b708170db38">
+        <source>Enable or disable the authorization server page.</source>
+        <target>Enable or disable the authorization server page.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="f86c7bed82286a17b1e557d7235ed4a0">
+        <source>Enable or disable the migrated cart rules page.</source>
+        <target>Enable or disable the migrated cart rules page.</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="17e98e038d333c2d89bc59c843414298">
+        <source>Enable or disable the migrated catalog price rules page.</source>
+        <target>Enable or disable the migrated catalog price rules page.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="dec852ff965efbef1b33366c7b927acd">
+        <source>Enable or disable the migrated countries page.</source>
+        <target>Enable or disable the migrated countries page.</target>
+        <note>Line: 65</note>
+      </trans-unit>
+      <trans-unit id="21686cbcfb36e6039ba2f0af0909b05b">
+        <source>Enable or disable the migrated states page.</source>
+        <target>Enable or disable the migrated states page.</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="8437c82aa6a57b80f6956352690d7e47">
+        <source>Enable or disable the migrated carriers page.</source>
+        <target>Enable or disable the migrated carriers page.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="375f32d57378784ca73de6ae649adf60">
+        <source>Enable or disable the migrated titles page.</source>
+        <target>Enable or disable the migrated titles page.</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="e93e9e56b71f065655b06fd7b069f181">
+        <source>Enable or disable the migrated permissions page.</source>
+        <target>Enable or disable the migrated permissions page.</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="acf9650ec7716ce837f6865d0dcc289b">
+        <source>Enable or disable the migrated tax rules page.</source>
+        <target>Enable or disable the migrated tax rules page.</target>
+        <note>Line: 85</note>
+      </trans-unit>
+      <trans-unit id="4c225d5d1f44741cfa6e05837c40d4e3">
+        <source>Enable or disable the migrated customer threads page.</source>
+        <target>Enable or disable the migrated customer threads page.</target>
+        <note>Line: 89</note>
+      </trans-unit>
+      <trans-unit id="a7980eefb5f08f8f3555df73e3dfa63f">
+        <source>Enable or disable the migrated order states page.</source>
+        <target>Enable or disable the migrated order states page.</target>
+        <note>Line: 93</note>
       </trans-unit>
     </body>
   </file>
@@ -19,8 +84,38 @@
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
         <source>or</source>
         <target>or</target>
-        <note>Line: 1064
+        <note>Line: 1074
 Comment: Special case for Product : either one or the other. Not both.</note>
+      </trans-unit>
+      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
+        <source>A category root is where a category tree can begin. This is used with multistore.</source>
+        <target>A category root is where a category tree can begin. This is used with multistore.</target>
+        <note>Line: 212</note>
+      </trans-unit>
+      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
+        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
+        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
+        <source>ID of the warehouse to set as storage.</source>
+        <target>ID of the warehouse to set as storage.</target>
+        <note>Line: 339</note>
+      </trans-unit>
+      <trans-unit id="d2beb087630a099f2fada85e7f2f19fb">
+        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default store will be used.</source>
+        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default store will be used.</target>
+        <note>Line: 543</note>
+      </trans-unit>
+      <trans-unit id="3fc09360fdbfd34338847f0c4d2c706a">
+        <source>Enable advanced stock management on product (0 = No, 1 = Yes)</source>
+        <target>Enable advanced stock management on product (0 = No, 1 = Yes)</target>
+        <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="5ed37ab0d176038cd3289e1fe4fb5637">
+        <source>Enable advanced stock management on product (0 = No, 1 = Yes).</source>
+        <target>Enable advanced stock management on product (0 = No, 1 = Yes).</target>
+        <note>Line: 331</note>
       </trans-unit>
     </body>
   </file>
@@ -29,22 +124,22 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="c127560c7252928dc38d9a0ebf312ba4">
         <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
         <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
-        <note>Line: 600</note>
+        <note>Line: 627</note>
       </trans-unit>
       <trans-unit id="41ff4b3ea277bdc597fce74850a85510">
         <source>Click here to display the shops in the %name% shop group</source>
         <target>Click here to display the shops in the %name% shop group</target>
-        <note>Line: 790</note>
+        <note>Line: 822</note>
       </trans-unit>
       <trans-unit id="d916f5b0696f10712fad55220707fab9">
         <source>Click here to display the URLs of the %name% shop</source>
         <target>Click here to display the URLs of the %name% shop</target>
-        <note>Line: 812</note>
+        <note>Line: 844</note>
       </trans-unit>
       <trans-unit id="01af4d9c4808ce3ccd662c0e5ef7f203">
         <source>Click here to display the list of shop groups</source>
         <target>Click here to display the list of shop groups</target>
-        <note>Line: 864</note>
+        <note>Line: 896</note>
       </trans-unit>
     </body>
   </file>
@@ -53,32 +148,32 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="0c2afe3d3eb02183ee182aa447608bc4">
         <source>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</source>
         <target>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</target>
-        <note>Line: 182</note>
+        <note>Line: 187</note>
       </trans-unit>
       <trans-unit id="ee5d0efc6b5d41f7ee2ac5ea831f2a7f">
         <source>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</source>
         <target>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</target>
-        <note>Line: 217</note>
+        <note>Line: 222</note>
       </trans-unit>
       <trans-unit id="dace58c348a19d7bddb7a3fe4fd3ebfa">
         <source>Warning: you will not be able to disable this option once you have registered customers.</source>
         <target>Warning: you will not be able to disable this option once you have registered customers.</target>
-        <note>Line: 217</note>
+        <note>Line: 222</note>
       </trans-unit>
       <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
         <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>
         <target>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</target>
-        <note>Line: 256</note>
+        <note>Line: 261</note>
       </trans-unit>
       <trans-unit id="697ce708715d1f771177623968e8c6a4">
         <source>Warning: You will not be able to disable this option once you've started to accept orders.</source>
         <target>Warning: You will not be able to disable this option once you've started to accept orders.</target>
-        <note>Line: 256</note>
+        <note>Line: 261</note>
       </trans-unit>
       <trans-unit id="e667b16af30e0820218ad32242e284dc">
         <source>Enable or disable this shop group?</source>
         <target>Enable or disable this shop group?</target>
-        <note>Line: 275</note>
+        <note>Line: 280</note>
       </trans-unit>
     </body>
   </file>
@@ -87,42 +182,42 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="c688fbbc9468ea3473172ca924290860">
         <source>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</source>
         <target>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</target>
-        <note>Line: 132</note>
+        <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="05f8f0fab3ff5d86e0de9db902da7045">
         <source>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</source>
         <target>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</target>
-        <note>Line: 136</note>
+        <note>Line: 142</note>
       </trans-unit>
       <trans-unit id="f6e7829277b67d5a8805d6728a810362">
         <source>URL rewriting must be activated on your server to use this feature.</source>
         <target>URL rewriting must be activated on your server to use this feature.</target>
-        <note>Line: 137</note>
+        <note>Line: 143</note>
       </trans-unit>
       <trans-unit id="a2e8a639b5fd3e34ab4def1e7aac3383">
         <source>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</source>
         <target>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</target>
-        <note>Line: 182</note>
+        <note>Line: 188</note>
       </trans-unit>
       <trans-unit id="819e18d335155ef4a9cdfe926ac8a3de">
         <source>Since the selected shop has no main URL, you have to set this URL as the Main URL.</source>
         <target>Since the selected shop has no main URL, you have to set this URL as the Main URL.</target>
-        <note>Line: 184</note>
+        <note>Line: 190</note>
       </trans-unit>
       <trans-unit id="fe42e7cf02611b9719a6db6513de19eb">
         <source>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</source>
         <target>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</target>
-        <note>Line: 188</note>
+        <note>Line: 194</note>
       </trans-unit>
       <trans-unit id="7e7b350e5cee624789b1e263ec59db26">
         <source>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</source>
         <target>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</target>
-        <note>Line: 240</note>
+        <note>Line: 246</note>
       </trans-unit>
       <trans-unit id="29f3eb1bea3049b52600a18ad4d0b96c">
         <source>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</source>
         <target>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</target>
-        <note>Line: 249</note>
+        <note>Line: 255</note>
       </trans-unit>
     </body>
   </file>
@@ -132,11 +227,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
         <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
         <note>Line: 75</note>
-      </trans-unit>
-      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
-        <source>A category root is where a category tree can begin. This is used with multistore.</source>
-        <target>A category root is where a category tree can begin. This is used with multistore.</target>
-        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>
@@ -151,16 +241,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/Core/Import/EntityField/Provider/ProductFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
-        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
-        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
-        <note>Line: 163</note>
-      </trans-unit>
-      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
-        <source>ID of the warehouse to set as storage.</source>
-        <target>ID of the warehouse to set as storage.</target>
-        <note>Line: 171</note>
-      </trans-unit>
       <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
         <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
         <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
@@ -183,6 +263,16 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Enable or disable debug mode.</source>
         <target>Enable or disable debug mode.</target>
         <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="abef01780b7419768943a18d85666f09">
+        <source>Enable or disable debug mode. Debug mode will enable extended error reporting, display the Symfony debug bar, and other features.</source>
+        <target>Enable or disable debug mode. Debug mode will enable extended error reporting, display the Symfony debug bar, and other features.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="913a55381fe0db5ad85c59b8a693fd18">
+        <source>Enable or disable debug profiling. Debug profiling will display performance-related information under each page and help find performance bottlenecks in your store.</source>
+        <target>Enable or disable debug profiling. Debug profiling will display performance-related information under each page and help find performance bottlenecks in your store.</target>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -248,22 +338,22 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="0f81567617bb8ebc23f48e74d8ae8acf">
         <source>Check the IP address of the cookie in order to prevent your cookie from being stolen.</source>
         <target>Check the IP address of the cookie in order to prevent your cookie from being stolen.</target>
-        <note>Line: 55</note>
+        <note>Line: 51</note>
       </trans-unit>
       <trans-unit id="20d6b6498eab9f749d55c9b53151e00a">
         <source>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</source>
         <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
-        <note>Line: 59</note>
+        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="b67a6169f1139b421eabe8278277b0ae">
         <source>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</source>
         <target>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</target>
-        <note>Line: 64</note>
+        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="c8d06889e023d3130c1bf60009d5417b">
         <source>Allows you to declare if your cookie should be restricted to a first-party or same-site context.</source>
         <target>Allows you to declare if your cookie should be restricted to a first-party or same-site context.</target>
-        <note>Line: 69</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -272,17 +362,17 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="eb191ef572b6d5c4e7a86734ba10fb5e">
         <source>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
         <target>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>Line: 58</note>
+        <note>Line: 71</note>
       </trans-unit>
       <trans-unit id="dae623d110235f2837ca0a6e753305b8">
         <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
         <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>Line: 90</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="2a59c5a630e01a9a88e9bcb2863fd69f">
         <source>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
         <target>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>Line: 122</note>
+        <note>Line: 135</note>
       </trans-unit>
     </body>
   </file>
@@ -324,7 +414,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="3d24e5589702a2ecfd1d65813b4a892e">
         <source>Enable DKIM, fill in the fields and give it a try. If no email is sent, check logs.</source>
         <target>Enable DKIM, fill in the fields and give it a try. If no email is sent, check logs.</target>
-        <note>Line: 110</note>
+        <note>Line: 113</note>
       </trans-unit>
     </body>
   </file>
@@ -354,6 +444,30 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Port number to use.</source>
         <target>Port number to use.</target>
         <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
+        <source>Password should be at least %num% characters long.</source>
+        <target>Password should be at least %num% characters long.</target>
+        <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="a951bd27ed3722e63e13ff4c73a3749a">
+        <source>Allow or deny this employee's access to the Admin panel.</source>
+        <target>Allow or deny this employee's access to the Admin panel.</target>
+        <note>Line: 203</note>
+      </trans-unit>
+      <trans-unit id="7774f7ea613f49f5246f9ff5e96d29de">
+        <source>Select the stores the employee is allowed to access.</source>
+        <target>Select the stores the employee is allowed to access.</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
+        <source>This page will be displayed just after login.</source>
+        <target>This page will be displayed just after login.</target>
+        <note>Line: 229</note>
       </trans-unit>
     </body>
   </file>
@@ -400,6 +514,15 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestSettingsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="408b9afa3037a223d76ff924a1e98fad">
+        <source>Enabling multi-statements queries increases the risk of SQL injection vulnerabilities being exploited.</source>
+        <target>Enabling multi-statements queries increases the risk of SQL injection vulnerabilities being exploited.</target>
+        <note>Line: 54</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Security/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4b620493cd5571cb4af81dba9c68812e">
@@ -438,31 +561,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="a5cb039db72d4c240b6cca34b48d61bc">
         <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
         <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
-        <note>Line: 130</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Columns/Content/severity_level.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b80c52e7f679fba3c2837b42705fe779">
-        <source>Informative only</source>
-        <target>Informative only</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
-        <source>Warning</source>
-        <target>Warning</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="902b0d55fddef6f8d651fe1035b7d4bd">
-        <source>Error</source>
-        <target>Error</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="4a378407770df6a42474ec5db9f54740">
-        <source>Major issue (crash)!</source>
-        <target>Major issue (crash)!</target>
-        <note>Line: 40</note>
+        <note>Line: 133</note>
       </trans-unit>
     </body>
   </file>
@@ -578,17 +677,12 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>Fill in the fields below to set up DKIM signing of outgoing emails. This will reduce the likelihood of your emails being marked as spam.
               You can get the data below from your server administrator or generate it yourself by using one of the freely available tools, such as dkimcore.org.
               Also, make sure that your server is registered as an authorized sender in your SPF record.</target>
-        <note>Line: 45</note>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
-        <source>Password should be at least %num% characters long.</source>
-        <target>Password should be at least %num% characters long.</target>
-        <note>Line: 66</note>
-      </trans-unit>
       <trans-unit id="d970370797ba19bba5524b480d3526fb">
         <source>Allow or disallow this employee to log in to the Admin panel.</source>
         <target>Allow or disallow this employee to log in to the Admin panel.</target>
@@ -608,6 +702,26 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b80c52e7f679fba3c2837b42705fe779">
+        <source>Informative only</source>
+        <target>Informative only</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
+        <source>Warning</source>
+        <target>Warning</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="902b0d55fddef6f8d651fe1035b7d4bd">
+        <source>Error</source>
+        <target>Error</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="4a378407770df6a42474ec5db9f54740">
+        <source>Major issue (crash)!</source>
+        <target>Major issue (crash)!</target>
+        <note>Line: 51</note>
+      </trans-unit>
       <trans-unit id="3979bb684920e9e9dc86e266f93d8c87">
         <source>Severity levels</source>
         <target>Severity levels</target>
@@ -625,8 +739,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="bd98e6133da373d5d4d0241cae2e5df5">
         <source>Click "%add_new_label%".</source>
         <target>Click "%add_new_label%".</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
         <source>Fill in the fields and click "%save_label%".</source>
@@ -641,7 +754,8 @@ Comment: Stable feature flags form</note>
       <trans-unit id="09fac4ee316f450e3defd79540c2d9fe">
         <source>You can also export the query results as a CSV file by clicking on the "%export_label%" button</source>
         <target>You can also export the query results as a CSV file by clicking on the "%export_label%" button</target>
-        <note>Line: 37</note>
+        <note>Line: 37
+Comment: Recommended modules will be attached to here.</note>
       </trans-unit>
     </body>
   </file>
@@ -659,7 +773,7 @@ Comment: Stable feature flags form</note>
       <trans-unit id="04da1735a100af1089236ff39c5021ca">
         <source>Scores are integers from 0 to 4.</source>
         <target>Scores are integers from 0 to 4.</target>
-        <note>Line: 66</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
@@ -682,21 +796,36 @@ Comment: Stable feature flags form</note>
       <trans-unit id="bb3656a5447418f8f2644f3ac91b5c6f">
         <source>Some features can be disabled in order to improve performance.</source>
         <target>Some features can be disabled in order to improve performance.</target>
-        <note>Line: 130</note>
+        <note>Line: 137</note>
       </trans-unit>
       <trans-unit id="460e080fb0af5e1ca93a24dbf1e3da2f">
         <source>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.</source>
         <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.</target>
-        <note>Line: 162</note>
+        <note>Line: 169</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/edit.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b5c5b3a0a7208392aaf2c4d23a81879c">
-        <source>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</source>
-        <target>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</target>
-        <note>Line: 72</note>
+      <trans-unit id="4bbb8f967da6d1a610596d7257179c2b">
+        <source>Invalid</source>
+        <target>Invalid</target>
+        <note>Line: 1596</note>
+      </trans-unit>
+      <trans-unit id="26b63f278101527e06a5547719568bb5">
+        <source>Okay</source>
+        <target>Okay</target>
+        <note>Line: 1597</note>
+      </trans-unit>
+      <trans-unit id="0c6ad70beb3a7e76c3fc7adab7c46acc">
+        <source>Good</source>
+        <target>Good</target>
+        <note>Line: 1598</note>
+      </trans-unit>
+      <trans-unit id="b8dc7c80939667637db7ac31ece215b9">
+        <source>Fabulous</source>
+        <target>Fabulous</target>
+        <note>Line: 1599</note>
       </trans-unit>
     </body>
   </file>

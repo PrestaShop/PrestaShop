@@ -40,27 +40,37 @@
       <trans-unit id="5dd532f0a63d89c5af0243b74732f63c">
         <source>Contact details</source>
         <target>Contact details</target>
-        <note>Line: 219</note>
+        <note>Line: 212</note>
       </trans-unit>
       <trans-unit id="84649906133e37fefda33a301de8cd4f">
         <source>Payee (name)</source>
         <target>Payee (name)</target>
-        <note>Line: 225</note>
+        <note>Line: 218</note>
       </trans-unit>
       <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
         <source>Address</source>
         <target>Address</target>
-        <note>Line: 231</note>
+        <note>Line: 224</note>
       </trans-unit>
       <trans-unit id="0fe62049ad5246bc188ec1bae347269e">
         <source>Address where the check should be sent to.</source>
         <target>Address where the check should be sent to.</target>
-        <note>Line: 232</note>
+        <note>Line: 225</note>
       </trans-unit>
       <trans-unit id="bb56f3a51352fe2ddce129260770c440">
         <source>%amount% (tax incl.)</source>
         <target>%amount% (tax incl.)</target>
         <note>Line: 269</note>
+      </trans-unit>
+      <trans-unit id="08aa5198d33cc5b74602b3235539321c">
+        <source>Display contact details blocks to make it easy for customers to pay by check on your store.</source>
+        <target>Display contact details blocks to make it easy for customers to pay by check on your store.</target>
+        <note>Line: 65</note>
+      </trans-unit>
+      <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
+        <source>(tax incl.)</source>
+        <target>(tax incl.)</target>
+        <note>Line: 268</note>
       </trans-unit>
     </body>
   </file>

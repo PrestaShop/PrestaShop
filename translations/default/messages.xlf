@@ -37,7 +37,7 @@
       <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
         <source>Discount name</source>
         <target>Discount name</target>
-        <note>Line: 203</note>
+        <note>Line: 209</note>
       </trans-unit>
     </body>
   </file>
@@ -113,6 +113,20 @@
         <source>No result</source>
         <target>No result</target>
         <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Read more</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
+        <source>%</source>
+        <target>%</target>
+        <note>Line: 107</note>
       </trans-unit>
     </body>
   </file>
@@ -195,11 +209,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/configure.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
-        <source>Uninstall</source>
-        <target>Uninstall</target>
-        <note>Line: 73</note>
-      </trans-unit>
       <trans-unit id="deccbe4e9083c3b5f7cd2632722765bb">
         <source>Translate</source>
         <target>Translate</target>
@@ -214,6 +223,11 @@
         <source>Manage hooks</source>
         <target>Manage hooks</target>
         <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
@@ -360,6 +374,11 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
+        <source>Uninstall</source>
+        <target>Uninstall</target>
+        <note>Line: 99</note>
+      </trans-unit>
       <trans-unit id="4f9b5fa08f2ef86fdc5d0ceefc271981">
         <source>Remove from Favorites</source>
         <target>Remove from Favorites</target>
@@ -369,11 +388,6 @@
         <source>Mark as Favorite</source>
         <target>Mark as Favorite</target>
         <note>Line: 159</note>
-      </trans-unit>
-      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
-        <source>Read more</source>
-        <target>Read more</target>
-        <note>Line: 73</note>
       </trans-unit>
       <trans-unit id="df3f079de6961496f0460dcfdbf9bca3">
         <source>by</source>
@@ -534,37 +548,37 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/readmore-body.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/modules/quickview.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3424c86a3f3fdfcff4d8f310912ee82b">
         <source>(%s votes)</source>
         <target>(%s votes)</target>
-        <note>Line: 35</note>
+        <note>Line: 52</note>
       </trans-unit>
       <trans-unit id="268cb3857932e260b03bf1334220f3bc">
         <source>(%s vote)</source>
         <target>(%s vote)</target>
-        <note>Line: 35</note>
+        <note>Line: 52</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
-        <note>Line: 52</note>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="7a66d21cf5a4354933980f6d79ec78a4">
         <source>Merchant benefits</source>
         <target>Merchant benefits</target>
-        <note>Line: 59</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="8530d0ebaf22889c1b42061824f3769b">
         <source>Install module</source>
         <target>Install module</target>
-        <note>Line: 92</note>
+        <note>Line: 99</note>
       </trans-unit>
       <trans-unit id="a6642661dcfc0e354c61f4e8b8b9ec5a">
         <source>View on PrestaShop Addons</source>
         <target>View on PrestaShop Addons</target>
-        <note>Line: 94</note>
+        <note>Line: 101</note>
       </trans-unit>
     </body>
   </file>
@@ -699,9 +713,14 @@
         <target>N/A</target>
         <note>Line: 69</note>
       </trans-unit>
+      <trans-unit id="a7b4930bf2fc5d57eec6b03097200152">
+        <source>EAN-13</source>
+        <target>EAN-13</target>
+        <note>Line: 39</note>
+      </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
@@ -713,19 +732,19 @@
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 40</note>
       </trans-unit>
+      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
+        <source>%d</source>
+        <target>%d</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="54524210ee89080b3da6c88a11c6d438">
         <source>You must use this syntax in your translations. Here are several examples:</source>
         <target>You must use this syntax in your translations. Here are several examples:</target>
         <note>Line: 86</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
-        <source>%d</source>
-        <target>%d</target>
-        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -769,227 +788,227 @@
       <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
         <source>Sunday</source>
         <target>Sunday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
         <source>Monday</source>
         <target>Monday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
         <source>Tuesday</source>
         <target>Tuesday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="796c163589f295373e171842f37265d5">
         <source>Wednesday</source>
         <target>Wednesday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="78ae6f0cd191d25147e252dc54768238">
         <source>Thursday</source>
         <target>Thursday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
         <source>Friday</source>
         <target>Friday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
         <source>Saturday</source>
         <target>Saturday</target>
-        <note>Line: 113</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="ef6572e4cd58bb39a3f4e82fc64fe9f0">
         <source>Sun</source>
         <target>Sun</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="fd29458ae58ac32a2d8734ed90ad51ec">
         <source>Mon</source>
         <target>Mon</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="2ddecde85408faf230652444db78cb72">
         <source>Tue</source>
         <target>Tue</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="510c292b1686eb070d9e90a575f74106">
         <source>Wed</source>
         <target>Wed</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="ed5e8353dfc585f4c6b3a55d1a9fc01d">
         <source>Thu</source>
         <target>Thu</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="ac616f844b9a5ea5a827bf7fb99b1ad5">
         <source>Fri</source>
         <target>Fri</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="13c7d2d737f81f7bf89aed9fbcd0ad55">
         <source>Sat</source>
         <target>Sat</target>
-        <note>Line: 114</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="f72c915d8f575a5c0999b5f37b6d99b7">
         <source>Su</source>
         <target>Su</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="c08df9bb5fb44242a6291b1eee5d09ad">
         <source>Mo</source>
         <target>Mo</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="080502c4fa636ac639bf42b6d2ba01d7">
         <source>Tu</source>
         <target>Tu</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="485c47a81eb6e3998ec05aca48eda184">
         <source>We</source>
         <target>We</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="eeeb9a8eb45dd351d9ec0eb4acce66ce">
         <source>Th</source>
         <target>Th</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="fa717ba17306cd76900510df8ac8013e">
         <source>Fr</source>
         <target>Fr</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="e55bb1ae59b6a64858a85a2f48c53036">
         <source>Sa</source>
         <target>Sa</target>
-        <note>Line: 115</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="86f5978d9b80124f509bdb71786e929e">
         <source>January</source>
         <target>January</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="659e59f062c75f81259d22786d6c44aa">
         <source>February</source>
         <target>February</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="fa3e5edac607a88d8fd7ecb9d6d67424">
         <source>March</source>
         <target>March</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="3fcf026bbfffb63fb24b8de9d0446949">
         <source>April</source>
         <target>April</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="195fbb57ffe7449796d23466085ce6d8">
         <source>May</source>
         <target>May</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="688937ccaf2a2b0c45a1c9bbba09698d">
         <source>June</source>
         <target>June</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="1b539f6f34e8503c97f6d3421346b63c">
         <source>July</source>
         <target>July</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="41ba70891fb6f39327d8ccb9b1dafb84">
         <source>August</source>
         <target>August</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="cc5d90569e1c8313c2b1c2aab1401174">
         <source>September</source>
         <target>September</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="eca60ae8611369fe28a02e2ab8c5d12e">
         <source>October</source>
         <target>October</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="7e823b37564da492ca1629b4732289a8">
         <source>November</source>
         <target>November</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="82331503174acbae012b2004f6431fa5">
         <source>December</source>
         <target>December</target>
-        <note>Line: 116</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="e68564f23e0e939acea76dc3d2bc01bf">
         <source>Jan</source>
         <target>Jan</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="ea171d540ccd5f0669171ef06d3cd848">
         <source>Feb</source>
         <target>Feb</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="7ce6b2286a5396e614b8484105d277e0">
         <source>Mar</source>
         <target>Mar</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="6d7215c4b3bc4716d026ac46c6d9ae64">
         <source>Apr</source>
         <target>Apr</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="e7f8f5c51fe3a6d48a79c6ede9112b7a">
         <source>May </source>
         <target>May </target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="eb4b40c1221dad5b23fe7ef84d292be1">
         <source>Jun</source>
         <target>Jun</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="a2866cd6efaa65c92278d4771a9eaec7">
         <source>Jul</source>
         <target>Jul</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="22f1a4667604b8557c9b209c201b4bc6">
         <source>Aug</source>
         <target>Aug</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="f04aa7019c490474fa3ce16e93501b57">
         <source>Sep</source>
         <target>Sep</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="594be08882c8e9d5efb9eeb62f303744">
         <source>Oct</source>
         <target>Oct</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="343e6957be77c6247aa2b8d0deb68bd6">
         <source>Nov</source>
         <target>Nov</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="d207b4e0bce42a8f1555ce3a05e287f6">
         <source>Dec</source>
         <target>Dec</target>
-        <note>Line: 117</note>
+        <note>Line: 115</note>
       </trans-unit>
     </body>
   </file>
@@ -1033,6 +1052,11 @@
         <source>Group:</source>
         <target>Group:</target>
         <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="741aae2e1e9e98305742675d1cfc3fb0">
+        <source>All stores</source>
+        <target>All stores</target>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -1096,11 +1120,6 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
-        <source>%</source>
-        <target>%</target>
-        <note>Line: 120</note>
-      </trans-unit>
       <trans-unit id="087fb8756d4add87f2d162304ccd486b">
         <source>No records found</source>
         <target>No records found</target>
@@ -1134,20 +1153,10 @@
   </file>
   <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
-        <source>and stay</source>
-        <target>and stay</target>
-        <note>Line: 206</note>
-      </trans-unit>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Line: 412</note>
-      </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 353</note>
+        <note>Line: 358</note>
       </trans-unit>
       <trans-unit id="6ccfec41b65de46efeb7ca242341e8ea">
         <source>Please fill at least one field to perform a search in this list.</source>
@@ -1172,12 +1181,12 @@
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
         <target>Shop group</target>
-        <note>Line: 320</note>
+        <note>Line: 325</note>
       </trans-unit>
       <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
         <source>To</source>
         <target>To</target>
-        <note>Line: 360</note>
+        <note>Line: 365</note>
       </trans-unit>
     </body>
   </file>
@@ -1201,12 +1210,17 @@
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>Line: 220</note>
+        <note>Line: 224</note>
       </trans-unit>
       <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
         <source>You can't change the value of this configuration field in the context of this shop.</source>
         <target>You can't change the value of this configuration field in the context of this shop.</target>
         <note>Line: 331</note>
+      </trans-unit>
+      <trans-unit id="fe73eda0f6569ec502fe52716a648370">
+        <source>You can't change the value of this configuration field in this store's context.</source>
+        <target>You can't change the value of this configuration field in this store's context.</target>
+        <note>Line: 335</note>
       </trans-unit>
     </body>
   </file>
@@ -1366,6 +1380,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
+        <source>and stay</source>
+        <target>and stay</target>
+        <note>Line: 79</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/new-theme/template/components/layout/non-responsive.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ed95254a7068ffd8729fd94d07347d67">
@@ -1409,97 +1432,97 @@
       <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
         <source>List</source>
         <target>List</target>
-        <note>Line: 652</note>
+        <note>Line: 654</note>
       </trans-unit>
       <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
         <source>View details</source>
         <target>View details</target>
-        <note>Line: 658</note>
+        <note>Line: 660</note>
       </trans-unit>
       <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
         <source>Options</source>
         <target>Options</target>
-        <note>Line: 663</note>
+        <note>Line: 665</note>
       </trans-unit>
       <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
         <source>Generator</source>
         <target>Generator</target>
-        <note>Line: 668</note>
+        <note>Line: 670</note>
       </trans-unit>
       <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
         <source>%s: %s</source>
         <target>%s: %s</target>
-        <note>Line: 762</note>
+        <note>Line: 766</note>
       </trans-unit>
       <trans-unit id="921d54865f8169b84c90d4335c256494">
         <source>filter by %s</source>
         <target>filter by %s</target>
-        <note>Line: 769</note>
+        <note>Line: 773</note>
       </trans-unit>
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>Line: 4016</note>
+        <note>Line: 4060</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>Line: 1212</note>
+        <note>Line: 1216</note>
       </trans-unit>
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>Line: 1321</note>
+        <note>Line: 1325</note>
       </trans-unit>
       <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
         <source>Do you really want to uninstall this module?</source>
         <target>Do you really want to uninstall this module?</target>
-        <note>Line: 4327</note>
+        <note>Line: 4371</note>
       </trans-unit>
       <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
         <source>Disable this module</source>
         <target>Disable this module</target>
-        <note>Line: 4329</note>
+        <note>Line: 4373</note>
       </trans-unit>
       <trans-unit id="668c99c1164d5348f99c0878770b53a8">
         <source>Enable this module for all shops</source>
         <target>Enable this module for all shops</target>
-        <note>Line: 4330</note>
+        <note>Line: 4374</note>
       </trans-unit>
       <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
         <source>Disable on mobiles</source>
         <target>Disable on mobiles</target>
-        <note>Line: 4333</note>
+        <note>Line: 4377</note>
       </trans-unit>
       <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
         <source>Disable on tablets</source>
         <target>Disable on tablets</target>
-        <note>Line: 4334</note>
+        <note>Line: 4378</note>
       </trans-unit>
       <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
         <source>Disable on computers</source>
         <target>Disable on computers</target>
-        <note>Line: 4335</note>
+        <note>Line: 4379</note>
       </trans-unit>
       <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
         <source>Display on mobiles</source>
         <target>Display on mobiles</target>
-        <note>Line: 4336</note>
+        <note>Line: 4380</note>
       </trans-unit>
       <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
         <source>Display on tablets</source>
         <target>Display on tablets</target>
-        <note>Line: 4337</note>
+        <note>Line: 4381</note>
       </trans-unit>
       <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
         <source>Display on computers</source>
         <target>Display on computers</target>
-        <note>Line: 4338</note>
+        <note>Line: 4382</note>
       </trans-unit>
       <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
         <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
         <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
-        <note>Line: 4345</note>
+        <note>Line: 4389</note>
       </trans-unit>
     </body>
   </file>
@@ -1697,6 +1720,400 @@
         <source>Add another word or two. Uncommon words are better.</source>
         <target>Add another word or two. Uncommon words are better.</target>
         <note>Line: 290</note>
+      </trans-unit>
+      <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
+        <source>Sequences like "abc" or "6543" are easy to guess</source>
+        <target>Sequences like "abc" or "6543" are easy to guess</target>
+        <note>Line: 264</note>
+      </trans-unit>
+      <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
+        <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
+        <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
+        <note>Line: 289</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/classes/GDPRLog.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ba2c992afac038de48cb8866fb819fd6">
+        <source>Guest client : ID</source>
+        <target>Guest client : ID</target>
+        <note>Line: 102</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/controllers/front/ExportDataToCsv.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3bcfe5c02494f4ff326c5dbd1dcffa91">
+        <source>General info</source>
+        <target>General info</target>
+        <note>Line: 67
+Comment: GENERAL INFO</note>
+      </trans-unit>
+      <trans-unit id="019ec3132cdf8ee0f2e2a75cf5d3e459">
+        <source>Gender</source>
+        <target>Gender</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Line: 261</note>
+      </trans-unit>
+      <trans-unit id="9c37b7b6ff829e977df287900543ea54">
+        <source>Birth date</source>
+        <target>Birth date</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
+        <source>Age</source>
+        <target>Age</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
+        <source>Language</source>
+        <target>Language</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="7d9f5730d745285016630376deebcbd8">
+        <source>Creation account data</source>
+        <target>Creation account data</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="5e5914912e8d2f2765525840acf98bea">
+        <source>Last visit</source>
+        <target>Last visit</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="60adc330494a66981dec101c81e27f03">
+        <source>Siret</source>
+        <target>Siret</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="6c5a79a30b5c5c4fb6ec45735d32edc2">
+        <source>Ape</source>
+        <target>Ape</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Company</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
+        <source>Website</source>
+        <target>Website</target>
+        <note>Line: 82</note>
+      </trans-unit>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Line: 110
+Comment: ADDRESSES</note>
+      </trans-unit>
+      <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
+        <source>Alias</source>
+        <target>Alias</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
+        <source>Address</source>
+        <target>Address</target>
+        <note>Line: 117</note>
+      </trans-unit>
+      <trans-unit id="fac322c3b42d04806299ae195f8a9238">
+        <source>Phone(s)</source>
+        <target>Phone(s)</target>
+        <note>Line: 118</note>
+      </trans-unit>
+      <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
+        <source>Country</source>
+        <target>Country</target>
+        <note>Line: 341</note>
+      </trans-unit>
+      <trans-unit id="44749712dbec183e983dcd78a7736c41">
+        <source>Date</source>
+        <target>Date</target>
+        <note>Line: 342</note>
+      </trans-unit>
+      <trans-unit id="587bb937485e3dbe02ea0d281600bb52">
+        <source>No addresses</source>
+        <target>No addresses</target>
+        <note>Line: 140</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Line: 155</note>
+      </trans-unit>
+      <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
+        <source>Payment</source>
+        <target>Payment</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="d02bbc3cb147c272b0445ac5ca7d1a36">
+        <source>Order state</source>
+        <target>Order state</target>
+        <note>Line: 157</note>
+      </trans-unit>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="08cfa7751d1812e961560f623e082aba">
+        <source>No orders</source>
+        <target>No orders</target>
+        <note>Line: 177</note>
+      </trans-unit>
+      <trans-unit id="c8be451a5698956a0e78b5c2caab4821">
+        <source>Products bought</source>
+        <target>Products bought</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="79af0c77f8ce8cbb17006e22e8e9494b">
+        <source>Order ref</source>
+        <target>Order ref</target>
+        <note>Line: 193</note>
+      </trans-unit>
+      <trans-unit id="2cc349f141e8c9932281bf573f2c40ef">
+        <source>Product ref</source>
+        <target>Product ref</target>
+        <note>Line: 194</note>
+      </trans-unit>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 262</note>
+      </trans-unit>
+      <trans-unit id="fc26e55e0993a75e892175deb02aae15">
+        <source>Carts</source>
+        <target>Carts</target>
+        <note>Line: 222
+Comment: CARTS</note>
+      </trans-unit>
+      <trans-unit id="490aa6e856ccf208a054389e47ce0d06">
+        <source>Id</source>
+        <target>Id</target>
+        <note>Line: 226</note>
+      </trans-unit>
+      <trans-unit id="db205f01b4fd580fb5daa9072d96849d">
+        <source>Total products</source>
+        <target>Total products</target>
+        <note>Line: 227</note>
+      </trans-unit>
+      <trans-unit id="bbd47e26c95290218b2fc449e54e8cdc">
+        <source>No carts</source>
+        <target>No carts</target>
+        <note>Line: 288</note>
+      </trans-unit>
+      <trans-unit id="89ac4bd26e975229032206877db1f027">
+        <source>Product(s) still in cart</source>
+        <target>Product(s) still in cart</target>
+        <note>Line: 255
+Comment: PRODUCTS IN CART</note>
+      </trans-unit>
+      <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
+        <source>Cart ID</source>
+        <target>Cart ID</target>
+        <note>Line: 259</note>
+      </trans-unit>
+      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
+        <source>Product reference</source>
+        <target>Product reference</target>
+        <note>Line: 260</note>
+      </trans-unit>
+      <trans-unit id="09dc02ecbb078868a3a86dded030076d">
+        <source>No products</source>
+        <target>No products</target>
+        <note>Line: 282</note>
+      </trans-unit>
+      <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
+        <source>Messages</source>
+        <target>Messages</target>
+        <note>Line: 299
+Comment: MESSSAGES</note>
+      </trans-unit>
+      <trans-unit id="a12a3079e14ced46e69ba52b8a90b21a">
+        <source>IP</source>
+        <target>IP</target>
+        <note>Line: 303</note>
+      </trans-unit>
+      <trans-unit id="58a747ef5d07d22101bdcd058e772ff9">
+        <source>No messages</source>
+        <target>No messages</target>
+        <note>Line: 321</note>
+      </trans-unit>
+      <trans-unit id="93bd48ecb9c4d5c4eec7fefffbb2070f">
+        <source>Last connections</source>
+        <target>Last connections</target>
+        <note>Line: 332
+Comment: CONNECTIONS</note>
+      </trans-unit>
+      <trans-unit id="33e29c1d042c0923008f78b46af94984">
+        <source>Origin request</source>
+        <target>Origin request</target>
+        <note>Line: 336</note>
+      </trans-unit>
+      <trans-unit id="57f32d7d0e6672cc2b60bc7a49f91453">
+        <source>Page viewed</source>
+        <target>Page viewed</target>
+        <note>Line: 337</note>
+      </trans-unit>
+      <trans-unit id="fae6aba9bc4e69842be0ac98e15c4c99">
+        <source>Time on the page</source>
+        <target>Time on the page</target>
+        <note>Line: 338</note>
+      </trans-unit>
+      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
+        <source>IP address</source>
+        <target>IP address</target>
+        <note>Line: 339</note>
+      </trans-unit>
+      <trans-unit id="c51e6bdf66e5d601e85d055301014410">
+        <source>No connections</source>
+        <target>No connections</target>
+        <note>Line: 360</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/psgdpr.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5966265f35dd87febf4d59029bc9ef66">
+        <source>Official GDPR compliance</source>
+        <target>Official GDPR compliance</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="74f261754dce7bb6c07ea3f586c3e2f1">
+        <source>Make your store comply with the General Data Protection Regulation (GDPR).</source>
+        <target>Make your store comply with the General Data Protection Regulation (GDPR).</target>
+        <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Line: 151
+Comment: Confirm uninstall</note>
+      </trans-unit>
+      <trans-unit id="e9415612c1d72517733c98e6877a6b46">
+        <source>There was an error during the uninstallation. Please contact us through Addons website.</source>
+        <target>There was an error during the uninstallation. Please contact us through Addons website.</target>
+        <note>Line: 205
+Comment: if something wrong return false</note>
+      </trans-unit>
+      <trans-unit id="f82c07eeaadf212c53a454cca4073e82">
+        <source>There was an error on module uninstall. Please contact us through Addons website</source>
+        <target>There was an error on module uninstall. Please contact us through Addons website</target>
+        <note>Line: 228</note>
+      </trans-unit>
+      <trans-unit id="f3aa5220c9615fe82e680b31ec805772">
+        <source>Data accessibility</source>
+        <target>Data accessibility</target>
+        <note>Line: 326</note>
+      </trans-unit>
+      <trans-unit id="2f4239765c85ef14bc7d270b88169431">
+        <source>How can a customer retrieve all of his personal data?</source>
+        <target>How can a customer retrieve all of his personal data?</target>
+        <note>Line: 329</note>
+      </trans-unit>
+      <trans-unit id="f23b2c81c46ee0bef9e68cf8a4e8094d">
+        <source>From his customer account, a new tab called My Personal Data is available and your customer can retrieve all of his personal data collected by your shop and installed modules, in PDF or CSV format.</source>
+        <target>From his customer account, a new tab called My Personal Data is available and your customer can retrieve all of his personal data collected by your shop and installed modules, in PDF or CSV format.</target>
+        <note>Line: 330</note>
+      </trans-unit>
+      <trans-unit id="b05c17c9e1019a5b801746c5b8c5d965">
+        <source>Customer consent</source>
+        <target>Customer consent</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="de571168b7c4d4ab2c7826d2df1ec04b">
+        <source>There is no consent confirmation checkbox in the contact form. Isn't this a requirement?</source>
+        <target>There is no consent confirmation checkbox in the contact form. Isn't this a requirement?</target>
+        <note>Line: 338</note>
+      </trans-unit>
+      <trans-unit id="5132f2c7071d21437185cc8906ff30d6">
+        <source>No, it is not a requirement as the customer gives consent by clicking on the Submit message button. Only a message is required to give your customers more information about the use of personal data on your website. We are currently working on a new version of the contact form, it will be available really soon for your online store.</source>
+        <target>No, it is not a requirement as the customer gives consent by clicking on the Submit message button. Only a message is required to give your customers more information about the use of personal data on your website. We are currently working on a new version of the contact form, it will be available really soon for your online store.</target>
+        <note>Line: 339</note>
+      </trans-unit>
+      <trans-unit id="ea4ec6483496abdc141f5ded3db3ede1">
+        <source>Data erasure</source>
+        <target>Data erasure</target>
+        <note>Line: 344</note>
+      </trans-unit>
+      <trans-unit id="9176e38989ed06bc8bc2d2eb64ff651a">
+        <source>How will a customer ask for all of his personal data to be deleted ?</source>
+        <target>How will a customer ask for all of his personal data to be deleted ?</target>
+        <note>Line: 347</note>
+      </trans-unit>
+      <trans-unit id="9bfcf0be1757b83609e3cd7fc59fc7ea">
+        <source>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</source>
+        <target>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</target>
+        <note>Line: 348</note>
+      </trans-unit>
+      <trans-unit id="c11321f9fb4112e493e86a1410745b32">
+        <source>There is no Remove Data button in the customer account. Isn't this a requirement?</source>
+        <target>There is no Remove Data button in the customer account. Isn't this a requirement?</target>
+        <note>Line: 351</note>
+      </trans-unit>
+      <trans-unit id="0124f1dc4ed1770b17898a61a00ba224">
+        <source>No, the Remove Data button in the customer account is not an obligation. For the data erasure requests, your customers can request data removal only under certain circumstances, that is the reason why we decided not to include an automatic Remove Data button in their customer account.
+
+They can, however, contact you anytime via your contact form, in this case, you can review their request and once you accept it, you will be able to remove their personal data directly in the configuration page of our Official GDPR Compliance module.</source>
+        <target>No, the Remove Data button in the customer account is not an obligation. For the data erasure requests, your customers can request data removal only under certain circumstances, that is the reason why we decided not to include an automatic Remove Data button in their customer account.
+
+They can, however, contact you anytime via your contact form, in this case, you can review their request and once you accept it, you will be able to remove their personal data directly in the configuration page of our Official GDPR Compliance module.</target>
+        <note>Line: 352</note>
+      </trans-unit>
+      <trans-unit id="72cd5bd2552bb7c07721af5830c6cb57">
+        <source>How to remove the personal data of a customer?</source>
+        <target>How to remove the personal data of a customer?</target>
+        <note>Line: 355</note>
+      </trans-unit>
+      <trans-unit id="cb91cb05467ec71c32d5c23913b71bd0">
+        <source>If the request is valid, from the Personal Data Management tab of this module, any customer can be found by typing the first few letters of his name or email address in the search bar.
+Before deleting any data, we recommend you to download all the invoices of the involved customer. After deleting the data with the “Remove data” button, the customer’s orders can’t be legally deleted, they just won’t be linked to any account. This allows you to keep precise statistics of your shop.</source>
+        <target>If the request is valid, from the Personal Data Management tab of this module, any customer can be found by typing the first few letters of his name or email address in the search bar.
+Before deleting any data, we recommend you to download all the invoices of the involved customer. After deleting the data with the “Remove data” button, the customer’s orders can’t be legally deleted, they just won’t be linked to any account. This allows you to keep precise statistics of your shop.</target>
+        <note>Line: 356</note>
+      </trans-unit>
+      <trans-unit id="87ad69c27077c1bb5c57d004e7eac4aa">
+        <source>After removing all personal data of a customer from my database, what will happen to his orders?</source>
+        <target>After removing all personal data of a customer from my database, what will happen to his orders?</target>
+        <note>Line: 359</note>
+      </trans-unit>
+      <trans-unit id="10201d0ca5552dfa9bd599483105ffd0">
+        <source>Due to other legal obligations, his orders will still be stocked but they are no longer associated with the customer.
+Only the name, shipping, and billing information must be kept in the order details page for legal reasons, invoicing, and accounting.
+According to the Rec.30;Art.7(1)(c)</source>
+        <target>Due to other legal obligations, his orders will still be stocked but they are no longer associated with the customer.
+Only the name, shipping, and billing information must be kept in the order details page for legal reasons, invoicing, and accounting.
+According to the Rec.30;Art.7(1)(c)</target>
+        <note>Line: 360</note>
+      </trans-unit>
+      <trans-unit id="e7502bc086a11cfa8789053af27eab2d">
+        <source>Saved with success !</source>
+        <target>Saved with success !</target>
+        <note>Line: 524</note>
+      </trans-unit>
+      <trans-unit id="a59aa7fb037f2498e36a6d687869e83e">
+        <source>Customer data deleted by official GDPR module.</source>
+        <target>Customer data deleted by official GDPR module.</target>
+        <note>Line: 549</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Type/ChangePasswordType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2871afea416378d2772937c4d67d6c2c">
+        <source>Generate password</source>
+        <target>Generate password</target>
+        <note>Line: 122</note>
       </trans-unit>
     </body>
   </file>

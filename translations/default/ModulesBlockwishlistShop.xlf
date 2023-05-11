@@ -164,15 +164,15 @@
         <target>List title is too short</target>
         <note>Line: 28</note>
       </trans-unit>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 26</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/blockwishlist/views/templates/components/modals/delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="a1cfe7cbeafd513db812282da3f01704">
         <source>Remove product from wishlist</source>
         <target>Remove product from wishlist</target>

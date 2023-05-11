@@ -5,36 +5,56 @@
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
         <target>Contact us</target>
-        <note>Line: 26</note>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
+        <source>Call us: [1]%phone%[/1]</source>
+        <target>Call us: [1]%phone%[/1]</target>
+        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
-        <source>Call us: [1]%phone%[/1]</source>
-        <target>Call us: [1]%phone%[/1]</target>
-        <note>Line: 32</note>
-      </trans-unit>
       <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
         <source>Store information</source>
         <target>Store information</target>
         <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="da6eb684bd77243a780629a180c9d19b">
-        <source>Fax: [1]%fax%[/1]</source>
-        <target>Fax: [1]%fax%[/1]</target>
-        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="077d21d48dae9586405c0d264f6d32e7">
         <source>Email us: [1]%email%[/1]</source>
         <target>Email us: [1]%email%[/1]</target>
         <note>Line: 57</note>
       </trans-unit>
+      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
+        <source>Email us:</source>
+        <target>Email us:</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="1300caaefd15b839f37952dc7cc75d82">
+        <source>Call us:</source>
+        <target>Call us:</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="0e2fb5b02182fd28b9b96e86ed27838f">
+        <source>Fax:</source>
+        <target>Fax:</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="2babe53026309ed1bc4d26626dbaf9b3">
+        <source>Details:</source>
+        <target>Details:</target>
+        <note>Line: 67</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="da6eb684bd77243a780629a180c9d19b">
+        <source>Fax: [1]%fax%[/1]</source>
+        <target>Fax: [1]%fax%[/1]</target>
+        <note>Line: 45</note>
+      </trans-unit>
       <trans-unit id="0bda3a05a6be2f106eb4f1da481bc7ce">
         <source>Tel: %phone%</source>
         <target>Tel: %phone%</target>

@@ -37,17 +37,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription-column.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e0aa021e21dddbd6d8cecec71e9cf564">
         <source>OK</source>
         <target>OK</target>
-        <note>Line: 35</note>
+        <note>Line: 43</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="b26917587d98330d93f87808fc9d7267">
         <source>Subscribe</source>
         <target>Subscribe</target>
@@ -148,7 +144,7 @@
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
-        <note>Line: 57</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -185,7 +181,7 @@
       <trans-unit id="d7778d0c64b6ba21494c97f77a66885a">
         <source>Filter</source>
         <target>Filter</target>
-        <note>Line: 43</note>
+        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>
@@ -205,6 +201,20 @@
         <target>Select</target>
         <note>Line: 35</note>
       </trans-unit>
+      <trans-unit id="961f2247a2070bedff9f9cd8d64e2650">
+        <source>Choose</source>
+        <target>Choose</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
+        <source>Download</source>
+        <target>Download</target>
+        <note>Line: 207</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/checkout/_partials/address-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -213,6 +223,20 @@
         <source>Cancel</source>
         <target>Cancel</target>
         <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/address-selector-block.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -236,15 +260,6 @@
         <source>Take advantage of our exclusive offers:</source>
         <target>Take advantage of our exclusive offers:</target>
         <note>Line: 78</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/login-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
-        <source>Continue</source>
-        <target>Continue</target>
-        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -275,12 +290,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/checkout/_partials/steps/payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/checkout/_partials/steps/shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="961f2247a2070bedff9f9cd8d64e2650">
-        <source>Choose</source>
-        <target>Choose</target>
-        <note>Line: 43</note>
+      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
+        <source>Continue</source>
+        <target>Continue</target>
+        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>
@@ -304,33 +319,10 @@
   </file>
   <file original="themes/classic/templates/customer/_partials/block-address.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
-        <source>Delete</source>
-        <target>Delete</target>
-        <note>Line: 42</note>
-      </trans-unit>
       <trans-unit id="06933067aafd48425d67bcb01bba5cb6">
         <source>Update</source>
         <target>Update</target>
         <note>Line: 38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/_partials/customer-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
-        <source>Save</source>
-        <target>Save</target>
-        <note>Line: 51</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/_partials/order-detail-no-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
-        <source>Download</source>
-        <target>Download</target>
-        <note>Line: 135</note>
       </trans-unit>
     </body>
   </file>
@@ -380,17 +372,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/password-infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="95e6faaba5e8b016e5f9bcf5ea6c8270">
         <source>Back to Login</source>
         <target>Back to Login</target>
-        <note>Line: 48</note>
+        <note>Line: 88</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="8f1e77e0d2be21da93cd4d9a939148f7">
         <source>Change Password</source>
         <target>Change Password</target>

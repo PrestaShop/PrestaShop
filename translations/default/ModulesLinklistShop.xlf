@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_linklist/src/Model/LinkBlockLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_linklist/src/Repository/LinkBlockRepository.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
         <target>Products</target>
-        <note>Line: 46</note>
+        <note>Line: 306</note>
       </trans-unit>
       <trans-unit id="ebdaa50b843565605176eb40816e77fe">
         <source>Our company</source>
         <target>Our company</target>
-        <note>Line: 47</note>
+        <note>Line: 307</note>
       </trans-unit>
     </body>
   </file>

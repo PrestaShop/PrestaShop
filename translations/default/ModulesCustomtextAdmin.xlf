@@ -5,17 +5,17 @@
       <trans-unit id="85fddc601dab19ef2388ec9902764943">
         <source>Custom text block</source>
         <target>Custom text block</target>
-        <note>Line: 227</note>
+        <note>Line: 242</note>
       </trans-unit>
       <trans-unit id="f233e46d07ed427b8397ef8535c9e53f">
         <source>Give your visitors extra information, display a customized block of content on your homepage.</source>
         <target>Give your visitors extra information, display a customized block of content on your homepage.</target>
-        <note>Line: 57</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="7ef25f7b93adc8bf024ed532d722f697">
         <source>Text block</source>
         <target>Text block</target>
-        <note>Line: 236</note>
+        <note>Line: 251</note>
       </trans-unit>
     </body>
   </file>

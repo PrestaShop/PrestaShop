@@ -29,7 +29,7 @@
       <trans-unit id="2845ecdc5099c86c8375b45aae5178b6">
         <source>Invalid postcode - should look like "%zipcode%"</source>
         <target>Invalid postcode - should look like "%zipcode%"</target>
-        <note>Line: 126</note>
+        <note>Line: 129</note>
       </trans-unit>
     </body>
   </file>
