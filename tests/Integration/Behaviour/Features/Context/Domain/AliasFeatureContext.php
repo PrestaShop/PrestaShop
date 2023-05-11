@@ -173,8 +173,6 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I bulk delete aliases :aliasReferences
-     *
-     * @param TableNode $aliasesList
      */
     public function bulkDeleteAlias(string $aliasReferences): void
     {

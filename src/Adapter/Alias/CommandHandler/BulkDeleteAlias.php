@@ -79,7 +79,7 @@ class BulkDeleteAlias extends AbstractBulkCommandHandler implements BulkDeleteAl
     {
         return new BulkAliasException(
             $caughtExceptions,
-            'Errors occurred during Feature bulk delete action',
+            'Errors occurred during Alias bulk delete action',
             BulkFeatureException::FAILED_BULK_DELETE
         );
     }
