@@ -16,6 +16,7 @@ type StoreCreator = {
   note?: string
   status?: boolean
   hours?: string[]
+  picture?: string
 };
 
 export default StoreCreator;
