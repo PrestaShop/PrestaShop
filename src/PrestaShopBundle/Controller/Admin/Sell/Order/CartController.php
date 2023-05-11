@@ -537,7 +537,7 @@ class CartController extends FrameworkBundleAdminController
         $minimalQuantity = $e instanceof MinimalQuantityException ? $e->getMinimalQuantity() : 0;
 
         return [
-            CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CartNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
             CartRuleValidityException::class => $e->getMessage(),
             CartConstraintException::class => [
                 CartConstraintException::INVALID_QUANTITY => $this->trans(

@@ -1273,7 +1273,7 @@ class ProductController extends FrameworkBundleAdminController
     private function getErrorMessages(): array
     {
         return [
-            ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
             CannotUpdateProductException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_ONLINE_DATA => $this->trans(

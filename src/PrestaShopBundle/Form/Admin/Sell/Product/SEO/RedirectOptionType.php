@@ -101,7 +101,7 @@ class RedirectOptionType extends TranslatorAwareType
         $entityAttributes = [
             'product' => [
                 'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
-                'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
+                'placeholder' => $this->trans('To which product should the page redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
                 'searchUrl' => $this->router->generate('admin_products_search_products_for_association', [
                     'languageCode' => $this->employeeIsoCode,
@@ -111,8 +111,8 @@ class RedirectOptionType extends TranslatorAwareType
             ],
             'category' => [
                 'label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
-                'placeholder' => $this->trans('To which category the page should redirect?', 'Admin.Catalog.Help'),
-                'help' => $this->trans('If no category is selected the Main Category is used', 'Admin.Catalog.Help'),
+                'placeholder' => $this->trans('To which category should the page redirect?', 'Admin.Catalog.Help'),
+                'help' => $this->trans('By default, the main category will be used if no category is selected.', 'Admin.Catalog.Help'),
                 'searchUrl' => $this->router->generate('admin_categories_get_ajax_categories', ['query' => '__QUERY__']),
                 'filtered' => json_encode([$this->homeCategoryId]),
             ],

@@ -59,14 +59,14 @@
 {else}
     var youEditFieldFor = '';
 {/if}
-		var new_order_msg = '{l|escape s='A new order has been placed on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var new_order_msg = '{l|escape s='A new order has been placed on your store.' js=1 d='Admin.Navigation.Header'}';
 		var order_number_msg = '{l|escape s='Order number:' js=1 d='Admin.Navigation.Header'} ';
 		var total_msg = '{l|escape s='Total' js=1 d='Admin.Global'} ';
 		var from_msg = '{l|escape s='From:' js=1 d='Admin.Global'} ';
 		var see_order_msg = '{l|escape s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
-		var new_customer_msg = '{l|escape s='A new customer registered on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var new_customer_msg = '{l|escape s='A new customer registered on your store.' js=1 d='Admin.Navigation.Header'}';
         var customer_name_msg = '{l|escape s='registered' js=1 d='Admin.Navigation.Notification'} ';
-		var new_msg = '{l|escape s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var new_msg = '{l|escape s='A new message was posted on your store.' js=1 d='Admin.Navigation.Header'}';
 		var see_msg = '{l|escape s='Read this message' js=1 d='Admin.Navigation.Header'}';
 		var token = '{$token|addslashes}';
 		var token_admin_orders = tokenAdminOrders = '{getAdminToken tab='AdminOrders'}';
@@ -227,7 +227,7 @@
            data-toggle="tooltip"
            data-placement="bottom"
            data-html="true"
-           title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
+           title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your store is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
           <i class="material-icons">bug_report</i>
@@ -288,7 +288,7 @@
             {else}
               <a id="header_shopname" class="shop-state" href="{$base_url|escape:'html':'UTF-8'}" target="_blank">
                 <i class="material-icons">visibility</i>
-                <span>{l|escape s='View my shop' d='Admin.Navigation.Header'}</span>
+                <span>{l|escape s='View my store' d='Admin.Navigation.Header'}</span>
               </a>
             {/if}
           </li>

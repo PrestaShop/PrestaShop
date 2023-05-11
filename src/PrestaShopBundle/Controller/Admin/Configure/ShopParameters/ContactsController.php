@@ -259,7 +259,7 @@ class ContactsController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         }
 
@@ -275,7 +275,7 @@ class ContactsController extends FrameworkBundleAdminController
     {
         return [
             ContactNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             ContactConstraintException::class => [

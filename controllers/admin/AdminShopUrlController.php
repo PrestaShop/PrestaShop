@@ -63,7 +63,7 @@ class AdminShopUrlControllerCore extends AdminController
 
         $this->fields_list = [
             'id_shop_url' => [
-                'title' => $this->trans('Shop URL ID', [], 'Admin.Advparameters.Feature'),
+                'title' => $this->trans('Store URL ID', [], 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ],
@@ -170,7 +170,7 @@ class AdminShopUrlControllerCore extends AdminController
                         ],
                         [
                             'type' => 'switch',
-                            'label' => $this->trans('Is it the main URL for this shop?', [], 'Admin.Advparameters.Feature'),
+                            'label' => $this->trans('Is it the main URL for this store?', [], 'Admin.Advparameters.Feature'),
                             'name' => 'main',
                             'is_bool' => true,
                             'class' => 't',
@@ -223,7 +223,7 @@ class AdminShopUrlControllerCore extends AdminController
             [
                 'form' => [
                     'legend' => [
-                        'title' => $this->trans('Shop URL', [], 'Admin.Advparameters.Feature'),
+                        'title' => $this->trans('Store URL', [], 'Admin.Advparameters.Feature'),
                         'icon' => 'icon-shopping-cart',
                     ],
                     'input' => [
@@ -310,7 +310,7 @@ class AdminShopUrlControllerCore extends AdminController
             }
 
             $this->page_header_toolbar_btn['edit'] = [
-                'desc' => $this->trans('Edit this shop', [], 'Admin.Advparameters.Feature'),
+                'desc' => $this->trans('Edit this store', [], 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop') . '&updateshop&shop_id=' . (int) $this->id_shop,
             ];
 

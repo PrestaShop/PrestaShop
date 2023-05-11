@@ -285,7 +285,7 @@ class FeatureController extends FrameworkBundleAdminController
     {
         return [
             FeatureNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             FeatureConstraintException::class => [

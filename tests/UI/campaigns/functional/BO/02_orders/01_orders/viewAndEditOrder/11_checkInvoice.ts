@@ -375,7 +375,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
-            'Delivery Address,,'
+            'Delivery address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
             + `${Addresses.second.address},`
@@ -392,7 +392,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const billingAddressExist = await files.isTextInPDF(
             filePath,
-            'Billing Address,,'
+            'Billing address,,'
             + `${Addresses.third.firstName} ${Addresses.third.lastName},`
             + `${Addresses.third.company},`
             + `${Addresses.third.address} ${Addresses.third.secondAddress},`
@@ -609,7 +609,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
-            'Delivery Address,,'
+            'Delivery address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
             + `${Addresses.second.address},`
@@ -626,7 +626,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const billingAddressExist = await files.isTextInPDF(
             filePath,
-            'Billing Address,,'
+            'Billing address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
             + `${Addresses.second.address},`
@@ -805,7 +805,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
-            'Delivery Address,,'
+            'Delivery address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
             + `${Addresses.second.address},`
@@ -822,7 +822,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const billingAddressExist = await files.isTextInPDF(
             filePath,
-            'Billing Address,,'
+            'Billing address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
             + `${Addresses.second.address},`
@@ -1046,7 +1046,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           // Check delivery address
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
-            'Delivery Address,,'
+            'Delivery address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
             + `${Addresses.second.address},`
@@ -1063,7 +1063,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const billingAddressExist = await files.isTextInPDF(
             filePath,
-            'Billing Address,,'
+            'Billing address,,'
             + `${Addresses.second.firstName} ${Addresses.second.lastName},`
             + `${Addresses.second.company},`
             + `${Addresses.second.address},`
@@ -1212,7 +1212,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
-            'Delivery Address,,'
+            'Delivery address,,'
             + `${Addresses.third.firstName} ${Addresses.third.lastName},`
             + `${Addresses.third.company},`
             + `${Addresses.third.address} ${Addresses.third.secondAddress},`
@@ -1248,7 +1248,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const deliveryAddressExist = await files.isTextInPDF(
             filePath,
-            'Billing Address,,'
+            'Billing address,,'
             + `${Addresses.third.firstName} ${Addresses.third.lastName},`
             + `${Addresses.third.company},`
             + `${Addresses.third.address} ${Addresses.third.secondAddress},`

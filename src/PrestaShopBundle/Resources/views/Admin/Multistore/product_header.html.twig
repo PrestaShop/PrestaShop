@@ -59,7 +59,7 @@
     <a class="multishop-modal-shop-name{% if shop.hasMainUrl() == false %} multishop-modal-no-url">{{ shop.name }}</a>{% else %}" href="{{ multistore_shop_url(shop) }}">{{ shop.name }}</a>{% endif %}
   </div>
   {% if shop.hasMainUrl() %}
-    <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
+    <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my store"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
   {% else %}
     <a class="multishop-modal-shop-view" href="{{ getAdminLink('AdminShopUrl', true, {'shop_id' : shop.id, 'addshop_url' : 1}) }}" rel="noreferrer">{{ "Configure URL"|trans({}, 'Admin.Actions') }} <i class="material-icons">visibility</i></a>
   {% endif %}

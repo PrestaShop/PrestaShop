@@ -74,6 +74,10 @@ class DiscountControllerCore extends FrontController
                 continue;
             }
 
+            if ($voucher['quantity'] === 0 || $voucher['quantity_for_user'] === 0) {
+                continue;
+            }
+
             $cart_rule = $this->buildCartRuleFromVoucher($voucher);
             $cart_rules[$key] = $cart_rule;
         }

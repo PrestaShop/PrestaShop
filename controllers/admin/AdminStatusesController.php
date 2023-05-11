@@ -326,7 +326,7 @@ class AdminStatusesControllerCore extends AdminController
                     'name' => 'invoice',
                     'values' => [
                         'query' => [
-                            ['id' => 'on', 'name' => $this->trans('Allow a customer to download and view PDF versions of his/her invoices.', [], 'Admin.Shopparameters.Feature'), 'val' => '1'],
+                            ['id' => 'on', 'name' => $this->trans('Allow a customer to download and view PDF versions of their invoices.', [], 'Admin.Shopparameters.Feature'), 'val' => '1'],
                         ],
                         'id' => 'id',
                         'name' => 'name',
@@ -348,7 +348,7 @@ class AdminStatusesControllerCore extends AdminController
                     'name' => 'send_email',
                     'values' => [
                         'query' => [
-                            ['id' => 'on', 'name' => $this->trans('Send an email to the customer when his/her order status has changed.', [], 'Admin.Shopparameters.Feature'), 'val' => '1'],
+                            ['id' => 'on', 'name' => $this->trans('Send an email to the customer when their order status has changed.', [], 'Admin.Shopparameters.Feature'), 'val' => '1'],
                         ],
                         'id' => 'id',
                         'name' => 'name',

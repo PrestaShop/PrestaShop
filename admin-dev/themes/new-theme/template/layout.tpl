@@ -44,7 +44,7 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
+             title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your store is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">bug_report</i>

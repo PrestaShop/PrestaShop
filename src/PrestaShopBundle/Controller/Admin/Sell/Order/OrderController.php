@@ -177,7 +177,7 @@ class OrderController extends FrameworkBundleAdminController
 
         if (!$isSingleShopContext) {
             $toolbarButtons['add']['help'] = $this->trans(
-                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'You can use this feature in a single-store context only. Switch contexts to enable it.',
                 'Admin.Orderscustomers.Feature'
             );
             $toolbarButtons['add']['href'] = '#';

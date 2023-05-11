@@ -294,7 +294,7 @@ class AdminCartsControllerCore extends AdminController
         $helper->id = 'box-kpi-cart';
         $helper->icon = 'icon-shopping-cart';
         $helper->color = 'color1';
-        $helper->title = $this->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
+        $helper->title = $this->trans('Total cart', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = $this->context->getCurrentLocale()->formatPrice($total_price, $currency->iso_code);
         $kpi = $helper->generate();

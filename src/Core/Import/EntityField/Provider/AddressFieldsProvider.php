@@ -72,7 +72,7 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('state', $this->trans('State', 'Admin.Global')),
             new EntityField('other', $this->trans('Other', 'Admin.Global')),
             new EntityField('phone', $this->trans('Phone', 'Admin.Global')),
-            new EntityField('phone_mobile', $this->trans('Mobile Phone', 'Admin.Global')),
+            new EntityField('phone_mobile', $this->trans('Mobile phone', 'Admin.Global')),
             new EntityField('vat_number', $this->trans('VAT number', 'Admin.Orderscustomers.Feature')),
             new EntityField('dni', $this->trans('Identification number', 'Admin.Orderscustomers.Feature')),
         ];

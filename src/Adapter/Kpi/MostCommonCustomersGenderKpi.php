@@ -76,7 +76,7 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
         $helper->icon = 'person';
         $helper->color = 'color1';
         $helper->title = $this->translator->trans('Customers', [], 'Admin.Global');
-        $helper->subtitle = $this->translator->trans('All Time', [], 'Admin.Global');
+        $helper->subtitle = $this->translator->trans('All time', [], 'Admin.Global');
 
         if (false !== $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER')) {
             $helper->value = $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER');

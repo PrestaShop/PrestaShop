@@ -192,7 +192,7 @@ class CurrencyType extends TranslatorAwareType
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(
-                    'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).',
+                    'Exchange rates are calculated from one unit of your store\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).',
                     'Admin.International.Help'
                 ),
                 'scale' => 6,

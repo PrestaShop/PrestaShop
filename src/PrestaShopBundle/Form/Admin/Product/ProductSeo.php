@@ -179,10 +179,10 @@ class ProductSeo extends CommonAbstractType
                     'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
                     'attr' => [
                         'data-labelproduct' => $this->translator->trans('Target product', [], 'Admin.Catalog.Feature'),
-                        'data-placeholderproduct' => $this->translator->trans('To which product the page should redirect?', [], 'Admin.Catalog.Help'),
+                        'data-placeholderproduct' => $this->translator->trans('To which product should the page redirect?', [], 'Admin.Catalog.Help'),
                         'data-labelcategory' => $this->translator->trans('Target category', [], 'Admin.Catalog.Feature'),
-                        'data-placeholdercategory' => $this->translator->trans('To which category the page should redirect?', [], 'Admin.Catalog.Help'),
-                        'data-hintcategory' => $this->translator->trans('If no category is selected the Main Category is used', [], 'Admin.Catalog.Help'),
+                        'data-placeholdercategory' => $this->translator->trans('To which category should the page redirect?', [], 'Admin.Catalog.Help'),
+                        'data-hintcategory' => $this->translator->trans('By default, the main category will be used if no category is selected.', [], 'Admin.Catalog.Help'),
                     ],
                 ]
             )

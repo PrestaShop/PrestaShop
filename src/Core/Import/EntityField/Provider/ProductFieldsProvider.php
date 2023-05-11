@@ -152,7 +152,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
                 'advanced_stock_management',
                 $this->trans('Advanced stock management', 'Admin.Advparameters.Feature'),
                 $this->trans(
-                    'Enable Advanced stock management on product (0 = No, 1 = Yes).',
+                    'Enable advanced stock management on product (0 = No, 1 = Yes).',
                     'Admin.Advparameters.Help'
                 )
             ),

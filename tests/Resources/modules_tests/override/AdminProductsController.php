@@ -297,7 +297,7 @@ class AdminProductsController extends AdminProductsControllerCore
             foreach ($attachment_descriptions as $lang => $description) {
                 $language = Language::getLanguage((int) $lang);
                 if (!Validate::isCleanHtml($description)) {
-                    $_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid description for %s language'), $language['name']);
+                    $_FILES['attachment_file']['error'][] = sprintf(Tools::displayError('Invalid description for %s language.'), $language['name']);
                 }
             }
             if (!$is_attachment_name_valid) {
@@ -759,7 +759,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $tos = Tools::getValue('spm_to');
         foreach ($id_specific_prices as $key => $id_specific_price) {
             if ($reduction_types[$key] == 'percentage' && ((float) $reductions[$key] <= 0 || (float) $reductions[$key] > 100)) {
-                $this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
+                $this->errors[] = Tools::displayError('The submitted reduction value (0-100) is out-of-range.');
             } elseif ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key])) {
                 $specific_price = new SpecificPrice((int) ($id_specific_price));
                 $specific_price->id_shop = (int) $id_shops[$key];
@@ -816,11 +816,11 @@ class AdminProductsController extends AdminProductsControllerCore
             $to = '0000-00-00 00:00:00';
         }
         if (($price == '-1') && ((float) $reduction == '0')) {
-            $this->errors[] = Tools::displayError('No reduction value has been submitted');
+            $this->errors[] = Tools::displayError('No reduction value has been submitted.');
         } elseif (strtotime($to) < strtotime($from)) {
             $this->errors[] = Tools::displayError('Invalid date range');
         } elseif ($reduction_type == 'percentage' && ((float) $reduction <= 0 || (float) $reduction > 100)) {
-            $this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
+            $this->errors[] = Tools::displayError('The submitted reduction value (0-100) is out-of-range.');
         } elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
             $specificPrice = new SpecificPrice();
             $specificPrice->id_product = (int) $id_product;
