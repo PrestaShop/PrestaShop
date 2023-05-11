@@ -161,10 +161,13 @@ class FrameworkBundleAdminController extends AbstractController
 
         $iso = (string) $legacyContext->getEmployeeLanguageIso();
 
-        return $this->generateUrl('admin_common_sidebar', [
+        $url = $this->generateUrl('admin_common_sidebar', [
             'url' => $this->container->get(Documentation::class)->generateLink($section, $iso),
             'title' => $title,
         ]);
+
+        //this line is allow to revert a new behaviour introduce in sf 5.4 which break the result we used to have
+        return strtr($url, ['%2F' => '%252F']);
     }
 
     /**
