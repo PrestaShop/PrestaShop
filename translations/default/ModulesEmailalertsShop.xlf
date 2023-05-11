@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_emailalerts/controllers/front/actions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="72af53019e3ff98e70637357a59d69ae">
+        <source>Your email address is invalid.</source>
+        <target>Your email address is invalid.</target>
+        <note>Line: 153</note>
+      </trans-unit>
+      <trans-unit id="460257917102c6eb3643c095c012f3e8">
+        <source>You already have set an alert for this product.</source>
+        <target>You already have set an alert for this product.</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="61172eb93737ebf095d3fa02119ce1df">
+        <source>Request notification registered</source>
+        <target>Request notification registered</target>
+        <note>Line: 145</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailalerts/views/templates/front/mailalerts-account-line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b811a5b0016fedb3e356d7ce8e4e9f91">
+        <source>Delete email alert</source>
+        <target>Delete email alert</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_emailalerts/views/templates/front/mailalerts-account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8bb23c2ae698681ebb650f43acb54dab">
@@ -7,14 +35,10 @@
         <target>No mail alerts yet.</target>
         <note>Line: 39</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_emailalerts/views/templates/hook/my-account-footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
         <source>My alerts</source>
         <target>My alerts</target>
-        <note>Line: 27</note>
+        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>
@@ -23,12 +47,17 @@
       <trans-unit id="67135a14d3ac4f1369633dd006d6efec">
         <source>your@email.com</source>
         <target>your@email.com</target>
-        <note>Line: 29</note>
+        <note>Line: 30</note>
       </trans-unit>
       <trans-unit id="546e02eaa9a986c83cc347e273269f2c">
         <source>Notify me when available</source>
         <target>Notify me when available</target>
-        <note>Line: 42</note>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="d3618b65315f6c6c9270964484f4ca4c">
+        <source>You will be notified when this product is available.</source>
+        <target>You will be notified when this product is available.</target>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
