@@ -77,6 +77,7 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
       await productsPage.goToAddProductPage(page);
+      await productsPage.closeSfToolBar(page);
 
       const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
       await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
