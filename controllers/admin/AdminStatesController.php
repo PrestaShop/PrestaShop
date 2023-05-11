@@ -134,7 +134,7 @@ class AdminStatesControllerCore extends AdminController
         // display multistore information message if multistore is used
         if ($this->isMultistoreEnabled()) {
             $this->informations[] = $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in "all stores" context. It will be added to all your stores.',
                 [],
                 'Admin.Notifications.Info'
             );
