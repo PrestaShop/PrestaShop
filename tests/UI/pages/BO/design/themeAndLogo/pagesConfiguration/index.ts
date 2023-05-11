@@ -1,6 +1,10 @@
+// Import pages
 import themeAndLogoBasePage from '@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage';
-import {Page} from 'playwright';
+
+// Import data
 import ModuleData from '@data/faker/module';
+
+import {Page} from 'playwright';
 
 /**
  * Pages configuration page, contains functions that can be used on the page
