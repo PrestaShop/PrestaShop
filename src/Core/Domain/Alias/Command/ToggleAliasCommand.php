@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Alias\Command;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 
 /**
- * Toggles carrier status
+ * Toggles alias status
  */
 class ToggleAliasCommand
 {
