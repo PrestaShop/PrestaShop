@@ -38,7 +38,7 @@ use PrestaShopException;
 /**
  * Toggles alias status
  */
-class ToggleAliasHandler implements ToggleAliasHandlerInterfaces
+class ToggleAliasStatusHandler implements ToggleAliasHandlerInterfaces
 {
     /**
      * @var AliasRepository
