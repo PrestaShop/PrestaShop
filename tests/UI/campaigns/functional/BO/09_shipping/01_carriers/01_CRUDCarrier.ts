@@ -55,8 +55,8 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
     // Create images
     await Promise.all([
-      files.generateImage(`${createCarrierData.name}.jpg`),
-      files.generateImage(`${editCarrierData.name}.jpg`),
+      files.generateImage(createCarrierData.name),
+      files.generateImage(editCarrierData.name),
     ]);
   });
 

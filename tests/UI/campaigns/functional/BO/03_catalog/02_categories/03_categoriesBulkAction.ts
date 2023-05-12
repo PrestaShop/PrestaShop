@@ -35,8 +35,8 @@ describe('BO - Catalog - Categories : Enable/Disable/Delete categories by Bulk A
 
     // Create categories images
     await Promise.all([
-      files.generateImage(`${firstCategoryData.name}.jpg`),
-      files.generateImage(`${secondCategoryData.name}.jpg`),
+      files.generateImage(firstCategoryData.name),
+      files.generateImage(secondCategoryData.name),
     ]);
   });
 

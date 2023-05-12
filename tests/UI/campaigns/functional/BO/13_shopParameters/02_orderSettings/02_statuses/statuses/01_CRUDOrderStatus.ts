@@ -45,8 +45,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
 
     // Create images
     await Promise.all([
-      files.generateImage(`${createOrderStatusData.name}.jpg`),
-      files.generateImage(`${editOrderStatusData.name}.jpg`),
+      files.generateImage(createOrderStatusData.name),
+      files.generateImage(editOrderStatusData.name),
     ]);
   });
 

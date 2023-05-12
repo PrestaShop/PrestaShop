@@ -271,7 +271,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create order status n°${index + 1} in BO`, async () => {
-      before(() => files.generateImage(`todelete${index}.jpg`));
+      before(() => files.generateImage(`todelete${index}`));
 
       const orderStatusData: OrderStatusData = new OrderStatusData({name: `todelete${index}`});
 

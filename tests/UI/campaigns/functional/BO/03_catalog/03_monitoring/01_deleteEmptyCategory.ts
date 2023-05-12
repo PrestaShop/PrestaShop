@@ -39,7 +39,7 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
     page = await helper.newTab(browserContext);
 
     // Create category image
-    await files.generateImage(`${createCategoryData.name}.jpg`);
+    await files.generateImage(createCategoryData.name);
   });
 
   after(async () => {

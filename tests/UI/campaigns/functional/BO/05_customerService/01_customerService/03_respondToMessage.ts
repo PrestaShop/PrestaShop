@@ -39,7 +39,7 @@ describe('BO - Customer Service : Respond to message', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
-    await files.generateImage(`${contactUsData.fileName}.jpg`);
+    await files.generateImage(contactUsData.fileName);
   });
 
   after(async () => {
