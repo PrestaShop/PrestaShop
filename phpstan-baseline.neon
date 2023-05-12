@@ -946,11 +946,6 @@ parameters:
 			path: src/PrestaShopBundle/Bridge/AdminController/LegacyControllerBridge.php
 
 		-
-			message: "#^Using __PS_BASE_URI__ is forbidden, Use dependency injection instead$#"
-			count: 18
-			path: src/PrestaShopBundle/Bridge/AdminController/LegacyControllerBridge.php
-
-		-
 			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 1
 			path: src/PrestaShopBundle/Bridge/AdminController/Listener/InitFrameworkBridgeControllerListener.php

@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use Link;
+use PrestaShop\PrestaShop\Adapter\Tab\Repository\TabRepository;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
-use Tab;
 use Tools;
 
 /**
@@ -40,26 +40,11 @@ use Tools;
  */
 class ControllerConfigurationFactory
 {
-    /**
-     * @var UserProvider
-     */
-    private $userProvider;
-
-    /**
-     * @var Link
-     */
-    private $link;
-
-    /**
-     * @param UserProvider $userProvider
-     * @param Link $link
-     */
     public function __construct(
-        UserProvider $userProvider,
-        Link $link
+        private UserProvider $userProvider,
+        private Link $link,
+        private TabRepository $tabRepository
     ) {
-        $this->userProvider = $userProvider;
-        $this->link = $link;
     }
 
     /**
@@ -84,9 +69,7 @@ class ControllerConfigurationFactory
             );
         }
 
-        /* @phpstan-ignore-next-line */
-        $tabId = Tab::getIdFromClassName($legacyControllerName);
-
+        $tabId = $this->tabRepository->getIdByClassName($legacyControllerName);
         if (!$tabId) {
             throw new BridgeException(
                 sprintf(
@@ -98,7 +81,7 @@ class ControllerConfigurationFactory
 
         $controllerConfiguration = new ControllerConfiguration(
             $employee,
-            $tabId,
+            $tabId->getValue(),
             $objectModelClassName,
             $legacyControllerName,
             $tableName,

@@ -8,3 +8,9 @@ services:
       - '@doctrine.orm.entity_manager'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand' }
+
+  PrestaShop\PrestaShop\Adapter\Tab\Repository\TabRepository:
+    autowire: true
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

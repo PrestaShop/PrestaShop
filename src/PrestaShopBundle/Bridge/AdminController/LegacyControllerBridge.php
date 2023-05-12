@@ -170,6 +170,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
      */
     public function setMedia($isNewTheme = false): void
     {
+        $baseUri = $this->legacyContext->getContext()->shop->getBaseURI();
         $adminWebpath = '';
 
         if (defined('_PS_ADMIN_DIR_')) {
@@ -180,23 +181,23 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         }
 
         if ($this->getContext()->language->is_rtl) {
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . $this->bo_theme . '/public/rtl.css?v=' . _PS_VERSION_, 'all', 0);
+            $this->addCSS($baseUri . $adminWebpath . '/themes/new_theme/public/rtl.css?v=' . _PS_VERSION_, 'all', 0);
         }
 
         if ($isNewTheme) {
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/theme.css?v=' . _PS_VERSION_, 'all', 1);
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/main.bundle.js?v=' . _PS_VERSION_);
+            $this->addCSS($baseUri . $adminWebpath . '/themes/new-theme/public/theme.css?v=' . _PS_VERSION_, 'all', 1);
+            $this->addJS($baseUri . $adminWebpath . '/themes/new-theme/public/main.bundle.js?v=' . _PS_VERSION_);
 
             // the multistore dropdown should be called only once, and only if multistore is used
             if ($this->multiStoreFeature->isUsed()) {
-                $this->addJs(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/multistore_dropdown.bundle.js?v=' . _PS_VERSION_);
+                $this->addJs($baseUri . $adminWebpath . '/themes/new-theme/public/multistore_dropdown.bundle.js?v=' . _PS_VERSION_);
             }
             $this->addJqueryPlugin(['chosen', 'fancybox']);
         } else {
             //Bootstrap
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/theme.css?v=' . _PS_VERSION_, 'all', 0);
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/vendor/titatoggle-min.css', 'all', 0);
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
+            $this->addCSS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/theme.css?v=' . _PS_VERSION_, 'all', 0);
+            $this->addCSS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/vendor/titatoggle-min.css', 'all', 0);
+            $this->addCSS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/theme.css?v=' . _PS_VERSION_, 'all', 0);
 
             // add Jquery 3 and its migration script
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.5.1.min.js');
@@ -210,16 +211,16 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
             $this->addJqueryPlugin('growl', null, false);
             $this->addJqueryUI(['ui.slider', 'ui.datepicker']);
 
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/bootstrap.min.js');
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/modernizr.min.js');
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/modernizr-loads.js');
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/moment-with-langs.min.js');
-            $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/bundle.js?v=' . _PS_VERSION_);
+            $this->addJS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/bootstrap.min.js');
+            $this->addJS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/modernizr.min.js');
+            $this->addJS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/modernizr-loads.js');
+            $this->addJS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/vendor/moment-with-langs.min.js');
+            $this->addJS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/public/bundle.js?v=' . _PS_VERSION_);
 
             $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
 
             if (!$this->controllerConfiguration->liteDisplay) {
-                $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/help.js?v=' . _PS_VERSION_);
+                $this->addJS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/help.js?v=' . _PS_VERSION_);
             }
 
             if (!Tools::getValue('submitFormAjax')) {
@@ -228,18 +229,18 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         }
 
         // Specific Admin Theme
-        $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/overrides.css', 'all', PHP_INT_MAX);
+        $this->addCSS($baseUri . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/overrides.css', 'all', PHP_INT_MAX);
 
-        $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/create_product_default_theme.css?v=' . _PS_VERSION_, 'all', 0);
+        $this->addCSS($baseUri . $adminWebpath . '/themes/new-theme/public/create_product_default_theme.css?v=' . _PS_VERSION_, 'all', 0);
         $this->addJS([
             _PS_JS_DIR_ . 'admin.js?v=' . _PS_VERSION_, // TODO: SEE IF REMOVABLE
-            __PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/cldr.bundle.js?v=' . _PS_VERSION_,
+            $baseUri . $adminWebpath . '/themes/new-theme/public/cldr.bundle.js?v=' . _PS_VERSION_,
             _PS_JS_DIR_ . 'tools.js?v=' . _PS_VERSION_,
-            __PS_BASE_URI__ . $adminWebpath . '/public/bundle.js?v=' . _PS_VERSION_,
+            $baseUri . $adminWebpath . '/public/bundle.js?v=' . _PS_VERSION_,
         ]);
 
         // This is handled as an external common dependency for both themes, but once new-theme is the only one it should be integrated directly into the main.bundle.js file
-        $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/create_product.bundle.js?v=' . _PS_VERSION_);
+        $this->addJS($baseUri . $adminWebpath . '/themes/new-theme/public/create_product.bundle.js?v=' . _PS_VERSION_);
 
         Media::addJsDef([
             'changeFormLanguageUrl' => $this->getContext()->link->getAdminLink(
@@ -249,8 +250,8 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
                 ['action' => 'formLanguage']
             ),
         ]);
-        Media::addJsDef(['baseDir' => __PS_BASE_URI__]);
-        Media::addJsDef(['baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/']);
+        Media::addJsDef(['baseDir' => $baseUri]);
+        Media::addJsDef(['baseAdminDir' => $baseUri . basename(_PS_ADMIN_DIR_) . '/']);
         Media::addJsDef(['currency' => [
             'iso_code' => $this->getContext()->currency->iso_code,
             'sign' => $this->getContext()->currency->sign,

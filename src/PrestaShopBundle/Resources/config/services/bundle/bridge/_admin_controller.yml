@@ -3,9 +3,9 @@ services:
     public: true
 
   PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory:
+    autowire: true
     arguments:
-      - '@PrestaShopBundle\Service\DataProvider\UserProvider'
-      - '@=service("prestashop.adapter.legacy.context").getContext().link'
+      $link: '@=service("prestashop.adapter.legacy.context").getContext().link'
 
   PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory:
     arguments:
