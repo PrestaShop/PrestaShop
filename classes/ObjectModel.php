@@ -53,20 +53,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public const HAS_ONE = 1;
     public const HAS_MANY = 2;
 
-    /** @var int|null Object ID */
-    public $id;
-
-    /** @var int|null Language ID */
-    protected $id_lang = null;
-
     /** @var Language|null Language ID
      * This is the same Language as the $id_lang except in the following case:
      * If $id_lang is invalid (e.g. due to a removed language) $lang_associated is the default language
      */
     protected $lang_associated = null;
-
-    /** @var int|null Shop ID */
-    protected $id_shop = null;
 
     /**
      * This field contains the list of shop that you intend to update. When add or update is called the ObjectModel
@@ -156,9 +147,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var string file type of image files. */
     protected $image_format = 'jpg';
 
-    /** @var TranslatorComponent */
-    protected $translator;
-
     /**
      * @var array Contains object definition
      *
@@ -242,8 +230,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function __construct($id = null, $id_lang = null, $id_shop = null, $translator = null)
-    {
+    public function __construct(
+        public int|null $id = null,
+        protected int|null $id_lang = null,
+        protected int|null $id_shop = null,
+        protected TranslatorComponent|null $translator = null
+    ) {
         $class_name = get_class($this);
         if (!isset(ObjectModel::$loaded_classes[$class_name])) {
             $this->def = ObjectModel::getDefinition($class_name);
