@@ -330,6 +330,8 @@ class AdminStoresControllerCore extends AdminController
             'hours' => $hours,
         ];
 
+        $this->tpl_form_vars['states_url'] = $this->getContainer()->get('router')->generate('admin_country_states');
+
         return parent::renderForm();
     }
 
