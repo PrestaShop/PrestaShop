@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages

@@ -1,6 +1,10 @@
 import ModuleData from '@data/faker/module';
 
 export default {
+  psCheckPayment: new ModuleData({
+    tag: 'ps_checkpayment',
+    name: 'Payments by check',
+  }),
   psEmailSubscription: new ModuleData({
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
