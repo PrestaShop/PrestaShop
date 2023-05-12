@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotAddCartRuleExcept
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotEditCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Restriction\RestrictionRuleGroup;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class CartRuleRepository extends AbstractObjectModelRepository
@@ -85,6 +86,17 @@ class CartRuleRepository extends AbstractObjectModelRepository
         );
 
         return $cartRule;
+    }
+
+    /**
+     * @param CartRuleId $cartRuleId
+     * @param RestrictionRuleGroup[] $restrictionRuleGroups
+     *
+     * @return void
+     */
+    public function setProductRestrictions(CartRuleId $cartRuleId, array $restrictionRuleGroups): void
+    {
+        //@todo: implement
     }
 
     /**
