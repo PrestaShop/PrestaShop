@@ -22,7 +22,7 @@ services:
   prestashop.core.admin.module.repository.eventsubscriber:
     class: PrestaShop\PrestaShop\Core\Module\EventSubscriber
     arguments:
-      - '@prestashop.core.admin.module.repository'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
       - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
     tags:
       - { name: kernel.event_subscriber }
@@ -52,3 +52,9 @@ services:
   PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory:
     arguments:
       - !tagged core.module.source_handler
+
+  # Deprecated in 8.1.0
+  prestashop.module.factory.sourcehandler:
+    alias: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
+    public: true
+    deprecated: ~

@@ -69,7 +69,7 @@ services:
       - "@translator"
       - "@session"
       - "@annotation_reader"
-      - "@prestashop.core.admin.module.repository"
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
     tags:
       - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 

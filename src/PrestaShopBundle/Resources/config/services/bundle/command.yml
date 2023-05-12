@@ -42,7 +42,7 @@ services:
       - '@translator'
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.adapter.module.self_configurator'
-      - '@prestashop.module.manager'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleManager'
     tags:
       - 'console.command'
 

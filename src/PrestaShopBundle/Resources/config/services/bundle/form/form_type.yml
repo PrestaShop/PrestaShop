@@ -578,7 +578,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType:
     arguments:
       $moduleDataProvider: '@prestashop.adapter.data_provider.module'
-      $moduleRepository: '@prestashop.core.admin.module.repository'
+      $moduleRepository: '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
 
   PrestaShopBundle\Form\Admin\Sell\Product\FooterType:
     arguments:

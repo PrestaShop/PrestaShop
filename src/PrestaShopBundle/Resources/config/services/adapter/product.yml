@@ -18,6 +18,15 @@ services:
       - '@PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface'
       - '@PrestaShop\PrestaShop\Adapter\ContextStateManager'
 
+  # Deprecated in 8.1
+  PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper:
+    arguments:
+      - "@translator"
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
+      - '@PrestaShop\PrestaShop\Core\Localization\LocaleInterface'
+      - '@PrestaShopBundle\Utils\FloatParser'
+    deprecated: ~
+
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForAssociationHandler:
     autowire: true
     public: false
