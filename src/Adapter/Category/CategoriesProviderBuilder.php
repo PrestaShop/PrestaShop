@@ -24,10 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Service\DataProvider\Admin;
+namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 class CategoriesProviderBuilder
 {
