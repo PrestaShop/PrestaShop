@@ -1355,7 +1355,7 @@ class CartCore extends ObjectModel
      *
      * @param int $idProduct Product ID
      * @param int $idProductAttribute ProductAttribute ID
-     * @param int $idCustomization Customization ID
+     * @param int|bool $idCustomization Customization ID
      * @param int $idAddressDelivery Delivery Address ID
      *
      * @return array quantity index     : number of product in cart without counting those of pack in cart
@@ -1363,16 +1363,16 @@ class CartCore extends ObjectModel
      */
     public function getProductQuantity($idProduct, $idProductAttribute = 0, $idCustomization = 0, $idAddressDelivery = 0)
     {
-        $productIsPack = Pack::isPack($idProduct);
         $defaultPackStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         $packStockTypesAllowed = [
             Pack::STOCK_TYPE_PRODUCTS_ONLY,
             Pack::STOCK_TYPE_PACK_BOTH,
         ];
         $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
-        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity
+        // We need to SUM up cp.`quantity` because multiple rows could be returned when id_customization filtering is skipped.
+        $firstUnionSql = 'SELECT SUM(cp.`quantity`) as first_level_quantity, 0 as pack_quantity
           FROM `' . _DB_PREFIX_ . 'cart_product` cp';
-        $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
+        $secondUnionSql = 'SELECT 0 as first_level_quantity, SUM(cp.`quantity` * p.`quantity`) as pack_quantity
           FROM `' . _DB_PREFIX_ . 'cart_product` cp' .
             ' JOIN `' . _DB_PREFIX_ . 'pack` p ON cp.`id_product` = p.`id_product_pack`' .
             ' JOIN `' . _DB_PREFIX_ . 'product` pr ON p.`id_product_pack` = pr.`id_product`';
@@ -1386,9 +1386,11 @@ class CartCore extends ObjectModel
             $firstUnionSql .= $customizationJoin;
             $secondUnionSql .= $customizationJoin;
         }
+        // Ignore customizations if $idCustomization is set to false
+        // This is necessary to get products with or without customizations
         $commonWhere = '
             WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute . '
-            AND cp.`id_customization` = ' . (int) $idCustomization . '
+              ' . ($idCustomization !== false ? ' AND cp.`id_customization` = ' . (int) $idCustomization : '') . '
             AND cp.`id_cart` = ' . (int) $this->id;
 
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
@@ -1565,7 +1567,7 @@ class CartCore extends ObjectModel
 
         /* Update quantity if product already exist */
         if (!empty($cartProductQuantity['quantity'])) {
-            $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
+            $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this, false);
             $availableOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product->id));
 
             if ($operator == 'up') {
@@ -1613,7 +1615,7 @@ class CartCore extends ObjectModel
 
             // Quantity for product pack
             if (Pack::isPack($id_product)) {
-                $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this);
+                $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this, false);
             }
 
             if (isset($result2['out_of_stock']) && !Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
@@ -4064,7 +4066,7 @@ class CartCore extends ObjectModel
                     $product['id_product_attribute'],
                     null,
                     $this,
-                    $product['id_customization']
+                    false
                 );
                 if ($productQuantity < 0) {
                     return $returnProductOnFailure ? $product : false;
@@ -4992,7 +4994,7 @@ class CartCore extends ObjectModel
                 $idProductAttribute,
                 null,
                 $this,
-                $product['id_customization']
+                false
             );
 
             if ($productQuantity < 0 && !$availableOutOfStock) {
