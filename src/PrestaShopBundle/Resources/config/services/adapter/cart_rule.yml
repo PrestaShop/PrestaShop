@@ -66,8 +66,15 @@ services:
     autowire: true
     public: false
 
+
   PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\SetCartRuleRestrictionsHandler:
     autowire: true
     public: false
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleRestrictionsCommand }
+
+  PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\SetCartRuleProductRestrictionsHandler:
+    autowire: true
+    public: false
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\SetCartRuleProductRestrictionsCommand }

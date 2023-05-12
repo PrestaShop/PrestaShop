@@ -40,9 +40,9 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 class CartRuleRepository extends AbstractObjectModelRepository
 {
     public function __construct(
-        protected CartRuleValidator $cartRuleValidator,
-        protected Connection $connection,
-        protected string $dbPrefix
+        protected readonly CartRuleValidator $cartRuleValidator,
+        protected readonly Connection $connection,
+        protected readonly string $dbPrefix
     ) {
     }
 
@@ -96,7 +96,9 @@ class CartRuleRepository extends AbstractObjectModelRepository
      */
     public function setProductRestrictions(CartRuleId $cartRuleId, array $restrictionRuleGroups): void
     {
-        //@todo: implement
+        // first remove all product restrictions concerning provided cart rule
+        $this->removeProductRestrictions($cartRuleId);
+        // @todo: then set new ones.
     }
 
     /**
@@ -185,6 +187,51 @@ class CartRuleRepository extends AbstractObjectModelRepository
         $this->connection->createQueryBuilder()
             ->delete($this->dbPrefix . 'cart_rule_combination', 'crc')
             ->where('crc.id_cart_rule_1 = :cartRuleId OR crc.id_cart_rule_2 = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
+    }
+
+    private function removeProductRestrictions(CartRuleId $cartRuleId): void
+    {
+        //delete records from cart_rule_product_rule_value for this cart rule
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_product_rule_value', 'crprv')
+            ->innerJoin(
+                'crprv',
+                $this->dbPrefix . 'cart_rule_product_rule',
+                'crpr',
+                'crprv.id_product_rule = crpr.id_product_rule'
+            )
+            ->innerJoin(
+                'crpr',
+                $this->dbPrefix . 'cart_rule_product_rule_group',
+                'crprg',
+                'crpr.id_product_rule_group = crprg.id_product_rule_group'
+            )
+            ->where('crprg.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
+
+        // delete records from cart_rule_product_rule for this cart rule
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_product_rule', 'crpr')
+            ->innerJoin(
+                'crpr',
+                $this->dbPrefix . 'cart_rule_product_rule_group',
+                'crprg',
+                'crpr.id_product_rule_group = crprg.id_product_rule_group'
+            )
+            ->where('crprg.id_cart_rule = :cartRuleId')
+            ->setParameter('cartRuleId', $cartRuleId->getValue())
+            ->execute()
+        ;
+
+        // and finally delete records from cart_rule_product_rule_group for this cart rule
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_product_rule_group')
+            ->where('id_cart_rule = :cartRuleId')
             ->setParameter('cartRuleId', $cartRuleId->getValue())
             ->execute()
         ;

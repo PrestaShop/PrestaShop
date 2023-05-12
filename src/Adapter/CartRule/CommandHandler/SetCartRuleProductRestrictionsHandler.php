@@ -47,6 +47,12 @@ class SetCartRuleProductRestrictionsHandler implements SetCartRuleProductRestric
 
     public function handle(SetCartRuleProductRestrictionsCommand $command): void
     {
-        $cartRule = $this->cartRuleRepository->get($command->getCartRuleId());
+        $cartRuleId = $command->getCartRuleId();
+        $cartRule = $this->cartRuleRepository->get($cartRuleId);
+
+        $this->cartRuleRepository->setProductRestrictions($cartRuleId, $command->getRestrictionRuleGroups());
+
+        $cartRule->product_restriction = !empty($command->getRestrictionRuleGroups());
+        $this->cartRuleRepository->partialUpdate($cartRule, ['product_restriction']);
     }
 }
