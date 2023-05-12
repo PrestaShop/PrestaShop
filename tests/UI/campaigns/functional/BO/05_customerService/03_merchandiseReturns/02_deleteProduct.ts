@@ -204,7 +204,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
   describe('FO : Create merchandise returns', async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
       page = await viewOrderBasePage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
