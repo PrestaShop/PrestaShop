@@ -1,0 +1,25 @@
+# This file will be removed in next version, do not add any service here
+services:
+  # Deprecated in 9.0.0
+  prestashop.bundle.form.data_transformer.string_array_to_integer_array:
+    alias: 'PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
+    deprecated: ~
+    public: true
+
+  # Deprecated in 9.0.0
+  prestashop.bundle.form.data_transformer.default_language_to_filled_array:
+    alias: 'PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
+    deprecated: ~
+    public: true
+
+  # Deprecated in 9.0.0
+  prestashop.bundle.form.data_transformer.arabic_to_latin_digit:
+    alias: 'PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'
+    deprecated: ~
+    public: true
+
+  # Deprecated in 9.0.0
+  prestashop.bundle.form.data_transformer.idn_converter:
+    alias: 'PrestaShopBundle\Form\DataTransformer\IDNConverterDataTransformer'
+    deprecated: ~
+    public: true
