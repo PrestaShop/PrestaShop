@@ -1,0 +1,13 @@
+# This file will be removed in next version, do not add any service here
+services:
+  # Deprecated in 9.0.0
+  form.form_builder_modifier:
+    alias: PrestaShopBundle\Form\FormBuilderModifier
+    deprecated: ~
+    public: true
+
+  # Deprecated in 9.0.0
+  prestashop.multistore_checkbox_enabler:
+    alias: 'PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler'
+    deprecated: ~
+    public: true
