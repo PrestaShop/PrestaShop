@@ -29,15 +29,11 @@ namespace PrestaShopBundle\Service\DataProvider\Admin;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 
-/**
- * Provide the categories used to order modules and themes on https://addons.prestashop.com.
- */
 class CategoriesProviderBuilder
 {
-    private $context;
-    private $themeRepository;
-
-    private $addonsCategories;
+    private LegacyContext $context;
+    private ThemeRepository $themeRepository;
+    private array $addonsCategories;
 
     public function __construct(LegacyContext $context, ThemeRepository $themeRepository, array $addonsCategories)
     {
@@ -46,7 +42,7 @@ class CategoriesProviderBuilder
         $this->addonsCategories = $addonsCategories;
     }
 
-    public function build()
+    public function build(): CategoriesProvider
     {
         $themeName = $this->context->getContext()->shop->theme_name;
         $modulesTheme = $themeName ? $this->themeRepository->getInstanceByName($themeName)->getModulesToEnable() : [];
