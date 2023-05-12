@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=8.1",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-fileinfo": "*",
@@ -55,7 +55,7 @@
         "mrclay/minify": "^3.0.11",
         "nikic/php-parser": "^4.0",
         "nyholm/psr7": "^1.5",
-        "pelago/emogrifier": "^v5.0.1",
+        "pelago/emogrifier": "^v6.0.0",
         "phpoffice/phpspreadsheet": "^1.19",
         "prestashop/autoload": "^1.0",
         "prestashop/blockreassurance": "^5.1",
@@ -166,7 +166,7 @@
             "symfony/phpunit-bridge": true
         },
         "platform": {
-            "php": "7.2.5"
+            "php": "8.1.0"
         },
         "sort-packages": true
     },
