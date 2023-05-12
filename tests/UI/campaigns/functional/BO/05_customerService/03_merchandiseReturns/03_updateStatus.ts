@@ -374,7 +374,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
             await expect(isVisible, 'Returned product details are not correct!').to.be.true;
           });
         } else {
-          it('should check the file is not existing', async function () {
+          it('should check that the file is not existing', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkFileNotExisting${index}`, baseContext);
 
             const fileName = await editMerchandiseReturnsPage.getFileName(page);
