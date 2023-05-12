@@ -541,9 +541,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         if (!$order->isVirtual()) {
             foreach ($shipping as $item) {
                 if ($taxCalculationMethod == PS_TAX_INC) {
-                    $price = $this->locale->formatPrice($item['shipping_cost_tax_incl'], $currency->iso_code);
+                    $price = $item['shipping_cost_tax_incl']
+                        ? $this->locale->formatPrice($item['shipping_cost_tax_incl'], $currency->iso_code)
+                        : $item['shipping_cost_tax_incl'];
                 } else {
-                    $price = $this->locale->formatPrice($item['shipping_cost_tax_excl'], $currency->iso_code);
+                    $price = $item['shipping_cost_tax_excl']
+                        ? $this->locale->formatPrice($item['shipping_cost_tax_excl'], $currency->iso_code)
+                        : $item['shipping_cost_tax_excl'];
                 }
 
                 $trackingUrl = null;

@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThread
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadMessageType;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -66,12 +67,19 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
     private $translator;
 
     /**
-     * @param Context $context
+     * @var Locale
      */
-    public function __construct(Context $context)
+    protected $locale;
+
+    /**
+     * @param Context $context
+     * @param Locale $locale
+     */
+    public function __construct(Context $context, Locale $locale)
     {
         $this->context = $context;
         $this->translator = $context->getTranslator();
+        $this->locale = $locale;
     }
 
     /**
@@ -349,7 +357,7 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
                 }
 
                 $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
-                $orders[$key]['total_paid_real'] = $this->context->getCurrentLocale()->formatPrice(
+                $orders[$key]['total_paid_real'] = $this->locale->formatPrice(
                     $order['total_paid_real'],
                     (new Currency((int) $order['id_currency']))->iso_code
                 );

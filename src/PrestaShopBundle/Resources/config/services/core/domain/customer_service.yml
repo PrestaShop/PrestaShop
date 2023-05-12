@@ -34,6 +34,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerThreadForViewingHandler'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - '@prestashop.core.localization.locale.context_locale'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing'
