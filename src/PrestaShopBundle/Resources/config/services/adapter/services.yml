@@ -111,7 +111,7 @@ services:
     arguments:
       - '@prestashop.service.translation'
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().link'
-      - '@prestashop.core.admin.module.repository'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
 
   prestashop.adapter.shop.shop_url:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'
