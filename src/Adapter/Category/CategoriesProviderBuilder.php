@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -32,9 +34,9 @@ use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 class CategoriesProviderBuilder
 {
-    private LegacyContext $context;
-    private ThemeRepository $themeRepository;
-    private array $addonsCategories;
+    private $context;
+    private $themeRepository;
+    private $addonsCategories;
 
     public function __construct(LegacyContext $context, ThemeRepository $themeRepository, array $addonsCategories)
     {
