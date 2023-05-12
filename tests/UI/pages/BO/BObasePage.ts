@@ -253,6 +253,8 @@ export default class BOBasePage extends CommonPage {
 
   private readonly invalidTokenCancelLink: string;
 
+  public readonly debugModeToolbar: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on all BO pages
@@ -303,6 +305,8 @@ export default class BOBasePage extends CommonPage {
     this.navbarCollapsed = (isCollapsed) => `body${isCollapsed
       ? '.page-sidebar-closed'
       : ':not(.page-sidebar-closed)'}`;
+
+    this.debugModeToolbar = 'div[id*=sfToolbarMainContent]';
 
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';

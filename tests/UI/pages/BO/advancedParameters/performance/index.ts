@@ -16,6 +16,8 @@ class Performance extends BOBasePage {
 
   private readonly clearCacheButton: string;
 
+  private readonly saveDebugModeForm: string;
+
   private readonly debugModeButton: (toEnable: number) => string;
 
   /**
@@ -33,6 +35,7 @@ class Performance extends BOBasePage {
     // Selectors
     this.clearCacheButton = '#page-header-desc-configuration-clear_cache';
     this.debugModeButton = (toEnable: number) => `#debug_mode_debug_mode_${toEnable}`;
+    this.saveDebugModeForm = '#main-div form[name=debug_mode] div.card-footer button';
   }
 
   /*
@@ -57,7 +60,7 @@ class Performance extends BOBasePage {
    */
   async setDebugMode(page: Page, toEnable: boolean): Promise<string> {
     await this.setChecked(page, this.debugModeButton(toEnable ? 1 : 0));
-    await this.waitForSelectorAndClick(page, '#main-div form[name=debug_mode] div.card-footer button');
+    await this.waitForSelectorAndClick(page, this.saveDebugModeForm);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
@@ -68,7 +71,7 @@ class Performance extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isDebugModeToggleVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, 'div[id*=sfToolbarMainContent]', 1000);
+    return this.elementVisible(page, this.debugModeToolbar, 1000);
   }
 }
 
