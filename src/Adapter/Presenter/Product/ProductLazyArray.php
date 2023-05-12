@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Context;
 use DateTime;
 use Language;
 use Link;
@@ -764,8 +765,8 @@ class ProductLazyArray extends AbstractLazyArray
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
             // TODO: add percent sign according to locale preferences
-            $this->product['discount_percentage'] = $this->context->getCurrentLocale()->formatNumber($presNegativeReduction) . '%';
-            $this->product['discount_percentage_absolute'] = $this->context->getCurrentLocale()->formatNumber($presAbsoluteReduction) . '%';
+            $this->product['discount_percentage'] = Context::getContext()->getCurrentLocale()->formatNumber($presNegativeReduction) . '%';
+            $this->product['discount_percentage_absolute'] = Context::getContext()->getCurrentLocale()->formatNumber($presAbsoluteReduction) . '%';
             if ($settings->include_taxes) {
                 $regular_price = $product['price_without_reduction'];
                 $this->product['discount_amount'] = $this->priceFormatter->format(

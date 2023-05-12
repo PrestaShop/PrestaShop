@@ -54,10 +54,11 @@ class PriceFormatter
      */
     public function format($price, $currency = null)
     {
-        return Context::getContext()->getCurrentLocale()->formatPrice(
-            $price,
-            is_array($currency) ? $currency['iso_code'] : ($currency instanceof Currency ? $currency->iso_code : null)
-        );
+        $priceCurrency = is_array($currency) ? $currency['iso_code'] : null;
+        $priceCurrency = !$priceCurrency && $currency instanceof Currency ? $currency->iso_code : $priceCurrency;
+        $priceCurrency = !$priceCurrency ? Context::getContext()->currency->iso_code : $priceCurrency;
+
+        return Context::getContext()->getCurrentLocale()->formatPrice($price, $priceCurrency);
     }
 
     /**
