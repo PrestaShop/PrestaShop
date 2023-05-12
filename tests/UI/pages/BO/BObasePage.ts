@@ -183,7 +183,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly informationLink: string;
 
-  private readonly performanceLink: string;
+  public readonly performanceLink: string;
 
   private readonly administrationLink: string;
 
