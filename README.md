@@ -80,6 +80,12 @@ docker compose down -v
 docker compose build --no-cache
 docker-compose up --build --force-recreate
 ```
+**Note:** To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
+
+```
+cp docker-compose.override.yml.dist docker-compose.override.yml
+docker-compose up
+```
 
 Documentation
 --------
