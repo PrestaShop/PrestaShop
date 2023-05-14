@@ -90,8 +90,8 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
         $result = Mail::sendMailTest(
             Tools::htmlentitiesUTF8($smtpChecked),
             Tools::htmlentitiesUTF8($config['smtp_server']),
-            Tools::htmlentitiesUTF8($content),
-            Tools::htmlentitiesUTF8($subject),
+            Tools::htmlentitiesDecodeUTF8($content),
+            Tools::htmlentitiesDecodeUTF8($subject),
             Tools::htmlentitiesUTF8('text/html'),
             Tools::htmlentitiesUTF8($config['send_email_to']),
             Tools::htmlentitiesUTF8($this->configuration->get('PS_SHOP_EMAIL')),
