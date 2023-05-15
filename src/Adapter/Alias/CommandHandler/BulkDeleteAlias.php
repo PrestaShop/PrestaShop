@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Handles command which deletes aliases in bulk action
