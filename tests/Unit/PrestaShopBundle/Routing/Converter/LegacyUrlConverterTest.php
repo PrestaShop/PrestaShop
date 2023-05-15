@@ -38,7 +38,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
 class LegacyUrlConverterTest extends TestCase
@@ -512,7 +511,7 @@ class LegacyUrlConverterTest extends TestCase
         ));
 
         $mockRouter = $this
-            ->getMockBuilder(Router::class)
+            ->getMockBuilder(RouterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -551,7 +550,7 @@ class LegacyUrlConverterTest extends TestCase
         $routeCollection = $this->buildRouteCollection($routes);
 
         $mockRouter = $this
-            ->getMockBuilder(Router::class)
+            ->getMockBuilder(RouterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class UrlGeneratorTest extends TestCase
 {
@@ -52,7 +52,7 @@ class UrlGeneratorTest extends TestCase
         return $mock;
     }
 
-    private function getMockRouter(): Router
+    private function getMockRouter(): RouterInterface
     {
         $route = new Route('/{offset}/{limit}/{orderBy}/{sortOrder}');
         $route->setDefault('_legacy_controller', 'AdminProducts');
@@ -60,7 +60,7 @@ class UrlGeneratorTest extends TestCase
         $routeCollection = new RouteCollection();
         $routeCollection->add('admin_product_catalog', $route);
 
-        $mock = $this->createMock(Router::class);
+        $mock = $this->createMock(RouterInterface::class);
         $mock->method('getRouteCollection')->willReturn($routeCollection);
 
         return $mock;

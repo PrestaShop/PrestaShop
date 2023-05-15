@@ -35,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -63,7 +63,7 @@ class ProductSeo extends CommonAbstractType
      *
      * @param TranslatorInterface $translator
      * @param LegacyContext $legacyContext
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(TranslatorInterface $translator, LegacyContext $legacyContext, UrlGeneratorInterface $router)
     {

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Before we introduced the filterId notion to store/clean filters on grids the solution
@@ -47,16 +47,16 @@ class ControllerResponseBuilder
     /** @var GridFilterFormFactoryInterface */
     private $filterFormFactory;
 
-    /** @var Router */
+    /** @var RouterInterface */
     private $router;
 
     /**
      * @param GridFilterFormFactoryInterface $filterFormFactory
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(
         GridFilterFormFactoryInterface $filterFormFactory,
-        Router $router
+        RouterInterface $router
     ) {
         $this->filterFormFactory = $filterFormFactory;
         $this->router = $router;

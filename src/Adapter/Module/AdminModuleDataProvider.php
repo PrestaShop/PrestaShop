@@ -32,7 +32,6 @@ use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 use Tools;
 
@@ -95,7 +94,7 @@ class AdminModuleDataProvider implements ModuleInterface
     ];
 
     /**
-     * @var Router|null
+     * @var RouterInterface|null
      */
     private $router = null;
 

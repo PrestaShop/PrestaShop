@@ -42,7 +42,7 @@ use Psr\Log\NullLogger;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
 use Tests\Integration\Utility\ContextMockerTrait;
 
@@ -56,7 +56,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     protected $client;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 

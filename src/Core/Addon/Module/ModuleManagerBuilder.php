@@ -44,11 +44,11 @@ use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Router;
 
 class ModuleManagerBuilder
 {
@@ -205,9 +205,9 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy.
+     * Returns an instance of \Symfony\Component\Routing\RouterInterface from Symfony scope into Legacy.
      *
-     * @return \Symfony\Component\Routing\Router
+     * @return \Symfony\Component\Routing\RouterInterface
      */
     private function getSymfonyRouter()
     {

@@ -38,7 +38,7 @@ use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -78,7 +78,7 @@ class ProductPrice extends CommonAbstractType
      */
     public $legacyContext;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     public $router;
     /**
@@ -103,7 +103,7 @@ class ProductPrice extends CommonAbstractType
      *
      * @param TranslatorInterface $translator
      * @param TaxRuleDataProvider $taxDataProvider
-     * @param Router $router
+     * @param RouterInterface $router
      * @param Context $shopContextAdapter
      * @param CountryDataProvider $countryDataprovider
      * @param CurrencyDataProvider $currencyDataprovider

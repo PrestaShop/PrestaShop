@@ -29,8 +29,8 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Configure\ShopPara
 
 use PHPUnit\Framework\Assert;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 use Tests\Resources\Resetter\StoreResetter;
@@ -44,7 +44,7 @@ class StoreControllerTest extends GridControllerTestCase
     protected $client;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 

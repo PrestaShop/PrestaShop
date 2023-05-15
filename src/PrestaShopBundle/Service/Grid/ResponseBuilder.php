@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class ResponseBuilder
 {
@@ -47,7 +47,7 @@ class ResponseBuilder
     /** @var GridFilterFormFactoryInterface */
     private $filterFormFactory;
 
-    /** @var Router */
+    /** @var RouterInterface */
     private $router;
 
     /** @var int */
@@ -58,14 +58,14 @@ class ResponseBuilder
 
     /**
      * @param GridFilterFormFactoryInterface $filterFormFactory
-     * @param Router $router
+     * @param RouterInterface $router
      * @param AdminFilterRepository $adminFilterRepository
      * @param int|null $employeeId
      * @param int $shopId
      */
     public function __construct(
         GridFilterFormFactoryInterface $filterFormFactory,
-        Router $router,
+        RouterInterface $router,
         AdminFilterRepository $adminFilterRepository,
         ?int $employeeId,
         int $shopId,

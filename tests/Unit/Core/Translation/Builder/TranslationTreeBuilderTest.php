@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueLayersProviderInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class TranslationTreeBuilderTest extends TestCase
@@ -101,7 +101,7 @@ class TranslationTreeBuilderTest extends TestCase
         $providerFactory = $this->createMock(CatalogueProviderFactory::class);
         $providerFactory->method('getProvider')->willReturn($provider);
 
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
         $router->method('generate')->willReturn('route');
 
         $this->treeBuilder = new TranslationsTreeBuilder(

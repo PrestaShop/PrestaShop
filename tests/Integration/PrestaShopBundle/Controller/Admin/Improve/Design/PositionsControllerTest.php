@@ -33,10 +33,10 @@ use Hook;
 use Module;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RouterInterface;
 
 class PositionsControllerTest extends WebTestCase
 {
@@ -53,7 +53,7 @@ class PositionsControllerTest extends WebTestCase
      */
     protected $client;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
     /**

@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RouterInterface;
 use WebserviceKey;
 
 class WebserviceControllerTest extends WebTestCase
@@ -41,7 +41,7 @@ class WebserviceControllerTest extends WebTestCase
      */
     protected $client;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
     /**

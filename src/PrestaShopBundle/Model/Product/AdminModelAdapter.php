@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @deprecated since 8.1 and will be removed in next major.
@@ -79,7 +79,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $warehouseAdapter;
     /** @var Configuration */
     private $configuration;
-    /** @var Router */
+    /** @var RouterInterface */
     private $router;
     /** @var FloatParser */
     private $floatParser;
@@ -185,7 +185,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
      * @param Configuration $configuration
-     * @param Router $router
+     * @param RouterInterface $router
      * @param FloatParser|null $floatParser
      */
     public function __construct(
@@ -200,7 +200,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         ShopContext $shopContext,
         TaxRuleDataProvider $taxRuleDataProvider,
         Configuration $configuration,
-        Router $router,
+        RouterInterface $router,
         FloatParser $floatParser = null
     ) {
         $this->context = $legacyContext;

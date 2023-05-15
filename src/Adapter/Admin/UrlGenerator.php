@@ -31,7 +31,7 @@ use ReflectionClass;
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This UrlGeneratorInterface implementation (in a Sf service) will provides Legacy URLs.
@@ -50,7 +50,7 @@ class UrlGenerator implements UrlGeneratorInterface
     private $legacyContext;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -58,9 +58,9 @@ class UrlGenerator implements UrlGeneratorInterface
      * Constructor.
      *
      * @param LegacyContext $legacyContext
-     * @param Router $router
+     * @param RouterInterface $router
      */
-    public function __construct(LegacyContext $legacyContext, Router $router)
+    public function __construct(LegacyContext $legacyContext, RouterInterface $router)
     {
         $this->legacyContext = $legacyContext;
         $this->router = $router;

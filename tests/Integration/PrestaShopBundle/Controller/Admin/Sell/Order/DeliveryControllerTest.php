@@ -30,11 +30,11 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 class DeliveryControllerTest extends WebTestCase
@@ -44,7 +44,7 @@ class DeliveryControllerTest extends WebTestCase
      */
     protected $client;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
     /**

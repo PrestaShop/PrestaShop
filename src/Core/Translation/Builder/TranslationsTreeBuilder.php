@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeEx
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Builds a domain tree for the translation API.
@@ -44,7 +44,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 class TranslationsTreeBuilder
 {
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
     /**
@@ -53,10 +53,10 @@ class TranslationsTreeBuilder
     private $translationCatalogueBuilder;
 
     /**
-     * @param Router $router
+     * @param RouterInterface $router
      * @param TranslationCatalogueBuilder $translationCatalogueBuilder
      */
-    public function __construct(Router $router, TranslationCatalogueBuilder $translationCatalogueBuilder)
+    public function __construct(RouterInterface $router, TranslationCatalogueBuilder $translationCatalogueBuilder)
     {
         $this->router = $router;
         $this->translationCatalogueBuilder = $translationCatalogueBuilder;

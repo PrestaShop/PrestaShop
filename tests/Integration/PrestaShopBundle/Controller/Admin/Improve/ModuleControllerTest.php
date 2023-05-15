@@ -33,8 +33,8 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
 
 class ModuleControllerTest extends WebTestCase
@@ -44,7 +44,7 @@ class ModuleControllerTest extends WebTestCase
      */
     protected $client;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
     /**

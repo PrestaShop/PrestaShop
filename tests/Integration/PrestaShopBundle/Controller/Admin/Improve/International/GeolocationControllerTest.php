@@ -30,9 +30,9 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve\Internatio
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 class GeolocationControllerTest extends WebTestCase
 {
@@ -41,7 +41,7 @@ class GeolocationControllerTest extends WebTestCase
      */
     protected $client;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 

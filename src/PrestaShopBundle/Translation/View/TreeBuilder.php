@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Translation\View;
 
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class TreeBuilder
 {
@@ -179,14 +179,14 @@ class TreeBuilder
      * Clean tree to use it with the new API system.
      *
      * @param array $tree
-     * @param Router $router
+     * @param RouterInterface $router
      * @param string|null $theme
      * @param null $search
      * @param string|null $module
      *
      * @return array
      */
-    public function cleanTreeToApi($tree, Router $router, $theme = null, $search = null, $module = null)
+    public function cleanTreeToApi($tree, RouterInterface $router, $theme = null, $search = null, $module = null)
     {
         $rootTree = [
             'tree' => [
@@ -289,7 +289,7 @@ class TreeBuilder
     }
 
     /**
-     * @param Router $router
+     * @param RouterInterface $router
      * @param array $tree
      * @param int $index
      * @param string $name
@@ -300,7 +300,7 @@ class TreeBuilder
      *
      * @return mixed
      */
-    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false, $search = null, $module = false)
+    private function addTreeInfo(RouterInterface $router, &$tree, $index, $name, $fullName, $theme = false, $search = null, $module = false)
     {
         if (!isset($tree[$index])) {
             $routeParams = [

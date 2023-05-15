@@ -37,12 +37,12 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType;
 use PrestaShopBundle\Form\FormHelper;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -82,7 +82,7 @@ class ProductSpecificPrice extends CommonAbstractType
      */
     public $locales;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     public $router;
     /**
@@ -97,7 +97,7 @@ class ProductSpecificPrice extends CommonAbstractType
     /**
      * Constructor.
      *
-     * @param Router $router
+     * @param RouterInterface $router
      * @param TranslatorInterface $translator
      * @param Context $shopContextAdapter
      * @param CountryDataProvider $countryDataprovider

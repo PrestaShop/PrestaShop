@@ -82,7 +82,7 @@ final class EmployeeType extends AbstractType
     private $superAdminProfileId;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 

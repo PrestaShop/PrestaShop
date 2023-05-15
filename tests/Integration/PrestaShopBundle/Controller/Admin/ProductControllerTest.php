@@ -42,7 +42,7 @@ use Psr\Log\NullLogger;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class ProductControllerTest extends WebTestCase
 {
@@ -52,7 +52,7 @@ class ProductControllerTest extends WebTestCase
     protected $client;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 

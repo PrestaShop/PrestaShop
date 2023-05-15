@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Service\TransitionalBehavior;
 use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator as LegacyUrlGenerator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Factory to return a UrlGeneratorInterface.
@@ -39,16 +39,16 @@ use Symfony\Component\Routing\Router;
 class AdminUrlGeneratorFactory
 {
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
     /**
      * Constructor.
      *
-     * @param Router $router
+     * @param RouterInterface $router
      */
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }

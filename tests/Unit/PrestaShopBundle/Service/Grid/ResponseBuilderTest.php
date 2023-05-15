@@ -43,7 +43,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class ResponseBuilderTest extends TestCase
 {
@@ -196,7 +196,7 @@ class ResponseBuilderTest extends TestCase
             $this->createMock(GridDefinitionInterface::class)
         );
 
-        $mockRouter = $this->createMock(Router::class);
+        $mockRouter = $this->createMock(RouterInterface::class);
         $mockRouter->method('generate')->willReturnCallback(function (string $name, array $parameters = []) {
             return $name . '?' . http_build_query($parameters);
         });
