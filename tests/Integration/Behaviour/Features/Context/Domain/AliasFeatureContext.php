@@ -158,15 +158,15 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
                 'Unexpected alias reference'
             );
 
-            if (!empty($expectedAlias['active'])) {
+            if (isset($expectedAlias['active'])) {
                 Assert::assertSame(
-                    (int) $alias['active'],
-                    (int) $expectedAlias['active'],
+                    $alias['active'],
+                    PrimitiveUtils::convertStringToBool($expectedAlias['active']),
                     'Unexpected alias active field'
                 );
             }
 
-            if (!empty($expectedAlias['id reference'])) {
+            if (isset($expectedAlias['id reference'])) {
                 $idsByIdReferences[$expectedAlias['id reference']] = $alias['id_alias'];
             }
         }
