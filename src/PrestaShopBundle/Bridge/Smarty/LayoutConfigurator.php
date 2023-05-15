@@ -31,45 +31,22 @@ namespace PrestaShopBundle\Bridge\Smarty;
 use HelperShop;
 use Media;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Tab\Repository\TabRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Tab;
 use Tools;
 
 class LayoutConfigurator implements ConfiguratorInterface
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ShopConstraintContextInterface
-     */
-    private $shopConstraintContext;
-
     public function __construct(
-        ConfigurationInterface $configuration,
-        LegacyContext $legacyContext,
-        TranslatorInterface $translator,
-        ShopConstraintContextInterface $shopConstraintContext
+        private ConfigurationInterface $configuration,
+        private LegacyContext $legacyContext,
+        private TranslatorInterface $translator,
+        private ShopConstraintContextInterface $shopConstraintContext,
+        private TabRepository $tabRepository
     ) {
-        $this->configuration = $configuration;
-        $this->legacyContext = $legacyContext;
-        $this->translator = $translator;
-        $this->shopConstraintContext = $shopConstraintContext;
     }
 
     public function configure(ControllerConfiguration $controllerConfiguration)
@@ -96,13 +73,14 @@ class LayoutConfigurator implements ConfiguratorInterface
         if (isset($employee)) {
             $employeeToken = Tools::getAdminToken(
                 'AdminEmployees' .
-                (int) Tab::getIdFromClassName('AdminEmployees') .
+                $this->tabRepository->getIdByClassName('AdminEmployees')->getValue() .
                 (int) $employee->id
             );
         } else {
             $employeeToken = '';
         }
 
+        $baseUri = $this->legacyContext->getContext()->shop->getBaseURI();
         $helperShop = new HelperShop();
         $controllerConfiguration->templateVars['display_header'] = $controllerConfiguration->displayHeader;
         $controllerConfiguration->templateVars['display_header_javascript'] = $controllerConfiguration->displayHeaderJavascript;
@@ -116,7 +94,7 @@ class LayoutConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['current_index'] = $controllerConfiguration->legacyCurrentIndex;
         $controllerConfiguration->templateVars['multi_shop_edit_for'] = $editFieldFor;
         $controllerConfiguration->templateVars['employee_token'] = $employeeToken;
-        $controllerConfiguration->templateVars['baseAdminUrl'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
+        $controllerConfiguration->templateVars['baseAdminUrl'] = $baseUri . basename(_PS_ADMIN_DIR_) . '/';
         $controllerConfiguration->templateVars['shop_list'] = $helperShop->getRenderedShopList();
         $controllerConfiguration->templateVars['current_shop_name'] = $helperShop->getCurrentShopName();
 
@@ -130,6 +108,6 @@ class LayoutConfigurator implements ConfiguratorInterface
             }
             $controllerConfiguration->templateVars[$type] = $controllerConfiguration->json ? json_encode(array_unique($controllerConfiguration->$type)) : array_unique($controllerConfiguration->$type);
         }
-        $controllerConfiguration->templateVars['baseAdminUrl'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
+        $controllerConfiguration->templateVars['baseAdminUrl'] = $baseUri . basename(_PS_ADMIN_DIR_) . '/';
     }
 }

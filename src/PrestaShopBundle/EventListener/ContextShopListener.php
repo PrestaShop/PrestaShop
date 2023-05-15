@@ -45,50 +45,14 @@ class ContextShopListener
 {
     public const CONTROLLER_CONFIGURATION_ATTRIBUTE = 'configuration_controller';
 
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
-     * @var Repository
-     */
-    private $localeRepository;
-
-    /**
-     * @var LegacyControllerBridgeFactory
-     */
-    private $controllerBridgeFactory;
-
-    /**
-     * @var ControllerConfigurationFactory
-     */
-    private $controllerConfigurationFactory;
-
-    /**
-     * @var SymfonyLayoutFeature
-     */
-    private $symfonyLayoutFeature;
-
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
     public function __construct(
-        LegacyContext $legacyContext,
-        Repository $localeRepository,
-        LegacyControllerBridgeFactory $controllerBridgeFactory,
-        ControllerConfigurationFactory $controllerConfigurationFactory,
-        SymfonyLayoutFeature $symfonyLayoutFeature,
-        ConfigurationInterface $configuration
+        private LegacyContext $legacyContext,
+        private Repository $localeRepository,
+        private LegacyControllerBridgeFactory $controllerBridgeFactory,
+        private ControllerConfigurationFactory $controllerConfigurationFactory,
+        private SymfonyLayoutFeature $symfonyLayoutFeature,
+        private ConfigurationInterface $configuration
     ) {
-        $this->legacyContext = $legacyContext;
-        $this->localeRepository = $localeRepository;
-        $this->controllerBridgeFactory = $controllerBridgeFactory;
-        $this->controllerConfigurationFactory = $controllerConfigurationFactory;
-        $this->symfonyLayoutFeature = $symfonyLayoutFeature;
-        $this->configuration = $configuration;
     }
 
     /**
