@@ -14,7 +14,7 @@ import productPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import passwordReminderPage from '@pages/FO/passwordReminder';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 
 // Import data
 import CustomerData from '@data/faker/customer';

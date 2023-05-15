@@ -143,7 +143,7 @@ export default class FOBasePage extends CommonPage {
     this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
-    this.accountLink = `${this.userInfoLink} .user-info a.account`;
+    this.accountLink = `${this.userInfoLink} .user-info a[href*="/my-account"]`;
     this.logoutLink = `${this.userInfoLink} .user-info a[href*="/?mylogout="]`;
     this.contactLink = '#contact-link';
     this.categoryMenu = (id) => `#category-${id} a`;
@@ -307,6 +307,12 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async goToMyAccountPage(page: Page): Promise<void> {
+    if (this.theme === 'hummingbird') {
+      await page.click(this.userMenuDropdown);
+      await this.clickAndWaitForNavigation(page, this.accountLink);
+
+      return;
+    }
     await this.clickAndWaitForNavigation(page, this.accountLink);
   }
 

@@ -13,7 +13,7 @@ import countriesPage from '@pages/BO/international/locations/countries';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import addressesPage from '@pages/FO/myAccount/addresses';
 import newAddressesPage from '@pages/FO/myAccount/addAddress';
 

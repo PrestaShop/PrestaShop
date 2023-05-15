@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 
 // Import data
 import type Customer from '@data/types/customer';

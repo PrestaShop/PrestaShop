@@ -13,7 +13,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import ordersPage from '@pages/BO/orders';

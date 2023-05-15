@@ -23,7 +23,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import contactUsPage from '@pages/FO/contactUs';
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import {createAccountPage} from '@pages/FO/myAccount/add';
 import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 import productPage from '@pages/FO/product';

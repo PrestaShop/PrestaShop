@@ -14,7 +14,7 @@ import customerServiceMessageViewPage from '@pages/BO/customerService/customerSe
 // FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
@@ -97,7 +97,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
       await foLoginPage.customerLogin(page, Customers.johnDoe);
-      const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 

@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends FOBasePage
  */
-class MyAccount extends FOBasePage {
+class MyAccountPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly resetPasswordSuccessMessage: string;
@@ -28,7 +28,7 @@ class MyAccount extends FOBasePage {
 
   private readonly successMessageAlert: string;
 
-  private readonly logoutFooterLink: string;
+  protected logoutFooterLink: string;
 
   private readonly psgdprLink: string;
 
@@ -154,4 +154,5 @@ class MyAccount extends FOBasePage {
   }
 }
 
-export default new MyAccount();
+const myAccountPage = new MyAccountPage();
+export {myAccountPage, MyAccountPage};

@@ -14,7 +14,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
@@ -147,7 +147,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
-      const isCustomerConnected: boolean = await foMyAccountPage.isCustomerConnected(page);
+      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
@@ -156,14 +156,14 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
       await foHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foMyAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+      const pageTitle = await myAccountPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await foMyAccountPage.goToHistoryAndDetailsPage(page);
+      await myAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);

@@ -16,7 +16,7 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
