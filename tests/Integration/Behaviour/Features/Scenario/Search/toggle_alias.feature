@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s alias --tags toggle
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s alias --tags update_alias_status_feature
 @restore-aliases-before-feature
 @clear-cache-before-feature
 @clear-cache-after-feature
