@@ -26,9 +26,21 @@ class ModuleManager extends BOBasePage {
 
   public readonly uninstallModuleSuccessMessage: (moduleTag: string) => string;
 
+  public readonly uploadModuleSuccessMessage: string;
+
   private readonly searchModuleTagInput: string;
 
   private readonly searchModuleButton: string;
+
+  private readonly uploadModuleButton: string;
+
+  private readonly uploadModal: string;
+
+  private readonly uploadModuleLink: string;
+
+  private readonly uploadModuleModalSuccessMessage: string;
+
+  private readonly uploadModuleModalCloseButton: string;
 
   private readonly topMenuDiv: string;
 
@@ -55,6 +67,12 @@ class ModuleManager extends BOBasePage {
   private readonly moduleBlock: (moduleTag: string) => string;
 
   private readonly moduleCheckboxButton: (moduleTag: string) => string;
+
+  private readonly seeMoreButton: (blockName: string) => string;
+
+  private readonly seeLessButton: (blockName: string) => string;
+
+  private readonly moduleListBlock: (blockName: string) => string;
 
   private readonly actionModuleButton: (moduleTag: string, action: string) => string;
 
@@ -97,10 +115,16 @@ class ModuleManager extends BOBasePage {
     this.resetModuleSuccessMessage = (moduleTag: string) => `Reset action on module ${moduleTag} succeeded.`;
     this.installModuleSuccessMessage = (moduleTag: string) => `Install action on module ${moduleTag} succeeded.`;
     this.uninstallModuleSuccessMessage = (moduleTag: string) => `Uninstall action on module ${moduleTag} succeeded.`;
+    this.uploadModuleSuccessMessage = 'Module installed!';
 
     // Header Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
+    this.uploadModuleButton = '#page-header-desc-configuration-add_module';
+    this.uploadModal = '#importDropzone';
+    this.uploadModuleLink = `${this.uploadModal} div.module-import-start p.module-import-start-main-text a`;
+    this.uploadModuleModalSuccessMessage = `${this.uploadModal} div.module-import-success p.module-import-success-msg`;
+    this.uploadModuleModalCloseButton = '#module-modal-import-closing-cross';
 
     // Top menu
     this.topMenuDiv = 'div.module-top-menu';
@@ -132,6 +156,9 @@ class ModuleManager extends BOBasePage {
     this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name=${moduleTag}]`;
     this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)}`
       + ' div.module-checkbox-bulk-list.md-checkbox label i';
+    this.seeMoreButton = (blockName: string) => `#main-div div.module-short-list button.see-more[data-category=${blockName}]`;
+    this.seeLessButton = (blockName: string) => `#main-div div.module-short-list button.see-less[data-category=${blockName}]`;
+    this.moduleListBlock = (blockName: string) => `#modules-list-container-${blockName} div.module-item-list`;
 
     // Module actions selector
     this.actionModuleButton = (moduleTag: string, action: string) => `div[data-tech-name=${moduleTag}]`
@@ -153,6 +180,31 @@ class ModuleManager extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Upload module
+   * @param page {Page} Browser tab
+   * @param file {string} File to upload
+   * @return {Promise<string>}
+   */
+  async uploadModule(page: Page, file: string): Promise<string | null> {
+    await this.waitForSelectorAndClick(page, this.uploadModuleButton);
+
+    await this.uploadOnFileChooser(page, this.uploadModuleLink, file);
+
+    return this.getTextContent(page, this.uploadModuleModalSuccessMessage);
+  }
+
+  /**
+   * Close upload module modal
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async closeUploadModuleModal(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.uploadModuleModalCloseButton);
+
+    return this.elementNotVisible(page, this.uploadModal, 1000);
+  }
 
   /**
    * Search Module in Page module Catalog
@@ -371,6 +423,40 @@ class ModuleManager extends BOBasePage {
     const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, (all) => all.map((el) => el.textContent));
 
     return modulesBlocks[position - 1];
+  }
+
+  /**
+   * Click on see more button
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<boolean>}
+   */
+  async clickOnSeeMoreButton(page: Page, blockName: string): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.seeMoreButton(blockName));
+
+    return this.elementVisible(page, this.seeLessButton(blockName), 1000);
+  }
+
+  /**
+   * Click on see less button
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<boolean>}
+   */
+  async clickOnSeeLessButton(page: Page, blockName: string): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.seeLessButton(blockName));
+
+    return this.elementVisible(page, this.seeMoreButton(blockName), 1000);
+  }
+
+  /**
+   * Get number of modules in block
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<number>}
+   */
+  async getNumberOfModulesInBlock(page: Page, blockName: string): Promise<number> {
+    return (await page.$$(this.moduleListBlock(blockName))).length;
   }
 }
 
