@@ -107,6 +107,7 @@
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@keycloak/keycloak-admin-client": "^21.1.1",
     "@xmldom/xmldom": "^0.8.7",
     "chai": "^4.3.7",
     "chai-string": "^1.5.0",

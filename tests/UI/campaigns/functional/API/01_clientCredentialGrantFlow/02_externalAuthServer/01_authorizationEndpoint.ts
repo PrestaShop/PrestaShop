@@ -4,13 +4,14 @@ import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import {APIRequestContext, request} from 'playwright';
-import createKeycloakClient from '@commonTests/API/keycloak';
+import type ClientRepresentation from '@keycloak/keycloak-admin-client/lib/defs/clientRepresentation';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_authorizationEndpoint';
 
 describe('API : Authorization Endpoint', async () => {
   let apiContextBO: APIRequestContext;
   let apiContextKeycloak: APIRequestContext;
+  let clientKeycloak: ClientRepresentation|undefined;
 
   before(async () => {
     apiContextBO = await request.newContext({
@@ -23,10 +24,14 @@ describe('API : Authorization Endpoint', async () => {
       // @todo : Remove it when Puppeteer will accept self signed certificates
       ignoreHTTPSErrors: true,
     });
-  });
 
-  // Pre-Condition: Setup Keycloak
-  createKeycloakClient(`${baseContext}_preTest_1`);
+    clientKeycloak = await keycloakHelper.createClient(
+      global.keycloakConfig.keycloakClientId,
+      'PrestaShop Client ID',
+      true,
+      true,
+    );
+  });
 
   describe('Authorization Endpoint', async () => {
     it('should request the endpoint /admin-dev/api/oauth2/token with method GET', async function () {
@@ -109,11 +114,13 @@ describe('API : Authorization Endpoint', async () => {
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestKeycloakWithMethodPOSTValidData', baseContext);
 
-        const accessTokenKeycloak: string = await keycloakHelper.getClientSecret(apiContextKeycloak);
+        const accessTokenKeycloak: string|undefined = clientKeycloak?.secret;
+        await expect(accessTokenKeycloak).to.be.a('string');
+
         const apiResponse = await apiContextKeycloak.post('/realms/master/protocol/openid-connect/token', {
           form: {
             client_id: global.keycloakConfig.keycloakClientId,
-            client_secret: accessTokenKeycloak,
+            client_secret: accessTokenKeycloak as string,
             grant_type: 'client_credentials',
           },
         });
