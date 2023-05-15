@@ -98,7 +98,18 @@ class CartRuleRepository extends AbstractObjectModelRepository
     {
         // first remove all product restrictions concerning provided cart rule
         $this->removeProductRestrictions($cartRuleId);
-        // @todo: then set new ones.
+        $ruleGroupValues = '';
+
+        foreach ($restrictionRuleGroups as $restrictionRuleGroup) {
+            $qty = $restrictionRuleGroup->getRequiredQuantityInCart();
+            $ruleGroupValues .= sprintf('(%d, %d)', $qty, $cartRuleId->getValue());
+        }
+
+        $ruleGroupsStmt = sprintf(
+            'INSERT INTO (id_cart_rule, quantity) %scart_rule_product_rule_group VALUES %s',
+            $this->dbPrefix,
+            $ruleGroupValues
+        );
     }
 
     /**
