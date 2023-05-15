@@ -34,7 +34,7 @@
             class="modal-content"
             aria-labelledby="modalTitle"
             aria-describedby="modalDescription"
-            v-click-outside="close"
+            v-click-outside="clickOutsideClose"
           >
             <header
               class="modal-header"
@@ -118,6 +118,11 @@
       ClickOutside,
     },
     props: {
+      closeOnClickOutside: {
+        type: Boolean,
+        required: false,
+        default: true,
+      },
       confirmation: {
         type: Boolean,
         required: false,
@@ -153,6 +158,11 @@
       },
     },
     methods: {
+      clickOutsideClose(): void {
+        if (this.closeOnClickOutside) {
+          this.$emit('close');
+        }
+      },
       close(): void {
         this.$emit('close');
       },
