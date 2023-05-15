@@ -28,7 +28,7 @@ jobs:
         with:
           repository: ${{ env.prestonbot_repository }}
           path: 'prestonbot/'
-          token: ${{ secrets.PS_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           ref: 'master'
 
       - name: Composer install in prestashop

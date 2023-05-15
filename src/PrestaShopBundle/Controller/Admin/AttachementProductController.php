@@ -47,6 +47,7 @@ class AttachementProductController extends FrameworkBundleAdminController
      */
     public function addAction($idProduct, Request $request)
     {
+        $this->trans('An error occurred while uploading the file.', 'Admin.Notifications.Error');
         $response = new JsonResponse();
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
