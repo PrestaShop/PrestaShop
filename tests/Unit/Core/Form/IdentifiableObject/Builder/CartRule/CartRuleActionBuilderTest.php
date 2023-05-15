@@ -32,11 +32,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -92,19 +88,18 @@ class CartRuleActionBuilderTest extends TestCase
     }
 
     /**
-     * @dataProvider getDataForGiftProductAction
      * @dataProvider getDataForFreeShippingAction
      * @dataProvider getDataForAmountDiscountAction
      * @dataProvider getDataForPercentageDiscountAction
      *
      * @param array<string, mixed> $data
-     * @param AmountDiscountAction $expectedAction
+     * @param CartRuleAction $expectedAction
      *
      * @return void
      */
     public function testItBuildsAction(
         array $data,
-        CartRuleActionInterface $expectedAction
+        CartRuleAction $expectedAction
     ): void {
         $action = $this->getCartRuleActionBuilder()->build($data);
 
@@ -353,7 +348,25 @@ class CartRuleActionBuilderTest extends TestCase
     {
         yield [
             ['free_shipping' => true],
-            new FreeShippingAction(),
+            CartRuleAction::buildFreeShipping(),
+        ];
+        yield [
+            [
+                'free_shipping' => true,
+                'gift_product' => [
+                    ['product_id' => 17],
+                ],
+            ],
+            CartRuleAction::buildFreeShipping(new GiftProduct(17)),
+        ];
+        yield [
+            [
+                'free_shipping' => true,
+                'gift_product' => [
+                    ['product_id' => 17, 'combination_id' => 12],
+                ],
+            ],
+            CartRuleAction::buildFreeShipping(new GiftProduct(17, 12)),
         ];
     }
 
@@ -365,7 +378,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ['product_id' => 16],
                 ],
             ],
-            new GiftProductAction(new GiftProduct(16)),
+            CartRuleAction::buildGiftProduct(new GiftProduct(16)),
         ];
 
         yield 'gift product with combination action' => [
@@ -377,7 +390,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            new GiftProductAction(new GiftProduct(16, 18)),
+            CartRuleAction::buildGiftProduct(new GiftProduct(16, 18)),
         ];
     }
 
@@ -395,7 +408,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            new AmountDiscountAction(
+            CartRuleAction::buildAmountDiscount(
                 new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
                 false,
                 new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
@@ -415,7 +428,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            new AmountDiscountAction(
+            CartRuleAction::buildAmountDiscount(
                 new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
                 false,
                 new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10)
@@ -438,7 +451,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ['product_id' => 14],
                 ],
             ],
-            new AmountDiscountAction(
+            CartRuleAction::buildAmountDiscount(
                 new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
                 false,
                 new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10),
@@ -466,7 +479,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            new AmountDiscountAction(
+            CartRuleAction::buildAmountDiscount(
                 new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
                 true,
                 new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10),
@@ -488,7 +501,7 @@ class CartRuleActionBuilderTest extends TestCase
                     'apply_to_discounted_products' => false,
                 ],
             ],
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('11.23'),
                 false,
                 false,
@@ -508,7 +521,7 @@ class CartRuleActionBuilderTest extends TestCase
                     'apply_to_discounted_products' => false,
                 ],
             ],
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('11.23'),
                 false,
                 false,
@@ -528,7 +541,7 @@ class CartRuleActionBuilderTest extends TestCase
                     'apply_to_discounted_products' => false,
                 ],
             ],
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('11.23'),
                 false,
                 true,
@@ -548,7 +561,7 @@ class CartRuleActionBuilderTest extends TestCase
                     'apply_to_discounted_products' => true,
                 ],
             ],
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('50'),
                 true,
                 false,
@@ -569,7 +582,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ['product_id' => 15],
                 ],
             ],
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('50'),
                 false,
                 false,
@@ -594,7 +607,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('50'),
                 false,
                 false,

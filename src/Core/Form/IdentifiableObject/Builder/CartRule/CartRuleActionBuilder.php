@@ -97,9 +97,9 @@ class CartRuleActionBuilder
                 );
             }
         } elseif ($freeShipping) {
-            CartRuleAction::buildFreeShipping($giftProduct);
+            return CartRuleAction::buildFreeShipping($giftProduct);
         } elseif ($giftProduct) {
-            CartRuleAction::buildGiftProduct($giftProduct);
+            return CartRuleAction::buildGiftProduct($giftProduct);
         }
 
         throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);

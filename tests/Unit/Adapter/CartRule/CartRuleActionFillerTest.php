@@ -34,11 +34,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -49,14 +45,14 @@ class CartRuleActionFillerTest extends TestCase
     /**
      * @dataProvider getDataToTestUpdatablePropertiesFilling
      *
-     * @param CartRuleActionInterface $cartRuleAction
+     * @param CartRuleAction $cartRuleAction
      * @param array $expectedUpdatableProperties
      * @param CartRule $expectedCartRule
      *
      * @return void
      */
     public function testFillsUpdatableProperties(
-        CartRuleActionInterface $cartRuleAction,
+        CartRuleAction $cartRuleAction,
         array $expectedUpdatableProperties,
         CartRule $expectedCartRule
     ) {
@@ -77,7 +73,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = null;
         $expectedCartRule->gift_product_attribute = null;
         yield [
-            new FreeShippingAction(),
+            CartRuleAction::buildFreeShipping(),
             ['free_shipping', 'gift_product', 'gift_product_attribute'],
             $expectedCartRule,
         ];
@@ -87,7 +83,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product_attribute = null;
         $expectedCartRule->free_shipping = true;
         yield [
-            new FreeShippingAction(
+            CartRuleAction::buildFreeShipping(
                 new GiftProduct(2)
             ),
             ['free_shipping', 'gift_product', 'gift_product_attribute'],
@@ -99,7 +95,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product_attribute = 3;
         $expectedCartRule->free_shipping = true;
         yield [
-            new FreeShippingAction(
+            CartRuleAction::buildFreeShipping(
                 new GiftProduct(2, 3)
             ),
             ['free_shipping', 'gift_product', 'gift_product_attribute'],
@@ -111,7 +107,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = null;
         yield [
-            new FreeShippingAction(
+            CartRuleAction::buildFreeShipping(
                 new GiftProduct(1)
             ),
             ['free_shipping', 'gift_product', 'gift_product_attribute'],
@@ -123,7 +119,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = 2;
         yield [
-            new FreeShippingAction(
+            CartRuleAction::buildFreeShipping(
                 new GiftProduct(1, 2)
             ),
             ['free_shipping', 'gift_product', 'gift_product_attribute'],
@@ -135,7 +131,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = null;
         yield [
-            new GiftProductAction(new GiftProduct(1)),
+            CartRuleAction::buildGiftProduct(new GiftProduct(1)),
             ['free_shipping', 'gift_product', 'gift_product_attribute'],
             $expectedCartRule,
         ];
@@ -145,7 +141,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = 2;
         yield [
-            new GiftProductAction(new GiftProduct(1, 2)),
+            CartRuleAction::buildGiftProduct(new GiftProduct(1, 2)),
             ['free_shipping', 'gift_product', 'gift_product_attribute'],
             $expectedCartRule,
         ];
@@ -161,7 +157,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_exclude_special = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
         yield [
-            new AmountDiscountAction(
+            CartRuleAction::buildAmountDiscount(
                 new Money(new DecimalNumber('10'), new CurrencyId(2), true),
                 true,
                 new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
@@ -183,7 +179,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_exclude_special = false;
         $expectedCartRule->reduction_product = 5;
         yield [
-            new AmountDiscountAction(
+            CartRuleAction::buildAmountDiscount(
                 new Money(new DecimalNumber('10'), new CurrencyId(2), false),
                 false,
                 new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 5),
@@ -206,7 +202,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_tax = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
         yield [
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('15'),
                 true,
                 true,
@@ -229,7 +225,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_tax = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
         yield [
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('15'),
                 false,
                 false,
@@ -253,7 +249,7 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_tax = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
         yield [
-            new PercentageDiscountAction(
+            CartRuleAction::buildPercentageDiscount(
                 new DecimalNumber('15'),
                 false,
                 false,
