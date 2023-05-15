@@ -7159,7 +7159,11 @@ class ProductCore extends ObjectModel
             'ORDER BY `position`'
         );
 
-        if ($position > count($result)) {
+        $listIds = array_column($result, 'id_product');
+        $count = count($result);
+        if ($position > $count && in_array($this->id, $listIds)
+            || $position > $count + 1 && !in_array($this->id, $listIds)    
+        ) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans(
