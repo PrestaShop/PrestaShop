@@ -92,7 +92,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $idsByIdReferences = $this->assertAliasProperties($expectedAliases, $aliases);
 
         foreach ($idsByIdReferences as $reference => $id) {
-            $this->getSharedStorage()->set($reference, $id);
+            $this->getSharedStorage()->set($reference, (int) $id);
         }
     }
 
@@ -177,9 +177,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     public function bulkDeleteAlias(string $aliasReferences): void
     {
         try {
-            $this->getCommandBus()->handle(new BulkDeleteAliasCommand(
-                array_map('intval', $this->referencesToIds($aliasReferences))
-            ));
+            $this->getCommandBus()->handle(new BulkDeleteAliasCommand($this->referencesToIds($aliasReferences)));
         } catch (AliasException $e) {
             $this->setLastException($e);
         }
