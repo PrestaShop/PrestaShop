@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
+import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -15,9 +16,9 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_searchModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_alerts_enableDisableMobile';
 
-describe('BO - Modules - Module Manager : Search module', async () => {
+describe('BO - Modules - Alerts tab : Disable / Enable mobile', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -49,10 +50,32 @@ describe('BO - Modules - Module Manager : Search module', async () => {
     await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.contactForm.name}`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+  it('should go to \'Alerts\' tab', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAlertsTab', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
-    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+    await moduleManagerPage.goToAlertsTab(page);
+
+    const pageTitle = await moduleAlertsPage.getPageTitle(page);
+    await expect(pageTitle).to.eq(moduleAlertsPage.pageTitle);
+  });
+
+  [
+    {
+      title: 'disable mobile',
+      action: 'disableMobile',
+      message: moduleAlertsPage.disableMobileSuccessMessage(Modules.psCheckPayment.tag),
+    },
+    {
+      title: 'enable mobile',
+      action: 'enableMobile',
+      message: moduleAlertsPage.enableMobileSuccessMessage(Modules.psCheckPayment.tag),
+    },
+  ].forEach((test) => {
+    it(`should ${test.title}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', test.action, baseContext);
+
+      const successMessage = await moduleAlertsPage.setActionInModule(page, Modules.psCheckPayment, test.action);
+      await expect(successMessage).to.eq(test.message);
+    });
   });
 });

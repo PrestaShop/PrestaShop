@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
 import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 

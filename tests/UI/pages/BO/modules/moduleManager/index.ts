@@ -10,7 +10,7 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class ModuleManager extends BOBasePage {
-  public readonly pageTitle: string;
+  public pageTitle: string;
 
   public readonly disableModuleSuccessMessage: (moduleTag: string) => string;
 
@@ -27,6 +27,8 @@ class ModuleManager extends BOBasePage {
   public readonly uninstallModuleSuccessMessage: (moduleTag: string) => string;
 
   public readonly uploadModuleSuccessMessage: string;
+
+  private readonly alertsTab: string;
 
   private readonly searchModuleTagInput: string;
 
@@ -117,6 +119,9 @@ class ModuleManager extends BOBasePage {
     this.uninstallModuleSuccessMessage = (moduleTag: string) => `Uninstall action on module ${moduleTag} succeeded.`;
     this.uploadModuleSuccessMessage = 'Module installed!';
 
+    // Tabs
+    this.alertsTab = '#subtab-AdminModulesNotifications';
+
     // Header Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
@@ -180,6 +185,15 @@ class ModuleManager extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Go to the Alerts Tab
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToAlertsTab(page: Page): Promise<void> {
+    await page.click(this.alertsTab);
+  }
 
   /**
    * Upload module
@@ -460,4 +474,5 @@ class ModuleManager extends BOBasePage {
   }
 }
 
-export default new ModuleManager();
+const moduleManager = new ModuleManager();
+export {moduleManager, ModuleManager};

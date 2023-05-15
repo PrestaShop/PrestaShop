@@ -16,7 +16,7 @@ import testContext from '@utils/testContext';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import statsPage from '@pages/BO/stats';
-import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import newCategoryPage from '@pages/BO/catalog/categories/add';
 import newVoucherPage from '@pages/BO/catalog/discounts/add';
 import newProductPage from '@pages/BO/catalog/products/add';
