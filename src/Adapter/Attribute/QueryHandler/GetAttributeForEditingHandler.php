@@ -57,7 +57,7 @@ final class GetAttributeForEditingHandler implements GetAttributeForEditingHandl
 
         return new EditableAttribute(
             $attributeId,
-            new AttributeGroupId($attribute->id_attribute_group),
+            new AttributeGroupId((int) $attribute->id_attribute_group),
             $attribute->name,
             $attribute->color,
             $attribute->getAssociatedShops()
