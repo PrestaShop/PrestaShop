@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 use DateTimeImmutable;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
@@ -117,7 +117,7 @@ class EditCartRuleCommand
     private $quantityPerUser;
 
     /**
-     * @var CartRuleActionInterface|null
+     * @var CartRuleAction|null
      */
     private $cartRuleAction;
 
@@ -298,7 +298,7 @@ class EditCartRuleCommand
         return $this;
     }
 
-    public function getCartRuleAction(): ?CartRuleActionInterface
+    public function getCartRuleAction(): ?CartRuleAction
     {
         return $this->cartRuleAction;
     }
@@ -329,7 +329,7 @@ class EditCartRuleCommand
         return $this->minimumAmountShippingIncluded;
     }
 
-    public function setCartRuleAction(CartRuleActionInterface $cartRuleAction): EditCartRuleCommand
+    public function setCartRuleAction(CartRuleAction $cartRuleAction): EditCartRuleCommand
     {
         $this->cartRuleAction = $cartRuleAction;
 

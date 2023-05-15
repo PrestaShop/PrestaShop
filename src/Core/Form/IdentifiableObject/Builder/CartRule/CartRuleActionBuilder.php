@@ -29,11 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -46,9 +42,9 @@ class CartRuleActionBuilder
     /**
      * @param array<string, mixed> $actionsData
      *
-     * @return CartRuleActionInterface
+     * @return CartRuleAction
      */
-    public function build(array $actionsData): CartRuleActionInterface
+    public function build(array $actionsData): CartRuleAction
     {
         $giftProduct = null;
         if (!empty($actionsData['gift_product'][0])) {
@@ -81,7 +77,7 @@ class CartRuleActionBuilder
             $reduction = new Reduction($reductionData['type'], (string) $reductionData['value']);
 
             if ($reduction->getType() === Reduction::TYPE_AMOUNT) {
-                return new AmountDiscountAction(
+                return CartRuleAction::buildAmountDiscount(
                     new Money(
                         $reduction->getValue(),
                         new CurrencyId($reductionData['currency']),
@@ -92,7 +88,7 @@ class CartRuleActionBuilder
                     $giftProduct
                 );
             } else {
-                return new PercentageDiscountAction(
+                return CartRuleAction::buildPercentageDiscount(
                     $reduction->getValue(),
                     !empty($actionsData['discount']['apply_to_discounted_products']),
                     $freeShipping,
@@ -101,9 +97,9 @@ class CartRuleActionBuilder
                 );
             }
         } elseif ($freeShipping) {
-            return new FreeShippingAction($giftProduct);
+            CartRuleAction::buildFreeShipping($giftProduct);
         } elseif ($giftProduct) {
-            return new GiftProductAction($giftProduct);
+            CartRuleAction::buildGiftProduct($giftProduct);
         }
 
         throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);

@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
@@ -127,7 +128,7 @@ class AddCartRuleCommand
      * @param DateTime $validTo
      * @param int $totalQuantity
      * @param int $quantityPerUser
-     * @param CartRuleActionInterface $cartRuleAction
+     * @param CartRuleAction $cartRuleAction
      *
      * @throws CartRuleConstraintException
      */
@@ -141,7 +142,7 @@ class AddCartRuleCommand
         DateTime $validTo,
         int $totalQuantity,
         int $quantityPerUser,
-        CartRuleActionInterface $cartRuleAction
+        CartRuleAction $cartRuleAction
     ) {
         $this->assertDateRangeIsValid($validFrom, $validTo);
         $this->setLocalizedNames($localizedNames);
@@ -253,9 +254,9 @@ class AddCartRuleCommand
     }
 
     /**
-     * @return CartRuleActionInterface
+     * @return CartRuleAction
      */
-    public function getCartRuleAction(): CartRuleActionInterface
+    public function getCartRuleAction(): CartRuleAction
     {
         return $this->cartRuleAction;
     }

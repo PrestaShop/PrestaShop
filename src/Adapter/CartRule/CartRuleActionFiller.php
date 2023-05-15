@@ -29,20 +29,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CartRule;
 
 use CartRule;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 
 class CartRuleActionFiller
 {
     /**
      * @param CartRule $cartRule
-     * @param CartRuleActionInterface $cartRuleAction
+     * @param CartRuleAction $cartRuleAction
      *
      * @return string[] list of updatable properties which were filled
      */
     public function fillUpdatableProperties(
         CartRule $cartRule,
-        CartRuleActionInterface $cartRuleAction
+        CartRuleAction $cartRuleAction
     ): array {
         $updatableProperties = [];
         $amountDiscount = $cartRuleAction->getAmountDiscount();
@@ -97,11 +97,11 @@ class CartRuleActionFiller
 
     /**
      * @param CartRule $cartRule
-     * @param CartRuleActionInterface $cartRuleAction
+     * @param CartRuleAction $cartRuleAction
      */
     private function fillDiscountApplicationType(
         CartRule $cartRule,
-        CartRuleActionInterface $cartRuleAction
+        CartRuleAction $cartRuleAction
     ): void {
         $discountApplicationType = $cartRuleAction->getDiscountApplicationType();
 
