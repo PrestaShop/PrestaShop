@@ -189,7 +189,7 @@ class ModuleManager extends BOBasePage {
   /**
    * Go to the Alerts Tab
    * @param page {Page} Browser tab
-   * @return {Promise<boolean>}
+   * @return {Promise<void>}
    */
   async goToAlertsTab(page: Page): Promise<void> {
     await page.click(this.alertsTab);
