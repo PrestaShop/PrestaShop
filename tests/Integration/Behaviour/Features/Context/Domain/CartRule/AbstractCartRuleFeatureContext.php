@@ -41,6 +41,8 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
     }
 
     /**
+     * This method reformats the data from the behat feature files into an array structure understandable by the CartRuleActionBuilder (based on the form structure).
+     *
      * @param array<string, mixed> $data
      *
      * @return array<string, mixed>
