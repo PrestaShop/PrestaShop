@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -51,7 +50,7 @@ class SecurityController extends FrameworkBundleAdminController
             ->getToken($username)
             ->getValue();
 
-        $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
+        $newUri = $this->generateTokenizedUrl($requestUri, $newToken);
 
         return $this->render(
             '@PrestaShop/Admin/Security/compromised.html.twig',
@@ -59,5 +58,27 @@ class SecurityController extends FrameworkBundleAdminController
                 'requestUri' => $newUri,
             ]
         );
+    }
+
+    protected function generateTokenizedUrl($url, $token): string
+    {
+        $components = parse_url($url);
+        $baseUrl = (isset($components['path']) ? $components['path'] : '');
+        $queryParams = [];
+        if (isset($components['query'])) {
+            $query = $components['query'];
+
+            parse_str($query, $queryParams);
+        }
+
+        $queryParams['_token'] = $token;
+
+        $url = $baseUrl . '?' . http_build_query($queryParams, '', '&');
+        if (isset($components['fragment']) && $components['fragment'] !== '') {
+            /* This copy-paste from Symfony's UrlGenerator */
+            $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
+        }
+
+        return $url;
     }
 }

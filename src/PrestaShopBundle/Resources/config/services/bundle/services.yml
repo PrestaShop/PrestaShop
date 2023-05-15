@@ -81,6 +81,7 @@ services:
     arguments: [ '@security.token_storage' ]
 
   prestashop.router:
+    deprecated: ~ # Since 9.0
     class: PrestaShopBundle\Service\Routing\Router
     parent: 'router.default'
     public: true

@@ -1,6 +1,6 @@
 services:
   PrestaShopBundle\Routing\Router:
-    public: true # A compiler pass set this public, let's stay compatible.
+    public: true  # A compiler pass set this public, let's stay compatible.
     autowire: true
     decorates: 'router.default'
     arguments:

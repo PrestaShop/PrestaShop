@@ -35,6 +35,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
  * We extends Symfony Router in order to add a token to each url.
  *
  * This is done for Security purposes.
+ *
+ * @deprecated since 9.0
  */
 class Router extends BaseRouter
 {

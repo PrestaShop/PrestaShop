@@ -125,11 +125,10 @@ services:
 
   prestashop.core.form.identifiable_object.data_provider.order_return_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderReturnFormDataProvider'
+    autowire: true
     arguments:
-      - '@prestashop.core.query_bus'
-      - '@prestashop.router'
-      - '@translator'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
+      $queryBus: '@prestashop.core.query_bus'
+      $dateFormat: '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
 
   prestashop.core.form.identifiable_object.data_provider.catalog_price_rule_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CatalogPriceRuleFormDataProvider'
