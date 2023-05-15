@@ -76,6 +76,8 @@
     "// Functional FO - Hummingbird": "Scripts to run functional FO Hummingbird tests",
     "test:functional:FO:hummingbird": "TEST_PATH='functional/FO/hummingbird/**/*.{ts,js}' npm run test:specific",
     "test:functional:FO:hummingbird:01-03": "TEST_PATH='functional/FO/hummingbird/0[1-3]*/*.{ts,js}' npm run test:specific",
+    "// Functional WS": "Scripts to run functional WS tests",
+    "test:functional:WS": "TEST_PATH='functional/WS/**/*.{ts,js}' npm run test:specific",
     "// Regression tests": "Scripts to run regression tests",
     "test:regression": "TEST_PATH='regression/**/*.{ts,js}' npm run test:specific",
     "// All tests": "Scripts to run all campaigns",
@@ -105,6 +107,7 @@
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@xmldom/xmldom": "^0.8.7",
     "chai": "^4.3.7",
     "chai-string": "^1.5.0",
     "csv-writer": "^1.6.0",
@@ -115,7 +118,8 @@
     "mochawesome": "^7.1.3",
     "module-alias": "^2.2.2",
     "pdfjs-dist": "^3.3.122",
-    "playwright": "^1.30.0"
+    "playwright": "^1.30.0",
+    "xpath-ts": "^1.3.13"
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",

@@ -1,8 +1,9 @@
 import api from '@utils/api';
+import helpers from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
-import {APIRequestContext, request} from 'playwright';
+import type {APIRequestContext} from 'playwright';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_internalAuthServer_authorizationEndpoint';
 
@@ -10,11 +11,7 @@ describe('API : Authorization Endpoint', async () => {
   let apiContext: APIRequestContext;
 
   before(async () => {
-    apiContext = await request.newContext({
-      baseURL: global.BO.URL,
-      // @todo : Remove it when Puppeteer will accept self signed certificates
-      ignoreHTTPSErrors: true,
-    });
+    apiContext = await helpers.createAPIContext(global.BO.URL);
   });
 
   describe('Authorization Endpoint', async () => {
