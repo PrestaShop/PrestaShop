@@ -30,7 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule;
 
 use CartRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Discount;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 class CartRuleActionFiller
 {
@@ -44,33 +47,10 @@ class CartRuleActionFiller
         CartRule $cartRule,
         CartRuleAction $cartRuleAction
     ): array {
-        $updatableProperties = [];
-        $amountDiscount = $cartRuleAction->getAmountDiscount();
-        if (null !== $amountDiscount) {
-            $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
-            $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
-            $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
-            $cartRule->reduction_percent = 0;
-            $cartRule->reduction_exclude_special = false;
-            $updatableProperties[] = 'reduction_amount';
-            $updatableProperties[] = 'reduction_percent';
-            $updatableProperties[] = 'reduction_currency';
-            $updatableProperties[] = 'reduction_tax';
-            $updatableProperties[] = 'reduction_exclude_special';
-        }
+        $discount = $cartRuleAction->getDiscount();
 
-        $percentageDiscount = $cartRuleAction->getPercentageDiscount();
-        if (null !== $percentageDiscount) {
-            $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
-            $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
-            $cartRule->reduction_amount = 0;
-            $cartRule->reduction_currency = 0;
-            $cartRule->reduction_tax = false;
-            $updatableProperties[] = 'reduction_amount';
-            $updatableProperties[] = 'reduction_percent';
-            $updatableProperties[] = 'reduction_currency';
-            $updatableProperties[] = 'reduction_tax';
-            $updatableProperties[] = 'reduction_exclude_special';
+        if ($discount) {
+            $this->fillDiscount($cartRule, $discount);
         }
 
         $giftProduct = $cartRuleAction->getGiftProduct();
@@ -83,32 +63,61 @@ class CartRuleActionFiller
         }
 
         $cartRule->free_shipping = $cartRuleAction->isFreeShipping();
-        $updatableProperties[] = 'free_shipping';
-        $updatableProperties[] = 'gift_product';
-        $updatableProperties[] = 'gift_product_attribute';
 
-        if (null !== $cartRuleAction->getDiscountApplicationType()) {
-            $this->fillDiscountApplicationType($cartRule, $cartRuleAction);
-            $updatableProperties[] = 'reduction_product';
-        }
-
-        return $updatableProperties;
+        // always return all the properties related to the action, because when one action is set the other one must be reset,
+        // so we always end up updating all of them when action related field is being updated.
+        return [
+            'reduction_amount',
+            'reduction_percent',
+            'reduction_currency',
+            'reduction_tax',
+            'reduction_exclude_special',
+            'reduction_product',
+            'free_shipping',
+            'gift_product',
+            'gift_product_attribute',
+        ];
     }
 
     /**
      * @param CartRule $cartRule
-     * @param CartRuleAction $cartRuleAction
+     * @param ?Discount $discount
      */
-    private function fillDiscountApplicationType(
-        CartRule $cartRule,
-        CartRuleAction $cartRuleAction
-    ): void {
-        $discountApplicationType = $cartRuleAction->getDiscountApplicationType();
+    private function fillDiscount(CartRule $cartRule, ?Discount $discount): void
+    {
+        // when there is no discount action, we reset all the related properties to defaults
+        if (!$discount) {
+            $cartRule->reduction_amount = 0;
+            $cartRule->reduction_currency = 0;
+            $cartRule->reduction_tax = false;
+            $cartRule->reduction_percent = 0;
+            $cartRule->reduction_exclude_special = false;
+            $cartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
 
-        if ((!$cartRuleAction->getAmountDiscount() && !$cartRuleAction->getPercentageDiscount()) || !$discountApplicationType) {
             return;
         }
 
+        $percentageDiscount = $discount->getPercentageDiscount();
+        $amountDiscount = $discount->getAmountDiscount();
+
+        if ($amountDiscount) {
+            $this->fillAmountDiscount($cartRule, $amountDiscount);
+        }
+        if ($percentageDiscount) {
+            $this->fillPercentageDiscount($cartRule, $percentageDiscount);
+        }
+
+        $this->fillDiscountApplicationType($cartRule, $discount->getDiscountApplicationType());
+    }
+
+    /**
+     * @param CartRule $cartRule
+     * @param DiscountApplicationType $discountApplicationType
+     */
+    private function fillDiscountApplicationType(
+        CartRule $cartRule,
+        DiscountApplicationType $discountApplicationType
+    ): void {
         switch ($discountApplicationType->getType()) {
             case DiscountApplicationType::SELECTED_PRODUCTS:
                 $discountApplicationValue = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
@@ -124,5 +133,23 @@ class CartRuleActionFiller
         }
 
         $cartRule->reduction_product = $discountApplicationValue;
+    }
+
+    private function fillAmountDiscount(CartRule $cartRule, Money $amountDiscount): void
+    {
+        $cartRule->reduction_amount = (float) (string) $amountDiscount->getAmount();
+        $cartRule->reduction_currency = $amountDiscount->getCurrencyId()->getValue();
+        $cartRule->reduction_tax = $amountDiscount->isTaxIncluded();
+        $cartRule->reduction_percent = 0;
+        $cartRule->reduction_exclude_special = false;
+    }
+
+    private function fillPercentageDiscount(CartRule $cartRule, PercentageDiscount $percentageDiscount): void
+    {
+        $cartRule->reduction_percent = (float) (string) $percentageDiscount->getPercentage();
+        $cartRule->reduction_exclude_special = !$percentageDiscount->applyToDiscountedProducts();
+        $cartRule->reduction_amount = 0;
+        $cartRule->reduction_currency = 0;
+        $cartRule->reduction_tax = false;
     }
 }

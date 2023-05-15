@@ -33,6 +33,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Discount;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -91,6 +92,7 @@ class CartRuleActionBuilderTest extends TestCase
      * @dataProvider getDataForFreeShippingAction
      * @dataProvider getDataForAmountDiscountAction
      * @dataProvider getDataForPercentageDiscountAction
+     * @dataProvider getDataForMixedAction
      *
      * @param array<string, mixed> $data
      * @param CartRuleAction $expectedAction
@@ -239,7 +241,7 @@ class CartRuleActionBuilderTest extends TestCase
             ProductConstraintException::INVALID_ID,
         ];
 
-        yield 'reduciton amount value is empty' => [
+        yield 'reduction amount value is empty' => [
             [
                 'discount' => [
                     'reduction' => [
@@ -348,25 +350,7 @@ class CartRuleActionBuilderTest extends TestCase
     {
         yield [
             ['free_shipping' => true],
-            CartRuleAction::buildFreeShipping(),
-        ];
-        yield [
-            [
-                'free_shipping' => true,
-                'gift_product' => [
-                    ['product_id' => 17],
-                ],
-            ],
-            CartRuleAction::buildFreeShipping(new GiftProduct(17)),
-        ];
-        yield [
-            [
-                'free_shipping' => true,
-                'gift_product' => [
-                    ['product_id' => 17, 'combination_id' => 12],
-                ],
-            ],
-            CartRuleAction::buildFreeShipping(new GiftProduct(17, 12)),
+            new CartRuleAction(true, null, null),
         ];
     }
 
@@ -378,7 +362,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ['product_id' => 16],
                 ],
             ],
-            CartRuleAction::buildGiftProduct(new GiftProduct(16)),
+            new CartRuleAction(false, new GiftProduct(16), null),
         ];
 
         yield 'gift product with combination action' => [
@@ -390,7 +374,7 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            CartRuleAction::buildGiftProduct(new GiftProduct(16, 18)),
+            new CartRuleAction(false, new GiftProduct(16, 18), null),
         ];
     }
 
@@ -408,10 +392,13 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            CartRuleAction::buildAmountDiscount(
-                new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+            new CartRuleAction(
                 false,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                null,
+                Discount::buildAmountDiscount(
+                    new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
             ),
         ];
 
@@ -428,10 +415,89 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            CartRuleAction::buildAmountDiscount(
-                new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+            new CartRuleAction(
                 false,
-                new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10)
+                null,
+                Discount::buildAmountDiscount(
+                    new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+                    new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10)
+                )
+            ),
+        ];
+    }
+
+    public function getDataForPercentageDiscountAction(): iterable
+    {
+        yield 'percent action with free_shipping not set' => [
+            [
+                'discount' => [
+                    'discount_application' => DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
+                    'reduction' => [
+                        'type' => Reduction::TYPE_PERCENTAGE,
+                        'value' => '11.23',
+                    ],
+                    'apply_to_discounted_products' => false,
+                ],
+            ],
+            new CartRuleAction(
+                false,
+                null,
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('11.23'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
+            ),
+        ];
+
+        yield 'percent action with free_shipping set to false' => [
+            [
+                'free_shipping' => false,
+                'discount' => [
+                    'discount_application' => DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
+                    'reduction' => [
+                        'type' => Reduction::TYPE_PERCENTAGE,
+                        'value' => '11.23',
+                    ],
+                    'apply_to_discounted_products' => false,
+                ],
+            ],
+            new CartRuleAction(
+                false,
+                null,
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('11.23'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
+            ),
+        ];
+    }
+
+    public function getDataForMixedAction(): iterable
+    {
+        yield 'free shipping with gift product' => [
+            [
+                'free_shipping' => true,
+                'gift_product' => [
+                    ['product_id' => 17],
+                ],
+            ],
+            new CartRuleAction(
+                true,
+                new GiftProduct(17)
+            ),
+        ];
+        yield 'free shipping with gift combination' => [
+            [
+                'free_shipping' => true,
+                'gift_product' => [
+                    ['product_id' => 17, 'combination_id' => 12],
+                ],
+            ],
+            new CartRuleAction(
+                true,
+                new GiftProduct(17, 12)
             ),
         ];
 
@@ -451,11 +517,13 @@ class CartRuleActionBuilderTest extends TestCase
                     ['product_id' => 14],
                 ],
             ],
-            CartRuleAction::buildAmountDiscount(
-                new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+            new CartRuleAction(
                 false,
-                new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10),
-                new GiftProduct(14)
+                new GiftProduct(14),
+                Discount::buildAmountDiscount(
+                    new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+                    new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10)
+                )
             ),
         ];
 
@@ -479,53 +547,13 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            CartRuleAction::buildAmountDiscount(
-                new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+            new CartRuleAction(
                 true,
-                new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10),
-                new GiftProduct(14, 12)
-            ),
-        ];
-    }
-
-    public function getDataForPercentageDiscountAction(): iterable
-    {
-        yield 'percent action with free_shipping not set' => [
-            [
-                'discount' => [
-                    'discount_application' => DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
-                    'reduction' => [
-                        'type' => Reduction::TYPE_PERCENTAGE,
-                        'value' => '11.23',
-                    ],
-                    'apply_to_discounted_products' => false,
-                ],
-            ],
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('11.23'),
-                false,
-                false,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
-            ),
-        ];
-
-        yield 'percent action with free_shipping set to false' => [
-            [
-                'free_shipping' => false,
-                'discount' => [
-                    'discount_application' => DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
-                    'reduction' => [
-                        'type' => Reduction::TYPE_PERCENTAGE,
-                        'value' => '11.23',
-                    ],
-                    'apply_to_discounted_products' => false,
-                ],
-            ],
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('11.23'),
-                false,
-                false,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                new GiftProduct(14, 12),
+                Discount::buildAmountDiscount(
+                    new Money(new DecimalNumber('11.23'), new CurrencyId(3), true),
+                    new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 10)
+                )
             ),
         ];
 
@@ -541,11 +569,14 @@ class CartRuleActionBuilderTest extends TestCase
                     'apply_to_discounted_products' => false,
                 ],
             ],
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('11.23'),
-                false,
+            new CartRuleAction(
                 true,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                null,
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('11.23'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
             ),
         ];
 
@@ -561,11 +592,14 @@ class CartRuleActionBuilderTest extends TestCase
                     'apply_to_discounted_products' => true,
                 ],
             ],
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('50'),
-                true,
+            new CartRuleAction(
                 false,
-                new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 13)
+                null,
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('50'),
+                    true,
+                    new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 13)
+                )
             ),
         ];
 
@@ -582,12 +616,14 @@ class CartRuleActionBuilderTest extends TestCase
                     ['product_id' => 15],
                 ],
             ],
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('50'),
+            new CartRuleAction(
                 false,
-                false,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING),
-                new GiftProduct(15)
+                new GiftProduct(15),
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('50'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
             ),
         ];
 
@@ -607,12 +643,14 @@ class CartRuleActionBuilderTest extends TestCase
                     ],
                 ],
             ],
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('50'),
+            new CartRuleAction(
                 false,
-                false,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING),
-                new GiftProduct(15, 32)
+                new GiftProduct(15, 32),
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('50'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
             ),
         ];
     }

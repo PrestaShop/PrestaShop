@@ -35,6 +35,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Discount;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -73,8 +74,8 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = null;
         $expectedCartRule->gift_product_attribute = null;
         yield [
-            CartRuleAction::buildFreeShipping(),
-            ['free_shipping', 'gift_product', 'gift_product_attribute'],
+            new CartRuleAction(true),
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -83,10 +84,11 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product_attribute = null;
         $expectedCartRule->free_shipping = true;
         yield [
-            CartRuleAction::buildFreeShipping(
+            new CartRuleAction(
+                true,
                 new GiftProduct(2)
             ),
-            ['free_shipping', 'gift_product', 'gift_product_attribute'],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -95,10 +97,11 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product_attribute = 3;
         $expectedCartRule->free_shipping = true;
         yield [
-            CartRuleAction::buildFreeShipping(
+            new CartRuleAction(
+                true,
                 new GiftProduct(2, 3)
             ),
-            ['free_shipping', 'gift_product', 'gift_product_attribute'],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -107,10 +110,11 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = null;
         yield [
-            CartRuleAction::buildFreeShipping(
+            new CartRuleAction(
+                true,
                 new GiftProduct(1)
             ),
-            ['free_shipping', 'gift_product', 'gift_product_attribute'],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -119,10 +123,11 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = 2;
         yield [
-            CartRuleAction::buildFreeShipping(
+            new CartRuleAction(
+                true,
                 new GiftProduct(1, 2)
             ),
-            ['free_shipping', 'gift_product', 'gift_product_attribute'],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -131,8 +136,11 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = null;
         yield [
-            CartRuleAction::buildGiftProduct(new GiftProduct(1)),
-            ['free_shipping', 'gift_product', 'gift_product_attribute'],
+            new CartRuleAction(
+                false,
+                new GiftProduct(1)
+            ),
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -141,8 +149,11 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->gift_product = 1;
         $expectedCartRule->gift_product_attribute = 2;
         yield [
-            CartRuleAction::buildGiftProduct(new GiftProduct(1, 2)),
-            ['free_shipping', 'gift_product', 'gift_product_attribute'],
+            new CartRuleAction(
+                false,
+                new GiftProduct(1, 2)
+            ),
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -157,14 +168,15 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_exclude_special = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
         yield [
-            CartRuleAction::buildAmountDiscount(
-                new Money(new DecimalNumber('10'), new CurrencyId(2), true),
+            new CartRuleAction(
                 true,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                null,
+                Discount::buildAmountDiscount(
+                    new Money(new DecimalNumber('10'), new CurrencyId(2), true),
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
             ),
-            ['reduction_amount', 'reduction_percent', 'reduction_currency', 'reduction_tax', 'reduction_exclude_special',
-                'free_shipping', 'gift_product', 'gift_product_attribute', 'reduction_product',
-            ],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -179,15 +191,15 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_exclude_special = false;
         $expectedCartRule->reduction_product = 5;
         yield [
-            CartRuleAction::buildAmountDiscount(
-                new Money(new DecimalNumber('10'), new CurrencyId(2), false),
+            new CartRuleAction(
                 false,
-                new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 5),
-                new GiftProduct(1, 3)
+                new GiftProduct(1, 3),
+                Discount::buildAmountDiscount(
+                    new Money(new DecimalNumber('10'), new CurrencyId(2), false),
+                    new DiscountApplicationType(DiscountApplicationType::SPECIFIC_PRODUCT, 5)
+                )
             ),
-            ['reduction_amount', 'reduction_percent', 'reduction_currency', 'reduction_tax', 'reduction_exclude_special',
-                'free_shipping', 'gift_product', 'gift_product_attribute', 'reduction_product',
-            ],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -202,15 +214,16 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_tax = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
         yield [
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('15'),
+            new CartRuleAction(
                 true,
-                true,
-                new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                null,
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('15'),
+                    true,
+                    new DiscountApplicationType(DiscountApplicationType::ORDER_WITHOUT_SHIPPING)
+                )
             ),
-            ['reduction_amount', 'reduction_percent', 'reduction_currency', 'reduction_tax', 'reduction_exclude_special',
-                'free_shipping', 'gift_product', 'gift_product_attribute', 'reduction_product',
-            ],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -225,16 +238,16 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_tax = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
         yield [
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('15'),
+            new CartRuleAction(
                 false,
-                false,
-                new DiscountApplicationType(DiscountApplicationType::CHEAPEST_PRODUCT),
-                new GiftProduct(1, 4)
+                new GiftProduct(1, 4),
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('15'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::CHEAPEST_PRODUCT)
+                )
             ),
-            ['reduction_amount', 'reduction_percent', 'reduction_currency', 'reduction_tax', 'reduction_exclude_special',
-                'free_shipping', 'gift_product', 'gift_product_attribute', 'reduction_product',
-            ],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
         ];
 
@@ -249,17 +262,31 @@ class CartRuleActionFillerTest extends TestCase
         $expectedCartRule->reduction_tax = false;
         $expectedCartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
         yield [
-            CartRuleAction::buildPercentageDiscount(
-                new DecimalNumber('15'),
+            new CartRuleAction(
                 false,
-                false,
-                new DiscountApplicationType(DiscountApplicationType::SELECTED_PRODUCTS),
-                new GiftProduct(2)
+                new GiftProduct(2),
+                Discount::buildPercentageDiscount(
+                    new DecimalNumber('15'),
+                    false,
+                    new DiscountApplicationType(DiscountApplicationType::SELECTED_PRODUCTS)
+                )
             ),
-            ['reduction_amount', 'reduction_percent', 'reduction_currency', 'reduction_tax', 'reduction_exclude_special',
-                'free_shipping', 'gift_product', 'gift_product_attribute', 'reduction_product',
-            ],
+            $this->getExpectedUpdatableProperties(),
             $expectedCartRule,
+        ];
+    }
+
+    /**
+     * Filler should always return all the properties which are updated as part of an action
+     * (once one action is set, another one must be reset, so it still needs to be updated)
+     *
+     * @return string[]
+     */
+    private function getExpectedUpdatableProperties(): array
+    {
+        return [
+            'reduction_amount', 'reduction_percent', 'reduction_currency', 'reduction_tax', 'reduction_exclude_special',
+            'reduction_product', 'free_shipping', 'gift_product', 'gift_product_attribute',
         ];
     }
 

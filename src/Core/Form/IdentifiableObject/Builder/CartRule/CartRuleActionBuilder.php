@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\Discount;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -46,63 +46,68 @@ class CartRuleActionBuilder
      */
     public function build(array $actionsData): CartRuleAction
     {
-        $giftProduct = null;
-        if (!empty($actionsData['gift_product'][0])) {
-            $giftProductData = $actionsData['gift_product'][0];
-            $giftProduct = new GiftProduct(
-                $giftProductData['product_id'],
-                isset($giftProductData['combination_id']) ? (int) $giftProductData['combination_id'] : null
-            );
+        return new CartRuleAction(
+            $this->buildFreeShipping($actionsData),
+            $this->buildGiftProduct($actionsData),
+            $this->buildPriceDiscount($actionsData)
+        );
+    }
+
+    private function buildFreeShipping(array $data): bool
+    {
+        return !empty($data['free_shipping']);
+    }
+
+    private function buildGiftProduct(array $data): ?GiftProduct
+    {
+        if (empty($data['gift_product'][0])) {
+            return null;
         }
 
-        $freeShipping = false;
-        if (!empty($actionsData['free_shipping'])) {
-            $freeShipping = true;
+        $giftProductData = $data['gift_product'][0];
+
+        return new GiftProduct(
+            $giftProductData['product_id'],
+            isset($giftProductData['combination_id']) ? (int) $giftProductData['combination_id'] : null
+        );
+    }
+
+    private function buildPriceDiscount(array $data): ?Discount
+    {
+        if (empty($data['discount']['reduction']['value'])) {
+            return null;
         }
 
-        if (!empty($actionsData['discount']['reduction']['value'])) {
-            if (!empty($actionsData['discount']['specific_product'][0]['id'])) {
-                $specificProductId = (int) $actionsData['discount']['specific_product'][0]['id'];
-            } else {
-                $specificProductId = null;
-            }
+        $specificProductId = null;
+        if (!empty($data['discount']['specific_product'][0]['id'])) {
+            $specificProductId = (int) $data['discount']['specific_product'][0]['id'];
+        }
 
-            $discountApplicationType = new DiscountApplicationType(
-                $actionsData['discount']['discount_application'],
-                $specificProductId
-            );
-            $reductionData = $actionsData['discount']['reduction'];
-            // creating this VO mostly just to fire the validation inside its constructor,
-            // and we don't need to create DecimalNumbers manually when using in Discount objects
-            $reduction = new Reduction($reductionData['type'], (string) $reductionData['value']);
+        $discountApplicationType = new DiscountApplicationType(
+            $data['discount']['discount_application'],
+            $specificProductId
+        );
+        $reductionData = $data['discount']['reduction'];
+        // creating this VO mostly just to fire the validation inside its constructor,
+        // and we don't need to create DecimalNumbers manually when using in Discount objects
+        $reduction = new Reduction($reductionData['type'], (string) $reductionData['value']);
 
-            if ($reduction->getType() === Reduction::TYPE_AMOUNT) {
-                return CartRuleAction::buildAmountDiscount(
-                    new Money(
-                        $reduction->getValue(),
-                        new CurrencyId($reductionData['currency']),
-                        (bool) $reductionData['include_tax']
-                    ),
-                    $freeShipping,
-                    $discountApplicationType,
-                    $giftProduct
-                );
-            } else {
-                return CartRuleAction::buildPercentageDiscount(
+        if ($reduction->getType() === Reduction::TYPE_AMOUNT) {
+            return Discount::buildAmountDiscount(
+                new Money(
                     $reduction->getValue(),
-                    !empty($actionsData['discount']['apply_to_discounted_products']),
-                    $freeShipping,
-                    $discountApplicationType,
-                    $giftProduct
-                );
-            }
-        } elseif ($freeShipping) {
-            return CartRuleAction::buildFreeShipping($giftProduct);
-        } elseif ($giftProduct) {
-            return CartRuleAction::buildGiftProduct($giftProduct);
+                    new CurrencyId($reductionData['currency']),
+                    (bool) $reductionData['include_tax']
+                ),
+                $discountApplicationType
+            );
         }
 
-        throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
+        return Discount::buildPercentageDiscount(
+            $reduction->getValue(),
+            !empty($data['discount']['apply_to_discounted_products']),
+            $discountApplicationType
+        );
     }
 
     /**
