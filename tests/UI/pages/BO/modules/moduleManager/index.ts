@@ -204,7 +204,7 @@ class ModuleManager extends BOBasePage {
   async uploadModule(page: Page, file: string): Promise<string | null> {
     await this.waitForSelectorAndClick(page, this.uploadModuleButton);
 
-    await this.uploadOnFileChooser(page, this.uploadModuleLink, file);
+    await this.uploadOnFileChooser(page, this.uploadModuleLink, [file]);
 
     return this.getTextContent(page, this.uploadModuleModalSuccessMessage);
   }
