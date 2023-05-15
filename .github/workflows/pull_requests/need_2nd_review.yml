@@ -9,37 +9,37 @@ jobs:
     if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
-    -  uses: tspascoal/get-user-teams-membership@v2
-       id: checkUserMember
-       with:
-         organization: PrestaShop
-         username: ${{ github.actor }}
-         team: 'committers'
-         GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
-    - if: ${{ steps.checkUserMember.outputs.isTeamMember == 'true' }}
-      run: echo "yes"
+      - uses: tspascoal/get-user-teams-membership@v2
+        id: checkUserMember
+        with:
+          organization: PrestaShop
+          username: ${{ github.actor }}
+          team: 'committers'
+          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
+      - if: ${{ steps.checkUserMember.outputs.isTeamMember == 'true' }}
+        run: echo "yes"
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.1'
-        tools: composer
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
 
-    - uses: actions/checkout@v2
-      with:
-        name: prestashop/kanbanbot
+      - uses: actions/checkout@v2
+        with:
+          name: prestashop/kanbanbot
 
-    - name: Install dependencies
-      run: |
-        composer self-update --2.2
-        composer install --no-interaction
+      - name: Install dependencies
+        run: |
+          composer self-update --2.2
+          composer install --no-interaction
 
-    - name: Test PHP
-      env:
-        GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
-        ORGANIZATION: PrestaShop
-        PROJECT: PrestaShop
-        PROJECT_NUMBER: 17
-        PR_ID: ${{ github.event.pull_request.node_id }}
-      run:
-        php bin/console kanbanbot:need-second-review
+      - name: Test PHP
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
+          ORGANIZATION: PrestaShop
+          PROJECT: PrestaShop
+          PROJECT_NUMBER: 17
+          PR_ID: ${{ github.event.pull_request.node_id }}
+        run:
+          php bin/console kanbanbot:need-second-review
