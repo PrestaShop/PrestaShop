@@ -40,6 +40,8 @@ class AddStore extends BOBasePage {
 
   private readonly statusToggle: (toggle: string) => string;
 
+  private readonly pictureInput: string;
+
   private readonly hoursInput: (pos: number) => string;
 
   private readonly saveButton: string;
@@ -69,6 +71,7 @@ class AddStore extends BOBasePage {
     this.emailInput = '#email';
     this.noteTextarea = '#note_1';
     this.statusToggle = (toggle: string) => `${this.storeForm} #active_${toggle}`;
+    this.pictureInput = `${this.storeForm} #image`;
     this.hoursInput = (pos: number) => `input[name='hours[${pos}][1]']`;
     this.saveButton = '#store_form_submit_btn';
     this.alertSuccessBlockParagraph = '.alert-success';
@@ -105,6 +108,11 @@ class AddStore extends BOBasePage {
 
     // Set store status
     await this.setChecked(page, this.statusToggle(storeData.status ? 'on' : 'off'));
+
+    // Set store picture
+    if (storeData.picture) {
+      await this.uploadFile(page, this.pictureInput, storeData.picture);
+    }
 
     // Set opening hours
     for (let day:number = 1; day <= 7; day++) {
