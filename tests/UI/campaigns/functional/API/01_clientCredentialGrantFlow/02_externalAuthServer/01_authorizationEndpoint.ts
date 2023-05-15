@@ -4,14 +4,13 @@ import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
 import {APIRequestContext, request} from 'playwright';
-import type ClientRepresentation from '@keycloak/keycloak-admin-client/lib/defs/clientRepresentation';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_authorizationEndpoint';
 
 describe('API : Authorization Endpoint', async () => {
   let apiContextBO: APIRequestContext;
   let apiContextKeycloak: APIRequestContext;
-  let clientKeycloak: ClientRepresentation|undefined;
+  let accessTokenKeycloak: string;
 
   before(async () => {
     apiContextBO = await request.newContext({
@@ -25,12 +24,18 @@ describe('API : Authorization Endpoint', async () => {
       ignoreHTTPSErrors: true,
     });
 
-    clientKeycloak = await keycloakHelper.createClient(
+    accessTokenKeycloak = await keycloakHelper.createClient(
       global.keycloakConfig.keycloakClientId,
       'PrestaShop Client ID',
-      true,
+      false,
       true,
     );
+    await expect(accessTokenKeycloak.length).to.be.gt(0);
+  });
+
+  after(async () => {
+    const isRemoved: boolean = await keycloakHelper.removeClient(global.keycloakConfig.keycloakClientId);
+    await expect(isRemoved).to.be.true;
   });
 
   describe('Authorization Endpoint', async () => {
@@ -114,13 +119,10 @@ describe('API : Authorization Endpoint', async () => {
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'requestKeycloakWithMethodPOSTValidData', baseContext);
 
-        const accessTokenKeycloak: string|undefined = clientKeycloak?.secret;
-        await expect(accessTokenKeycloak).to.be.a('string');
-
         const apiResponse = await apiContextKeycloak.post('/realms/master/protocol/openid-connect/token', {
           form: {
             client_id: global.keycloakConfig.keycloakClientId,
-            client_secret: accessTokenKeycloak as string,
+            client_secret: accessTokenKeycloak,
             grant_type: 'client_credentials',
           },
         });
