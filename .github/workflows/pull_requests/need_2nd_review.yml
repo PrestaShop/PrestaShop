@@ -2,7 +2,7 @@ name: Need second review
 
 on:
   pull_request_review:
-    types: [submitted]
+    types: [ submitted ]
 
 jobs:
   approved:

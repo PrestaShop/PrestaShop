@@ -2,7 +2,7 @@ name: Waiting for author
 
 on:
   pull_request_review:
-    types: [submitted]
+    types: [ submitted ]
   pull_request:
     types:
       - labeled
