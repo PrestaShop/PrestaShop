@@ -12,7 +12,7 @@ class Search extends BOBasePage {
 
   public readonly successfulUpdateStatusMessage: string;
 
-  private readonly settingsUpdateMessage: string;
+  public readonly settingsUpdateMessage: string;
 
   private readonly addNewAliasLink: string;
 
@@ -363,7 +363,7 @@ class Search extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getStatus(page: Page, row: number): Promise<boolean> {
+  async getStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, this.tableColumnStatusEnabledIcon(row), 500);
   }
 
