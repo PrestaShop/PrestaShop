@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\ToggleAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusHandler;
 
 /**
  * Interface for services that handle command which toggles alias status
@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Command\ToggleAliasCommand;
 interface ToggleAliasHandlerInterfaces
 {
     /**
-     * @param ToggleAliasCommand $command
+     * @param UpdateAliasStatusHandler $command
      *
      * @return void
      */
-    public function handle(ToggleAliasCommand $command): void;
+    public function handle(UpdateAliasStatusHandler $command): void;
 }

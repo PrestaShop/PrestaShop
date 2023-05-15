@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\ToggleAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\ToggleAliasHandlerInterfaces;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotToggleAliasException;
@@ -55,13 +55,13 @@ class ToggleAliasStatusHandler implements ToggleAliasHandlerInterfaces
     }
 
     /**
-     * @param ToggleAliasCommand $command
+     * @param UpdateAliasStatusHandler $command
      *
      * @return void
      *
      * @throws AliasException
      */
-    public function handle(ToggleAliasCommand $command): void
+    public function handle(UpdateAliasStatusHandler $command): void
     {
         $alias = $this->aliasRepository->get($command->getAliasId());
 

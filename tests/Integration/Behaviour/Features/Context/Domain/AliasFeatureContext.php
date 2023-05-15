@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\ToggleAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -108,7 +108,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
             $aliasId = $this->getSharedStorage()->get($aliasReference['id reference']);
 
             try {
-                $this->getCommandBus()->handle(new ToggleAliasCommand(new AliasId((int) $aliasId)));
+                $this->getCommandBus()->handle(new UpdateAliasStatusHandler(new AliasId((int) $aliasId)));
             } catch (InvalidArgumentException $exception) {
                 $this->setLastException($exception);
             }
