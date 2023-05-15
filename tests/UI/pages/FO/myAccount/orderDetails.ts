@@ -136,7 +136,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<void>}
    */
   async requestMerchandiseReturn(page: Page, messageText: string = 'test', productsNumber: number = 1,
-                                 returnData: object = [{quantity: 1}]): Promise<void> {
+    returnData: object = [{quantity: 1}]): Promise<void> {
     await this.chooseProductsToReturn(page, productsNumber, returnData);
     await this.setValue(page, this.returnTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.requestReturnButton);
