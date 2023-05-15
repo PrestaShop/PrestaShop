@@ -30,8 +30,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasStatusHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusHandler;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -103,15 +104,10 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     {
         $aliasReferences = $table->getColumnsHash();
 
-        foreach ($aliasReferences as $aliasReference) {
-            /** @var string $aliasId */
-            $aliasId = $this->getSharedStorage()->get($aliasReference['id reference']);
-
-            try {
-                $this->getCommandBus()->handle(new UpdateAliasStatusHandler(new AliasId((int) $aliasId)));
-            } catch (InvalidArgumentException $exception) {
-                $this->setLastException($exception);
-            }
+        try {
+            $this->getCommandBus()->handle(new UpdateAliasStatusHandler(new AliasId($this->getSharedStorage()->get($aliasReference))));
+        } catch (InvalidArgumentException $exception) {
+            $this->setLastException($exception);
         }
     }
 

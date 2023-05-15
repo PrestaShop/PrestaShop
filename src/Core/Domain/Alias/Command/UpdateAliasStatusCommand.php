@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 /**
  * Toggles alias status
  */
-class UpdateAliasStatusHandler
+class UpdateAliasStatusCommand
 {
     /**
      * @var AliasId
