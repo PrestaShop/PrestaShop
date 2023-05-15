@@ -34,6 +34,10 @@ class OrderDetails extends FOBasePage {
 
   private readonly tableBodyColumn: (row: number, column: number) => string;
 
+  private readonly tableReturnProductRowCheckboxButton: (row: number) => string;
+
+  private readonly tableReturnQuantityRowSelectButton: (row: number) => string;
+
   private readonly productName: (row: number, column: number) => string;
 
   private readonly downloadLink: (row: number, column: number) => string;
@@ -75,7 +79,9 @@ class OrderDetails extends FOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+    this.tableBodyColumn = (row: number, column: number) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+    this.tableReturnProductRowCheckboxButton = (row: number) => `${this.tableBodyColumn(row, 1)} input`;
+    this.tableReturnQuantityRowSelectButton = (row: number) => `${this.tableBodyColumn(row, 3)} select`;
 
     // Order product table content
     this.productName = (row, column) => `${this.tableBodyColumn(row, column)} a`;
@@ -130,7 +136,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<void>}
    */
   async requestMerchandiseReturn(page: Page, messageText: string = 'test', productsNumber: number = 1,
-    returnData: object = [{quantity: 1}]): Promise<void> {
+                                 returnData: object = [{quantity: 1}]): Promise<void> {
     await this.chooseProductsToReturn(page, productsNumber, returnData);
     await this.setValue(page, this.returnTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.requestReturnButton);
@@ -146,8 +152,8 @@ class OrderDetails extends FOBasePage {
   async chooseProductsToReturn(page: Page, productsNumber: number, returnData: object): Promise<void> {
     for (let i = 0; i < productsNumber; i++) {
       const index: number = i + 1;
-      await this.setChecked(page, `${this.tableBodyColumn(index, 1)} input`);
-      await this.selectByVisibleText(page, `${this.tableBodyColumn(index, 3)} select`, returnData[i].quantity);
+      await this.setChecked(page, this.tableReturnProductRowCheckboxButton(index));
+      await this.selectByVisibleText(page, this.tableReturnQuantityRowSelectButton(index), returnData[i].quantity);
     }
   }
 
