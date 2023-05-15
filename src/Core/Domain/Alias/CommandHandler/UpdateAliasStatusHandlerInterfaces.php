@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusHandler;
 /**
  * Interface for services that handle command which toggles alias status
  */
-interface ToggleAliasHandlerInterfaces
+interface UpdateAliasStatusHandlerInterfaces
 {
     /**
      * @param UpdateAliasStatusHandler $command

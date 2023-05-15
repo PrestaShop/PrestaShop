@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusHandler;
-use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\ToggleAliasHandlerInterfaces;
+use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasStatusHandlerInterfaces;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotToggleAliasException;
 use PrestaShopException;
@@ -38,7 +38,7 @@ use PrestaShopException;
 /**
  * Toggles alias status
  */
-class ToggleAliasStatusHandler implements ToggleAliasHandlerInterfaces
+class UpdateAliasStatusStatusHandler implements UpdateAliasStatusHandlerInterfaces
 {
     /**
      * @var AliasRepository
