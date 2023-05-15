@@ -4,8 +4,7 @@ services:
 
   prestashop.bridge.helper.listing.helper_list_configuration_factory:
     class: PrestaShopBundle\Bridge\Helper\Listing\HelperListConfigurationFactory
-    arguments:
-      - '@prestashop.router'
+    autowire: true
 
   prestashop.bridge.helper.listing.filters_processor:
     class: PrestaShopBundle\Bridge\Helper\Listing\FiltersProcessor

@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Address\AddressSettings;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -62,7 +62,7 @@ class ManufacturerAddressType extends TranslatorAwareType
     private $contextCountryId;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -72,7 +72,7 @@ class ManufacturerAddressType extends TranslatorAwareType
      * @param array $manufacturerChoices
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $contextCountryId
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -80,7 +80,7 @@ class ManufacturerAddressType extends TranslatorAwareType
         array $manufacturerChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
-        Router $router
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->manufacturerChoices = $manufacturerChoices;

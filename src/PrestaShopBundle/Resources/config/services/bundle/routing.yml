@@ -1,4 +1,11 @@
 services:
+  PrestaShopBundle\Routing\Router:
+    public: true # A compiler pass set this public, let's stay compatible.
+    autowire: true
+    decorates: 'router.default'
+    arguments:
+      $userProvider: '@prestashop.user_provider'
+
   prestashop.bundle.routing.module_route_loader:
     class: 'PrestaShopBundle\Routing\YamlModuleLoader'
     arguments:

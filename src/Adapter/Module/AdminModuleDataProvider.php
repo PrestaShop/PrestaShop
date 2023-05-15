@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Tools;
 
 /**
@@ -139,9 +140,9 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * @param Router $router
+     * @param RouterInterface $router
      */
-    public function setRouter(Router $router)
+    public function setRouter(RouterInterface $router)
     {
         $this->router = $router;
     }

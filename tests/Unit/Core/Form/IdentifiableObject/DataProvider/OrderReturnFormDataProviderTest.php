@@ -34,8 +34,8 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderReturnFormDataProvider;
-use PrestaShopBundle\Service\Routing\Router;
 use RuntimeException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrderReturnFormDataProviderTest extends TestCase
@@ -74,11 +74,11 @@ class OrderReturnFormDataProviderTest extends TestCase
     }
 
     /**
-     * @return Router
+     * @return RouterInterface
      */
-    private function createRouterMock(): Router
+    private function createRouterMock(): RouterInterface
     {
-        $routerMock = $this->createMock(Router::class);
+        $routerMock = $this->createMock(RouterInterface::class);
 
         $routerMock
             ->method('generate')

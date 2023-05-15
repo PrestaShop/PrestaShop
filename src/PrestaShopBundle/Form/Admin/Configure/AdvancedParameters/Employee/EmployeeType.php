@@ -35,7 +35,6 @@ use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Service\Routing\Router;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -44,6 +43,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -98,7 +98,7 @@ final class EmployeeType extends AbstractType
      * @param bool $isMultistoreFeatureActive
      * @param ConfigurationInterface $configuration
      * @param int $superAdminProfileId
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(
         array $languagesChoices,
@@ -107,7 +107,7 @@ final class EmployeeType extends AbstractType
         bool $isMultistoreFeatureActive,
         ConfigurationInterface $configuration,
         int $superAdminProfileId,
-        Router $router,
+        RouterInterface $router,
         TranslatorInterface $translator
     ) {
         $this->languagesChoices = $languagesChoices;

@@ -45,12 +45,12 @@ use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\FormHelper;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
-use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -106,7 +106,7 @@ class ProductInformation extends CommonAbstractType
      */
     public $productDataProvider;
     /**
-     * @var Router
+     * @var RouterInterface
      */
     public $router;
     /**
@@ -119,7 +119,7 @@ class ProductInformation extends CommonAbstractType
      *
      * @param TranslatorInterface $translator
      * @param LegacyContext $legacyContext
-     * @param Router $router
+     * @param RouterInterface $router
      * @param CategoryDataProvider $categoryDataProvider
      * @param ProductDataProvider $productDataProvider
      * @param FeatureDataProvider $featureDataProvider
