@@ -49,64 +49,7 @@ class CartRuleActionBuilder
         return new CartRuleAction(
             $this->buildFreeShipping($actionsData),
             $this->buildGiftProduct($actionsData),
-            $this->buildPriceDiscount($actionsData)
-        );
-    }
-
-    private function buildFreeShipping(array $data): bool
-    {
-        return !empty($data['free_shipping']);
-    }
-
-    private function buildGiftProduct(array $data): ?GiftProduct
-    {
-        if (empty($data['gift_product'][0])) {
-            return null;
-        }
-
-        $giftProductData = $data['gift_product'][0];
-
-        return new GiftProduct(
-            $giftProductData['product_id'],
-            isset($giftProductData['combination_id']) ? (int) $giftProductData['combination_id'] : null
-        );
-    }
-
-    private function buildPriceDiscount(array $data): ?Discount
-    {
-        if (empty($data['discount']['reduction']['value'])) {
-            return null;
-        }
-
-        $specificProductId = null;
-        if (!empty($data['discount']['specific_product'][0]['id'])) {
-            $specificProductId = (int) $data['discount']['specific_product'][0]['id'];
-        }
-
-        $discountApplicationType = new DiscountApplicationType(
-            $data['discount']['discount_application'],
-            $specificProductId
-        );
-        $reductionData = $data['discount']['reduction'];
-        // creating this VO mostly just to fire the validation inside its constructor,
-        // and we don't need to create DecimalNumbers manually when using in Discount objects
-        $reduction = new Reduction($reductionData['type'], (string) $reductionData['value']);
-
-        if ($reduction->getType() === Reduction::TYPE_AMOUNT) {
-            return Discount::buildAmountDiscount(
-                new Money(
-                    $reduction->getValue(),
-                    new CurrencyId($reductionData['currency']),
-                    (bool) $reductionData['include_tax']
-                ),
-                $discountApplicationType
-            );
-        }
-
-        return Discount::buildPercentageDiscount(
-            $reduction->getValue(),
-            !empty($data['discount']['apply_to_discounted_products']),
-            $discountApplicationType
+            $this->buildDiscount($actionsData)
         );
     }
 
@@ -142,5 +85,62 @@ class CartRuleActionBuilder
         }
 
         return false;
+    }
+
+    private function buildFreeShipping(array $data): bool
+    {
+        return !empty($data['free_shipping']);
+    }
+
+    private function buildGiftProduct(array $data): ?GiftProduct
+    {
+        if (empty($data['gift_product'][0])) {
+            return null;
+        }
+
+        $giftProductData = $data['gift_product'][0];
+
+        return new GiftProduct(
+            $giftProductData['product_id'],
+            isset($giftProductData['combination_id']) ? (int) $giftProductData['combination_id'] : null
+        );
+    }
+
+    private function buildDiscount(array $data): ?Discount
+    {
+        if (empty($data['discount']['reduction']['value'])) {
+            return null;
+        }
+
+        $specificProductId = null;
+        if (!empty($data['discount']['specific_product'][0]['id'])) {
+            $specificProductId = (int) $data['discount']['specific_product'][0]['id'];
+        }
+
+        $discountApplicationType = new DiscountApplicationType(
+            $data['discount']['discount_application'],
+            $specificProductId
+        );
+        $reductionData = $data['discount']['reduction'];
+        // creating this VO mostly just to fire the validation inside its constructor,
+        // and we don't need to create DecimalNumbers manually when using in Discount objects
+        $reduction = new Reduction($reductionData['type'], (string) $reductionData['value']);
+
+        if ($reduction->getType() === Reduction::TYPE_AMOUNT) {
+            return Discount::buildAmountDiscount(
+                new Money(
+                    $reduction->getValue(),
+                    new CurrencyId($reductionData['currency']),
+                    (bool) $reductionData['include_tax']
+                ),
+                $discountApplicationType
+            );
+        }
+
+        return Discount::buildPercentageDiscount(
+            $reduction->getValue(),
+            !empty($data['discount']['apply_to_discounted_products']),
+            $discountApplicationType
+        );
     }
 }
