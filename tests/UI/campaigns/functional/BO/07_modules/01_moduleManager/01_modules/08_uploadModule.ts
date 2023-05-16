@@ -16,7 +16,7 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_uploadModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_uploadModule';
 
 describe('BO - Modules - Module Manager : Upload module', async () => {
   let browserContext: BrowserContext;

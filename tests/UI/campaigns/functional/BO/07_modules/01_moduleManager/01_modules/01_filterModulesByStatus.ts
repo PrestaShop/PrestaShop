@@ -15,7 +15,7 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_filterModulesByStatus';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_filterModulesByStatus';
 
 describe('BO - Modules - Module Manager : Filter modules by status', async () => {
   let browserContext: BrowserContext;

@@ -15,7 +15,7 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_bulkActions';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_bulkActions';
 
 describe('BO - Modules - Module Manager : Bulk actions', async () => {
   let browserContext: BrowserContext;

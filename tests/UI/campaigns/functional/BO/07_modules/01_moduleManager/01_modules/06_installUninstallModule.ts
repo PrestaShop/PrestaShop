@@ -15,7 +15,7 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_installUninstallModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_installUninstallModule';
 
 describe('BO - Modules - Module Manager : Install/Uninstall module', async () => {
   let browserContext: BrowserContext;

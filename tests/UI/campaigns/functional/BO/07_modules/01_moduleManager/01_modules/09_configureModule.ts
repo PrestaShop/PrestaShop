@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
+import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -15,9 +16,9 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_searchModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_configureModule';
 
-describe('BO - Modules - Module Manager : Search module', async () => {
+describe('BO - Modules - Module Manager : Configure module', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -49,10 +50,19 @@ describe('BO - Modules - Module Manager : Search module', async () => {
     await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.contactForm.name}`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+  it(`should search for module ${Modules.contactForm.name}`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
     await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+  });
+
+  it('should go to module configuration page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
+
+    await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.tag);
+
+    const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
+    await expect(pageSubtitle).to.contains(Modules.contactForm.name);
   });
 });
