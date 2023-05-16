@@ -64,7 +64,7 @@ class OrderDetailId
     private function assertIntegerIsGreaterThanZero(int $orderId): void
     {
         if (0 > $orderId) {
-            throw new OrderException(sprintf('Order detail id %s is invalid. Order detail id must be number that is greater than zero.', var_export($orderId, true)));
+            throw new OrderException(sprintf('Order detail id %d is invalid. Order detail id must be number that is greater than zero.', $orderId));
         }
     }
 }
