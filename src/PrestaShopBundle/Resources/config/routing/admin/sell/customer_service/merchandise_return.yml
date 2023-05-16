@@ -41,7 +41,7 @@ admin_order_returns_edit:
   requirements:
     orderReturnId: \d+
 
-admin_order_returns_products_filter:
+admin_order_return_products_search:
   path: /{orderReturnId}/edit
   methods: [ POST ]
   defaults:
