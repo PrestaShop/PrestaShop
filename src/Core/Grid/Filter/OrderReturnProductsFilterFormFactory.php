@@ -100,7 +100,7 @@ final class OrderReturnProductsFilterFormFactory implements GridFilterFormFactor
         $queryParams['orderReturnId'] = $request->attributes->get('orderReturnId');
 
         $newOrderReturnFormBuilder->setAction(
-            $this->urlGenerator->generate('admin_order_returns_products_filter', $queryParams)
+            $this->urlGenerator->generate('admin_order_return_products_search', $queryParams)
         );
 
         return $newOrderReturnFormBuilder->getForm();
