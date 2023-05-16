@@ -33,6 +33,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -41,35 +42,21 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ListCommandsAndQueriesCommand extends Command
 {
-    /**
-     * @var CommandDefinitionParser
-     */
-    private $commandDefinitionParser;
+    private CommandDefinitionParser $commandDefinitionParser;
 
     /**
-     * @var array
+     * @var string[]
      */
-    private $commandAndQueries;
+    private array $commandAndQueries;
 
-    /**
-     * @var bool
-     */
-    private $isFormatSimple;
-
-    /**
-     * @var bool
-     */
-    private $isOutputToFile;
+    private bool $isFormatSimple;
 
     /**
      * @var Route[]
      */
-    private $apiResourcesList;
+    private array $apiResourcesList;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private RouterInterface $router;
 
     public function __construct(
         CommandDefinitionParser $commandDefinitionParser,
@@ -112,6 +99,7 @@ class ListCommandsAndQueriesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
         $this->apiResourcesList = $this->getResourceList();
         $this->handleOptions($input);
 
@@ -120,15 +108,15 @@ class ListCommandsAndQueriesCommand extends Command
 
         foreach ($this->commandAndQueries as $key => $commandName) {
             $commandDefinition = $this->commandDefinitionParser->parseDefinition($commandName);
-            $isCQRSImplemented = $this->isCQRSImplemented($commandDefinition);
+            $CQRSEndpointURI = $this->getCQRSEndpointURI($commandDefinition);
 
             if ($this->isFormatSimple) {
-                $output->writeln('<info>' . $commandDefinition->getClassName() . ($isCQRSImplemented !== '' ? ' OK' : ' NOT OK') . '</info>');
+                $output->writeln('<info>' . $commandDefinition->getClassName() . (!empty($CQRSEndpointURI) ? ' OK' : ' NOT OK') . '</info>');
             } else {
                 $output->writeln(++$key . '.');
                 $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');
                 $output->writeln('<blue>Type: </blue><info>' . $commandDefinition->getCommandType() . '</info>');
-                $output->writeln('<blue>API: </blue><info>' . $isCQRSImplemented . '</info>');
+                $output->writeln('<blue>API: </blue><info>' . $CQRSEndpointURI . '</info>');
                 $output->writeln('<comment>' . $commandDefinition->getDescription() . '</comment>');
                 $output->writeln('');
             }
@@ -139,26 +127,35 @@ class ListCommandsAndQueriesCommand extends Command
 
     private function handleOptions(InputInterface $input): void
     {
-        if ($input->getOption('domain') !== null) {
+        if ($input->getOption('domain') !== []) {
             $this->filterCQRS($input->getOption('domain'));
         }
 
-        if ($input->getOption('format') !== null && $input->getOption('format') === 'simple') {
+        if ($input->getOption('format') === 'simple') {
             $this->isFormatSimple = true;
         }
     }
 
     /**
-     * @param string[] $filter
+     * @param string[] $filters
      */
-    private function filterCQRS(array $filter): void
+    private function filterCQRS(array $filters): void
     {
-        $this->commandAndQueries = array_filter($this->commandAndQueries, function (string $currentCQRS) use ($filter) {
-            return preg_match('/' . implode('|', $filter) . '/i', $currentCQRS);
+        $this->commandAndQueries = array_filter($this->commandAndQueries, function (string $currentCQRS) use ($filters) {
+            foreach ($filters as $filter) {
+                // We append a backslash behind the filter to find only exact matches
+                if (str_contains($currentCQRS, $filter . '\\') !== false) {
+                    return true;
+                }
+            }
+
+            return false;
         });
     }
 
     /**
+     * This method takes the list of all routes on the project and filters out all the api-platform endpoints.
+     *
      * @return Route[]
      */
     private function getResourceList(): array
@@ -170,7 +167,11 @@ class ListCommandsAndQueriesCommand extends Command
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    private function isCQRSImplemented(CommandDefinition $commandDefinition): string
+    /**
+     * This method takes the filtered list of routes, and checks it against the list of CQRS.
+     * The CQRS that have a route with the correct method are implemented, so we return the URI of the endpoint.
+     */
+    private function getCQRSEndpointURI(CommandDefinition $commandDefinition): string
     {
         foreach ($this->apiResourcesList as $resource) {
             $apiResourceClass = explode('\\', $resource->getDefault('_api_resource_class'));
