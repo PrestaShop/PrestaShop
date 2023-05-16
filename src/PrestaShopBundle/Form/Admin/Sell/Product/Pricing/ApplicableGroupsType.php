@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -38,11 +39,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ApplicableGroupsType extends TranslatorAwareType
 {
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    protected $countryByIdChoiceProvider;
-
     /**
      * @var FormChoiceProviderInterface
      */
@@ -66,14 +62,12 @@ class ApplicableGroupsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $countryByIdChoiceProvider,
         FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
         bool $isMultiShopEnabled,
         int $contextShopId
     ) {
         parent::__construct($translator, $locales);
-        $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
         $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
         $this->isMultiShopEnabled = $isMultiShopEnabled;
@@ -82,9 +76,6 @@ class ApplicableGroupsType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $countries = array_merge([
-            $this->trans('All countries', 'Admin.Global') => 0,
-        ], $this->countryByIdChoiceProvider->getChoices());
         $groups = array_merge([
             $this->trans('All groups', 'Admin.Global') => 0,
         ], $this->groupByIdChoiceProvider->getChoices());
@@ -93,10 +84,10 @@ class ApplicableGroupsType extends TranslatorAwareType
             ->add('currency_id', CurrencyChoiceType::class, [
                 'add_all_currencies_option' => true,
             ])
-            ->add('country_id', ChoiceType::class, [
+            ->add('country_id', CountryChoiceType::class, [
+                'add_all_countries_option' => true,
                 'label' => false,
                 'placeholder' => false,
-                'choices' => $countries,
                 'required' => false,
             ])
             ->add('group_id', ChoiceType::class, [

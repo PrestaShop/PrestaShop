@@ -205,7 +205,6 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType:
     arguments:
       $languageChoices: '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
-      $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       $timezoneChoices: '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType:
@@ -308,7 +307,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\CountryChoiceType:
     arguments:
-      - '@prestashop.core.form.choice_provider.country_by_id'
       - '@prestashop.core.form.choice_provider.country_by_id'
 
   PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutsCustomizationType:
@@ -426,7 +424,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType:
     arguments:
-      $countryByIdChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       $groupByIdChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       $shopByIdChoices: '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
 
@@ -611,7 +608,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType:
     arguments:
-      $countryByIdChoiceProvider: '@prestashop.core.form.choice_provider.country_by_id'
       $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
       $shopByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
 
