@@ -29,6 +29,7 @@ jobs:
           node-version: '16'
           npm-version: '7'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          ps-auto-install: true
           backoffice-layout: symfony
 
       - name: Cache Playwright browsers
