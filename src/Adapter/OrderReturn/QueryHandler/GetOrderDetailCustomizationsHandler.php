@@ -41,7 +41,9 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
      */
     private $contextLangId;
 
-    /** @var OrderRepository */
+    /**
+     * @var OrderRepository
+     */
     private $orderRepository;
 
     /**
