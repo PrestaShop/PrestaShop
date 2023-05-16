@@ -35,6 +35,8 @@ interface UpdateAliasHandlerInterface
 {
     /**
      * @param UpdateAliasCommand $command
+     *
+     * @return void
      */
     public function handle(UpdateAliasCommand $command): void;
 }
