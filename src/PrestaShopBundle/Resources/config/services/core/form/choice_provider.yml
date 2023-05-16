@@ -9,11 +9,16 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\:
     resource: '../../../Core/Form/ChoiceProvider/*'
 
+  # Todo, place this service into the correct place, one day
+  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider: ~
+
   # Todo: migrate controllers to use DI and make this private.
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
     public: true
 
-  PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider:
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider:
+    arguments:
+      $languages: '@=service("prestashop.adapter.data_provider.language").getLanguages(false)'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider:
     arguments:
