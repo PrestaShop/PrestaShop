@@ -9,13 +9,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import moduleAlertsPage from '@pages/BO/modules/moduleAlerts';
+import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 
 // Import data
 import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
-import {moduleConfigurationPage} from "@pages/BO/modules/moduleConfiguration";
 
 const baseContext: string = 'functional_BO_modules_moduleManager_alerts_configureModule';
 
