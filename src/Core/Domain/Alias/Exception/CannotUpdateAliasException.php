@@ -28,6 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
-class CannotToggleAliasException extends AliasException
+class CannotUpdateAliasException extends AliasException
 {
 }

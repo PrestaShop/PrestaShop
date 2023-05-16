@@ -32,8 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasStatusHandlerInterfaces;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotToggleAliasException;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotUpdateAliasException;
 
 /**
  * Toggles alias status
@@ -58,19 +57,11 @@ class UpdateAliasStatusHandler implements UpdateAliasStatusHandlerInterfaces
      * @param UpdateAliasStatusCommand $command
      *
      * @return void
-     *
-     * @throws AliasException
      */
     public function handle(UpdateAliasStatusCommand $command): void
     {
         $alias = $this->aliasRepository->get($command->getAliasId());
-
-        try {
-            if (false === $alias->toggleStatus()) {
-                throw new CannotToggleAliasException(sprintf('Unable to toggle status of alias with id "%d"', $command->getAliasId()->getValue()));
-            }
-        } catch (PrestaShopException $e) {
-            throw new AliasException(sprintf('An error occurred when toggling status of alias with id "%d"', $command->getAliasId()->getValue()), 0, $e);
-        }
+        $alias->active = $command->isEnabled();
+        $this->aliasRepository->partialUpdate($alias, ['active'], CannotUpdateAliasException::class);
     }
 }

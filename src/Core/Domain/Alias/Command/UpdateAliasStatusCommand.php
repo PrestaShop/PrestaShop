@@ -40,9 +40,19 @@ class UpdateAliasStatusCommand
      */
     private $aliasId;
 
-    public function __construct(AliasId $aliasId)
+    /**
+     * @var bool
+     */
+    private $enabled;
+
+    /**
+     * @param AliasId $aliasId
+     * @param bool $enabled
+     */
+    public function __construct(AliasId $aliasId, bool $enabled)
     {
         $this->aliasId = $aliasId;
+        $this->enabled = $enabled;
     }
 
     /**
@@ -52,4 +62,13 @@ class UpdateAliasStatusCommand
     {
         return $this->aliasId;
     }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
 }
