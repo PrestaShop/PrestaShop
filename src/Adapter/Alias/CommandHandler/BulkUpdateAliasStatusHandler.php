@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\BulkUpdateAliasStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotUpdateAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\BulkAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 
 class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements BulkUpdateAliasStatusHandlerInterface
@@ -82,6 +82,7 @@ class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements
 
     /**
      * @param AliasId $id
+     *
      * @return void
      */
     protected function handleSingleAction($id): void
