@@ -29,9 +29,7 @@ jobs:
           node-version: '16'
           npm-version: '7'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Enable Symfony layout via .env file
-        run: echo 'USE_SYMFONY_LAYOUT=true' >> .env
+          backoffice-layout: symfony
 
       - name: Cache Playwright browsers
         uses: actions/cache@v3

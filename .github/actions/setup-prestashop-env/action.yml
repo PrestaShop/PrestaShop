@@ -31,6 +31,10 @@ inputs:
     required: false
     description: GITHUB_TOKEN to be used by composer
     default: ""
+  backoffice-layout:
+    description: Backoffice layout
+    required: false
+    default: 'legacy'
 
 runs:
   using: "composite"
@@ -123,3 +127,9 @@ runs:
         --password="$ADMIN_PASSWD" --email="demo@prestashop.com" \
         --language="en" --country="fr" \
         --ssl=1
+
+    - name: Adapt Back Office layout
+      if: inputs.backoffice-layout == 'symfony'
+      shell: bash
+      run: |
+        sudo runuser -g www-data -u www-data -- php ./bin/console prestashop:feature-flag enable symfony_layout
