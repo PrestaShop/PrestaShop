@@ -31,7 +31,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
@@ -87,7 +89,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
         $idsByIdReferences = $this->assertAliasProperties($expectedAliases, $aliases);
 
         foreach ($idsByIdReferences as $reference => $id) {
-            $this->getSharedStorage()->set($reference, $id);
+            $this->getSharedStorage()->set($reference, (int) $id);
         }
     }
 
@@ -105,6 +107,21 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
             new AliasId((int) $this->getSharedStorage()->get($aliasReference)),
             $enable
         ));
+    }
+
+    /**
+     * @When /^I bulk change status to be (enabled|disabled) for following aliases "([^"]*)"$/
+     *
+     * @param bool $status
+     * @param string $aliasReferences
+     */
+    public function bulkUpdateStatusForDefaultShop(bool $status, string $aliasReferences): void
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkUpdateAliasStatusCommand($this->referencesToIds($aliasReferences), $status));
+        } catch (AliasException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**

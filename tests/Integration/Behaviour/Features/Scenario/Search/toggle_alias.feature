@@ -25,3 +25,15 @@ Feature: Toggle basic alias statuses from Back Office (BO)
       | id reference | alias  | search | active |
       | alias1       | bloose | blouse | 0      |
       | alias2       | blues  | blouse | 1      |
+
+  Scenario: I bulk update alias statuses
+    When I bulk change status to be enabled for following aliases "alias1,alias2"
+    Then following aliases should exist:
+      | id reference | alias  | search | active |
+      | alias1       | bloose | blouse | 1      |
+      | alias2       | blues  | blouse | 1      |
+    When I bulk change status to be disabled for following aliases "alias1,alias2"
+    Then following aliases should exist:
+      | id reference | alias  | search | active |
+      | alias1       | bloose | blouse | 0      |
+      | alias2       | blues  | blouse | 0      |
