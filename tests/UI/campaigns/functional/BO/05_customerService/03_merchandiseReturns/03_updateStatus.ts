@@ -53,9 +53,9 @@ Post-condition:
 describe('BO - Customer Service - Merchandise Returns : Update status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
-  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
+  let filePath: string|null;
   let returnID: number;
+  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
 
   // before and after functions
   before(async function () {
