@@ -108,11 +108,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
 
         try {
-            $editableOrderReturn = $this->getQueryBus()->handle(
-                new GetOrderReturnForEditing(
-                    $orderReturnId
-                )
-            );
             $form = $formBuilder->getFormFor($orderReturnId);
             $form->handleRequest($request);
 
@@ -128,12 +123,14 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_merchandise_returns_index');
         }
+        $orderStateId = (int) $form->getData()['order_return_state'];
+
         $allowPrintingOrderReturnPdf =
-            $editableOrderReturn->getOrderReturnStateId() === OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID;
+            $orderStateId === OrderReturnSettings::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID;
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
             'allowPrintingOrderReturnPdf' => $allowPrintingOrderReturnPdf,
-            'editableOrderReturn' => $editableOrderReturn,
+            'orderReturnId' => $orderReturnId,
             'orderReturnForm' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,

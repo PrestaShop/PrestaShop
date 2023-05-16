@@ -42,7 +42,7 @@
           </label>
 
           <div class="col-sm form-control-value">
-            <a href="{{ path('admin_order_returns_generate_pdf', {'orderReturnId': editableOrderReturn.orderReturnId }) }}" class="btn btn-outline-secondary">
+            <a href="{{ path('admin_order_returns_generate_pdf', {'orderReturnId': orderReturnId }) }}" class="btn btn-outline-secondary">
               {{ 'Print out'|trans({}, 'Admin.Actions') }}
             </a>
           </div>
