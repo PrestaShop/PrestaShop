@@ -26,55 +26,52 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 
 /**
- * Duplicates multiple products
+ * Updates status of multiple aliases
  */
-class BulkDuplicateProductCommand
+class BulkUpdateAliasStatusCommand
 {
     /**
-     * @var ProductId[]
+     * @var int[]
      */
-    private $productIds;
+    private $aliasIds;
 
     /**
-     * @var ShopConstraint
+     * @var bool
      */
-    private $shopConstraint;
+    private $enabled;
 
     /**
-     * @param int[] $productIds
-     *
-     * @throws ProductConstraintException
+     * @param int[] $aliasIds
+     * @param bool $enabled
      */
     public function __construct(
-        array $productIds,
-        ShopConstraint $shopConstraint
+        array $aliasIds,
+        bool $enabled
     ) {
-        foreach ($productIds as $productId) {
-            $this->productIds[] = new ProductId($productId);
+        foreach ($aliasIds as $aliasId) {
+            $this->aliasIds[] = new AliasId($aliasId);
         }
-        $this->shopConstraint = $shopConstraint;
+        $this->enabled = $enabled;
     }
 
     /**
-     * @return ProductId[]
+     * @return int[]
      */
-    public function getProductIds(): array
+    public function getAliasIds(): array
     {
-        return $this->productIds;
+        return $this->aliasIds;
     }
 
     /**
-     * @return ShopConstraint
+     * @return bool
      */
-    public function getShopConstraint(): ShopConstraint
+    public function isEnabled(): bool
     {
-        return $this->shopConstraint;
+        return $this->enabled;
     }
 }
