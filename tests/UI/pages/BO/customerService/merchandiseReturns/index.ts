@@ -10,6 +10,8 @@ import type {Page} from 'playwright';
 class MerchandiseReturns extends BOBasePage {
   public readonly pageTitle: string;
 
+  public readonly errorDeletionMessage: string;
+
   private readonly gridTable: string;
 
   private readonly filterColumn: (filterBy: string) => string;
@@ -41,6 +43,7 @@ class MerchandiseReturns extends BOBasePage {
 
     this.pageTitle = 'Merchandise Returns •';
     this.successfulUpdateMessage = 'The settings have been successfully updated.';
+    this.errorDeletionMessage = 'You need at least one product.';
 
     // Selectors
     // Merchandise returns table
