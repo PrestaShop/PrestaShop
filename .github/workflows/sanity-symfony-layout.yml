@@ -41,8 +41,8 @@ jobs:
         run: mv .env.ci .env
         working-directory: ./tests/UI
 
-      - name: Run tests
-        run: npm ci && npm run test:sanity:fast-fail && npm run test:sanity:productV2:fast-fail
+      - name: Run tests without install or the feature flag value will be overridden
+        run: npm ci && npm run test:sanity:no-install:fast-fail && npm run test:sanity:productV2:fast-fail
         working-directory: ./tests/UI
         env:
           ENABLE_SSL: true
