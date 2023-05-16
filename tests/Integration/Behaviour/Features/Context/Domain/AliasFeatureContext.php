@@ -30,10 +30,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasStatusHandler;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\AddAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder;
@@ -103,9 +101,10 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateAliasStatus(bool $enable, string $aliasReference): void
     {
-        $this->getCommandBus()->handle(
-            new UpdateAliasStatusCommand($this->getSharedStorage()->get($aliasReference), $enable)
-        );
+        $this->getCommandBus()->handle(new UpdateAliasStatusCommand(
+            new AliasId((int) $this->getSharedStorage()->get($aliasReference)),
+            $enable
+        ));
     }
 
     /**
@@ -154,7 +153,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
             if (isset($expectedAlias['active'])) {
                 Assert::assertSame(
                     $alias['active'],
-                    PrimitiveUtils::convertStringToBool($expectedAlias['active']),
+                    $expectedAlias['active'],
                     'Unexpected alias active field'
                 );
             }

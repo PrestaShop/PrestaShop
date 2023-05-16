@@ -3,9 +3,9 @@
 @clear-cache-before-feature
 @clear-cache-after-feature
 @update_alias_status_feature
-Feature: Add basic alias from Back Office (BO)
+Feature: Toggle basic alias statuses from Back Office (BO)
   As a BO user
-  I need to be able to add new alias with basic information from the BO
+  I need to be able to toggle alias statuses from the BO
 
   Scenario: I disable multiple aliases
     Given following aliases should exist:
