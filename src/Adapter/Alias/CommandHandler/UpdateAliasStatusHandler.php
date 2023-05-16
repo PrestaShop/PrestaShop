@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasStatusHandlerInterfaces;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotUpdateAliasException;
 
 /**

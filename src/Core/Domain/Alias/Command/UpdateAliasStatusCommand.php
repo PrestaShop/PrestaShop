@@ -70,5 +70,4 @@ class UpdateAliasStatusCommand
     {
         return $this->enabled;
     }
-
 }
