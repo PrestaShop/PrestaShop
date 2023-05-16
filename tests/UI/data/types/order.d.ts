@@ -67,7 +67,12 @@ type MerchandiseReturns = {
   dateIssued: string
 }
 
+type MerchandiseProductReturn = {
+  quantity: number
+}
+
 export {
+  MerchandiseProductReturn,
   MerchandiseReturns,
   OrderCreator,
   OrderDeliveryOption,
