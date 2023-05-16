@@ -84,19 +84,30 @@ class OrderRepository extends AbstractObjectModelRepository
      *
      * @return OrderDetailCustomizations|null
      *
-     * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws CoreException
      */
     public function getOrderDetailCustomizations(OrderDetailId $detailId, LanguageId $languageId): ?OrderDetailCustomizations
     {
-        $orderDetail = new OrderDetail($detailId->getValue());
-        $order = new Order($orderDetail->id_order);
-        $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $languageId->getValue(), true, $order->id_shop, $orderDetail->id_customization);
-        $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id] ?? null;
-        if (!is_array($customizedDatas)) {
-            return null;
+        try {
+            $orderDetail = new OrderDetail($detailId->getValue());
+            $order = new Order($orderDetail->id_order);
+            $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $languageId->getValue(), true, $order->id_shop, $orderDetail->id_customization);
+            $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id] ?? null;
+            if (!is_array($customizedDatas)) {
+                return null;
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get order customization for %s #%d [%s]',
+                    OrderDetail::class,
+                    $detailId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
         }
-
         $customizations = [];
         foreach ($customizedDatas as $customizationPerAddress) {
             foreach ($customizationPerAddress as $customization) {
