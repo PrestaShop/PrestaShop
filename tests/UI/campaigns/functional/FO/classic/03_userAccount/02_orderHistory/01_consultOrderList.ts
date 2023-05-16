@@ -20,7 +20,8 @@ import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
-import {OrderCreator, OrderHistory} from '@data/types/order';
+import OrderData from '@data/faker/order';
+import {OrderHistory} from '@data/types/order';
 import Products from '@data/demo/products';
 
 import {expect} from 'chai';
@@ -52,7 +53,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
     email: customerData.email,
     country: 'France',
   });
-  const orderData: OrderCreator = {
+  const orderData: OrderData = new OrderData({
     customer: customerData,
     products: [
       {
@@ -61,7 +62,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
       },
     ],
     paymentMethod: PaymentMethods.wirePayment,
-  };
+  });
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create new account

@@ -84,8 +84,8 @@ describe('BO - Catalog - Stocks : Update Quantity', async () => {
 
         // Get physical and available quantities of product
         productStock.stocks = {
-          physical: await stocksPage.getTextColumnFromTableStocks(page, 1, 'physical'),
-          available: await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'),
+          physical: parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'physical'), 10),
+          available: parseInt(await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'), 10),
         };
 
         await expect(productStock.stocks.physical).to.be.above(0);

@@ -1,7 +1,10 @@
-import type {Page} from 'playwright';
-
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
+
+// Import data
+import type ProductData from '@data/faker/product';
+
+import type {Page} from 'playwright';
 
 /**
  * Stocks tab on new product V2 page, contains functions that can be used on the page
@@ -38,7 +41,7 @@ class StocksTab extends BOBasePage {
    * @param productData {ProductData} Data to set in stock form
    * @returns {Promise<void>}
    */
-  async setProductStock(page:Page, productData:object): Promise<void> {
+  async setProductStock(page:Page, productData: ProductData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.stocksTabLink);
     await this.setValue(page, this.productQuantityInput, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);

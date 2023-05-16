@@ -421,8 +421,12 @@ class AddOrder extends BOBasePage {
 
     const customerFrame = await page.frame({url: /sell\/customers\/new/gmi});
 
-    await addCustomerPage.closeSfToolBar(customerFrame);
-    await addCustomerPage.createEditCustomer(customerFrame, customerData, false);
+    if (!customerFrame) {
+      throw new Error('The customerFrame doesn\'t exist!');
+    }
+
+    await addCustomerPage.closeSfToolBar(customerFrame!);
+    await addCustomerPage.createEditCustomer(customerFrame!, customerData, false);
 
     await this.waitForHiddenSelector(page, this.iframe);
 
@@ -461,7 +465,7 @@ class AddOrder extends BOBasePage {
    * Get customer Iframe
    * @param page {Page} Browser tab
    * @param customerID {number} Id of customer to check
-   * @returns {*}
+   * @returns {Frame | null}
    */
   getCustomerIframe(page: Page, customerID: number): Frame | null {
     return page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
@@ -1144,19 +1148,25 @@ class AddOrder extends BOBasePage {
   }
 
   /**
-   * Set more actions
+   * Set more actions "Pre Filled Order"
    * @param page {Page} Browser tab
-   * @param action {string} Action to select
-   * @returns {Promise<Page|string>}
+   * @returns {Promise<string>}
    */
-  // eslint-disable-next-line consistent-return
-  async setMoreActions(page: Page, action: string): Promise<Page | string> {
+  async setMoreActionsPreFilledOrder(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.moreActionsDropDownButton);
-    if (action === 'pre-filled order') {
-      await this.waitForSelectorAndClick(page, this.sendOrderMailButton);
 
-      return this.getTextContent(page, this.summarySuccessMessageBlock);
-    }
+    await this.waitForSelectorAndClick(page, this.sendOrderMailButton);
+
+    return this.getTextContent(page, this.summarySuccessMessageBlock);
+  }
+
+  /**
+   * Set more actions "Proceed to Checkout"
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async setMoreActionsProceedToCheckout(page: Page): Promise<Page> {
+    await this.waitForSelectorAndClick(page, this.moreActionsDropDownButton);
     return this.openLinkWithTargetBlank(page, this.proceedOrderLink, 'body a');
   }
 

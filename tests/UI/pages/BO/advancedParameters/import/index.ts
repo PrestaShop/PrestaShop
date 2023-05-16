@@ -91,7 +91,7 @@ class Import extends BOBasePage {
    * @param filePath {string} Value of file path to set on file input
    * @return {Promise<string>}
    */
-  async uploadFile(page: Page, fileType: string, filePath: string): Promise<string> {
+  async uploadImportFile(page: Page, fileType: string, filePath: string): Promise<string> {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
     await page.setInputFiles(this.fileInputField, filePath);
 

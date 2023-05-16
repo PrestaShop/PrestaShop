@@ -35,7 +35,7 @@ export default class BrandData {
 
   public readonly enabled: boolean;
 
-  public readonly addresses: number;
+  public addresses: number;
 
   public readonly products: number;
 
@@ -51,7 +51,7 @@ export default class BrandData {
     this.name = brandToCreate.name || faker.company.name();
 
     /** @type {string} Logo name of the brand */
-    this.logo = `${this.name.replace(/[^\w\s]/gi, '')}.png`;
+    this.logo = brandToCreate.logo || `${this.name.replace(/[^\w\s]/gi, '')}.png`;
 
     /** @type {string} Short description of the brand */
     this.shortDescription = brandToCreate.shortDescription || faker.lorem.sentence();

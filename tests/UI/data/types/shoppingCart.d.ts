@@ -7,7 +7,7 @@ type ShoppingCartCreator = {
   customer?: CustomerData
   carrier?: CarrierData
   online?: boolean
-};
+}
 
 type ShoppingCartDetails = {
   id_cart?: number

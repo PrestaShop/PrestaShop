@@ -91,10 +91,13 @@ class Addresses extends FOBasePage {
    */
   async goToEditAddressPage(page: Page, position: string | number = 'last'): Promise<void> {
     const editButtons = await page.$$(this.editAddressLink);
+    const positionEditButtons: number = typeof position === 'string' ? (editButtons.length - 1) : (position - 1);
 
     await Promise.all([
-      page.waitForNavigation('networkidle'),
-      editButtons[position === 'last' ? (editButtons.length - 1) : (position - 1)].click(),
+      page.waitForNavigation({
+        waitUntil: 'networkidle',
+      }),
+      editButtons[positionEditButtons].click(),
     ]);
   }
 
@@ -106,12 +109,13 @@ class Addresses extends FOBasePage {
    */
   async deleteAddress(page: Page, position: string | number = 'last'): Promise<string> {
     const deleteButtons = await page.$$(this.deleteAddressLink);
+    const positionDeleteButtons: number = typeof position === 'string' ? (deleteButtons.length - 1) : (position - 1);
 
     await Promise.all([
       page.waitForNavigation({
         waitUntil: 'networkidle',
       }),
-      deleteButtons[position === 'last' ? (deleteButtons.length - 1) : (position - 1)].click(),
+      deleteButtons[positionDeleteButtons].click(),
     ]);
 
     return this.getTextContent(page, this.notificationsBlock);

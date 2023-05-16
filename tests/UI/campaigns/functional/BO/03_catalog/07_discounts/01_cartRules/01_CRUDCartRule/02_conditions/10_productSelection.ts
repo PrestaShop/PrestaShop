@@ -182,7 +182,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       const total = Products.demo_8.finalPrice + Products.demo_1.finalPrice + Products.demo_3.finalPrice;
 
-      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent);
+      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
       await expect(discountValue).to.eq(-discount.toFixed(2));
@@ -202,7 +202,7 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       const total = Products.demo_8.finalPrice + Products.demo_3.finalPrice;
 
-      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent);
+      const discount = await basicHelper.percentage(total, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
       await expect(discountValue).to.eq(-discount.toFixed(2));

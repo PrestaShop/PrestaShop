@@ -217,7 +217,7 @@ class WebService extends BOBasePage {
         await this.setValue(page, this.webserviceFilterInput(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.webserviceFilterInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.webserviceFilterInput(filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing

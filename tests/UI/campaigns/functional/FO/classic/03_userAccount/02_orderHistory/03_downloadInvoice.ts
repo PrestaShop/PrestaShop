@@ -169,7 +169,7 @@ describe('FO - Account - Order history : download invoice', async () => {
     it('should download the invoice and check the invoice ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
-      const downloadFilePath: string = await foOrderHistoryPage.downloadInvoice(page);
+      const downloadFilePath: string|null = await foOrderHistoryPage.downloadInvoice(page);
 
       const exist: boolean = await files.isTextInPDF(downloadFilePath, fileName);
       await expect(exist).to.be.true;

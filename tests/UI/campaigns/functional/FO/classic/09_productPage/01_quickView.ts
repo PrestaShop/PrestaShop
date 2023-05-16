@@ -26,7 +26,7 @@ import boAddProductPage from '@pages/BO/catalog/products/add';
 import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
 import CartProductDetails from '@data/types/cart';
-import type {ProductAttribute} from '@data/types/product';
+import type {ProductAttribute, ProductImageUrls} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -353,8 +353,8 @@ describe('FO - product page : Product quick view', async () => {
 
   // 7 - Select color on hover from product list
   describe('Select color on hover on product list', async () => {
-    let imageFirstColor: {thumbImage: string, coverImage: string};
-    let imageSecondColor: {thumbImage: string, coverImage: string};
+    let imageFirstColor: ProductImageUrls;
+    let imageSecondColor: ProductImageUrls;
 
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomeToSelectColor', baseContext);

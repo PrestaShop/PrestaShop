@@ -83,7 +83,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         const productPrice = await productsPage.getProductPriceFromList(page, i, false);
         const productPriceATI = await productsPage.getProductPriceFromList(page, i, true);
         const conversionRate = (100 + parseInt(tax.DefaultFrTax.rate, 10)) / 100;
-        await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
+        await expect(productPrice).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
       }
     });
 

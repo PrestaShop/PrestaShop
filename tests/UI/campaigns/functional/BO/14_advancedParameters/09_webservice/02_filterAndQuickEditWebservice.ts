@@ -114,13 +114,13 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
           identifier: 'filterByStatus',
           filterType: 'select',
           filterBy: 'active',
-          filterValue: firstWebServiceData.status,
+          filterValue: firstWebServiceData.status ? '1' : '0',
         },
       },
     ];
 
     testsFilter.forEach((
-      test: {args: {identifier: string, filterType: string, filterBy: string, filterValue: string|boolean, }},
+      test: {args: {identifier: string, filterType: string, filterBy: string, filterValue: string, }},
       index: number,
     ) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
@@ -138,7 +138,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const wenServiceStatus = await webservicePage.getStatus(page, i);
-            await expect(wenServiceStatus).to.equal(test.args.filterValue);
+            await expect(wenServiceStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);

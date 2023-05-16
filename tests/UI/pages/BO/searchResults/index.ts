@@ -134,9 +134,9 @@ class SearchResults extends BOBasePage {
    * Return the link URL in Search panels
    * @param page {Page} Browser tab
    * @param nthLink {number} Nth link
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getSearchPanelsLinkURL(page: Page, nthLink: number): Promise<string|null> {
+  async getSearchPanelsLinkURL(page: Page, nthLink: number): Promise<string> {
     return this.getAttributeContent(page, this.searchPanelsLink(nthLink), 'href');
   }
 

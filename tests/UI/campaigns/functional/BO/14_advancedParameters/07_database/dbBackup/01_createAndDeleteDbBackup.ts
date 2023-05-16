@@ -26,7 +26,7 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
   let page: Page;
 
   let numberOfBackups: number = 0;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {

@@ -1,5 +1,7 @@
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
+import type OrderShippingData from '@data/faker/orderShipping';
+
 import type {Frame, Page} from 'playwright';
 
 /**
@@ -238,12 +240,12 @@ class TabListBlock extends ViewOrderBasePage {
 
   /**
    * Get text from Column on history table
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} status row in table
    * @returns {Promise<string>}
    */
-  async getTextColumnFromHistoryTable(page: Page, columnName: string, row: number): Promise<string> {
+  async getTextColumnFromHistoryTable(page: Frame|Page, columnName: string, row: number): Promise<string> {
     return this.getTextContent(page, this.statusTableColumn(row, columnName));
   }
 
@@ -550,10 +552,10 @@ class TabListBlock extends ViewOrderBasePage {
   /**
    * Set shipping details
    * @param page {Page} Browser tab
-   * @param shippingData {{trackingNumber: string, carrier: string, carrierID: number}} Data to set on shipping form
+   * @param shippingData {OrderShippingData} Data to set on shipping form
    * @returns {Promise<string>}
    */
-  async setShippingDetails(page: Page, shippingData): Promise<string> {
+  async setShippingDetails(page: Page, shippingData: OrderShippingData): Promise<string> {
     await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
     await page.click(this.carrierSelect);
     await this.waitForSelectorAndClick(page, this.carrierToSelect(shippingData.carrierID));

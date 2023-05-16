@@ -89,7 +89,7 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
     it('should add product to cart and go to cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foProductPage.addProductToTheCart(page, foProductPage);
+      await foProductPage.addProductToTheCart(page, 1);
 
       const pageTitle = await foCartPage.getPageTitle(page);
       await expect(pageTitle).to.equal(foCartPage.pageTitle);

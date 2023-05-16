@@ -322,7 +322,7 @@ class ShopSettings extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page: Page, sortBy: string, sortDirection: Promise<void>) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     let columnSelector: string;
 
     switch (sortBy) {

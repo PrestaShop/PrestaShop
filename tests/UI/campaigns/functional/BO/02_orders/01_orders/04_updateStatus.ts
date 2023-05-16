@@ -45,7 +45,7 @@ Scenario:
 describe('BO - orders : Update order status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
   let orderId: number;
 
   const orderByCustomerData: OrderData = new OrderData({

@@ -18,6 +18,7 @@ import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderData from '@data/faker/order';
+import OrderShippingData from '@data/faker/orderShipping';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,12 +39,12 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   let page: Page;
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
-  const shippingDetailsData = {
+  const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '0523698',
     carrier: Carriers.myCarrier.name,
     carrierID: Carriers.myCarrier.id,
-    shippingCost: '€8.40',
-  };
+  });
+  const shippingDetailsCost: string = '€8.40';
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
@@ -168,7 +169,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
         expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
-        expect(result.shippingCost).to.equal(shippingDetailsData.shippingCost),
+        expect(result.shippingCost).to.equal(shippingDetailsCost),
         expect(result.trackingNumber).to.equal(shippingDetailsData.trackingNumber),
       ]);
     });

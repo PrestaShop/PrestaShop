@@ -3,7 +3,7 @@ import Carriers from '@data/demo/carriers';
 import Customers from '@data/demo/customers';
 import type CarrierData from '@data/faker/carrier';
 import type CustomerData from '@data/faker/customer';
-import ShoppingCartCreator from '@data/types/shoppingCart';
+import type {ShoppingCartCreator} from '@data/types/shoppingCart';
 
 /**
  * Create new tax rule to use on tax rule form on BO

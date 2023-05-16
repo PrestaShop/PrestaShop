@@ -19,6 +19,8 @@
       "@utils/*": ["utils/*"],
       "@tools/*": ["tools/*"]
     },
-    "typeRoots": ["types", "node_modules/@types"]
+    "typeRoots": ["types", "node_modules/@types"],
+    "skipLibCheck": true,
+    "noEmit": true
   },
 }

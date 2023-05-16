@@ -37,7 +37,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
   let page: Page;
   let numberOfCategories: number = 0;
   let numberOfPages: number = 0;
-  let categoryID: string = '0';
+  let categoryID: number = 0;
 
   const createCategoryData: CMSCategoryData = new CMSCategoryData();
   const editCategoryData: CMSCategoryData = new CMSCategoryData({name: `update${createCategoryData.name}`});
@@ -130,7 +130,10 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await expect(textColumn).to.contains(createCategoryData.name);
 
       // Get category ID
-      categoryID = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category');
+      categoryID = parseInt(
+        await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category'),
+        10,
+      );
     });
 
     it('should view my shop', async function () {
@@ -300,7 +303,10 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'name');
       await expect(textColumn).to.contains(editCategoryData.name);
 
-      categoryID = await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category');
+      categoryID = parseInt(
+        await pagesPage.getTextColumnFromTableCmsPageCategory(page, 1, 'id_cms_category'),
+        10,
+      );
     });
 
     it('should view my shop', async function () {

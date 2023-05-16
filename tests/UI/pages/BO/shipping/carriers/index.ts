@@ -263,9 +263,9 @@ class Carriers extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row index in the table
    * @param columnName {string} Column name in the table
-   * @return {Promise<string|null>}
+   * @return {Promise<string>}
    */
-  async getTextColumn(page: Page, row: number, columnName: string): Promise<string | null> {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (columnName) {
@@ -329,11 +329,11 @@ class Carriers extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name in the table
-   * @return {Promise<(string|null)[]>}
+   * @return {Promise<string[]>}
    */
-  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string | null)[]> {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable: (string | null)[] = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);

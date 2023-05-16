@@ -27,7 +27,7 @@ import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
 import EmployeeData from '@data/faker/employee';
 import OrderData from '@data/faker/order';
-import type MailDevEmail from '@data/types/maildev';
+import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -207,7 +207,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await expect(textResult).to.contains(orderPageTabListBlock.errorAssignSameStatus);
     });
 
-    it(`should change the order status to '${OrderStatuses.canceled.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.canceled.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelOrderByStatus', baseContext);
 
       const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.canceled.name);

@@ -27,7 +27,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
 
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   let numberOfSQLQueries: number = 0;
 
