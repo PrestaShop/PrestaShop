@@ -53,10 +53,8 @@ class GroupType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'placeholder' => null,
             'choices' => $this->groupByIdChoiceProvider->getChoices(),
             'choice_translation_domain' => false,
-            'autocomplete' => true,
         ]);
     }
 }
