@@ -581,3 +581,4 @@ default:
           contexts:
             - Tests\Integration\Behaviour\Features\Context\Domain\AliasFeatureContext
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext

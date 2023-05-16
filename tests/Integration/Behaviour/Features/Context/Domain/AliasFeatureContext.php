@@ -94,21 +94,18 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I toggle alias with following information:
+     * @When /^I (enable|disable) alias with reference "(.+)"$/
      *
-     * @param TableNode $table
+     * @param bool $enable
+     * @param string $aliasReference
      *
-     * @throws AliasConstraintException
+     * @see StringToBoolTransformContext::transformTruthyStringToBoolean for $enable string to bool transformation
      */
-    public function toggleAlias(TableNode $table): void
+    public function updateAliasStatus(bool $enable, string $aliasReference): void
     {
-        $aliasReferences = $table->getColumnsHash();
-
-        try {
-            $this->getCommandBus()->handle(new UpdateAliasStatusHandler(new AliasId($this->getSharedStorage()->get($aliasReference))));
-        } catch (InvalidArgumentException $exception) {
-            $this->setLastException($exception);
-        }
+        $this->getCommandBus()->handle(
+            new UpdateAliasStatusCommand($this->getSharedStorage()->get($aliasReference), $enable)
+        );
     }
 
     /**
