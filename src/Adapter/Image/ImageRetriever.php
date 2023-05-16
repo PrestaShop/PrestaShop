@@ -217,9 +217,9 @@ class ImageRetriever
 
             foreach ($configuredImageFormats as $imageFormat) {
                 // Generate the thumbnail and optionally a high DPI version
-                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
+                $this->checkOrGenerateImageType($imageFolderPath, $id_image, $image_type, $imageFormat);
                 if ($generateHighDpiImages) {
-                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
+                    $this->checkOrGenerateImageType($imageFolderPath, $id_image, $image_type, $imageFormat, true);
                 }
 
                 // Get the URL of the thumb and add it to sources
@@ -272,7 +272,6 @@ class ImageRetriever
     }
 
     /**
-     * @param string $originalImagePath
      * @param string $imageFolderPath
      * @param int $idImage
      * @param array $imageTypeData
@@ -281,10 +280,9 @@ class ImageRetriever
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
+    private function checkOrGenerateImageType(string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
-
         if ($hdpi) {
             $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $imageFormat);
             $imageTypeData['width'] *= 2;
@@ -302,8 +300,13 @@ class ImageRetriever
 
         // Check if the thumbnail exists and generate it if needed
         if (!file_exists($resizedImagePath)) {
+            $sourceFile = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], 'jpg');
+            $sourceFilePath = implode(DIRECTORY_SEPARATOR, [
+                $imageFolderPath,
+                $sourceFile,
+            ]);
             ImageManager::resize(
-                $originalImagePath,
+                $sourceFilePath,
                 $resizedImagePath,
                 (int) $imageTypeData['width'],
                 (int) $imageTypeData['height'],
