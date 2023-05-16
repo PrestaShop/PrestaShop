@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 /**
  * Handles command which deletes aliases in bulk action
  */
-class BulkDeleteAlias extends AbstractBulkCommandHandler implements BulkDeleteAliasHandlerInterface
+class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkDeleteAliasHandlerInterface
 {
     /**
      * @var AliasRepository

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\DeleteAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\DeleteAliasHandlerInterface;
 
-class DeleteAlias implements DeleteAliasHandlerInterface
+class DeleteAliasHandler implements DeleteAliasHandlerInterface
 {
     /**
      * @var AliasRepository
