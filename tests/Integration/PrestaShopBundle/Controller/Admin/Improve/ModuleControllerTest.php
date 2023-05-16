@@ -30,7 +30,6 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -82,7 +81,7 @@ class ModuleControllerTest extends WebTestCase
                 ['_PS_ALL_THEMES_DIR_', null, null, dirname(__DIR__, 6) . '/themes/'],
             ]));
 
-        self::$kernel->getContainer()->set(ShopConfigurationInterface::class, $configurationMock);;
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
 
         $moduleRepository = $this->createMock(ModuleRepository::class);
         $moduleRepository->method('getList')->willReturn(new ModuleCollection());

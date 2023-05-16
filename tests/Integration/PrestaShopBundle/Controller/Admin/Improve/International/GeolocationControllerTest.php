@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,7 +65,7 @@ class GeolocationControllerTest extends WebTestCase
         $configurationMock->method('get')
             ->will($this->returnValueMap($values));
 
-        self::$kernel->getContainer()->set(ShopConfigurationInterface::class, $configurationMock);;
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
     }

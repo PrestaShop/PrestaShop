@@ -37,7 +37,6 @@ use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Psr\Log\NullLogger;
 use Shop;
@@ -247,7 +246,7 @@ class ProductControllerTest extends WebTestCase
         $configurationMock->method('get')
             ->will($this->returnValueMap($values));
 
-        self::$kernel->getContainer()->set(ShopConfigurationInterface::class, $configurationMock);;
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }
 
     /**

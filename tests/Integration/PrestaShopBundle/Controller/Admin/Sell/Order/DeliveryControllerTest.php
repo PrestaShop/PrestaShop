@@ -76,7 +76,7 @@ class DeliveryControllerTest extends WebTestCase
         $configurationMock->method('get')
             ->will($this->returnValueMap($values));
 
-        self::$kernel->getContainer()->set(ShopConfigurationInterface::class, $configurationMock);;
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');

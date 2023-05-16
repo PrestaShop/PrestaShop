@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,8 +72,7 @@ class OrderControllerTest extends WebTestCase
                 ['_PS_MODE_DEMO_', null, null, true],
             ]));
 
-        self::$kernel->getContainer()->set(ShopConfigurationInterface::class, $configurationMock);
-        self::$kernel->getContainer()->set(ShopConfigurationInterface::class, $configurationMock);;
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
         $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');

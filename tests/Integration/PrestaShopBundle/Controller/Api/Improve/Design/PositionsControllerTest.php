@@ -35,7 +35,6 @@ use Employee;
 use Hook;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
@@ -98,7 +97,7 @@ class PositionsControllerTest extends TestCase
             ['_PS_ALL_THEMES_DIR_', null, null, dirname(__DIR__, 7) . '/themes/'],
         ]));
 
-        self::$kernel->getContainer()->set(ShopConfigurationInterface::class, $configurationMock);;
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
