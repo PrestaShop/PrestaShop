@@ -183,12 +183,6 @@ class ImageRetriever
         // Obsolete solution, will be removed
         $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
-        $originalImagePath = implode(DIRECTORY_SEPARATOR, [
-            $imageFolderPath,
-            $id_image . '.jpg',
-        ]);
-
         /*
          * Let's resolve which formats we will use for image generation.
          * In new image system, it's multiple formats. In case of legacy, it's only .jpg.
