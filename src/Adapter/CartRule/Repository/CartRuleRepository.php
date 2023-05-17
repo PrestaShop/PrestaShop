@@ -38,28 +38,11 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class CartRuleRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var CartRuleValidator
-     */
-    private $cartRuleValidator;
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
     public function __construct(
-        CartRuleValidator $cartRuleValidator,
-        Connection $connection,
-        string $dbPrefix
+        protected CartRuleValidator $cartRuleValidator,
+        protected Connection $connection,
+        protected string $dbPrefix
     ) {
-        $this->cartRuleValidator = $cartRuleValidator;
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
     }
 
     public function add(CartRule $cartRule): CartRule

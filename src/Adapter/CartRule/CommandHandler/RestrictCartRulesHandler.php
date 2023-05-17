@@ -36,24 +36,19 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 class RestrictCartRulesHandler implements RestrictCartRulesHandlerInterface
 {
-    /**
-     * @var CartRuleRepository
-     */
-    private $cartRuleRepository;
-
     public function __construct(
-        CartRuleRepository $cartRuleRepository
+        protected CartRuleRepository $cartRuleRepository
     ) {
-        $this->cartRuleRepository = $cartRuleRepository;
     }
 
     public function handle(RestrictCartRulesCommand $command): void
     {
-        $cartRuleId = $command->getCartRuleId();
+        $cartRuleId = $command->cartRuleId;
         $cartRule = $this->cartRuleRepository->get($cartRuleId);
-        $this->cartRuleRepository->assertAllCartRulesExists($command->getRestrictedCartRuleIds());
-        $this->cartRuleRepository->restrictCartRules($cartRuleId, $command->getRestrictedCartRuleIds());
-        $hasRestrictions = !empty($command->getRestrictedCartRuleIds());
+        $restrictedCartRuleIds = $command->restrictedCartRuleIds;
+        $this->cartRuleRepository->assertAllCartRulesExists($restrictedCartRuleIds);
+        $this->cartRuleRepository->restrictCartRules($cartRuleId, $restrictedCartRuleIds);
+        $hasRestrictions = !empty($restrictedCartRuleIds);
 
         $this->updateRestrictionProperty($cartRule, $hasRestrictions);
 

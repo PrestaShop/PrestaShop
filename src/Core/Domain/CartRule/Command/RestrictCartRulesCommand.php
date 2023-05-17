@@ -33,15 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 class RestrictCartRulesCommand
 {
-    /**
-     * @var CartRuleId
-     */
-    private $cartRuleId;
+    public readonly CartRuleId $cartRuleId;
 
-    /**
-     * @var CartRuleId[]
-     */
-    private $restrictedCartRuleIds;
+    /** @var CartRuleId[] */
+    public readonly array $restrictedCartRuleIds;
 
     /**
      * @param int $cartRuleId
@@ -52,35 +47,20 @@ class RestrictCartRulesCommand
         array $restrictedCartRuleIds
     ) {
         $this->cartRuleId = new CartRuleId($cartRuleId);
-        $this->setRestrictedCartRuleIds($cartRuleId, $restrictedCartRuleIds);
-    }
-
-    /**
-     * @return CartRuleId
-     */
-    public function getCartRuleId(): CartRuleId
-    {
-        return $this->cartRuleId;
-    }
-
-    /**
-     * @return CartRuleId[]
-     */
-    public function getRestrictedCartRuleIds(): array
-    {
-        return $this->restrictedCartRuleIds;
+        $this->restrictedCartRuleIds = $this->assertCartRuleIds($cartRuleId, $restrictedCartRuleIds);
     }
 
     /**
      * @param int $cartRuleId
      * @param int[] $restrictedCartRuleIds
      *
-     * @return void
+     * @return CartRuleId[]
      *
      * @throws CartRuleConstraintException
      */
-    private function setRestrictedCartRuleIds(int $cartRuleId, array $restrictedCartRuleIds): void
+    private function assertCartRuleIds(int $cartRuleId, array $restrictedCartRuleIds): array
     {
+        $cartRuleIds = [];
         foreach ($restrictedCartRuleIds as $restrictedCartRuleId) {
             if ($restrictedCartRuleId === $cartRuleId) {
                 throw new CartRuleConstraintException(
@@ -88,8 +68,9 @@ class RestrictCartRulesCommand
                     CartRuleConstraintException::INVALID_CART_RULE_RESTRICTION
                 );
             }
-
-            $this->restrictedCartRuleIds[] = new CartRuleId($restrictedCartRuleId);
+            $cartRuleIds[] = new CartRuleId($restrictedCartRuleId);
         }
+
+        return $cartRuleIds;
     }
 }

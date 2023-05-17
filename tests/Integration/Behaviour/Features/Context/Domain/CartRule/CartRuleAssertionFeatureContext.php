@@ -328,7 +328,7 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
             $expectedRestrictedCartRuleIds = $this->referencesToIds($data['restricted cart rules']);
             Assert::assertSame(
                 $expectedRestrictedCartRuleIds,
-                $editableCartRule->getConditions()->getRestrictions()->getRestrictedCartRuleIds(),
+                $editableCartRule->getConditions()->getRestrictions()->restrictedCartRuleIds,
                 'Unexpected cart rule restrictions'
             );
         }

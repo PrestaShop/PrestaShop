@@ -30,97 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
 class CartRuleRestrictionsForEditing
 {
-    /**
-     * @var bool
-     */
-    private $countryRestriction;
-
-    /**
-     * @var bool
-     */
-    private $carrierRestriction;
-
-    /**
-     * @var bool
-     */
-    private $groupRestriction;
-
-    /**
-     * @var int[]
-     */
-    private $restrictedCartRuleIds;
-
-    /**
-     * @var bool
-     */
-    private $productRestriction;
-
-    /**
-     * @var bool
-     */
-    private $shopRestriction;
-
+    //@todo: add other restrictions like country, carrier, group, product, shop (shop association might be handled separatly)
     public function __construct(
-        bool $countryRestriction,
-        bool $carrierRestriction,
-        bool $groupRestriction,
-        array $restrictedCartRuleIds,
-        bool $productRestriction,
-        bool $shopRestriction
+        public readonly array $restrictedCartRuleIds
     ) {
-        $this->countryRestriction = $countryRestriction;
-        $this->carrierRestriction = $carrierRestriction;
-        $this->groupRestriction = $groupRestriction;
-        $this->restrictedCartRuleIds = $restrictedCartRuleIds;
-        $this->productRestriction = $productRestriction;
-        $this->shopRestriction = $shopRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCountryRestriction(): bool
-    {
-        return $this->countryRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCarrierRestriction(): bool
-    {
-        return $this->carrierRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGroupRestriction(): bool
-    {
-        return $this->groupRestriction;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getRestrictedCartRuleIds(): array
-    {
-        return $this->restrictedCartRuleIds;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isProductRestriction(): bool
-    {
-        return $this->productRestriction;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShopRestriction(): bool
-    {
-        return $this->shopRestriction;
     }
 }

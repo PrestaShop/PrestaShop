@@ -56,15 +56,9 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
  */
 class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements GetCartRuleForEditingHandlerInterface
 {
-    /**
-     * @var CartRuleRepository
-     */
-    private $cartRuleRepository;
-
     public function __construct(
-        CartRuleRepository $cartRuleRepository
+        protected CartRuleRepository $cartRuleRepository
     ) {
-        $this->cartRuleRepository = $cartRuleRepository;
     }
 
     /**
@@ -77,7 +71,7 @@ class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements Ge
      */
     public function handle(GetCartRuleForEditing $query): CartRuleForEditing
     {
-        $cartRuleId = $query->getCartRuleId();
+        $cartRuleId = $query->cartRuleId;
         $cartRule = $this->getCartRule($cartRuleId);
 
         $cartRuleInformation = $this->getCartRuleInformation($cartRule);
@@ -134,12 +128,8 @@ class GetCartRuleForEditingHandler extends AbstractCartRuleHandler implements Ge
         }
 
         $cartRuleRestrictions = new CartRuleRestrictionsForEditing(
-            (bool) $cartRule->country_restriction,
-            (bool) $cartRule->carrier_restriction,
-            (bool) $cartRule->group_restriction,
+            // @todo: fill other restrictions when related commands are implemented
             $restrictedCartRules,
-            (bool) $cartRule->product_restriction,
-            (bool) $cartRule->shop_restriction
         );
 
         return new CartRuleConditionsForEditing(
