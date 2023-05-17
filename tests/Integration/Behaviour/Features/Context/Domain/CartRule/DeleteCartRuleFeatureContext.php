@@ -24,42 +24,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
-/**
- * Describes a cart rule action.
- */
-interface CartRuleActionInterface
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+
+class DeleteCartRuleFeatureContext extends AbstractCartRuleFeatureContext
 {
     /**
-     * Check if this cart rule is giving free shipping.
+     * @When I delete Cart rule with reference :cartRuleReference
      *
-     * @return bool
+     * @param string $cartRuleReference
+     *
+     * @throws CartRuleConstraintException
      */
-    public function isFreeShipping(): bool;
+    public function deleteCartRule(string $cartRuleReference): void
+    {
+        $this->getCommandBus()->handle(
+            new DeleteCartRuleCommand($this->getSharedStorage()->get($cartRuleReference))
+        );
+    }
 
     /**
-     * Get the amount discount, which this cart rule action is giving.
+     * @When I bulk delete cart rules :cartRuleReferences
      *
-     * @return Money|null
-     */
-    public function getAmountDiscount(): ?Money;
-
-    /**
-     * Get the percentage discount, which this cart rule action is giving.
+     * @param string $cartRuleReferences
      *
-     * @return PercentageDiscount|null
+     * @throws CartRuleConstraintException
      */
-    public function getPercentageDiscount(): ?PercentageDiscount;
-
-    /**
-     * Get the gift product, which this cart rule action is giving.
-     *
-     * @return GiftProduct|null returns null when not applicable
-     */
-    public function getGiftProduct(): ?GiftProduct;
+    public function bulkDeleteCartRules(string $cartRuleReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkDeleteCartRuleCommand($this->referencesToIds($cartRuleReferences)));
+    }
 }

@@ -24,61 +24,60 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
 
-/**
- * Cart rule action that gives free shipping.
- * It cannot have percentage or amount discount.
- * It can optionally have gift product.
- */
-final class FreeShippingAction implements CartRuleActionInterface
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+
+class CartRuleAction
 {
+    /**
+     * @var bool
+     */
+    private $freeShipping;
+
     /**
      * @var GiftProduct|null
      */
     private $giftProduct;
 
     /**
-     * @param GiftProduct|null $giftProduct
+     * @var Discount|null
      */
-    public function __construct(?GiftProduct $giftProduct = null)
-    {
-        $this->giftProduct = $giftProduct;
+    private $discount;
+
+    public function __construct(
+        bool $freeShipping,
+        ?GiftProduct $giftProduct = null,
+        ?Discount $discount = null
+    ) {
+        if ($freeShipping || $giftProduct || $discount) {
+            $this->freeShipping = $freeShipping;
+            $this->giftProduct = $giftProduct;
+            $this->discount = $discount;
+
+            return;
+        }
+
+        throw new CartRuleConstraintException(
+            'Cart rule must have at least one action',
+            CartRuleConstraintException::MISSING_ACTION
+        );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFreeShipping(): bool
     {
-        return true;
+        return $this->freeShipping;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPercentageDiscount(): ?PercentageDiscount
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAmountDiscount(): ?Money
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getGiftProduct(): ?GiftProduct
     {
         return $this->giftProduct;
+    }
+
+    public function getDiscount(): ?Discount
+    {
+        return $this->discount;
     }
 }

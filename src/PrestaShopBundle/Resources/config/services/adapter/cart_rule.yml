@@ -59,3 +59,7 @@ services:
     public: false
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand }
+
+  PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller:
+    autowire: true
+    public: false

@@ -24,60 +24,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-/**
- * Cart rule action that gives gift product.
- * It cannot have percentage or amount discount, or free shipping.
- */
-final class GiftProductAction implements CartRuleActionInterface
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CartRuleValidator;
+use Symfony\Component\Validator\Constraint;
+
+class CartRule extends Constraint
 {
     /**
-     * @var GiftProduct
+     * When discount type "specific_product" is selected, but the specific product is not provided
+     *
+     * @var string
      */
-    private $giftProduct;
+    public $missingSpecificProductMessage = 'Specific product must be selected for this discount application type';
 
     /**
-     * @param GiftProduct $giftProduct
+     * When discount type "selected_products" is selected, but there are no selected product restrictions
+     *
+     * @var string
      */
-    public function __construct(GiftProduct $giftProduct)
-    {
-        $this->giftProduct = $giftProduct;
-    }
+    public $missingProductRestrictionsMessage = 'Product restrictions must be applied for this discount application type';
 
     /**
-     * {@inheritdoc}
+     * When cart rule has no actions
+     *
+     * @var string
      */
-    public function isFreeShipping(): bool
-    {
-        return false;
-    }
+    public $missingActionsMessage = 'Cart rule must have at least one action';
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getPercentageDiscount(): ?PercentageDiscount
+    public function validatedBy(): string
     {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAmountDiscount(): ?Money
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGiftProduct(): ?GiftProduct
-    {
-        return $this->giftProduct;
+        return CartRuleValidator::class;
     }
 }

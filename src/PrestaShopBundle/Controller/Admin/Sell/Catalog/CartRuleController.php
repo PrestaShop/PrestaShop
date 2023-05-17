@@ -345,10 +345,6 @@ class CartRuleController extends FrameworkBundleAdminController
                 $e instanceof BulkToggleCartRuleException ? implode(', ', $e->getCartRuleIds()) : ''
             ),
             CartRuleConstraintException::class => [
-                CartRuleConstraintException::MISSING_ACTION => $this->trans(
-                    'Cart rule must have at least one action',
-                    'Admin.Notifications.Error'
-                ),
                 CartRuleConstraintException::NON_UNIQUE_CODE => $this->trans(
                     'This cart rule code is already used',
                     'Admin.Notifications.Error'

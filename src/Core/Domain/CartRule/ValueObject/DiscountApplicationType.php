@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Discount application type indicates what the discount should be applied to.
@@ -67,12 +69,32 @@ class DiscountApplicationType
     private $type;
 
     /**
-     * @param string $type
+     * @var ProductId|null
      */
-    public function __construct(string $type)
+    private $productId;
+
+    /**
+     * @param string $type
+     * @param int|null $productId product id is required when application type is "specific_product"
+     *
+     * @throws CartRuleConstraintException
+     * @throws ProductConstraintException
+     */
+    public function __construct(string $type, ?int $productId = null)
     {
         if (!in_array($type, self::AVAILABLE_TYPES)) {
             throw new CartRuleConstraintException(sprintf('Invalid cart rule discount application type %s. Available types are: %s', var_export($type, true), implode(', ', self::AVAILABLE_TYPES)), CartRuleConstraintException::INVALID_DISCOUNT_APPLICATION_TYPE);
+        }
+
+        if ($type === self::SPECIFIC_PRODUCT) {
+            if (!$productId) {
+                throw new CartRuleConstraintException(
+                    'Provided Cart rule discount application type requires specific product',
+                    CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
+                );
+            }
+
+            $this->productId = new ProductId($productId);
         }
 
         $this->type = $type;
@@ -81,8 +103,16 @@ class DiscountApplicationType
     /**
      * @return string
      */
-    public function getValue(): string
+    public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * @return ProductId|null
+     */
+    public function getProductId(): ?ProductId
+    {
+        return $this->productId;
     }
 }

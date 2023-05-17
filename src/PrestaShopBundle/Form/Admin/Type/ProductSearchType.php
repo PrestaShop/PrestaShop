@@ -76,6 +76,8 @@ class ProductSearchType extends TranslatorAwareType
             ])
             ->setAllowedTypes('include_combinations', 'bool')
             ->setDefaults([
+                // error_bubbling => false allows constraint validators to set property path for error to be shown under this input, else it is not working
+                'error_bubbling' => false,
                 'required' => false,
                 'label' => false,
                 'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),

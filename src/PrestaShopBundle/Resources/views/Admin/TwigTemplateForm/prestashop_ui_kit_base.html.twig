@@ -1458,8 +1458,8 @@
         {% if child.vars.label_tab is defined %}
           {{ form_label(child, child.vars.label_tab) }}
         {% endif %}
-        {{ form_widget(child) }}
         {{ form_errors(child) }}
+        {{ form_widget(child) }}
       </div>
       {% set firstRenderedChild = false %}
       {% endif %}

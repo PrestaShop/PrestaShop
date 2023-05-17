@@ -31,12 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
@@ -115,21 +113,9 @@ class AddCartRuleCommand
     private $quantityPerUser;
 
     /**
-     * @var CartRuleActionInterface
+     * @var CartRuleAction
      */
     private $cartRuleAction;
-
-    /**
-     * @var DiscountApplicationType|null
-     */
-    private $discountApplicationType;
-
-    /**
-     * This is the product to which discount is applied, when discount application type is "specific product".
-     *
-     * @var ProductId|null
-     */
-    private $discountProductId;
 
     /**
      * @param array $localizedNames
@@ -141,7 +127,7 @@ class AddCartRuleCommand
      * @param DateTime $validTo
      * @param int $totalQuantity
      * @param int $quantityPerUser
-     * @param CartRuleActionInterface $cartRuleAction
+     * @param CartRuleAction $cartRuleAction
      *
      * @throws CartRuleConstraintException
      */
@@ -155,7 +141,7 @@ class AddCartRuleCommand
         DateTime $validTo,
         int $totalQuantity,
         int $quantityPerUser,
-        CartRuleActionInterface $cartRuleAction
+        CartRuleAction $cartRuleAction
     ) {
         $this->assertDateRangeIsValid($validFrom, $validTo);
         $this->setLocalizedNames($localizedNames);
@@ -168,40 +154,6 @@ class AddCartRuleCommand
         $this->validFrom = $validFrom;
         $this->validTo = $validTo;
         $this->cartRuleAction = $cartRuleAction;
-    }
-
-    /**
-     * @return DiscountApplicationType|null
-     */
-    public function getDiscountApplicationType(): ?DiscountApplicationType
-    {
-        return $this->discountApplicationType;
-    }
-
-    public function setDiscountApplication(string $discountApplicationType, ?int $productId = null): AddCartRuleCommand
-    {
-        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
-        if (DiscountApplicationType::SPECIFIC_PRODUCT === $discountApplicationType) {
-            if (!$productId) {
-                throw new CartRuleConstraintException(
-                    'ProductId is required for discount application "specific_product"',
-                    CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
-                );
-            }
-            $this->discountProductId = new ProductId($productId);
-        } else {
-            $this->discountProductId = null;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return ProductId|null
-     */
-    public function getDiscountProductId(): ?ProductId
-    {
-        return $this->discountProductId;
     }
 
     /**
@@ -301,9 +253,9 @@ class AddCartRuleCommand
     }
 
     /**
-     * @return CartRuleActionInterface
+     * @return CartRuleAction
      */
-    public function getCartRuleAction(): CartRuleActionInterface
+    public function getCartRuleAction(): CartRuleAction
     {
         return $this->cartRuleAction;
     }
