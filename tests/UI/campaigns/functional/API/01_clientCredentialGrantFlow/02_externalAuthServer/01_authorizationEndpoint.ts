@@ -7,7 +7,7 @@ import {APIRequestContext, request} from 'playwright';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_externalAuthServer_authorizationEndpoint';
 
-describe('API : Authorization Endpoint', async () => {
+describe('API : External Auth Server - Authorization Endpoint', async () => {
   let apiContextBO: APIRequestContext;
   let apiContextKeycloak: APIRequestContext;
   let accessTokenKeycloak: string;
@@ -18,24 +18,28 @@ describe('API : Authorization Endpoint', async () => {
       // @todo : Remove it when Puppeteer will accept self signed certificates
       ignoreHTTPSErrors: true,
     });
-    apiContextKeycloak = await request.newContext({
-      baseURL: global.keycloakConfig.keycloakServer,
-      // @todo : Remove it when Puppeteer will accept self signed certificates
-      ignoreHTTPSErrors: true,
-    });
+    if (!global.GENERATE_FAILED_STEPS) {
+      apiContextKeycloak = await request.newContext({
+        baseURL: global.keycloakConfig.keycloakServer,
+        // @todo : Remove it when Puppeteer will accept self signed certificates
+        ignoreHTTPSErrors: true,
+      });
 
-    accessTokenKeycloak = await keycloakHelper.createClient(
-      global.keycloakConfig.keycloakClientId,
-      'PrestaShop Client ID',
-      false,
-      true,
-    );
-    await expect(accessTokenKeycloak.length).to.be.gt(0);
+      accessTokenKeycloak = await keycloakHelper.createClient(
+        global.keycloakConfig.keycloakClientId,
+        'PrestaShop Client ID',
+        false,
+        true,
+      );
+      await expect(accessTokenKeycloak.length).to.be.gt(0);
+    }
   });
 
   after(async () => {
-    const isRemoved: boolean = await keycloakHelper.removeClient(global.keycloakConfig.keycloakClientId);
-    await expect(isRemoved).to.be.true;
+    if (!global.GENERATE_FAILED_STEPS) {
+      const isRemoved: boolean = await keycloakHelper.removeClient(global.keycloakConfig.keycloakClientId);
+      await expect(isRemoved).to.be.true;
+    }
   });
 
   describe('Authorization Endpoint', async () => {

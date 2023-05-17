@@ -137,7 +137,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       }
 
       it('should go to \'Shop Parameters > Contact\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${arg.extOriginal}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToContactPage${arg.extOriginal}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -298,7 +298,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         });
 
         it('should go to \'Shop Parameters > Contact\' page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${arg.extension}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToContactPage${arg.extension}ForRemoval`, baseContext);
 
           await dashboardPage.goToSubMenu(
             page,
@@ -312,7 +312,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         });
 
         it('should go to \'Stores\' tab', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToStoresTab${arg.extension}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToStoresTab${arg.extension}ForRemoval`, baseContext);
 
           await contactPage.goToStoresPage(page);
 
@@ -322,7 +322,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       }
 
       it('should filter list by name', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `filterForDelete${arg.extension}`, baseContext);
 
         await storesPage.resetFilter(page);
         await storesPage.filterTable(page, 'input', 'sl!name', arg.store.name);
@@ -332,7 +332,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       });
 
       it('should delete store', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'deleteStore', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `deleteStore${arg.extension}`, baseContext);
 
         const textResult = await storesPage.deleteStore(page, 1);
         await expect(textResult).to.contains(storesPage.successfulDeleteMessage);

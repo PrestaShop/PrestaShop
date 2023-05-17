@@ -7,7 +7,7 @@ import type {APIRequestContext} from 'playwright';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_internalAuthServer_authorizationEndpoint';
 
-describe('API : Authorization Endpoint', async () => {
+describe('API : Internal Auth Server - Authorization Endpoint', async () => {
   let apiContext: APIRequestContext;
 
   before(async () => {

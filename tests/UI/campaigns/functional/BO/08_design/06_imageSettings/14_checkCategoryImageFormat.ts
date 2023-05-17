@@ -157,12 +157,13 @@ describe('BO - Design - Image Settings - Check category image format', async () 
       extImageType: 'jpg',
     },
   ].forEach((arg: {category: CategoryData, extOriginal: string, extGenerated: string, extImageType: string}, index: number) => {
+    const argExtension: string = index === 2 ? arg.extGenerated : arg.extOriginal;
     describe(
-      `Image Generation - Category - Image Format : ${(index === 2 ? arg.extGenerated : arg.extOriginal).toUpperCase()}`,
+      `Image Generation - Category - Image Format : ${argExtension.toUpperCase()}`,
       async () => {
         if (index) {
           it('should go to BO', async function () {
-            await testContext.addContextItem(this, 'testIdentifier', `goToBoProducts${arg.extOriginal}`, baseContext);
+            await testContext.addContextItem(this, 'testIdentifier', `goToBoProducts${argExtension}`, baseContext);
 
             page = await categoryPage.closePage(browserContext, page, 0);
             await categoryPage.goToBO(page);
@@ -173,7 +174,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         }
 
         it('should go to \'Catalog > Categories\' page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToCategoriesPage${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToCategoriesPage${argExtension}`, baseContext);
 
           await dashboardPage.goToSubMenu(
             page,
@@ -188,7 +189,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         });
 
         it('should click on \'Add new category\' button', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `clickOnNewCategoryButton${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `clickOnNewCategoryButton${argExtension}`, baseContext);
 
           await categoriesPage.goToAddNewCategoryPage(page);
 
@@ -197,7 +198,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         });
 
         it('should create category', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `createCategory${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `createCategory${argExtension}`, baseContext);
 
           await addCategoryPage.closeSfToolBar(page);
 
@@ -206,7 +207,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         });
 
         it('should search for the new category and fetch the ID', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `searchCreatedCategory${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `searchCreatedCategory${argExtension}`, baseContext);
 
           await categoriesPage.resetFilter(page);
           await categoriesPage.filterCategories(
@@ -223,7 +224,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         });
 
         it('should check that images are generated', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `checkCategoryImages${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `checkCategoryImages${argExtension}`, baseContext);
 
           // Check the original image file
           const pathImageJPG: string = `${files.getRootPath()}/img/c/${idCategory}.jpg`;
@@ -299,7 +300,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         });
 
         it('should go to FO page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToFo${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToFo${argExtension}`, baseContext);
 
           page = await addCategoryPage.viewMyShop(page);
           await homePage.changeLanguage(page, 'en');
@@ -309,7 +310,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         });
 
         it('should go to all products page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToFoAllProducts${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToFoAllProducts${argExtension}`, baseContext);
 
           await homePage.goToAllProductsPage(page);
 
@@ -318,7 +319,7 @@ describe('BO - Design - Image Settings - Check category image format', async () 
         });
 
         it('should check that the main image of the quick view is a WebP', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${arg.extOriginal}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${argExtension}`, baseContext);
 
           const categoryImage = await categoryPage.getCategoryImageMain(page, arg.category.name);
           await expect(categoryImage).to.be.not.null;
