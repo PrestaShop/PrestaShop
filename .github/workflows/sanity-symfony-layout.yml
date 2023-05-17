@@ -50,7 +50,7 @@ jobs:
 
       - name: Display dev logs
         if: ${{ always() }}
-        run: cat var/logs/dev/*.log
+        run: cat var/logs/*.log
 
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
