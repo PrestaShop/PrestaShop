@@ -3,7 +3,6 @@ admin_common_notifications:
   methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAction'
-    _legacy_controller: AdminCommon
     _legacy_link: AdminCommon
   options:
     expose: true

@@ -157,6 +157,8 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
+     * @AdminSecurity("is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -177,10 +179,8 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_INSTALL:
                 $deniedAccess = $this->checkPermission(PageVoter::CREATE);
                 break;
-            case ModuleAdapter::ACTION_UNINSTALL:
-                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
-                break;
             case ModuleAdapter::ACTION_DELETE:
+            case ModuleAdapter::ACTION_UNINSTALL:
                 $deniedAccess = $this->checkPermission(PageVoter::DELETE);
                 break;
 
@@ -295,6 +295,8 @@ class ModuleController extends ModuleAbstractController
 
     /**
      * Controller responsible for importing new module from DropFile zone in BO.
+     *
+     * @AdminSecurity("is_granted('create', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *

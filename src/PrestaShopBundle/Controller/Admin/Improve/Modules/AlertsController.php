@@ -51,6 +51,8 @@ class AlertsController extends ModuleAbstractController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @return JsonResponse with number of modules having at least one notification
      */
     public function notificationsCountAction()

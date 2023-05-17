@@ -104,6 +104,14 @@ class CountryController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $countryId
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function editAction(int $countryId, Request $request): Response
     {
         //todo: complete edit action migration to symfony

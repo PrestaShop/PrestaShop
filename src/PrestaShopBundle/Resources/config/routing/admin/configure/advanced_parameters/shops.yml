@@ -3,5 +3,6 @@ admin_shops_search:
   methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::searchAction'
+    _legacy_controller: AdminAdvancedParameters
   options:
     expose: true

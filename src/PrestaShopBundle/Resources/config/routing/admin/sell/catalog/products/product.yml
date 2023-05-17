@@ -4,6 +4,7 @@ admin_product_new:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\ProductController::newAction
+    _legacy_controller: AdminProducts
 
 admin_product_form:
   path: /{id}
@@ -23,6 +24,7 @@ admin_product_virtual_save_action:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::saveAction
+    _legacy_controller: AdminProducts
     idProduct: 0
   requirements:
     idProduct: \d+
@@ -31,6 +33,7 @@ admin_product_virtual_remove_file_action:
   path: /virtual/remove-file/{idProduct}
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeFileAction
+    _legacy_controller: AdminProducts
     idProduct: 0
   requirements:
     idProduct: \d+
@@ -39,6 +42,7 @@ admin_product_virtual_download_file_action:
   path: /virtual/download-file/{idProduct}
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::downloadFileAction
+    _legacy_controller: AdminProducts
     idProduct: 0
   requirements:
     idProduct: \d+
@@ -47,6 +51,7 @@ admin_product_virtual_remove_action:
   path: /virtual/remove/{idProduct}
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeAction
+    _legacy_controller: AdminProducts
     idProduct: 0
   requirements:
     idProduct: \d+
@@ -56,6 +61,7 @@ admin_product_attachement_add_action:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\AttachementProductController::addAction
+    _legacy_controller: AdminProducts
     idProduct: 0
   requirements:
     idProduct: \d+
@@ -65,6 +71,7 @@ admin_product_image_upload:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\ProductImageController::uploadImageAction
+    _legacy_controller: AdminProducts
     idProduct: 0
   requirements:
     idProduct: \d+
@@ -74,11 +81,13 @@ admin_product_image_positions:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\ProductImageController::updateImagePositionAction
+    _legacy_controller: AdminProducts
 
 admin_product_image_form:
   path: image/form/{idImage}
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\ProductImageController::formAction
+    _legacy_controller: AdminProducts
     idImage: 0
   requirements:
     idImage: \d+
@@ -87,6 +96,7 @@ admin_product_image_delete:
   path: /image/delete/{idImage}
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\ProductImageController::deleteAction
+    _legacy_controller: AdminProducts
     idImage: 0
   requirements:
     idImage: \d+

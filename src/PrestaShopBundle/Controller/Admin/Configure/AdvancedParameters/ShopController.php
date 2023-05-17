@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,6 +42,8 @@ class ShopController extends FrameworkBundleAdminController
 {
     /**
      * Search for shops by query.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
      * @param string $searchTerm
      *

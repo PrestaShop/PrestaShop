@@ -315,6 +315,7 @@ class EmployeeController extends FrameworkBundleAdminController
      * Show Employee edit page.
      *
      * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $employeeId
      * @param Request $request
@@ -401,6 +402,8 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Change navigation menu status for employee.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return Response
@@ -415,6 +418,8 @@ class EmployeeController extends FrameworkBundleAdminController
 
     /**
      * Change employee form language.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

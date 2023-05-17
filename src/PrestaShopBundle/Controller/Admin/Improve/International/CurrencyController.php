@@ -388,6 +388,8 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Handles ajax request which updates live exchange rates.
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
