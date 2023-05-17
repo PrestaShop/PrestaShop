@@ -133,3 +133,17 @@ runs:
       shell: bash
       run: |
         sudo runuser -g www-data -u www-data -- php ./bin/console prestashop:feature-flag enable symfony_layout
+
+    - name: Clear and warmup cache for dev mode
+      if: inputs.ps-dev-mode == 'true'
+      shell: bash
+      run: |
+        sudo runuser -g www-data -u www-data -- php -d memory_limit=-1 ./bin/console cache:clear --env=dev
+        sudo runuser -g www-data -u www-data -- php -d memory_limit=-1 ./bin/console cache:warmup --env=dev
+
+    - name: Clear and warmup cache for prod mode
+      if: inputs.ps-dev-mode == 'false'
+      shell: bash
+      run: |
+        sudo runuser -g www-data -u www-data -- php -d memory_limit=-1 ./bin/console cache:clear --env=prod
+        sudo runuser -g www-data -u www-data -- php -d memory_limit=-1 ./bin/console cache:warmup --env=prod
