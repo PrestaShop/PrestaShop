@@ -75,16 +75,16 @@ class CountryChoiceType extends AbstractType
         ]);
 
         $resolver->addNormalizer('choices', function (Options $options) {
-            $currencies = $this->countriesChoiceProvider->getChoices();
+            $countries = $this->countriesChoiceProvider->getChoices();
 
             if ($options['add_all_countries_option']) {
                 return array_merge(
                     [$this->translator->trans('All countries', [], 'Admin.Global') => 0],
-                    $currencies
+                    $countries
                 );
             }
 
-            return $currencies;
+            return $countries;
         });
 
         $resolver
