@@ -197,7 +197,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should request the endpoint /api/countries/{id} with method GET', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGet', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGetAfterPost', baseContext);
 
         const apiResponse = await apiContext.get(`api/countries/${countryNodeID}`, {
           headers: {
@@ -252,7 +252,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should go to \'Countries\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPagePost', baseContext);
 
         await zonesPage.goToSubTabCountries(page);
 
@@ -261,7 +261,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should filter country by ID', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPost', baseContext);
 
         // Filter
         await countriesPage.resetFilter(page);
@@ -276,7 +276,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should go to edit country page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPageAfterPost', baseContext);
 
         await countriesPage.goToEditCountryPage(page, 1);
 
@@ -285,7 +285,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should check all values', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkEditCountryValues', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'checkEditCountryValuesAfterPost', baseContext);
 
         const xmlValueIDZone = ws.getWSNodeValue(xmlCreate, '/prestashop/country/id_zone');
         const valueIDZone = await addCountryPage.getSelectValue(page, 'id_zone');
@@ -333,7 +333,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should go to \'Countries\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPagePostReset', baseContext);
 
         await zonesPage.goToSubTabCountries(page);
 
@@ -342,7 +342,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPost', baseContext);
 
         const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCountries).to.be.above(0);
@@ -351,7 +351,7 @@ describe('WS - Countries : CRUD', async () => {
 
     describe('Endpoint : /api/countries - Method : PUT ', () => {
       it('should request the endpoint /api/countries/{id} with method PUT', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesMethodPost', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesMethodPut', baseContext);
 
         const apiResponse = await apiContext.put(`api/countries/${countryNodeID}`, {
           headers: {
@@ -374,7 +374,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should request the endpoint /api/countries/{id} with method GET', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGet', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGetAfterPut', baseContext);
 
         const apiResponse = await apiContext.get(`api/countries/${countryNodeID}`, {
           headers: {
@@ -417,7 +417,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should filter country by ID', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterPut', baseContext);
 
         // Filter
         await countriesPage.resetFilter(page);
@@ -491,7 +491,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should go to \'Countries\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPagePutReset', baseContext);
 
         await zonesPage.goToSubTabCountries(page);
 
@@ -500,7 +500,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirstAfterPut', baseContext);
 
         const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCountries).to.be.above(0);
@@ -509,7 +509,7 @@ describe('WS - Countries : CRUD', async () => {
 
     describe('Endpoint : /api/countries - Method : DELETE ', () => {
       it('should request the endpoint /api/countries/{id} with method DELETE', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesMethodPost', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesMethodDelete', baseContext);
 
         const apiResponse = await apiContext.delete(`api/countries/${countryNodeID}`, {
           headers: {
@@ -520,7 +520,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should request the endpoint /api/countries/{id} with method GET', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGet', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointCountriesIdMethodGetAfterDelete', baseContext);
 
         const apiResponse = await apiContext.get(`api/countries/${countryNodeID}`, {
           headers: {
@@ -531,7 +531,7 @@ describe('WS - Countries : CRUD', async () => {
       });
 
       it('should filter country by ID', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAfterDelete', baseContext);
 
         // Filter
         await countriesPage.resetFilter(page);

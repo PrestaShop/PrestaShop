@@ -7,7 +7,7 @@ import type {APIRequestContext} from 'playwright';
 
 const baseContext: string = 'functional_API_clientCredentialGrantFlow_internalAuthServer_resourceEndpoint';
 
-describe('API : Resource Endpoint', async () => {
+describe('API : Internal Auth Server - Resource Endpoint', async () => {
   let apiContext: APIRequestContext;
   let accessToken: string;
   let accessTokenExpired: string;
@@ -61,7 +61,7 @@ describe('API : Resource Endpoint', async () => {
     });
 
     it('should request the endpoint /admin-dev/new-api/hook-status/1 with expired access token', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithExpiredAccessToken', baseContext);
 
       const apiResponse = await apiContext.get('new-api/hook-status/1', {
         headers: {

@@ -12,7 +12,7 @@ import performancePage from '@pages/BO/advancedParameters/performance';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_performance_enableDisableDebugMode';
+const baseContext: string = 'functional_BO_advancedParameters_performance_debugMode';
 
 /*
 Enable/Disable debug mode

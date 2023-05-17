@@ -182,5 +182,5 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   });
 
   // POST-condition : Delete created features
-  bulkDeleteFeaturesTest('toDelete', baseContext);
+  bulkDeleteFeaturesTest('toDelete', `${baseContext}_postTest_1`);
 });

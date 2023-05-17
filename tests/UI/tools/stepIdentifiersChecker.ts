@@ -121,7 +121,7 @@ const checkDoubles = (jsonFile: string): boolean => {
   });
 
   if (contextDoubles.length !== 0) {
-    console.error(`Some test identifiers (${contextDoubles.length}) must be fixed:\n - ${
+    console.error(`Some test identifiers (${contextDoubles.length}) must be fixed (in double):\n - ${
       contextDoubles.join('\n - ')}`);
     return false;
   }
