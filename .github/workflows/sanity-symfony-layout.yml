@@ -48,6 +48,10 @@ jobs:
         env:
           ENABLE_SSL: true
 
+      - name: Display dev logs
+        if: ${{ always() }}
+        run: cat var/logs/dev/*.log
+
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
