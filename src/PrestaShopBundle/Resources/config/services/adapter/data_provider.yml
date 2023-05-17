@@ -111,7 +111,6 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.core.addon.theme.repository'
-      - "%prestashop.addons.categories%"
 
   prestashop.categories_provider:
     lazy: true

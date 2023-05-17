@@ -41,14 +41,9 @@ class PrestaShopExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new AddOnsConfiguration();
-        $config = $this->processConfiguration($configuration, $configs);
-
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $env = $container->getParameter('kernel.environment');
         $loader->load('services_' . $env . '.yml');
-
-        $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
     }
 
     /**
