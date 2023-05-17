@@ -10,31 +10,31 @@ Feature: Cart rule application is validated before it is applied to cart
     And country "US" is enabled
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                            | cartrule1              |
-      | total_quantity                         | 1000                   |
-      | quantity_per_user                      | 1000                   |
-      | free_shipping                          | false                  |
-      | code                                   | foo1                   |
-      | reduction_percentage                   | 50                     |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | cartrule1              |
+      | total_quantity               | 1000                   |
+      | quantity_per_user            | 1000                   |
+      | free_shipping                | false                  |
+      | code                         | foo1                   |
+      | discount_percentage          | 50                     |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
     And I create cart rule "cart_rule_2" with following properties:
-      | name[en-US]                            | cartrule2              |
-      | total_quantity                         | 10                     |
-      | quantity_per_user                      | 10                     |
-      | free_shipping                          | false                  |
-      | code                                   | foo2                   |
-      | reduction_amount                       | 10                     |
-      | reduction_currency                     | usd                    |
-      | reduction_tax                          | false                  |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | cartrule2              |
+      | total_quantity               | 10                     |
+      | quantity_per_user            | 10                     |
+      | free_shipping                | false                  |
+      | code                         | foo2                   |
+      | discount_amount              | 10                     |
+      | discount_currency            | usd                    |
+      | discount_includes_tax        | false                  |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
     And I create cart rule "cart_rule_3" with following properties:
-      | name[en-US]       | cartrule3              |
-      | total_quantity    | 10                     |
-      | quantity_per_user | 10                     |
-      | free_shipping     | true                   |
-      | code              | foo3                   |
+      | name[en-US]       | cartrule3 |
+      | total_quantity    | 10        |
+      | quantity_per_user | 10        |
+      | free_shipping     | true      |
+      | code              | foo3      |
 
   Scenario: Adding a cart rule to an empty cart should not be possible
     Given I have an empty default cart

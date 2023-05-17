@@ -177,11 +177,11 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
                 'Unexpected partial use'
             );
         }
-        if (isset($data['enabled'])) {
+        if (isset($data['active'])) {
             Assert::assertSame(
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
                 $information->isEnabled(),
-                'Unexpected enabled property'
+                'Unexpected active property'
             );
         }
         if (isset($data['code'])) {
@@ -263,40 +263,48 @@ class CartRuleAssertionFeatureContext extends AbstractCartRuleFeatureContext
             );
         }
 
-        if (isset($data['reduction_percentage'])) {
+        if (isset($data['discount_percentage'])) {
             Assert::assertTrue(
-                $actions->getReduction()->getPercent()->equals(new DecimalNumber($data['reduction_percentage'])),
-                'Unexpected reduction_percentage'
+                $actions->getReduction()->getPercent()->equals(new DecimalNumber($data['discount_percentage'])),
+                'Unexpected discount_percentage'
             );
         }
 
-        if (isset($data['reduction_amount'])) {
+        if (isset($data['discount_amount'])) {
             Assert::assertTrue(
-                $actions->getReduction()->getAmount()->equals(new DecimalNumber($data['reduction_amount'])),
-                'Unexpected reduction_amount'
+                $actions->getReduction()->getAmount()->equals(new DecimalNumber($data['discount_amount'])),
+                'Unexpected discount_amount'
             );
         }
 
-        if (isset($data['reduction_currency'])) {
-            if ($data['reduction_currency'] === '') {
+        if (isset($data['discount_currency'])) {
+            if ($data['discount_currency'] === '') {
                 Assert::assertNull(
                     $actions->getReduction()->getCurrencyId(),
-                    'Unexpected reduction_currency'
+                    'Unexpected discount_currency'
                 );
             } else {
                 Assert::assertSame(
-                    $this->getSharedStorage()->get($data['reduction_currency']),
+                    $this->getSharedStorage()->get($data['discount_currency']),
                     $actions->getReduction()->getCurrencyId(),
-                    'Unexpected reduction_currency'
+                    'Unexpected discount_currency'
                 );
             }
         }
 
-        if (isset($data['reduction_apply_to_discounted_products'])) {
+        if (isset($data['discount_includes_tax'])) {
             Assert::assertSame(
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['discount_includes_tax']),
+                $actions->getReduction()->isTax(),
+                'Unexpected discount_includes_tax'
+            );
+        }
+
+        if (isset($data['apply_to_discounted_products'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['apply_to_discounted_products']),
                 $actions->getReduction()->applyToDiscountedProducts(),
-                'Unexpected reduction_apply_to_discounted_products'
+                'Unexpected apply_to_discounted_products'
             );
         }
 

@@ -21,47 +21,19 @@ Feature: Apply cart rule to cart from Back Office (BO)
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
     And I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                            | CartRule with minimum amount |
-      | description                            | CartRule with minimum amount |
-      | highlight                              | true                         |
-      | is_active                              | true                         |
-      | allow_partial_use                      | false                        |
-      | priority                               | 2                            |
-      | valid_from                             | 2019-01-01 11:05:00          |
-      | valid_to                               | 2029-12-01 00:00:00          |
-      | total_quantity                         | 10                           |
-      | quantity_per_user                      | 1                            |
-      | free_shipping                          | true                         |
-      | minimum_amount                         | 50                           |
-      | minimum_amount_currency                | usd                          |
-      | minimum_amount_tax_included            | false                        |
-      | minimum_amount_shipping_included       | true                         |
-      | code                                   | CART_RULE_MIN_AMOUNT         |
-      | reduction_amount                       | 2                            |
-      | reduction_currency                     | usd                          |
-      | reduction_tax                          | true                         |
-      | discount_application_type              | order_without_shipping       |
-    And cart rule "cart_rule_1" should have the following properties:
-      | name[en-US]                            | CartRule with minimum amount |
-      | description                            | CartRule with minimum amount |
-      | highlight                              | true                         |
-      | is_active                              | true                         |
-      | allow_partial_use                      | false                        |
-      | priority                               | 2                            |
-      | valid_from                             | 2019-01-01 11:05:00          |
-      | valid_to                               | 2029-12-01 00:00:00          |
-      | total_quantity                         | 10                           |
-      | quantity_per_user                      | 1                            |
-      | free_shipping                          | true                         |
-      | minimum_amount                         | 50                           |
-      | minimum_amount_currency                | usd                          |
-      | minimum_amount_tax_included            | false                        |
-      | minimum_amount_shipping_included       | true                         |
-      | code                                   | CART_RULE_MIN_AMOUNT         |
-      | reduction_amount                       | 2                            |
-      | reduction_currency                     | usd                          |
-      | reduction_tax                          | true                         |
-      | discount_application_type              | order_without_shipping       |
+      | name[en-US]                      | CartRule with minimum amount |
+      | description                      | CartRule with minimum amount |
+      | priority                         | 2                            |
+      | free_shipping                    | true                         |
+      | minimum_amount                   | 50                           |
+      | minimum_amount_currency          | usd                          |
+      | minimum_amount_tax_included      | false                        |
+      | minimum_amount_shipping_included | true                         |
+      | code                             | CART_RULE_MIN_AMOUNT         |
+      | discount_amount                  | 2                            |
+      | discount_currency                | usd                          |
+      | discount_includes_tax            | true                         |
+      | discount_application_type        | order_without_shipping       |
     When I add 1 products "product1" to the cart "dummy_custom_cart"
     And I add 1 products "product4" to the cart "dummy_custom_cart"
     Then cart "dummy_custom_cart" should contain 2 products

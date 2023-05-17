@@ -16,41 +16,41 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     And product "product8" is in category "Awesome"
     And product "product8" is virtual
     And I create cart rule "reduction_5_dollar" with following properties:
-      | name[en-US]                            | reduces $5             |
-      | total_quantity                         | 1000                   |
-      | quantity_per_user                      | 1000                   |
-      | priority                               | 4                      |
-      | free_shipping                          | false                  |
-      | code                                   | reduce-5               |
-      | reduction_amount                       | 5                      |
-      | reduction_currency                     | usd                    |
-      | reduction_tax                          | false                  |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | reduces $5             |
+      | total_quantity               | 1000                   |
+      | quantity_per_user            | 1000                   |
+      | priority                     | 4                      |
+      | free_shipping                | false                  |
+      | code                         | reduce-5               |
+      | discount_amount              | 5                      |
+      | discount_currency            | usd                    |
+      | discount_includes_tax        | false                  |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
     And I create cart rule "reduction_500_dollar" with following properties:
-      | name[en-US]                            | reduces $500           |
-      | total_quantity                         | 1000                   |
-      | quantity_per_user                      | 1000                   |
-      | priority                               | 5                      |
-      | free_shipping                          | false                  |
-      | code                                   | reduce-500             |
-      | reduction_amount                       | 500                    |
-      | reduction_currency                     | usd                    |
-      | reduction_tax                          | false                  |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | reduces $500           |
+      | total_quantity               | 1000                   |
+      | quantity_per_user            | 1000                   |
+      | priority                     | 5                      |
+      | free_shipping                | false                  |
+      | code                         | reduce-500             |
+      | discount_amount              | 500                    |
+      | discount_currency            | usd                    |
+      | discount_includes_tax        | false                  |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
     And I create cart rule "reduction_10_dollar" with following properties:
-      | name[en-US]                            | reduces $10            |
-      | total_quantity                         | 1000                   |
-      | quantity_per_user                      | 1000                   |
-      | priority                               | 6                      |
-      | free_shipping                          | false                  |
-      | code                                   | reduce-10              |
-      | reduction_amount                       | 10                     |
-      | reduction_currency                     | usd                    |
-      | reduction_tax                          | false                  |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | reduces $10            |
+      | total_quantity               | 1000                   |
+      | quantity_per_user            | 1000                   |
+      | priority                     | 6                      |
+      | free_shipping                | false                  |
+      | code                         | reduce-10              |
+      | discount_amount              | 10                     |
+      | discount_currency            | usd                    |
+      | discount_includes_tax        | false                  |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
 
   Scenario: one product in cart, quantity 1, one 5€ global cartRule, one 10€ global cartRule
     Given I have an empty default cart
@@ -105,16 +105,16 @@ Feature: Cart rule (amount) calculation with multiple cart rules
       | priority          | 1                      |
       | free_shipping     | true                   |
     And I create cart rule "reduce-10-restricted" with following properties:
-      | name[en-US]                            | reduce-10-restricted   |
-      | total_quantity                         | 1                      |
-      | quantity_per_user                      | 1                      |
-      | priority                               | 1                      |
-      | free_shipping                          | false                  |
-      | reduction_amount                       | 10                     |
-      | reduction_currency                     | usd                    |
-      | reduction_tax                          | false                  |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | reduce-10-restricted   |
+      | total_quantity               | 1                      |
+      | quantity_per_user            | 1                      |
+      | priority                     | 1                      |
+      | free_shipping                | false                  |
+      | discount_amount              | 10                     |
+      | discount_currency            | usd                    |
+      | discount_includes_tax        | false                  |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
     And cart rule "reduce-10-restricted" is restricted to the category "Awesome" with a quantity of 1
     And cart rule "reduce-10-restricted" is restricted to product "product8"
     When I add 1 item of product "product8" in my cart
@@ -128,16 +128,16 @@ Feature: Cart rule (amount) calculation with multiple cart rules
   Scenario: One product in my cart, one 10€ global cartRule, 2 free gifts global cartRules
     Given I have an empty default cart
     And I create cart rule "reduce-10-global" with following properties:
-      | name[en-US]                            | reduce-10-global       |
-      | total_quantity                         | 1                      |
-      | quantity_per_user                      | 1                      |
-      | priority                               | 1                      |
-      | free_shipping                          | false                  |
-      | reduction_amount                       | 10                     |
-      | reduction_currency                     | usd                    |
-      | reduction_tax                          | false                  |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | reduce-10-global       |
+      | total_quantity               | 1                      |
+      | quantity_per_user            | 1                      |
+      | priority                     | 1                      |
+      | free_shipping                | false                  |
+      | discount_amount              | 10                     |
+      | discount_currency            | usd                    |
+      | discount_includes_tax        | false                  |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
     And I create cart rule "cartrule-gift-product2" with following properties:
       | name[en-US]       | cartrule-gift-product2 |
       | total_quantity    | 1                      |
@@ -165,16 +165,16 @@ Feature: Cart rule (amount) calculation with multiple cart rules
   Scenario: One product in my cart, one 30€ global cartRule (which is superior to the product bought), 2 free gifts global cartRules
     Given I have an empty default cart
     And I create cart rule "reduce-30-global" with following properties:
-      | name[en-US]                            | reduce-30-global       |
-      | total_quantity                         | 1                      |
-      | quantity_per_user                      | 1                      |
-      | priority                               | 1                      |
-      | free_shipping                          | false                  |
-      | reduction_amount                       | 30                     |
-      | reduction_currency                     | usd                    |
-      | reduction_tax                          | false                  |
-      | reduction_apply_to_discounted_products | true                   |
-      | discount_application_type              | order_without_shipping |
+      | name[en-US]                  | reduce-30-global       |
+      | total_quantity               | 1                      |
+      | quantity_per_user            | 1                      |
+      | priority                     | 1                      |
+      | free_shipping                | false                  |
+      | discount_amount              | 30                     |
+      | discount_currency            | usd                    |
+      | discount_includes_tax        | false                  |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
     And I create cart rule "cartrule-gift-product2" with following properties:
       | name[en-US]       | cartrule-gift-product2 |
       | total_quantity    | 1                      |
@@ -203,16 +203,16 @@ Feature: Cart rule (amount) calculation with multiple cart rules
   Scenario: One product in my cart, one 30€ global cartRule (which is superior to the product bought) with free shipping, 2 free gifts global cartRules
     Given I have an empty default cart
     And I create cart rule "reduce-30-free-ship-global" with following properties:
-      | name[en-US]                            | reduce-30-free-ship-global |
-      | total_quantity                         | 1                          |
-      | quantity_per_user                      | 1                          |
-      | priority                               | 1                          |
-      | free_shipping                          | true                       |
-      | reduction_amount                       | 30                         |
-      | reduction_currency                     | usd                        |
-      | reduction_tax                          | false                      |
-      | reduction_apply_to_discounted_products | true                       |
-      | discount_application_type              | order_without_shipping     |
+      | name[en-US]                  | reduce-30-free-ship-global |
+      | total_quantity               | 1                          |
+      | quantity_per_user            | 1                          |
+      | priority                     | 1                          |
+      | free_shipping                | true                       |
+      | discount_amount              | 30                         |
+      | discount_currency            | usd                        |
+      | discount_includes_tax        | false                      |
+      | apply_to_discounted_products | true                       |
+      | discount_application_type    | order_without_shipping     |
     And I create cart rule "cartrule-gift-product2" with following properties:
       | name[en-US]       | cartrule-gift-product2 |
       | total_quantity    | 1                      |

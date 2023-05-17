@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
-use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use DateTimeImmutable;
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleActionFiller;
 use PrestaShop\PrestaShop\Adapter\CartRule\Repository\CartRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;

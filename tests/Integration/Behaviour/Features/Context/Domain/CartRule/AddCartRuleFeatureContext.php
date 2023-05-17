@@ -60,8 +60,8 @@ class AddCartRuleFeatureContext extends AbstractCartRuleFeatureContext
             if (isset($data['priority'])) {
                 $command->setPriority((int) $data['priority']);
             }
-            if (isset($data['is_active'])) {
-                $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_active']));
+            if (isset($data['active'])) {
+                $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
             }
             if (isset($data['valid_from'])) {
                 if (empty($data['valid_to'])) {

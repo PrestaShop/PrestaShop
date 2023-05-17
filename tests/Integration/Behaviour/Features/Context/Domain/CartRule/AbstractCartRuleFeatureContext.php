@@ -55,18 +55,18 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
             $formattedData['free_shipping'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
         }
 
-        if (isset($data['reduction_percentage'])) {
-            $formattedData['discount']['reduction']['value'] = $data['reduction_percentage'];
+        if (isset($data['discount_percentage'])) {
+            $formattedData['discount']['reduction']['value'] = $data['discount_percentage'];
             $formattedData['discount']['reduction']['type'] = Reduction::TYPE_PERCENTAGE;
-            $formattedData['discount']['apply_to_discounted_products'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_apply_to_discounted_products']);
+            $formattedData['discount']['apply_to_discounted_products'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['apply_to_discounted_products']);
         }
 
-        if (isset($data['reduction_amount'])) {
+        if (isset($data['discount_amount'])) {
             $formattedData['discount']['reduction'] = [
-                'value' => $data['reduction_amount'],
+                'value' => $data['discount_amount'],
                 'type' => Reduction::TYPE_AMOUNT,
-                'currency' => $this->getSharedStorage()->get($data['reduction_currency']),
-                'include_tax' => PrimitiveUtils::castStringBooleanIntoBoolean($data['reduction_tax']),
+                'currency' => $this->getSharedStorage()->get($data['discount_currency']),
+                'include_tax' => PrimitiveUtils::castStringBooleanIntoBoolean($data['discount_includes_tax']),
             ];
         }
 

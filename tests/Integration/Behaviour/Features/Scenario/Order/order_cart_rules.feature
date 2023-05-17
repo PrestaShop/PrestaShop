@@ -801,35 +801,6 @@ Feature: Order from Back Office (BO)
     ## Create a new cart rule
     And I create cart rule "cart_rule_1" with following properties:
       | name[en-US]                            | Cart Rule 50% which excludes discounted products and applies to cheapest product |
-      | description                            | None                                                                             |
-      | highlight                              | true                                                                             |
-      | is_active                              | true                                                                             |
-      | allow_partial_use                      | false                                                                            |
-      | priority                               | 1                                                                                |
-      | valid_from                             | 2019-01-01 11:00:00                                                              |
-      | valid_to                               | 2040-01-01 12:00:00                                                              |
-      | total_quantity                         | 100                                                                              |
-      | quantity_per_user                      | 100                                                                              |
-      | free_shipping                          | false                                                                            |
-      | minimum_amount                         |                                                                                  |
-      | code                                   |                                                                                  |
-      | reduction_percentage                   | 50                                                                               |
-      | reduction_apply_to_discounted_products | false                                                                            |
-      | discount_application_type              | cheapest_product                                                                 |
-    And cart rule "cart_rule_1" should have the following properties:
-      | name[en-US]                            | Cart Rule 50% which excludes discounted products and applies to cheapest product |
-      | description                            | None                                                                             |
-      | highlight                              | true                                                                             |
-      | is_active                              | true                                                                             |
-      | allow_partial_use                      | false                                                                            |
-      | priority                               | 1                                                                                |
-      | valid_from                             | 2019-01-01 11:00:00                                                              |
-      | valid_to                               | 2040-01-01 12:00:00                                                              |
-      | total_quantity                         | 100                                                                              |
-      | quantity_per_user                      | 100                                                                              |
-      | free_shipping                          | false                                                                            |
-      | minimum_amount                         |                                                                                  |
-      | code                                   |                                                                                  |
       | reduction_percentage                   | 50                                                                               |
       | reduction_apply_to_discounted_products | false                                                                            |
       | discount_application_type              | cheapest_product                                                                 |
