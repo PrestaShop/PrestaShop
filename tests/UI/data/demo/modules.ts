@@ -21,6 +21,10 @@ export default {
     tag: 'statsstock',
     name: 'Available quantities',
   }),
+  mainMenu: new ModuleData({
+    tag: 'ps_mainmenu',
+    name: 'Main menu',
+  }),
   keycloak: new ModuleData({
     tag: 'keycloak_connector_demo',
     name: 'Keycloak OAuth2 connector demo',
