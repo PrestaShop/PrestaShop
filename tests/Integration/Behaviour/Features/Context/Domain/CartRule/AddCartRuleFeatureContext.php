@@ -31,9 +31,7 @@ use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
-use PrestaShopDatabaseException;
-use PrestaShopException;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class AddCartRuleFeatureContext extends AbstractCartRuleFeatureContext
@@ -43,11 +41,6 @@ class AddCartRuleFeatureContext extends AbstractCartRuleFeatureContext
      *
      * @param string $cartRuleReference
      * @param TableNode $node
-     *
-     * @throws CartRuleConstraintException
-     * @throws DomainConstraintException
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
      */
     public function createCartRuleWithReference(string $cartRuleReference, TableNode $node): void
     {
@@ -55,17 +48,36 @@ class AddCartRuleFeatureContext extends AbstractCartRuleFeatureContext
         try {
             $command = new AddCartRuleCommand(
                 $data['name'],
-                isset($data['highlight']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']),
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']),
-                (int) $data['priority'],
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['is_active']),
-                new DateTime($data['valid_from']),
-                new DateTime($data['valid_to']),
-                $data['total_quantity'],
-                $data['quantity_per_user'],
                 $this->getCartRuleActionBuilder()->build($this->formatDataForActionBuilder($data))
             );
 
+            if (isset($data['highlight'])) {
+                $command->setHighlightInCart(PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']));
+            }
+            if (isset($data['allow_partial_use'])) {
+                $command->setAllowPartialUse(PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']));
+            }
+            if (isset($data['priority'])) {
+                $command->setPriority((int) $data['priority']);
+            }
+            if (isset($data['is_active'])) {
+                $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_active']));
+            }
+            if (isset($data['valid_from'])) {
+                if (empty($data['valid_to'])) {
+                    throw new RuntimeException('When setting cart rule range "valid_from" and "valid_to" must be provided');
+                }
+                $command->setValidDateRange(
+                    new DateTime($data['valid_from']),
+                    new DateTime($data['valid_to']),
+                );
+            }
+            if (isset($data['total_quantity'])) {
+                $command->setTotalQuantity((int) $data['total_quantity']);
+            }
+            if (isset($data['quantity_per_user'])) {
+                $command->setQuantityPerUser((int) $data['quantity_per_user']);
+            }
             if (!empty($data['minimum_amount'])) {
                 $currencyId = $this->getSharedStorage()->get($data['minimum_amount_currency']);
                 $command->setMinimumAmount(
