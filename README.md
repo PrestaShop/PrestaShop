@@ -1,3 +1,4 @@
+Peace be upon you
 About PrestaShop
 --------
 
