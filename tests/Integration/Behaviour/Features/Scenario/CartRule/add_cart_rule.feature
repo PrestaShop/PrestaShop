@@ -58,7 +58,7 @@ Feature: Add cart rule
       | discount_application_type        | order_without_shipping |
 
   Scenario: Create a cart rule with percentage discount
-    When I create cart rule "cart_rule_1" with following properties:
+    When I create cart rule "cart_rule_2" with following properties:
       | name[en-US]                      | 50% off promo                           |
       | description                      | Discount for whole catalog for one hour |
       | highlight                        | true                                    |
@@ -78,7 +78,7 @@ Feature: Add cart rule
       | discount_percentage              | 50                                      |
       | apply_to_discounted_products     | false                                   |
       | discount_application_type        | cheapest_product                        |
-    And cart rule "cart_rule_1" should have the following properties:
+    And cart rule "cart_rule_2" should have the following properties:
       | name[en-US]                      | 50% off promo                           |
       | description                      | Discount for whole catalog for one hour |
       | highlight                        | true                                    |
@@ -100,8 +100,8 @@ Feature: Add cart rule
       | discount_application_type        | cheapest_product                        |
 
   Scenario: Create and enable cart rule
-    When I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                      | Cart Rule 1         |
+    When I create cart rule "cart_rule_3" with following properties:
+      | name[en-US]                      | Cart Rule 3         |
       | highlight                        | true                |
       | active                           | false               |
       | allow_partial_use                | true                |
@@ -116,12 +116,12 @@ Feature: Add cart rule
       | minimum_amount_currency          | usd                 |
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
-    When I enable cart rule with reference "cart_rule_1"
-    Then Cart rule with reference "cart_rule_1" is enabled
+    When I enable cart rule with reference "cart_rule_3"
+    Then cart rule with reference "cart_rule_3" is enabled
 
   Scenario: I should not be able to create cart rule with already existing code
-    Given I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]       | Cart Rule 1         |
+    Given I create cart rule "cart_rule_4" with following properties:
+      | name[en-US]       | Cart Rule 4         |
       | highlight         | true                |
       | active            | true                |
       | allow_partial_use | true                |
@@ -133,10 +133,10 @@ Feature: Add cart rule
       | quantity_per_user | 2                   |
       | free_shipping     | true                |
       | code              | testcode1           |
-    And cart rule cart_rule_1 should have the following properties:
+    And cart rule cart_rule_4 should have the following properties:
       | is_active | testcode1 |
-    When I create cart rule "cart_rule_2" with following properties:
-      | name[en-US]       | Cart Rule 2         |
+    When I create cart rule "cart_rule_5" with following properties:
+      | name[en-US]       | Cart Rule 5         |
       | highlight         | true                |
       | active            | true                |
       | allow_partial_use | true                |

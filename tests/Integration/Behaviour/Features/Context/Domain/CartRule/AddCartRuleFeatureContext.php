@@ -27,80 +27,38 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
 use Behat\Gherkin\Node\TableNode;
-use DateTime;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
-use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 
 class AddCartRuleFeatureContext extends AbstractCartRuleFeatureContext
 {
     /**
      * @When I create cart rule :cartRuleReference with following properties:
+     * @When there is a cart rule :cartRuleReference with following properties:
      *
      * @param string $cartRuleReference
      * @param TableNode $node
      */
-    public function createCartRuleWithReference(string $cartRuleReference, TableNode $node): void
+    public function createCartRuleIfNotExists(string $cartRuleReference, TableNode $node): void
     {
         $data = $this->localizeByRows($node);
+
+        if ($this->getSharedStorage()->exists($cartRuleReference)) {
+            try {
+                // if cart rule already exists we assert all its expected properties
+                $this->assertCartRuleProperties(
+                    $this->getCartRuleForEditing($this->getSharedStorage()->get($cartRuleReference)),
+                    $data
+                );
+
+                return;
+            } catch (CartRuleNotFoundException $e) {
+                // if cart rule was not found we proceed to create it under this reference.
+            }
+        }
+
         try {
-            $command = new AddCartRuleCommand(
-                $data['name'],
-                $this->getCartRuleActionBuilder()->build($this->formatDataForActionBuilder($data))
-            );
-
-            if (isset($data['highlight'])) {
-                $command->setHighlightInCart(PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']));
-            }
-            if (isset($data['allow_partial_use'])) {
-                $command->setAllowPartialUse(PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']));
-            }
-            if (isset($data['priority'])) {
-                $command->setPriority((int) $data['priority']);
-            }
-            if (isset($data['active'])) {
-                $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
-            }
-            if (isset($data['valid_from'])) {
-                if (empty($data['valid_to'])) {
-                    throw new RuntimeException('When setting cart rule range "valid_from" and "valid_to" must be provided');
-                }
-                $command->setValidDateRange(
-                    new DateTime($data['valid_from']),
-                    new DateTime($data['valid_to']),
-                );
-            }
-            if (isset($data['total_quantity'])) {
-                $command->setTotalQuantity((int) $data['total_quantity']);
-            }
-            if (isset($data['quantity_per_user'])) {
-                $command->setQuantityPerUser((int) $data['quantity_per_user']);
-            }
-            if (!empty($data['minimum_amount'])) {
-                $currencyId = $this->getSharedStorage()->get($data['minimum_amount_currency']);
-                $command->setMinimumAmount(
-                    $data['minimum_amount'],
-                    $currencyId,
-                    PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
-                    PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
-                );
-            }
-
-            $command->setDescription($data['description'] ?? '');
-            if (!empty($data['code'])) {
-                $command->setCode($data['code']);
-            }
-
-            /** @var CartRuleId $cartRuleId */
-            $cartRuleId = $this->getCommandBus()->handle($command);
-            $this->getSharedStorage()->set($cartRuleReference, $cartRuleId->getValue());
-
-            if (!empty($data['code'])) {
-                // set cart rule id by code when it is not empty
-                $this->getSharedStorage()->set($data['code'], $cartRuleId->getValue());
-            }
+            $this->createCartRuleWithReference($cartRuleReference, $data);
         } catch (CartRuleConstraintException $e) {
             $this->setLastException($e);
         }

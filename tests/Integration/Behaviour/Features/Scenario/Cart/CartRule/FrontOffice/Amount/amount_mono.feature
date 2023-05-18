@@ -11,7 +11,7 @@ Feature: Cart rule (amount) calculation with one cart rule
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
-    And I create cart rule "reduction_5_dollar" with following properties:
+    And there is a cart rule "reduction_5_dollar" with following properties:
       | name[en-US]                  | reduces $5             |
       | total_quantity               | 1000                   |
       | quantity_per_user            | 1000                   |
@@ -23,7 +23,7 @@ Feature: Cart rule (amount) calculation with one cart rule
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
-    And I create cart rule "reduction_500_dollar" with following properties:
+    And there is a cart rule "reduction_500_dollar" with following properties:
       | name[en-US]                  | reduces $500           |
       | total_quantity               | 1000                   |
       | quantity_per_user            | 1000                   |
@@ -46,7 +46,6 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then my cart total should be 21.812 tax included
     Then my cart total using previous calculation method should be 21.812 tax included
 
-  @restore-cart-rules-before-scenario
   Scenario: one product in cart, quantity 1, one 500€ global cartRule
     Given I have an empty default cart
     And I add 1 items of product "product1" in my cart
@@ -55,7 +54,6 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then my cart total should be 7.0 tax included
     And my cart total using previous calculation method should be 7.0 tax included
 
-  @restore-cart-rules-before-scenario
   Scenario: one product in cart, quantity 3, one 5€ global cartRule
     Given I have an empty default cart
     And I add 3 items of product "product1" in my cart
@@ -63,7 +61,6 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then my cart total should be 61.436 tax included
     And my cart total using previous calculation method should be 61.436 tax included
 
-  @restore-cart-rules-before-scenario
   Scenario: 3 products in cart, several quantities, one 5€ global cartRule (reduced product at first place)
     Given I have an empty default cart
     And I add 2 items of product "product2" in my cart
@@ -76,7 +73,6 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then my cart total should be 157.4 tax included
     And my cart total using previous calculation method should be 157.4 tax included
 
-  @restore-cart-rules-before-scenario
   Scenario: 3 products in cart, several quantities, one 5€ global cartRule (reduced product at second place)
     Given I have an empty default cart
     And I add 3 items of product "product1" in my cart
@@ -89,7 +85,6 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then my cart total should be 157.4 tax included
     And my cart total using previous calculation method should be 157.4 tax included
 
-  @restore-cart-rules-before-scenario
   Scenario: 3 products in cart, several quantities, one 500€ global cartRule
     Given I have an empty default cart
     And I add 3 items of product "product1" in my cart

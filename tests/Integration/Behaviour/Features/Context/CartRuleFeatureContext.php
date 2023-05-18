@@ -40,7 +40,6 @@ use Order;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use RuntimeException;
-use Tests\Resources\DatabaseDump;
 use Validate;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
@@ -625,29 +624,6 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         if ($result != $expectedErrorMessage) {
             throw new \RuntimeException(sprintf('Expects "usage limit reached" error message, got %s instead', $result));
         }
-    }
-
-    /**
-     * @BeforeScenario @restore-cart-rules-before-scenario
-     *
-     * @return void
-     */
-    public static function restoreCartRules(): void
-    {
-        DatabaseDump::restoreTables(['cart_rule', 'cart_rule_shop']);
-        DatabaseDump::restoreTables([
-            'cart_rule',
-            'cart_rule_shop',
-            'cart_rule_lang',
-            'cart_cart_rule',
-            'cart_rule_carrier',
-            'cart_rule_combination',
-            'cart_rule_country',
-            'cart_rule_group',
-            'cart_rule_product_rule',
-            'cart_rule_product_rule_group',
-            'cart_rule_product_rule_value',
-        ]);
     }
 
     /**

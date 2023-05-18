@@ -46,6 +46,7 @@ Feature: Add cart rule
       | discount_currency | usd                 |
       | code              |                     |
 
+  @restore-cart-rules-after-scenario
   Scenario: I edit cart rule and change various properties
     When I edit cart rule cart_rule_1 with following properties:
       | name[en-US]                      | cart rule 1 edited  |
@@ -89,6 +90,7 @@ Feature: Add cart rule
     And cart rule "cart_rule_1" should have the following properties:
       | free_shipping | true |
 
+  @restore-cart-rules-after-scenario
   Scenario: I edit cart rule by adding amount discount action.
     When I edit cart rule cart_rule_1 with following properties:
       | free_shipping             | true                   |
@@ -141,6 +143,7 @@ Feature: Add cart rule
       | discount_application_type | specific_product |
     Then I should get cart rule error about "required specific product"
 
+  @restore-cart-rules-after-scenario
   Scenario: I edit cart rule by adding percentage discount action.
     When I edit cart rule cart_rule_1 with following properties:
       | free_shipping                | true                   |
@@ -194,6 +197,7 @@ Feature: Add cart rule
       | apply_to_discounted_products | true                   |
       | discount_product             |                        |
 
+  @restore-cart-rules-after-scenario
   Scenario: I edit cart rule by adding gift product action.
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
@@ -249,6 +253,7 @@ Feature: Add cart rule
       | discount_application_type    | order_without_shipping |
       | apply_to_discounted_products | true                   |
 
+  @restore-cart-rules-after-scenario
   Scenario: I edit cart rule by alternating customer
     Given there is customer "JohnDoe" with email "pub@prestashop.com"
     And cart rule "cart_rule_1" should have the following properties:
@@ -263,21 +268,7 @@ Feature: Add cart rule
       | customer |  |
 
   Scenario: I should not be able to edit cart rule with already existing code
-    Given I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]       | Cart Rule 1         |
-      | highlight         | true                |
-      | active            | true                |
-      | allow_partial_use | true                |
-      | priority          | 1                   |
-      | valid_from        | 2019-01-01 11:05:00 |
-      | valid_to          | 2019-12-01 00:00:00 |
-      | total_quantity    | 10                  |
-      | quantity_per_user | 2                   |
-      | free_shipping     | true                |
-      | code              | testcode1           |
-    And cart rule cart_rule_1 should have the following properties:
-      | code | testcode1 |
-    And I create cart rule "cart_rule_2" with following properties:
+    Given I create cart rule "cart_rule_2" with following properties:
       | name[en-US]       | Cart Rule 2         |
       | highlight         | true                |
       | active            | true                |
@@ -288,42 +279,44 @@ Feature: Add cart rule
       | total_quantity    | 10                  |
       | quantity_per_user | 2                   |
       | free_shipping     | true                |
-      | code              | testcode2           |
+      | code              | testcode1           |
     And cart rule cart_rule_2 should have the following properties:
-      | code | testcode2 |
+      | code | testcode1 |
+    And I create cart rule "cart_rule_3" with following properties:
+      | name[en-US]       | Cart Rule 3         |
+      | highlight         | true                |
+      | active            | true                |
+      | allow_partial_use | true                |
+      | priority          | 1                   |
+      | valid_from        | 2019-01-01 11:05:00 |
+      | valid_to          | 2019-12-01 00:00:00 |
+      | total_quantity    | 10                  |
+      | quantity_per_user | 2                   |
+      | free_shipping     | true                |
+      | code              | testcode2           |
     When I edit cart rule cart_rule_2 with following properties:
       | code | testcode1 |
+    When I edit cart rule cart_rule_3 with following properties:
+      | code | testcode1 |
     Then I should get cart rule error about "non unique cart rule code"
-    And cart rule cart_rule_2 should have the following properties:
+    And cart rule cart_rule_3 should have the following properties:
       | code | testcode2 |
     # make sure we do not raise error when cart rule is submitted with the same code as it was before
-    When I edit cart rule cart_rule_2 with following properties:
+    When I edit cart rule cart_rule_3 with following properties:
       | code | testcode2 |
-    Then cart rule cart_rule_2 should have the following properties:
+    Then cart rule cart_rule_3 should have the following properties:
       | code | testcode2 |
 
-  Scenario: Disable cart rule
-    When I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                      | Cart Rule 1         |
-      | highlight                        | true                |
-      | active                           | true                |
-      | allow_partial_use                | true                |
-      | priority                         | 1                   |
-      | valid_from                       | 2019-01-01 11:05:00 |
-      | valid_to                         | 2019-12-01 00:00:00 |
-      | total_quantity                   | 10                  |
-      | quantity_per_user                | 2                   |
-      | free_shipping                    | true                |
-      | minimum_amount                   | 10                  |
-      | minimum_amount_currency          | usd                 |
-      | minimum_amount_tax_included      | true                |
-      | minimum_amount_shipping_included | true                |
-    And I disable cart rule with reference "cart_rule_1"
-    Then Cart rule with reference "cart_rule_1" is disabled
+  Scenario: Update cart rule status
+    Given cart rule with reference "cart_rule_1" is enabled
+    When I disable cart rule with reference "cart_rule_1"
+    Then cart rule with reference "cart_rule_1" is disabled
+    When I enable cart rule with reference "cart_rule_1"
+    Then cart rule with reference "cart_rule_1" is enabled
 
-  Scenario: Enable multiple cart rules
-    Given I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                      | Cart Rule 1         |
+  Scenario: Update multiple cart rules status
+    Given I create cart rule "cart_rule_4" with following properties:
+      | name[en-US]                      | Cart Rule 4         |
       | highlight                        | true                |
       | active                           | false               |
       | allow_partial_use                | true                |
@@ -337,8 +330,8 @@ Feature: Add cart rule
       | minimum_amount_currency          | usd                 |
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
-    And I create cart rule "cart_rule_2" with following properties:
-      | name[en-US]                      | Cart Rule 2         |
+    And I create cart rule "cart_rule_5" with following properties:
+      | name[en-US]                      | Cart Rule 5         |
       | highlight                        | true                |
       | active                           | false               |
       | allow_partial_use                | true                |
@@ -352,46 +345,19 @@ Feature: Add cart rule
       | minimum_amount_currency          | usd                 |
       | minimum_amount_tax_included      | true                |
       | minimum_amount_shipping_included | true                |
-    And cart rule cart_rule_1 should have the following properties:
+    And cart rule cart_rule_4 should have the following properties:
       | active | false |
-    And cart rule cart_rule_2 should have the following properties:
+    And cart rule cart_rule_5 should have the following properties:
       | active | false |
-    And I bulk enable cart rules "cart_rule_1,cart_rule_2"
-    Then Cart rule with reference "cart_rule_1" is enabled
-    And Cart rule with reference "cart_rule_2" is enabled
-
-  Scenario: Disable multiple cart rules
-    When I create cart rule "cart_rule_1" with following properties:
-      | name[en-US]                      | Cart Rule 1         |
-      | highlight                        | true                |
-      | active                           | true                |
-      | allow_partial_use                | true                |
-      | priority                         | 1                   |
-      | active                           | false               |
-      | valid_from                       | 2019-01-01 11:05:00 |
-      | valid_to                         | 2019-12-01 00:00:00 |
-      | total_quantity                   | 10                  |
-      | quantity_per_user                | 2                   |
-      | free_shipping                    | true                |
-      | minimum_amount                   | 10                  |
-      | minimum_amount_currency          | usd                 |
-      | minimum_amount_tax_included      | true                |
-      | minimum_amount_shipping_included | true                |
-    And I create cart rule "cart_rule_2" with following properties:
-      | name[en-US]                      | Cart Rule 2         |
-      | highlight                        | true                |
-      | active                           | false               |
-      | allow_partial_use                | true                |
-      | priority                         | 1                   |
-      | valid_from                       | 2019-01-01 11:05:00 |
-      | valid_to                         | 2019-12-01 00:00:00 |
-      | total_quantity                   | 10                  |
-      | quantity_per_user                | 2                   |
-      | free_shipping                    | true                |
-      | minimum_amount                   | 10                  |
-      | minimum_amount_currency          | usd                 |
-      | minimum_amount_tax_included      | true                |
-      | minimum_amount_shipping_included | true                |
-    When I bulk disable cart rules "cart_rule_1,cart_rule_2"
-    Then Cart rule with reference "cart_rule_1" is disabled
-    And Cart rule with reference "cart_rule_2" is disabled
+    And I bulk enable cart rules "cart_rule_4,cart_rule_5"
+    Then cart rule with reference "cart_rule_4" is enabled
+    And cart rule with reference "cart_rule_5" is enabled
+    When I bulk disable cart rules "cart_rule_4,cart_rule_5"
+    Then cart rule with reference "cart_rule_4" is disabled
+    And cart rule with reference "cart_rule_5" is disabled
+    When I bulk enable cart rules "cart_rule_4"
+    Then cart rule with reference "cart_rule_4" is enabled
+    But cart rule with reference "cart_rule_5" is disabled
+    When I bulk disable cart rules "cart_rule_4,cart_rule_5"
+    Then cart rule with reference "cart_rule_4" is disabled
+    And cart rule with reference "cart_rule_5" is disabled

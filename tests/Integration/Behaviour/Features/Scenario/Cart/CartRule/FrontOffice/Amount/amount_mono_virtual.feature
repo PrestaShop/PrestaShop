@@ -13,7 +13,7 @@ Feature: Cart rule (amount) calculation with one cart rule
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a product in the catalog named "product8" with a price of 12.345 and 1000 items in stock
     And product "product8" is virtual
-    And I create cart rule "reduction_5_dollar" with following properties:
+    And there is a cart rule "reduction_5_dollar" with following properties:
       | name[en-US]                  | reduces $5             |
       | total_quantity               | 1000                   |
       | quantity_per_user            | 1000                   |
@@ -25,7 +25,7 @@ Feature: Cart rule (amount) calculation with one cart rule
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
-    And I create cart rule "reduction_500_dollar" with following properties:
+    And there is a cart rule "reduction_500_dollar" with following properties:
       | name[en-US]                  | reduces $500           |
       | total_quantity               | 1000                   |
       | quantity_per_user            | 1000                   |
@@ -51,7 +51,6 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then my cart total should be 182.09 tax included
     And my cart total using previous calculation method should be 182.09 tax included
 
-  @restore-cart-rules-before-scenario
   Scenario: Only virtual product in my cart, one 5€ global voucher
     Given I have an empty default cart
     And I add 2 items of product "product8" in my cart

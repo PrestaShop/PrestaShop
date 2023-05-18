@@ -28,13 +28,288 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\CartRule;
 
+use DateTime;
+use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\CartRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\CartRule\CartRuleActionBuilder;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Resources\DatabaseDump;
 
 abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @BeforeScenario @restore-cart-rules-before-scenario
+     * @AfterScenario @restore-cart-rules-after-scenario
+     *
+     * @return void
+     */
+    public static function restoreCartRules(): void
+    {
+        DatabaseDump::restoreTables(['cart_rule', 'cart_rule_shop']);
+        DatabaseDump::restoreTables([
+            'cart_rule',
+            'cart_rule_shop',
+            'cart_rule_lang',
+            'cart_cart_rule',
+            'cart_rule_carrier',
+            'cart_rule_combination',
+            'cart_rule_country',
+            'cart_rule_group',
+            'cart_rule_product_rule',
+            'cart_rule_product_rule_group',
+            'cart_rule_product_rule_value',
+        ]);
+    }
+
+    public function createCartRuleWithReference(string $cartRuleReference, array $data): void
+    {
+        $command = new AddCartRuleCommand(
+            $data['name'],
+            $this->getCartRuleActionBuilder()->build($this->formatDataForActionBuilder($data))
+        );
+
+        if (isset($data['highlight'])) {
+            $command->setHighlightInCart(PrimitiveUtils::castStringBooleanIntoBoolean($data['highlight']));
+        }
+        if (isset($data['allow_partial_use'])) {
+            $command->setAllowPartialUse(PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']));
+        }
+        if (isset($data['priority'])) {
+            $command->setPriority((int) $data['priority']);
+        }
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+        if (isset($data['valid_from'])) {
+            if (empty($data['valid_to'])) {
+                throw new RuntimeException('When setting cart rule range "valid_from" and "valid_to" must be provided');
+            }
+            $command->setValidDateRange(
+                new DateTime($data['valid_from']),
+                new DateTime($data['valid_to']),
+            );
+        }
+        if (isset($data['total_quantity'])) {
+            $command->setTotalQuantity((int) $data['total_quantity']);
+        }
+        if (isset($data['quantity_per_user'])) {
+            $command->setQuantityPerUser((int) $data['quantity_per_user']);
+        }
+        if (!empty($data['minimum_amount'])) {
+            $currencyId = $this->getSharedStorage()->get($data['minimum_amount_currency']);
+            $command->setMinimumAmount(
+                $data['minimum_amount'],
+                $currencyId,
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included'])
+            );
+        }
+
+        $command->setDescription($data['description'] ?? '');
+        if (!empty($data['code'])) {
+            $command->setCode($data['code']);
+        }
+
+        /** @var CartRuleId $cartRuleId */
+        $cartRuleId = $this->getCommandBus()->handle($command);
+        $this->getSharedStorage()->set($cartRuleReference, $cartRuleId->getValue());
+
+        if (!empty($data['code'])) {
+            // set cart rule id by code when it is not empty
+            $this->getSharedStorage()->set($data['code'], $cartRuleId->getValue());
+        }
+    }
+
+    protected function assertCartRuleProperties(CartRuleForEditing $cartRuleForEditing, array $expectedData): void
+    {
+        $information = $cartRuleForEditing->getInformation();
+        $conditions = $cartRuleForEditing->getConditions();
+        $actions = $cartRuleForEditing->getActions();
+
+        if (isset($expectedData['name'])) {
+            Assert::assertSame($expectedData['name'], $information->getLocalizedNames(), 'Unexpected localized name');
+        }
+        if (isset($expectedData['description'])) {
+            Assert::assertSame($expectedData['description'], $information->getDescription(), 'Unexpected description');
+        }
+        if (isset($expectedData['highlight'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['highlight']),
+                $information->isHighlight(),
+                'Unexpected highlight'
+            );
+        }
+        if (isset($expectedData['allow_partial_use'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['allow_partial_use']),
+                $information->isPartialUse(),
+                'Unexpected partial use'
+            );
+        }
+        if (isset($expectedData['active'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['active']),
+                $information->isEnabled(),
+                'Unexpected active property'
+            );
+        }
+        if (isset($expectedData['code'])) {
+            Assert::assertSame($expectedData['code'], $information->getCode(), 'Unexpected code');
+        }
+        if (isset($expectedData['customer'])) {
+            Assert::assertSame(
+                !empty($expectedData['customer']) ? $this->getSharedStorage()->get($expectedData['customer']) : 0,
+                $conditions->getCustomerId()->getValue(),
+                'Unexpected customer id'
+            );
+        }
+        if (isset($expectedData['priority'])) {
+            Assert::assertSame((int) $expectedData['priority'], $information->getPriority(), 'Unexpected priority');
+        }
+        if (isset($expectedData['valid_from'])) {
+            Assert::assertEquals(
+                $expectedData['valid_from'],
+                $conditions->getDateFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                'Unexpected valid_from'
+            );
+        }
+        if (isset($expectedData['valid_to'])) {
+            Assert::assertEquals(
+                $expectedData['valid_to'],
+                $conditions->getDateTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                'Unexpected valid_to'
+            );
+        }
+        if (isset($expectedData['total quantity'])) {
+            Assert::assertSame((int) $expectedData['total quantity'], $conditions->getQuantity(), 'Unexpected quantity');
+        }
+        if (isset($expectedData['quantity per user'])) {
+            Assert::assertSame((int) $expectedData['quantity per user'], $conditions->getQuantityPerUser(), 'Unexpected quantity per user');
+        }
+
+        if (isset($expectedData['minimum_amount'])) {
+            if (empty($expectedData['minimum_amount'])) {
+                Assert::assertNull($conditions->getMinimum(), 'unexpected minimum_amount');
+            } else {
+                $minimum = $conditions->getMinimum();
+                Assert::assertTrue(
+                    $minimum->getAmount()->equals(new DecimalNumber($expectedData['minimum_amount'])),
+                    'Unexpected minimum_amount'
+                );
+
+                Assert::assertSame(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['minimum_amount_tax_included']),
+                    $minimum->isAmountTax(),
+                    'Unexpected minimum_amount_tax_included'
+                );
+
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($expectedData['minimum_amount_currency']),
+                    $minimum->getCurrencyId(),
+                    'Unexpected minimum_amount_currency'
+                );
+
+                Assert::assertSame(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['minimum_amount_shipping_included']),
+                    $minimum->isShipping(),
+                    'Unexpected minimum_amount_shipping_included'
+                );
+            }
+        }
+
+        if (isset($expectedData['discount_application_type'])) {
+            $expectedDiscountApplicationType = $expectedData['discount_application_type'];
+            Assert::assertSame(
+                $expectedDiscountApplicationType,
+                $actions->getDiscountApplicationType(),
+                'Unexpected discount_application_type'
+            );
+
+            Assert::assertSame(
+                !empty($expectedData['discount_product']) ? $this->getSharedStorage()->get($expectedData['discount_product']) : null,
+                $actions->getReduction()->getProductId(),
+                'Unexpected discount_product'
+            );
+        }
+
+        if (isset($expectedData['discount_percentage'])) {
+            Assert::assertTrue(
+                $actions->getReduction()->getPercent()->equals(new DecimalNumber($expectedData['discount_percentage'])),
+                'Unexpected discount_percentage'
+            );
+        }
+
+        if (isset($expectedData['discount_amount'])) {
+            Assert::assertTrue(
+                $actions->getReduction()->getAmount()->equals(new DecimalNumber($expectedData['discount_amount'])),
+                'Unexpected discount_amount'
+            );
+        }
+
+        if (isset($expectedData['discount_currency'])) {
+            if ($expectedData['discount_currency'] === '') {
+                Assert::assertNull(
+                    $actions->getReduction()->getCurrencyId(),
+                    'Unexpected discount_currency'
+                );
+            } else {
+                Assert::assertSame(
+                    $this->getSharedStorage()->get($expectedData['discount_currency']),
+                    $actions->getReduction()->getCurrencyId(),
+                    'Unexpected discount_currency'
+                );
+            }
+        }
+
+        if (isset($expectedData['discount_includes_tax'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['discount_includes_tax']),
+                $actions->getReduction()->isTax(),
+                'Unexpected discount_includes_tax'
+            );
+        }
+
+        if (isset($expectedData['apply_to_discounted_products'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['apply_to_discounted_products']),
+                $actions->getReduction()->applyToDiscountedProducts(),
+                'Unexpected apply_to_discounted_products'
+            );
+        }
+
+        if (isset($expectedData['free_shipping'])) {
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['free_shipping']),
+                $actions->isFreeShipping(),
+                'Unexpected free_shipping'
+            );
+        }
+
+        if (isset($expectedData['gift_product'])) {
+            Assert::assertSame(
+                $this->getSharedStorage()->get($expectedData['gift_product']),
+                $actions->getGiftProductId(),
+                'Unexpected gift_product'
+            );
+        }
+
+        if (isset($expectedData['gift_combination'])) {
+            Assert::assertSame(
+                !empty($expectedData['gift_combination']) ? $this->getSharedStorage()->get($expectedData['gift_combination']) : null,
+                $actions->getGiftCombinationId(),
+                'Unexpected gift_combination'
+            );
+        }
+    }
+
     protected function getCartRuleActionBuilder(): CartRuleActionBuilder
     {
         return new CartRuleActionBuilder();
@@ -86,5 +361,15 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         }
 
         return $formattedData;
+    }
+
+    protected function getCartRuleForEditing(int $cartRuleId): CartRuleForEditing
+    {
+        /** @var CartRuleForEditing $cartRuleForEditing */
+        $cartRuleForEditing = $this->getQueryBus()->handle(
+            new GetCartRuleForEditing($cartRuleId)
+        );
+
+        return $cartRuleForEditing;
     }
 }
