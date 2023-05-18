@@ -44,19 +44,19 @@ Feature: Cart rule (amount) calculation with one cart rule
     And I add 2 items of product "product2" in my cart
     And I add 1 items of product "product3" in my cart
     And I add 2 items of product "product8" in my cart
-    And total cart shipping fees should be 7.0 tax included
+    And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 187.09 tax included
     And my cart total using previous calculation method should be 187.09 tax included
-    When I apply the discount code "reduce-5"
+    When I apply the voucher code "reduce-5"
     Then my cart total should be 182.09 tax included
     And my cart total using previous calculation method should be 182.09 tax included
 
   Scenario: Only virtual product in my cart, one 5€ global voucher
     Given I have an empty default cart
     And I add 2 items of product "product8" in my cart
-    And total cart shipping fees should be 0.0 tax included
+    And my cart total shipping fees should be 0.0 tax included
     And my cart total should be 24.69 tax included
     And my cart total using previous calculation method should be 24.69 tax included
-    When I apply the discount code "reduce-5"
+    When I apply the voucher code "reduce-5"
     Then my cart total should be 19.69 tax included
     And my cart total using previous calculation method should be 19.69 tax included

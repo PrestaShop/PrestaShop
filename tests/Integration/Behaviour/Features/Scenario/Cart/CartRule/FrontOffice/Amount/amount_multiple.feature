@@ -55,26 +55,26 @@ Feature: Cart rule (amount) calculation with multiple cart rules
   Scenario: one product in cart, quantity 1, one 5€ global cartRule, one 10€ global cartRule
     Given I have an empty default cart
     And I add 1 items of product "product1" in my cart
-    And total cart shipping fees should be 7.0 tax included
+    And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 26.812 tax included
     And my cart total using previous calculation method should be 26.812 tax included
-    When I apply the discount code "reduce-5"
+    When I apply the voucher code "reduce-5"
     Then my cart total should be 21.812 tax included
     And my cart total using previous calculation method should be 21.812 tax included
-    And I apply the discount code "reduce-10"
+    And I apply the voucher code "reduce-10"
     Then my cart total should be 11.812 tax included
     And my cart total using previous calculation method should be 11.812 tax included
 
   Scenario: one product in cart, quantity 3, one 5€ global cartRule, one 10€ global cartRule
     Given I have an empty default cart
     And I add 3 items of product "product1" in my cart
-    And total cart shipping fees should be 7.0 tax included
+    And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 66.436 tax included
     And my cart total using previous calculation method should be 66.436 tax included
-    When I apply the discount code "reduce-5"
+    When I apply the voucher code "reduce-5"
     Then my cart total should be 61.436 tax included
     And my cart total using previous calculation method should be 61.436 tax included
-    When I apply the discount code "reduce-10"
+    When I apply the voucher code "reduce-10"
     Then my cart total should be 51.436 tax included
     And my cart total using previous calculation method should be 51.436 tax included
 
@@ -83,13 +83,13 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     And I add 2 items of product "product2" in my cart
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart
-    And total cart shipping fees should be 7.0 tax included
+    And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 162.4 tax included
     And my cart total using previous calculation method should be 162.4 tax included
-    When I apply the discount code "reduce-5"
+    When I apply the voucher code "reduce-5"
     Then my cart total should be 157.4 tax included
     And my cart total using previous calculation method should be 157.4 tax included
-    When I apply the discount code "reduce-10"
+    When I apply the voucher code "reduce-10"
     Then my cart total should be 147.4 tax included
     And my cart total using previous calculation method should be 147.4 tax included
 
@@ -117,7 +117,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     And cart rule "reduce-10-restricted" is restricted to product "product8"
     When I add 1 item of product "product8" in my cart
     And cart rule "reduce-10-restricted" is applied to my cart
-    Then total cart shipping fees should be 0.0 tax included
+    Then my cart total shipping fees should be 0.0 tax included
     And my cart total should be precisely 2.35 tax included
     And my cart total should be 2.4 tax included
     And my cart total using previous calculation method should be 2.4 tax included
@@ -192,7 +192,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     And cart rule "cartrule-gift-product2" is applied to my cart
     And cart rule "cartrule-gift-product3" is applied to my cart
     And cart rule "reduce-30-global" is applied to my cart
-    And total cart shipping fees should be 7.0 tax included
+    And my cart total shipping fees should be 7.0 tax included
     And my cart total should be precisely 7.0 tax included
     And my cart total should be 7.0 tax included
     And my cart total using previous calculation method should be 7.0 tax included

@@ -428,7 +428,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I apply the discount code "(.+)"$/
+     * @When /^I apply the voucher code "(.+)"$/
      *
      * @param string $code
      *

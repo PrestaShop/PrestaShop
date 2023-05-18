@@ -60,9 +60,9 @@ Feature: Cart rule (percent) calculation with one cart rule
     Given cart rule "cartrule1" has a discount code "foo1"
     When I add 1 items of product "product1" in my cart
     Then I should have 1 different products in my cart
-    And total cart shipping fees should be 7.0 tax excluded
+    And my cart total shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
-    When I apply the discount code "foo1"
+    When I apply the voucher code "foo1"
     Then my cart total should be 16.9 tax excluded
     When at least one cart rule applies today for customer with id 0
     Then I should have 1 products in my cart

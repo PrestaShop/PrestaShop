@@ -106,12 +106,12 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     And cart rule "cartrule12" offers a gift product "product3"
     And I add 1 items of product "product1" in my cart
     And I should have 1 different products in my cart
-    And total cart shipping fees should be 7.0 tax excluded
+    And my cart total shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
-    When I apply the discount code "foo12"
+    When I apply the voucher code "foo12"
     Then my cart total should be 24.8 tax excluded
     And I should have 2 products in my cart
-    When I apply the discount code "foo1"
+    When I apply the voucher code "foo1"
     Then my cart total should be 15.9 tax excluded
     And I should have 2 products in my cart
     And at least one cart rule applies today for customer with id 0
@@ -129,12 +129,12 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     And cart rule "cartrule13" offers a gift product "product4"
     And I add 1 items of product "product1" in my cart
     And I should have 1 different products in my cart
-    And total cart shipping fees should be 7.0 tax excluded
+    And my cart total shipping fees should be 7.0 tax excluded
     And my cart total should be 26.8 tax excluded
-    When I apply the discount code "foo13"
+    When I apply the voucher code "foo13"
     Then my cart total should be 24.8 tax excluded
     Then cart rule "cartrule1" can be applied to my cart
-    When I apply the discount code "foo1"
+    When I apply the voucher code "foo1"
     Then my cart total should be 15.9 tax excluded
     And I should have 1 products in my cart
     And at least one cart rule applies today for customer with id 0

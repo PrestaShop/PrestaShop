@@ -204,7 +204,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^total cart shipping fees should be (\d+\.\d+) tax (excluded|included)?$/
+     * @Then /^my cart total shipping fees should be (\d+\.\d+) tax (excluded|included)?$/
      */
     public function assertTotalCartShipping(string $expectedShipping, bool $taxIncluded): void
     {
