@@ -1,6 +1,8 @@
 name: Kanbanbot actions
 
-on: [ pull_request_review ]
+on:
+  pull_request_review:
+    types: [submitted]
 
 env:
   GITHUB_API_TOKEN: ${{ secrets.JARVIS_TOKEN }}
