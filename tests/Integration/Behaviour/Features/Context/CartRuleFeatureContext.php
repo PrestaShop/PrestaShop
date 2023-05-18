@@ -38,6 +38,7 @@ use DateTime;
 use Db;
 use Order;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use RuntimeException;
 use Validate;
@@ -454,6 +455,8 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         $this->getCurrentCart()->addCartRule((int) $cartRule->id);
+        //@todo: should this be added inside production addCartRule instead?
+        Cache::clean('getContextualValue_*');
     }
 
     /**
@@ -581,29 +584,32 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function checkCartRuleContextualValue(TableNode $table)
     {
-        $contextualReductionValues = $table->getRowsHash();
-        $cartRules = $this->getCurrentCart()->getCartRules();
+        $expectedCartRules = $table->getColumnsHash();
+        $cartRuleRows = $this->getCurrentCart()->getCartRules();
 
-        foreach ($cartRules as $currentCartRule) {
-            if (!isset($contextualReductionValues[$currentCartRule['description']])) {
-                throw new \RuntimeException(sprintf('Cart rule %s was not expected.', $currentCartRule['description']));
-            }
+        Assert::assertCount(count($expectedCartRules), $cartRuleRows, 'Unexpected cart rules count in cart');
 
-            // float numbers are compared as string because float numbers seemingly equals can still be unequals.
-            if ((string) $currentCartRule['value_real'] !== (string) $contextualReductionValues[$currentCartRule['description']]) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Expects %s, got %s instead',
-                        $contextualReductionValues[$currentCartRule['description']],
-                        $currentCartRule['value_real']
-                    )
-                );
-            }
-            unset($contextualReductionValues[$currentCartRule['description']]);
-        }
+        foreach ($cartRuleRows as $key => $cartRuleRow) {
+            $cartRuleReference = $expectedCartRules[$key]['reference'];
 
-        if (!empty($contextualReductionValues)) {
-            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', reset($contextualReductionValues)));
+            Assert::assertTrue(
+                $this->getSharedStorage()->exists($cartRuleReference),
+                sprintf('cart rule by reference "%s" doesnt exist', $cartRuleReference)
+            );
+
+            Assert::assertSame(
+                (int) $cartRuleRow['id_cart_rule'],
+                $this->getSharedStorage()->get($cartRuleReference),
+                sprintf('Cart rule %s was not expected in cart (or the sequence is unexpected).', $cartRuleReference)
+            );
+
+            $expectedReduction = new DecimalNumber($expectedCartRules[$key]['reduction']);
+            $actualReduction = new DecimalNumber((string) $cartRuleRow['value_real']);
+
+            Assert::assertTrue(
+                $actualReduction->equals($expectedReduction),
+                sprintf('Unexpected contextual reduction. Expected %s, got %s', $expectedReduction, $actualReduction)
+            );
         }
     }
 
@@ -659,7 +665,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             // @todo:
             //     some of these errors have %s placeholders, so we just match the most part of it,
             //     it should be convenient enough for now, but will need improvement later
-            if (0 === strpos($message, $errorPart)) {
+            if (str_starts_with($message, $errorPart)) {
                 return $code;
             }
         }
