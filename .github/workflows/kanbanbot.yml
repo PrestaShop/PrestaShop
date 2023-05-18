@@ -1,6 +1,6 @@
 name: Kanbanbot actions
 
-on: [ pull_request ]
+on: [ pull_request, pull_request_review ]
 
 env:
   GITHUB_API_TOKEN: ${{ secrets.JARVIS_TOKEN }}
@@ -35,5 +35,6 @@ jobs:
       - name: Dispatch github events in kanbanbot
         run: |
           cd kanbanbot/
+          echo "Event type: ${{ github.event_name }}"
           cat $GITHUB_EVENT_PATH
           php bin/console app:github:on-github-event ${{ github.event_name }} $GITHUB_EVENT_PATH
