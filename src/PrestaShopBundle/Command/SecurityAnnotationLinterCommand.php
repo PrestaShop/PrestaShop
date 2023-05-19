@@ -67,10 +67,10 @@ final class SecurityAnnotationLinterCommand extends Command
         'admin_common_reset_search_by_filter_id',
         'admin_security_compromised',
         'admin_get_ajax_categories',
-        'admin_product_list', // Deprecated products v1
-        'admin_product_bulk_action', // Deprecated products v1
-        'admin_product_unit_action', // Deprecated Products v1
-        'admin_product_mass_edit_action', // Deprecated Products v1
+        'admin_product_list', // Back-office product page v1 has its own security system
+        'admin_product_bulk_action', // Back-office product page v1 has its own security system
+        'admin_product_unit_action', // Back-office product page v1 has its own security system
+        'admin_product_mass_edit_action', // Back-office product page v1 has its own security system
         'admin_import_data_configuration_index_redirect',
         'admin_country_states',
         'admin_mail_theme_save_configuration_deprecated', // Deprecated

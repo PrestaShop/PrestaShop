@@ -115,8 +115,6 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Handle import file upload via AJAX, sending authorization errors in JSON.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse

@@ -223,8 +223,6 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Processes test email sending.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param Request $request
      *
      * @return Response

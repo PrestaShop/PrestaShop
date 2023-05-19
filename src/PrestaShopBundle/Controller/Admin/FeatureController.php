@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -38,8 +37,6 @@ class FeatureController extends FrameworkBundleAdminController
 {
     /**
      * Get all values for a given feature.
-     *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $idFeature The feature Id
      *

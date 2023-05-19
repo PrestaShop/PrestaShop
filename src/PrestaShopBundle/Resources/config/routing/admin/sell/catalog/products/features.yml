@@ -4,7 +4,6 @@ admin_feature_get_feature_values:
   defaults:
     idFeature: 0
     _controller: PrestaShopBundle\Controller\Admin\FeatureController::getFeatureValuesAction
-    _legacy_controller: AdminFeatures
   requirements:
     idFeature: \d+
   options:

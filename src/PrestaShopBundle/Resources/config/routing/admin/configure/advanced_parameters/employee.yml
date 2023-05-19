@@ -93,14 +93,12 @@ admin_employees_toggle_navigation:
   methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::toggleNavigationMenuAction'
-    _legacy_controller: AdminEmployees
 
 admin_employees_change_form_language:
   path: /change-form-language
   methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::changeFormLanguageAction'
-    _legacy_controller: AdminEmployees
 
 admin_employees_get_tabs:
   path: /tabs

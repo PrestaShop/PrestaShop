@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCom
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAssignProductToCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,8 +48,6 @@ class CategoryController extends FrameworkBundleAdminController
 {
     /**
      * Process Ajax Form to add a simple category (name and parent category).
-     *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

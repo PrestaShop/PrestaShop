@@ -382,12 +382,6 @@ class ThemeController extends AbstractAdminController
     /**
      * Show Front Office theme's pages layout customization.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return Response

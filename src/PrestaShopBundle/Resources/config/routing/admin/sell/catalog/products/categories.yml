@@ -3,7 +3,6 @@ admin_category_simple_add_form:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CategoryController::addSimpleCategoryFormAction
-    _legacy_controller: AdminCategories
 
 admin_get_ajax_categories:
   path: /list/{limit}

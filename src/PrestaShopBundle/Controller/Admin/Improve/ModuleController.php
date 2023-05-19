@@ -157,8 +157,6 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -295,8 +293,6 @@ class ModuleController extends ModuleAbstractController
 
     /**
      * Controller responsible for importing new module from DropFile zone in BO.
-     *
-     * @AdminSecurity("is_granted('create', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *

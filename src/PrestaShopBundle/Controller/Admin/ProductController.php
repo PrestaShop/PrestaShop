@@ -395,8 +395,6 @@ class ProductController extends FrameworkBundleAdminController
      * Create a new basic product
      * Then return to form action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @return RedirectResponse
      *
      * @throws LogicException
@@ -442,8 +440,6 @@ class ProductController extends FrameworkBundleAdminController
 
     /**
      * Product form.
-     *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
      *
      * @Template("@PrestaShop/Admin/Product/ProductPage/product.html.twig")
      *
