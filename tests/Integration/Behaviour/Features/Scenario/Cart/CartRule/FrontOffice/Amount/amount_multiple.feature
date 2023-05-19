@@ -51,10 +51,10 @@ Feature: Cart rule (amount) calculation with multiple cart rules
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
+    And I have an empty default cart
 
   Scenario: one product in cart, quantity 1, one 5€ global cartRule, one 10€ global cartRule
-    Given I have an empty default cart
-    And I add 1 items of product "product1" in my cart
+    Given I add 1 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 26.812 tax included
     And my cart total using previous calculation method should be 26.812 tax included
@@ -66,8 +66,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     And my cart total using previous calculation method should be 11.812 tax included
 
   Scenario: one product in cart, quantity 3, one 5€ global cartRule, one 10€ global cartRule
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 66.436 tax included
     And my cart total using previous calculation method should be 66.436 tax included
@@ -79,8 +78,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     And my cart total using previous calculation method should be 51.436 tax included
 
   Scenario: 3 products in cart, several quantities, one 5€ global cartRule (reduced product at first place)
-    Given I have an empty default cart
-    And I add 2 items of product "product2" in my cart
+    Given I add 2 items of product "product2" in my cart
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart
     And my cart total shipping fees should be 7.0 tax included
@@ -95,8 +93,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
 
   @restore-cart-rules-after-scenario
   Scenario: One product in my cart, one cart rule for free shipping and one for free gift
-    Given I have an empty default cart
-    And there is a cart rule "cartrule-free-shipping" with following properties:
+    Given there is a cart rule "cartrule-free-shipping" with following properties:
       | name[en-US]       | cartrule-free-shipping |
       | total_quantity    | 1                      |
       | quantity_per_user | 1                      |
@@ -124,8 +121,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
 
   @restore-cart-rules-after-scenario
   Scenario: One product in my cart, one 10€ global cartRule, 2 free gifts global cartRules
-    Given I have an empty default cart
-    And there is a cart rule "reduce-10-global" with following properties:
+    Given there is a cart rule "reduce-10-global" with following properties:
       | name[en-US]                  | reduce-10-global       |
       | total_quantity               | 1                      |
       | quantity_per_user            | 1                      |
@@ -161,8 +157,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
 
   @restore-cart-rules-after-scenario
   Scenario: One product in my cart, one 30€ global cartRule (which is superior to the product bought), 2 free gifts global cartRules
-    Given I have an empty default cart
-    And there is a cart rule "reduce-30-global" with following properties:
+    Given there is a cart rule "reduce-30-global" with following properties:
       | name[en-US]                  | reduce-30-global       |
       | total_quantity               | 1                      |
       | quantity_per_user            | 1                      |
@@ -199,8 +194,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
 
   @restore-cart-rules-after-scenario
   Scenario: One product in my cart, one 30€ global cartRule (which is superior to the product bought) with free shipping, 2 free gifts global cartRules
-    Given I have an empty default cart
-    And there is a cart rule "reduce-30-free-ship-global" with following properties:
+    Given there is a cart rule "reduce-30-free-ship-global" with following properties:
       | name[en-US]                  | reduce-30-free-ship-global |
       | total_quantity               | 1                          |
       | quantity_per_user            | 1                          |

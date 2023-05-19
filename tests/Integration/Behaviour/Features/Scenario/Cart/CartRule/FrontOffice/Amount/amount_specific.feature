@@ -24,12 +24,12 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
       | apply_to_discounted_products | true                    |
       | discount_application_type    | order_without_shipping  |
     And cart rule "cartrule8" is restricted to product "product2"
+    And I have an empty default cart
 
   Scenario: 3 products in cart, several quantities, one specific 5€ cartRule on product #2
-    Given I have an empty default cart
     When I add 2 items of product "product2" in my cart
-    When I add 3 items of product "product1" in my cart
-    When I add 1 items of product "product3" in my cart
+    And I add 3 items of product "product1" in my cart
+    And I add 1 items of product "product3" in my cart
     And my cart total shipping fees should be 7.0 tax excluded
     And my cart total should be 162.4 tax excluded
     When I apply the voucher code "foo8"
@@ -37,8 +37,7 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
     And my cart total using previous calculation method should be 157.4 tax included
 
   Scenario: 3 products in cart, several quantities, one specific 500€ cartRule on product #2
-    Given I have an empty default cart
-    And there is a cart rule "cartrule9" with following properties:
+    Given there is a cart rule "cartrule9" with following properties:
       | name[en-US]                  | reduces $500 for product2 |
       | total_quantity               | 1000                      |
       | quantity_per_user            | 1000                      |

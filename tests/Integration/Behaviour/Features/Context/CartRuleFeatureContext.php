@@ -269,13 +269,24 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedIsRestrictedToCarrierNamed($cartRuleName, $carrierName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
         $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
-        $this->cartRules[$cartRuleName]->carrier_restriction = true;
-        $this->cartRules[$cartRuleName]->save();
+
+        if ($this->getSharedStorage()->exists($cartRuleName)) {
+            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
+            //       it is not ideal, but for now it should work, until restrictions are migrated.
+            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
+        } else {
+            $this->checkCartRuleWithNameExists($cartRuleName);
+            $cartRuleId = (int) $this->cartRules[$cartRuleName]->id;
+        }
+        $cartRule = new CartRule($cartRuleId);
+        $cartRule->carrier_restriction = true;
+        $cartRule->save();
+        $this->cartRules[$cartRuleName] = $cartRule;
+
         Db::getInstance()->execute('
           INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
-          VALUES('" . (int) $this->cartRules[$cartRuleName]->id . "',
+          VALUES('" . $cartRuleId . "',
           '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
         ");
         Cache::clear();

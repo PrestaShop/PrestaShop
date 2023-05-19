@@ -35,10 +35,10 @@ Feature: Cart rule (amount) calculation with one cart rule
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
+    And I have an empty default cart
 
   Scenario: one product in cart, quantity 1, one 5€ global cartRule
-    Given I have an empty default cart
-    And I add 1 items of product "product1" in my cart
+    Given I add 1 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     Then my cart total should be 26.812 tax included
     Then my cart total using previous calculation method should be 26.812 tax included
@@ -47,23 +47,20 @@ Feature: Cart rule (amount) calculation with one cart rule
     Then my cart total using previous calculation method should be 21.812 tax included
 
   Scenario: one product in cart, quantity 1, one 500€ global cartRule
-    Given I have an empty default cart
-    And I add 1 items of product "product1" in my cart
+    Given I add 1 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     When I apply the voucher code "reduce-500"
     Then my cart total should be 7.0 tax included
     And my cart total using previous calculation method should be 7.0 tax included
 
   Scenario: one product in cart, quantity 3, one 5€ global cartRule
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     When I apply the voucher code "reduce-5"
     Then my cart total should be 61.436 tax included
     And my cart total using previous calculation method should be 61.436 tax included
 
   Scenario: 3 products in cart, several quantities, one 5€ global cartRule (reduced product at first place)
-    Given I have an empty default cart
-    And I add 2 items of product "product2" in my cart
+    Given I add 2 items of product "product2" in my cart
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart
     And my cart total shipping fees should be 7.0 tax included
@@ -74,8 +71,7 @@ Feature: Cart rule (amount) calculation with one cart rule
     And my cart total using previous calculation method should be 157.4 tax included
 
   Scenario: 3 products in cart, several quantities, one 5€ global cartRule (reduced product at second place)
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     And I add 2 items of product "product2" in my cart
     And I add 1 items of product "product3" in my cart
     And my cart total shipping fees should be 7.0 tax included
@@ -86,8 +82,7 @@ Feature: Cart rule (amount) calculation with one cart rule
     And my cart total using previous calculation method should be 157.4 tax included
 
   Scenario: 3 products in cart, several quantities, one 500€ global cartRule
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     And I add 2 items of product "product2" in my cart
     And I add 1 items of product "product3" in my cart
     And my cart total shipping fees should be 7.0 tax included

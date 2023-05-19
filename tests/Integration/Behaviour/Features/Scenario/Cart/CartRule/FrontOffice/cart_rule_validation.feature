@@ -45,29 +45,64 @@ Feature: Cart rule application is validated before it is applied to cart
     And discount code "foo2" is not applied to my cart
     And discount code "foo3" is not applied to my cart
     And I should have 0 different products in my cart
-    And my cart total shipping fees should be 0.0 tax excluded
+    And my cart total shipping fees should be 0.0 tax included
     And my cart total should be 0.0 tax included
     # try applying percentage discount
     When I apply the voucher code "foo1"
     Then I should get cart rule validation error saying "Cart is empty"
     And discount code "foo1" is not applied to my cart
     And I should have 0 products in my cart
-    And my cart total shipping fees should be 0.0 tax excluded
+    And my cart total shipping fees should be 0.0 tax included
     And my cart total should be 0.0 tax included
     # try applying amount discount
     When I apply the voucher code "foo2"
     Then I should get cart rule validation error saying "Cart is empty"
     And discount code "foo2" is not applied to my cart
     And I should have 0 products in my cart
-    And my cart total shipping fees should be 0.0 tax excluded
+    And my cart total shipping fees should be 0.0 tax included
     And my cart total should be 0.0 tax included
     # try applying free shipping discount
     When I apply the voucher code "foo3"
     Then I should get cart rule validation error saying "Cart is empty"
     And discount code "foo3" is not applied to my cart
     And I should have 0 products in my cart
-    And my cart total shipping fees should be 0.0 tax excluded
+    And my cart total shipping fees should be 0.0 tax included
     And my cart total should be 0.0 tax included
+    # try applying cart rule restricted to carrier
+    Given I have an empty default cart
+    And there is a cart rule "cart_rule_4" with following properties:
+      | name[en-US]                  | cart_rule_4            |
+      | total_quantity               | 10                     |
+      | quantity_per_user            | 10                     |
+      | free_shipping                | false                  |
+      | free_shipping                | true                   |
+      | code                         | rule_carrier1          |
+      | discount_percentage          | 50                     |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
+    And there is a carrier named "carrier1"
+    And cart rule "cart_rule_4" is restricted to carrier "carrier1"
+    And I select carrier "carrier1" in my cart
+    And I should have 0 products in my cart
+    When I apply the voucher code "foo3"
+    Then I should get cart rule validation error saying "Cart is empty"
+
+  @restore-cart-rules-after-scenario
+  Scenario: Cart rule without code is not applied when cart is empty
+    Given I have an empty default cart
+    And my cart total shipping fees should be 0.0 tax included
+    And my cart total should be 0.0 tax included
+    And I should have 0 products in my cart
+    When there is a cart rule "cart_rule_5" with following properties:
+      | name[en-US]       | cart_rule_5 |
+      | total_quantity    | 10          |
+      | quantity_per_user | 10          |
+      | free_shipping     | false       |
+      | free_shipping     | false       |
+      | gift_product      | product1    |
+    Then my cart total shipping fees should be 0.0 tax included
+    And my cart total should be 0.0 tax included
+    And I should have 0 products in my cart
 
   Scenario: Cart rule cannot be applied again when it is already in the cart
     Given I have an empty default cart

@@ -37,10 +37,10 @@ Feature: Cart rule (amount) calculation with one cart rule
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
+    And I have an empty default cart
 
   Scenario: 4 products in cart, one is virtual, several quantities, one 5€ global voucher
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     And I add 2 items of product "product2" in my cart
     And I add 1 items of product "product3" in my cart
     And I add 2 items of product "product8" in my cart
@@ -52,8 +52,7 @@ Feature: Cart rule (amount) calculation with one cart rule
     And my cart total using previous calculation method should be 182.09 tax included
 
   Scenario: Only virtual product in my cart, one 5€ global voucher
-    Given I have an empty default cart
-    And I add 2 items of product "product8" in my cart
+    Given I add 2 items of product "product8" in my cart
     And my cart total shipping fees should be 0.0 tax included
     And my cart total should be 24.69 tax included
     And my cart total using previous calculation method should be 24.69 tax included

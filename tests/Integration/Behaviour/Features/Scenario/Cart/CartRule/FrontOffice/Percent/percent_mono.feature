@@ -21,10 +21,10 @@ Feature: Cart rule (percent) calculation with one cart rule
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
+    And I have an empty default cart
 
   Scenario: one product in cart, quantity 1, one 50% global cartRule
-    Given I have an empty default cart
-    And I add 1 items of product "product1" in my cart
+    Given I add 1 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 26.812 tax included
     When I apply the voucher code "foo2"
@@ -32,8 +32,7 @@ Feature: Cart rule (percent) calculation with one cart rule
     And my cart total using previous calculation method should be 16.906 tax included
 
   Scenario: one product in cart, quantity 3, one 50% global cartRule
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 66.436 tax included
     When I apply the voucher code "foo2"
@@ -41,8 +40,7 @@ Feature: Cart rule (percent) calculation with one cart rule
     And my cart total using previous calculation method should be 36.718 tax included
 
   Scenario: 3 products in cart, several quantities, one 5€ global cartRule (reduced product at first place)
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     And I add 2 items of product "product2" in my cart
     And I add 1 items of product "product3" in my cart
     And my cart total shipping fees should be 7.0 tax included
@@ -52,8 +50,7 @@ Feature: Cart rule (percent) calculation with one cart rule
     Then my cart total using previous calculation method should be 84.7 tax included
 
   Scenario: 1 product in cart, percentage reduction cart rule is applied correctly
-    Given I have an empty default cart
-    And there is a cart rule "cartrule1" with following properties:
+    Given there is a cart rule "cartrule1" with following properties:
       | name[en-US]                  | cartrule1              |
       | total_quantity               | 1000                   |
       | quantity_per_user            | 1000                   |

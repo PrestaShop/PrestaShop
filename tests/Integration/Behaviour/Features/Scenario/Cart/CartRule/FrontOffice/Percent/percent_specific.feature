@@ -8,7 +8,6 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to one pr
 
   Background:
     Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
-    And I have an empty default cart
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
@@ -35,6 +34,7 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to one pr
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
     And cart rule "cartrule11" is restricted to product "product2"
+    And I have an empty default cart
 
   Scenario: one product #2 in cart, quantity 3, one specific 50% cartRule on product #2
     Given I add 3 items of product "product2" in my cart

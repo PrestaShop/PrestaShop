@@ -32,10 +32,10 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | discount_percentage          | 10                     |
       | apply_to_discounted_products | true                   |
       | discount_application_type    | order_without_shipping |
+    And I have an empty default cart
 
   Scenario: one product in cart, quantity 1, 2x % global cartRules
-    Given I have an empty default cart
-    And I add 1 items of product "product1" in my cart
+    Given I add 1 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 26.81 tax included
     When I apply the voucher code "foo2"
@@ -48,8 +48,7 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | cartrule3 | 0.9905    |
 
   Scenario: one product in cart, quantity 3, one 50% global cartRule
-    Given I have an empty default cart
-    And I add 3 items of product "product1" in my cart
+    Given I add 3 items of product "product1" in my cart
     And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 66.44 tax included
     When I apply the voucher code "foo2"
@@ -62,8 +61,7 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | cartrule3 | 2.972     |
 
   Scenario: 3 products in cart, several quantities, 2x % global cartRules
-    Given I have an empty default cart
-    And I add 2 items of product "product2" in my cart
+    Given I add 2 items of product "product2" in my cart
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart
     And my cart total shipping fees should be 7.0 tax included
@@ -79,7 +77,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
 
   @restore-cart-rules-after-scenario
   Scenario: one product in cart, one cart rule free shipping, one cart rule 10%
-    Given I have an empty default cart
     When I add 1 items of product "product1" in my cart
     # checking cart total and shipping before cart rules exists, to assert that shipping price will be reduced later
     # because when ONLY_SHIPPING is calculated it does not count cart rules
@@ -109,8 +106,7 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | 10percent    | 1.981     |
 
   Scenario: 2 combinable cart rules are applied correctly
-    Given I have an empty default cart
-    And there is a cart rule "cartrule50" with following properties:
+    Given there is a cart rule "cartrule50" with following properties:
       | name[en-US]                  | cartrule50             |
       | total_quantity               | 1000                   |
       | quantity_per_user            | 1000                   |
@@ -138,7 +134,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
     Then my cart total should be precisely 13.93 tax included
 
   Scenario: 3 products in cart, several quantities, 2x % global cartRules without codes
-    Given I have an empty default cart
     When I add 2 items of product "product2" in my cart
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart
