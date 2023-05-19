@@ -1,0 +1,40 @@
+name: Kanbanbot actions
+
+on:
+  pull_request_review:
+    types: [ submitted ]
+
+env:
+  GITHUB_API_TOKEN: ${{ secrets.JARVIS_TOKEN }}
+  APP_ENV: prod
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dispatch_github_events_in_kanbanbot:
+    name: Dispatch Github events in kanbanbot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+
+      - name: Checkout Kanbanbot
+        uses: actions/checkout@v3
+        with:
+          repository: PrestaShop/kanbanbot
+          path: 'kanbanbot/'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: 'main'
+
+      - name: Composer install in kanbanbot
+        run: |
+          cd kanbanbot/
+          composer install --no-interaction --no-progress --no-dev
+      - name: Dispatch github events in kanbanbot
+        run: |
+          cd kanbanbot/
+          php bin/console app:github:on-github-event ${{ github.event_name }} $GITHUB_EVENT_PATH
