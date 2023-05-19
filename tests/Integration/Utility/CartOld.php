@@ -36,6 +36,8 @@ use Tax;
 use Tools;
 
 /**
+ * @todo: should this class be deleted already? (or at least deprecated?) It doesn't seem to be used anymore
+ *
  * legacy code here : used to test behaviour between recent and previous version
  */
 class CartOld extends Cart
