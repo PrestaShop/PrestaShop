@@ -308,22 +308,19 @@ class CartPresenter implements PresenterInterface
 
     /**
      * @param Cart $cart
-     * @param bool $shouldSeparateGifts
-     *
-     * @return array
      *
      * @throws \Exception
      */
-    public function present($cart, $shouldSeparateGifts = false)
+    public function present($cart, bool $shouldSeparateGifts = false): array
     {
-        $cache_id = 'presentedCart_' . (int) $shouldSeparateGifts;
+        $cache_id = 'presentedCart_' . (int) $shouldSeparateGifts . $cart->id;
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
+
         if (!is_a($cart, 'Cart')) {
             throw new \Exception('CartPresenter can only present instance of Cart');
         }
-
         if ($shouldSeparateGifts) {
             $rawProducts = $cart->getProductsWithSeparatedGifts();
         } else {
