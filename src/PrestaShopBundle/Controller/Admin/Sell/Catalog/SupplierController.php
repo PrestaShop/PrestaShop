@@ -87,6 +87,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'settingsTipMessage' => $this->getSettingsTipMessage(),
+                'layoutHeaderToolbarBtn' => $this->getSupplierIndexToolbarButtons(),
             ]
         );
     }
@@ -406,6 +407,7 @@ class SupplierController extends FrameworkBundleAdminController
             'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getSupplierViewToolbarButtons($supplierId),
             'layoutTitle' => $this->trans(
                 'Supplier %name%',
                 'Admin.Navigation.Menu',
@@ -604,5 +606,39 @@ class SupplierController extends FrameworkBundleAdminController
             'Admin.Catalog.Notification',
             [$urlOpening, $urlEnding]
         );
+    }
+
+    /**
+     * @return array
+     */
+    private function getSupplierIndexToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_suppliers_create'),
+            'desc' => $this->trans('Add new supplier', 'Admin.Catalog.Feature'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
+    }
+
+    /**
+     * @param int $supplierId
+     *
+     * @return array
+     */
+    private function getSupplierViewToolbarButtons(int $supplierId): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['edit'] = [
+            'href' => $this->generateUrl('admin_suppliers_edit', ['supplierId' => $supplierId]),
+            'desc' => $this->trans('Edit supplier', 'Admin.Catalog.Feature'),
+            'icon' => 'mode_edit',
+        ];
+
+        return $toolbarButtons;
     }
 }

@@ -136,6 +136,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'helperDocLink' => $helperBlockLinkProvider->getLink('cms_pages'),
                 'cmsPageShowcaseCardName' => ShowcaseCard::CMS_PAGES_CARD,
+                'layoutHeaderToolbarBtn' => $this->getCmsPageIndexToolbarButtons($cmsCategoryParentId),
                 'showcaseCardIsClosed' => $showcaseCardIsClosed,
             ]
         );
@@ -1233,5 +1234,37 @@ class CmsPageController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * @param int $cmsCategoryId
+     *
+     * @return array
+     */
+    private function getCmsPageIndexToolbarButtons($cmsCategoryId): array
+    {
+        $toolbarButtons = [];
+
+        if ($cmsCategoryId !== CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID) {
+            $toolbarButtons['edit_cms_category'] = [
+                'href' => $this->generateUrl('admin_cms_pages_category_edit', ['cmsCategoryId' => $cmsCategoryId]),
+                'desc' => $this->trans('Edit page category', 'Admin.Design.Help'),
+                'icon' => 'mode_edit',
+            ];
+        }
+
+        $toolbarButtons['add_cms_category'] = [
+            'href' => $this->generateUrl('admin_cms_pages_category_create', ['id_cms_category' => $cmsCategoryId]),
+            'desc' => $this->trans('Add new page category', 'Admin.Design.Help'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        $toolbarButtons['add_cms_page'] = [
+            'href' => $this->generateUrl('admin_cms_pages_create', ['id_cms_category' => $cmsCategoryId]),
+            'desc' => $this->trans('Add new page', 'Admin.Design.Help'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
     }
 }

@@ -120,7 +120,7 @@ class CustomerController extends AbstractAdminController
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
-            'layoutHeaderToolbarBtn' => $this->getCustomerToolbarButtons(),
+            'layoutHeaderToolbarBtn' => $this->getCustomerIndexToolbarButtons(),
             'enableSidebar' => true,
         ]);
     }
@@ -378,6 +378,7 @@ class CustomerController extends AbstractAdminController
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
+            'layoutHeaderToolbarBtn' => $this->getCustomerViewToolbarButtons($customerId),
             'layoutTitle' => $this->trans(
                 'Customer %name%',
                 'Admin.Navigation.Menu',
@@ -1089,7 +1090,7 @@ class CustomerController extends AbstractAdminController
     /**
      * @return array
      */
-    private function getCustomerToolbarButtons(): array
+    private function getCustomerIndexToolbarButtons(): array
     {
         $toolbarButtons = [];
 
@@ -1109,6 +1110,24 @@ class CustomerController extends AbstractAdminController
             );
             $toolbarButtons['add']['href'] = '#';
         }
+
+        return $toolbarButtons;
+    }
+
+    /**
+     * @param int $customerId
+     *
+     * @return array
+     */
+    private function getCustomerViewToolbarButtons(int $customerId): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['edit'] = [
+            'href' => $this->generateUrl('admin_customers_edit', ['customerId' => $customerId]),
+            'desc' => $this->trans('Edit customer', 'Admin.Orderscustomers.Feature'),
+            'icon' => 'mode_edit',
+        ];
 
         return $toolbarButtons;
     }

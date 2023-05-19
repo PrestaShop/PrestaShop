@@ -876,6 +876,12 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $toolbarButtons = [];
 
+        $toolbarButtons['edit'] = [
+            'href' => $this->generateUrl('admin_categories_edit', ['categoryId' => $categoryId]),
+            'desc' => $this->trans('Edit category', 'Admin.Catalog.Feature'),
+            'icon' => 'mode_edit',
+        ];
+
         if ($this->get('prestashop.adapter.feature.multistore')->isUsed()) {
             $toolbarButtons['add_root'] = [
                 'href' => $this->generateUrl('admin_categories_create_root'),
