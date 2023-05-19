@@ -101,7 +101,7 @@ Feature: Cart rule application is validated before it is applied to cart
       | discount_application_type    | order_without_shipping  |
     And cart rule "cartrule4" is restricted to product "product2"
     And I add 1 items of product "product1" in my cart
-    And my cart total shipping fees should be 7.0 tax excluded
+    And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 26.812 tax included
     When I apply the voucher code "foo4"
     And I should get cart rule validation error saying "You cannot use this voucher with these products"
@@ -115,3 +115,41 @@ Feature: Cart rule application is validated before it is applied to cart
     And my cart total should be 98.82 tax included
     When I apply the voucher code "foo4"
     Then my cart total should be 93.82 tax included
+    # same with percentage
+    Given I have an empty default cart
+    And there is a cart rule "cartrule50" with following properties:
+      | name[en-US]                  | cartrule50             |
+      | total_quantity               | 1000                   |
+      | quantity_per_user            | 1000                   |
+      | priority                     | 10                     |
+      | free_shipping                | false                  |
+      | code                         | foo50                  |
+      | discount_percentage          | 50                     |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
+    And cart rule "cartrule50" is restricted to product "product2"
+    And I add 1 items of product "product1" in my cart
+    And my cart total shipping fees should be 7.0 tax included
+    And my cart total should be 26.812 tax included
+    When I apply the voucher code "foo50"
+    Then I should get cart rule validation error saying "You cannot use this voucher with these products"
+    And my cart total should be 26.812 tax included
+    # same with free shipping (just restricting to another product)
+    Given I have an empty default cart
+    And there is a cart rule "cartruleFreeShip" with following properties:
+      | name[en-US]                  | cartruleFreeShip       |
+      | priority                     | 11                     |
+      | free_shipping                | true                   |
+      | code                         | cartruleFreeShip       |
+      | discount_percentage          | 50                     |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
+    And cart rule "cartruleFreeShip" is restricted to product "product1"
+    And I add 1 items of product "product2" in my cart
+    And my cart total shipping fees should be 7.0 tax included
+    And my cart total should be 39.4 tax included
+    When I apply the voucher code "cartruleFreeShip"
+    Then I should get cart rule validation error saying "You cannot use this voucher with these products"
+    And my cart total should be 39.4 tax included
+
+

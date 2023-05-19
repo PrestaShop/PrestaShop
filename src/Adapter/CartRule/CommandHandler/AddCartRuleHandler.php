@@ -91,7 +91,7 @@ class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->highlight = $command->isHighlightInCart();
         $cartRule->partial_use = $command->allowPartialUse();
         $cartRule->priority = $command->getPriority();
-        $cartRule->active = $command->active();
+        $cartRule->active = $command->isActive();
 
         $this->fillCartRuleConditionsFromCommandData($cartRule, $command);
         $this->cartRuleActionFiller->fillUpdatableProperties($cartRule, $command->getCartRuleAction());

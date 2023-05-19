@@ -6,7 +6,7 @@ Feature: Cart rule (amount) calculation with one cart rule
   I must be able to have correct cart total when adding cart rules
 
   Background:
-    And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
+    Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock

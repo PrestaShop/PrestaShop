@@ -201,7 +201,7 @@ class AddCartRuleCommand
         return $this;
     }
 
-    public function active(): bool
+    public function isActive(): bool
     {
         return $this->active;
     }

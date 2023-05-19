@@ -7,7 +7,7 @@ Feature: Cart rule (percent) calculation with multiple cart rules
   I must be able to have correct cart total when adding cart rules
 
   Background:
-    And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
+    Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
@@ -136,3 +136,36 @@ Feature: Cart rule (percent) calculation with multiple cart rules
     Then my cart total should be 16.9 tax included
     When I apply the voucher code "foo30"
     Then my cart total should be precisely 13.93 tax included
+
+  Scenario: 3 products in cart, several quantities, 2x % global cartRules without codes
+    Given I have an empty default cart
+    When I add 2 items of product "product2" in my cart
+    And I add 3 items of product "product1" in my cart
+    And I add 1 items of product "product3" in my cart
+    Then my cart total should be 162.4 tax included
+    And my cart total shipping fees should be 7.0 tax included
+    Given I have an empty default cart
+    And there is a cart rule "cartrule14" with following properties:
+      | name[en-US]                  | cartrule14             |
+      | total_quantity               | 1000                   |
+      | quantity_per_user            | 1000                   |
+      | priority                     | 14                     |
+      | free_shipping                | false                  |
+      | code                         |                        |
+      | discount_percentage          | 10                     |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
+    And there is a cart rule "cartrule15" with following properties:
+      | name[en-US]                  | cartrule15             |
+      | total_quantity               | 1000                   |
+      | quantity_per_user            | 1000                   |
+      | priority                     | 15                     |
+      | free_shipping                | false                  |
+      | code                         |                        |
+      | discount_percentage          | 10                     |
+      | apply_to_discounted_products | true                   |
+      | discount_application_type    | order_without_shipping |
+    When I add 2 items of product "product2" in my cart
+    And I add 3 items of product "product1" in my cart
+    And I add 1 items of product "product3" in my cart
+    Then my cart total should be 132.874 tax included
