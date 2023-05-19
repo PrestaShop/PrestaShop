@@ -62,13 +62,14 @@ class ImageGenerator
     /**
      * @param string $imagePath
      * @param ImageType[] $imageTypes
+     * @param int $imageId
      *
      * @return bool
      *
      * @throws ImageOptimizationException
      * @throws ImageUploadException
      */
-    public function generateImagesByTypes(string $imagePath, array $imageTypes, int $imageId): bool
+    public function generateImagesByTypes(string $imagePath, array $imageTypes, int $imageId = 0): bool
     {
         $resized = true;
 
@@ -92,10 +93,11 @@ class ImageGenerator
      *
      * @param string $filePath
      * @param ImageType $imageType
+     * @param int $imageId
      *
      * @return bool
      */
-    protected function resize(string $filePath, ImageType $imageType, int $imageId): bool
+    protected function resize(string $filePath, ImageType $imageType, int $imageId = 0): bool
     {
         if (!is_file($filePath)) {
             throw new ImageUploadException(sprintf('File "%s" does not exist', $filePath));
