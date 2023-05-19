@@ -868,7 +868,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param int $customerId
+     * @param int $manufacturerId
      *
      * @return array
      */
