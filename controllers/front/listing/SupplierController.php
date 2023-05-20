@@ -23,20 +23,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Adapter\Presenter\Supplier\SupplierPresenter;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class SupplierControllerCore extends ProductListingFrontController
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $php_self = 'supplier';
 
     /** @var Supplier|null */
     protected $supplier;
     protected $label;
+
+    /** @var SupplierPresenter */
+    protected $supplierPresenter;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -78,6 +80,9 @@ class SupplierControllerCore extends ProductListingFrontController
                 $this->canonicalRedirection();
             }
         }
+
+        // Initialize presenter, we will use it for all cases
+        $this->supplierPresenter = new SupplierPresenter($this->context->link);
 
         parent::init();
     }
@@ -155,7 +160,10 @@ class SupplierControllerCore extends ProductListingFrontController
      */
     protected function assignSupplier()
     {
-        $supplierVar = $this->objectPresenter->present($this->supplier);
+        $supplierVar = $this->supplierPresenter->present(
+            $this->supplier,
+            $this->context->language
+        );
 
         $filteredSupplier = Hook::exec(
             'filterSupplierContent',
@@ -202,26 +210,22 @@ class SupplierControllerCore extends ProductListingFrontController
         }
 
         $this->context->smarty->assign([
-            'brands' => $suppliersVar,
+            'suppliers' => $suppliersVar,
         ]);
     }
 
     public function getTemplateVarSuppliers()
     {
         $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true);
-        $suppliers_for_display = [];
 
-        foreach ($suppliers as $supplier) {
-            $suppliers_for_display[$supplier['id_supplier']] = $supplier;
-            $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
-            $suppliers_for_display[$supplier['id_supplier']]['image'] = $this->context->link->getSupplierImageLink($supplier['id_supplier'], 'small_default');
-            $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getSupplierLink($supplier['id_supplier']);
-            $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1
-                ? $this->trans('%number% products', ['%number%' => $supplier['nb_products']], 'Shop.Theme.Catalog')
-                : $this->trans('%number% product', ['%number%' => $supplier['nb_products']], 'Shop.Theme.Catalog');
+        foreach ($suppliers as &$supplier) {
+            $supplier = $this->supplierPresenter->present(
+                $supplier,
+                $this->context->language
+            );
         }
 
-        return $suppliers_for_display;
+        return $suppliers;
     }
 
     public function getListingLabel()
@@ -232,9 +236,8 @@ class SupplierControllerCore extends ProductListingFrontController
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
-
         $breadcrumb['links'][] = [
-            'title' => $this->trans('All suppliers', [], 'Shop.Theme.Catalog'),
+            'title' => $this->trans('Suppliers', [], 'Shop.Theme.Catalog'),
             'url' => $this->context->link->getPageLink('supplier', true),
         ];
 

@@ -24,15 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Presenter\Manufacturer;
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Supplier;
 
 use Language;
 use Link;
-use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use Supplier;
 
-class ManufacturerLazyArray extends AbstractLazyArray
+class SupplierLazyArray extends AbstractLazyArray
 {
     /**
      * @var ImageRetriever
@@ -47,7 +47,7 @@ class ManufacturerLazyArray extends AbstractLazyArray
     /**
      * @var array
      */
-    protected $manufacturer;
+    protected $supplier;
 
     /**
      * @var Language
@@ -55,28 +55,18 @@ class ManufacturerLazyArray extends AbstractLazyArray
     private $language;
 
     public function __construct(
-        array $manufacturer,
+        array $supplier,
         Language $language,
         ImageRetriever $imageRetriever,
         Link $link
     ) {
-        $this->manufacturer = $manufacturer;
+        $this->supplier = $supplier;
         $this->language = $language;
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
 
         parent::__construct();
-        $this->appendArray($this->manufacturer);
-    }
-
-    /**
-     * @arrayAccess
-     *
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->manufacturer['short_description'];
+        $this->appendArray($this->supplier);
     }
 
     /**
@@ -86,7 +76,7 @@ class ManufacturerLazyArray extends AbstractLazyArray
      */
     public function getUrl()
     {
-        return $this->link->getManufacturerLink($this->manufacturer['id']);
+        return $this->link->getSupplierLink($this->supplier['id']);
     }
 
     /**
@@ -97,8 +87,8 @@ class ManufacturerLazyArray extends AbstractLazyArray
     public function getImage()
     {
         return $this->imageRetriever->getImage(
-            new Manufacturer($this->manufacturer['id'], $this->language->getId()),
-            $this->manufacturer['id']
+            new Supplier($this->supplier['id'], $this->language->getId()),
+            $this->supplier['id']
         );
     }
 
@@ -109,13 +99,13 @@ class ManufacturerLazyArray extends AbstractLazyArray
      */
     public function getNbProducts()
     {
-        if (!isset($this->manufacturer['nb_products'])) {
-            $this->manufacturer['nb_products'] = count(
-                (new Manufacturer($this->manufacturer['id'], $this->language->getId()))
+        if (!isset($this->supplier['nb_products'])) {
+            $this->supplier['nb_products'] = count(
+                (new Supplier($this->supplier['id'], $this->language->getId()))
                     ->getProductsLite($this->language->getId())
             );
         }
 
-        return $this->manufacturer['nb_products'];
+        return $this->supplier['nb_products'];
     }
 }
