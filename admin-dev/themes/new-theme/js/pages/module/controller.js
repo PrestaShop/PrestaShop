@@ -225,6 +225,7 @@ class AdminModuleController {
     this.eventEmitter.on('Module Enabled', (context) => this.onModuleDisabled(context));
     this.eventEmitter.on('Module Disabled', (context) => this.onModuleDisabled(context));
     this.eventEmitter.on('Module Uninstalled', (context) => this.installHandler(context));
+    this.eventEmitter.on('Module Delete', (context) => this.onModuleDelete(context));
     this.eventEmitter.on('Module Installed', (context) => this.installHandler(context));
   }
 
@@ -274,6 +275,11 @@ class AdminModuleController {
     $('.modules-list').each(() => {
       self.updateModuleVisibility();
     });
+  }
+
+  onModuleDelete(event) {
+    this.modulesList = this.modulesList.filter((value) => value.techName !== $(event).data('tech-name'));
+    this.installHandler(event);
   }
 
   initPlaceholderMechanism() {
