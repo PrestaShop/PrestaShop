@@ -128,9 +128,8 @@ Feature: Cart calculation with carrier specific cart rules
 
   Scenario: one product in cart, quantity 1, can apply corresponding cart rule
     Given carrier "carrier3" applies shipping fees of 6.7 in zone "zone1" for price between 0 and 10000
-    Given carrier "carrier3" applies shipping fees of 7.2 in zone "zone2" for price between 0 and 10000
-    Given there is a cart rule named "cartrule3" that applies a percent discount of 55.0% with priority 3, quantity of 1000 and quantity per user 1000
-    Given there is a cart rule "cartrule3" with following properties:
+    And carrier "carrier3" applies shipping fees of 7.2 in zone "zone2" for price between 0 and 10000
+    And there is a cart rule "cartrule3" with following properties:
       | name[en-US]                  | cartrule3              |
       | total_quantity               | 1000                   |
       | quantity_per_user            | 1000                   |

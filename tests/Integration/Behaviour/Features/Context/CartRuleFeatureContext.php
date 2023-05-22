@@ -297,16 +297,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedIsRestrictedToCountryNamed(string $cartRuleName, string $country)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
         $this->countryFeatureContext->checkCountryWithIsoCodeExists($country);
-        $this->cartRules[$cartRuleName]->country_restriction = true;
-        $this->cartRules[$cartRuleName]->save();
 
-        $idCartRule = (int) $this->cartRules[$cartRuleName]->id;
+        if ($this->getSharedStorage()->exists($cartRuleName)) {
+            //@todo: This allows applying this step to cart rule that was created with a step using CQRS command and saved to shared storage
+            //       it is not ideal, but for now it should work, until restrictions are migrated.
+            $cartRuleId = $this->getSharedStorage()->get($cartRuleName);
+        } else {
+            $this->checkCartRuleWithNameExists($cartRuleName);
+            $cartRuleId = (int) $this->cartRules[$cartRuleName]->id;
+        }
+
+        $cartRule = new CartRule($cartRuleId);
+        $cartRule->country_restriction = true;
+        $cartRule->save();
+        $this->cartRules[$cartRuleName] = $cartRule;
+
         $idCountry = (int) $this->countryFeatureContext->getCountryWithIsoCode($country);
         Db::getInstance()->execute(
             'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_country(`id_cart_rule`, `id_country`) ' .
-            'VALUES(' . $idCartRule . ', ' . $idCountry . ')'
+            'VALUES(' . $cartRuleId . ', ' . $idCountry . ')'
         );
         Cache::clear();
     }
