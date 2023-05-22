@@ -186,5 +186,3 @@ Feature: Cart rule application is validated before it is applied to cart
     When I apply the voucher code "cartruleFreeShip"
     Then I should get cart rule validation error saying "You cannot use this voucher with these products"
     And my cart total should be 39.4 tax included
-
-
