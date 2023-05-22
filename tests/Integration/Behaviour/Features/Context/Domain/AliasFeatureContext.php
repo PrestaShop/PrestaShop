@@ -170,7 +170,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
             if (isset($expectedAlias['active'])) {
                 Assert::assertSame(
                     $alias['active'],
-                    $expectedAlias['active'],
+                    (int) $expectedAlias['active'],
                     'Unexpected alias active field'
                 );
             }
