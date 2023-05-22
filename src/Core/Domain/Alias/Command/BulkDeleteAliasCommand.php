@@ -37,16 +37,11 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
 class BulkDeleteAliasCommand
 {
     /**
-     * @var AliasId[]
-     */
-    private $aliasIds;
-
-    /**
      * @param int[] $aliasIds
      *
      * @throws AliasConstraintException
      */
-    public function __construct(array $aliasIds)
+    public function __construct(private array $aliasIds)
     {
         foreach ($aliasIds as $aliasId) {
             $this->aliasIds[] = new AliasId($aliasId);

@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
  */
 class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkDeleteAliasHandlerInterface
 {
-    public function __construct(private readonly AliasRepository $aliasRepository)
+    public function __construct(protected AliasRepository $aliasRepository)
     {
     }
 
@@ -80,7 +80,7 @@ class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkD
     /**
      * {@inheritDoc}
      */
-    protected function supports(object $id): bool
+    protected function supports(mixed $id): bool
     {
         return $id instanceof AliasId;
     }
