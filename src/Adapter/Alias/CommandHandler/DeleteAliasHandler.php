@@ -34,14 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\DeleteAliasHandlerInt
 
 class DeleteAliasHandler implements DeleteAliasHandlerInterface
 {
-    /**
-     * @var AliasRepository
-     */
-    private $aliasRepository;
-
-    public function __construct(AliasRepository $aliasRepository)
+    public function __construct(private readonly AliasRepository $aliasRepository)
     {
-        $this->aliasRepository = $aliasRepository;
     }
 
     /**

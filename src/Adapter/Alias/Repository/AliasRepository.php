@@ -43,28 +43,15 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 class AliasRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var Connection
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param AliasValidator $aliasValidator
      */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var AliasValidator
-     */
-    private $aliasValidator;
-
     public function __construct(
-        Connection $connection,
-        string $dbPrefix,
-        AliasValidator $aliasValidator
+        private readonly Connection $connection,
+        private readonly string $dbPrefix,
+        private readonly AliasValidator $aliasValidator
     ) {
-        $this->aliasValidator = $aliasValidator;
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
     }
 
     /**
