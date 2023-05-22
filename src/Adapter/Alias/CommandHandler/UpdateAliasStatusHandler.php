@@ -39,17 +39,11 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotUpdateAliasException
 class UpdateAliasStatusHandler implements UpdateAliasStatusHandlerInterfaces
 {
     /**
-     * @var AliasRepository
-     */
-    private $aliasRepository;
-
-    /**
      * @param AliasRepository $aliasRepository
      */
     public function __construct(
-        AliasRepository $aliasRepository
+        protected AliasRepository $aliasRepository
     ) {
-        $this->aliasRepository = $aliasRepository;
     }
 
     /**
@@ -59,8 +53,8 @@ class UpdateAliasStatusHandler implements UpdateAliasStatusHandlerInterfaces
      */
     public function handle(UpdateAliasStatusCommand $command): void
     {
-        $alias = $this->aliasRepository->get($command->getAliasId());
-        $alias->active = $command->isEnabled();
+        $alias = $this->aliasRepository->get($command->aliasId);
+        $alias->active = $command->enabled;
         $this->aliasRepository->partialUpdate($alias, ['active'], CannotUpdateAliasException::class);
     }
 }

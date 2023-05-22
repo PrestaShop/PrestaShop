@@ -154,7 +154,7 @@ class AliasRepository extends AbstractObjectModelRepository
 
     /**
      * @param Alias $alias
-     * @param array $propertiesToUpdate
+     * @param string[] $propertiesToUpdate
      * @param string $exceptionClass
      *
      * @return void
