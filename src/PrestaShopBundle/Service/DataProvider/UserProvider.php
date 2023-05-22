@@ -36,11 +36,9 @@ class UserProvider
 {
     public const ANONYMOUS_USER = 'ANONYMOUS_USER';
 
-    private $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
     }
 
     /**

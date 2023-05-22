@@ -30,17 +30,17 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension;
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PathWithBackUrlExtensionTest extends TestCase
 {
     public const FALLBACK_URL = 'https://www.prestashop.com/en';
 
     /**
-     * @var MockObject|RoutingExtension
+     * @var MockObject&UrlGeneratorInterface
      */
     private $routingExtensionMock;
 
@@ -59,14 +59,14 @@ class PathWithBackUrlExtensionTest extends TestCase
         parent::setUp();
 
         $this->routingExtensionMock = $this
-            ->getMockBuilder(RoutingExtension::class)
+            ->getMockBuilder(UrlGeneratorInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $this
             ->routingExtensionMock
-            ->method('getPath')
+            ->method('generate')
             ->willReturn(self::FALLBACK_URL)
         ;
 
@@ -79,19 +79,6 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->getMockBuilder(BackUrlProvider::class)
             ->getMock()
         ;
-    }
-
-    public function testItFallBacksToDefaultUrlWhenRequestStackIsNull()
-    {
-        $extension = new PathWithBackUrlExtension(
-            $this->routingExtensionMock,
-            $this->backUrlProviderMock,
-            null
-        );
-
-        $url = $extension->getPathWithBackUrl('prestashop');
-
-        $this->assertEquals(self::FALLBACK_URL, $url);
     }
 
     public function testItFallBacksToDefaultUrlWhenBackUrlIsNotFound()
