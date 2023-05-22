@@ -1234,6 +1234,8 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
      * @return CsvResponse
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
@@ -1247,6 +1249,8 @@ class ProductController extends FrameworkBundleAdminController
      * Set the Catalog filters values and redirect to the catalogAction.
      *
      * URL example: /product/catalog_filters/42/last/32
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int|string $quantity the quantity to set on the catalog filters persistence
      * @param string $active the activation state to set on the catalog filters persistence

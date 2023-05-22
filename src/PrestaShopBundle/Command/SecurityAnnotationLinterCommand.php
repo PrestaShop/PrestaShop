@@ -55,6 +55,29 @@ final class SecurityAnnotationLinterCommand extends Command
      */
     private $securityAnnotationLinter;
 
+    /**
+     * @var array
+     */
+    private const EXCEPTION_ROUTES = [
+        'admin_common_notifications',
+        'admin_common_notifications_ack',
+        'admin_common_pagination',
+        'admin_common_sidebar',
+        'admin_common_reset_search',
+        'admin_common_reset_search_by_filter_id',
+        'admin_security_compromised',
+        'admin_get_ajax_categories',
+        'admin_product_list', // Back-office product page v1 has its own security system
+        'admin_product_bulk_action', // Back-office product page v1 has its own security system
+        'admin_product_unit_action', // Back-office product page v1 has its own security system
+        'admin_product_mass_edit_action', // Back-office product page v1 has its own security system
+        'admin_import_data_configuration_index_redirect',
+        'admin_country_states',
+        'admin_mail_theme_save_configuration_deprecated', // Deprecated
+        'admin_mail_theme_send_test_mail_deprecated',  // Deprecated
+        'admin_mail_theme_send_test_module_mail_deprecated',  // Deprecated
+    ];
+
     public function __construct(AdminRouteProvider $adminRouteProvider, SecurityAnnotationLinter $securityAnnotationLinter)
     {
         parent::__construct();
@@ -185,6 +208,9 @@ final class SecurityAnnotationLinterCommand extends Command
 
         /** @var Route $route */
         foreach ($this->adminRouteProvider->getRoutes() as $routeName => $route) {
+            if (in_array($routeName, self::EXCEPTION_ROUTES)) {
+                continue;
+            }
             try {
                 $this->securityAnnotationLinter->lint($routeName, $route);
             } catch (LinterException $e) {

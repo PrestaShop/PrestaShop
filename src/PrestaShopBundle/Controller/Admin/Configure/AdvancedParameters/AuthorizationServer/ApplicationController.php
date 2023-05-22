@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\Authori
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -41,6 +42,8 @@ use Symfony\Component\HttpFoundation\Response;
 class ApplicationController extends FrameworkBundleAdminController
 {
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param AuthorizedApplicationsFilters $filters the list of filters from the request
      *
      * @return Response
@@ -61,24 +64,36 @@ class ApplicationController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     */
     public function viewAction(): void
     {
         // TODO: Implement viewAction() method in view PR.
         throw new NotImplementedException();
     }
 
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     */
     public function createAction(): void
     {
         // TODO: Implement createAction() method in create PR.
         throw new NotImplementedException();
     }
 
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     */
     public function editAction(): void
     {
         // TODO: Implement editAction() method in edit PR.
         throw new NotImplementedException();
     }
 
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     */
     public function deleteAction(): void
     {
         // TODO: Implement deleteAction() method in delete PR.
