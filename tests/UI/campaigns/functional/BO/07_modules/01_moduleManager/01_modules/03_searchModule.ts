@@ -15,7 +15,7 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_smodules_earchModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_searchModule';
 
 describe('BO - Modules - Module Manager : Search module', async () => {
   let browserContext: BrowserContext;
