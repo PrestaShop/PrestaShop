@@ -43,14 +43,8 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
  */
 class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkDeleteAliasHandlerInterface
 {
-    /**
-     * @var AliasRepository
-     */
-    private $aliasRepository;
-
-    public function __construct(AliasRepository $aliasRepository)
+    public function __construct(private readonly AliasRepository $aliasRepository)
     {
-        $this->aliasRepository = $aliasRepository;
     }
 
     /**
@@ -66,7 +60,7 @@ class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkD
      *
      * @return void
      */
-    protected function handleSingleAction($id): void
+    protected function handleSingleAction(object $id): void
     {
         $this->aliasRepository->delete($id);
     }
@@ -86,7 +80,7 @@ class BulkDeleteAliasHandler extends AbstractBulkCommandHandler implements BulkD
     /**
      * {@inheritDoc}
      */
-    protected function supports($id): bool
+    protected function supports(object $id): bool
     {
         return $id instanceof AliasId;
     }
