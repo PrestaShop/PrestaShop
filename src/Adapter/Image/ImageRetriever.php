@@ -137,7 +137,7 @@ class ImageRetriever
 
     /**
      * @param Product|Store|Category|Manufacturer|Supplier $object
-     * @param int $id_image
+     * @param int|string $id_image Identifier of the image
      *
      * @return array|null
      *
@@ -267,13 +267,13 @@ class ImageRetriever
     /**
      * @param string $originalImagePath
      * @param string $imageFolderPath
-     * @param int $idImage
+     * @param int|string $idImage
      * @param array $imageTypeData
      * @param string $imageFormat
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int|string $idImage, array $imageTypeData, string $imageFormat)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
         $resizedImagePath = implode(DIRECTORY_SEPARATOR, [

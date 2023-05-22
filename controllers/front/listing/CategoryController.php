@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Presenter\Category\CategoryPresenter;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
@@ -43,6 +44,9 @@ class CategoryControllerCore extends ProductListingFrontController
      * @var Category
      */
     protected $category;
+
+    /** @var CategoryPresenter */
+    protected $categoryPresenter;
 
     public function canonicalRedirection(string $canonicalURL = '')
     {
@@ -98,24 +102,11 @@ class CategoryControllerCore extends ProductListingFrontController
             return;
         }
 
-        $categoryVar = $this->getTemplateVarCategory();
-
-        $filteredCategory = Hook::exec(
-            'filterCategoryContent',
-            ['object' => $categoryVar],
-            $id_module = null,
-            $array_return = false,
-            $check_exceptions = true,
-            $use_push = false,
-            $id_shop = null,
-            $chain = true
-        );
-        if (!empty($filteredCategory['object'])) {
-            $categoryVar = $filteredCategory['object'];
-        }
+        // Initialize presenter, we will use it for all cases
+        $this->categoryPresenter = new CategoryPresenter($this->context->link);
 
         $this->context->smarty->assign([
-            'category' => $categoryVar,
+            'category' => $this->getTemplateVarCategory(),
             'subcategories' => $this->getTemplateVarSubCategories(),
         ]);
     }
@@ -201,37 +192,45 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected function getTemplateVarCategory()
     {
-        $category = $this->objectPresenter->present($this->category);
-        $category['image'] = $this->getImage(
+        $categoryVar = $this->categoryPresenter->present(
             $this->category,
-            $this->category->id_image
+            $this->context->language
         );
 
-        return $category;
+        $filteredCategory = Hook::exec(
+            'filterCategoryContent',
+            ['object' => $categoryVar],
+            $id_module = null,
+            $array_return = false,
+            $check_exceptions = true,
+            $use_push = false,
+            $id_shop = null,
+            $chain = true
+        );
+        if (!empty($filteredCategory['object'])) {
+            $categoryVar = $filteredCategory['object'];
+        }
+
+        return $categoryVar;
     }
 
     protected function getTemplateVarSubCategories()
     {
-        return array_map(function (array $category) {
-            $object = new Category(
-                $category['id_category'],
-                $this->context->language->id
-            );
+        $subcategories = $this->category->getSubCategories($this->context->language->id);
 
-            $category['image'] = $this->getImage(
-                $object,
-                $object->id_image
+        foreach ($subcategories as &$subcategory) {
+            $subcategory = $this->categoryPresenter->present(
+                $subcategory,
+                $this->context->language
             );
+        }
 
-            $category['url'] = $this->context->link->getCategoryLink(
-                $category['id_category'],
-                $category['link_rewrite']
-            );
-
-            return $category;
-        }, $this->category->getSubCategories($this->context->language->id));
+        return $subcategories;
     }
 
+    /**
+     * @deprecated since 9.0.0 and will be removed in 10.0.0
+     */
     protected function getImage(Category $object, int $id_image)
     {
         $retriever = new ImageRetriever(
