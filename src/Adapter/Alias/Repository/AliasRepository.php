@@ -48,9 +48,9 @@ class AliasRepository extends AbstractObjectModelRepository
      * @param AliasValidator $aliasValidator
      */
     public function __construct(
-        private readonly Connection $connection,
-        private readonly string $dbPrefix,
-        private readonly AliasValidator $aliasValidator
+        protected Connection $connection,
+        protected string $dbPrefix,
+        protected AliasValidator $aliasValidator
     ) {
     }
 
