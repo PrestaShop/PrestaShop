@@ -43,6 +43,6 @@ class DeleteAliasHandler implements DeleteAliasHandlerInterface
      */
     public function handle(DeleteAliasCommand $command): void
     {
-        $this->aliasRepository->delete($command->getAliasId());
+        $this->aliasRepository->delete($command->aliasId);
     }
 }

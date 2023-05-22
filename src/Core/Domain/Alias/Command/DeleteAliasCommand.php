@@ -35,21 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\ValueObject\AliasId;
  */
 class DeleteAliasCommand
 {
-    /**
-     * @var AliasId
-     */
-    private $aliasId;
-
-    public function __construct(AliasId $aliasId)
+    public function __construct(public readonly AliasId $aliasId)
     {
-        $this->aliasId = $aliasId;
-    }
-
-    /**
-     * @return AliasId
-     */
-    public function getAliasId(): AliasId
-    {
-        return $this->aliasId;
     }
 }
