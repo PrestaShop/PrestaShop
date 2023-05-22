@@ -7,7 +7,7 @@ on:
     types: [labeled]
 
 env:
-  GITHUB_API_TOKEN: ${{ secrets.JARVIS_TOKEN }}
+  GITHUB_API_TOKEN: ${{ secrets.KANBANBOT_TOKEN }}
   APP_ENV: prod
 
 concurrency:
