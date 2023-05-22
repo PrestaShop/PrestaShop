@@ -41,22 +41,16 @@ class BulkUpdateAliasStatusCommand
     private $aliasIds;
 
     /**
-     * @var bool
-     */
-    private $enabled;
-
-    /**
      * @param int[] $aliasIds
      * @param bool $enabled
      */
     public function __construct(
         array $aliasIds,
-        bool $enabled
+        private readonly bool $enabled
     ) {
         foreach ($aliasIds as $aliasId) {
             $this->aliasIds[] = new AliasId($aliasId);
         }
-        $this->enabled = $enabled;
     }
 
     /**

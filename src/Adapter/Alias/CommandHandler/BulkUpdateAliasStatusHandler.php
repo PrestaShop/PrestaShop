@@ -42,11 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements BulkUpdateAliasStatusHandlerInterface
 {
     /**
-     * @var AliasRepository
-     */
-    private $aliasRepository;
-
-    /**
      * @var bool|null
      */
     private $enabled;
@@ -54,9 +49,8 @@ class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements
     /**
      * @param AliasRepository $aliasRepository
      */
-    public function __construct(AliasRepository $aliasRepository)
+    public function __construct(protected AliasRepository $aliasRepository)
     {
-        $this->aliasRepository = $aliasRepository;
     }
 
     /**
