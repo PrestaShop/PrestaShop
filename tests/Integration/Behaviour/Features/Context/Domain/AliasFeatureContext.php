@@ -110,7 +110,7 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I bulk change status to be (enabled|disabled) for following aliases "([^"]*)"$/
+     * @When /^I bulk (enable|disable) the following aliases "([^"]*)"$/
      *
      * @param bool $status
      * @param string $aliasReferences

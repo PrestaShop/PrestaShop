@@ -3,9 +3,9 @@
 @clear-cache-before-feature
 @clear-cache-after-feature
 @update_alias_status_feature
-Feature: Toggle basic alias statuses from Back Office (BO)
+Feature: Update alias status from Back Office (BO)
   As a BO user
-  I need to be able to toggle alias statuses from the BO
+  I need to be able to enable or disable alias from the BO
 
   Scenario: I disable multiple aliases
     Given following aliases should exist:
@@ -27,12 +27,12 @@ Feature: Toggle basic alias statuses from Back Office (BO)
       | alias2       | blues  | blouse | 1      |
 
   Scenario: I bulk update alias statuses
-    When I bulk change status to be enabled for following aliases "alias1,alias2"
+    When I bulk enable the following aliases "alias1,alias2"
     Then following aliases should exist:
       | id reference | alias  | search | active |
       | alias1       | bloose | blouse | 1      |
       | alias2       | blues  | blouse | 1      |
-    When I bulk change status to be disabled for following aliases "alias1,alias2"
+    When I bulk disable the following aliases "alias1,alias2"
     Then following aliases should exist:
       | id reference | alias  | search | active |
       | alias1       | bloose | blouse | 0      |
