@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureValueFilters;
@@ -52,11 +53,6 @@ use Symfony\Component\DependencyInjection\Container;
 class FeatureValueGridFactory extends GridFactory
 {
     /**
-     * @var FeatureRepository
-     */
-    private $featureRepository;
-
-    /**
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataFactoryInterface $dataFactory
      * @param GridFilterFormFactoryInterface $filterFormFactory
@@ -68,17 +64,16 @@ class FeatureValueGridFactory extends GridFactory
      *        and FeatureValueGridFactory should be removed from phpstan-disallowed-calls.neon "allowIn" section
      */
     public function __construct(
-        GridDefinitionFactoryInterface $definitionFactory,
-        GridDataFactoryInterface $dataFactory,
-        GridFilterFormFactoryInterface $filterFormFactory,
-        HookDispatcherInterface $hookDispatcher,
-        FeatureRepository $featureRepository
+        protected GridDefinitionFactoryInterface $definitionFactory,
+        protected GridDataFactoryInterface $dataFactory,
+        protected GridFilterFormFactoryInterface $filterFormFactory,
+        protected HookDispatcherInterface $hookDispatcher,
+        protected FeatureRepository $featureRepository
     ) {
         parent::__construct($definitionFactory, $dataFactory, $filterFormFactory, $hookDispatcher);
-        $this->featureRepository = $featureRepository;
     }
 
-    public function getGrid(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria): GridInterface
     {
         if (!$searchCriteria instanceof FeatureValueFilters) {
             throw new InvalidArgumentException(sprintf('Invalid search criteria. Expected "%s"', FeatureValueFilters::class));

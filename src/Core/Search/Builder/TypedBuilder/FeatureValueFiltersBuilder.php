@@ -36,18 +36,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FeatureValueFiltersBuilder extends AbstractFiltersBuilder implements TypedFiltersBuilderInterface
 {
-    /** @var Request */
-    private $request;
-
-    /**
-     * @var ContextLanguageProviderInterface
-     */
-    private $contextLanguageProvider;
+    private Request $request;
 
     public function __construct(
-        ContextLanguageProviderInterface $contextLanguageProvider
+        protected ContextLanguageProviderInterface $contextLanguageProvider
     ) {
-        $this->contextLanguageProvider = $contextLanguageProvider;
     }
 
     /**

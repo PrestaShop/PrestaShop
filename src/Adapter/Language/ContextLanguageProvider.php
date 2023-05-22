@@ -33,19 +33,13 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface;
 
 /**
- * @experimental This will be refactored once the Context replacement architecture has been decided
+ * @experimental This will be refactored once the Context replacement architecture is decided
  */
 class ContextLanguageProvider implements ContextLanguageProviderInterface
 {
-    /**
-     * @var LegacyContext
-     */
-    private $context;
-
     public function __construct(
-        LegacyContext $context
+        protected LegacyContext $context
     ) {
-        $this->context = $context;
     }
 
     public function getLanguageId(): int

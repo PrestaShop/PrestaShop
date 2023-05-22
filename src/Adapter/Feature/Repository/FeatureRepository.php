@@ -49,34 +49,11 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository
  */
 class FeatureRepository extends AbstractMultiShopObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
-     * @var string
-     */
-    protected $dbPrefix;
-
-    /**
-     * @var FeatureValidator
-     */
-    private $featureValidator;
-
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param FeatureValidator $featureValidator
-     */
     public function __construct(
-        Connection $connection,
-        string $dbPrefix,
-        FeatureValidator $featureValidator
+        protected Connection $connection,
+        protected string $dbPrefix,
+        protected FeatureValidator $featureValidator
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
-        $this->featureValidator = $featureValidator;
     }
 
     public function get(FeatureId $featureId): Feature

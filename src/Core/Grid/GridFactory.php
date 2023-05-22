@@ -39,47 +39,23 @@ use Symfony\Component\DependencyInjection\Container;
 class GridFactory implements GridFactoryInterface
 {
     /**
-     * @var GridDefinitionFactoryInterface
-     */
-    protected $definitionFactory;
-
-    /**
-     * @var GridDataFactoryInterface
-     */
-    protected $dataFactory;
-
-    /**
-     * @var GridFilterFormFactoryInterface
-     */
-    protected $filterFormFactory;
-
-    /**
-     * @var HookDispatcherInterface
-     */
-    protected $hookDispatcher;
-
-    /**
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataFactoryInterface $dataFactory
      * @param GridFilterFormFactoryInterface $filterFormFactory
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
-        GridDefinitionFactoryInterface $definitionFactory,
-        GridDataFactoryInterface $dataFactory,
-        GridFilterFormFactoryInterface $filterFormFactory,
-        HookDispatcherInterface $hookDispatcher
+        protected GridDefinitionFactoryInterface $definitionFactory,
+        protected GridDataFactoryInterface $dataFactory,
+        protected GridFilterFormFactoryInterface $filterFormFactory,
+        protected HookDispatcherInterface $hookDispatcher
     ) {
-        $this->definitionFactory = $definitionFactory;
-        $this->dataFactory = $dataFactory;
-        $this->filterFormFactory = $filterFormFactory;
-        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getGrid(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria): GridInterface
     {
         $definition = $this->definitionFactory->getDefinition();
         $data = $this->dataFactory->getData($searchCriteria);
