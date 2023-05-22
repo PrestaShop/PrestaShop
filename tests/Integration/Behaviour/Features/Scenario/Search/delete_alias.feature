@@ -13,8 +13,8 @@ Feature: Delete aliases from Back Office (BO)
       | alias1       | bloose | blouse |
       | alias2       | blues  | blouse |
     When I add alias with following information:
-      | alias   | large |
-      | search  | big   |
+      | alias  | large |
+      | search | big   |
     Then following aliases should exist:
       | id reference | alias  | search |
       | alias1       | bloose | blouse |
@@ -32,11 +32,11 @@ Feature: Delete aliases from Back Office (BO)
       | alias1       | bloose | blouse |
       | alias2       | blues  | blouse |
     When I add alias with following information:
-      | alias   | large |
-      | search  | big   |
+      | alias  | large |
+      | search | big   |
     And I add alias with following information:
-      | alias   | huge |
-      | search  | big   |
+      | alias  | huge |
+      | search | big  |
     Then following aliases should exist:
       | id reference | alias  | search |
       | alias1       | bloose | blouse |
