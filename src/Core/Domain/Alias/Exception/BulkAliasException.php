@@ -39,18 +39,12 @@ class BulkAliasException extends AliasException implements BulkCommandExceptionI
 {
     public const FAILED_BULK_DELETE = 1;
 
-    /**
-     * @var Throwable[]
-     */
-    private $exceptions;
-
     public function __construct(
-        array $exceptions,
+        private readonly array $exceptions,
         string $message = 'Errors occurred during Alias bulk action',
         int $code = 0,
         Throwable $previous = null
     ) {
-        $this->exceptions = $exceptions;
         parent::__construct($message, $code, $previous);
     }
 
