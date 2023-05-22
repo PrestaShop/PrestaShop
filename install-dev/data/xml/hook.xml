@@ -2146,6 +2146,16 @@
       <title>Order Return Presenter</title>
       <description>This hook is called before an order return is presented</description>
     </hook>
+    <hook id="actionPresentSupplier">
+      <name>actionPresentSupplier</name>
+      <title>Supplier Presenter</title>
+      <description>This hook is called before a supplier is presented</description>
+    </hook>
+    <hook id="actionPresentManufacturer">
+      <name>actionPresentManufacturer</name>
+      <title>Manufacturer Presenter</title>
+      <description>This hook is called before a manufacturer is presented</description>
+    </hook>
     <hook id="actionPresentProduct">
       <name>actionPresentProduct</name>
       <title>Product Presenter</title>
