@@ -24,13 +24,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Adapter\Alias\Filler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
+use Alias;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 
 /**
- * Thrown when new alias update fails
+ * Responsible for filling up the Alias with the properties which have to be updated
  */
-class CannotUpdateAliasException extends AliasException
+interface AliasFillerInterface
 {
+    /**
+     * Fill alias properties from the command and return an array of the properties to update.
+     *
+     * Returns a list of properties that were filled.
+     *
+     * @return string[]
+     *
+     * e.g.:
+     * [
+     *     'active',
+     *     'alias',
+     * ]
+     */
+    public function fillUpdatableProperties(Alias $alias, UpdateAliasCommand $command): array;
 }

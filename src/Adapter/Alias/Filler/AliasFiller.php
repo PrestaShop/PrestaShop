@@ -26,11 +26,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Alias\Filler;
 
-/**
- * Thrown when new alias update fails
- */
-class CannotUpdateAliasException extends AliasException
+use Alias;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
+
+class AliasFiller implements AliasFillerInterface
 {
+    /**
+     * @var AliasFillerInterface[]
+     */
+    private $updatablePropertyFillers;
+
+    /**
+     * @param AliasFillerInterface[] $updatablePropertyFillers
+     */
+    public function __construct(
+        iterable $updatablePropertyFillers
+    ) {
+        $this->updatablePropertyFillers = $updatablePropertyFillers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fillUpdatableProperties(Alias $alias, UpdateAliasCommand $command): array
+    {
+        $updatableProperties = [];
+
+        foreach ($this->updatablePropertyFillers as $filler) {
+            $properties = $filler->fillUpdatableProperties($alias, $command);
+
+            if (empty($properties)) {
+                continue;
+            }
+
+            $updatableProperties = array_merge($updatableProperties, $properties);
+        }
+
+        return $updatableProperties;
+    }
 }

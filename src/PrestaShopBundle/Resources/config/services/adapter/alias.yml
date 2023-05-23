@@ -34,3 +34,7 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand
+
+  PrestaShop\PrestaShop\Adapter\Alias\Filler\AliasFiller:
+    arguments:
+      - !tagged core.alias_filler

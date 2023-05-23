@@ -28,13 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Alias\Filler\AliasFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
 use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotUpdateAliasException;
 
 class UpdateAliasHandler implements UpdateAliasHandlerInterface
 {
     public function __construct(
+        protected AliasFillerInterface $aliasUpdatablePropertyFiller,
         protected AliasRepository $aliasRepository
     ) {
     }
@@ -45,13 +48,21 @@ class UpdateAliasHandler implements UpdateAliasHandlerInterface
     public function handle(UpdateAliasCommand $command): void
     {
         $alias = $this->aliasRepository->get($command->aliasId);
-        $wasActive = (bool) $alias->active;
 
-        // @TODO implement updatable property filler
+        $updatableProperties = $this->aliasUpdatablePropertyFiller->fillUpdatableProperties(
+            $alias,
+            $command
+        );
 
         if (null !== $command->isActive()) {
             $alias->active = $command->isActive();
             $updatableProperties[] = 'active';
         }
+
+        $this->aliasRepository->partialUpdate(
+            $alias,
+            $updatableProperties,
+            CannotUpdateAliasException::class
+        );
     }
 }
