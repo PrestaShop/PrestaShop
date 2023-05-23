@@ -33,6 +33,11 @@ abstract class AdminStatsTabControllerCore extends AdminController
         $this->display = 'view';
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if ($this->ajax) {

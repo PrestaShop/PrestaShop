@@ -969,6 +969,11 @@ class AdminImagesControllerCore extends AdminController
         return count($this->errors) > 0 ? false : true;
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if ($this->display != 'edit' && $this->display != 'add') {

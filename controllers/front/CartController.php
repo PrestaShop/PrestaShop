@@ -93,6 +93,8 @@ class CartControllerCore extends FrontController
     }
 
     /**
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -551,6 +553,12 @@ class CartControllerCore extends FrontController
         ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
     }
 
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();

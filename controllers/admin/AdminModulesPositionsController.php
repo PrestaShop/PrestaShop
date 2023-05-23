@@ -237,6 +237,11 @@ class AdminModulesPositionsControllerCore extends AdminController
         }
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         $this->addjqueryPlugin('sortable');

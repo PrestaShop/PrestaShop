@@ -47,6 +47,11 @@ class SupplierControllerCore extends ProductListingFrontController
         }
     }
 
+    /**
+     * Returns canonical URL for current supplier or a supplier list
+     *
+     * @return string
+     */
     public function getCanonicalURL(): string
     {
         if (Validate::isLoadedObject($this->supplier)) {
@@ -116,6 +121,9 @@ class SupplierControllerCore extends ProductListingFrontController
     }
 
     /**
+     * Gets the product search query for the controller. This is a set of information that
+     * a filtering module or the default provider will use to fetch our products.
+     *
      * @return ProductSearchQuery
      */
     protected function getProductSearchQuery()
@@ -130,6 +138,8 @@ class SupplierControllerCore extends ProductListingFrontController
     }
 
     /**
+     * Default product search provider used if no filtering module stood up for the job
+     *
      * @return SupplierProductSearchProvider
      */
     protected function getDefaultProductSearchProvider()
@@ -238,6 +248,12 @@ class SupplierControllerCore extends ProductListingFrontController
         return $breadcrumb;
     }
 
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();

@@ -52,9 +52,11 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
-     * {@inheritdoc}
+     * Returns canonical URL for current category
+     *
+     * @return string
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         if (!Validate::isLoadedObject($this->category)) {
             return '';
@@ -119,7 +121,9 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
-     * {@inheritdoc}
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
      */
     public function initContent()
     {
@@ -164,6 +168,9 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
+     * Gets the product search query for the controller. This is a set of information that
+     * a filtering module or the default provider will use to fetch our products.
+     *
      * @return ProductSearchQuery
      *
      * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
@@ -180,6 +187,8 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
+     * Default product search provider used if no filtering module stood up for the job
+     *
      * @return CategoryProductSearchProvider
      */
     protected function getDefaultProductSearchProvider()
@@ -264,6 +273,12 @@ class CategoryControllerCore extends ProductListingFrontController
         return $this->category;
     }
 
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
