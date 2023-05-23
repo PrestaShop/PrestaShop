@@ -41,6 +41,8 @@ class UpdateHookStatusCommand
     private $hookId;
 
     /**
+     * New hook status
+     *
      * @var bool
      */
     private $status;
