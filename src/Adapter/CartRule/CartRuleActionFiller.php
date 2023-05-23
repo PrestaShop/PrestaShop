@@ -102,8 +102,7 @@ class CartRuleActionFiller
 
         if ($amountDiscount) {
             $this->fillAmountDiscount($cartRule, $amountDiscount);
-        }
-        if ($percentageDiscount) {
+        } else {
             $this->fillPercentageDiscount($cartRule, $percentageDiscount);
         }
 
@@ -132,6 +131,7 @@ class CartRuleActionFiller
                 $discountApplicationValue = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
         }
 
+        //@todo: specific/selected/cheapest product is selected it might be that product_restriction muts be set to true.
         $cartRule->reduction_product = $discountApplicationValue;
     }
 
