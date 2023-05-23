@@ -5,32 +5,32 @@
       <trans-unit id="859e85774d372c6084d62d02324a1cc3">
         <source>Viewed products block</source>
         <target>Viewed products block</target>
-        <note>Line: 58</note>
+        <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="28eb4669d7846b4e90492c61b0ca6626">
         <source>Display a kind of showcase on your product pages with recently viewed products.</source>
         <target>Display a kind of showcase on your product pages with recently viewed products.</target>
-        <note>Line: 60</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="4ace1851b4246cf521d3319e6e3947e8">
         <source>You must fill in the 'Products displayed' field.</source>
         <target>You must fill in the 'Products displayed' field.</target>
-        <note>Line: 96</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="73293a024e644165e9bf48f270af63a0">
         <source>Invalid number.</source>
         <target>Invalid number.</target>
-        <note>Line: 101</note>
+        <note>Line: 100</note>
       </trans-unit>
       <trans-unit id="26986c3388870d4148b1b5375368a83d">
         <source>Products to display</source>
         <target>Products to display</target>
-        <note>Line: 129</note>
+        <note>Line: 128</note>
       </trans-unit>
       <trans-unit id="d36bbb6066e3744039d38e580f17a2cc">
         <source>Define the number of products displayed in this block.</source>
         <target>Define the number of products displayed in this block.</target>
-        <note>Line: 133</note>
+        <note>Line: 132</note>
       </trans-unit>
     </body>
   </file>

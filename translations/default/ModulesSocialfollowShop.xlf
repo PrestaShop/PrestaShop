@@ -5,42 +5,52 @@
       <trans-unit id="d85544fce402c7a2a96a48078edaf203">
         <source>Facebook</source>
         <target>Facebook</target>
-        <note>Line: 262</note>
+        <note>Line: 287</note>
       </trans-unit>
       <trans-unit id="2491bc9c7d8731e1ae33124093bc7026">
         <source>Twitter</source>
         <target>Twitter</target>
-        <note>Line: 270</note>
+        <note>Line: 295</note>
       </trans-unit>
       <trans-unit id="48ee8ba81f747e2afa3344472d9f2f7c">
         <source>Rss</source>
         <target>Rss</target>
-        <note>Line: 278</note>
+        <note>Line: 303</note>
       </trans-unit>
       <trans-unit id="8dd1bae8da2e2408210d0656fbe6b7d1">
         <source>YouTube</source>
         <target>YouTube</target>
-        <note>Line: 286</note>
+        <note>Line: 311</note>
       </trans-unit>
       <trans-unit id="86709a608bd914b28221164e6680ebf7">
         <source>Pinterest</source>
         <target>Pinterest</target>
-        <note>Line: 294</note>
+        <note>Line: 319</note>
       </trans-unit>
       <trans-unit id="15db599e0119be476d71bfc1fda72217">
         <source>Vimeo</source>
         <target>Vimeo</target>
-        <note>Line: 302</note>
+        <note>Line: 327</note>
       </trans-unit>
       <trans-unit id="55f015a0c5605702f913536afe70cfb0">
         <source>Instagram</source>
         <target>Instagram</target>
-        <note>Line: 310</note>
+        <note>Line: 335</note>
       </trans-unit>
       <trans-unit id="e884c507c5198a4578a84498f7a323e2">
         <source>LinkedIn</source>
         <target>LinkedIn</target>
-        <note>Line: 318</note>
+        <note>Line: 343</note>
+      </trans-unit>
+      <trans-unit id="d7a9a3e2a98999afaa77e64983165058">
+        <source>TikTok</source>
+        <target>TikTok</target>
+        <note>Line: 351</note>
+      </trans-unit>
+      <trans-unit id="8f5cc6430613f1c12f36965050bb7197">
+        <source>Discord</source>
+        <target>Discord</target>
+        <note>Line: 359</note>
       </trans-unit>
     </body>
   </file>

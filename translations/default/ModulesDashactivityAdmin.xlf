@@ -5,57 +5,62 @@
       <trans-unit id="0369e7f54bf8a30b2766e6a9a708de0b">
         <source>Dashboard Activity</source>
         <target>Dashboard Activity</target>
-        <note>Line: 46</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
         <source>(from %s to %s)</source>
         <target>(from %s to %s)</target>
-        <note>Line: 96</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="914030b0a079e4eec3b3f5090c0fc35a">
         <source>Active cart</source>
         <target>Active cart</target>
-        <note>Line: 418</note>
+        <note>Line: 356</note>
       </trans-unit>
       <trans-unit id="78fa968db0e87c6fc302614b26f93b5d">
         <source>How long (in minutes) a cart is to be considered as active after the last recorded change (default: 30 min).</source>
         <target>How long (in minutes) a cart is to be considered as active after the last recorded change (default: 30 min).</target>
-        <note>Line: 419</note>
+        <note>Line: 357</note>
       </trans-unit>
       <trans-unit id="47b8a33a5335cce8d4e353c4d1743f31">
         <source>Online visitor</source>
         <target>Online visitor</target>
-        <note>Line: 436</note>
+        <note>Line: 374</note>
       </trans-unit>
       <trans-unit id="b13a895857368f29e5e127767388b0ab">
         <source>How long (in minutes) a visitor is to be considered as online after their last action (default: 30 min).</source>
         <target>How long (in minutes) a visitor is to be considered as online after their last action (default: 30 min).</target>
-        <note>Line: 437</note>
+        <note>Line: 375</note>
       </trans-unit>
       <trans-unit id="6ad366c171531a83ffbc5625e159f340">
         <source>Abandoned cart (min)</source>
         <target>Abandoned cart (min)</target>
-        <note>Line: 454</note>
+        <note>Line: 392</note>
       </trans-unit>
       <trans-unit id="8f1f252cfd3cbbcba7a2325f12e3dbc4">
         <source>How long (in hours) after the last action a cart is to be considered as abandoned (default: 24 hrs).</source>
         <target>How long (in hours) after the last action a cart is to be considered as abandoned (default: 24 hrs).</target>
-        <note>Line: 455</note>
+        <note>Line: 393</note>
       </trans-unit>
       <trans-unit id="c760237f74bcc7e3f90ad956086edb66">
         <source>hrs</source>
         <target>hrs</target>
-        <note>Line: 465</note>
+        <note>Line: 403</note>
       </trans-unit>
       <trans-unit id="a5493eb7cba36f452249d093e7757adc">
         <source>Abandoned cart (max)</source>
         <target>Abandoned cart (max)</target>
-        <note>Line: 461</note>
+        <note>Line: 399</note>
       </trans-unit>
       <trans-unit id="45e9c82415a3bee4413485c6bcb4347f">
         <source>How long (in hours) after the last action a cart is no longer to be considered as abandoned (default: 24 hrs).</source>
         <target>How long (in hours) after the last action a cart is no longer to be considered as abandoned (default: 24 hrs).</target>
-        <note>Line: 462</note>
+        <note>Line: 400</note>
+      </trans-unit>
+      <trans-unit id="db2564248ce7ffe0fa85f4f6d049005c">
+        <source>Check in one glance what is happening on your store with a list of KPI on your dashboard.</source>
+        <target>Check in one glance what is happening on your store with a list of KPI on your dashboard.</target>
+        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>
@@ -139,17 +144,17 @@
       <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
         <source>Visits</source>
         <target>Visits</target>
-        <note>Line: 153</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="945f170a18e4894c90381a3d01bdef8b">
         <source>Unique Visitors</source>
         <target>Unique Visitors</target>
-        <note>Line: 159</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="0fcff541ec15c6ed895d5dec49436488">
         <source>Traffic Sources</source>
         <target>Traffic Sources</target>
-        <note>Line: 165</note>
+        <note>Line: 158</note>
       </trans-unit>
     </body>
   </file>

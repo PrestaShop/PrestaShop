@@ -57,47 +57,47 @@
       <trans-unit id="c2cbc795de8a7691ec0e4c55fd61fe43">
         <source>You do not have permission to use this wizard.</source>
         <target>You do not have permission to use this wizard.</target>
-        <note>Line: 785</note>
+        <note>Line: 790</note>
       </trans-unit>
       <trans-unit id="6305822e6fd3b92120ee6f23552164c4">
         <source>You must choose at least one shop or group shop.</source>
         <target>You must choose at least one shop or group shop.</target>
-        <note>Line: 673</note>
+        <note>Line: 678</note>
       </trans-unit>
       <trans-unit id="9ef70769595c35cca03dae49ac1f31d1">
         <source>An error occurred while saving this carrier.</source>
         <target>An error occurred while saving this carrier.</target>
-        <note>Line: 830</note>
+        <note>Line: 835</note>
       </trans-unit>
       <trans-unit id="cfabe09befdc8289f6ca5fbc6887ffe5">
         <source>An error occurred while saving carrier groups.</source>
         <target>An error occurred while saving carrier groups.</target>
-        <note>Line: 844</note>
+        <note>Line: 849</note>
       </trans-unit>
       <trans-unit id="2222c64a45d69edbf16dd5fb81db904b">
         <source>An error occurred while saving carrier zones.</source>
         <target>An error occurred while saving carrier zones.</target>
-        <note>Line: 849</note>
+        <note>Line: 854</note>
       </trans-unit>
       <trans-unit id="bae6cceb9789ee48445a0ddc8c143f0b">
         <source>An error occurred while saving carrier ranges.</source>
         <target>An error occurred while saving carrier ranges.</target>
-        <note>Line: 855</note>
+        <note>Line: 860</note>
       </trans-unit>
       <trans-unit id="be78233fdb6fe537e065a0d8650c0e84">
         <source>An error occurred while saving associations of shops.</source>
         <target>An error occurred while saving associations of shops.</target>
-        <note>Line: 861</note>
+        <note>Line: 866</note>
       </trans-unit>
       <trans-unit id="5b26cf06b6165264574bf9e097f062bc">
         <source>An error occurred while saving the tax rules group.</source>
         <target>An error occurred while saving the tax rules group.</target>
-        <note>Line: 866</note>
+        <note>Line: 871</note>
       </trans-unit>
       <trans-unit id="08c490a8c2d633b012b63dccd00cc719">
         <source>An error occurred while saving carrier logo.</source>
         <target>An error occurred while saving carrier logo.</target>
-        <note>Line: 876</note>
+        <note>Line: 881</note>
       </trans-unit>
     </body>
   </file>
@@ -106,7 +106,7 @@
       <trans-unit id="407ec7ad396ed1f5fc78bc006946af12">
         <source>An error occurred while updating carrier information.</source>
         <target>An error occurred while updating carrier information.</target>
-        <note>Line: 527</note>
+        <note>Line: 532</note>
       </trans-unit>
     </body>
   </file>
@@ -115,7 +115,7 @@
       <trans-unit id="0e8c87584e926658c275b850477aa3ff">
         <source>An error occurred while updating the free shipping status.</source>
         <target>An error occurred while updating the free shipping status.</target>
-        <note>Line: 367</note>
+        <note>Line: 369</note>
       </trans-unit>
     </body>
   </file>

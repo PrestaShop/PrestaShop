@@ -5,7 +5,7 @@
       <trans-unit id="6655df4af87b2038afd507a33545a56d">
         <source>Dashboard Products</source>
         <target>Dashboard Products</target>
-        <note>Line: 44</note>
+        <note>Line: 40</note>
       </trans-unit>
       <trans-unit id="4a528e24be5aca96e8a15b256efe1f31">
         <source>Adds a block with a table of your latest orders and a ranking of your products</source>
@@ -15,7 +15,7 @@
       <trans-unit id="2ea989f83006e233627987293f4bde0a">
         <source>Customer Name</source>
         <target>Customer Name</target>
-        <note>Line: 104</note>
+        <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="3ec365dd533ddb7ef3d1c111186ce872">
         <source>Details</source>
@@ -35,52 +35,57 @@
       <trans-unit id="ed4832a84ee072b00a6740f657183598">
         <source>Views</source>
         <target>Views</target>
-        <note>Line: 290</note>
+        <note>Line: 291</note>
       </trans-unit>
       <trans-unit id="2c04f1ad7694378897b98624780327ff">
         <source>Added to cart</source>
         <target>Added to cart</target>
-        <note>Line: 295</note>
+        <note>Line: 296</note>
       </trans-unit>
       <trans-unit id="ce4ee01637f4279d02d0f232459dc9a4">
         <source>Purchased</source>
         <target>Purchased</target>
-        <note>Line: 300</note>
+        <note>Line: 301</note>
       </trans-unit>
       <trans-unit id="1eb18ea1d018abef5759cef60ddc289b">
         <source>You must enable the "Save global page views" option from the "Data mining for statistics" module in order to display the most viewed products, or use the Google Analytics module.</source>
         <target>You must enable the "Save global page views" option from the "Data mining for statistics" module in order to display the most viewed products, or use the Google Analytics module.</target>
-        <note>Line: 369</note>
+        <note>Line: 370</note>
       </trans-unit>
       <trans-unit id="cf5f3091e30dee6597885d8c0e0c357f">
         <source>Term</source>
         <target>Term</target>
-        <note>Line: 379</note>
+        <note>Line: 381</note>
       </trans-unit>
       <trans-unit id="fd69c5cf902969e6fb71d043085ddee6">
         <source>Results</source>
         <target>Results</target>
-        <note>Line: 389</note>
+        <note>Line: 391</note>
       </trans-unit>
       <trans-unit id="85bf7474324d7d02725e4dca586afcd9">
         <source>Number of "Recent Orders" to display</source>
         <target>Number of "Recent Orders" to display</target>
-        <note>Line: 547</note>
+        <note>Line: 508</note>
       </trans-unit>
       <trans-unit id="735b8c7f6d50b4c6f818deeab3cdea4a">
         <source>Number of "Best Sellers" to display</source>
         <target>Number of "Best Sellers" to display</target>
-        <note>Line: 551</note>
+        <note>Line: 512</note>
       </trans-unit>
       <trans-unit id="14d24dddc4c67abf8364b980b2ccd5a2">
         <source>Number of "Most Viewed" to display</source>
         <target>Number of "Most Viewed" to display</target>
-        <note>Line: 555</note>
+        <note>Line: 516</note>
       </trans-unit>
       <trans-unit id="f1ee1eaab342241138d45f35f4d8466a">
         <source>Number of "Top Searches" to display</source>
         <target>Number of "Top Searches" to display</target>
-        <note>Line: 559</note>
+        <note>Line: 520</note>
+      </trans-unit>
+      <trans-unit id="f5e4a6e42440014476359f5c74e22966">
+        <source>Enrich your stats: display a table of your latest orders and a ranking of your products.</source>
+        <target>Enrich your stats: display a table of your latest orders and a ranking of your products.</target>
+        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>
@@ -104,7 +109,7 @@
       <trans-unit id="be5006eb5af9ab6dbca803f8d3065bbc">
         <source>Most Viewed</source>
         <target>Most Viewed</target>
-        <note>Line: 102</note>
+        <note>Line: 104</note>
       </trans-unit>
       <trans-unit id="1eb5e5713d7363e921dd7f5500b6d212">
         <source>Top Searches</source>
@@ -114,27 +119,27 @@
       <trans-unit id="3d23ac9ab254a9f1014c3a859b01bcfc">
         <source>Last %d orders</source>
         <target>Last %d orders</target>
-        <note>Line: 80</note>
+        <note>Line: 81</note>
       </trans-unit>
       <trans-unit id="82f0f8d535196ce2a6ea16652d981f94">
         <source>Top %d products</source>
         <target>Top %d products</target>
-        <note>Line: 90</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 115</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="01b6e20344b68835c5ed1ddedf20d531">
         <source>to</source>
         <target>to</target>
-        <note>Line: 115</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="1daaca459ce1e6610e0b97a9ad723f27">
         <source>Top %d most search terms</source>
         <target>Top %d most search terms</target>
-        <note>Line: 114</note>
+        <note>Line: 116</note>
       </trans-unit>
     </body>
   </file>

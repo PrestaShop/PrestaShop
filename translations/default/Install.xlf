@@ -32,6 +32,11 @@
         <target>Store installation</target>
         <note>Line: 133</note>
       </trans-unit>
+      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
+        <source>Content of your store</source>
+        <target>Content of your store</target>
+        <note>Line: 123</note>
+      </trans-unit>
     </body>
   </file>
   <file original="install-dev/controllers/http/configure.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -101,6 +106,101 @@
         <target>Sports and Entertainment</target>
         <note>Line: 220</note>
       </trans-unit>
+      <trans-unit id="21084da7c0a49b229bd7f905e93d4aaa">
+        <source>Lingerie and Adult</source>
+        <target>Lingerie and Adult</target>
+        <note>Line: 202</note>
+      </trans-unit>
+      <trans-unit id="0fe4ca3df29658482098bb33a2ff66e5">
+        <source>Animals and Pets</source>
+        <target>Animals and Pets</target>
+        <note>Line: 203</note>
+      </trans-unit>
+      <trans-unit id="9e4359f35054190eba36e09466e39d01">
+        <source>Art and Culture</source>
+        <target>Art and Culture</target>
+        <note>Line: 204</note>
+      </trans-unit>
+      <trans-unit id="066cd752c82ddc6231a9723b5822a945">
+        <source>Babies</source>
+        <target>Babies</target>
+        <note>Line: 205</note>
+      </trans-unit>
+      <trans-unit id="41a081c3f3042ac40117cf295350870d">
+        <source>Beauty and Personal Care</source>
+        <target>Beauty and Personal Care</target>
+        <note>Line: 206</note>
+      </trans-unit>
+      <trans-unit id="f2b545a8abb14f8706f808a79277c061">
+        <source>Cars</source>
+        <target>Cars</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="39bb2fdc532f8984d8348863c86ebfca">
+        <source>Computer Hardware and Software</source>
+        <target>Computer Hardware and Software</target>
+        <note>Line: 208</note>
+      </trans-unit>
+      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
+        <source>Download</source>
+        <target>Download</target>
+        <note>Line: 209</note>
+      </trans-unit>
+      <trans-unit id="33cb31c5505618a808d3bcd7490a793c">
+        <source>Flowers, Gifts and Crafts</source>
+        <target>Flowers, Gifts and Crafts</target>
+        <note>Line: 211</note>
+      </trans-unit>
+      <trans-unit id="0570b6d9de5c37a026e69c6987fc27f6">
+        <source>Food and beverage</source>
+        <target>Food and beverage</target>
+        <note>Line: 212</note>
+      </trans-unit>
+      <trans-unit id="4b73b8913afcdf06d9f49c176306d950">
+        <source>HiFi, Photo and Video</source>
+        <target>HiFi, Photo and Video</target>
+        <note>Line: 213</note>
+      </trans-unit>
+      <trans-unit id="2e9d6500d9b2a65985a621f0f0afdeb3">
+        <source>Home and Garden</source>
+        <target>Home and Garden</target>
+        <note>Line: 214</note>
+      </trans-unit>
+      <trans-unit id="83dd3493957bcd92a37bc39111f670b8">
+        <source>Home Appliances</source>
+        <target>Home Appliances</target>
+        <note>Line: 215</note>
+      </trans-unit>
+      <trans-unit id="565631402af79df42f22a117b0d6f1a5">
+        <source>Jewelry</source>
+        <target>Jewelry</target>
+        <note>Line: 216</note>
+      </trans-unit>
+      <trans-unit id="18848d605251b3627014c6a58c14c449">
+        <source>Mobile and Telecom</source>
+        <target>Mobile and Telecom</target>
+        <note>Line: 217</note>
+      </trans-unit>
+      <trans-unit id="992a0f0542384f1ee5ef51b7cf4ae6c4">
+        <source>Services</source>
+        <target>Services</target>
+        <note>Line: 218</note>
+      </trans-unit>
+      <trans-unit id="4ef7205b13f6821177d0dbc2fb90f79e">
+        <source>Shoes and accessories</source>
+        <target>Shoes and accessories</target>
+        <note>Line: 219</note>
+      </trans-unit>
+      <trans-unit id="1fb0f99b55e6c2be35aed72ebe38c245">
+        <source>Travel</source>
+        <target>Travel</target>
+        <note>Line: 221</note>
+      </trans-unit>
+      <trans-unit id="f0a0d906028bd455cb67ef7f5b5d0650">
+        <source>Fashion and Accessories</source>
+        <target>Fashion and Accessories</target>
+        <note>Line: 210</note>
+      </trans-unit>
     </body>
   </file>
   <file original="install-dev/controllers/http/database.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -127,48 +227,48 @@
       <trans-unit id="cdc5a0619e8dadc368c1d5feb2d83986">
         <source>Create file parameters</source>
         <target>Create file parameters</target>
-        <note>Line: 306
+        <note>Line: 309
 Comment: We fill the process step used for Ajax queries</note>
       </trans-unit>
       <trans-unit id="0b1b557a66c34f8467d364c5f6ac36a5">
         <source>Create database tables</source>
         <target>Create database tables</target>
-        <note>Line: 307</note>
+        <note>Line: 310</note>
       </trans-unit>
       <trans-unit id="22242e741d52f57289ac8b72b9e8c96d">
         <source>Create default shop and languages</source>
         <target>Create default shop and languages</target>
-        <note>Line: 308</note>
+        <note>Line: 311</note>
       </trans-unit>
       <trans-unit id="33f1b48d4dac0408b87bb952b6b0799f">
         <source>Populate database tables</source>
         <target>Populate database tables</target>
-        <note>Line: 310</note>
+        <note>Line: 313</note>
       </trans-unit>
       <trans-unit id="039c15f5a6879d4a65fb0f67f8f90f09">
         <source>Configure shop information</source>
         <target>Configure shop information</target>
-        <note>Line: 311</note>
+        <note>Line: 314</note>
       </trans-unit>
       <trans-unit id="7ad8960b5505289cf368e247f7ac72ef">
         <source>Install theme</source>
         <target>Install theme</target>
-        <note>Line: 313</note>
+        <note>Line: 316</note>
       </trans-unit>
       <trans-unit id="e819ad111fcd4023d34b419946936265">
         <source>Install modules</source>
         <target>Install modules</target>
-        <note>Line: 314</note>
+        <note>Line: 317</note>
       </trans-unit>
       <trans-unit id="23de8b7f5abcac68c426e405975411bb">
         <source>Install demonstration data</source>
         <target>Install demonstration data</target>
-        <note>Line: 317</note>
+        <note>Line: 320</note>
       </trans-unit>
       <trans-unit id="cb64700c69079f0f605130a3e4b62d0a">
         <source>Post installation scripts</source>
         <target>Post installation scripts</target>
-        <note>Line: 331</note>
+        <note>Line: 334</note>
       </trans-unit>
     </body>
   </file>
@@ -437,15 +537,15 @@ Comment: We fill the process step used for Ajax queries</note>
         <target>The minimum score must be: %s</target>
         <note>Line: 179</note>
       </trans-unit>
+      <trans-unit id="e72dca5d5a8a4706a206f3225324bf44">
+        <source>Store name</source>
+        <target>Store name</target>
+        <note>Line: 32</note>
+      </trans-unit>
     </body>
   </file>
   <file original="install-dev/theme/views/content.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0e8ea4263454e813a58e0f1bbad5958f">
-        <source>Content of your store</source>
-        <target>Content of your store</target>
-        <note>Line: 29</note>
-      </trans-unit>
       <trans-unit id="82da52196edba4e07eb729fa3560027f">
         <source>Installation of theme</source>
         <target>Installation of theme</target>
@@ -500,6 +600,11 @@ Comment: We fill the process step used for Ajax queries</note>
         <source>Select all</source>
         <target>Select all</target>
         <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="2b6dffeb7fe74b952dccebb3784a947e">
+        <source>Select the theme to install</source>
+        <target>Select the theme to install</target>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -612,6 +717,21 @@ Comment: We fill the process step used for Ajax queries</note>
         <source>I agree to the above terms and conditions.</source>
         <target>I agree to the above terms and conditions.</target>
         <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="dadc147971798a0e004bbb75fb3a550c">
+        <source>Privacy note</source>
+        <target>Privacy note</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="8acadeccb90bf205135348e4902b9c20">
+        <source>this article</source>
+        <target>this article</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="c1ed7fcca4fa79d958f8d7c1e6621a61">
+        <source>Some project modules may submit public and technical information about your store to the PrestaShop Project for analytics purposes. To learn more and make an informed choice, read %link%.</source>
+        <target>Some project modules may submit public and technical information about your store to the PrestaShop Project for analytics purposes. To learn more and make an informed choice, read %link%.</target>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
@@ -783,110 +903,20 @@ Comment: We fill the process step used for Ajax queries</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="21084da7c0a49b229bd7f905e93d4aaa">
-        <source>Lingerie and Adult</source>
-        <target>Lingerie and Adult</target>
-        <note>Line: 225</note>
-      </trans-unit>
-      <trans-unit id="0fe4ca3df29658482098bb33a2ff66e5">
-        <source>Animals and Pets</source>
-        <target>Animals and Pets</target>
-        <note>Line: 211</note>
-      </trans-unit>
-      <trans-unit id="9e4359f35054190eba36e09466e39d01">
-        <source>Art and Culture</source>
-        <target>Art and Culture</target>
-        <note>Line: 212</note>
-      </trans-unit>
-      <trans-unit id="066cd752c82ddc6231a9723b5822a945">
-        <source>Babies</source>
-        <target>Babies</target>
-        <note>Line: 213</note>
-      </trans-unit>
-      <trans-unit id="41a081c3f3042ac40117cf295350870d">
-        <source>Beauty and Personal Care</source>
-        <target>Beauty and Personal Care</target>
-        <note>Line: 214</note>
-      </trans-unit>
-      <trans-unit id="f2b545a8abb14f8706f808a79277c061">
-        <source>Cars</source>
-        <target>Cars</target>
-        <note>Line: 215</note>
-      </trans-unit>
-      <trans-unit id="39bb2fdc532f8984d8348863c86ebfca">
-        <source>Computer Hardware and Software</source>
-        <target>Computer Hardware and Software</target>
-        <note>Line: 216</note>
-      </trans-unit>
-      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
-        <source>Download</source>
-        <target>Download</target>
-        <note>Line: 217</note>
-      </trans-unit>
       <trans-unit id="8bdd8b2357d516da5b81eb16746ba9a9">
         <source>Fashion and accessories</source>
         <target>Fashion and accessories</target>
-        <note>Line: 218</note>
-      </trans-unit>
-      <trans-unit id="33cb31c5505618a808d3bcd7490a793c">
-        <source>Flowers, Gifts and Crafts</source>
-        <target>Flowers, Gifts and Crafts</target>
-        <note>Line: 219</note>
-      </trans-unit>
-      <trans-unit id="0570b6d9de5c37a026e69c6987fc27f6">
-        <source>Food and beverage</source>
-        <target>Food and beverage</target>
-        <note>Line: 220</note>
-      </trans-unit>
-      <trans-unit id="4b73b8913afcdf06d9f49c176306d950">
-        <source>HiFi, Photo and Video</source>
-        <target>HiFi, Photo and Video</target>
-        <note>Line: 221</note>
-      </trans-unit>
-      <trans-unit id="2e9d6500d9b2a65985a621f0f0afdeb3">
-        <source>Home and Garden</source>
-        <target>Home and Garden</target>
-        <note>Line: 222</note>
-      </trans-unit>
-      <trans-unit id="83dd3493957bcd92a37bc39111f670b8">
-        <source>Home Appliances</source>
-        <target>Home Appliances</target>
-        <note>Line: 223</note>
-      </trans-unit>
-      <trans-unit id="565631402af79df42f22a117b0d6f1a5">
-        <source>Jewelry</source>
-        <target>Jewelry</target>
-        <note>Line: 224</note>
-      </trans-unit>
-      <trans-unit id="18848d605251b3627014c6a58c14c449">
-        <source>Mobile and Telecom</source>
-        <target>Mobile and Telecom</target>
-        <note>Line: 226</note>
-      </trans-unit>
-      <trans-unit id="992a0f0542384f1ee5ef51b7cf4ae6c4">
-        <source>Services</source>
-        <target>Services</target>
         <note>Line: 227</note>
-      </trans-unit>
-      <trans-unit id="4ef7205b13f6821177d0dbc2fb90f79e">
-        <source>Shoes and accessories</source>
-        <target>Shoes and accessories</target>
-        <note>Line: 228</note>
-      </trans-unit>
-      <trans-unit id="1fb0f99b55e6c2be35aed72ebe38c245">
-        <source>Travel</source>
-        <target>Travel</target>
-        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="9503054261b8aeed48e0a3902019b579">
         <source>Sport and Entertainment</source>
         <target>Sport and Entertainment</target>
-        <note>Line: 229</note>
+        <note>Line: 238</note>
       </trans-unit>
       <trans-unit id="4d0a6a9777a818ecc3b59b9a8ecd0c43">
         <source>-- Please choose your main activity --</source>
         <target>-- Please choose your main activity --</target>
-        <note>Line: 209</note>
+        <note>Line: 218</note>
       </trans-unit>
     </body>
   </file>
@@ -954,107 +984,107 @@ Comment: We fill the process step used for Ajax queries</note>
       <trans-unit id="13cd0b09fa253a2b524ca2345638aacf">
         <source>%file% file is not writable (check permissions)</source>
         <target>%file% file is not writable (check permissions)</target>
-        <note>Line: 156</note>
+        <note>Line: 161</note>
       </trans-unit>
       <trans-unit id="5b0aceda64c33fa187bdd138c42de909">
         <source>%folder% folder is not writable (check permissions)</source>
         <target>%folder% folder is not writable (check permissions)</target>
-        <note>Line: 165</note>
+        <note>Line: 170</note>
       </trans-unit>
       <trans-unit id="b63440f4a2f5faa849b821e433c85e53">
         <source>Cannot write settings file</source>
         <target>Cannot write settings file</target>
-        <note>Line: 220</note>
+        <note>Line: 233</note>
       </trans-unit>
       <trans-unit id="39fcc4a2539d44e1bc88df1af88df1e8">
         <source>Cannot write app/config/parameters.php file</source>
         <target>Cannot write app/config/parameters.php file</target>
-        <note>Line: 243</note>
+        <note>Line: 256</note>
       </trans-unit>
       <trans-unit id="da766b8e6f70454b5fdde126ba5c761c">
         <source>Cannot write app/config/parameters.yml file</source>
         <target>Cannot write app/config/parameters.yml file</target>
-        <note>Line: 257</note>
+        <note>Line: 270</note>
       </trans-unit>
       <trans-unit id="453faec2c85b2b9c0b9c2b474b30bd21">
         <source>Database structure file not found</source>
         <target>Database structure file not found</target>
-        <note>Line: 308</note>
+        <note>Line: 321</note>
       </trans-unit>
       <trans-unit id="f726c29f41d9b6ab3d61f6f4e41959a3">
         <source>Cannot create group shop</source>
         <target>Cannot create group shop</target>
-        <note>Line: 541</note>
+        <note>Line: 554</note>
       </trans-unit>
       <trans-unit id="19de782cabcc5cc12fa9730264cd5325">
         <source>Cannot create shop</source>
         <target>Cannot create shop</target>
-        <note>Line: 556</note>
+        <note>Line: 569</note>
       </trans-unit>
       <trans-unit id="90ae323fee3fa743290c6ebdbd7fea65">
         <source>Cannot create shop URL</source>
         <target>Cannot create shop URL</target>
-        <note>Line: 572</note>
+        <note>Line: 585</note>
       </trans-unit>
       <trans-unit id="53d7a51998faa87f513eb974a2a596f2">
         <source>File "language.xml" not found for language iso "%iso%"</source>
         <target>File "language.xml" not found for language iso "%iso%"</target>
-        <note>Line: 608</note>
+        <note>Line: 621</note>
       </trans-unit>
       <trans-unit id="9972ad1ade2906747dbb39490a96b191">
         <source>File "language.xml" not valid for language iso "%iso%"</source>
         <target>File "language.xml" not valid for language iso "%iso%"</target>
-        <note>Line: 612</note>
+        <note>Line: 625</note>
       </trans-unit>
       <trans-unit id="54c23cef7fbebba7ee1267cc0cf97b2a">
         <source>Cannot download language pack "%iso%"</source>
         <target>Cannot download language pack "%iso%"</target>
-        <note>Line: 639</note>
+        <note>Line: 652</note>
       </trans-unit>
       <trans-unit id="9d321a378efc308c33c5f345f623dd90">
         <source>Cannot install language "%iso%"</source>
         <target>Cannot install language "%iso%"</target>
-        <note>Line: 649</note>
+        <note>Line: 662</note>
       </trans-unit>
       <trans-unit id="258057c839ab36aa9e3bb60550348c5e">
         <source>Cannot copy flag language "%flag%"</source>
         <target>Cannot copy flag language "%flag%"</target>
-        <note>Line: 660</note>
+        <note>Line: 673</note>
       </trans-unit>
       <trans-unit id="27654955bc85150712aa0bc53bcc6224">
         <source>Cannot create admin account</source>
         <target>Cannot create admin account</target>
-        <note>Line: 871</note>
+        <note>Line: 884</note>
       </trans-unit>
       <trans-unit id="26b901ba3ecdcb91823f05ce15a70ce4">
         <source>Cannot install module "%module%"</source>
         <target>Cannot install module "%module%"</target>
-        <note>Line: 987</note>
+        <note>Line: 998</note>
       </trans-unit>
       <trans-unit id="c2c8925b8e5c7cfc0d83fa3f7342b48d">
         <source>Cannot execute post install on module "%module%"</source>
         <target>Cannot execute post install on module "%module%"</target>
-        <note>Line: 1013</note>
+        <note>Line: 1024</note>
       </trans-unit>
       <trans-unit id="4a85cd1d84d691a2e0b73a5f08cd3483">
         <source>Fixtures class "%class%" not found</source>
         <target>Fixtures class "%class%" not found</target>
-        <note>Line: 1082</note>
+        <note>Line: 1100</note>
       </trans-unit>
       <trans-unit id="e1120cceb6bcfd9596161e3912b2ad9d">
         <source>"%class%" must be an instance of "InstallXmlLoader"</source>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
-        <note>Line: 1089</note>
+        <note>Line: 1107</note>
+      </trans-unit>
+      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
+        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
+        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
+        <note>Line: 328</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Install/XmlLoader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
-        <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
-        <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
-        <note>Line: 1266</note>
-      </trans-unit>
       <trans-unit id="5b56439cb79f3a01ae56d92e52be2218">
         <source><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></source>
         <target><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></target>

@@ -5,17 +5,22 @@
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
-        <note>Line: 73</note>
+        <note>Line: 72</note>
       </trans-unit>
       <trans-unit id="db6a532890a0d1a32fd31b77ca71f3d4">
         <source>Best brands</source>
         <target>Best brands</target>
-        <note>Line: 80</note>
+        <note>Line: 79</note>
       </trans-unit>
       <trans-unit id="1303f6630f41d138b17b47b9c33a84ff">
         <source>Adds a list of the best brands to the Stats dashboard.</source>
         <target>Adds a list of the best brands to the Stats dashboard.</target>
         <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="4209302f83157a9a457c510becbe84a1">
+        <source>Enrich your stats: add a list of the best-selling brands to your dashboard.</source>
+        <target>Enrich your stats: add a list of the best-selling brands to your dashboard.</target>
+        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>

@@ -5,7 +5,21 @@
       <trans-unit id="764368526633c5baf14291ba7fbb9e05">
         <source>For this particular customer group, prices are displayed as:</source>
         <target>For this particular customer group, prices are displayed as:</target>
-        <note>Line: 221</note>
+        <note>Line: 227</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9cdca3c7972c48111e79648c942ac672">
+        <source>The message was successfully sent to the customer.</source>
+        <target>The message was successfully sent to the customer.</target>
+        <note>Line: 503</note>
+      </trans-unit>
+      <trans-unit id="1923e1e610686f1182bf54f573b86921">
+        <source>A partial refund was successfully created.</source>
+        <target>A partial refund was successfully created.</target>
+        <note>Line: 523</note>
       </trans-unit>
     </body>
   </file>
@@ -16,6 +30,16 @@
         <target>Invalid new order status</target>
         <note>Line: 363</note>
       </trans-unit>
+      <trans-unit id="f22b1baf8dcfb014646921be9841cb41">
+        <source>expires on %s.</source>
+        <target>expires on %s.</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="0db24e725e6876d0fc7467554e8b6c03">
+        <source>downloadable %d time(s)</source>
+        <target>downloadable %d time(s)</target>
+        <note>Line: 148</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -23,12 +47,17 @@
       <trans-unit id="996a45aa702d041706f6388d54c53b12">
         <source>Invalid order</source>
         <target>Invalid order</target>
-        <note>Line: 587</note>
+        <note>Line: 596</note>
       </trans-unit>
       <trans-unit id="5125d7cea2749d85f13a55a023a56c71">
         <source>The order cannot be renewed.</source>
         <target>The order cannot be renewed.</target>
-        <note>Line: 594</note>
+        <note>Line: 603</note>
+      </trans-unit>
+      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
+        <source>You must add a minimum quantity of %d</source>
+        <target>You must add a minimum quantity of %d</target>
+        <note>Line: 513</note>
       </trans-unit>
     </body>
   </file>
@@ -42,22 +71,22 @@
       <trans-unit id="d9c93c77e4f2eb90e8457f586e0c5cb3">
         <source>Cannot create message in a new thread.</source>
         <target>Cannot create message in a new thread.</target>
-        <note>Line: 1083</note>
+        <note>Line: 1104</note>
       </trans-unit>
       <trans-unit id="142c7111dc9e81f5cf273851ccce9fcc">
         <source>The message body is empty, cannot import it.</source>
         <target>The message body is empty, cannot import it.</target>
-        <note>Line: 1151</note>
+        <note>Line: 1172</note>
       </trans-unit>
       <trans-unit id="5d1cbbd2b78574a8cfac676d8bdb9ea4">
         <source>Invalid message content for subject: %s</source>
         <target>Invalid message content for subject: %s</target>
-        <note>Line: 1158</note>
+        <note>Line: 1179</note>
       </trans-unit>
       <trans-unit id="f70f856f6d471d374aaf5080afeb1e53">
         <source>The message content is not valid, cannot import it.</source>
         <target>The message content is not valid, cannot import it.</target>
-        <note>Line: 1164</note>
+        <note>Line: 1185</note>
       </trans-unit>
     </body>
   </file>
@@ -91,7 +120,12 @@
       <trans-unit id="d7e5dfc920c9871caaf7562d8ba9ab36">
         <source>The order invoice cannot be found within your database.</source>
         <target>The order invoice cannot be found within your database.</target>
-        <note>Line: 198</note>
+        <note>Line: 230</note>
+      </trans-unit>
+      <trans-unit id="1244f34e7f971d0b80cd2fd7cbbfb22c">
+        <source>The order cannot be found within your database.</source>
+        <target>The order cannot be found within your database.</target>
+        <note>Line: 218</note>
       </trans-unit>
     </body>
   </file>
@@ -134,12 +168,12 @@
       <trans-unit id="3b27bc623d860beacbe5d5cde18fdec0">
         <source>No invoice was found with this ID:</source>
         <target>No invoice was found with this ID:</target>
-        <note>Line: 185</note>
+        <note>Line: 194</note>
       </trans-unit>
       <trans-unit id="ec79affe41245b47969a2451211b263a">
         <source>No cart was found with this ID:</source>
         <target>No cart was found with this ID:</target>
-        <note>Line: 193</note>
+        <note>Line: 202</note>
       </trans-unit>
     </body>
   </file>
@@ -157,31 +191,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Customer/QueryHandler/GetCustomerForViewingHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/dashactivity/dashactivity.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="14542f5997c4a02d4276da364657f501">
         <source>Direct link</source>
         <target>Direct link</target>
-        <note>Line: 490</note>
+        <note>Line: 311</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Customer/QueryHandler/GetCustomerForViewingHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="bde13610a2ae2521b30aa7821d553862">
         <source>There is no status defined for this order.</source>
         <target>There is no status defined for this order.</target>
         <note>Line: 264</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/MailTemplate/MailPreviewVariablesBuilder.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f22b1baf8dcfb014646921be9841cb41">
-        <source>expires on %s.</source>
-        <target>expires on %s.</target>
-        <note>Line: 427</note>
-      </trans-unit>
-      <trans-unit id="0db24e725e6876d0fc7467554e8b6c03">
-        <source>downloadable %d time(s)</source>
-        <target>downloadable %d time(s)</target>
-        <note>Line: 428</note>
       </trans-unit>
     </body>
   </file>
@@ -212,15 +236,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/PDF/DeliverySlipPdfGenerator.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1244f34e7f971d0b80cd2fd7cbbfb22c">
-        <source>The order cannot be found within your database.</source>
-        <target>The order cannot be found within your database.</target>
-        <note>Line: 71</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/Core/Form/ChoiceProvider/CustomerDeleteMethodChoiceProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ecace08642e28fc9c2704b5f73605b6d">
@@ -240,7 +255,7 @@
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
         <source>An account already exists for this email address:</source>
         <target>An account already exists for this email address:</target>
-        <note>Line: 517</note>
+        <note>Line: 529</note>
       </trans-unit>
     </body>
   </file>
@@ -249,36 +264,41 @@
       <trans-unit id="8562db06e3931e51ac8c456b56088b02">
         <source>This customer does not exist.</source>
         <target>This customer does not exist.</target>
-        <note>Line: 914</note>
+        <note>Line: 926</note>
       </trans-unit>
       <trans-unit id="c0498039cc042a1109b53933dc33b2e7">
         <source>A default customer group must be selected in group box.</source>
         <target>A default customer group must be selected in group box.</target>
-        <note>Line: 923</note>
+        <note>Line: 935</note>
       </trans-unit>
       <trans-unit id="1c623b291d95f4f1b1d0c03d0dc0ffa1">
         <source>This email address is not registered.</source>
         <target>This email address is not registered.</target>
-        <note>Line: 927</note>
+        <note>Line: 939</note>
       </trans-unit>
       <trans-unit id="4383b950a18d0fd893e237148f5f58ca">
         <source>This customer already exists as a non-guest.</source>
         <target>This customer already exists as a non-guest.</target>
-        <note>Line: 964</note>
+        <note>Line: 976</note>
       </trans-unit>
       <trans-unit id="beaa75cbedc3443661b894ed66c76b13">
         <source>An error occurred while updating customer information.</source>
         <target>An error occurred while updating customer information.</target>
-        <note>Line: 968</note>
+        <note>Line: 980</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/CustomerThreadController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/MerchandiseReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9cdca3c7972c48111e79648c942ac672">
-        <source>The message was successfully sent to the customer.</source>
-        <target>The message was successfully sent to the customer.</target>
-        <note>Line: 138</note>
+      <trans-unit id="fb31a2cb28ec3e7dee5df6dce5e1a68f">
+        <source>Merchandise return not found.</source>
+        <target>Merchandise return not found.</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="dc30c095a6e57c3146babe8f9088984f">
+        <source>An error occurred while trying to update merchandise return.</source>
+        <target>An error occurred while trying to update merchandise return.</target>
+        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -288,15 +308,6 @@
         <source>An order message with the same name already exists in %s.</source>
         <target>An order message with the same name already exists in %s.</target>
         <note>Line: 259</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
-        <source>You must add a minimum quantity of %d</source>
-        <target>You must add a minimum quantity of %d</target>
-        <note>Line: 606</note>
       </trans-unit>
     </body>
   </file>
@@ -311,11 +322,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1923e1e610686f1182bf54f573b86921">
-        <source>A partial refund was successfully created.</source>
-        <target>A partial refund was successfully created.</target>
-        <note>Line: 603</note>
-      </trans-unit>
       <trans-unit id="aea807cc550550acd7b8d9a7bc469f6a">
         <source>You have to select a shop before creating new orders.</source>
         <target>You have to select a shop before creating new orders.</target>
@@ -339,117 +345,117 @@
       <trans-unit id="561918c3c49ff748f543e28f5c405d3c">
         <source>An error occurred while sending an email to the customer.</source>
         <target>An error occurred while sending an email to the customer.</target>
-        <note>Line: 1311</note>
+        <note>Line: 1312</note>
       </trans-unit>
       <trans-unit id="4174f012bc63b679f092acd1a933bf5c">
         <source>The email was sent to your customer.</source>
         <target>The email was sent to your customer.</target>
-        <note>Line: 1655</note>
+        <note>Line: 1656</note>
       </trans-unit>
       <trans-unit id="fedc8043f101accfb757ff85fd8fb81d">
         <source>Product search phrase must not be an empty string.</source>
         <target>Product search phrase must not be an empty string.</target>
-        <note>Line: 1899</note>
+        <note>Line: 1900</note>
       </trans-unit>
       <trans-unit id="f77fd3f9865f0c725901d48dbc00619f">
         <source>You cannot edit the cart once the order delivered.</source>
         <target>You cannot edit the cart once the order delivered.</target>
-        <note>Line: 1903</note>
+        <note>Line: 1904</note>
       </trans-unit>
       <trans-unit id="918093e8ad4567f6b99e9851eab8bc69">
         <source>Order #%d cannot be loaded.</source>
         <target>Order #%d cannot be loaded.</target>
-        <note>Line: 2097</note>
+        <note>Line: 2098</note>
       </trans-unit>
       <trans-unit id="fded441ef916f653d49abf142b535b52">
         <source>An error occurred while sending the e-mail to the customer.</source>
         <target>An error occurred while sending the e-mail to the customer.</target>
-        <note>Line: 1913</note>
+        <note>Line: 1914</note>
       </trans-unit>
       <trans-unit id="f131fb3c210a32ca24a4910b42b6e2ef">
         <source>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</source>
         <target>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</target>
-        <note>Line: 1925</note>
+        <note>Line: 1926</note>
       </trans-unit>
       <trans-unit id="7b310c5ac94a5e50139d50574395683b">
         <source>Percent value must be greater than 0.</source>
         <target>Percent value must be greater than 0.</target>
-        <note>Line: 1930</note>
+        <note>Line: 1931</note>
       </trans-unit>
       <trans-unit id="7f35d95de964c02a558f322bf683ff93">
         <source>Percent value cannot exceed 100.</source>
         <target>Percent value cannot exceed 100.</target>
-        <note>Line: 1934</note>
+        <note>Line: 1935</note>
       </trans-unit>
       <trans-unit id="2b0c8d4ac85a4f8ddf1427f7ad537f55">
         <source>Amount value must be greater than 0.</source>
         <target>Amount value must be greater than 0.</target>
-        <note>Line: 1938</note>
+        <note>Line: 1939</note>
       </trans-unit>
       <trans-unit id="bd69d7116253ba1407fa8f2611ea6866">
         <source>Discount value cannot exceed the total price of this order.</source>
         <target>Discount value cannot exceed the total price of this order.</target>
-        <note>Line: 1942</note>
+        <note>Line: 1943</note>
       </trans-unit>
       <trans-unit id="0e6becfb4c6566c35a8fda2d94891c70">
         <source>Shipping discount value cannot exceed the total price of this order.</source>
         <target>Shipping discount value cannot exceed the total price of this order.</target>
-        <note>Line: 1946</note>
+        <note>Line: 1947</note>
       </trans-unit>
       <trans-unit id="2a11327ffe3e46a9ffadddf38b4b9fff">
         <source>Please enter a maximum quantity of [1].</source>
         <target>Please enter a maximum quantity of [1].</target>
-        <note>Line: 1956</note>
+        <note>Line: 1957</note>
       </trans-unit>
       <trans-unit id="97f014aa339f5b37951f100fb1a086d8">
         <source>Please select at least one product.</source>
         <target>Please select at least one product.</target>
-        <note>Line: 1961</note>
+        <note>Line: 1962</note>
       </trans-unit>
       <trans-unit id="d31c479bcda04bd5b859f7cff371c3d0">
         <source>Please enter a positive amount.</source>
         <target>Please enter a positive amount.</target>
-        <note>Line: 1965</note>
+        <note>Line: 1966</note>
       </trans-unit>
       <trans-unit id="4b0c5f16b969b647ff0b63481af6c3e5">
         <source>Please generate at least one credit slip or voucher.</source>
         <target>Please generate at least one credit slip or voucher.</target>
-        <note>Line: 1969</note>
+        <note>Line: 1970</note>
       </trans-unit>
       <trans-unit id="500f3380713af59cab7bdd14d8fefea2">
         <source>You must choose a payment module to create the order.</source>
         <target>You must choose a payment module to create the order.</target>
-        <note>Line: 1974</note>
+        <note>Line: 1975</note>
       </trans-unit>
       <trans-unit id="b2f61848a1b9245fb4d79db939e04c02">
         <source>You must choose an order status to create the order.</source>
         <target>You must choose an order status to create the order.</target>
-        <note>Line: 2003</note>
+        <note>Line: 2004</note>
       </trans-unit>
       <trans-unit id="53efa65204c54a806b9df6707fc8a326">
         <source>The order message given is invalid.</source>
         <target>The order message given is invalid.</target>
-        <note>Line: 2010</note>
+        <note>Line: 2011</note>
       </trans-unit>
       <trans-unit id="c3cb19afc3cf5cd7d07346dcd3504fe2">
         <source>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</source>
         <target>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</target>
-        <note>Line: 2038</note>
+        <note>Line: 2039</note>
       </trans-unit>
       <trans-unit id="6ab061ec12504fab2c41f0689579d623">
         <source>The selected payment method is invalid.</source>
         <target>The selected payment method is invalid.</target>
-        <note>Line: 2045</note>
+        <note>Line: 2046</note>
       </trans-unit>
       <trans-unit id="18893a82469e2cd9492fc8d46fa8ac01">
         <source>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</source>
         <target>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</target>
-        <note>Line: 2073</note>
+        <note>Line: 2074</note>
       </trans-unit>
       <trans-unit id="409f3dfd9f910287f86fd6c25c94c4d8">
         <source>Order #%d has already been assigned this status.</source>
         <target>Order #%d has already been assigned this status.</target>
-        <note>Line: 2084</note>
+        <note>Line: 2085</note>
       </trans-unit>
     </body>
   </file>
@@ -620,11 +626,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
-        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
-        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
-        <note>Line: 71</note>
-      </trans-unit>
       <trans-unit id="e2103a9e878a2280b3163e5ee098cbdf">
         <source>Are you sure you want to create a new invoice?</source>
         <target>Are you sure you want to create a new invoice?</target>
@@ -643,6 +644,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
+        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
+        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
+        <note>Line: 54</note>
+      </trans-unit>
       <trans-unit id="99def74fcec1306526eaf054ccd2a5f7">
         <source>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</source>
         <target>Are you sure you want to edit this product price? It will be applied to all identical products in this order.</target>

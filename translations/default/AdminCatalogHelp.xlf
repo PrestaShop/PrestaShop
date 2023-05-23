@@ -87,42 +87,42 @@
       <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
         <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
         <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
-        <note>Line: 315</note>
+        <note>Line: 325</note>
       </trans-unit>
       <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
         <source>Your internal name for this attribute.</source>
         <target>Your internal name for this attribute.</target>
-        <note>Line: 207</note>
+        <note>Line: 217</note>
       </trans-unit>
       <trans-unit id="b5e6921c2d093fbcb0088c9466ee9983">
         <source>The public name for this attribute, displayed to the customers.</source>
         <target>The public name for this attribute, displayed to the customers.</target>
-        <note>Line: 216</note>
+        <note>Line: 226</note>
       </trans-unit>
       <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
         <source>The way the attribute's values will be presented to the customers in the product's page.</source>
         <target>The way the attribute's values will be presented to the customers in the product's page.</target>
-        <note>Line: 229</note>
+        <note>Line: 239</note>
       </trans-unit>
       <trans-unit id="71c476c94d0a0e3dfc0826afd03d2dda">
         <source>Choose the attribute group for this value.</source>
         <target>Choose the attribute group for this value.</target>
-        <note>Line: 277</note>
+        <note>Line: 287</note>
       </trans-unit>
       <trans-unit id="dd24a1142c1070a0efbdf43b4f0167cc">
         <source>Upload an image file containing the color texture from your computer.</source>
         <target>Upload an image file containing the color texture from your computer.</target>
-        <note>Line: 323</note>
+        <note>Line: 333</note>
       </trans-unit>
       <trans-unit id="ba353198430b2004efeb1ac6d1f410d0">
         <source>This will override the HTML color!</source>
         <target>This will override the HTML color!</target>
-        <note>Line: 324</note>
+        <note>Line: 334</note>
       </trans-unit>
       <trans-unit id="7d5672f569de406c85249db6f1c99ec0">
         <source>Save then add another value</source>
         <target>Save then add another value</target>
-        <note>Line: 566</note>
+        <note>Line: 576</note>
       </trans-unit>
     </body>
   </file>
@@ -210,17 +210,22 @@
       <trans-unit id="21d883f3177ec09a845d9963eca239b1">
         <source>Save and add another value</source>
         <target>Save and add another value</target>
-        <note>Line: 246</note>
+        <note>Line: 252</note>
       </trans-unit>
       <trans-unit id="07fc7dc79c8046bb36d97b4332dab1ca">
         <source>Back to the list</source>
         <target>Back to the list</target>
-        <note>Line: 270</note>
+        <note>Line: 276</note>
       </trans-unit>
       <trans-unit id="d8aac6665c79faf4f411fe0da93ab23c">
         <source>Add new feature values</source>
         <target>Add new feature values</target>
-        <note>Line: 266</note>
+        <note>Line: 272</note>
+      </trans-unit>
+      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
+        <source>Add new feature value</source>
+        <target>Add new feature value</target>
+        <note>Line: 224</note>
       </trans-unit>
     </body>
   </file>
@@ -229,17 +234,27 @@
       <trans-unit id="dd0479e67d24cd2c2868d4c6b2dcba9a">
         <source>Company name for this supplier</source>
         <target>Company name for this supplier</target>
-        <note>Line: 146</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="b51bea4eee9d9ef6bd9a6849337013d5">
         <source>Phone number for this supplier</source>
         <target>Phone number for this supplier</target>
-        <note>Line: 168</note>
+        <note>Line: 174</note>
       </trans-unit>
       <trans-unit id="c24c0c9cd7bdb34eaff67028b0cb8349">
         <source>Mobile phone number for this supplier.</source>
         <target>Mobile phone number for this supplier.</target>
-        <note>Line: 177</note>
+        <note>Line: 183</note>
+      </trans-unit>
+      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
+        <source>Will appear in the list of suppliers.</source>
+        <target>Will appear in the list of suppliers.</target>
+        <note>Line: 163</note>
+      </trans-unit>
+      <trans-unit id="e865605842d16d0d11c266c731e00507">
+        <source>Upload a supplier logo from your computer.</source>
+        <target>Upload a supplier logo from your computer.</target>
+        <note>Line: 256</note>
       </trans-unit>
     </body>
   </file>
@@ -248,7 +263,7 @@
       <trans-unit id="d56b081f1e66fdf5130276c68d528780">
         <source>Search reference</source>
         <target>Search reference</target>
-        <note>Line: 297</note>
+        <note>Line: 549</note>
       </trans-unit>
     </body>
   </file>
@@ -257,16 +272,7 @@
       <trans-unit id="cc2ac103a9c1411fd67952983e25978a">
         <source>Create a new product: CTRL+P</source>
         <target>Create a new product: CTRL+P</target>
-        <note>Line: 378</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
-        <source>Add new feature value</source>
-        <target>Add new feature value</target>
-        <note>Line: 220</note>
+        <note>Line: 388</note>
       </trans-unit>
     </body>
   </file>
@@ -298,22 +304,22 @@
       <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
         <source>Search for a product</source>
         <target>Search for a product</target>
-        <note>Line: 204</note>
+        <note>Line: 206</note>
       </trans-unit>
       <trans-unit id="9242ed633bcac07574f63fba6e184fd8">
         <source>Enter your product name</source>
         <target>Enter your product name</target>
-        <note>Line: 226</note>
+        <note>Line: 238</note>
       </trans-unit>
       <trans-unit id="7f6c27a96363effdda77216cf1251400">
         <source><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></source>
         <target><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></target>
-        <note>Line: 257</note>
+        <note>Line: 269</note>
       </trans-unit>
       <trans-unit id="1fbfcc9642d39544207c67f66ec3bc00">
         <source>Search and add a related product</source>
         <target>Search and add a related product</target>
-        <note>Line: 347</note>
+        <note>Line: 359</note>
       </trans-unit>
     </body>
   </file>
@@ -322,7 +328,7 @@
       <trans-unit id="8246ddfaa2c607ace3ae3a4643d957d1">
         <source>Use a comma to create separate tags. E.g.: dress, cotton, party dresses.</source>
         <target>Use a comma to create separate tags. E.g.: dress, cotton, party dresses.</target>
-        <note>Line: 112</note>
+        <note>Line: 114</note>
       </trans-unit>
     </body>
   </file>
@@ -331,7 +337,7 @@
       <trans-unit id="420f46a170eef476454fa134085a85a2">
         <source>Per kilo, per litre</source>
         <target>Per kilo, per litre</target>
-        <note>Line: 235</note>
+        <note>Line: 237</note>
       </trans-unit>
     </body>
   </file>
@@ -340,12 +346,12 @@
       <trans-unit id="16a5534d559007de7e8f5b4f17112203">
         <source>Leave empty to disable</source>
         <target>Leave empty to disable</target>
-        <note>Line: 197</note>
+        <note>Line: 204</note>
       </trans-unit>
       <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
         <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
         <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
-        <note>Line: 104</note>
+        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>
@@ -354,7 +360,7 @@
       <trans-unit id="8533d8d42f2c7ef3078797984ea14675">
         <source>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</source>
         <target>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</target>
-        <note>Line: 135</note>
+        <note>Line: 137</note>
       </trans-unit>
       <trans-unit id="26511e4120f7b4f3135a21b9f35efed8">
         <source>To which product the page should redirect?</source>
@@ -374,17 +380,32 @@
       <trans-unit id="af809f35e40bd6f644509ad566ecf38c">
         <source>To have a different title from the product name, enter it here.</source>
         <target>To have a different title from the product name, enter it here.</target>
-        <note>Line: 99</note>
+        <note>Line: 101</note>
       </trans-unit>
       <trans-unit id="b0ea2bd9df4b8ee746b4e5fd28503851">
         <source>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</source>
         <target>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</target>
-        <note>Line: 110</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="5f99bb8ecd940f311cb66fadfc467a2b">
         <source>To have a different description than your product summary in search results pages, write it here.</source>
         <target>To have a different description than your product summary in search results pages, write it here.</target>
-        <note>Line: 124</note>
+        <note>Line: 126</note>
+      </trans-unit>
+      <trans-unit id="96bacc9c71fc8b7763f985fed3dfc545">
+        <source>To which product should the page redirect?</source>
+        <target>To which product should the page redirect?</target>
+        <note>Line: 186</note>
+      </trans-unit>
+      <trans-unit id="6dd1254fcdbcc7b3fd459617adad9289">
+        <source>To which category should the page redirect?</source>
+        <target>To which category should the page redirect?</target>
+        <note>Line: 188</note>
+      </trans-unit>
+      <trans-unit id="1b9648d6a32243bb7003ae8046dc7c1a">
+        <source>By default, the main category will be used if no category is selected.</source>
+        <target>By default, the main category will be used if no category is selected.</target>
+        <note>Line: 189</note>
       </trans-unit>
     </body>
   </file>
@@ -402,7 +423,7 @@
       <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
         <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
         <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
-        <note>Line: 93</note>
+        <note>Line: 109</note>
       </trans-unit>
     </body>
   </file>
@@ -420,7 +441,7 @@
       <trans-unit id="0834dbec80c240be5b2fda7c96b79b50">
         <source>Search product</source>
         <target>Search product</target>
-        <note>Line: 157</note>
+        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -429,7 +450,7 @@
       <trans-unit id="5f9f342e4e78d83ab2ebb44531de3500">
         <source>Using another image as cover will automatically uncheck this box.</source>
         <target>Using another image as cover will automatically uncheck this box.</target>
-        <note>Line: 59</note>
+        <note>Line: 109</note>
       </trans-unit>
     </body>
   </file>
@@ -457,12 +478,12 @@
       <trans-unit id="127a2d0e467657187c3a043fb6179b17">
         <source>Set specific prices for customers meeting certain conditions.</source>
         <target>Set specific prices for customers meeting certain conditions.</target>
-        <note>Line: 96</note>
+        <note>Line: 104</note>
       </trans-unit>
       <trans-unit id="5a533ff8b0bb46f6ddbe100864e44771">
         <source>Define which condition should apply first when a customer is eligible for multiple specific prices.</source>
         <target>Define which condition should apply first when a customer is eligible for multiple specific prices.</target>
-        <note>Line: 101</note>
+        <note>Line: 118</note>
       </trans-unit>
     </body>
   </file>
@@ -521,36 +542,22 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
-        <source>Will appear in the list of suppliers.</source>
-        <target>Will appear in the list of suppliers.</target>
-        <note>Line: 150</note>
-      </trans-unit>
-      <trans-unit id="e865605842d16d0d11c266c731e00507">
-        <source>Upload a supplier logo from your computer.</source>
-        <target>Upload a supplier logo from your computer.</target>
-        <note>Line: 278</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
         <source>Search name</source>
         <target>Search name</target>
-        <note>Line: 119</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="84645920bd0fb266cb4acdbc00003e62">
         <source>Search category</source>
         <target>Search category</target>
-        <note>Line: 141</note>
+        <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="3ce14776b1408d0dc406766fd0c6a45d">
         <source>Search ref.</source>
         <target>Search ref.</target>
-        <note>Line: 130</note>
+        <note>Line: 129</note>
       </trans-unit>
     </body>
   </file>
@@ -669,12 +676,42 @@
       <trans-unit id="462864be2a8d87de471c82d553000030">
         <source>Permanent redirection (301) = Permanently display another product or category instead.</source>
         <target>Permanent redirection (301) = Permanently display another product or category instead.</target>
-        <note>Line: 129</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="50565048560ec8a9fe1f6ddec57a917a">
         <source>Temporary redirection (302) = Temporarily display another product or category instead.</source>
         <target>Temporary redirection (302) = Temporarily display another product or category instead.</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="916ba4b2422000e9868d30814dc1cef3">
+        <source><![CDATA[Default behavior is specified in the Shop Parameters > Product settings page.]]></source>
+        <target><![CDATA[Default behavior is specified in the Shop Parameters > Product settings page.]]></target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="8d9ca96605aac170ba7120491d770710">
+        <source>No redirection (200), display product = Do not redirect anywhere, display product as discontinued and return normal 200 response.</source>
+        <target>No redirection (200), display product = Do not redirect anywhere, display product as discontinued and return normal 200 response.</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="8e2b691e27a3ccb91f0b3a9baa091562">
+        <source>No redirection (404), display product = Do not redirect anywhere, display product as discontinued and return 404 "Not Found" response.</source>
+        <target>No redirection (404), display product = Do not redirect anywhere, display product as discontinued and return 404 "Not Found" response.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="76baa7f2e915f48214cd6577b59e1552">
+        <source>No redirection (410), display product = Do not redirect anywhere, display product as discontinued and return 410 "Gone" response.</source>
+        <target>No redirection (410), display product = Do not redirect anywhere, display product as discontinued and return 410 "Gone" response.</target>
         <note>Line: 130</note>
+      </trans-unit>
+      <trans-unit id="97faaea8b9fbed3f6c5b7d7a9c60e648">
+        <source>No redirection (404), display error page = Do not redirect anywhere and display a 404 "Not Found" page.</source>
+        <target>No redirection (404), display error page = Do not redirect anywhere and display a 404 "Not Found" page.</target>
+        <note>Line: 131</note>
+      </trans-unit>
+      <trans-unit id="10bcd2f914bb6f74c3fef8c13e59ea61">
+        <source>No redirection (410), display error page = Do not redirect anywhere and display a 410 "Gone" page.</source>
+        <target>No redirection (410), display error page = Do not redirect anywhere and display a 410 "Gone" page.</target>
+        <note>Line: 132</note>
       </trans-unit>
     </body>
   </file>
@@ -898,27 +935,27 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
       <trans-unit id="607e1d854783c8229998ac2b5b6923d3">
         <source>Invalid token</source>
         <target>Invalid token</target>
-        <note>Line: 32</note>
+        <note>Line: 33</note>
       </trans-unit>
       <trans-unit id="d24ec28b066e46d9d9ec3c1f39aa89ee">
         <source>[1]Invalid token[/1]: direct access to this link may lead to a potential security breach.</source>
         <target>[1]Invalid token[/1]: direct access to this link may lead to a potential security breach.</target>
-        <note>Line: 40</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="f364944e8422977932bd21eb2d96963a">
         <source>Do you want to display this page?</source>
         <target>Do you want to display this page?</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="a0d31e7f783700b99e15ce8621dc6381">
         <source>Yes, I understand the risks</source>
         <target>Yes, I understand the risks</target>
-        <note>Line: 47</note>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="a5b0a810681c7fca4581d7f7524009f4">
         <source>Take me out of there!</source>
         <target>Take me out of there!</target>
-        <note>Line: 50</note>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -952,17 +989,17 @@ Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no clo
       <trans-unit id="09e2683b6b92b326691cd992f6e5684b">
         <source>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</source>
         <target>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</target>
-        <note>Line: 177</note>
+        <note>Line: 180</note>
       </trans-unit>
       <trans-unit id="463848257c086c4816d9f4c020a8d19e">
         <source>Mark all of the customer groups which you would like to have access to this category.</source>
         <target>Mark all of the customer groups which you would like to have access to this category.</target>
-        <note>Line: 182</note>
+        <note>Line: 185</note>
       </trans-unit>
       <trans-unit id="53d98bd116f47fdfe15c8eb4525c5e99">
         <source>You now have three default customer groups.</source>
         <target>You now have three default customer groups.</target>
-        <note>Line: 190</note>
+        <note>Line: 193</note>
       </trans-unit>
     </body>
   </file>
