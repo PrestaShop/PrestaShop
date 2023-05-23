@@ -220,7 +220,7 @@ class TranslateCore
                 'Admin.International.Notification'
             );
         }
-        
+
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
             return str_replace('"', '&quot;', Translate::checkAndReplaceArgs($string, $sprintf));
         }
