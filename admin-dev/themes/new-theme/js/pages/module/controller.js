@@ -172,10 +172,7 @@ class AdminModuleController {
 
       self.lastBulkAction = $(this).data('ref');
       const modulesListString = self.buildBulkActionModuleList();
-      const actionString = $(this)
-        .find(':checked')
-        .text()
-        .toLowerCase();
+      const actionString = $(this).data('display-name').toLowerCase();
       $(self.bulkConfirmModalListSelector).html(modulesListString);
       $(self.bulkConfirmModalActionNameSelector).text(actionString);
 
