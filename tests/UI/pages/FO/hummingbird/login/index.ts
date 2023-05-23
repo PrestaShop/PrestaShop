@@ -17,6 +17,7 @@ class Login extends LoginPage {
     this.theme = 'hummingbird';
 
     this.displayRegisterFormLink = 'div a[data-link-action=\'display-register-form\']';
+    this.alertDangerTextBlock = '.login .help-block .alert.alert-danger';
   }
 }
 
