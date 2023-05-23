@@ -208,12 +208,25 @@ class ImageRetriever
         $image_types = ImageType::getImagesTypes($type, true);
         foreach ($image_types as $image_type) {
             $sources = [];
+            $formattedName = ImageType::getFormattedName('small');
+
+            if ($type === 'categories' && $formattedName === $image_type['name']) {
+                $originalFileName = $id_image . '_thumb.jpg';
+            } else {
+                $originalFileName = $id_image . '.jpg';
+            }
+
+            // Get path of original uploaded image we will use to get thumbnails (original image extension is always .jpg)
+            $originalImagePath = implode(DIRECTORY_SEPARATOR, [
+                $imageFolderPath,
+                $originalFileName,
+            ]);
 
             foreach ($configuredImageFormats as $imageFormat) {
                 // Generate the thumbnail and optionally a high DPI version
-                $this->checkOrGenerateImageType($imageFolderPath, $id_image, $image_type, $imageFormat);
+                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
                 if ($generateHighDpiImages) {
-                    $this->checkOrGenerateImageType($imageFolderPath, $id_image, $image_type, $imageFormat, true);
+                    $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
                 }
 
                 // Get the URL of the thumb and add it to sources
@@ -266,6 +279,7 @@ class ImageRetriever
     }
 
     /**
+     * @param string $originalImagePath
      * @param string $imageFolderPath
      * @param int $idImage
      * @param array $imageTypeData
@@ -274,9 +288,10 @@ class ImageRetriever
      *
      * @return void
      */
-    private function checkOrGenerateImageType(string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $imageFormat, bool $hdpi = false)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
+
         if ($hdpi) {
             $fileName = sprintf('%s-%s2x.%s', $idImage, $imageTypeData['name'], $imageFormat);
             $imageTypeData['width'] *= 2;
@@ -294,13 +309,8 @@ class ImageRetriever
 
         // Check if the thumbnail exists and generate it if needed
         if (!file_exists($resizedImagePath)) {
-            $sourceFile = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], 'jpg');
-            $sourceFilePath = implode(DIRECTORY_SEPARATOR, [
-                $imageFolderPath,
-                $sourceFile,
-            ]);
             ImageManager::resize(
-                $sourceFilePath,
+                $originalImagePath,
                 $resizedImagePath,
                 (int) $imageTypeData['width'],
                 (int) $imageTypeData['height'],
