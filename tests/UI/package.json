@@ -80,6 +80,8 @@
     "test:functional:FO:hummingbird:01-03": "TEST_PATH='functional/FO/hummingbird/0[1-3]*/' npm run test:specific",
     "// Functional WS": "Scripts to run functional WS tests",
     "test:functional:WS": "TEST_PATH='functional/WS/' npm run test:specific",
+    "// Modules tests": "Scripts to run modules tests",
+    "test:modules": "TEST_PATH='modules/' npm run test:specific",
     "// Regression tests": "Scripts to run regression tests",
     "test:regression": "TEST_PATH='regression/' npm run test:specific",
     "// All tests": "Scripts to run all campaigns",

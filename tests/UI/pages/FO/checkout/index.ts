@@ -1151,7 +1151,7 @@ class Checkout extends FOBasePage {
    * @param paymentModuleName {string} The payment module name
    * @returns {Promise<boolean>}
    */
-  isPaymentMethodExist(page: Page, paymentModuleName: string): Promise<boolean> {
+  async isPaymentMethodExist(page: Page, paymentModuleName: string): Promise<boolean> {
     return this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 2000);
   }
 

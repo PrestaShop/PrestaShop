@@ -1,6 +1,10 @@
 import ModuleData from '@data/faker/module';
 
 export default {
+  psCashOnDelivery: new ModuleData({
+    tag: 'ps_cashondelivery',
+    name: 'Cash on delivery (COD)',
+  }),
   psCheckPayment: new ModuleData({
     tag: 'ps_checkpayment',
     name: 'Payments by check',
