@@ -24,17 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler;
+declare(strict_types=1);
 
+namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasHandlerInterface;
 
-/**
- * Defines contract to handle @see UpdateAliasCommand
- */
-interface UpdateAliasHandlerInterface
+class UpdateAliasHandler implements UpdateAliasHandlerInterface
 {
+    public function __construct(
+        protected AliasRepository $aliasRepository
+    ) {
+    }
+
     /**
      * @param UpdateAliasCommand $command
      */
-    public function handle(UpdateAliasCommand $command): void;
+    public function handle(UpdateAliasCommand $command): void
+    {
+        $alias = $this->aliasRepository->get($command->aliasId);
+        $wasActive = (bool) $alias->active;
+
+        // @TODO implement updatable property filler
+
+        if (null !== $command->isActive()) {
+            $alias->active = $command->isActive();
+            $updatableProperties[] = 'active';
+        }
+    }
 }
