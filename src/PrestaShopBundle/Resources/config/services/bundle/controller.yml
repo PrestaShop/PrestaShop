@@ -3,7 +3,6 @@ services:
     public: true
 
   PrestaShopBundle\Controller\Api\ApiController:
-    #abstract: true
     class: PrestaShopBundle\Controller\Api\ApiController
     calls:
       - [ setLogger, [ '@logger' ] ]
