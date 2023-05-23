@@ -313,6 +313,7 @@ class CustomerType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'autocomplete' => true,
+                'placeholder' => null,
             ])
         ;
 
