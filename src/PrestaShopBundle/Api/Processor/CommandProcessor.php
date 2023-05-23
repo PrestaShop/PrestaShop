@@ -26,25 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Api\Provider;
+namespace PrestaShopBundle\Api\Processor;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
+use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 
-class QueryProvider implements ProviderInterface
+class CommandProcessor implements ProcessorInterface
 {
-    private $queryBus;
+    /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
 
-    public function __construct(CommandBusInterface $queryBus)
+    /**
+     * @param CommandBusInterface $commandBus
+     */
+    public function __construct(CommandBusInterface $commandBus)
     {
-        $this->queryBus = $queryBus;
+        $this->commandBus = $commandBus;
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $query = $operation->getExtraProperties()['query'];
+        $command = $operation->getExtraProperties()['command'];
+        $reflectionMethod = new \ReflectionMethod($command, '__construct');
+        $constructParameters = $reflectionMethod->getParameters();
+        $parameters = [];
+        foreach ($constructParameters as $parameter) {
+            $parameters[] = $data->{$parameter->name};
+        }
 
-        return $this->queryBus->handle(new $query(...array_values($uriVariables)));
+        $this->commandBus->handle(new $command(...array_values($parameters)));
     }
 }

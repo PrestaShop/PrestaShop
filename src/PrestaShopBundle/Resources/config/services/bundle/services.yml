@@ -111,6 +111,13 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
+  PrestaShopBundle\Api\Processor\CommandProcessor:
+    tags: [ 'api_platform.state_processor' ]
+    public: false
+    autowire: true
+    arguments:
+      - '@prestashop.core.command_bus'
+
   PrestaShopBundle\Security\Admin\SessionRenewer:
     arguments:
       $storage: "@security.csrf.token_storage"
