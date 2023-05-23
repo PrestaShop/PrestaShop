@@ -131,7 +131,6 @@ class CartRuleActionFiller
                 $discountApplicationValue = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
         }
 
-        //@todo: specific/selected/cheapest product is selected it might be that product_restriction muts be set to true.
         $cartRule->reduction_product = $discountApplicationValue;
     }
 
