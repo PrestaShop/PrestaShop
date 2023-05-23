@@ -155,7 +155,7 @@ class AdminModuleController {
     body.on('click', this.bulkActionCheckboxListSelector, () => {
       const selector = $(self.bulkActionDropDownSelector);
 
-      if ($(this.checkedBulkActionListSelector).length > 0) {
+      if ($(self.checkedBulkActionListSelector).length > 0) {
         selector.closest('.module-top-menu-item').removeClass('disabled');
       } else {
         selector.closest('.module-top-menu-item').addClass('disabled');
@@ -163,7 +163,7 @@ class AdminModuleController {
     });
 
     body.on('click', self.bulkItemSelector, function initializeBodyChange() {
-      if ($(this.checkedBulkActionListSelector).length === 0) {
+      if ($(self.checkedBulkActionListSelector).length === 0) {
         $.growl.warning({
           message: window.translate_javascripts['Bulk Action - One module minimum'],
         });
