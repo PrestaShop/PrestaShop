@@ -133,12 +133,13 @@
         "smarty/smarty": "^4.3.1",
         "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~6.2",
+        "symfony/doctrine-messenger": "^5.4",
         "symfony/monolog-bundle": "^3.7.0",
         "symfony/polyfill-php73": "^1.10",
-        "symfony/property-access": "^4",
+        "symfony/property-access": "^5",
         "symfony/psr-http-message-bridge": "^2.1",
         "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/symfony": "4.4.*",
+        "symfony/symfony": "5.4.*",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "twig/twig": "^3.0"
@@ -175,7 +176,7 @@
             "file": "app/config/parameters.yml"
         },
         "symfony": {
-            "require": "~4.4"
+            "require": "~5.4"
         },
         "symfony-app-dir": "app",
         "symfony-assets-install": "relative",

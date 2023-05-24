@@ -44,7 +44,7 @@ services:
 
   prestashop.adapter.php_parameters:
     class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
-    arguments: [ '%kernel.root_dir%/config/parameters.php' ]
+    arguments: [ '%kernel.project_dir%/app/config/parameters.php' ]
 
   prestashop.adapter.legacy.kpi_configuration:
     class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration

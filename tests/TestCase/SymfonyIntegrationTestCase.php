@@ -26,7 +26,7 @@
 
 namespace Tests\TestCase;
 
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Integration\Utility\ContextMocker;
 use Tests\Resources\DatabaseDump;
@@ -39,7 +39,7 @@ class SymfonyIntegrationTestCase extends WebTestCase
     protected $contextMocker;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -53,7 +53,6 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
         //createClient already creates the kernel
         //$this->bootKernel();
-        self::$container = self::$kernel->getContainer();
 
         // Global var for SymfonyContainer
         global $kernel;

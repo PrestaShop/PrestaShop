@@ -90,6 +90,12 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
         $this->modulesDir = self::$kernel->getContainer()->getParameter('translations_modules_dir');
 
         $this->legacyModuleExtractor = $this->createMock(LegacyModuleExtractorInterface::class);
+        $this->legacyModuleExtractor->method('extract')
+            ->withAnyParameters()
+            ->willReturnCallback(function (string $moduleName, string $locale) {
+                return new MessageCatalogue($locale);
+            });
+
         $this->legacyFileLoader = $this->createMock(LoaderInterface::class);
     }
 

@@ -64,7 +64,7 @@ class StockController extends ApiController
      */
     public function listProductsAction(Request $request)
     {
-        if (!$this->isGranted([Permission::READ], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted(Permission::READ, $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -92,7 +92,7 @@ class StockController extends ApiController
      */
     public function editProductAction(Request $request)
     {
-        if (!$this->isGranted([Permission::UPDATE], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted(Permission::UPDATE, $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -125,7 +125,7 @@ class StockController extends ApiController
      */
     public function bulkEditProductsAction(Request $request)
     {
-        if (!$this->isGranted([Permission::UPDATE], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted(Permission::UPDATE, $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -154,10 +154,9 @@ class StockController extends ApiController
      */
     public function listProductsExportAction(Request $request)
     {
-        if (!$this->isGranted([Permission::READ], $request->get('_legacy_controller'))) {
+        if (!$this->isGranted(Permission::READ, $request->get('_legacy_controller'))) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
-
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {

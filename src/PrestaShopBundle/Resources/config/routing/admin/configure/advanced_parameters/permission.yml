@@ -2,7 +2,7 @@ admin_permissions_index:
   path: /
   methods: GET
   defaults:
-    _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PermissionController::indexAction'
     _legacy_controller: AdminAccess
     _legacy_link: AdminAccess
     _legacy_feature_flag: permission
@@ -11,7 +11,7 @@ admin_permissions_update_tab_permissions:
   path: /update/permissions/tab
   methods: POST
   defaults:
-    _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:updateTabPermissions
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PermissionController:updateTabPermissionsAction'
     _legacy_controller: AdminAccess
     _legacy_link: AdminAccess:updateAccess
     _legacy_feature_flag: permission
@@ -20,7 +20,7 @@ admin_permissions_update_module_permissions:
   path: /update/permissions/module
   methods: POST
   defaults:
-    _controller: PrestaShopBundle:Admin\Configure\AdvancedParameters\Permission:updateModulePermissions
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PermissionController:updateModulePermissionsAction'
     _legacy_controller: AdminAccess
     _legacy_link: AdminAccess:updateModuleAccess
     _legacy_feature_flag: permission

@@ -75,7 +75,8 @@ class PositionsControllerTest extends TestCase
         Module::clearStaticCache();
 
         parent::setUp();
-        self::bootKernel();
+
+        $this->client = self::createClient();
 
         // Unregister all modules hooked on displayHome
         Db::getInstance()->execute(sprintf(
@@ -118,8 +119,7 @@ class PositionsControllerTest extends TestCase
         $this->secondModuleId = $moduleRepository->getModule('bankwire')->database->get('id');
         $this->hookId = Hook::getIdByName('displayHome');
 
-        $this->client = self::createClient();
-        $this->router = self::$container->get('router');
+        $this->router = self::getContainer()->get('router');
     }
 
     protected function tearDown(): void

@@ -757,7 +757,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        $productIdList = $request->request->get('bulk_action_selected_products');
+        $productIdList = $request->request->all('bulk_action_selected_products');
         /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
@@ -955,8 +955,8 @@ class ProductController extends FrameworkBundleAdminController
                     /* Change position_ordering to position */
                     $routerParams['orderBy'] = 'position';
 
-                    $productIdList = $request->request->get('mass_edit_action_sorted_products');
-                    $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
+                    $productIdList = $request->request->all('mass_edit_action_sorted_products');
+                    $productPositionList = $request->request->all('mass_edit_action_sorted_positions');
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,
                         'product_list_position' => $productPositionList,

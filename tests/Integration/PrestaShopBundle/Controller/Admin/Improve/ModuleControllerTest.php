@@ -59,7 +59,6 @@ class ModuleControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::bootKernel();
 
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');

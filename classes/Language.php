@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
-use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Countries;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
@@ -1733,7 +1733,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private function getCountries(string $locale): array
     {
         Locale::setDefault($locale);
-        $countries = Intl::getRegionBundle()->getCountryNames();
+        $countries = Countries::getNames();
         $countries = array_change_key_case($countries, CASE_LOWER);
 
         return $countries;

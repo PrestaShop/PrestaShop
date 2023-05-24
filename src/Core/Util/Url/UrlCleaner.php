@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,24 +22,29 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% block grid_pagination %}
-  {% if grid.data.records_total > 10 or grid.pagination.offset %}
-    {% set route_params = {} %}
+declare(strict_types=1);
 
-    {% for param_name, param_value in app.request.attributes.get('_route_params') %}
-      {% set route_params = route_params|merge({ (param_name) : (param_value) }) %}
-    {% endfor %}
+namespace PrestaShop\PrestaShop\Core\Util\Url;
 
-    {{ render(controller('PrestaShopBundle\\Controller\\Admin\\CommonController:paginationAction', {
-      'limit': grid.pagination.limit,
-      'offset': grid.pagination.offset,
-      'total': grid.data.records_total,
-      'prefix': grid.form_prefix,
-      'caller_route': app.request.attributes.get('_route'),
-      'caller_parameters': route_params,
-      'view': grid.view_options.pagination_view|default('full')
-    })) }}
-  {% endif %}
-{% endblock %}
+class UrlCleaner
+{
+    public static function cleanUrl(string $url, array $removedParams): string
+    {
+        $parsedUrl = parse_url($url);
+        $parameters = [];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $parameters);
+        }
+
+        foreach ($removedParams as $removedParam) {
+            unset($parameters[$removedParam]);
+        }
+
+        return http_build_url([
+            'path' => $parsedUrl['path'],
+            'query' => http_build_query($parameters),
+        ]);
+    }
+}

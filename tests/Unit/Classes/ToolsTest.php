@@ -843,9 +843,17 @@ class ToolsTest extends TestCase
         $rule = "~$rule~";
         foreach ($testCases as $setName => $case) {
             if ($case['shouldMatch']) {
-                $this->assertRegExp($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
+                if (method_exists($this, 'assertMatchesRegularExpression')) {
+                    $this->assertMatchesRegularExpression($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
+                } else {
+                    $this->assertRegExp($rule, $case['uri'], "The uri segment is expected to match the pattern, but it doesn't");
+                }
             } else {
-                $this->assertNotRegExp($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
+                if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+                    $this->assertDoesNotMatchRegularExpression($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
+                } else {
+                    $this->assertNotRegExp($rule, $case['uri'], 'The uri segment is expected NOT to match the pattern, but it does');
+                }
             }
 
             if ($case['shouldMatch']) {

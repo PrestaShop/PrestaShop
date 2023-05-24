@@ -58,16 +58,16 @@ class Router extends BaseRouter
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        $username = $this->userProvider->getUsername();
-        // Do not generate token each time we want to generate a route for a user
-        if (!isset($this->tokens[$username])) {
-            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
-        }
-
         $url = parent::generate($name, $parameters, $referenceType);
 
         if (TokenInUrls::isDisabled()) {
             return $url;
+        }
+
+        $username = $this->userProvider->getUsername();
+        // Do not generate token each time we want to generate a route for a user
+        if (!isset($this->tokens[$username])) {
+            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
         }
 
         return self::generateTokenizedUrl($url, $this->tokens[$username]);

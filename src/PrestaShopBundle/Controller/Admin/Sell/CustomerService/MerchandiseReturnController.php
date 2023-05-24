@@ -89,7 +89,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * Edit existing order return
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_merchandise_returns_index"
      * )
      *

@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Security\OAuth2\Repository;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use PrestaShopBundle\Security\OAuth2\Entity\Client;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -86,7 +86,7 @@ class ClientRepository implements ClientRepositoryInterface
     {
         try {
             return $this->userProvider->loadUserByUsername($clientIdentifier);
-        } catch (UsernameNotFoundException $exception) {
+        } catch (UserNotFoundException $exception) {
             return null;
         }
     }

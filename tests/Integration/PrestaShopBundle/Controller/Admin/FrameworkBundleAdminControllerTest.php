@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Psr\Log\NullLogger;
 use Shop;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
@@ -51,7 +51,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     use ContextMockerTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -69,11 +69,6 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     {
         parent::setUp();
         self::mockContext();
-
-        // Symfony
-        self::bootKernel();
-        global $kernel;
-        $kernel = self::$kernel;
 
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');

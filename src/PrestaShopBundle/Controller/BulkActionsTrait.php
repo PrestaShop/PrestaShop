@@ -32,15 +32,7 @@ trait BulkActionsTrait
 {
     protected function getBulkActionIds(Request $request, string $key): array
     {
-        $ids = $request->request->get($key);
-
-        if (is_numeric($ids)) {
-            return [(int) $ids];
-        }
-
-        if (!is_array($ids)) {
-            return [];
-        }
+        $ids = $request->request->all($key);
 
         foreach ($ids as $i => $id) {
             $ids[$i] = (int) $id;

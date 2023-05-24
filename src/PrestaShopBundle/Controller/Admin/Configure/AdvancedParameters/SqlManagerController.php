@@ -611,11 +611,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     protected function getBulkSqlRequestFromRequest(Request $request): array
     {
-        $sqlRequestIds = $request->request->get('sql_request_bulk');
-
-        if (!is_array($sqlRequestIds)) {
-            return [];
-        }
+        $sqlRequestIds = $request->request->all('sql_request_bulk');
 
         return array_map('intval', $sqlRequestIds);
     }

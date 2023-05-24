@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
 use InvalidArgumentException;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -43,7 +43,7 @@ abstract class GridControllerTestCase extends WebTestCase
     use ContextMockerTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -75,6 +75,11 @@ abstract class GridControllerTestCase extends WebTestCase
         $this->client = static::createClient();
         $this->router = $this->client->getContainer()->get('router');
         $this->formFiller = new FormFiller();
+        //Since symfony 5.4, the session is fetch from the request stack
+        //We do need a request in the request stack to be able to use the configured session.
+        //With this line we ensure to have a request in the request stack at any time
+        //For more details see TokenStorageSession::getSession()
+        $this->client->request('GET', '/');
     }
 
     /**

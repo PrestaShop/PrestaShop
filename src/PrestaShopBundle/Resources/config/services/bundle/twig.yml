@@ -7,7 +7,7 @@ services:
   Twig\Extension\StringLoaderExtension: ~
 
   PrestaShopBundle\Twig\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Twig/*"
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Twig/*"
 
   PrestaShopBundle\Twig\LocaleExtension:
     arguments:

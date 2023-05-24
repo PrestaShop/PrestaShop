@@ -48,9 +48,5 @@ services:
   Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory:
 
   PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
-    public: true
-    arguments:
-      - '@League\OAuth2\Server\AuthorizationServer'
-      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
-      - '@Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory'
-      - '@Nyholm\Psr7\Factory\Psr17Factory'
+    autowire: true
+    autoconfigure: true

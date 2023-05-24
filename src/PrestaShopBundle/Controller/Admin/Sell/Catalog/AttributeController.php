@@ -233,11 +233,7 @@ class AttributeController extends FrameworkBundleAdminController
      */
     private function getAttributeIdsFromRequest(Request $request)
     {
-        $attributeIds = $request->request->get('attribute_bulk');
-
-        if (!is_array($attributeIds)) {
-            return [];
-        }
+        $attributeIds = $request->request->all('attribute_bulk');
 
         foreach ($attributeIds as $i => $attributeId) {
             $attributeIds[$i] = (int) $attributeId;

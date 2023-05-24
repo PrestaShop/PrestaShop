@@ -52,7 +52,7 @@ final class CommandsAndQueriesDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         $this->data = [
             'executed_commands' => $this->executedCommandRegistry->getExecutedCommands(),
