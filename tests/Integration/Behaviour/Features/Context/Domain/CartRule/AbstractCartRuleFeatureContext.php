@@ -333,7 +333,9 @@ abstract class AbstractCartRuleFeatureContext extends AbstractDomainFeatureConte
         if (isset($data['discount_percentage'])) {
             $formattedData['discount']['reduction']['value'] = $data['discount_percentage'];
             $formattedData['discount']['reduction']['type'] = Reduction::TYPE_PERCENTAGE;
-            $formattedData['discount']['apply_to_discounted_products'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['apply_to_discounted_products']);
+            if (isset($data['apply_to_discounted_products'])) {
+                $formattedData['discount']['apply_to_discounted_products'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['apply_to_discounted_products']);
+            }
         }
 
         if (isset($data['discount_amount'])) {

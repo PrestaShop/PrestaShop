@@ -15,28 +15,20 @@ Feature: Cart rule (amount) calculation with one cart rule
     And product "product8" is virtual
     And there is a cart rule "reduction_5_dollar" with following properties:
       | name[en-US]                  | reduces $5             |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
       | priority                     | 4                      |
       | free_shipping                | false                  |
       | code                         | reduce-5               |
       | discount_amount              | 5                      |
       | discount_currency            | usd                    |
       | discount_includes_tax        | false                  |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And there is a cart rule "reduction_500_dollar" with following properties:
       | name[en-US]                  | reduces $500           |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
       | priority                     | 5                      |
       | free_shipping                | false                  |
       | code                         | reduce-500             |
       | discount_amount              | 500                    |
       | discount_currency            | usd                    |
       | discount_includes_tax        | false                  |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And I have an empty default cart
 
   Scenario: 4 products in cart, one is virtual, several quantities, one 5€ global voucher

@@ -24,15 +24,11 @@ Feature: Cart calculation with country specific cart rules
     And carrier "carrier1" applies shipping fees of 45.6 in zone "North America" for price between 0 and 10000
     And there is a cart rule "cartrule1" with following properties:
       | name[en-US]                  | cartrule1              |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
       | priority                     | 1                      |
       | free_shipping                | false                  |
       | discount_amount              | 7.8                    |
       | discount_currency            | usd                    |
       | discount_includes_tax        | false                  |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule1" is restricted to country "FR"
     And there is a product in the catalog named "Product1" with a price of 90.12 and 100 items in stock
 

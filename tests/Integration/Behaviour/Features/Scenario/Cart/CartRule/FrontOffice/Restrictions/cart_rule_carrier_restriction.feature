@@ -37,8 +37,6 @@ Feature: Cart calculation with carrier specific cart rules
       | free_shipping                | false                  |
       | code                         | foo                    |
       | discount_percentage          | 50                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule1" is restricted to carrier "carrier2"
     And there is a cart rule "cartrule2" with following properties:
       | name[en-US]                  | cartrule2              |
@@ -48,8 +46,6 @@ Feature: Cart calculation with carrier specific cart rules
       | free_shipping                | false                  |
       | code                         | bar                    |
       | discount_percentage          | 50                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule2" is restricted to carrier "carrier1"
 
   Scenario: I cannot use voucher when it is restricted to specific carrier and that carrier is not selected
@@ -91,8 +87,6 @@ Feature: Cart calculation with carrier specific cart rules
       | priority                     | 1                      |
       | free_shipping                | false                  |
       | discount_percentage          | 55                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule11" is restricted to carrier "carrier2"
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
@@ -114,8 +108,6 @@ Feature: Cart calculation with carrier specific cart rules
       | discount_amount              | 10                     |
       | discount_currency            | usd                    |
       | discount_includes_tax        | false                  |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule12" is restricted to carrier "carrier2"
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart

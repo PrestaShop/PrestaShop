@@ -11,7 +11,6 @@ Feature: Apply cart rule to cart from Back Office (BO)
 
   Scenario: 1 product in cart, 1 automatic cart rule offering free gift, change the product quantity and check split cart quantities
     Given I am logged in as "test@prestashop.com" employee
-    Given there is customer "customer1" with email "pub@prestashop.com"
     Given I create an empty cart "dummy_custom_cart" for customer "customer1"
     Given email sending is disabled
     Given shipping handling fees are set to 2.0

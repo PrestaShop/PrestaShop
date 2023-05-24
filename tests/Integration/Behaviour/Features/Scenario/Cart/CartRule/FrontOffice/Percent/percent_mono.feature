@@ -19,8 +19,6 @@ Feature: Cart rule (percent) calculation with one cart rule
       | free_shipping                | false                  |
       | code                         | foo2                   |
       | discount_percentage          | 50                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And I have an empty default cart
 
   Scenario: one product in cart, quantity 1, one 50% global cartRule
@@ -58,8 +56,6 @@ Feature: Cart rule (percent) calculation with one cart rule
       | free_shipping                | false                  |
       | code                         | foo1                   |
       | discount_percentage          | 50                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And I add 1 items of product "product1" in my cart
     And I should have 1 different products in my cart
     And my cart total shipping fees should be 7.0 tax excluded

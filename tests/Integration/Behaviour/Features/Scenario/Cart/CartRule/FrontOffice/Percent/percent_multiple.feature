@@ -20,8 +20,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | free_shipping                | false                  |
       | code                         | foo2                   |
       | discount_percentage          | 50                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And there is a cart rule "cartrule3" with following properties:
       | name[en-US]                  | cartrule3              |
       | total_quantity               | 1000                   |
@@ -30,8 +28,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | free_shipping                | false                  |
       | code                         | foo3                   |
       | discount_percentage          | 10                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And I have an empty default cart
 
   Scenario: one product in cart, quantity 1, 2x % global cartRules
@@ -95,8 +91,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | quantity_per_user            | 1000                   |
       | priority                     | 2                      |
       | discount_percentage          | 10                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     # now adding same products just with cart rules and checking the order total is correct (shipping and percentage applied)
     When I add 1 items of product "product1" in my cart
     And my cart total should be precisely 17.83 tax included
@@ -113,8 +107,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | priority                     | 1                      |
       | code                         | foo50                  |
       | discount_percentage          | 50                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And there is a cart rule "cartrule30" with following properties:
       | name[en-US]                  | cartrule30             |
       | total_quantity               | 1000                   |
@@ -122,8 +114,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | priority                     | 2                      |
       | code                         | foo30                  |
       | discount_percentage          | 30                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And I add 1 items of product "product1" in my cart
     And I should have 1 different products in my cart
     And my cart total shipping fees should be 7.0 tax included
@@ -148,8 +138,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | free_shipping                | false                  |
       | code                         |                        |
       | discount_percentage          | 10                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And there is a cart rule "cartrule15" with following properties:
       | name[en-US]                  | cartrule15             |
       | total_quantity               | 1000                   |
@@ -158,8 +146,6 @@ Feature: Cart rule (percent) calculation with multiple cart rules
       | free_shipping                | false                  |
       | code                         |                        |
       | discount_percentage          | 10                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     When I add 2 items of product "product2" in my cart
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart

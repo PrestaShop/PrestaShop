@@ -207,8 +207,6 @@ Feature: Cart calculation with cart rules and different carriers
       | priority                     | 3                      |
       | free_shipping                | false                  |
       | discount_percentage          | 55                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule9" is restricted to carrier "carrier3"
     And cart rule "cartrule5" is restricted to carrier "carrier2"
     And cart rule "cartrule2" is restricted to carrier "carrier1"

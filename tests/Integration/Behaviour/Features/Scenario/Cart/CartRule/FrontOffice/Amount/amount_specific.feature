@@ -13,16 +13,12 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a cart rule "cartrule8" with following properties:
       | name[en-US]                  | reduces $5 for product2 |
-      | total_quantity               | 1000                    |
-      | quantity_per_user            | 1000                    |
       | priority                     | 8                       |
       | free_shipping                | false                   |
       | code                         | foo8                    |
       | discount_amount              | 5                       |
       | discount_currency            | usd                     |
       | discount_includes_tax        | false                   |
-      | apply_to_discounted_products | true                    |
-      | discount_application_type    | order_without_shipping  |
     And cart rule "cartrule8" is restricted to product "product2"
     And I have an empty default cart
 
@@ -39,16 +35,12 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
   Scenario: 3 products in cart, several quantities, one specific 500€ cartRule on product #2
     Given there is a cart rule "cartrule9" with following properties:
       | name[en-US]                  | reduces $500 for product2 |
-      | total_quantity               | 1000                      |
-      | quantity_per_user            | 1000                      |
       | priority                     | 8                         |
       | free_shipping                | false                     |
       | code                         | foo9                      |
       | discount_amount              | 500                       |
       | discount_currency            | usd                       |
       | discount_includes_tax        | false                     |
-      | apply_to_discounted_products | true                      |
-      | discount_application_type    | order_without_shipping    |
     And cart rule "cartrule9" is restricted to product "product2"
     When I add 3 items of product "product1" in my cart
     When I add 2 items of product "product2" in my cart

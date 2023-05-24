@@ -14,25 +14,17 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to one pr
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a cart rule "cartrule10" with following properties:
       | name[en-US]                  | cartrule10             |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
       | priority                     | 10                     |
       | free_shipping                | false                  |
       | code                         | foo10                  |
       | discount_percentage          | 50                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule10" is restricted to product "product2"
     And there is a cart rule "cartrule11" with following properties:
       | name[en-US]                  | cartrule11             |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
       | priority                     | 11                     |
       | free_shipping                | false                  |
       | code                         | foo11                  |
       | discount_percentage          | 10                     |
-      | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And cart rule "cartrule11" is restricted to product "product2"
     And I have an empty default cart
 

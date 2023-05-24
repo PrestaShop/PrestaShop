@@ -19,7 +19,6 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to cheape
       | free_shipping                | false            |
       | code                         | foo10            |
       | discount_percentage          | 50               |
-      | apply_to_discounted_products | false            |
       | discount_application_type    | cheapest_product |
 
   Scenario: one product in cart, quantity 1, one 50% cartRule on cheapest product

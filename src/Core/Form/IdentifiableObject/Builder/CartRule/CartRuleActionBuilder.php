@@ -79,7 +79,6 @@ class CartRuleActionBuilder
         if (
             $propertyAccessor->isReadable($data, '[discount][reduction][value]')
             && $propertyAccessor->isReadable($data, '[discount][reduction][type]')
-            && $propertyAccessor->isReadable($data, '[discount][discount_application]')
         ) {
             return true;
         }
@@ -118,7 +117,7 @@ class CartRuleActionBuilder
         }
 
         $discountApplicationType = new DiscountApplicationType(
-            $data['discount']['discount_application'],
+            $data['discount']['discount_application'] ?? DiscountApplicationType::ORDER_WITHOUT_SHIPPING,
             $specificProductId
         );
         $reductionData = $data['discount']['reduction'];
