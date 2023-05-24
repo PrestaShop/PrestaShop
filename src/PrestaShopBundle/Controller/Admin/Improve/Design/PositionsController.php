@@ -259,7 +259,7 @@ class PositionsController extends FrameworkBundleAdminController
         $hookStatus = false;
 
         try {
-            $hookStatus = $this->getQueryBus()->handle(new GetHookStatus($hookId));
+            $hookStatus = !$this->getQueryBus()->handle(new GetHookStatus($hookId));
             $this->getCommandBus()->handle(new UpdateHookStatusCommand($hookId, (bool) $hookStatus));
             $response = [
                 'status' => true,
@@ -272,7 +272,7 @@ class PositionsController extends FrameworkBundleAdminController
             ];
         }
 
-        $response['hook_status'] = !$hookStatus;
+        $response['hook_status'] = $hookStatus;
 
         return $this->json($response);
     }
