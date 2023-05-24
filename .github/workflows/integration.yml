@@ -2,9 +2,6 @@ name: Integration tests
 on:
   push:
   pull_request:
-    # Do not run when only tests are updated
-    paths-ignore:
-      - 'tests/UI/**'
 
 permissions:
   contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)

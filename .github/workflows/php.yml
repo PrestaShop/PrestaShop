@@ -2,9 +2,6 @@ name: PHP
 on:
   push:
   pull_request:
-    # Do not run when only tests are updated
-    paths-ignore:
-      - 'tests/UI/**'
 
 permissions:
   contents: read
