@@ -78,9 +78,17 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     {
         foreach ($this->activeModulesPaths as $modulePath) {
             if (str_ends_with($modulePath, 'api_module')) {
-                $moduleResourcesPath = sprintf('%s/config/api_platform', $modulePath);
-                if (file_exists($moduleResourcesPath)) {
-                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$moduleResourcesPath]]]);
+                $moduleConfigPath = sprintf('%s/config/api_platform', $modulePath);
+                if (file_exists($moduleConfigPath)) {
+                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$moduleConfigPath]]]);
+                }
+                $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
+                if (file_exists($entitiesRessourcesPath)) {
+                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$entitiesRessourcesPath]]]);
+                }
+                $moduleRessourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);
+                if (file_exists($moduleRessourcesPath)) {
+                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$moduleRessourcesPath]]]);
                 }
             }
         }
