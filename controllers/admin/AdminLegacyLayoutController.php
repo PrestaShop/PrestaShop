@@ -167,6 +167,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->page_header_toolbar_btn = array_merge($this->page_header_toolbar_btn, $this->headerToolbarBtn);
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         $this->addHeaderToolbarBtn();

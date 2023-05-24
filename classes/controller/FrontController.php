@@ -239,6 +239,7 @@ class FrontControllerCore extends Controller
 
     /**
      * Check if the current user/visitor has valid view permissions.
+     * Currently not used in any native controller.
      *
      * @see Controller::viewAccess
      *
@@ -489,6 +490,9 @@ class FrontControllerCore extends Controller
     {
     }
 
+    /**
+     * Initializes a set of commonly used variables, available for use in the template.
+     */
     protected function assignGeneralPurposeVariables()
     {
         if (Validate::isLoadedObject($this->context->cart)) {
@@ -601,7 +605,7 @@ class FrontControllerCore extends Controller
 
     /**
      * Called before compiling common page sections (header, footer, columns).
-     * Good place to modify smarty variables.
+     * Good place to modify smarty variables. Currently not used by any native controller.
      *
      * @see FrontController::initContent()
      */
@@ -1497,6 +1501,12 @@ class FrontControllerCore extends Controller
         return Product::getColorsListCacheId($id_product);
     }
 
+    /**
+     * Initializes a set of commonly used urls of pages, image folders and others, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarUrls()
     {
         if ($this->urls === null) {
@@ -1576,6 +1586,12 @@ class FrontControllerCore extends Controller
         return $this->urls;
     }
 
+    /**
+     * Initializes a set of commonly used variables of current configuration, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarConfiguration()
     {
         $quantity_discount_price = Configuration::get('PS_DISPLAY_DISCOUNT_PRICE');
@@ -1613,6 +1629,13 @@ class FrontControllerCore extends Controller
         return (Module::isEnabled('ps_legalcompliance') && (bool) Configuration::get('AEUC_LABEL_TAX_INC_EXC')) || $this->context->country->display_tax_label;
     }
 
+    /**
+     * Initializes information about currently used currency, available for use in the template.
+     *
+     * @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarCurrency()
     {
         $curr = [];
@@ -1624,6 +1647,13 @@ class FrontControllerCore extends Controller
         return $curr;
     }
 
+    /**
+     * Initializes information about current customer, available for use in the template.
+     *
+     * @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarCustomer($customer = null)
     {
         if (Validate::isLoadedObject($customer)) {
@@ -1690,6 +1720,12 @@ class FrontControllerCore extends Controller
         return $this->context->shop->physical_uri . 'themes/';
     }
 
+    /**
+     * Initializes a set of commonly used information about the shop, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarShop()
     {
         $address = $this->context->shop->getAddress();
@@ -1728,6 +1764,12 @@ class FrontControllerCore extends Controller
         return $shop;
     }
 
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page_name = $this->getPageName();
@@ -1814,6 +1856,11 @@ class FrontControllerCore extends Controller
         return $page;
     }
 
+    /**
+     * Returns a list of breadcrumbs with their count to show on the current page.
+     *
+     * @return array
+     */
     public function getBreadcrumb()
     {
         $breadcrumb = $this->getBreadcrumbLinks();
@@ -1822,6 +1869,12 @@ class FrontControllerCore extends Controller
         return $breadcrumb;
     }
 
+    /**
+     * Returns an array of breadcrumbs for current controller. Inheriting controllers should
+     * extend this list in most cases.
+     *
+     * @return array
+     */
     protected function getBreadcrumbLinks()
     {
         $breadcrumb = [];
@@ -1844,6 +1897,11 @@ class FrontControllerCore extends Controller
         }
     }
 
+    /**
+     * Returns breadcrumb step for "Your account" page.
+     *
+     * @return array
+     */
     protected function addMyAccountToBreadcrumb()
     {
         return [

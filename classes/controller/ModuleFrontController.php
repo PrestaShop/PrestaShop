@@ -64,6 +64,11 @@ class ModuleFrontControllerCore extends FrontController
         }
     }
 
+    /**
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
+     */
     public function initContent()
     {
         if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {

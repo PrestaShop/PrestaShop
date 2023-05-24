@@ -84,6 +84,11 @@ class AdminShopGroupControllerCore extends AdminController
         return Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         parent::initContent();

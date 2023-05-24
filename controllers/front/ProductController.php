@@ -102,7 +102,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * {@inheritdoc}
+     * Returns canonical URL for the current product
+     *
+     * @return string
      */
     public function getCanonicalURL(): string
     {
@@ -1418,6 +1420,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
      * @return array
      */
     public function getTemplateVarPage()

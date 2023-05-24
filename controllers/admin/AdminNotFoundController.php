@@ -41,6 +41,11 @@ class AdminNotFoundControllerCore extends AdminController
         return true;
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         $this->errors[] = $this->trans('Page not found', [], 'Admin.Notifications.Error');

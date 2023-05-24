@@ -49,6 +49,11 @@ class ManufacturerControllerCore extends ProductListingFrontController
         }
     }
 
+    /**
+     * Returns canonical URL for current manufacturer or a manufacturer list
+     *
+     * @return string
+     */
     public function getCanonicalURL(): string
     {
         if (Validate::isLoadedObject($this->manufacturer)) {
@@ -121,6 +126,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
     }
 
     /**
+     * Gets the product search query for the controller. This is a set of information that
+     * a filtering module or the default provider will use to fetch our products.
+     *
      * @return ProductSearchQuery
      *
      * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
@@ -137,6 +145,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
     }
 
     /**
+     * Default product search provider used if no filtering module stood up for the job
+     *
      * @return ManufacturerProductSearchProvider
      */
     protected function getDefaultProductSearchProvider()
@@ -243,6 +253,12 @@ class ManufacturerControllerCore extends ProductListingFrontController
         return $breadcrumb;
     }
 
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();

@@ -77,6 +77,11 @@ class AdminLoginControllerCore extends AdminController
         $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if (!Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) {
