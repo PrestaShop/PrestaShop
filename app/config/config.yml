@@ -105,6 +105,6 @@ api_platform:
   enable_entrypoint: false
   mapping:
     paths:
-      - '%kernel.root_dir%/../src/PrestaShopBundle/Api/Resources'
+      - '%kernel.project_dir%/src/PrestaShopBundle/Api/Resources'
 
   metadata_backward_compatibility_layer: false

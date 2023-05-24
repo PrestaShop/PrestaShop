@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Api\Resources;
+namespace PrestaShopBundle\ApiPlatform\Resources;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
-use PrestaShopBundle\Api\Processor\CommandProcessor;
-use PrestaShopBundle\Api\Provider\QueryProvider;
+use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 
 #[ApiResource(
     operations: [

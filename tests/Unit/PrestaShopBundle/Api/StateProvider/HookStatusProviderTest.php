@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
-use PrestaShopBundle\Api\Provider\QueryProvider;
+use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 use RuntimeException;
 
 class HookStatusProviderTest extends TestCase
