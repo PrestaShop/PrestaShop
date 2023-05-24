@@ -204,6 +204,8 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @todo: check if possible to unify this step with calculateCartShippingFees() so that they produce the same result (maybe selecting currency and address is missing?)
+     *
      * @Then /^my cart total shipping fees should be (\d+\.\d+) tax (excluded|included)?$/
      */
     public function assertTotalCartShipping(string $expectedShipping, bool $taxIncluded): void
