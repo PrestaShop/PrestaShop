@@ -111,7 +111,7 @@ Feature: Cart calculation with cart rules and different carriers
     And I select address "address1" in my cart
     And I select carrier "carrier4" in my cart
     And I apply the voucher code "foo5"
-    Then I should get cart rule validation error saying "The minimum amount to benefit from this promo code is"
+    Then I should get cart rule validation error saying "The minimum amount to benefit from this promo code is $150"
     And cart shipping fees should be 7.0
     And my cart total should be 156.0 tax included
     And my cart total using previous calculation method should be 156.0 tax included

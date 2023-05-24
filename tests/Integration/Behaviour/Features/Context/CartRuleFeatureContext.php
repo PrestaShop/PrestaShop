@@ -652,29 +652,30 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     private function getCartRuleValidityCodeByMessage(string $message): int
     {
         $map = [
-            'This voucher is disabled' => 100,
-            'This voucher has already been used' => 101,
-            'This voucher is not valid yet' => 102,
-            'This voucher has expired' => 103,
-            'You cannot use this voucher anymore (usage limit reached)' => 104,
-            'You cannot use this voucher' => 105,
-            'You must choose a delivery address before applying this voucher to your order' => 106,
-            'You cannot use this voucher in your country of delivery' => 107,
-            'You must choose a carrier before applying this voucher to your order' => 108,
-            'You cannot use this voucher with this carrier' => 109,
-            'You cannot use this voucher on products on sale' => 110,
-            'You cannot use this voucher in an empty cart' => 111,
-            'You cannot use this voucher with these products' => 112,
-            'The minimum amount to benefit from this promo code is' => 113,
-            'This voucher is already in your cart' => 114,
-            'This voucher is not combinable with an other voucher already in your cart:' => 115,
-            'Cart is empty' => 116,
+            'Cart is empty' => 100,
+            'This voucher is disabled' => 101,
+            'This voucher has already been used' => 102,
+            'This voucher is not valid yet' => 103,
+            'This voucher has expired' => 104,
+            'You must choose a delivery address before applying this voucher to your order' => 105,
+            'You must choose a carrier before applying this voucher to your order' => 106,
+            'The minimum amount to benefit from this promo code is' => 107,
+            'This voucher is already in your cart' => 108,
+            'This voucher is not combinable with an other voucher already in your cart:' => 109,
+            'You cannot use this voucher with these products' => 110,
+            'You cannot use this voucher on products on sale' => 111,
+            'You cannot use this voucher with this carrier' => 112,
+            'You cannot use this voucher in your country of delivery' => 113,
+            'You cannot use this voucher in an empty cart' => 114,
+            'You cannot use this voucher anymore (usage limit reached)' => 115,
+            'You cannot use this voucher' => 116,
         ];
 
         foreach ($map as $errorPart => $code) {
             // @todo:
-            //     some of these errors have %s placeholders, so we just match the most part of it,
-            //     it should be convenient enough for now, but will need improvement later
+            //     some of these errors have %s placeholders (luckily at the end of the string),
+            //      so we just match the start of the error message,
+            //     it should be convenient enough for now, but might need improvement later
             if (str_starts_with($message, $errorPart)) {
                 return $code;
             }
