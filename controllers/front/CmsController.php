@@ -33,18 +33,14 @@ class CmsControllerCore extends FrontController
     public $assignCase;
 
     /**
-     * @deprecated Since 8.1, it will become protected in next major version. Use getCms() method instead.
-     *
      * @var CMS|null
      */
-    public $cms;
+    protected $cms;
 
     /**
-     * @deprecated Since 8.1, it will become protected in next major version. Use getCmsCategory() method instead.
-     *
      * @var CMSCategory|null
      */
-    public $cms_category;
+    protected $cms_category;
 
     /** @var bool */
     public $ssl = false;

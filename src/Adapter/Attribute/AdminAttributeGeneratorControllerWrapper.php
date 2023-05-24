@@ -33,7 +33,6 @@ use Product;
 use SpecificPriceRule;
 use Stock;
 use StockAvailable;
-use Tools;
 use Validate;
 
 /**
@@ -121,7 +120,6 @@ class AdminAttributeGeneratorControllerWrapper
             } else {
                 $product->deleteAttributeCombination((int) $idAttribute);
                 $product->checkDefaultAttributes();
-                Tools::clearColorListCache((int) $product->id);
                 if (!$product->hasAttributes()) {
                     $product->cache_default_attribute = 0;
                     $product->update();

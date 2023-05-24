@@ -478,10 +478,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
             $this->setTypeAttribute();
         }
 
-        if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute')) {
-            Tools::clearColorListCache();
-        }
-
         return $object;
     }
 

@@ -512,8 +512,6 @@ class StockAvailableCore extends ObjectModel
                 $product = new Product((int) $this->id_product);
                 foreach ($colors as $color) {
                     if ($product->isColorUnavailable((int) $color['id_attribute'], (int) $this->id_shop)) {
-                        Tools::clearColorListCache($product->id);
-
                         break;
                     }
                 }

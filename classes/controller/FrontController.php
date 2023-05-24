@@ -48,46 +48,8 @@ class FrontControllerCore extends Controller
     /** @var string Language ISO code */
     public $iso;
 
-    /**
-     * @deprecated Since 8.0 and will be removed in the next major.
-     *
-     * @var string ORDER BY field
-     */
-    public $orderBy;
-
-    /**
-     * @deprecated Since 8.0 and will be removed in the next major.
-     *
-     * @var string Order way string ('ASC', 'DESC')
-     */
-    public $orderWay;
-
-    /**
-     * @deprecated Since 8.0 and will be removed in the next major.
-     *
-     * @var int Current page number
-     */
-    public $p;
-
-    /**
-     * @deprecated Since 8.0 and will be removed in the next major.
-     *
-     * @var int Items (products) per page
-     */
-    public $n;
-
     /** @var bool If set to true, will redirected user to login page during init function. */
     public $auth = false;
-
-    /**
-     * If set to true, user can be logged in as guest when checking if logged in.
-     *
-     * @deprecated Since 8.0 and will be removed in the next major.
-     * @see $auth
-     *
-     * @var bool
-     */
-    public $guestAllowed = false;
 
     /**
      * Route of PrestaShop page to redirect to after forced login.
@@ -122,13 +84,6 @@ class FrontControllerCore extends Controller
      * @var array Holds current customer's groups
      */
     protected static $currentCustomerGroups;
-
-    /**
-     * @deprecated Since 8.0 and will be removed in the next major.
-     *
-     * @var int
-     */
-    public $nb_items_per_page;
 
     /**
      * @var ObjectPresenter
@@ -1445,60 +1400,6 @@ class FrontControllerCore extends Controller
             $params['id'],
             $locale
         );
-    }
-
-    /**
-     * Renders and adds color list HTML for each product in a list.
-     *
-     * @deprecated since 8.1 and will be removed in next major version.
-     *
-     * @param array $products
-     */
-    public function addColorsToProductList(&$products)
-    {
-        if (!is_array($products) || !count($products) || !file_exists(_PS_THEME_DIR_ . 'product-list-colors.tpl')) {
-            return;
-        }
-
-        $products_need_cache = [];
-        foreach ($products as $product) {
-            if (!$this->isCached(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']))) {
-                $products_need_cache[] = (int) $product['id_product'];
-            }
-        }
-
-        $colors = false;
-        if (count($products_need_cache)) {
-            $colors = Product::getAttributesColorList($products_need_cache);
-        }
-
-        Tools::enableCache();
-        foreach ($products as &$product) {
-            $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
-            $tpl->assign([
-                'id_product' => $product['id_product'],
-                'colors_list' => isset($colors[$product['id_product']]) ? $colors[$product['id_product']] : null,
-                'link' => Context::getContext()->link,
-                'img_col_dir' => _THEME_COL_DIR_,
-                'col_img_dir' => _PS_COL_IMG_DIR_,
-            ]);
-            $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
-        }
-        Tools::restoreCacheSettings();
-    }
-
-    /**
-     * Returns cache ID for product color list.
-     *
-     * @deprecated since 8.1 and will be removed in next major version.
-     *
-     * @param int $id_product
-     *
-     * @return string
-     */
-    protected function getColorsListCacheId($id_product)
-    {
-        return Product::getColorsListCacheId($id_product);
     }
 
     /**
