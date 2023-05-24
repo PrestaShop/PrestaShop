@@ -215,7 +215,6 @@ export default class ProductPartialUpdater {
         ProductMap.footer.previewUrlButton,
         ProductMap.footer.duplicateProductButton,
         ProductMap.footer.newProductButton,
-        ProductMap.productType.headerPreviewButton,
       ], false);
       // Disable type button permanently
       this.$productTypePreview.off('click');
@@ -230,7 +229,6 @@ export default class ProductPartialUpdater {
         ProductMap.footer.previewUrlButton,
         ProductMap.footer.duplicateProductButton,
         ProductMap.footer.newProductButton,
-        ProductMap.productType.headerPreviewButton,
       ], true);
     } else {
       this.toggleButtonsState([
@@ -242,7 +240,6 @@ export default class ProductPartialUpdater {
         ProductMap.footer.previewUrlButton,
         ProductMap.footer.duplicateProductButton,
         ProductMap.footer.newProductButton,
-        ProductMap.productType.headerPreviewButton,
       ], false);
       // Disable type button permanently
       this.$productTypePreview.off('click');
