@@ -61,7 +61,6 @@ class StockManagerTest extends KernelTestCase
     public function setUp(): void
     {
         parent::setUp();
-        self::bootKernel();
 
         $this->configuration = $this->createMock(ConfigurationInterface::class);
         $this->savedContainer = ServiceLocator::getContainer();

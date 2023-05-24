@@ -90,7 +90,7 @@ class HookDispatcherTest extends KernelTestCase
 
         foreach ($subset as $key => $value) {
             $this->assertArrayHasKey($key, $array);
-            $this->assertEquals($value, $value);
+            $this->assertEquals($value, $array[$key]);
         }
     }
 

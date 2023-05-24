@@ -57,7 +57,6 @@ class ProductPresenterTest extends KernelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::bootKernel();
 
         $this->settings = new ProductPresentationSettings();
         $this->settings->catalog_mode = false;
