@@ -2,22 +2,6 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.admin.search_parameters:
-    class: PrestaShop\PrestaShop\Core\Search\SearchParameters
-    arguments: [ '@prestashop.core.admin.admin_filter.repository' ]
-
-  # Controller Argument Resolver
-  prestashop.search_parameters.resolver:
-    class: 'PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver'
-    arguments:
-      - '@prestashop.core.admin.search_parameters'
-      - '@security.token_storage'
-      - '@prestashop.core.admin.admin_filter.repository'
-      - '@event_dispatcher'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-  #    tags:
-  #      - { name: controller.argument_value_resolver, priority: 50 }
-
   # Filters builder argument resolver
   prestashop.filters_builder.resolver:
     class: 'PrestaShopBundle\Controller\ArgumentResolver\FiltersBuilderResolver'
