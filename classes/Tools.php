@@ -1214,11 +1214,10 @@ class ToolsCore
 
     /**
      * @param array $params
-     * @param Smarty|null $smarty unused parameter, please ignore (@todo: remove in next major)
      *
      * @return bool|string
      */
-    public static function getAdminTokenLiteSmarty($params, &$smarty = null)
+    public static function getAdminTokenLiteSmarty($params)
     {
         $context = Context::getContext();
 
@@ -3145,20 +3144,6 @@ exit;
     {
         Tools::clearSmartyCache();
         Tools::clearSf2Cache();
-    }
-
-    /**
-     * @deprecated since 8.1 and will be removed in next major version.
-     *
-     * @param int|bool $id_product
-     */
-    public static function clearColorListCache($id_product = false)
-    {
-        // Change template dir if called from the BackOffice
-        $current_template_dir = Context::getContext()->smarty->getTemplateDir();
-        Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, _PS_THEME_DIR_ . 'product-list-colors.tpl', Product::getColorsListCacheId((int) $id_product, false));
-        Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 
     /**

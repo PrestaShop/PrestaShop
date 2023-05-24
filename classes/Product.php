@@ -2344,7 +2344,6 @@ class ProductCore extends ObjectModel
         }
 
         Hook::exec('actionProductAttributeUpdate', ['id_product_attribute' => (int) $id_product_attribute]);
-        Tools::clearColorListCache($this->id);
 
         return true;
     }
@@ -2460,8 +2459,6 @@ class ProductCore extends ObjectModel
             $combination->setImages($id_images);
         }
 
-        Tools::clearColorListCache($this->id);
-
         if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $warehouse_location_entity = new WarehouseProductLocation();
             $warehouse_location_entity->id_product = $this->id;
@@ -2510,7 +2507,6 @@ class ProductCore extends ObjectModel
             $result &= $combination->delete();
         }
         SpecificPriceRule::applyAllRules([(int) $this->id]);
-        Tools::clearColorListCache($this->id);
 
         return $result;
     }
@@ -8128,28 +8124,6 @@ class ProductCore extends ObjectModel
                 WHERE sa.id_product_attribute = pa.id_product_attribute AND pa.id_product=' . (int) $this->id . ' AND pac.id_attribute=' . (int) $id_attribute . '
             )'
         );
-    }
-
-    /**
-     * @deprecated since 8.1 and will be removed in next major version.
-     *
-     * @param int $id_product Product identifier
-     * @param bool $full
-     *
-     * @return string
-     */
-    public static function getColorsListCacheId($id_product, $full = true)
-    {
-        $cache_id = 'productlist_colors';
-        if ($id_product) {
-            $cache_id .= '|' . (int) $id_product;
-        }
-
-        if ($full) {
-            $cache_id .= '|' . (int) Context::getContext()->shop->id . '|' . (int) Context::getContext()->cookie->id_lang;
-        }
-
-        return $cache_id;
     }
 
     /**
