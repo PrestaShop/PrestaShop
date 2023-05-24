@@ -26,16 +26,23 @@
 
 namespace PrestaShopBundle\DependencyInjection;
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Adds main PrestaShop core services to the Symfony container.
  */
-class PrestaShopExtension extends Extension
+class PrestaShopExtension extends Extension implements PrependExtensionInterface
 {
+    public function __construct()
+    {
+        $this->activeModulesPaths = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModulesPaths();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -65,5 +72,17 @@ class PrestaShopExtension extends Extension
     public function getAlias()
     {
         return 'prestashop';
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        foreach ($this->activeModulesPaths as $modulePath) {
+            if (str_ends_with($modulePath, 'api_module')) {
+                $moduleResourcesPath = sprintf('%s/config/api_platform', $modulePath);
+                if (file_exists($moduleResourcesPath)) {
+                    $container->prependExtensionConfig('api_platform', ['mapping' => ['paths' => [$moduleResourcesPath]]]);
+                }
+            }
+        }
     }
 }
