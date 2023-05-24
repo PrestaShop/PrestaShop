@@ -46,7 +46,7 @@ class BulkUpdateAliasStatusCommand
      */
     public function __construct(
         array $aliasIds,
-        private readonly bool $enabled
+        public readonly bool $enabled
     ) {
         foreach ($aliasIds as $aliasId) {
             $this->aliasIds[] = new AliasId($aliasId);
@@ -59,13 +59,5 @@ class BulkUpdateAliasStatusCommand
     public function getAliasIds(): array
     {
         return $this->aliasIds;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
     }
 }

@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use Throwable;
@@ -47,7 +46,7 @@ abstract class AbstractBulkCommandHandler
      *
      * @throws BulkCommandExceptionInterface
      */
-    protected function handleBulkAction(array $ids, string $exceptionToCatch): void
+    protected function handleBulkAction(array $ids, string $exceptionToCatch, mixed $command): void
     {
         foreach ($ids as $id) {
             try {
@@ -56,7 +55,7 @@ abstract class AbstractBulkCommandHandler
                         sprintf('%s not supported by bulk action', var_export($id, true))
                     );
                 }
-                $this->handleSingleAction($id);
+                $this->handleSingleAction($id, $command);
             } catch (Throwable $e) {
                 if (!($e instanceof $exceptionToCatch)) {
                     throw $e;
@@ -80,8 +79,9 @@ abstract class AbstractBulkCommandHandler
 
     /**
      * @param mixed $id
+     * @param mixed $command
      */
-    abstract protected function handleSingleAction($id): void;
+    abstract protected function handleSingleAction(mixed $id, mixed $command): void;
 
     /**
      * Should return true if provided $id type is supported by actions, false otherwise

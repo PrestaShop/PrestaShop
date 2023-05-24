@@ -42,11 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
 class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements BulkUpdateAliasStatusHandlerInterface
 {
     /**
-     * @var bool|null
-     */
-    private $enabled;
-
-    /**
      * @param AliasRepository $aliasRepository
      */
     public function __construct(protected AliasRepository $aliasRepository)
@@ -58,8 +53,7 @@ class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements
      */
     public function handle(BulkUpdateAliasStatusCommand $command): void
     {
-        $this->enabled = $command->isEnabled();
-        $this->handleBulkAction($command->getAliasIds(), AliasException::class);
+        $this->handleBulkAction($command->getAliasIds(), AliasException::class, $command);
     }
 
     /**
@@ -75,14 +69,12 @@ class BulkUpdateAliasStatusHandler extends AbstractBulkCommandHandler implements
     }
 
     /**
-     * @param AliasId $id
-     *
-     * @return void
+     * {@inheritDoc}
      */
-    protected function handleSingleAction($id): void
+    protected function handleSingleAction(mixed $id, mixed $command): void
     {
         $alias = $this->aliasRepository->get($id);
-        $alias->active = $this->enabled;
+        $alias->active = $command->enabled;
         $this->aliasRepository->partialUpdate($alias, ['active'], CannotUpdateAliasException::class);
     }
 
