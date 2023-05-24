@@ -83,7 +83,7 @@ class TokenizedUrlsListener
          * every uri which contains 'token' should use the old validation system
          */
         if ($request->query->has('token')) {
-            if (0 == strcasecmp(Tools::getAdminToken($this->legacyContext->getContext()->employee->id), $request->query->get('token'))) {
+            if (0 == strcasecmp(Tools::getAdminToken((string) $this->legacyContext->getContext()->employee->id), $request->query->get('token'))) {
                 return;
             }
         }
