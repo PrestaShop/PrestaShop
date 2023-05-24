@@ -583,7 +583,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function useDiscountByCodeOnCart(string $voucherCode, string $cartReference)
     {
-        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cartId = $this->getSharedStorage()->get($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         $this->getCommandBus()->handle(
@@ -878,6 +878,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function addGiftPlusFreeShippingCartRule(string $voucherCode, string $giftProductName, string $cartReference)
     {
         $productId = $this->getProductIdByName($giftProductName);
+
+        if (!(new Product($productId))->id) {
+            throw new RuntimeException(sprintf('Product %d was not found', $productId));
+        }
         $cartRule = $this->createCommonCartRule($voucherCode);
         $cartRule->free_shipping = true;
         $cartRule->gift_product = $productId;

@@ -39,6 +39,7 @@ use Db;
 use Order;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use RuntimeException;
 use Validate;
@@ -163,8 +164,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
         $cartRule->active = true;
         $cartRule->add();
-        $this->cartRules[$cartRuleName] = $cartRule;
-        SharedStorage::getStorage()->set($cartRuleName, $cartRule->id);
+        $this->getSharedStorage()->set($cartRuleName, $cartRule->id);
     }
 
     /**
@@ -206,10 +206,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedHasACode($cartRuleName, $cartRuleCode)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->code = $cartRuleCode;
-        $this->cartRules[$cartRuleName]->save();
-        SharedStorage::getStorage()->set($cartRuleCode, $this->cartRules[$cartRuleName]->id);
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->code = $cartRuleCode;
+        $cartRule->save();
+
+        $this->getSharedStorage()->set($cartRuleCode, (int) $cartRule->id);
     }
 
     /**
@@ -217,9 +218,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedHasNoCode($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->code = '';
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->code = '';
+        $cartRule->save();
     }
 
     /**
@@ -326,9 +327,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleIsRestrictedToSelectionProducts(string $cartRuleName): void
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->reduction_product = -2;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
+        $cartRule->save();
     }
 
     /**
@@ -336,10 +337,10 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->product_restriction = false;
-        $this->cartRules[$cartRuleName]->reduction_product = 0;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->product_restriction = false;
+        $cartRule->reduction_product = 0;
+        $cartRule->save();
     }
 
     /**
@@ -347,9 +348,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleIsDisabled($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->active = false;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->active = false;
+        $cartRule->save();
     }
 
     /**
@@ -357,9 +358,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function enableCartRule($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->active = true;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->active = true;
+        $cartRule->save();
     }
 
     /**
@@ -367,9 +368,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleDoesNotApplyToDiscountedProduct($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->reduction_exclude_special = true;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->reduction_exclude_special = true;
+        $cartRule->save();
     }
 
     /**
@@ -377,10 +378,10 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedHasAGiftProductNamed($cartRuleName, $productName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
-        $this->cartRules[$cartRuleName]->gift_product = $this->productFeatureContext->getProductWithName($productName)->id;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->gift_product = $this->productFeatureContext->getProductWithName($productName)->id;
+        $cartRule->save();
     }
 
     /**
@@ -388,9 +389,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleOffersFreeShipping($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->free_shipping = true;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->free_shipping = true;
+        $cartRule->save();
     }
 
     /**
@@ -398,9 +399,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleAppliesBetween($cartRuleName, $min)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->minimum_amount = $min;
-        $this->cartRules[$cartRuleName]->save();
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $cartRule->minimum_amount = $min;
+        $cartRule->save();
     }
 
     /**
@@ -408,8 +409,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
+
         if ($result) {
             throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
@@ -420,8 +422,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cartRuleNamedCanBeAppliedToMyCart($cartRuleName)
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
+
         if (!$result) {
             throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
@@ -434,8 +437,8 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function iAddCartRuleNamedToMyCart(string $cartRuleName): void
     {
-        $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->getCurrentCart()->addCartRule($this->cartRules[$cartRuleName]->id);
+        $cartRule = $this->loadCartRule($cartRuleName);
+        $this->getCurrentCart()->addCartRule($cartRule->id);
     }
 
     /**
@@ -447,8 +450,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function applyCartRuleByCode(string $code): void
     {
-        $cartRuleId = $this->getSharedStorage()->get($code);
-        $cartRule = new CartRule($cartRuleId);
+        $cartRule = $this->loadCartRule($code);
 
         if (!Validate::isLoadedObject($cartRule)) {
             throw new RuntimeException(sprintf('Failed to load cart rule %d', $cartRule->id));
@@ -685,5 +687,21 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             'Invalid error-code mapping in test. Couldn\'t find the code for message "%s"',
             $message
         ));
+    }
+
+    /**
+     * This method is temporary. We will get rid of it once all old cart rule creation/edition steps are cleaned up
+     *
+     * @param string $reference
+     *
+     * @return CartRule
+     */
+    private function loadCartRule(string $reference): CartRule
+    {
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException('Cart rule "%s" does not exist in shared storage', $reference);
+        }
+
+        return new CartRule($this->getSharedStorage()->get($reference));
     }
 }

@@ -190,6 +190,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function restoreAllTablesBeforeFeature()
     {
         DatabaseDump::restoreAllTables();
+        SharedStorage::getStorage()->clean();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -201,6 +202,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function restoreAllTablesAfterFeature()
     {
         DatabaseDump::restoreAllTables();
+        SharedStorage::getStorage()->clean();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 

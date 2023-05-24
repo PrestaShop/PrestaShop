@@ -35,8 +35,6 @@ Feature: Cart calculation with cart rules and different carriers
     And shipping handling fees are set to 2.0
     And there is a cart rule "cartrule5" with following properties:
       | name[en-US]                      | cartrule5 |
-      | total_quantity                   | 1000      |
-      | quantity_per_user                | 1000      |
       | priority                         | 2         |
       | free_shipping                    | true      |
       | code                             | foo5      |
@@ -46,8 +44,6 @@ Feature: Cart calculation with cart rules and different carriers
       | minimum_amount_shipping_included | false     |
     And there is a cart rule "cartrule2" with following properties:
       | name[en-US]                  | cartrule2              |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
       | priority                     | 2                      |
       | free_shipping                | false                  |
       | code                         | cartrule2              |
@@ -68,8 +64,6 @@ Feature: Cart calculation with cart rules and different carriers
   Scenario: free carrier in price range, voucher in amount set the price bellow range
     Given there is a cart rule "cartrule3" with following properties:
       | name[en-US]                  | cartrule3              |
-      | total_quantity               | 1000                   |
-      | quantity_per_user            | 1000                   |
       | priority                     | 2                      |
       | free_shipping                | false                  |
       | code                         | foo2                   |
