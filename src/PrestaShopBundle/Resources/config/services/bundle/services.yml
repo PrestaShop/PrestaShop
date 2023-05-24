@@ -76,9 +76,14 @@ services:
       - "@service_container"
 
   # CSRF/XSS additional protection middleware
+  PrestaShopBundle\Service\DataProvider\UserProvider:
+    autowire: true
+    public: false
+
   prestashop.user_provider:
-    class: PrestaShopBundle\Service\DataProvider\UserProvider
-    arguments: [ '@security.token_storage' ]
+    alias: PrestaShopBundle\Service\DataProvider\UserProvider
+    deprecated: ~   # since 9.0
+    public: true
 
   prestashop.router:
     class: PrestaShopBundle\Service\Routing\Router
@@ -86,7 +91,7 @@ services:
     public: true
     calls:
       - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
-      - [ 'setUserProvider', [ "@=service('prestashop.user_provider')" ] ]
+      - [ 'setUserProvider', [ '@PrestaShopBundle\Service\DataProvider\UserProvider' ] ]
 
   prestashop.multistore.customized_configuration_checker:
     class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker

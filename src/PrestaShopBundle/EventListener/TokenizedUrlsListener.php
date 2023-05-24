@@ -29,13 +29,13 @@ namespace PrestaShopBundle\EventListener;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\CS\Tokenizer\Token;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Tools;
 
 /**
@@ -45,20 +45,14 @@ use Tools;
  */
 class TokenizedUrlsListener
 {
-    private $tokenManager;
-    private $router;
-    private $username;
-    private $employeeId;
+    private ?int $employeeId = null;
 
     public function __construct(
-        CsrfTokenManager $tokenManager,
-        RouterInterface $router,
-        $username,
+        private readonly CsrfTokenManagerInterface $tokenManager,
+        private readonly RouterInterface $router,
+        private readonly UserProvider $userProvider,
         LegacyContext $legacyContext
     ) {
-        $this->tokenManager = $tokenManager;
-        $this->router = $router;
-        $this->username = $username;
         $context = $legacyContext->getContext();
 
         if (null !== $context) {
@@ -87,8 +81,8 @@ class TokenizedUrlsListener
          * every route prefixed by '_' won't be secured
          */
         if (
-            0 === strpos($route, '_') ||
-            0 === strpos($route, 'api_')
+            str_starts_with($route, '_') ||
+            str_starts_with($route, 'api_')
         ) {
             return;
         }
@@ -97,14 +91,14 @@ class TokenizedUrlsListener
          * every uri which contains 'token' should use the old validation system
          */
         if ($request->query->has('token')) {
-            if (0 == strcasecmp(Tools::getAdminToken($this->employeeId), $request->query->get('token'))) {
+            if (0 == strcasecmp(Tools::getAdminToken((string) $this->employeeId), $request->query->get('token'))) {
                 return;
             }
         }
 
         $token = false;
         if ($request->query->has('_token')) {
-            $token = new CsrfToken($this->username, $request->query->get('_token'));
+            $token = new CsrfToken($this->userProvider->getUsername(), $request->query->get('_token'));
         } elseif (isset($request->query->get('form')['_token'])) {
             $token = new CsrfToken('form', $request->query->get('form')['_token']);
         }

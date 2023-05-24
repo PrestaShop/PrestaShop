@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Twig;
 
 use Currency;
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -42,18 +42,6 @@ use Twig\TwigFunction;
  */
 class LayoutExtension extends AbstractExtension implements GlobalsInterface
 {
-    /** @var LegacyContext */
-    private $context;
-
-    /** @var string */
-    private $environment;
-
-    /** @var Configuration */
-    private $configuration;
-
-    /** @var CurrencyDataProvider */
-    private $currencyDataProvider;
-
     /**
      * Constructor.
      *
@@ -61,19 +49,15 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      *
      * @param LegacyContext $context
      * @param string $environment
-     * @param Configuration $configuration
+     * @param ShopConfigurationInterface $configuration
      * @param CurrencyDataProvider $currencyDataProvider
      */
     public function __construct(
-        LegacyContext $context,
-        $environment,
-        Configuration $configuration,
-        CurrencyDataProvider $currencyDataProvider
+        private readonly LegacyContext $context,
+        private readonly string $environment,
+        private readonly ShopConfigurationInterface $configuration,
+        private readonly CurrencyDataProvider $currencyDataProvider
     ) {
-        $this->context = $context;
-        $this->environment = $environment;
-        $this->configuration = $configuration;
-        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
