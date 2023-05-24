@@ -42,9 +42,12 @@ class UrlCleaner
             unset($parameters[$removedParam]);
         }
 
-        return http_build_url([
-            'path' => $parsedUrl['path'],
-            'query' => http_build_query($parameters),
-        ]);
+        $query = http_build_query($parameters, '', '&');
+
+        // Replace %5B%5D escaped brackets with actual brackets but keep their content
+        $query = preg_replace('/\%5B([^\%5B\%5D]*?)\%5D/', '[$1]', $query);
+        $parsedUrl['query'] = $query;
+
+        return http_build_url($parsedUrl);
     }
 }
