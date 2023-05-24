@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ApiAccessesFilters;
 /**
  * Class ApiAccessQueryBuilder builds search & count queries for api access grid.
  */
-final class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
+class ApiAccessQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicator
