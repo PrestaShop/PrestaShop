@@ -54,11 +54,6 @@ class UpdateAliasHandler implements UpdateAliasHandlerInterface
             $command
         );
 
-        if (null !== $command->isActive()) {
-            $alias->active = $command->isActive();
-            $updatableProperties[] = 'active';
-        }
-
         $this->aliasRepository->partialUpdate(
             $alias,
             $updatableProperties,

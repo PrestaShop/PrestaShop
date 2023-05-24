@@ -16,8 +16,8 @@ Feature: Edit alias from Back Office (BO)
     When I update alias "alias1" with following values:
       | aliases | dark  |
       | search  | black |
-      | active  | true  |
+      | active  | 0     |
     Then following aliases should exist:
-      | id reference | alias  | search | active |
-      | alias1       | bloose | blouse | 0      |
-      | alias2       | blues  | blouse | 0      |
+      | id reference | alias | search | active |
+      | alias1       | dark  | black  | 0      |
+      | alias2       | blues | blouse | 1      |

@@ -203,18 +203,18 @@ class AliasFeatureContext extends AbstractDomainFeatureContext
 
     private function buildUpdateAliasCommand(string $aliasReference, TableNode $table): UpdateAliasCommand
     {
-        $data = $table->getColumnsHash();
+        $data = $table->getRowsHash();
         $aliasId = $this->getSharedStorage()->get($aliasReference);
         $command = new UpdateAliasCommand($aliasId);
 
         if (isset($data['aliases'])) {
-            $command->setAliases($data['aliases']);
+            $command->setAliases(PrimitiveUtils::castStringArrayIntoArray($data['aliases']));
         }
         if (isset($data['search'])) {
             $command->setSearchTerm($data['search']);
         }
         if (isset($data['active'])) {
-            $command->setActive($data['active']);
+            $command->setActive((bool) $data['active']);
         }
 
         return $command;
