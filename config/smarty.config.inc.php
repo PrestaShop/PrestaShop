@@ -113,7 +113,6 @@ smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
 smartyRegisterFunction($smarty, 'modifier', 'ucfirst', 'ucfirst');
 smartyRegisterFunction($smarty, 'modifier', 'urlencode','urlencode');
 smartyRegisterFunction($smarty, 'modifier', 'htmlspecialchars','htmlspecialchars');
-smartyRegisterFunction($smarty, 'modifier', 'implode','implode');
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
