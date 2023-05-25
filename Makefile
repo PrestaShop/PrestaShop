@@ -1,4 +1,4 @@
-install: composer assets
+install: composer assets docker-override
 
 composer:
 	composer install
@@ -39,3 +39,10 @@ es-linter:
 	cd admin-dev/themes/default && npm run lint-fix
 	cd themes/classic/_dev && npm run lint-fix
 	cd themes && npm run lint-fix
+
+docker: docker-override
+	docker compose up -d
+
+docker-override:
+	cp docker-compose.override.yml.dist docker-compose.override.yml
+
