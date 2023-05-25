@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
-import checkoutPage from '@pages/FO/checkout';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
