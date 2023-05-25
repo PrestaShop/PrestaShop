@@ -122,6 +122,9 @@ tests-legacy/.phpunit.result.cache
 !/admin-dev/themes/new-theme/public/theme.rtlfix
 !/admin-dev/themes/default/public/theme.rtlfix
 
+# Api plateform assets
+/admin-dev/bundles
+
 themes/*/cache/*
 themes/core.js.map
 themes/core.js

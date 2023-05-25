@@ -24,7 +24,7 @@ security:
       security: false
 
     api:
-      pattern: '^%api_base_path%'
+      pattern: '^(%api_base_path%)(?!/docs)'
       stateless: true
       provider: 'oauth2'
       guard:
