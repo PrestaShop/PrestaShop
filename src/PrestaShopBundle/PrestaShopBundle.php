@@ -57,6 +57,10 @@ class PrestaShopBundle extends Bundle
      */
     public const LOAD_MODULE_SERVICES_PASS_PRIORITY = 200;
 
+    public function __construct(private \AppKernel $kernel)
+    {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -72,6 +76,8 @@ class PrestaShopBundle extends Bundle
     {
         $container->addCompilerPass(new DynamicRolePass());
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
+        $container->addCompilerPass(new LoadServicesFromModulesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, self::LOAD_MODULE_SERVICES_PASS_PRIORITY);
+        $container->addCompilerPass(new LoadServicesFromModulesPass($this->kernel->getAppType()), PassConfig::TYPE_BEFORE_OPTIMIZATION, self::LOAD_MODULE_SERVICES_PASS_PRIORITY);
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());

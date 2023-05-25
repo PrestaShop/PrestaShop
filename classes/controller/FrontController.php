@@ -30,7 +30,9 @@ use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\IpUtils;
 
@@ -2076,9 +2078,14 @@ class FrontControllerCore extends Controller
     /**
      * {@inheritdoc}
      */
-    protected function buildContainer()
+    protected function buildContainer(): ContainerInterface
     {
-        return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
+        /* @phpstan-ignore-next-line */
+        if (FRONT_LEGACY_CONTEXT) {
+            return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
+        }
+
+        return SymfonyContainer::getInstance();
     }
 
     /**

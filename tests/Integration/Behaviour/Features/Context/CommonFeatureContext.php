@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Access;
 use Address;
 use AddressFormat;
+use AdminKernel;
 use Alias;
 use AppKernel;
 use Attachment;
@@ -163,7 +164,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     {
         require_once __DIR__ . '/../../bootstrap.php';
 
-        self::$kernel = new AppKernel('test', true);
+        self::$kernel = new AdminKernel('test', true);
         self::$kernel->boot();
 
         global $kernel;

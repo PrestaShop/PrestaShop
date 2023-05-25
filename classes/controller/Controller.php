@@ -24,8 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Translation\TranslatorComponent;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
@@ -155,7 +156,7 @@ abstract class ControllerCore
     /**
      * Dependency container.
      *
-     * @var ContainerBuilder
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -781,9 +782,12 @@ abstract class ControllerCore
     /**
      * Construct the dependency container.
      *
-     * @return ContainerBuilder
+     * @return ContainerInterface
      */
-    abstract protected function buildContainer();
+    protected function buildContainer(): ContainerInterface
+    {
+        return SymfonyContainer::getInstance();
+    }
 
     /**
      * Gets a service from the service container.
@@ -816,7 +820,7 @@ abstract class ControllerCore
     /**
      * Gets the dependency container.
      *
-     * @return ContainerBuilder|null
+     * @return ContainerInterface|null
      */
     public function getContainer()
     {

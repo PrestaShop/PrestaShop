@@ -50,6 +50,8 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Build the Container for PrestaShop Legacy.
+ *
+ * @deprecated since 9.0. Please use SymfonyContainer instead.
  */
 class ContainerBuilder
 {
