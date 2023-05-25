@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Resources;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
@@ -41,7 +42,7 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 #[ApiResource(
     operations: [
         new Get(
-            uriTemplate: '/hook-status/{id}',
+            uriTemplate: '/hook-status/{hookId}',
             requirements: ['id' => '\d+'],
             exceptionToStatus: [HookNotFoundException::class => 404],
             output: HookStatus::class,
@@ -60,11 +61,7 @@ class Hook
     /**
      * @var int
      */
-    public int $id = 0;
-
-    /**
-     * @var int
-     */
+    #[ApiProperty(identifier: true)]
     public $hookId;
 
     /**
