@@ -1,4 +1,4 @@
-install: composer assets docker-override
+install: composer assets
 
 composer:
 	composer install
