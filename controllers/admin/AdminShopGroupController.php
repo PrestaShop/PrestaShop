@@ -137,7 +137,7 @@ class AdminShopGroupControllerCore extends AdminController
         $this->context->smarty->assign([
             'toolbar_scroll' => 1,
             'toolbar_btn' => $this->toolbar_btn,
-            'title' => $this->toolbar_title,
+            'title' => end($this->toolbar_title),
             'shops_tree' => $shops_tree,
         ]);
     }
