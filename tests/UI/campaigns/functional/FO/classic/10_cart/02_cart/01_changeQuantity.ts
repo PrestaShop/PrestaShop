@@ -100,8 +100,8 @@ describe('FO - cart : Change quantity', async () => {
     await expect(notificationsNumber).to.be.eq(64);
   });
 
-  it('should set the quantity 64 in the input', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'setQuantity64', baseContext);
+  it('should set \'azerty\' in the input', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'setAZERTY', baseContext);
 
     await cartPage.editProductQuantity(page, 1, 'azerty');
 

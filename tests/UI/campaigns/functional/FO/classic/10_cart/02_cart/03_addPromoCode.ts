@@ -34,7 +34,7 @@ describe('FO - cart : Add promo code', async () => {
   });
 
   // Pre-condition: Create cart rule and apply the discount to 'productWithCartRule'
-  createCartRuleTest(newCartRuleData, baseContext);
+  createCartRuleTest(newCartRuleData, `${baseContext}_PreTest`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -124,5 +124,5 @@ describe('FO - cart : Add promo code', async () => {
   });
 
   // Post-Condition: Delete cart rule
-  deleteCartRuleTest(newCartRuleData.name, baseContext);
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_PostTest`);
 });
