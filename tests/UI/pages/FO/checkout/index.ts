@@ -982,10 +982,13 @@ class Checkout extends FOBasePage {
    * @param carrierID {number} The carrier row in list
    */
   async getCarrierData(page: Page, carrierID: number = 1): Promise<CarrierData> {
+    const priceText: string = await this.getTextContent(page, this.deliveryStepCarrierPrice(carrierID));
+
     return new CarrierData({
       name: await this.getTextContent(page, this.deliveryStepCarrierName(carrierID)),
       delay: await this.getTextContent(page, this.deliveryStepCarrierDelay(carrierID)),
-      price: parseFloat(await this.getTextContent(page, this.deliveryStepCarrierPrice(carrierID))),
+      price: parseFloat(priceText),
+      priceText,
     });
   }
 
