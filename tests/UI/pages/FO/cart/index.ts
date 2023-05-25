@@ -38,6 +38,10 @@ class Cart extends FOBasePage {
 
   private readonly productQuantity: (number: number) => string;
 
+  private readonly productQuantityScrollUpButton: string;
+
+  private readonly productQuantityScrollDownButton: string;
+
   private readonly productSize: (number: number) => string;
 
   private readonly productColor: (number: number) => string;
@@ -49,6 +53,8 @@ class Cart extends FOBasePage {
   private readonly itemsNumber: string;
 
   private readonly noItemsInYourCartSpan: string;
+
+  private readonly alertMessage: string;
 
   private readonly subtotalDiscountValueSpan: string;
 
@@ -84,6 +90,8 @@ class Cart extends FOBasePage {
 
   public readonly minimumAmountErrorMessage: string;
 
+  public readonly errorNotificationForProductQuantity: string;
+
   private readonly alertWarning: string;
 
   private readonly proceedToCheckoutButton: string;
@@ -109,6 +117,7 @@ class Cart extends FOBasePage {
     this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
     this.minimumAmountErrorMessage = 'The minimum amount to benefit from this promo code is';
+    this.errorNotificationForProductQuantity = 'The available purchase order quantity for this product is 300.';
 
     // Selectors for cart page
     // Shopping cart block selectors
@@ -120,11 +129,16 @@ class Cart extends FOBasePage {
     this.productTotalPrice = (number: number) => `${this.productItem(number)} span.product-price`;
     this.productQuantity = (number: number) => `${this.productItem(number)} div.input-group `
       + 'input.js-cart-line-product-quantity';
+    this.productQuantityScrollUpButton = 'button.js-increase-product-quantity.bootstrap-touchspin-up';
+    this.productQuantityScrollDownButton = 'button.js-decrease-product-quantity.bootstrap-touchspin-down';
     this.productSize = (number: number) => `${this.productItem(number)} div.product-line-info.size span.value`;
     this.productColor = (number: number) => `${this.productItem(number)} div.product-line-info.color span.value`;
     this.productImage = (number: number) => `${this.productItem(number)} span.product-image img`;
     this.deleteIcon = (number: number) => `${this.productItem(number)} .remove-from-cart`;
     this.noItemsInYourCartSpan = 'div.cart-grid-body div.cart-overview.js-cart span.no-items';
+
+    // Notifications
+    this.alertMessage = '#notifications div.notifications-container';
 
     // Cart summary block selectors
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
@@ -148,14 +162,18 @@ class Cart extends FOBasePage {
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
 
     this.proceedToCheckoutButton = '#main div.checkout a';
-    this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
+    this.disabledProceedToCheckoutButton = '#main div.checkout .disabled';
 
-    this.alertPromoCode = '#promo-code > div > div > span';
+    this.alertPromoCode = '#promo-code div div span';
   }
 
   /*
  Methods
   */
+
+  async getNotificationMessage(page: Page): Promise<string> {
+    return this.getTextContent(page, this.alertMessage);
+  }
 
   /**
    * Get no items in your cart message
@@ -241,6 +259,31 @@ class Cart extends FOBasePage {
     await this.setValue(page, this.productQuantity(productID), quantity.toString());
     // click on price to see that its changed
     await page.click(this.productPrice(productID));
+  }
+
+  /**
+   * Set product quantity
+   * @param page {Page} Browser tab
+   * @param productID {number} ID of the product
+   * @param quantity {number} New quantity of the product
+   * @returns {Promise<number>}
+   */
+  async setProductQuantity(page: Page, productID: number = 1, quantity: number = 1): Promise<number> {
+    const productQuantity: number = parseInt(await this.getAttributeContent(page, this.productQuantity(productID), 'value'), 10);
+
+    if (productQuantity < quantity) {
+      for (let i: number = 1; i < quantity; i++) {
+        await page.click(this.productQuantityScrollUpButton);
+        await page.waitForTimeout(1000);
+      }
+    } else {
+      for (let i: number = productQuantity; i > quantity; i--) {
+        await page.click(this.productQuantityScrollDownButton);
+        await page.waitForTimeout(1000);
+      }
+    }
+
+    return parseInt(await this.getAttributeContent(page, this.productQuantity(productID), 'value'), 10);
   }
 
   /**
