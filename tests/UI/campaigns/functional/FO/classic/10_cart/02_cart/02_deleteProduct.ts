@@ -9,7 +9,7 @@ import {homePage as foHomePage, homePage} from '@pages/FO/home';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_FO_classic_cart_cart_changeQuantity';
+const baseContext: string = 'functional_FO_classic_cart_cart_deleteProduct';
 
 describe('FO - cart : Delete product', async () => {
   let browserContext: BrowserContext;

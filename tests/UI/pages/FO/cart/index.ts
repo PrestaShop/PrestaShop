@@ -16,6 +16,12 @@ class Cart extends FOBasePage {
 
   public readonly cartRuleAlreadyUsedErrorText: string;
 
+  public readonly cartRuleAlreadyInYourCartErrorText: string;
+
+  public readonly cartRuleNotExistingErrorText: string;
+
+  public readonly cartRuleMustEnterVoucherErrorText: string;
+
   public readonly cartRuleLimitUsageErrorText: string;
 
   public readonly cartRuleAlertMessageText: string;
@@ -109,6 +115,9 @@ class Cart extends FOBasePage {
 
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
+    this.cartRuleAlreadyInYourCartErrorText = 'This voucher is already in your cart';
+    this.cartRuleNotExistingErrorText = 'This voucher does not exist.';
+    this.cartRuleMustEnterVoucherErrorText = 'You must enter a voucher code.';
     this.cartRuleLimitUsageErrorText = 'You cannot use this voucher anymore (usage limit reached)';
     this.cartRuleAlertMessageText = 'You cannot use this voucher';
     this.alertChooseDeliveryAddressWarningText = 'You must choose a delivery address'
@@ -373,6 +382,7 @@ class Cart extends FOBasePage {
     }
     await this.setValue(page, this.promoInput, code);
     await page.click(this.addPromoCodeButton);
+    await page.waitForTimeout(1000);
   }
 
   /**
