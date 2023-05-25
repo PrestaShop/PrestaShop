@@ -13,3 +13,32 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
+
+  mysql:
+    ports:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: prestashop
+      MYSQL_DATABASE: prestashop
+
+  prestashop-git:
+    environment:
+      DISABLE_MAKE: ${DISABLE_MAKE:-0}
+      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
+      DB_PASSWD: ${DB_PASSWD:-prestashop}
+      DB_NAME: ${DB_NAME:-prestashop}
+      DB_SERVER: ${DB_SERVER:-mysql}
+      DB_PREFIX: ${DB_PREFIX:-ps_}
+      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
+      PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
+      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
+      PS_COUNTRY: ${PS_COUNTRY:-fr}
+      PS_LANGUAGE: ${PS_LANGUAGE:-en}
+      PS_DEV_MODE: ${PS_DEV_MODE:-1}
+      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
+      PS_ERASE_DB: ${PS_ERASE_DB:-0}
+      ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
+    ports:
+      - "8001:80"
+      - "8002:443"
