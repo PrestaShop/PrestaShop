@@ -714,11 +714,14 @@ class Checkout extends FOBasePage {
       await this.setValue(page, this.addressStepAliasInput, address.alias);
     }
     await this.setValue(page, this.addressStepCompanyInput, address.company);
+    // Contact
+    await this.setValue(page, this.addressStepPhoneInput, address.phone);
+
+    // Address
     await this.setValue(page, this.addressStepAddress1Input, address.address);
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(page, this.addressStepCityInput, address.city);
     await this.selectByVisibleText(page, this.addressStepCountrySelect, address.country);
-    await this.setValue(page, this.addressStepPhoneInput, address.phone);
     if (await this.elementVisible(page, this.stateInput, 1000)) {
       await this.selectByVisibleText(page, this.stateInput, address.state);
     }
