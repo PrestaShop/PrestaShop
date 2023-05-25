@@ -51,26 +51,33 @@ PrestaShop can also be deployed with Docker and its tool [Docker compose][docker
 
 To run the software, use:
 
-```
+``` shell
+cp docker-compose.override.yml.dist docker-compose.override.yml
 docker compose up
+```
+
+or 
+
+``` shell
+make docker
 ```
 
 Then reach your shop on this URL: http://localhost:8001
 
-Docker will bind your port 8001 to the web server. If you want to use other port, open and modify the file `docker-compose.yml`.
+Docker will bind your port 8001 to the web server. If you want to use other port, open and modify the file `docker-compose.override.yml`.
 MySQL credentials can also be found and modified in this file if needed.
 
 **Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
 If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data`
 has write access to the whole workspace.
 
-To fully reset your repo and get a fresh start, run (be careful: this removes all your extra files):
+To fully reset your repo and get a fresh start, run (be careful: this removes all your extra files, except docker-compose.override.yml):
 
 ```
 # clean everything that is not part of the original repository (node_modules, etc.)
 git fetch origin
 git reset --hard origin/develop
-git clean -dfx
+git clean -dfx -e docker-compose.override.yml
 
 # inform build scripts to reinstall shop
 rm config/settings.inc.php
@@ -79,12 +86,6 @@ rm config/settings.inc.php
 docker compose down -v
 docker compose build --no-cache
 docker compose up --build --force-recreate
-```
-**Note:** To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
-
-```
-cp docker-compose.override.yml.dist docker-compose.override.yml
-docker compose up
 ```
 
 Documentation
