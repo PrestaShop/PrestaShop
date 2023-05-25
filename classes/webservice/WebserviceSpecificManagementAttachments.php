@@ -219,7 +219,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     $this->getWsObject()->executeEntityGetAndHead();
                     break;
                 case 'DELETE':
-                    $attachment = new Attachment((int) $this->getWsObject()->urlSegment[1]);
+                    $attachment = new Attachment((int) $this->getWsObject()->urlSegment[2]);
                     $attachment->delete();
                     break;
             }
