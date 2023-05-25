@@ -165,6 +165,7 @@
         "symfony/process": "5.4.*",
         "symfony/property-access": "5.4.*",
         "symfony/property-info": "5.4.*",
+        "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/psr-http-message-bridge": "^2.1",
         "symfony/rate-limiter": "5.4.*",
         "symfony/routing": "5.4.*",
