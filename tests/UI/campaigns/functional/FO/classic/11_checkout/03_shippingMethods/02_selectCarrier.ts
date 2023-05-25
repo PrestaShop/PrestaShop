@@ -130,7 +130,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await Promise.all([
         expect(carrierData.name).to.equal(Carriers.default.name),
         expect(carrierData.delay).to.equal(Carriers.default.delay),
-        expect(carrierData.price).to.equal('Free'),
+        expect(carrierData.priceText).to.equal('Free'),
       ]);
     });
 
@@ -141,7 +141,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await Promise.all([
         expect(carrierData.name).to.equal(Carriers.myCarrier.name),
         expect(carrierData.delay).to.equal(Carriers.myCarrier.delay),
-        expect(carrierData.price).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)} tax incl.`),
+        expect(carrierData.priceText).to.equal(`€${Carriers.myCarrier.priceTTC.toFixed(2)} tax incl.`),
       ]);
     });
 
@@ -198,7 +198,7 @@ describe('FO - Checkout - Shipping methods : Select carrier', async () => {
       await Promise.all([
         expect(carrierData.name).to.equal(Carriers.myCarrier.name),
         expect(carrierData.delay).to.equal(Carriers.myCarrier.delay),
-        expect(carrierData.price).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`),
+        expect(carrierData.priceText).to.equal(`€${Carriers.myCarrier.price.toFixed(2)}`),
       ]);
     });
 
