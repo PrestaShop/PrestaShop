@@ -115,17 +115,17 @@
 								{counter start=0 assign=irow}
 								{foreach $newLang as $key => $value}{counter}
 									<tr>
-										<td width="40%">{$key|stripslashes}</td>
+										<td width="40%">{stripslashes($key)}</td>
 										<td width="2%">=</td>
 										<td width="40%"> {*todo : md5 is already calculated in AdminTranslationsController*}
 											{if $key|strlen < $textarea_sized}
 												<input type="text" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-													name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
-													value="{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}"' />
+													name="{if in_array($type, array('front', 'fields'))}{$k}_{md5($key)}{else}{$k}{md5($key)}{/if}"
+													value="{stripslashes($value.trad)|regex_replace:'/"/':'&quot;'}"' />
 											{else}
 												<textarea rows="{($key|strlen / $textarea_sized)|intval}" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-												name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
-												>{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}</textarea>
+												name="{if in_array($type, array('front', 'fields'))}{$k}_{md5($key)}{else}{$k}{md5($key)}{/if}"
+												>{stripslashes($value.trad)|regex_replace:'/"/':'&quot;'}</textarea>
 											{/if}
 										</td>
 										<td width="18%">

@@ -85,9 +85,9 @@
 				<table class="table">
 					{foreach $errorsArray as $key => $value}
 						<tr {if empty($value.trad)}style="background-color:#FBB"{else}{cycle values='class="alt_row",'}{/if}>
-							<td width="40%">{$key|stripslashes}</td>
+							<td width="40%">{stripslashes($key)}</td>
 							<td width="40%">
-								<input type="text" name="{$key|md5}" value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}"' style="width: 450px{if empty($value.trad)};background:#FBB{/if}">
+								<input type="text" name="{md5($key)}" value="{stripslashes($value.trad)|regex_replace:'#"#':'&quot;'}"' style="width: 450px{if empty($value.trad)};background:#FBB{/if}">
 							</td>
 							<td width="18%">
 								{if isset($value.use_sprintf) && $value.use_sprintf}

@@ -119,7 +119,7 @@
 									<table class="table">
 										{foreach $newLang as $key => $value}
 											<tr>
-												<td width="40%">{$key|stripslashes}</td>
+												<td width="40%">{stripslashes($key)}</td>
 												<td>=</td>
 												<td>
 													{* Prepare name string for md5() *}
@@ -127,12 +127,12 @@
 													{if $key|strlen < $textarea_sized}
 														<input type="text"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-															name="{$name|md5}"
-															value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}" />
+															name="{md5($name)}"
+															value="{stripslashes($value.trad)|regex_replace:'#"#':'&quot;'}" />
 													{else}
 														<textarea rows="{($key|strlen / $textarea_sized)|intval}"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-															name="{$name|md5}">{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}</textarea>
+															name="{md5($name)}">{stripslashes($value.trad)|regex_replace:'#"#':'&quot;'}</textarea>
 													{/if}
 												</td>
 												<td>
