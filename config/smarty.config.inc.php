@@ -223,7 +223,7 @@ function smartyClassnames(array $classnames)
 /**
  * We add this intermediate method to prevent a warning because end expects its input to be a reference
  *
- * @param $arrayValue
+ * @param array<mixed> $arrayValue
  *
  * @return false|mixed
  */
