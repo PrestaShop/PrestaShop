@@ -179,7 +179,11 @@ class Cart extends FOBasePage {
   /*
  Methods
   */
-
+  /**
+   * Get notification message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   async getNotificationMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertMessage);
   }
