@@ -40,7 +40,7 @@ es-linter:
 	cd themes/classic/_dev && npm run lint-fix
 	cd themes && npm run lint-fix
 
-docker: docker-override
+docker-up: docker-override
 	docker compose up -d
 
 docker-override:

@@ -59,7 +59,7 @@ docker compose up
 or 
 
 ``` shell
-make docker
+make docker-up
 ```
 
 Then reach your shop on this URL: http://localhost:8001
