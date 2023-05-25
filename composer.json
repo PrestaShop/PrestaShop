@@ -168,6 +168,7 @@
         "symfony/psr-http-message-bridge": "^2.1",
         "symfony/rate-limiter": "5.4.*",
         "symfony/routing": "5.4.*",
+        "symfony/security-bundle": "5.4.*",
         "symfony/security-core": "5.4.*",
         "symfony/security-csrf": "5.4.*",
         "symfony/security-guard": "5.4.*",
@@ -178,6 +179,7 @@
         "symfony/swiftmailer-bundle": "^3.1",
         "symfony/templating": "5.4.*",
         "symfony/translation": "5.4.*",
+        "symfony/twig-bundle": "5.4.*",
         "symfony/uid": "5.4.*",
         "symfony/validator": "5.4.*",
         "symfony/var-dumper": "5.4.*",
@@ -201,8 +203,10 @@
         "spaze/phpstan-disallowed-calls": "^2.10",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",
+        "symfony/debug-bundle": "5.4.*",
         "symfony/phpunit-bridge": "^3.4",
-        "symfony/stopwatch": "5.4.*"
+        "symfony/stopwatch": "5.4.*",
+        "symfony/web-profiler-bundle": "5.4.*"
     },
     "config": {
         "allow-plugins": {
