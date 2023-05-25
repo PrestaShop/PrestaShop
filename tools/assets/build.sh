@@ -28,6 +28,13 @@ function build {
   npm ci
   npm run build
   popd
+
+  if [[ ! -d "$ADMIN_DIR/bundles" ]]; then
+    echo ">>> install api-platform assets..."
+    bin/console asset:install "admin-dev"
+  else
+    echo ">>> api-platform assets already installed"
+  fi
 }
 
 build_asset() {
