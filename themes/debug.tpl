@@ -159,7 +159,7 @@
     </html>
 {/capture}
 <script type="text/javascript">
-    {$id = $template_name|default:''|md5}
+    {$id = md5($template_name|default:'')}
     _smarty_console = window.open("", "console{$id}", "width=680,height=600,resizable,scrollbars=yes");
     _smarty_console.document.write("{$debug_output|escape:'javascript' nofilter}");
     _smarty_console.document.close();
