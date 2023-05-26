@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -2858,12 +2859,7 @@ class AdminControllerCore extends Controller
         // Change shop context ?
         if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false) {
             $this->context->cookie->shopContext = Tools::getValue('setShopContext');
-            $url = parse_url($_SERVER['REQUEST_URI']);
-            $query = (isset($url['query'])) ? $url['query'] : '';
-            parse_str($query, $parse_query);
-            unset($parse_query['setShopContext'], $parse_query['conf']);
-            $http_build_query = http_build_query($parse_query, '', '&');
-            $this->redirect_after = $url['path'] . ($http_build_query ? '?' . $http_build_query : '');
+            $this->redirect_after = UrlCleaner::cleanUrl($_SERVER['REQUEST_URI'], ['setShopContext', 'conf']);
         } elseif (!Shop::isFeatureActive()) {
             $this->context->cookie->shopContext = 's-' . (int) Configuration::get('PS_SHOP_DEFAULT');
         } elseif (Shop::getTotalShops(false, null) < 2 && $this->context->employee->isLoggedBack()) {
