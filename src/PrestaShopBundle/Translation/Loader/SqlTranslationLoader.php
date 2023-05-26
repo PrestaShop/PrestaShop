@@ -80,10 +80,8 @@ class SqlTranslationLoader implements LoaderInterface
                 AND theme ' . ($this->theme !== null ? ' IN ("' . $this->theme->getName() . '"' . ($this->theme->get('parent') ? ',"' . $this->theme->get('parent') . '"' : '') . ')' : 'IS NULL');
 
         $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
-        
         $catalogue = new MessageCatalogue($locale);
         $this->addTranslationsToCatalogue($translations, $catalogue);
-        
         return $catalogue;
     }
 
