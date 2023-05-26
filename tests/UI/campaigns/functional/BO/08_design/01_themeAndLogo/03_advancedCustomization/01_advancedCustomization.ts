@@ -79,7 +79,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it(`should check the status of the module ${Modules.themeCustomization.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusModule', baseContext);
 
-      const isModuleEnabled = await moduleManagerPage.isModuleEnabled(page, Modules.themeCustomization.name);
+      const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, Modules.themeCustomization.name, 'enable');
       await expect(isModuleEnabled, `The module ${Modules.themeCustomization.name} is disabled`).to.be.true;
     });
   });

@@ -140,7 +140,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterModuleConfigPage', baseContext);
 
       await moduleManagerPage.searchModule(page, moduleInformation);
-      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
+      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
       await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
@@ -199,7 +199,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToNewsletterModuleConfig', baseContext);
 
       await moduleManagerPage.searchModule(page, moduleInformation);
-      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
+      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.tag);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
       await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);

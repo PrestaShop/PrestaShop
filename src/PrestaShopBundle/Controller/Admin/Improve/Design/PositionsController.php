@@ -283,7 +283,7 @@ class PositionsController extends FrameworkBundleAdminController
     private function getErrorMessages(): array
     {
         return [
-            HookNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            HookNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
             HookUpdateHookException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
         ];
     }

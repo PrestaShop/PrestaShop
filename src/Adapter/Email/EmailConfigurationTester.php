@@ -109,7 +109,7 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
 
         if (false === $result || is_string($result)) {
             $errors[] = $this->translator->trans(
-                'Error: Please check your configuration',
+                'An error has occurred. Please check your configuration',
                 [],
                 'Admin.Advparameters.Feature'
             );

@@ -66,7 +66,7 @@ class AdminShopGroupControllerCore extends AdminController
                 'title' => $this->trans('Multistore options', [], 'Admin.Advparameters.Feature'),
                 'fields' => [
                     'PS_SHOP_DEFAULT' => [
-                        'title' => $this->trans('Default shop', [], 'Admin.Advparameters.Feature'),
+                        'title' => $this->trans('Default store', [], 'Admin.Advparameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'id_shop',
@@ -153,11 +153,11 @@ class AdminShopGroupControllerCore extends AdminController
 
         if ($this->display != 'add' && $this->display != 'edit') {
             $this->page_header_toolbar_btn['new'] = [
-                'desc' => $this->trans('Add a new shop group', [], 'Admin.Advparameters.Feature'),
+                'desc' => $this->trans('Add a new group of stores', [], 'Admin.Advparameters.Feature'),
                 'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
             ];
             $this->page_header_toolbar_btn['new_2'] = [
-                'desc' => $this->trans('Add a new shop', [], 'Admin.Advparameters.Feature'),
+                'desc' => $this->trans('Add a new store', [], 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop') . '&addshop',
                 'imgclass' => 'new_2',
                 'icon' => 'process-icon-new',
@@ -171,7 +171,7 @@ class AdminShopGroupControllerCore extends AdminController
 
         if ($this->display != 'add' && $this->display != 'edit') {
             $this->toolbar_btn['new'] = [
-                'desc' => $this->trans('Add a new shop group', [], 'Admin.Advparameters.Feature'),
+                'desc' => $this->trans('Add a new group of stores', [], 'Admin.Advparameters.Feature'),
                 'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
             ];
         }
@@ -193,7 +193,7 @@ class AdminShopGroupControllerCore extends AdminController
             'input' => [
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Shop group name', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Name of the group of stores', [], 'Admin.Advparameters.Feature'),
                     'name' => 'name',
                     'required' => true,
                 ],

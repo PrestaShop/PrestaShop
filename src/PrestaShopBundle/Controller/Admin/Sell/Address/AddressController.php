@@ -616,7 +616,7 @@ class AddressController extends FrameworkBundleAdminController
                 $e instanceof BulkDeleteAddressException ? implode(', ', $e->getAddressIds()) : ''
             ),
             AddressNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotSetRequiredFieldsForAddressException::class => $this->trans(
@@ -673,15 +673,15 @@ class AddressController extends FrameworkBundleAdminController
                 ),
             ],
             CustomerNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CountryNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CustomerByEmailNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
         ];

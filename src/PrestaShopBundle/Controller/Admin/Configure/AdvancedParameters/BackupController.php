@@ -88,7 +88,7 @@ class BackupController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -304,7 +304,7 @@ class BackupController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'success',
-            $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+            $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
         );
 
         return $this->redirectToRoute('admin_backups_index');

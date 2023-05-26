@@ -7,7 +7,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
 // Import data
@@ -16,9 +15,9 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_configureModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_resetModule';
 
-describe('BO - Modules - Module Manager : Configure module', async () => {
+describe('BO - Modules - Module Manager : Reset module', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -50,19 +49,26 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
     await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search for module ${Modules.contactForm.name}`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
+  it(`should search the module ${Modules.contactForm.name}`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
     const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
     await expect(isModuleVisible).to.be.true;
   });
 
-  it('should go to module configuration page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
+  it('should reset the module', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.name);
+    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'reset');
+    await expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(Modules.contactForm.tag));
+  });
 
-    const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-    await expect(pageSubtitle).to.contains(Modules.contactForm.name);
+  it('should show all modules', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'showAllModules', baseContext);
+
+    await moduleManagerPage.filterByStatus(page, 'all-Modules');
+
+    const blocksNumber = await moduleManagerPage.getNumberOfBlocks(page);
+    await expect(blocksNumber).greaterThan(2);
   });
 });

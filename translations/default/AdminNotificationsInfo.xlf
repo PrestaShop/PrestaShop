@@ -19,22 +19,26 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Line: 683</note>
-      </trans-unit>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
-        <note>Line: 57</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
         <source>Delete selected</source>
         <target>Delete selected</target>
-        <note>Line: 56</note>
+        <note>Line: 80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 858</note>
       </trans-unit>
     </body>
   </file>
@@ -47,12 +51,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f63e342ec86620f97ce763a05fd6f140">
+        <source>Note that this feature is only available in "all stores" context. It will be added to all your stores.</source>
+        <target>Note that this feature is only available in "all stores" context. It will be added to all your stores.</target>
+        <note>Line: 137</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/statsbestmanufacturers/statsbestmanufacturers.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="58ef962a87e6fbbea6027c17a954a18d">
         <source>Empty recordset returned.</source>
         <target>Empty recordset returned.</target>
-        <note>Line: 53</note>
+        <note>Line: 52</note>
       </trans-unit>
     </body>
   </file>
@@ -61,16 +74,21 @@
       <trans-unit id="4f29d8c727dcf2022ac241cb96c31083">
         <source>Empty recordset returned</source>
         <target>Empty recordset returned</target>
-        <note>Line: 53</note>
+        <note>Line: 52</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="233a1ce8ca8efc5c0f45bf2df346812a">
         <source>Note that this page is available in all shops context only, this is why your context has just switched.</source>
         <target>Note that this page is available in all shops context only, this is why your context has just switched.</target>
-        <note>Line: 79</note>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="bcc5aa7d20ec5e8bfa75d7754753e35b">
+        <source>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</source>
+        <target>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</target>
+        <note>Line: 234</note>
       </trans-unit>
     </body>
   </file>
@@ -88,12 +106,17 @@
       <trans-unit id="d522a12a111ad26cc15c16da99cebef6">
         <source>This product is not associated with the store selected in the multistore header, please select another one.</source>
         <target>This product is not associated with the store selected in the multistore header, please select another one.</target>
-        <note>Line: 800</note>
+        <note>Line: 1469</note>
       </trans-unit>
       <trans-unit id="2c7dae12339ce3e31db32f7b78288369">
         <source>This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].</source>
         <target>This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].</target>
         <note>Line: 819</note>
+      </trans-unit>
+      <trans-unit id="0269f018a765e0d969747a1871c109a1">
+        <source>This page is only compatible in a single-store context. Please select a store in the multistore header.</source>
+        <target>This page is only compatible in a single-store context. Please select a store in the multistore header.</target>
+        <note>Line: 1485</note>
       </trans-unit>
     </body>
   </file>
@@ -104,6 +127,11 @@
         <target>Key should be at least %length% characters long.</target>
         <note>Line: 95</note>
       </trans-unit>
+      <trans-unit id="c98f13b5535852631344d794fdfba5a5">
+        <source>The key must be %length% characters long.</source>
+        <target>The key must be %length% characters long.</target>
+        <note>Line: 95</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -111,7 +139,7 @@
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 207</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -138,7 +166,7 @@
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
-        <note>Line: 167</note>
+        <note>Line: 170</note>
       </trans-unit>
     </body>
   </file>

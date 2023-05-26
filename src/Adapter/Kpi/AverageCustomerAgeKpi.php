@@ -72,7 +72,7 @@ final class AverageCustomerAgeKpi implements KpiInterface
         $helper->color = 'color2';
 
         $helper->title = $this->translator->trans('Average Age', [], 'Admin.Orderscustomers.Feature');
-        $helper->subtitle = $this->translator->trans('All Time', [], 'Admin.Global');
+        $helper->subtitle = $this->translator->trans('All time', [], 'Admin.Global');
 
         if (false !== $this->kpiConfiguration->get('AVG_CUSTOMER_AGE')) {
             $helper->value = $this->kpiConfiguration->get('AVG_CUSTOMER_AGE');

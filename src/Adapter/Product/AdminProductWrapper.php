@@ -307,11 +307,11 @@ class AdminProductWrapper
 
         // ---- validation ----
         if (($price == '-1') && ((float) $reduction == '0')) {
-            $this->errors[] = $this->translator->trans('No reduction value has been submitted', [], 'Admin.Catalog.Notification');
+            $this->errors[] = $this->translator->trans('No reduction value has been submitted.', [], 'Admin.Catalog.Notification');
         } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
             $this->errors[] = $this->translator->trans('Invalid date range', [], 'Admin.Catalog.Notification');
         } elseif ($reduction_type == 'percentage' && ((float) $reduction <= 0 || (float) $reduction > 100)) {
-            $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', [], 'Admin.Catalog.Notification');
+            $this->errors[] = $this->translator->trans('The submitted reduction value (0-100) is out-of-range.', [], 'Admin.Catalog.Notification');
         }
         $validationResult = $this->validateSpecificPrice(
             $id_product,

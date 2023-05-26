@@ -9,6 +9,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
+// Import data
+import Modules from '@data/demo/modules';
+
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';
 
@@ -47,20 +50,40 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
   });
 
   describe('Filter modules by status', async () => {
-    [false, true].forEach((status: boolean, index: number) => {
-      it(`should filter by status enabled : '${status}'`, async function () {
+    it(`should uninstall the module '${Modules.contactForm.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
+
+      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'uninstall');
+      await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.contactForm.tag));
+    });
+
+    ['enabled', 'disabled', 'installed', 'uninstalled'].forEach((status: string, index: number) => {
+      it(`should filter by status : '${status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${index}`, baseContext);
 
         await moduleManagerPage.filterByStatus(page, status);
 
-        const modules = await moduleManagerPage.getAllModulesStatus(page);
+        const modules = await moduleManagerPage.getAllModulesStatus(page, status);
         modules.map(
-          (module) => expect(
-            module.status,
-            `${module.name} is not ${status ? 'enabled' : 'disabled'}`,
-          ).to.equal(status),
+          (module) => expect(module.status, `'${module.name}' is not ${status}`).to.be.true,
         );
       });
+    });
+
+    it(`should install the module '${Modules.contactForm.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
+
+      const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'install');
+      await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.contactForm.tag));
+    });
+
+    it('should show all modules and check the different blocks', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'showAllModules', baseContext);
+
+      await moduleManagerPage.filterByStatus(page, 'all-Modules');
+
+      const blocksNumber = await moduleManagerPage.getNumberOfBlocks(page);
+      await expect(blocksNumber).greaterThan(2);
     });
   });
 });

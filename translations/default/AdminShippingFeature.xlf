@@ -102,7 +102,7 @@
       <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
         <source>Add new carrier</source>
         <target>Add new carrier</target>
-        <note>Line: 32</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -111,7 +111,7 @@
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 212</note>
+        <note>Line: 218</note>
       </trans-unit>
     </body>
   </file>
@@ -149,92 +149,87 @@
       <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
         <source>Carrier name</source>
         <target>Carrier name</target>
-        <note>Line: 203</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="0979779c4569141b98591d326d343ec2">
         <source>Tracking URL</source>
         <target>Tracking URL</target>
-        <note>Line: 236</note>
+        <note>Line: 241</note>
       </trans-unit>
       <trans-unit id="829c7cc5ed48e11df7ac9b05e236a12c">
         <source>Add handling costs</source>
         <target>Add handling costs</target>
-        <note>Line: 279</note>
+        <note>Line: 284</note>
       </trans-unit>
       <trans-unit id="0f696253cf9dacf6079bf5060e60da06">
         <source>According to total price.</source>
         <target>According to total price.</target>
-        <note>Line: 328</note>
+        <note>Line: 333</note>
       </trans-unit>
       <trans-unit id="a083cb6637472c81ec701d3342320adf">
         <source>According to total weight.</source>
         <target>According to total weight.</target>
-        <note>Line: 333</note>
+        <note>Line: 338</note>
       </trans-unit>
       <trans-unit id="482836cce404046ca7dc34fb0a6fc526">
         <source>Apply the cost of the highest defined range</source>
         <target>Apply the cost of the highest defined range</target>
-        <note>Line: 359</note>
+        <note>Line: 364</note>
       </trans-unit>
       <trans-unit id="9c3448f86be5ee19015f4ecce4bbd6fe">
         <source>Maximum package width (%s)</source>
         <target>Maximum package width (%s)</target>
-        <note>Line: 410</note>
+        <note>Line: 415</note>
       </trans-unit>
       <trans-unit id="65a0cd2bca5d0a980a5582a548d79900">
         <source>Maximum package height (%s)</source>
         <target>Maximum package height (%s)</target>
-        <note>Line: 417</note>
+        <note>Line: 422</note>
       </trans-unit>
       <trans-unit id="8317f5bb182c1e92c11221955592b518">
         <source>Maximum package depth (%s)</source>
         <target>Maximum package depth (%s)</target>
-        <note>Line: 424</note>
+        <note>Line: 429</note>
       </trans-unit>
       <trans-unit id="da5c987cbda47de7a6b09406b0840ec4">
         <source>Maximum package weight (%s)</source>
         <target>Maximum package weight (%s)</target>
-        <note>Line: 431</note>
+        <note>Line: 436</note>
       </trans-unit>
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>Line: 438</note>
+        <note>Line: 443</note>
+      </trans-unit>
+      <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
+        <source>Transit time</source>
+        <target>Transit time</target>
+        <note>Line: 219</note>
+      </trans-unit>
+      <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
+        <source>Speed grade</source>
+        <target>Speed grade</target>
+        <note>Line: 228</note>
+      </trans-unit>
+      <trans-unit id="780c462e85ba4399a5d42e88f69a15ca">
+        <source>Billing</source>
+        <target>Billing</target>
+        <note>Line: 324</note>
+      </trans-unit>
+      <trans-unit id="082ebbb29b5ba59c293a00a55581679b">
+        <source>Out-of-range behavior</source>
+        <target>Out-of-range behavior</target>
+        <note>Line: 358</note>
+      </trans-unit>
+      <trans-unit id="4f890cf6a72112cad95093baecf39831">
+        <source>Disable carrier</source>
+        <target>Disable carrier</target>
+        <note>Line: 368</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
-        <source>Transit time</source>
-        <target>Transit time</target>
-        <note>Line: 184</note>
-      </trans-unit>
-      <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
-        <source>Speed grade</source>
-        <target>Speed grade</target>
-        <note>Line: 193</note>
-      </trans-unit>
-      <trans-unit id="780c462e85ba4399a5d42e88f69a15ca">
-        <source>Billing</source>
-        <target>Billing</target>
-        <note>Line: 300</note>
-      </trans-unit>
-      <trans-unit id="082ebbb29b5ba59c293a00a55581679b">
-        <source>Out-of-range behavior</source>
-        <target>Out-of-range behavior</target>
-        <note>Line: 325</note>
-      </trans-unit>
-      <trans-unit id="4f890cf6a72112cad95093baecf39831">
-        <source>Disable carrier</source>
-        <target>Disable carrier</target>
-        <note>Line: 335</note>
-      </trans-unit>
-      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
-        <source>Name:</source>
-        <target>Name:</target>
-        <note>Line: 687</note>
-      </trans-unit>
       <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
         <source>Free Shipping</source>
         <target>Free Shipping</target>
@@ -243,56 +238,61 @@
       <trans-unit id="1c0e287237d8c352c6ead633b019c047">
         <source>Apply shipping cost</source>
         <target>Apply shipping cost</target>
-        <note>Line: 245</note>
+        <note>Line: 250</note>
       </trans-unit>
       <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
         <source>Shipping and handling</source>
         <target>Shipping and handling</target>
-        <note>Line: 279</note>
+        <note>Line: 284</note>
       </trans-unit>
       <trans-unit id="590f6d9a5885f042982c9a911f76abda">
         <source>Default behavior</source>
         <target>Default behavior</target>
-        <note>Line: 309</note>
+        <note>Line: 314</note>
       </trans-unit>
       <trans-unit id="e3d29a6f3d7588301aa04429e686b260">
         <source>According to total price</source>
         <target>According to total price</target>
-        <note>Line: 314</note>
+        <note>Line: 319</note>
       </trans-unit>
       <trans-unit id="49fec5c86a3b43821fdf0d9aa7bbd935">
         <source>According to total weight</source>
         <target>According to total weight</target>
-        <note>Line: 319</note>
+        <note>Line: 324</note>
       </trans-unit>
       <trans-unit id="324029d06c6bfe85489099f6e69b7637">
         <source>Maximum package height</source>
         <target>Maximum package height</target>
-        <note>Line: 345</note>
+        <note>Line: 350</note>
       </trans-unit>
       <trans-unit id="3e86ececa46af50900510892f94c4ed6">
         <source>Maximum package width</source>
         <target>Maximum package width</target>
-        <note>Line: 352</note>
+        <note>Line: 357</note>
       </trans-unit>
       <trans-unit id="1935671a637346f67b485596b9fcba2c">
         <source>Maximum package depth</source>
         <target>Maximum package depth</target>
-        <note>Line: 359</note>
+        <note>Line: 364</note>
       </trans-unit>
       <trans-unit id="0cce6348a3d85f52a44d053f542afcbc">
         <source>Maximum package weight</source>
         <target>Maximum package weight</target>
-        <note>Line: 366</note>
+        <note>Line: 371</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CarrierGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
         <source>Delay</source>
         <target>Delay</target>
-        <note>Line: 112</note>
+        <note>Line: 85</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
+        <source>Name:</source>
+        <target>Name:</target>
+        <note>Line: 861</note>
       </trans-unit>
     </body>
   </file>
@@ -305,17 +305,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/PreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
         <source>Handling charges</source>
         <target>Handling charges</target>
-        <note>Line: 82</note>
+        <note>Line: 106</note>
       </trans-unit>
       <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
         <source>Free shipping starts at</source>
         <target>Free shipping starts at</target>
-        <note>Line: 106</note>
+        <note>Line: 114</note>
       </trans-unit>
     </body>
   </file>

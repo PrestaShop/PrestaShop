@@ -5,7 +5,7 @@
       <trans-unit id="8a4f5a66d0fcc9d13614516db6e3d47a">
         <source>Products in the same category</source>
         <target>Products in the same category</target>
-        <note>Line: 57</note>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="1d269d7f013c3d9d891a146f4379eb02">
         <source>Adds a block on the product page that displays products from the same category.</source>
@@ -31,6 +31,11 @@
         <source>Number of product to display</source>
         <target>Number of product to display</target>
         <note>Line: 167</note>
+      </trans-unit>
+      <trans-unit id="bd71e0418c0d9873f1e9d58f50e8bb65">
+        <source>Add a block on every product page that displays items from the same category.</source>
+        <target>Add a block on every product page that displays items from the same category.</target>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>

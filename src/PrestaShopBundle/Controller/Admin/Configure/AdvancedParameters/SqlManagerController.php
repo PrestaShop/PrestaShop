@@ -197,7 +197,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -235,7 +235,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         } catch (SqlRequestNotFoundException $e) {
             $this->addFlash(
                 'error',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+                $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error')
             );
 
             return $this->redirectToRoute('admin_sql_requests_index');
@@ -307,7 +307,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleException($e));
@@ -486,7 +486,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
             SqlRequestConstraintException::class => $e->getMessage(),
             SqlRequestException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
         ];
@@ -521,7 +521,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
         ];
 
         if (isset($exceptionMessages[$type])) {
@@ -581,7 +581,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         $domainErrors = [
-            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found).', 'Admin.Notifications.Error'),
         ];
 
         if (isset($domainErrors[$type])) {

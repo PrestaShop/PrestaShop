@@ -946,7 +946,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         foreach ($_POST as $field_name => $value) {
             if (in_array($field_name, $authorized_text_fields) && $value != '') {
                 if (!Validate::isMessage($value)) {
-                    $this->errors[] = $this->trans('Invalid message', [], 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('Invalid message.', [], 'Shop.Notifications.Error');
                 } else {
                     $this->context->cart->addTextFieldToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
                 }

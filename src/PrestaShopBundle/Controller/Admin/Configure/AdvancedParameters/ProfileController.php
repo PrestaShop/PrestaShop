@@ -150,7 +150,7 @@ class ProfileController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
             'multistoreInfoTip' => $this->trans(
-                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Note that this feature is only available in the "all stores" context. It will be added to all your stores.',
                 'Admin.Notifications.Info'
             ),
             'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
@@ -298,7 +298,7 @@ class ProfileController extends FrameworkBundleAdminController
                 ),
             ],
             ProfileNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotDeleteSuperAdminProfileException::class => $this->trans(

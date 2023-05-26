@@ -513,7 +513,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -925,7 +925,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -1125,7 +1125,7 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         return [
             CmsPageNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotToggleCmsPageException::class => $this->trans(
@@ -1214,7 +1214,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 ),
             ],
             CmsPageCategoryNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotToggleCmsPageCategoryStatusException::class => $this->trans(

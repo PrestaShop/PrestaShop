@@ -207,21 +207,15 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers', baseContext);
 
         const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
-        await expect(numberOfVouchers).to.equal(2);
+        await expect(numberOfVouchers).to.equal(1);
       });
 
       [
-        {args: {column: 'code', row: 1, value: ''}},
         {args: {column: 'description', row: 1, value: cartRuleEnabledPartialUse.name}},
-        {args: {column: 'quantity', row: 1, value: '0'}},
-        {args: {column: 'value', row: 1, value: '€100.00 Tax included'}},
+        {args: {column: 'quantity', row: 1, value: '1'}},
+        {args: {column: 'value', row: 1, value: `€${amountValue} Tax included`}},
         {args: {column: 'minimum', row: 1, value: 'None'}},
         {args: {column: 'cumulative', row: 1, value: 'Yes'}},
-        {args: {column: 'code', row: 1, value: cartRuleEnabledPartialUse.code}},
-        {args: {column: 'quantity', row: 2, value: '1'}},
-        {args: {column: 'value', row: 2, value: `€${amountValue} Tax included`}},
-        {args: {column: 'minimum', row: 2, value: 'None'}},
-        {args: {column: 'cumulative', row: 2, value: 'Yes'}},
       ].forEach((cartRule, index: number) => {
         it(`should check the voucher ${cartRule.args.column} n°${cartRule.args.row}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
@@ -412,28 +406,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfVouchers2', baseContext);
 
         const numberOfVouchers = await foVouchersPage.getNumberOfVouchers(page);
-        await expect(numberOfVouchers).to.equal(1);
-      });
-
-      [
-        {args: {column: 'code', row: 1, value: ''}},
-        {args: {column: 'description', row: 1, value: cartRuleDisabledPartialUse.name}},
-        {args: {column: 'quantity', row: 1, value: '0'}},
-        {args: {column: 'value', row: 1, value: '€100.00 Tax included'}},
-        {args: {column: 'minimum', row: 1, value: 'None'}},
-        {args: {column: 'cumulative', row: 1, value: 'Yes'}},
-        {args: {column: 'code', row: 1, value: cartRuleDisabledPartialUse.code}},
-      ].forEach((cartRule, index: number) => {
-        it(`should check the voucher ${cartRule.args.column}`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `checkVoucher2${index}`, baseContext);
-
-          const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(
-            page,
-            cartRule.args.row,
-            cartRule.args.column,
-          );
-          await expect(cartRuleTextColumn).to.equal(cartRule.args.value);
-        });
+        await expect(numberOfVouchers).to.equal(0);
       });
     });
 

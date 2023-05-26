@@ -196,7 +196,7 @@ class CreditSlipController extends FrameworkBundleAdminController
                 ),
             ],
             MissingDataException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
         ];

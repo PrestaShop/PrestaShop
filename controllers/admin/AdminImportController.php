@@ -166,7 +166,7 @@ class AdminImportControllerCore extends AdminController
                     ],
                     'advanced_stock_management' => [
                         'label' => $this->trans('Advanced Stock Management', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Help'),
+                        'help' => $this->trans('Enable advanced stock management on product (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Help'),
                     ],
                     'depends_on_stock' => [
                         'label' => $this->trans('Depends on stock', [], 'Admin.Advparameters.Feature'),
@@ -328,7 +328,7 @@ class AdminImportControllerCore extends AdminController
                     ],
                     'advanced_stock_management' => [
                         'label' => $this->trans('Advanced Stock Management', [], 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes).', [], 'Admin.Advparameters.Help'),
+                        'help' => $this->trans('Enable advanced stock management on product (0 = No, 1 = Yes).', [], 'Admin.Advparameters.Help'),
                     ],
                     'depends_on_stock' => [
                         'label' => $this->trans('Depends on stock', [], 'Admin.Advparameters.Feature'),
@@ -441,7 +441,7 @@ class AdminImportControllerCore extends AdminController
                     'state' => ['label' => $this->trans('State', [], 'Admin.Global')],
                     'other' => ['label' => $this->trans('Other', [], 'Admin.Global')],
                     'phone' => ['label' => $this->trans('Phone', [], 'Admin.Global')],
-                    'phone_mobile' => ['label' => $this->trans('Mobile Phone', [], 'Admin.Global')],
+                    'phone_mobile' => ['label' => $this->trans('Mobile phone', [], 'Admin.Global')],
                     'vat_number' => ['label' => $this->trans('VAT number', [], 'Admin.Orderscustomers.Feature')],
                     'dni' => ['label' => $this->trans('Identification number', [], 'Admin.Orderscustomers.Feature')],
                 ];
@@ -807,7 +807,7 @@ class AdminImportControllerCore extends AdminController
                     break;
             }
         } elseif (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $_FILES['file']['name'])) {
-            $_FILES['file']['error'] = $this->trans('The extension of your file should be .csv.', [], 'Admin.Advparameters.Notification');
+            $_FILES['file']['error'] = $this->trans('The extension of your file should be ".csv".', [], 'Admin.Advparameters.Notification');
         } elseif (!@filemtime($_FILES['file']['tmp_name']) ||
             !@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath() . $filename_prefix . str_replace("\0", '', $_FILES['file']['name']))) {
             $_FILES['file']['error'] = $this->trans('An error occurred while uploading / copying the file.', [], 'Admin.Advparameters.Notification');
@@ -2680,7 +2680,7 @@ class AdminImportControllerCore extends AdminController
 
                     if (!Validate::isEan13($info['ean13'])) {
                         $this->warnings[] = $this->trans(
-                            'EAN-13 "%ean13%" has incorrect value for product with id %id%.',
+                            'EAN-13 "%ean13%" has incorrect value for product with ID %id%.',
                             [
                                 '%ean13%' => Tools::htmlentitiesUTF8($info['ean13']),
                                 '%id%' => Tools::htmlentitiesUTF8($product->id),

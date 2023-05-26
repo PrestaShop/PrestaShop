@@ -724,7 +724,7 @@ class CustomerController extends AbstractAdminController
 
                 $this->addFlash(
                     'success',
-                    $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
                 );
             } catch (CustomerException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -1104,7 +1104,7 @@ class CustomerController extends AbstractAdminController
 
         if (!$isSingleShopContext) {
             $toolbarButtons['add']['help'] = $this->trans(
-                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'You can use this feature in a single-store context only. Switch contexts to enable it.',
                 'Admin.Orderscustomers.Feature'
             );
             $toolbarButtons['add']['href'] = '#';

@@ -500,7 +500,7 @@ class AdminControllerCore extends Controller
 
         $this->_conf = [
             1 => $this->trans('Successful deletion', [], 'Admin.Notifications.Success'),
-            2 => $this->trans('The selection has been successfully deleted', [], 'Admin.Notifications.Success'),
+            2 => $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success'),
             3 => $this->trans('Successful creation', [], 'Admin.Notifications.Success'),
             4 => $this->trans('Successful update', [], 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
@@ -680,6 +680,8 @@ class AdminControllerCore extends Controller
 
                 break;
         }
+
+        Hook::exec('actionAdminBreadcrumbModifier', ['tabs' => $tabs, 'breadcrumb' => &$breadcrumbs2], null, true);
 
         $this->context->smarty->assign([
             'breadcrumbs2' => $breadcrumbs2,
@@ -1771,7 +1773,7 @@ class AdminControllerCore extends Controller
                 return $this->object;
             }
             // throw exception
-            $this->errors[] = $this->trans('The object cannot be loaded (or found)', [], 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error');
 
             return false;
         } elseif ($opt) {

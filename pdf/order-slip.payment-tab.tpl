@@ -24,7 +24,7 @@
  *}
 <table id="payment-tab" width="100%">
 	<tr>
-		<td class="payment center small grey bold" width="44%">{l s='Payment Method' d='Shop.Pdf' pdf='true'}</td>
+		<td class="payment center small grey bold" width="44%">{l s='Payment method' d='Shop.Pdf' pdf='true'}</td>
 		<td class="payment left white" width="56%">
 			{$order->payment}
 		</td>

@@ -22,6 +22,11 @@
         <target>Determine the number of product to display in this block</target>
         <note>Line: 143</note>
       </trans-unit>
+      <trans-unit id="d097706618745d1d4e3d1fa48837d9ec">
+        <source>Show your visitors what are your top-selling products directly on your homepage.</source>
+        <target>Show your visitors what are your top-selling products directly on your homepage.</target>
+        <note>Line: 61</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

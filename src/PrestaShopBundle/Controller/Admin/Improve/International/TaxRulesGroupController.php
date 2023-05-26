@@ -356,7 +356,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             TaxRulesGroupNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             CannotUpdateTaxRulesGroupException::class => [

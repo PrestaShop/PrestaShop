@@ -250,7 +250,7 @@ class AttributeController extends FrameworkBundleAdminController
     private function getErrorMessages()
     {
         $notFoundMessage = $this->trans(
-            'The object cannot be loaded (or found)',
+            'The object cannot be loaded (or found).',
             'Admin.Notifications.Error'
         );
 

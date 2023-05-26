@@ -100,7 +100,7 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
 
       // Search and go to configure module page
       await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
-      await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailSubscription.name);
+      await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailSubscription.tag);
 
       const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
       await expect(pageTitle).to.contains(Modules.psEmailSubscription.name);

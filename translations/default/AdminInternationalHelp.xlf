@@ -36,54 +36,50 @@
         <target>This expression uses a special syntax:</target>
         <note>Line: 94</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="f75f58622599fa286aa5bdd94fb4404d">
         <source>Some of these expressions use this special syntax: %s.</source>
         <target>Some of these expressions use this special syntax: %s.</target>
-        <note>Line: 68</note>
+        <note>Line: 67</note>
       </trans-unit>
       <trans-unit id="919a5a4550f8f714f806f5590ed1b66a">
         <source>There are [1]%replace%[/1] products</source>
         <target>There are [1]%replace%[/1] products</target>
-        <note>Line: 73</note>
+        <note>Line: 72</note>
       </trans-unit>
       <trans-unit id="06fb8ada95eab3e2b5d4a3e834a9ab10">
         <source>"%s" will be replaced by a number.</source>
         <target>"%s" will be replaced by a number.</target>
-        <note>Line: 73</note>
+        <note>Line: 72</note>
       </trans-unit>
       <trans-unit id="cfe3ecf9fcc29ce36de15ee87cebd12b">
         <source>List of pages in [1]%replace%[/1]</source>
         <target>List of pages in [1]%replace%[/1]</target>
-        <note>Line: 74</note>
+        <note>Line: 73</note>
       </trans-unit>
       <trans-unit id="a24386154e350ad7c608af84cdb4be11">
         <source>"%s" will be replaced by a string.</source>
         <target>"%s" will be replaced by a string.</target>
-        <note>Line: 74</note>
+        <note>Line: 73</note>
       </trans-unit>
       <trans-unit id="9b4ca9541e2c3e7215a5fac1f4cecd2f">
         <source>Feature: [1]%1%[/1] ([1]%2%[/1] values)</source>
         <target>Feature: [1]%1%[/1] ([1]%2%[/1] values)</target>
-        <note>Line: 75</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="031775df42ef41141d4b4c7d4db89d65">
         <source>The numbers enable you to reorder the variables when necessary.</source>
         <target>The numbers enable you to reorder the variables when necessary.</target>
-        <note>Line: 75</note>
-      </trans-unit>
-      <trans-unit id="54524210ee89080b3da6c88a11c6d438">
-        <source>You must use this syntax in your translations. Here are several examples:</source>
-        <target>You must use this syntax in your translations. Here are several examples:</target>
-        <note>Line: 70</note>
+        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="54524210ee89080b3da6c88a11c6d438">
+        <source>You must use this syntax in your translations. Here are several examples:</source>
+        <target>You must use this syntax in your translations. Here are several examples:</target>
+        <note>Line: 71</note>
+      </trans-unit>
       <trans-unit id="013afdec32d184dc61040022a45409ca">
         <source>Click on the title of a section to open its fieldsets.</source>
         <target>Click on the title of a section to open its fieldsets.</target>
@@ -111,27 +107,27 @@
       <trans-unit id="b33aadd6763bfea56853a7ecf2176382">
         <source>Two -- or three -- letter ISO code (e.g. "us" for United States).</source>
         <target>Two -- or three -- letter ISO code (e.g. "us" for United States).</target>
-        <note>Line: 206</note>
+        <note>Line: 211</note>
       </trans-unit>
       <trans-unit id="cd2f7b9409e0f1527766ad35aa8bd3c5">
         <source>International call prefix, (e.g. 1 for United States).</source>
         <target>International call prefix, (e.g. 1 for United States).</target>
-        <note>Line: 220</note>
+        <note>Line: 225</note>
       </trans-unit>
       <trans-unit id="92de0162cbdfa60f671ba3cad1d392a1">
         <source>Geographical region.</source>
         <target>Geographical region.</target>
-        <note>Line: 245</note>
+        <note>Line: 250</note>
       </trans-unit>
       <trans-unit id="98ae2fd635525d30d2b0e8b643f9a23c">
         <source>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</source>
         <target>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</target>
-        <note>Line: 271</note>
+        <note>Line: 276</note>
       </trans-unit>
       <trans-unit id="a2ddbdfb29a0708bd711601f9277435c">
         <source>Display this country to your customers (the selected country will always be displayed in the Back Office).</source>
         <target>Display this country to your customers (the selected country will always be displayed in the Back Office).</target>
-        <note>Line: 300</note>
+        <note>Line: 305</note>
       </trans-unit>
     </body>
   </file>
@@ -179,32 +175,32 @@
       <trans-unit id="e14eeddb992a1fa103cb2669178369cf">
         <source>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</source>
         <target>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</target>
-        <note>Line: 287</note>
+        <note>Line: 292</note>
       </trans-unit>
       <trans-unit id="ce9c5fc1032ac5aa03a3d248022773df">
         <source>You must define the behavior if an address matches multiple rules:</source>
         <target>You must define the behavior if an address matches multiple rules:</target>
-        <note>Line: 313</note>
+        <note>Line: 318</note>
       </trans-unit>
       <trans-unit id="439fa6ce423495b01ffd31ea56b33335">
         <source>- This tax only: Will apply only this tax</source>
         <target>- This tax only: Will apply only this tax</target>
-        <note>Line: 314</note>
+        <note>Line: 319</note>
       </trans-unit>
       <trans-unit id="4019ba4535164cd55c61ac20379a8aa9">
         <source>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</source>
         <target>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</target>
-        <note>Line: 315</note>
+        <note>Line: 320</note>
       </trans-unit>
       <trans-unit id="dabf677c95d59c749ea5d6d6d22012c4">
         <source><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></source>
         <target><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></target>
-        <note>Line: 316</note>
+        <note>Line: 321</note>
       </trans-unit>
       <trans-unit id="7475ec0d41372a307c497acb7eeea8c4">
         <source>No Tax</source>
         <target>No Tax</target>
-        <note>Line: 330</note>
+        <note>Line: 335</note>
       </trans-unit>
       <trans-unit id="7a3ded393734410a3d3514e10b672c92">
         <source>(Total tax: 9%)</source>
@@ -225,9 +221,19 @@
         <target>ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)</target>
         <note>Line: 173</note>
       </trans-unit>
-      <trans-unit id="0ab7db7a10b7efc8270dd215c2a4ada7">
-        <source><![CDATA[Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></source>
-        <target><![CDATA[Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></target>
+      <trans-unit id="c7c838899b96b2b17ea954d2578cf541">
+        <source>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
+        <target>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
+        <note>Line: 197</note>
+      </trans-unit>
+      <trans-unit id="2a08dc363eacc877e145bd670893f942">
+        <source>Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
+        <target>Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
+        <note>Line: 197</note>
+      </trans-unit>
+      <trans-unit id="48da3cf2897b7f486bdf8657354a3667">
+        <source><![CDATA[Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></source>
+        <target><![CDATA[Exchange rates are calculated from one unit of your store's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></target>
         <note>Line: 197</note>
       </trans-unit>
     </body>

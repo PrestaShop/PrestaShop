@@ -72,7 +72,7 @@ final class OrdersPerCustomerKpi implements KpiInterface
         $helper->color = 'color4';
 
         $helper->title = $this->translator->trans('Orders per Customer', [], 'Admin.Orderscustomers.Feature');
-        $helper->subtitle = $this->translator->trans('All Time', [], 'Admin.Global');
+        $helper->subtitle = $this->translator->trans('All time', [], 'Admin.Global');
 
         if (false !== $this->kpiConfiguration->get('ORDERS_PER_CUSTOMER')) {
             $helper->value = $this->kpiConfiguration->get('ORDERS_PER_CUSTOMER');

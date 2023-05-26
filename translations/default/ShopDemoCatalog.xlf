@@ -349,6 +349,11 @@
         <target>0.31 in</target>
         <note>Line: 90</note>
       </trans-unit>
+      <trans-unit id="d576562cd8e23f2a8210efc25387bde2">
+        <source>120 g</source>
+        <target>120 g</target>
+        <note>Line: 88</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

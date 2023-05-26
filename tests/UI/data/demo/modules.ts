@@ -13,4 +13,8 @@ export default {
     tag: 'ps_themecusto',
     name: 'Theme Customization',
   }),
+  availableQuantities: new ModuleData({
+    tag: 'statsstock',
+    name: 'Available quantities',
+  }),
 };

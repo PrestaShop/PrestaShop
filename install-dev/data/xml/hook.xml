@@ -4509,5 +4509,10 @@
       <title>Modify back office menu</title>
       <description>This hook allows modifying back office menu tabs</description>
     </hook>
+    <hook id="actionAdminBreadcrumbModifier">
+      <name>actionAdminBreadcrumbModifier</name>
+      <title>Modify back office breadcrumb</title>
+      <description>This hook allows modifying back office breadcrumb</description>
+    </hook>
   </entities>
 </entity_hook>

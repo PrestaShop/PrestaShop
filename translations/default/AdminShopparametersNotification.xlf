@@ -37,7 +37,7 @@
       <trans-unit id="f164e438206718c5539f6761d83e26b7">
         <source>Width and height must be numeric values.</source>
         <target>Width and height must be numeric values.</target>
-        <note>Line: 211</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -46,27 +46,27 @@
       <trans-unit id="2a266db001f17e9fdcbc17ac7f169922">
         <source>The discount value is incorrect (must be a percentage).</source>
         <target>The discount value is incorrect (must be a percentage).</target>
-        <note>Line: 557</note>
+        <note>Line: 570</note>
       </trans-unit>
       <trans-unit id="5f455758d7337262fdeedba6d54ec89f">
         <source>Wrong category ID.</source>
         <target>Wrong category ID.</target>
-        <note>Line: 554</note>
+        <note>Line: 567</note>
       </trans-unit>
       <trans-unit id="14d9080664b90f7ff1bcd739aa34f5d0">
         <source>The discount value is incorrect.</source>
         <target>The discount value is incorrect.</target>
-        <note>Line: 608</note>
+        <note>Line: 621</note>
       </trans-unit>
       <trans-unit id="5d4aa63b116fb3fe40589e20c1574661">
         <source>You cannot save group reductions.</source>
         <target>You cannot save group reductions.</target>
-        <note>Line: 617</note>
+        <note>Line: 630</note>
       </trans-unit>
       <trans-unit id="a5ee25b466967f2e940d8c7f973a6906">
         <source>An error occurred while updating this group.</source>
         <target>An error occurred while updating this group.</target>
-        <note>Line: 635</note>
+        <note>Line: 648</note>
       </trans-unit>
     </body>
   </file>
@@ -94,7 +94,7 @@
       <trans-unit id="ef553500695e07c58644bbdd166581be">
         <source>This is not a valid IP address:</source>
         <target>This is not a valid IP address:</target>
-        <note>Line: 215</note>
+        <note>Line: 224</note>
       </trans-unit>
     </body>
   </file>
@@ -103,27 +103,27 @@
       <trans-unit id="837e57427bf283453398a561c9516398">
         <source>You cannot delete this shop (customer and/or order dependency).</source>
         <target>You cannot delete this shop (customer and/or order dependency).</target>
-        <note>Line: 283</note>
+        <note>Line: 301</note>
       </trans-unit>
       <trans-unit id="e3651705f1156de17be5bf1943c480b3">
         <source>Please create some sub-categories for this root category.</source>
         <target>Please create some sub-categories for this root category.</target>
-        <note>Line: 325</note>
+        <note>Line: 343</note>
       </trans-unit>
       <trans-unit id="cf52c411b5659457074fd9962435307f">
         <source>You need to select at least the root category.</source>
         <target>You need to select at least the root category.</target>
-        <note>Line: 333</note>
+        <note>Line: 351</note>
       </trans-unit>
       <trans-unit id="18f086b62387b20309c709bbf9fe4fdb">
         <source>Warning: You won't be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.</source>
         <target>Warning: You won't be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.</target>
-        <note>Line: 426</note>
+        <note>Line: 452</note>
       </trans-unit>
       <trans-unit id="1ff40978236e0d196983386376b0a5e3">
         <source>You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.</source>
         <target>You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.</target>
-        <note>Line: 428</note>
+        <note>Line: 454</note>
       </trans-unit>
     </body>
   </file>
@@ -141,17 +141,17 @@
       <trans-unit id="86de674d7405670db52e79ec1665b0b1">
         <source>An address located in a country containing states must have a state selected.</source>
         <target>An address located in a country containing states must have a state selected.</target>
-        <note>Line: 361</note>
+        <note>Line: 367</note>
       </trans-unit>
       <trans-unit id="60e8343766afd5e69c5797ea7380ce8e">
         <source>Latitude and longitude are required.</source>
         <target>Latitude and longitude are required.</target>
-        <note>Line: 368</note>
+        <note>Line: 374</note>
       </trans-unit>
       <trans-unit id="1ae9a82096a0077dde65dec6b1344792">
         <source>The specified state is not located in this country.</source>
         <target>The specified state is not located in this country.</target>
-        <note>Line: 564</note>
+        <note>Line: 573</note>
       </trans-unit>
     </body>
   </file>
@@ -160,17 +160,17 @@
       <trans-unit id="b8a27e47e64caa3e36c8894c3745357b">
         <source>Before being able to use this tool, you need to:</source>
         <target>Before being able to use this tool, you need to:</target>
-        <note>Line: 112</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="d7faa8eb2f73f2c764e387d3d7c57556">
         <source>Create a blank .htaccess in your root directory.</source>
         <target>Create a blank .htaccess in your root directory.</target>
-        <note>Line: 120</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="5dab5160dfb25b3a4d6c51416dac5c87">
         <source>Give it write permissions (CHMOD 666 on Unix system).</source>
         <target>Give it write permissions (CHMOD 666 on Unix system).</target>
-        <note>Line: 128</note>
+        <note>Line: 134</note>
       </trans-unit>
     </body>
   </file>
@@ -201,12 +201,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesGeneralFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="85a1ca0031f114f8409d15c6790856f5">
         <source>Assign a valid page if you want it to be read.</source>
         <target>Assign a valid page if you want it to be read.</target>
-        <note>Line: 118</note>
+        <note>Line: 142</note>
       </trans-unit>
     </body>
   </file>
@@ -310,6 +310,11 @@
         <target>As long as a keyword has an associated value, you can use the syntax {prepend:keyword:append} to add text before and after it</target>
         <note>Line: 69</note>
       </trans-unit>
+      <trans-unit id="72648be8a3ff61acd92f41a9b0e924d5">
+        <source>As long as a keyword has an associated value, you can use the syntax {prepend:keyword:append} to add text before and after it.</source>
+        <target>As long as a keyword has an associated value, you can use the syntax {prepend:keyword:append} to add text before and after it.</target>
+        <note>Line: 69</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -317,8 +322,7 @@
       <trans-unit id="843afaeb1d84245d7cf7d0877a7258dd">
         <source>You can only display the page list in a shop context.</source>
         <target>You can only display the page list in a shop context.</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
