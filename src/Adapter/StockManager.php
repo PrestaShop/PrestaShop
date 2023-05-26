@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
+use Shop;
 
 /**
  * Data provider for new Architecture, about Product stocks.
@@ -102,6 +103,11 @@ class StockManager implements StockInterface
     public function updatePhysicalProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
+        $whereShopIdCond = $shopId;
+
+        if(Shop::isFeatureActive() && Shop::getContextShopGroup()->share_stock){
+            $whereShopIdCond = 0;
+        }
 
         $updatePhysicalQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
 
@@ -118,7 +124,7 @@ class StockManager implements StockInterface
 
         $updatePhysicalQuantityQuery .= '
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
-            WHERE sa.id_shop = ' . (int) $shopId . '
+            WHERE sa.id_shop = ' . $whereShopIdCond . '
         ';
 
         if ($idProduct) {
@@ -141,6 +147,13 @@ class StockManager implements StockInterface
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
+        $whereShopIdCond = $shopId;
+        $whereCondition = 'o.id_shop = :shop_id AND ';
+        if(Shop::isFeatureActive() && Shop::getContextShopGroup()->share_stock){
+            $whereShopIdCond = 0;
+            $whereCondition = 'o.id_shop_group = '. Shop::getContextShopGroup()->id .' AND ';
+        }
+
         $updateReservedQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
 
         if ($idOrder) {
@@ -160,7 +173,7 @@ class StockManager implements StockInterface
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE o.id_shop = :shop_id AND
+                WHERE '.$whereCondition.'
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
                         os.id_order_state != :error_state AND
@@ -170,7 +183,7 @@ class StockManager implements StockInterface
                 sa.id_product_attribute = od.product_attribute_id
                 GROUP BY od.product_id, od.product_attribute_id
             )
-            WHERE sa.id_shop = :shop_id
+            WHERE sa.id_shop = '. $whereShopIdCond .'
         ';
 
         $strParams = [
