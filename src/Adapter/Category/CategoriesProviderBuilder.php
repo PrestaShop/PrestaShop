@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
@@ -36,19 +35,19 @@ use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 class CategoriesProviderBuilder
 {
-    private $context;
-    private $themeRepository;
-
-    public function __construct(LegacyContext $context, ThemeRepository $themeRepository)
-    {
-        $this->context = $context;
-        $this->themeRepository = $themeRepository;
+    public function __construct(
+        private readonly LegacyContext $context,
+        private readonly ThemeRepository $themeRepository,
+        private readonly string $cacheDir,
+        private readonly string $rootDir,
+        private readonly string $categoriesConfigPath,
+    ) {
     }
 
     public function build(): CategoriesProvider
     {
-        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
-        $addonsCategories = $yamlParser->parse(_PS_ROOT_DIR_ . '/app/config' . '/addons/categories.yml');
+        $yamlParser = new YamlParser($this->cacheDir);
+        $addonsCategories = $yamlParser->parse($this->rootDir . $this->categoriesConfigPath);
         $themeName = $this->context->getContext()->shop->theme_name;
         $modulesTheme = $themeName ? $this->themeRepository->getInstanceByName($themeName)->getModulesToEnable() : [];
 
