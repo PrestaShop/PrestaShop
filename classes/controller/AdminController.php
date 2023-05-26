@@ -4201,32 +4201,6 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @deprecated Since 1.7.7 Use Tools::isFileFresh instead
-     *
-     * @param string $file
-     * @param int $timeout
-     *
-     * @return bool
-     */
-    public function isFresh($file, $timeout = 604800)
-    {
-        return Tools::isFileFresh($file, $timeout);
-    }
-
-    /**
-     * @deprecated Since 1.7.7 Use Tools::refreshFile instead
-     *
-     * @param string $file_to_refresh
-     * @param string $external_file
-     *
-     * @return bool
-     */
-    public function refresh($file_to_refresh, $external_file)
-    {
-        return Tools::refreshFile($file_to_refresh, $external_file);
-    }
-
-    /**
      * Add an entry to the meta title.
      *
      * @param string $entry new entry
