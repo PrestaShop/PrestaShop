@@ -84,9 +84,11 @@ class ModuleManager extends BOBasePage {
 
   private readonly actionModuleButtonInDropdownList: (action: string) => string;
 
+  private readonly modalConfirmAction: (moduleTag: string, action: string) => string;
+
   private readonly modalConfirmButton: (moduleTag: string, action: string) => string;
 
-  private readonly modalConfirmAction: (moduleTag: string) => string;
+  private readonly modalConfirmCancel: (moduleTag: string, action: string) => string;
 
   private readonly statusDropdownDiv: string;
 
@@ -177,9 +179,11 @@ class ModuleManager extends BOBasePage {
       + ` button.module_action_menu_${action}`;
 
     // Modal confirmation selectors
-    this.modalConfirmAction = (moduleTag: string) => `#module-modal-confirm-${moduleTag}`;
-    this.modalConfirmButton = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag)}-${action}`
+    this.modalConfirmAction = (moduleTag: string, action: string) => `#module-modal-confirm-${moduleTag}-${action}`;
+    this.modalConfirmButton = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag, action)}`
       + ` div.modal-footer a.module_action_modal_${action}`;
+    this.modalConfirmCancel = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag, action)}`
+      + ' div.modal-footer input[type="button"][data-dismiss="modal"]';
   }
 
   /*
@@ -231,6 +235,16 @@ class ModuleManager extends BOBasePage {
     await page.type(this.searchModuleTagInput, module.tag);
     await page.click(this.searchModuleButton);
 
+    return this.isModuleVisible(page, module);
+  }
+
+  /**
+   * Return if the module is visible
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Tag of the Module
+   * @return {Promise<boolean>}
+   */
+  async isModuleVisible(page: Page, module: ModuleData): Promise<boolean> {
     return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
   }
 
@@ -388,9 +402,10 @@ class ModuleManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @param module {ModuleData} Module data to install/uninstall
    * @param action {string} Action install/uninstall/enable/disable/reset
+   * @param cancel {boolean} Cancel the action
    * @return {Promise<string | null>}
    */
-  async setActionInModule(page: Page, module: ModuleData, action: string): Promise<string | null> {
+  async setActionInModule(page: Page, module: ModuleData, action: string, cancel: boolean = false): Promise<string | null> {
     await this.closeGrowlMessage(page);
 
     if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {
@@ -402,12 +417,29 @@ class ModuleManager extends BOBasePage {
       await page.click(this.actionsDropdownButton(module.tag));
       await this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.tag)}[aria-expanded='true']`);
       await this.waitForSelectorAndClick(page, this.actionModuleButtonInDropdownList(action));
+
+      if (cancel) {
+        await this.waitForSelectorAndClick(page, this.modalConfirmCancel(module.tag, action));
+        await this.elementNotVisible(page, this.modalConfirmAction(module.tag, action), 10000);
+        return '';
+      }
       if (action === 'disable' || action === 'uninstall' || action === 'reset') {
         await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));
       }
     }
 
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Returns if the action module modal is visible
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Module data to install/uninstall
+   * @param action {string} Action install/uninstall/enable/disable/reset
+   * @return {Promise<string | null>}
+   */
+  async isModalActionVisible(page: Page, module: ModuleData, action: string): Promise<boolean> {
+    return this.elementVisible(page, this.modalConfirmAction(module.tag, action));
   }
 
   /**
