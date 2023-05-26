@@ -12,7 +12,7 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_seeMore';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_seeMore';
 
 describe('BO - Modules - Module Manager : See more/less', async () => {
   let browserContext: BrowserContext;

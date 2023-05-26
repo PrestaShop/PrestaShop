@@ -13,11 +13,11 @@ import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManage
 import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_installUninstallModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_resetModule';
 
-describe('BO - Modules - Module Manager : Install/Uninstall module', async () => {
+describe('BO - Modules - Module Manager : Reset module', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -49,25 +49,18 @@ describe('BO - Modules - Module Manager : Install/Uninstall module', async () =>
     await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search the module ${Modules.psEmailSubscription.name}`, async function () {
+  it(`should search the module ${Modules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
-    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
+    await expect(isModuleVisible).to.be.true;
   });
 
-  it(`should uninstall the module '${Modules.psEmailSubscription.name}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'uninstallModule', baseContext);
+  it('should reset the module', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetModule', baseContext);
 
-    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'uninstall');
-    await expect(successMessage).to.eq(moduleManagerPage.uninstallModuleSuccessMessage(Modules.psEmailSubscription.tag));
-  });
-
-  it(`should install the module '${Modules.psEmailSubscription.name}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'installModule', baseContext);
-
-    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.psEmailSubscription, 'install');
-    await expect(successMessage).to.eq(moduleManagerPage.installModuleSuccessMessage(Modules.psEmailSubscription.tag));
+    const successMessage = await moduleManagerPage.setActionInModule(page, Modules.contactForm, 'reset');
+    await expect(successMessage).to.eq(moduleManagerPage.resetModuleSuccessMessage(Modules.contactForm.tag));
   });
 
   it('should show all modules', async function () {
