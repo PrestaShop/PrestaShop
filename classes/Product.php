@@ -388,6 +388,11 @@ class ProductCore extends ObjectModel
     public $product_type = ProductType::TYPE_UNDEFINED;
 
     /**
+     * @var int
+     */
+    public $id_product;
+
+    /**
      * @var int|null
      */
     public static $_taxCalculationMethod = null;
