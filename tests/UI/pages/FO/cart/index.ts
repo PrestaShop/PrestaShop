@@ -268,8 +268,8 @@ class Cart extends FOBasePage {
    * @param quantity {number} New quantity of the product
    * @returns {Promise<void>}
    */
-  async editProductQuantity(page: Page, productID: number, quantity: number): Promise<void> {
-    await this.setValue(page, this.productQuantity(productID), quantity.toString());
+  async editProductQuantity(page: Page, productID: number, quantity: number | string): Promise<void> {
+    await this.setValue(page, this.productQuantity(productID), quantity);
     // click on price to see that its changed
     await page.click(this.productPrice(productID));
   }
