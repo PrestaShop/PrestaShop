@@ -32,7 +32,7 @@ class LoginPage extends FOBasePage {
 
   private readonly showPasswordButton: string;
 
-  private readonly alertDangerTextBlock: string;
+  protected alertDangerTextBlock: string;
 
   /**
    * @constructs
