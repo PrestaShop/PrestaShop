@@ -554,9 +554,9 @@ class ContextCore
     {
         if ($this->priceComputingPrecision === null) {
             $computingPrecision = new ComputingPrecision();
-            //If currency is not set, we use the default currency
-            if(!isset($this->currency)){
-                $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+            // If the currency is not set, we use the default currency
+            if (!isset($this->currency)) {
+                $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
                 $this->currency = $currency;
             }
             $this->priceComputingPrecision = $computingPrecision->getPrecision($this->currency->precision);
