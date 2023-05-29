@@ -82,6 +82,7 @@ class SqlTranslationLoader implements LoaderInterface
         $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
         $catalogue = new MessageCatalogue($locale);
         $this->addTranslationsToCatalogue($translations, $catalogue);
+
         return $catalogue;
     }
 
