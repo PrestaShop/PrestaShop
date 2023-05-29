@@ -80,7 +80,7 @@ class ButtonCollectionType extends AbstractType
         $view->vars['use_button_groups'] = $options['use_button_groups'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

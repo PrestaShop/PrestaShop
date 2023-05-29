@@ -45,7 +45,7 @@ class AccordionType extends AbstractType
         $view->vars['display_one'] = $options['display_one'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'expand_first' => true,

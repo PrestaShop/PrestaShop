@@ -101,7 +101,7 @@ class VisibilityType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

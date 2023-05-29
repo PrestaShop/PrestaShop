@@ -83,7 +83,7 @@ class ProductWarehouseCombination extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'id_warehouse' => null,

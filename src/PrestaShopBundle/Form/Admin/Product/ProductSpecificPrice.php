@@ -358,7 +358,7 @@ class ProductSpecificPrice extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'id_product' => 1, // 1 is default value for new form

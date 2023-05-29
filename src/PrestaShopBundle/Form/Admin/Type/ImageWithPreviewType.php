@@ -55,7 +55,7 @@ class ImageWithPreviewType extends FileType
         $view->vars['warning_message'] = $options['warning_message'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

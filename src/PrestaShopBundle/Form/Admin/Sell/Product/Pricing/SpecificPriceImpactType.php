@@ -116,7 +116,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $builder->get('fixed_price_tax_excluded')->addViewTransformer(new SpecificPriceFixedPriceTransformer());
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

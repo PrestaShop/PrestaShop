@@ -108,7 +108,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'remote_url' => '',

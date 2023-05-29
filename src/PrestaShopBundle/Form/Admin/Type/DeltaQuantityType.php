@@ -114,7 +114,7 @@ class DeltaQuantityType extends TranslatorAwareType
         $view->vars['initialQuantity'] = $initialQuantity;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver

@@ -33,7 +33,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PriceSummaryType extends TranslatorAwareType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'label' => $this->trans('Summary', 'Admin.Global'),
