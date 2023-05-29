@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApp
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\NotImplementedException;
@@ -91,7 +89,7 @@ class ApplicationController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction(): Response
+    public function createAction(Request $request): Response
     {
         $authorizedApplicationForm = $this->get('prestashop.core.form.identifiable_object.builder.application_form_builder')->getForm();
         $authorizedApplicationForm->handleRequest($request);
@@ -123,7 +121,7 @@ class ApplicationController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse|Response
      */
-    public function editAction(): Response
+    public function editAction(Request $request, int $applicationId): Response
     {
         try {
             /** @var EditableApplication $editableApplication */

@@ -30,8 +30,8 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Response;
 
