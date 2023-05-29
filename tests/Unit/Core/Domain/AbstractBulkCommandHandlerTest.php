@@ -152,7 +152,7 @@ class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
     /**
      * @param mixed $id
      */
-    protected function handleSingleAction(mixed $id): void
+    protected function handleSingleAction(mixed $id, $command): void
     {
         foreach ($this->failingIdsMock as $failingId) {
             if ($id->getValue() === $failingId->getValue()) {
