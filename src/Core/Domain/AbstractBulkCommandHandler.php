@@ -46,7 +46,7 @@ abstract class AbstractBulkCommandHandler
      *
      * @throws BulkCommandExceptionInterface
      */
-    protected function handleBulkAction(array $ids, string $exceptionToCatch, mixed $command): void
+    protected function handleBulkAction(array $ids, string $exceptionToCatch, mixed $command = null): void
     {
         foreach ($ids as $id) {
             try {
