@@ -69,8 +69,7 @@ class SmtpConfigurationType extends TranslatorAwareType
             ->add('encryption', ChoiceType::class, [
                 'choices' => [
                     'None' => 'off',
-                    'TLS' => 'tls',
-                    'SSL' => 'ssl',
+                    'TLS' => 'tls'
                 ],
                 'choice_translation_domain' => 'Admin.Advparameters.Feature',
                 'label' => $this->trans('Encryption', 'Admin.Advparameters.Feature'),
