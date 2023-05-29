@@ -183,7 +183,7 @@ class StockManager implements StockInterface
                 sa.id_product_attribute = od.product_attribute_id
                 GROUP BY od.product_id, od.product_attribute_id
             )
-            WHERE sa.id_shop = '. $whereShopIdCond .'
+            WHERE sa.id_shop = ' . $whereShopIdCond . '
         ';
 
         $strParams = [
