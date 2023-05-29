@@ -53,7 +53,7 @@ export default {
     id: 4,
     name: 'Canada',
     isoCode: 'CA',
-    callPrefix: 1,
+    callPrefix: '1',
     zone: 'North America',
     active: false,
   }),

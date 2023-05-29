@@ -498,9 +498,9 @@ class Brands extends BOBasePage {
    * Get logo link from brands table row
    * @param page {Page} Browser tab
    * @param row {number} Row in table to get logo link
-   * @return {Promise<string|null>}
+   * @return {Promise<string>}
    */
-  async getLogoLinkFromBrandsTable(page: Page, row: number): Promise<string | null> {
+  async getLogoLinkFromBrandsTable(page: Page, row: number): Promise<string> {
     return this.getAttributeContent(page, this.brandsTableColumnLogoImg(row), 'src');
   }
 
