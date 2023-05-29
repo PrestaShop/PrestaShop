@@ -39,7 +39,7 @@ use Twig\TwigFilter;
  */
 class EntitySearchExtension extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('entity_field', [$this, 'getEntityField']),

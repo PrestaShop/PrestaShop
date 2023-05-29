@@ -69,7 +69,7 @@ class GridExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('column_content', [$this, 'renderColumnContent'], [
