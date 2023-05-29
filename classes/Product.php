@@ -2709,7 +2709,7 @@ class ProductCore extends ObjectModel
      * @param string $attribute_value_separator
      * @param string $attribute_separator
      *
-     * @return bool|array Product attributes combinations
+     * @return array Product attributes combinations
      */
     public function getAttributesResume($id_lang, $attribute_value_separator = ' - ', $attribute_separator = ', ')
     {
@@ -2725,7 +2725,7 @@ class ProductCore extends ObjectModel
                 ORDER BY pa.`id_product_attribute`');
 
         if (!$combinations) {
-            return false;
+            return [];
         }
 
         $combinations = array_column($combinations, null, 'id_product_attribute');
