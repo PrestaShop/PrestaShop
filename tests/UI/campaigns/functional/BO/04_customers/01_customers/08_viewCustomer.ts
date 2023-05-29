@@ -371,7 +371,7 @@ describe('BO - Customers - Customers : View information about customer', async (
     });
 
     it('should check purchased products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPurchasedProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPurchasedProduct1', baseContext);
 
       const viewedProduct = await viewCustomerPage.getTextFromElement(page, 'Purchased products');
       expect(viewedProduct).to.contains(Products.demo_1.name);
