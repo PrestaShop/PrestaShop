@@ -29,9 +29,16 @@ declare(strict_types=1);
 namespace Tests\Integration\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use Tests\Resources\DatabaseDump;
 
 class GetHookStatusTest extends ApiTestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        DatabaseDump::restoreTables(['hook']);
+    }
+
     public function testGetHookStatus(): void
     {
         $inactiveHook = new \Hook();
@@ -45,18 +52,18 @@ class GetHookStatusTest extends ApiTestCase
         $activeHook->add();
 
         $bearerToken = $this->getBearerToken();
-        $response = static::createClient()->request('GET', '/admin-dev/new-api/hook-status/' . (int) $inactiveHook->id, ['auth_bearer' => $bearerToken]);
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . (int) $inactiveHook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $inactiveHook->active);
         self::assertResponseStatusCodeSame(200);
 
-        $response = static::createClient()->request('GET', '/admin-dev/new-api/hook-status/' . (int) $activeHook->id, ['auth_bearer' => $bearerToken]);
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . (int) $activeHook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $activeHook->active);
         self::assertResponseStatusCodeSame(200);
 
-        static::createClient()->request('GET', '/admin-dev/new-api/hook-status/' . 9999, ['auth_bearer' => $bearerToken]);
+        static::createClient()->request('GET', '/new-api/hook-status/' . 9999, ['auth_bearer' => $bearerToken]);
         self::assertResponseStatusCodeSame(404);
 
-        static::createClient()->request('GET', '/admin-dev/new-api/hook-status/' . $activeHook->id);
+        static::createClient()->request('GET', '/new-api/hook-status/' . $activeHook->id);
         self::assertResponseStatusCodeSame(401);
 
         $inactiveHook->delete();

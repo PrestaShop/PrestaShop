@@ -62,10 +62,10 @@ class Hook
      * @var int
      */
     #[ApiProperty(identifier: true)]
-    public $hookId;
+    public int $hookId;
 
     /**
      * @var bool
      */
-    public $status;
+    public bool $status;
 }

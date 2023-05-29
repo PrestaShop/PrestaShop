@@ -45,6 +45,6 @@ class QueryProvider implements ProviderInterface
     {
         $query = $operation->getExtraProperties()['query'];
 
-        return $this->queryBus->handle(new $query(...array_values($uriVariables)));
+        return $this->queryBus->handle(new $query(...$uriVariables));
     }
 }
