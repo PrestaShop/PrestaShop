@@ -94,7 +94,7 @@ class DefaultEmptyDataTransformer implements DataTransformerInterface
     /**
      * {@inheritDoc}
      */
-    public function transform($value)
+    public function transform($value): mixed
     {
         return empty($value) ? $this->viewEmptyData : $value;
     }
@@ -102,7 +102,7 @@ class DefaultEmptyDataTransformer implements DataTransformerInterface
     /**
      * {@inheritDoc}
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         return empty($value) ? $this->emptyData : $value;
     }

@@ -51,7 +51,7 @@ final class IDNConverterDataTransformer implements DataTransformerInterface
      *
      * Do not convert utf8 to punycode, should be done on the client side
      */
-    public function transform($value)
+    public function transform($value): mixed
     {
         return $value;
     }
@@ -61,7 +61,7 @@ final class IDNConverterDataTransformer implements DataTransformerInterface
      *
      * Convert punycode to utf8 (prestashop@xn--80aswg.xn--p1ai -> prestashop@сайт.рф)
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         return is_string($value) ? $this->converter->emailToUtf8($value) : $value;
     }

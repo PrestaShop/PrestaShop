@@ -37,7 +37,7 @@ final class StringArrayToIntegerArrayDataTransformer implements DataTransformerI
     /**
      * {@inheritdoc}
      */
-    public function transform($value)
+    public function transform($value): mixed
     {
         // No transformation is required here due to this data is being sent to template
         return $value;
@@ -46,7 +46,7 @@ final class StringArrayToIntegerArrayDataTransformer implements DataTransformerI
     /**
      * {@inheritdoc}
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         if (!is_array($value)) {
             return $value;
