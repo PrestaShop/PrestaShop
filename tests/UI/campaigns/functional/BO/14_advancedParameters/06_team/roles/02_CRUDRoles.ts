@@ -17,7 +17,7 @@ import RoleData from '@data/faker/role';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_advancedParameters_team_roles_CRUDRole';
+const baseContext: string = 'functional_BO_advancedParameters_team_roles_CRUDRoles';
 
 // Create, Read, Update and Delete role in BO
 describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete role in BO', async () => {
