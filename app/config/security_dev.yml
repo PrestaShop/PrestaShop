@@ -14,7 +14,7 @@ security:
       memory:
         users: [ ]
 
-  encoders:
+  password_hashers:
     Symfony\Component\Security\Core\User\User: plaintext
 
   firewalls:

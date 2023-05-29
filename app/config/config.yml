@@ -38,6 +38,7 @@ framework:
   router:
     resource: "%kernel.project_dir%/app/config/routing.yml"
     strict_requirements: ~
+    utf8: true
   form: ~
   csrf_protection: ~
   validation: { enable_annotations: true }
@@ -45,6 +46,7 @@ framework:
   default_locale: "%locale%"
   trusted_hosts: ~
   session:
+    storage_factory_id: session.storage.factory.native
     handler_id: ~
   fragments: ~
   http_method_override: true
@@ -108,3 +110,7 @@ api_platform:
       - '%kernel.project_dir%/app/config/api_platform'
 
   metadata_backward_compatibility_layer: false
+
+sensio_framework_extra:
+  router:
+    annotations: false
