@@ -139,9 +139,9 @@ class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
      * @param IdInterface[] $ids
      * @param string $exceptionToCatch
      */
-    public function handle(array $ids, string $exceptionToCatch): void
+    public function handle(array $ids, string $exceptionToCatch, mixed $command = null): void
     {
-        $this->handleBulkAction($ids, $exceptionToCatch);
+        $this->handleBulkAction($ids, $exceptionToCatch, $command);
     }
 
     protected function buildBulkException(array $coughtExceptions): BulkCommandExceptionInterface
