@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Security\Admin;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\TokenStorage\ClearableTokenStorageInterface;
 
 /**
@@ -39,24 +39,10 @@ use Symfony\Component\Security\Csrf\TokenStorage\ClearableTokenStorageInterface;
  */
 final class SessionRenewer
 {
-    /**
-     * @var ClearableTokenStorageInterface
-     */
-    private $storage;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @param ClearableTokenStorageInterface $storage
-     * @param SessionInterface $session
-     */
-    public function __construct(ClearableTokenStorageInterface $storage, SessionInterface $session)
-    {
-        $this->storage = $storage;
-        $this->session = $session;
+    public function __construct(
+        private readonly ClearableTokenStorageInterface $storage,
+        private readonly RequestStack $requeststack
+    ) {
     }
 
     /**
@@ -66,11 +52,13 @@ final class SessionRenewer
      */
     public function renew(): void
     {
-        if (!$this->session->isStarted()) {
-            $this->session->start();
+        $session = $this->requeststack->getSession();
+
+        if (!$session->isStarted()) {
+            $session->start();
         }
 
-        $this->session->migrate(true);
+        $session->migrate(true);
         $this->storage->clear();
     }
 }
