@@ -173,7 +173,7 @@ class StockManager implements StockInterface
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE '.$whereCondition.'
+                WHERE ' . $whereCondition . '
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
                         os.id_order_state != :error_state AND
