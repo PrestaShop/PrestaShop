@@ -36,6 +36,7 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import SqlQueryData from '@data/faker/sqlQuery';
 
 const baseContext: string = 'regression_currencies_computingPrecision_FO';
 
@@ -74,14 +75,12 @@ describe(
       freeGiftProduct: Products.demo_13,
     });
     // Create sql query data to get last order discount and total price
-    const dbPrefix: string = global.INSTALL.DB_PREFIX;
-    const sqlQueryData = {
+    const sqlQueryData = new SqlQueryData({
       name: 'Discount and ATI from last order',
       sqlQuery: '',
-      sqlQueryTemplate: (orderRef: string) => 'SELECT total_discounts, total_paid_tax_incl '
-        + `from  ${dbPrefix}orders `
-        + `WHERE reference = '${orderRef}'`,
-    };
+    });
+    const sqlQueryTemplate = (orderRef: string) => 'SELECT total_discounts, total_paid_tax_incl '
+      + `FROM  ${global.INSTALL.DB_PREFIX}orders WHERE reference = '${orderRef}'`;
     // Init data for the order
     const orderToMake: OrderData = new OrderData({
       products: [
@@ -365,7 +364,7 @@ describe(
 
           await sqlManagerPage.goToNewSQLQueryPage(page);
           // Adding order reference to sql query
-          sqlQueryData.sqlQuery = sqlQueryData.sqlQueryTemplate(orderToMake.reference);
+          sqlQueryData.sqlQuery = sqlQueryTemplate(orderToMake.reference);
 
           const pageTitle = await addSqlQueryPage.getPageTitle(page);
           await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);

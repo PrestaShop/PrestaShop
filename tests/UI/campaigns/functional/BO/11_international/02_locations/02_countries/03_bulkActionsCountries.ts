@@ -33,7 +33,7 @@ describe('BO - International - Countries : Bulk actions', async () => {
   const firstCountryToCreate: CountryData = new CountryData({
     name: 'todelete1',
     isoCode: 'CT',
-    callPrefix: 216,
+    callPrefix: '216',
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: true,
@@ -41,7 +41,7 @@ describe('BO - International - Countries : Bulk actions', async () => {
   const secondCountryToCreate: CountryData = new CountryData({
     name: 'todelete2',
     isoCode: 'JF',
-    callPrefix: 333,
+    callPrefix: '333',
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: false,

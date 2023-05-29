@@ -2,7 +2,7 @@ import BOBasePage from '@pages/BO/BObasePage';
 
 import type CartRuleData from '@data/faker/cartRule';
 
-import type {Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
 
 /**
  * Add cart rule page, contains functions that can be used on the page
@@ -282,11 +282,11 @@ class AddCartRule extends BOBasePage {
   /* Methods */
   /**
    * Fill form in information tab
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on information form
    * @return {Promise<void>}
    */
-  async fillInformationForm(page: Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillInformationForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
     await page.click(this.infomationsTabLink);
 
@@ -316,11 +316,11 @@ class AddCartRule extends BOBasePage {
 
   /**
    * Fill form in condition tab
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on conditions form
    * @return {Promise<void>}
    */
-  async fillConditionsForm(page: Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillConditionsForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to tab conditions
     await page.click(this.conditionsTabLink);
 
@@ -403,11 +403,11 @@ class AddCartRule extends BOBasePage {
 
   /**
    * Fill actions tab
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on actions form
    * @return {Promise<void>}
    */
-  async fillActionsForm(page: Page, cartRuleData: CartRuleData): Promise<void> {
+  async fillActionsForm(page: Frame|Page, cartRuleData: CartRuleData): Promise<void> {
     // Go to actions tab
     await page.click(this.actionsTabLink);
 
@@ -479,12 +479,16 @@ class AddCartRule extends BOBasePage {
 
   /**
    * Create/edit cart rule
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
    * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
    * @returns {Promise<string|null>}
    */
-  async createEditCartRules(page: Page, cartRuleData: CartRuleData, waitForNavigation: boolean = true): Promise<string | null> {
+  async createEditCartRules(
+    page: Frame|Page,
+    cartRuleData: CartRuleData,
+    waitForNavigation: boolean = true,
+  ): Promise<string|null> {
     // Fill information form
     await this.fillInformationForm(page, cartRuleData);
 

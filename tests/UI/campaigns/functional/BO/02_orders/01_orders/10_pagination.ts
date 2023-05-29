@@ -40,7 +40,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfOrders: number = 0;
-  let sortedTable: number[] = [];
+  let sortedTable: string[] = [];
   let numberOfOrdersAfterFilter: number;
 
   const orderByCustomerData: OrderData = new OrderData({
@@ -131,13 +131,15 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sortOrdersDesc', baseContext);
 
       const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
 
       await ordersPage.sortTable(page, 'total_paid_tax_incl', 'desc');
 
       sortedTable = await ordersPage.getAllRowsColumnContent(page, 'total_paid_tax_incl');
+      const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTable);
-      await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
     });
 
     it('should check that the orders table is sorted by total desc', async function () {
@@ -190,13 +192,15 @@ describe('BO - Orders : Pagination of orders table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackDefaultSort', baseContext);
 
       const nonSortedTable = await ordersPage.getAllRowsColumnContent(page, 'id_order');
+      const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
 
       await ordersPage.sortTable(page, 'id_order', 'desc');
 
       sortedTable = await ordersPage.getAllRowsColumnContent(page, 'id_order');
+      const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTable);
-      await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
     });
 
     it('should filter by customer \'J.DOE\'', async function () {
@@ -210,8 +214,6 @@ describe('BO - Orders : Pagination of orders table', async () => {
 
     it('should check that the orders table is filtered by customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'CheckFilterByCustomer', baseContext);
-
-      sortedTable = await ordersPage.getAllRowsColumnContent(page, 'customer');
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
         const textColumn = await ordersPage.getTextColumn(page, 'customer', row);

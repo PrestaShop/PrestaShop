@@ -142,7 +142,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
 
-      const successMessage: string = await combinationsTab.generateCombinations(page);
+      const successMessage = await combinationsTab.generateCombinations(page);
       await expect(successMessage).to.equal('Successfully generated 4 combinations.');
     });
 
@@ -175,7 +175,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(newProductData.price),
@@ -224,7 +224,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations2', baseContext);
 
-      const successMessage: string = await combinationsTab.generateCombinations(page);
+      const successMessage = await combinationsTab.generateCombinations(page);
       await expect(successMessage).to.equal('Successfully generated 6 combinations.');
     });
 
@@ -257,7 +257,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price).to.equal(editProductData.price),

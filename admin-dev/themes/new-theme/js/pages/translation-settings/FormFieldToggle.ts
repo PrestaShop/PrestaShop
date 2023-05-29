@@ -75,7 +75,7 @@ export default class FormFieldToggle {
       this.toggleEmailFields.bind(this),
     );
 
-    this.toggleFields();
+    $(window).on('load', this.toggleFields.bind(this));
   }
 
   /**

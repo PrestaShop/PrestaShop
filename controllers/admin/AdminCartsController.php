@@ -419,7 +419,7 @@ class AdminCartsControllerCore extends AdminController
                             continue;
                         }
                         if (!Validate::isMessage(Tools::getValue($field_id))) {
-                            $errors[] = $this->trans('Invalid message', [], 'Admin.Notifications.Error');
+                            $errors[] = $this->trans('Invalid message.', [], 'Admin.Notifications.Error');
                         }
                         $this->context->cart->addTextFieldToProduct((int) $product->id, (int) $customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, Tools::getValue($field_id));
                     } elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE) {

@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import data
 import Modules from '@data/demo/modules';
@@ -15,7 +15,7 @@ import Modules from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_enableDisableModule';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_enableDisableModule';
 
 describe('BO - Modules - Module Manager : Enable/Disable module', async () => {
   let browserContext: BrowserContext;

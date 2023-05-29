@@ -14,7 +14,7 @@ import addCountryPage from '@pages/BO/international/locations/countries/add';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foNewAddressesPage from '@pages/FO/myAccount/addAddress';
 
@@ -52,7 +52,7 @@ describe('BO - International - Countries : CRUD country', async () => {
   const createCountryData: CountryData = new CountryData({
     name: 'countryTest',
     isoCode: 'CT',
-    callPrefix: 216,
+    callPrefix: '216',
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: true,
@@ -60,7 +60,7 @@ describe('BO - International - Countries : CRUD country', async () => {
   const editCountryData: CountryData = new CountryData({
     name: 'countryTestEdit',
     isoCode: 'CT',
-    callPrefix: 333,
+    callPrefix: '333',
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: false,
@@ -170,7 +170,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToAddressesPage(page);
+      await myAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open addresses page').to.contains(foAddressesPage.pageTitle);
@@ -273,7 +273,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToAddressesPage(page);
+      await myAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open addresses page').to.contains(foAddressesPage.pageTitle);

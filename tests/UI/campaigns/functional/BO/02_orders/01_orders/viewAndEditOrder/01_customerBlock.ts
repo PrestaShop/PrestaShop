@@ -72,10 +72,10 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     paymentMethod: PaymentMethods.wirePayment,
   });
   // Customer login data
-  const customerLoginData = {
+  const customerLoginData = new CustomerData({
     email: customerData.email,
     password: customerData.password,
-  };
+  });
 
   // Pre-Condition: create customer
   createAccountTest(customerData, `${baseContext}_preTest_1`);

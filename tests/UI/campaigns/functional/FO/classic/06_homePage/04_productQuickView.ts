@@ -41,13 +41,12 @@ describe('FO - Home Page : Product quick view', async () => {
   const defaultAttributes: ProductAttribute = {
     name: 'dimension',
     value: '40x60cm',
-    quantity: 1,
   };
   const attributes: ProductAttribute = {
     name: 'dimension',
     value: '60x90cm',
-    quantity: 4,
   };
+  const attributesQty: number = 4;
 
   // Data to create product out of stock not allowed
   const productOutOfStockNotAllowed: ProductData = new ProductData({
@@ -137,7 +136,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should change the product quantity and click on add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await homePage.changeQuantity(page, attributes.quantity);
+      await homePage.changeQuantity(page, attributesQty);
       await homePage.addToCartByQuickView(page);
 
       const isVisible = await homePage.isBlockCartModalVisible(page);
@@ -179,7 +178,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should change the product quantity and click on add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-      await homePage.changeQuantity(page, attributes.quantity);
+      await homePage.changeQuantity(page, attributesQty);
       await homePage.addToCartByQuickView(page);
 
       const isVisible = await homePage.isBlockCartModalVisible(page);

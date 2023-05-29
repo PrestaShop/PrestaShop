@@ -14,7 +14,7 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_design_imageSettings_imageGenerationOption';
+const baseContext: string = 'functional_BO_design_imageSettings_imageGenerationOptions';
 
 /*
   Enable Feature flag of image

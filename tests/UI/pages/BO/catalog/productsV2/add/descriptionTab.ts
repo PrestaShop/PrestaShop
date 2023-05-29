@@ -1,5 +1,7 @@
 import type {Page} from 'playwright';
 
+import type ProductData from '@data/faker/product';
+
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
 
@@ -98,7 +100,7 @@ class DescriptionTab extends BOBasePage {
    * @param productData {ProductData} Data to set in description form
    * @returns {Promise<void>}
    */
-  async setProductDescription(page: Page, productData: object): Promise<void> {
+  async setProductDescription(page: Page, productData: ProductData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.descriptionTabLink);
 
     await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);

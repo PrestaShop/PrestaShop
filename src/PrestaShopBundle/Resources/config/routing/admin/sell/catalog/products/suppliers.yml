@@ -3,6 +3,7 @@ admin_supplier_refresh_product_supplier_combination_form:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\SupplierController::refreshProductSupplierCombinationFormAction
+    _legacy_controller: AdminProducts
     supplierIds: 0
     idProduct: 0
   requirements:

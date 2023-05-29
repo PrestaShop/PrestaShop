@@ -193,7 +193,7 @@ class ShoppingCarts extends BOBasePage {
   async getCartInCsvFormat(page: Page, row: number): Promise<string> {
     const cart = await this.getCartFromTable(page, row);
 
-    const cartDate = date.setDateFormat('yyyy-mm-dd', cart.date);
+    const cartDate = date.setDateFormat('yyyy-mm-dd', cart.date ?? '');
     const lastName = cart.lastname !== '--' ? `"${cart.lastname}"` : '';
     const status = cart.status !== 'Abandoned cart' ? cart.status : `"${cart.status}"`;
     const carrier = cart.carrier !== '--' ? `"${cart.carrier}"` : '';

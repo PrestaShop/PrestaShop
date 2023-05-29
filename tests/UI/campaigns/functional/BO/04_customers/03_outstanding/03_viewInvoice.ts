@@ -41,10 +41,8 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
   let page: Page;
   // Variable used for the last order reference created
   let orderReference: string;
-  // Variable used for the last outstanding ID created
-  let outstandingId: string;
   // Variable used for the temporary invoice file
-  let filePath: string;
+  let filePath: string|null;
   // New order by customer data
   const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
@@ -137,7 +135,10 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
 
       await outstandingPage.resetFilter(page);
 
-      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1);
+      const outstandingId = parseInt(
+        await outstandingPage.getTextColumn(page, 'id_invoice', 1),
+        10,
+      );
       await expect(outstandingId).to.be.at.least(1);
     });
 

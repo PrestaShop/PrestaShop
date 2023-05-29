@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import BrandData from '@data/faker/brand';
+
 import type {Page} from 'playwright';
 
 /**
@@ -506,17 +508,19 @@ class Brands extends BOBasePage {
    * Get all information from brands table
    * @param page {Page} Browser tab
    * @param row {number} Row in table to get text column
-   * @return {Promise<object>}
+   * @return {Promise<BrandData>}
    */
-  async getBrandFromTable(page: Page, row: number): Promise<object> {
-    return {
-      id: await this.getTextColumnFromTableBrands(page, row, 'id_manufacturer'),
+  async getBrandFromTable(page: Page, row: number): Promise<BrandData> {
+    const adressesCount = await this.getTextColumnFromTableBrands(page, row, 'addresses_count');
+
+    return new BrandData({
+      id: parseInt(await this.getTextColumnFromTableBrands(page, row, 'id_manufacturer'), 10),
       logo: await this.getLogoLinkFromBrandsTable(page, row),
       name: await this.getTextColumnFromTableBrands(page, row, 'name'),
-      addresses: await this.getTextColumnFromTableBrands(page, row, 'addresses_count'),
-      products: await this.getTextColumnFromTableBrands(page, row, 'products_count'),
-      status: await this.getBrandStatus(page, row),
-    };
+      addresses: parseInt(adressesCount === '--' ? '0' : adressesCount, 10),
+      products: parseInt(await this.getTextColumnFromTableBrands(page, row, 'products_count'), 10),
+      enabled: await this.getBrandStatus(page, row),
+    });
   }
 
   /**
@@ -663,9 +667,9 @@ class Brands extends BOBasePage {
     return `${brand.id};`
       + `${brand.logo};`
       + `"${brand.name}";`
-      + `${brand.addresses};`
+      + `${brand.addresses > 0 ? brand.addresses : '--'};`
       + `${brand.products};`
-      + `${brand.status ? 1 : 0}`;
+      + `${brand.enabled ? 1 : 0}`;
   }
 
   /* Pagination methods */

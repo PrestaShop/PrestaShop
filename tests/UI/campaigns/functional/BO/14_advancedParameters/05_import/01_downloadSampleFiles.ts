@@ -18,7 +18,7 @@ const baseContext: string = 'functional_BO_advancedParameters_import_downloadSam
 describe('BO - Advanced Parameters - Import : Download sample csv files', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {

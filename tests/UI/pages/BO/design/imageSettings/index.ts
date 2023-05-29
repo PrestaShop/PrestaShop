@@ -92,6 +92,8 @@ class ImageSettings extends BOBasePage {
 
   private readonly checkboxImageFormat: (imageFormat: string) => string;
 
+  private readonly checkboxBaseFormat: (baseFormat: string) => string;
+
   private readonly submitImageGenerationOptions: string;
 
   private readonly formRegenerateThumbnails: string;
@@ -184,6 +186,8 @@ class ImageSettings extends BOBasePage {
     this.formImageGenerationOptions = '#image_type_form';
     this.checkboxImageFormat = (imageFormat: string) => `${this.formImageGenerationOptions} `
       + `input[name="PS_IMAGE_FORMAT[]"][value="${imageFormat}"]`;
+    this.checkboxBaseFormat = (baseFormat: string) => `${this.formImageGenerationOptions} `
+      + `input#PS_IMAGE_QUALITY_${baseFormat}`;
     this.submitImageGenerationOptions = `${this.formImageGenerationOptions} button[type="submit"]`;
 
     // Regenerate thumbnails
@@ -522,6 +526,31 @@ class ImageSettings extends BOBasePage {
    */
   async setImageFormatToGenerateChecked(page: Page, imageFormat: string, valueWanted: boolean): Promise<string> {
     await this.setChecked(page, this.checkboxImageFormat(imageFormat), valueWanted);
+    await page.click(this.submitImageGenerationOptions);
+
+    // Return successful message
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Returns if the base format is checked in Image Generation Options
+   * @param page {Page} Browser tab
+   * @param baseFormat {string} base format
+   * @returns {Promise<boolean>}
+   */
+  async isBaseFormatToGenerateChecked(page: Page, baseFormat: string): Promise<boolean> {
+    return this.isChecked(page, this.checkboxBaseFormat(baseFormat));
+  }
+
+  /**
+   * Enable/Disable the base format in Image Generation Options
+   * @param page {Page} Browser tab
+   * @param baseFormat {string} Image Format
+   * @param valueWanted {boolean} Checked or not
+   * @returns {Promise<string>}
+   */
+  async setBaseFormatChecked(page: Page, baseFormat: string, valueWanted: boolean): Promise<string> {
+    await this.setChecked(page, this.checkboxBaseFormat(baseFormat), valueWanted);
     await page.click(this.submitImageGenerationOptions);
 
     // Return successful message

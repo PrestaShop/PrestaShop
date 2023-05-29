@@ -46,6 +46,15 @@ npm ci
 | SMTP_SERVER | The smtp server address for maildev (default to **`172.20.0.4`**) |
 | SMTP_PORT   | The smtp port for maildev (default to **`1025`**)                 |
 
+### Keycloak parameters
+
+| Parameter           | Description                                                                              |
+|---------------------|------------------------------------------------------------------------------------------|
+| KEYCLOAK_SERVER     | The server for Keycloak (default to **`http://127.0.0.1:8003`**)                         |
+| KEYCLOAK_ADMIN_USER | The admin user for connecting to Keycloak (default to **`admin`**)                       |
+| KEYCLOAK_ADMIN_PASS | The admin password for connecting to Keycloak (default to **`admin`**)                   |
+| KEYCLOAK_CLIENT_ID  | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop_client_id`**) |
+
 ### Playwright parameters
 
 | Parameter | Description                                                                                                             |

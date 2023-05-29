@@ -55,7 +55,7 @@ class AdminShopGroupControllerCore extends AdminController
                 'class' => 'fixed-width-xs',
             ],
             'name' => [
-                'title' => $this->trans('Shop group', [], 'Admin.Advparameters.Feature'),
+                'title' => $this->trans('Store group', [], 'Admin.Advparameters.Feature'),
                 'width' => 'auto',
                 'filter_key' => 'a!name',
             ],
@@ -186,14 +186,14 @@ class AdminShopGroupControllerCore extends AdminController
     {
         $this->fields_form = [
             'legend' => [
-                'title' => $this->trans('Shop group', [], 'Admin.Advparameters.Feature'),
+                'title' => $this->trans('Store group', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-shopping-cart',
             ],
             'description' => $this->trans('Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.', [], 'Admin.Advparameters.Help'),
             'input' => [
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Name of the group of stores', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Name of the store group', [], 'Admin.Advparameters.Feature'),
                     'name' => 'name',
                     'required' => true,
                 ],

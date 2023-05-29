@@ -1,6 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
 
 /**
  * View shopping page, contains functions that can be used on view shopping cart page
@@ -75,48 +75,48 @@ class ViewShoppingCarts extends BOBasePage {
    */
   /**
    * Get cart ID
-   * @param page {Page} Browser tab
+   * @param page {Page|Frame} Browser tab
    * @returns {Promise<string>}
    */
-  async getCartId(page: Page): Promise<string> {
+  async getCartId(page: Frame|Page): Promise<string> {
     return this.getTextContent(page, this.cartSubtitle);
   }
 
   /**
    * Get cart Total
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getCartTotal(page: Page): Promise<number> {
+  async getCartTotal(page: Frame|Page): Promise<number> {
     return this.getPriceFromText(page, this.cartTotal);
   }
 
   /**
    * Get Customer Information
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCustomerInformation(page: Page): Promise<string> {
+  async getCustomerInformation(page: Frame|Page): Promise<string> {
     return this.getTextContent(page, this.customerInformationCartBody);
   }
 
   /**
    * Get Order information
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getOrderInformation(page: Page): Promise<string> {
+  async getOrderInformation(page: Frame|Page): Promise<string> {
     return this.getTextContent(page, this.orderInformationBlockBody);
   }
 
   /**
    * Get text from column in table
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @param columnName {string} Column on table
    * @param row {number} Row on table
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getTextColumn(page: Page, columnName: string, row: number = 1): Promise<string | null> {
+  async getTextColumn(page: Frame|Page, columnName: string, row: number = 1): Promise<string | null> {
     let columnSelector;
 
     switch (columnName) {
@@ -169,10 +169,10 @@ class ViewShoppingCarts extends BOBasePage {
 
   /**
    * Check if the button "Create an order from this cart." exists
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async hasButtonCreateOrderFromCart(page: Page): Promise<boolean> {
+  async hasButtonCreateOrderFromCart(page: Frame|Page): Promise<boolean> {
     return this.elementVisible(page, this.orderInformationButtonCreateOrder, 1000);
   }
 

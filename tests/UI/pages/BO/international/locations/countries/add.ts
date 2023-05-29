@@ -18,7 +18,9 @@ class AddCountry extends BOBasePage {
 
   public readonly errorMessagePrefix: string;
 
-  private readonly nameInput: string;
+  private readonly nameInputEn: string;
+
+  private readonly nameInputFr: string;
 
   private readonly isoCodeInput: string;
 
@@ -55,7 +57,8 @@ class AddCountry extends BOBasePage {
     this.errorMessagePrefix = 'The call_prefix field is invalid.';
 
     // Selectors
-    this.nameInput = '#name_1';
+    this.nameInputEn = '#name_1';
+    this.nameInputFr = '#name_2';
     this.isoCodeInput = '#iso_code';
     this.callPrefixInput = '#call_prefix';
     this.defaultCurrencySelect = '#id_currency';
@@ -79,7 +82,7 @@ class AddCountry extends BOBasePage {
    * @returns {Promise<string>}
    */
   async createEditCountry(page: Page, countryData: CountryData): Promise<string> {
-    await this.setValue(page, this.nameInput, countryData.name);
+    await this.setValue(page, this.nameInputEn, countryData.name);
     await this.setValue(page, this.isoCodeInput, countryData.isoCode);
     await this.setValue(page, this.callPrefixInput, countryData.callPrefix.toString());
     await this.selectByVisibleText(page, this.defaultCurrencySelect, countryData.currency);
@@ -97,6 +100,93 @@ class AddCountry extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveCountryButton);
 
     return this.getTextContent(page, this.alertBlock);
+  }
+
+  /**
+   * Get the value of an input
+   * @param page {Page} Browser tab
+   * @param input {string} ID of the input
+   * @returns {Promise<string>}
+   */
+  async getInputValue(page: Page, input: string): Promise<string> {
+    let selector: string;
+
+    switch (input) {
+      case 'call_prefix':
+        selector = this.callPrefixInput;
+        break;
+      case 'iso_code':
+        selector = this.isoCodeInput;
+        break;
+      case 'zipCodeFormat':
+        selector = this.zipCodeFormatInput;
+        break;
+      case 'nameEn':
+        selector = this.nameInputEn;
+        break;
+      case 'nameFr':
+        selector = this.nameInputFr;
+        break;
+      default:
+        throw new Error(`Field ${input} was not found`);
+    }
+
+    return page.inputValue(selector);
+  }
+
+  /**
+   * Get the value of a select
+   * @param page {Page} Browser tab
+   * @param input {string} ID of the input
+   * @returns {Promise<string>}
+   */
+  async getSelectValue(page: Page, input: string): Promise<string> {
+    let selector: string;
+
+    switch (input) {
+      case 'id_currency':
+        selector = this.defaultCurrencySelect;
+        break;
+      case 'id_zone':
+        selector = this.zoneSelect;
+        break;
+      default:
+        throw new Error(`Field ${input} was not found`);
+    }
+
+    return page.$eval(selector, (node: HTMLSelectElement) => node.value);
+  }
+
+  /**
+   * Get the value of an input
+   * @param page {Page} Browser tab
+   * @param input {string} ID of the input
+   * @returns {Promise<string>}
+   */
+  async isCheckboxChecked(page: Page, input: string): Promise<boolean> {
+    let selector: string;
+
+    switch (input) {
+      case 'active':
+        selector = this.activeLabel('on');
+        break;
+      case 'contains_states':
+        selector = this.containsStatesLabel('on');
+        break;
+      case 'display_tax_label':
+        selector = this.displayTaxLabel('on');
+        break;
+      case 'need_identification_number':
+        selector = this.needIdentificationNumberLabel('on');
+        break;
+      case 'need_zip_code':
+        selector = this.needZipCodeLabel('on');
+        break;
+      default:
+        throw new Error(`Field ${input} was not found`);
+    }
+
+    return this.isChecked(page, selector);
   }
 }
 

@@ -65,6 +65,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 0,
           isGiftWrappingTax: 'None',
+          taxValue: 0,
           isRecycledPackaging: false,
         },
     },
@@ -76,6 +77,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 1,
           isGiftWrappingTax: 'None',
+          taxValue: 0,
           isRecycledPackaging: false,
         },
     },
@@ -99,6 +101,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 0,
           isGiftWrappingTax: 'None',
+          taxValue: 0,
           isRecycledPackaging: true,
         },
     },
@@ -226,9 +229,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
 
             const giftPrice = await checkoutPage.getGiftPrice(page);
             await expect(giftPrice, 'Gift price is incorrect').to.equal(
-              test.args.giftWrappingPrice === 0 ? 'Free'
-                : `€${parseFloat(
-                  test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue)),
+              test.args.giftWrappingPrice === 0
+                ? 'Free'
+                : `€${(
+                  test.args.giftWrappingPrice * (test.args.isGiftWrappingTax === 'None' ? 1 : (1 + test.args.taxValue))
                 ).toFixed(2)}`,
             );
           });

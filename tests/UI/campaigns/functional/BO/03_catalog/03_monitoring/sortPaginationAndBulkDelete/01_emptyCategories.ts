@@ -16,6 +16,7 @@ import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import ImportCategories from '@data/import/categories';
+import type {CategoryFilter} from '@data/types/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -40,7 +41,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
   // Variable used to create empty categories csv file
   const fileName: string = 'categories.csv';
   // Object used to delete imported categories
-  const categoryData: object = {filterBy: 'name', value: 'category'};
+  const categoryData: CategoryFilter = {filterBy: 'name', value: 'category'};
 
   // Pre-condition: Import empty category list
   importFileTest(fileName, ImportCategories.entity, baseContext);

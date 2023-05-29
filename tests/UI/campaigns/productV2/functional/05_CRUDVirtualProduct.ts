@@ -17,7 +17,7 @@ import foProductPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
@@ -71,15 +71,23 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    await files.generateImage(newProductData.coverImage);
-    await files.generateImage(newProductData.thumbImage);
+    if (newProductData.coverImage) {
+      await files.generateImage(newProductData.coverImage);
+    }
+    if (newProductData.thumbImage) {
+      await files.generateImage(newProductData.thumbImage);
+    }
     await files.generateImage(newProductData.fileName);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile(newProductData.coverImage);
-    await files.deleteFile(newProductData.thumbImage);
+    if (newProductData.coverImage) {
+      await files.deleteFile(newProductData.coverImage);
+    }
+    if (newProductData.thumbImage) {
+      await files.deleteFile(newProductData.thumbImage);
+    }
     await files.deleteFile(newProductData.fileName);
   });
 
@@ -153,7 +161,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       const taxValue: number = await basicHelper.percentage(newProductData.price, newProductData.tax);
 
-      const productHeaderSummary: object = await createProductsPage.getProductHeaderSummary(page);
+      const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
         expect(productHeaderSummary.priceTaxExc).to.equal(`€${(newProductData.price.toFixed(2))} tax excl.`),
         expect(productHeaderSummary.priceTaxIncl).to.equal(
@@ -187,7 +195,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       const taxValue: number = await basicHelper.percentage(newProductData.price, newProductData.tax);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price.toFixed(2)).to.equal((newProductData.price + taxValue).toFixed(2)),
@@ -222,7 +230,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete: string = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
@@ -243,7 +251,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         // Go back to BO
         page = await foProductPage.closePage(browserContext, page, 0);
 
-        const pageTitle: object = await createProductsPage.getPageTitle(page);
+        const pageTitle = await createProductsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(createProductsPage.pageTitle);
       });
 
@@ -281,16 +289,17 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
         await homePage.goToMyAccountPage(page);
-        const pageTitle: string = await foMyAccountPage.getPageTitle(page);
-        await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+
+        const pageTitle = await myAccountPage.getPageTitle(page);
+        await expect(pageTitle).to.equal(myAccountPage.pageTitle);
       });
 
       it('should go to order history page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-        await foMyAccountPage.goToHistoryAndDetailsPage(page);
+        await myAccountPage.goToHistoryAndDetailsPage(page);
 
-        const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
+        const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
         await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
       });
 
@@ -362,7 +371,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       const taxValue: number = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
-      const productHeaderSummary: object = await createProductsPage.getProductHeaderSummary(page);
+      const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
         expect(productHeaderSummary.priceTaxExc).to.equal(`€${(editProductData.price.toFixed(2))} tax excl.`),
         expect(productHeaderSummary.priceTaxIncl).to.equal(
@@ -392,7 +401,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       const taxValue: number = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
-      const result: object = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),

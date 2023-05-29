@@ -47,7 +47,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfShoppingCarts: number;
-  let orderId: string;
+  let orderId: number;
 
   const customerData: CustomerData = new CustomerData();
   const orderData: OrderData = new OrderData({
@@ -230,7 +230,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should search a shopping cart with a specific order Id', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchSpecificOrderShoppingCarts', baseContext);
 
-      await shoppingCartsPage.filterTable(page, 'input', 'status', orderId);
+      await shoppingCartsPage.filterTable(page, 'input', 'status', orderId.toString());
 
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       await expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);

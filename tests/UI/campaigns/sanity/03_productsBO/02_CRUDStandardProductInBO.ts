@@ -15,7 +15,7 @@ import foProductPage from '@pages/FO/product';
 // Import data
 import tax from '@data/demo/tax';
 import ProductData from '@data/faker/product';
-import {ProductDetails} from '@data/types/product';
+import {ProductInformations} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,7 +30,7 @@ const baseContext: string = 'sanity_productsBO_CRUDStandardProductInBO';
 describe('BO - Catalog - Products : Create, read, update and delete Standard product in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let productInformation: ProductDetails = {
+  let productInformation: ProductInformations = {
     price: 0,
     name: '',
     description: '',
@@ -187,8 +187,8 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
       const productPriceATI = await productsPage.getProductPriceFromList(page, 1, true);
 
       const conversionRate = (100 + parseInt(tax.DefaultFrTax.rate, 10)) / 100;
-      await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / conversionRate).toFixed(2)));
-      await expect(parseFloat(productPriceATI)).to.equal(parseFloat(editedProductData.price));
+      await expect(productPrice).to.equal(parseFloat((editedProductData.price / conversionRate).toFixed(2)));
+      await expect(productPriceATI).to.equal(editedProductData.price);
     });
 
     it('should go to edit product page', async function () {

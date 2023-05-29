@@ -21,6 +21,7 @@ type CarrierCreator = {
   maxWeight?: number
   enable?: boolean
   price?: number
+  priceText?: string
   priceTTC?: number
 };
 

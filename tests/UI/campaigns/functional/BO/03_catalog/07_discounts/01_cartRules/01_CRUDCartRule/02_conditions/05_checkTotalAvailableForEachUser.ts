@@ -146,7 +146,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
           const discountedPrice = Products.demo_1.finalPrice
-            - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent);
+            - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent!);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
           await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));
@@ -228,7 +228,7 @@ describe('BO - Catalog - Cart rules : Check Total available for each user', asyn
           await testContext.addContextItem(this, 'testIdentifier', 'checkPromoCode', baseContext);
 
           const discountedPrice = Products.demo_1.finalPrice
-            - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent);
+            - await basicHelper.percentage(Products.demo_1.finalPrice, newCartRuleData.discountPercent!);
 
           const totalAfterDiscount = await cartPage.getATIPrice(page);
           await expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));

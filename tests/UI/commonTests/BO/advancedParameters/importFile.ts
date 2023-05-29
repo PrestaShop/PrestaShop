@@ -58,7 +58,7 @@ function importFileTest(
     it(`should import '${fileName}' file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      const uploadSuccessText = await importPage.uploadFile(page, entityToImport, fileName);
+      const uploadSuccessText = await importPage.uploadImportFile(page, entityToImport, fileName);
       await expect(uploadSuccessText).contain(fileName);
 
       if (await importPage.isForceAllIDNumbersVisible(page)) {

@@ -10,7 +10,7 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class ModuleManager extends BOBasePage {
-  public readonly pageTitle: string;
+  public pageTitle: string;
 
   public readonly disableModuleSuccessMessage: (moduleTag: string) => string;
 
@@ -26,9 +26,23 @@ class ModuleManager extends BOBasePage {
 
   public readonly uninstallModuleSuccessMessage: (moduleTag: string) => string;
 
+  public readonly uploadModuleSuccessMessage: string;
+
+  private readonly alertsTab: string;
+
   private readonly searchModuleTagInput: string;
 
   private readonly searchModuleButton: string;
+
+  private readonly uploadModuleButton: string;
+
+  private readonly uploadModal: string;
+
+  private readonly uploadModuleLink: string;
+
+  private readonly uploadModuleModalSuccessMessage: string;
+
+  private readonly uploadModuleModalCloseButton: string;
 
   private readonly topMenuDiv: string;
 
@@ -56,6 +70,12 @@ class ModuleManager extends BOBasePage {
 
   private readonly moduleCheckboxButton: (moduleTag: string) => string;
 
+  private readonly seeMoreButton: (blockName: string) => string;
+
+  private readonly seeLessButton: (blockName: string) => string;
+
+  private readonly moduleListBlock: (blockName: string) => string;
+
   private readonly actionModuleButton: (moduleTag: string, action: string) => string;
 
   private readonly configureModuleButton: (moduleTag: string) => string;
@@ -64,9 +84,11 @@ class ModuleManager extends BOBasePage {
 
   private readonly actionModuleButtonInDropdownList: (action: string) => string;
 
+  private readonly modalConfirmAction: (moduleTag: string, action: string) => string;
+
   private readonly modalConfirmButton: (moduleTag: string, action: string) => string;
 
-  private readonly modalConfirmAction: (moduleTag: string) => string;
+  private readonly modalConfirmCancel: (moduleTag: string, action: string) => string;
 
   private readonly statusDropdownDiv: string;
 
@@ -97,10 +119,19 @@ class ModuleManager extends BOBasePage {
     this.resetModuleSuccessMessage = (moduleTag: string) => `Reset action on module ${moduleTag} succeeded.`;
     this.installModuleSuccessMessage = (moduleTag: string) => `Install action on module ${moduleTag} succeeded.`;
     this.uninstallModuleSuccessMessage = (moduleTag: string) => `Uninstall action on module ${moduleTag} succeeded.`;
+    this.uploadModuleSuccessMessage = 'Module installed!';
+
+    // Tabs
+    this.alertsTab = '#subtab-AdminModulesNotifications';
 
     // Header Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
+    this.uploadModuleButton = '#page-header-desc-configuration-add_module';
+    this.uploadModal = '#importDropzone';
+    this.uploadModuleLink = `${this.uploadModal} div.module-import-start p.module-import-start-main-text a`;
+    this.uploadModuleModalSuccessMessage = `${this.uploadModal} div.module-import-success p.module-import-success-msg`;
+    this.uploadModuleModalCloseButton = '#module-modal-import-closing-cross';
 
     // Top menu
     this.topMenuDiv = 'div.module-top-menu';
@@ -132,6 +163,9 @@ class ModuleManager extends BOBasePage {
     this.moduleBlock = (moduleTag: string) => `${this.allModulesBlock}[data-tech-name=${moduleTag}]`;
     this.moduleCheckboxButton = (moduleTag: string) => `${this.moduleBlock(moduleTag)}`
       + ' div.module-checkbox-bulk-list.md-checkbox label i';
+    this.seeMoreButton = (blockName: string) => `#main-div div.module-short-list button.see-more[data-category=${blockName}]`;
+    this.seeLessButton = (blockName: string) => `#main-div div.module-short-list button.see-less[data-category=${blockName}]`;
+    this.moduleListBlock = (blockName: string) => `#modules-list-container-${blockName} div.module-item-list`;
 
     // Module actions selector
     this.actionModuleButton = (moduleTag: string, action: string) => `div[data-tech-name=${moduleTag}]`
@@ -145,14 +179,50 @@ class ModuleManager extends BOBasePage {
       + ` button.module_action_menu_${action}`;
 
     // Modal confirmation selectors
-    this.modalConfirmAction = (moduleTag: string) => `#module-modal-confirm-${moduleTag}`;
-    this.modalConfirmButton = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag)}-${action}`
+    this.modalConfirmAction = (moduleTag: string, action: string) => `#module-modal-confirm-${moduleTag}-${action}`;
+    this.modalConfirmButton = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag, action)}`
       + ` div.modal-footer a.module_action_modal_${action}`;
+    this.modalConfirmCancel = (moduleTag: string, action: string) => `${this.modalConfirmAction(moduleTag, action)}`
+      + ' div.modal-footer input[type="button"][data-dismiss="modal"]';
   }
 
   /*
   Methods
    */
+
+  /**
+   * Go to the Alerts Tab
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToAlertsTab(page: Page): Promise<void> {
+    await page.click(this.alertsTab);
+  }
+
+  /**
+   * Upload module
+   * @param page {Page} Browser tab
+   * @param file {string} File to upload
+   * @return {Promise<string>}
+   */
+  async uploadModule(page: Page, file: string): Promise<string | null> {
+    await this.waitForSelectorAndClick(page, this.uploadModuleButton);
+
+    await this.uploadOnFileChooser(page, this.uploadModuleLink, [file]);
+
+    return this.getTextContent(page, this.uploadModuleModalSuccessMessage);
+  }
+
+  /**
+   * Close upload module modal
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async closeUploadModuleModal(page: Page): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.uploadModuleModalCloseButton);
+
+    return this.elementNotVisible(page, this.uploadModal, 1000);
+  }
 
   /**
    * Search Module in Page module Catalog
@@ -165,6 +235,16 @@ class ModuleManager extends BOBasePage {
     await page.type(this.searchModuleTagInput, module.tag);
     await page.click(this.searchModuleButton);
 
+    return this.isModuleVisible(page, module);
+  }
+
+  /**
+   * Return if the module is visible
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Tag of the Module
+   * @return {Promise<boolean>}
+   */
+  async isModuleVisible(page: Page, module: ModuleData): Promise<boolean> {
     return this.elementVisible(page, this.moduleBlock(module.tag), 10000);
   }
 
@@ -322,9 +402,10 @@ class ModuleManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @param module {ModuleData} Module data to install/uninstall
    * @param action {string} Action install/uninstall/enable/disable/reset
+   * @param cancel {boolean} Cancel the action
    * @return {Promise<string | null>}
    */
-  async setActionInModule(page: Page, module: ModuleData, action: string): Promise<string | null> {
+  async setActionInModule(page: Page, module: ModuleData, action: string, cancel: boolean = false): Promise<string | null> {
     await this.closeGrowlMessage(page);
 
     if (await this.elementVisible(page, this.actionModuleButton(module.tag, action), 1000)) {
@@ -336,12 +417,29 @@ class ModuleManager extends BOBasePage {
       await page.click(this.actionsDropdownButton(module.tag));
       await this.waitForVisibleSelector(page, `${this.actionsDropdownButton(module.tag)}[aria-expanded='true']`);
       await this.waitForSelectorAndClick(page, this.actionModuleButtonInDropdownList(action));
+
+      if (cancel) {
+        await this.waitForSelectorAndClick(page, this.modalConfirmCancel(module.tag, action));
+        await this.elementNotVisible(page, this.modalConfirmAction(module.tag, action), 10000);
+        return '';
+      }
       if (action === 'disable' || action === 'uninstall' || action === 'reset') {
         await this.waitForSelectorAndClick(page, this.modalConfirmButton(module.tag, action));
       }
     }
 
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Returns if the action module modal is visible
+   * @param page {Page} Browser tab
+   * @param module {ModuleData} Module data to install/uninstall
+   * @param action {string} Action install/uninstall/enable/disable/reset
+   * @return {Promise<string | null>}
+   */
+  async isModalActionVisible(page: Page, module: ModuleData, action: string): Promise<boolean> {
+    return this.elementVisible(page, this.modalConfirmAction(module.tag, action));
   }
 
   /**
@@ -372,6 +470,41 @@ class ModuleManager extends BOBasePage {
 
     return modulesBlocks[position - 1];
   }
+
+  /**
+   * Click on see more button
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<boolean>}
+   */
+  async clickOnSeeMoreButton(page: Page, blockName: string): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.seeMoreButton(blockName));
+
+    return this.elementVisible(page, this.seeLessButton(blockName), 1000);
+  }
+
+  /**
+   * Click on see less button
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<boolean>}
+   */
+  async clickOnSeeLessButton(page: Page, blockName: string): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.seeLessButton(blockName));
+
+    return this.elementVisible(page, this.seeMoreButton(blockName), 1000);
+  }
+
+  /**
+   * Get number of modules in block
+   * @param page {Page} Browser tab
+   * @param blockName {string} The block name
+   * @return {Promise<number>}
+   */
+  async getNumberOfModulesInBlock(page: Page, blockName: string): Promise<number> {
+    return (await page.$$(this.moduleListBlock(blockName))).length;
+  }
 }
 
-export default new ModuleManager();
+const moduleManager = new ModuleManager();
+export {moduleManager, ModuleManager};

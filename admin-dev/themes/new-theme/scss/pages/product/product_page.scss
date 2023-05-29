@@ -1751,6 +1751,8 @@ $product-page-padding-bottom: 80px !default;
 }
 
 #product_combinations_combination_manager {
+  @import "../../components/twitter_typeahead";
+
   #combination-list-actions {
     display: flex;
     flex-direction: row;

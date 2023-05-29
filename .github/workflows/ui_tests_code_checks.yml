@@ -45,6 +45,34 @@ jobs:
       - name: Check eslint errors
         run: npm run lint
 
+  tscheck:
+    runs-on: ubuntu-latest
+    name: TypeScript Check
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright/
+          key: ${{ runner.os }}-browsers
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup NPM
+        run: npm install -g npm@${{ env.NPM_VERSION }}
+
+      - name: Install dependencies in UI tests directory
+        run: npm install
+
+      - name: Check TypeScript errors
+        run: npm run check:typescript
+
   Steps-identifiers:
     runs-on: ubuntu-latest
     name: Checking Steps identifiers

@@ -12,6 +12,7 @@ import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {EmployeePermission} from '@data/types/employee';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -19,12 +20,12 @@ let page: Page;
 /**
  * Function to set the employee permissions
  * @param profileName {string}
- * @param permissionsData {array}
+ * @param permissionsData {EmployeePermission[]}
  * @param baseContext {string}
  */
 function setPermissions(
   profileName: string,
-  permissionsData: object[],
+  permissionsData: EmployeePermission[],
   baseContext: string = 'commonTests-setPermissions',
 ): void {
   describe('PRE-TEST: Set permissions to a profile', async () => {
@@ -69,7 +70,7 @@ function setPermissions(
       await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
     });
 
-    permissionsData.forEach((permission: object) => {
+    permissionsData.forEach((permission: EmployeePermission) => {
       permission.accesses.forEach((access: string) => {
         it(`should set the permission ${access} on the ${permission.className}`, async function () {
           await testContext.addContextItem(

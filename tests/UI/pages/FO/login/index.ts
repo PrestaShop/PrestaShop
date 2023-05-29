@@ -32,7 +32,7 @@ class LoginPage extends FOBasePage {
 
   private readonly showPasswordButton: string;
 
-  private readonly alertDangerTextBlock: string;
+  protected alertDangerTextBlock: string;
 
   /**
    * @constructs
@@ -89,18 +89,18 @@ class LoginPage extends FOBasePage {
   /**
    * Get password type
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getPasswordType(page: Page): Promise<string|null> {
+  async getPasswordType(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.passwordInput, 'type');
   }
 
   /**
    * Show password
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async showPassword(page: Page): Promise<string|null> {
+  async showPassword(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.showPasswordButton);
 
     return this.getAttributeContent(page, this.passwordInput, 'type');

@@ -22,6 +22,7 @@ import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
 // Import data
 import EmployeeData from '@data/faker/employee';
+import type {EmployeePermission} from '@data/types/employee';
 
 const baseContext: string = 'functional_BO_header_myProfile';
 
@@ -34,7 +35,7 @@ describe('BO - Header : My profile', async () => {
     language: 'English (English)',
     permissionProfile: 'Salesman',
   });
-  const permissionProfileData = [
+  const permissionProfileData: EmployeePermission[] = [
     {
       className: 'AdminEmployees',
       accesses: [

@@ -18,7 +18,7 @@ import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
@@ -204,7 +204,7 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
   describe('FO : Create merchandise returns', async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
       page = await viewOrderBasePage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');

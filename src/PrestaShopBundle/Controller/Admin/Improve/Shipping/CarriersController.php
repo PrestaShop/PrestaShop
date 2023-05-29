@@ -116,6 +116,8 @@ class CarriersController extends FrameworkBundleAdminController
     /**
      * Redirect to carrier wizard for carrier editing.
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param int $carrierId
      *
      * @return RedirectResponse

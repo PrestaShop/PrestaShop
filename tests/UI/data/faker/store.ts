@@ -42,6 +42,8 @@ export default class StoreData {
 
   public hours: string[];
 
+  public picture: string|null;
+
   /**
    * Constructor for class StoreData
    * @param storeToCreate {StoreCreator} Could be used to force the value of some members
@@ -97,5 +99,8 @@ export default class StoreData {
 
     /** @type {Array<string>} Opening hours of the store */
     this.hours = storeToCreate.hours || new Array(7).fill('10:00 - 18:00', 0, 7);
+
+    /** @type {string|null} Picture of the store */
+    this.picture = storeToCreate.picture || null;
   }
 }

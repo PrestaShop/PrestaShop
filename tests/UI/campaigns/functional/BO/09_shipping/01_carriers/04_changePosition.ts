@@ -63,18 +63,18 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     it('should sort by \'position\' \'asc\' And check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sortByPosition', baseContext);
 
-      let nonSortedTable = await carriersPage.getAllRowsColumnContent(page, 'a!position');
+      const nonSortedTable = await carriersPage.getAllRowsColumnContent(page, 'a!position');
 
       await carriersPage.sortTable(page, 'a!position', 'up');
 
-      let sortedTable = await carriersPage.getAllRowsColumnContent(page, 'a!position');
+      const sortedTable = await carriersPage.getAllRowsColumnContent(page, 'a!position');
 
-      nonSortedTable = await nonSortedTable.map((text: string): number => parseFloat(text));
-      sortedTable = await sortedTable.map((text: string): number => parseFloat(text));
+      const nonSortedTableFloat: number[] = nonSortedTable.map((text: string|null): number => parseFloat(text ?? ''));
+      const sortedTableFloat: number[] = sortedTable.map((text: string|null): number => parseFloat(text ?? ''));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTable);
+      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-      await expect(sortedTable).to.deep.equal(expectedResult);
+      await expect(sortedTableFloat).to.deep.equal(expectedResult);
     });
 
     it('should change first carrier position to 3', async function () {

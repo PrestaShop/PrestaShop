@@ -14,7 +14,7 @@ import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
@@ -45,7 +45,7 @@ Scenario:
 describe('BO - orders : Update order status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
   let orderId: number;
 
   const orderByCustomerData: OrderData = new OrderData({
@@ -234,7 +234,7 @@ describe('BO - orders : Update order status', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderHistoryPage${index}`, baseContext);
 
           await homePage.goToMyAccountPage(page);
-          await foMyAccountPage.goToHistoryAndDetailsPage(page);
+          await myAccountPage.goToHistoryAndDetailsPage(page);
 
           const pageTitle = await foOrderHistoryPage.getPageTitle(page);
           await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);

@@ -19,7 +19,7 @@ import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseRet
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
@@ -56,7 +56,7 @@ describe('FO - Account : Check order return PDF', async () => {
   let orderID: number;
   let orderReference: string;
   let orderDate: string;
-  let filePath: string;
+  let filePath: string|null;
   let fileName: string = '#RE0000';
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
@@ -319,7 +319,7 @@ describe('FO - Account : Check order return PDF', async () => {
       it('should check the existence of the merchandise returns in the table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkExistenceOfReturns', baseContext);
 
-        await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'a!id_order', orderID);
+        await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'a!id_order', orderID.toString());
 
         const result = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order');
         await expect(result).to.contains(orderID);

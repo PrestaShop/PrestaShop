@@ -60,6 +60,8 @@ export default class CarrierData {
 
   public readonly price: number;
 
+  public readonly priceText: string;
+
   public readonly priceTTC: number;
 
   /**
@@ -132,6 +134,9 @@ export default class CarrierData {
 
     /** @type {number} Price HT */
     this.price = carrierToCreate.price || 0;
+
+    /** @type {string} */
+    this.priceText = carrierToCreate.priceText || this.price.toString();
 
     /** @type {number} Price TTC */
     this.priceTTC = carrierToCreate.priceTTC || 0;

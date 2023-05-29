@@ -143,7 +143,7 @@ export default class FOBasePage extends CommonPage {
     this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
-    this.accountLink = `${this.userInfoLink} .user-info a.account`;
+    this.accountLink = `${this.userInfoLink} .user-info a[href*="/my-account"]`;
     this.logoutLink = `${this.userInfoLink} .user-info a[href*="/?mylogout="]`;
     this.contactLink = '#contact-link';
     this.categoryMenu = (id) => `#category-${id} a`;
@@ -307,6 +307,12 @@ export default class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async goToMyAccountPage(page: Page): Promise<void> {
+    if (this.theme === 'hummingbird') {
+      await page.click(this.userMenuDropdown);
+      await this.clickAndWaitForNavigation(page, this.accountLink);
+
+      return;
+    }
     await this.clickAndWaitForNavigation(page, this.accountLink);
   }
 
@@ -322,9 +328,9 @@ export default class FOBasePage extends CommonPage {
   /**
    * Get shop language
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  getShopLanguage(page: Page): Promise<string|null> {
+  getShopLanguage(page: Page): Promise<string> {
     return this.getAttributeContent(page, 'html[lang]', 'lang');
   }
 
@@ -474,9 +480,19 @@ export default class FOBasePage extends CommonPage {
    * @param productName {string} Product name to search
    * @returns {Promise<boolean>}
    */
+  async isAutocompleteSearchResultVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.autocompleteSearchResult, 2000);
+  }
+
+  /**
+   * Check if there are autocomplete search result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<boolean>}
+   */
   async hasAutocompleteSearchResult(page: Page, productName:string): Promise<boolean> {
     await this.setValue(page, this.searchInput, productName);
-    return this.elementVisible(page, this.autocompleteSearchResult, 2000);
+    return this.isAutocompleteSearchResultVisible(page);
   }
 
   /**

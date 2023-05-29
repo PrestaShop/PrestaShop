@@ -24,7 +24,7 @@ describe('BO - Catalog - Brands & Suppliers : Export brands', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfBrands: number = 0;
-  let filePath: string;
+  let filePath: string|null;
 
   const tableName: string = 'manufacturer';
 

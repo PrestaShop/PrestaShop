@@ -12,4 +12,12 @@ type EmployeeCreator = {
   enableGravatar?: boolean
 };
 
-export default EmployeeCreator;
+type EmployeePermission = {
+  className: string
+  accesses: string[]
+}
+
+export {
+  EmployeeCreator,
+  EmployeePermission,
+};

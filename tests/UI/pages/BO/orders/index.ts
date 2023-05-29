@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import type OrderStatusData from '@data/faker/orderStatus';
+
 import type {Page} from 'playwright';
 
 /**
@@ -401,10 +403,10 @@ class Order extends BOBasePage {
    * Set order status
    * @param page {Page} Browser tab
    * @param row {number} Order row in table
-   * @param status {{id: number}} Order status on table
+   * @param status {OrderStatusData} Order status on table
    * @returns {Promise<string>}
    */
-  async setOrderStatus(page: Page, row: number, status): Promise<string> {
+  async setOrderStatus(page: Page, row: number, status: OrderStatusData): Promise<string> {
     await Promise.all([
       page.click(this.updateStatusInTableButton(row)),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),
@@ -417,9 +419,9 @@ class Order extends BOBasePage {
    * Click on view invoice to download it
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  downloadInvoice(page: Page, row: number): Promise<string> {
+  downloadInvoice(page: Page, row: number): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.viewInvoiceRowLink(row));
   }
 

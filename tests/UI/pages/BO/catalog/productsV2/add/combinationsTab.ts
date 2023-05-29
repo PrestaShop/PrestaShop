@@ -2,9 +2,18 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 // Import data
-import {ProductAttributes} from '@data/types/product';
+import {
+  ProductAttributes,
+  ProductCombinationBulk,
+  ProductCombinationBulkRetailPrice,
+  ProductCombinationBulkSpecificReferences,
+  ProductCombinationBulkStock,
+  ProductCombinationOptions,
+  ProductStockMovement,
+} from '@data/types/product';
 
-import type {Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
+import {expect} from 'chai';
 
 /**
  * Combinations tab on new product V2 page, contains functions that can be used on the page
@@ -24,7 +33,7 @@ class CombinationsTab extends BOBasePage {
 
   private readonly combinationsTabLink: string;
 
-  public readonly attributesAndFeaturesLink: string;
+  private readonly attributesAndFeaturesHyperLink: string;
 
   private readonly generateFirstCombinationsButton: string;
 
@@ -182,7 +191,7 @@ class CombinationsTab extends BOBasePage {
 
     // Selectors in combinations tab
     this.combinationsTabLink = '#product_combinations-tab-nav';
-    this.attributesAndFeaturesLink = '#combinations-empty-state p.mx-auto.showcase-list-card__message a.alert-link';
+    this.attributesAndFeaturesHyperLink = '#combinations-empty-state p.mx-auto.showcase-list-card__message a.alert-link';
     this.generateFirstCombinationsButton = '#combinations-empty-state button.generate-combinations-button';
     this.generateCombinationButton = '#combination-list-actions button.generate-combinations-button';
     this.generateCombinationsModal = '#product-combinations-generate div.modal.show';
@@ -302,7 +311,7 @@ class CombinationsTab extends BOBasePage {
   async clickOnAttributesAndFeaturesLink(page: Page): Promise<Page> {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
 
-    return this.openLinkWithTargetBlank(page, this.attributesAndFeaturesLink, 'body');
+    return this.openLinkWithTargetBlank(page, this.attributesAndFeaturesHyperLink, 'body');
   }
 
   /**
@@ -380,11 +389,11 @@ class CombinationsTab extends BOBasePage {
   /**
    * Edit combination
    * @param page {Page} Browser tab
-   * @param combinationData {object} Data to set to edit combination
+   * @param combinationData {ProductCombinationOptions} Data to set to edit combination
    * @param row {number} Row in table
    * @returns {Promise<string|null>}
    */
-  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string | null> {
+  async editCombination(page: Page, combinationData: ProductCombinationOptions, row: number = 1): Promise<string | null> {
     await this.closeGrowlMessage(page);
     await this.setValue(page, `${this.combinationListTableColumn(row, 'reference')}`, combinationData.reference);
     await this.setValue(
@@ -427,46 +436,50 @@ class CombinationsTab extends BOBasePage {
   /**
    * Edit combination from modal
    * @param page {Page} Browser tab
-   * @param combinationData {object}
+   * @param combinationData {ProductCombinationOptions}
    * @returns {Promise<string>}
    */
-  async editCombinationFromModal(page: Page, combinationData: object): Promise<string> {
+  async editCombinationFromModal(page: Page, combinationData: ProductCombinationOptions): Promise<string> {
     await page.waitForTimeout(2000);
     await this.waitForVisibleSelector(page, this.editCombinationIframe);
 
-    const combinationFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    await expect(combinationFrame).to.be.not.null;
 
-    await this.setValue(combinationFrame, this.editCombinationModalQuantityInput, combinationData.quantity);
+    await this.setValue(combinationFrame!, this.editCombinationModalQuantityInput, combinationData.quantity);
+    if (combinationData.minimalQuantity) {
+      await this.setValue(
+        combinationFrame!,
+        this.editCombinationModalMinimalQuantityInput,
+        combinationData.minimalQuantity,
+      );
+    }
     await this.setValue(
-      combinationFrame,
-      this.editCombinationModalMinimalQuantityInput,
-      combinationData.minimalQuantity,
-    );
-    await this.setValue(
-      combinationFrame,
+      combinationFrame!,
       this.editCombinationModalImpactOnPriceTExcInput,
       combinationData.impactOnPriceTExc,
     );
-    await this.setValue(combinationFrame, this.editCombinationModalReferenceInput, combinationData.reference);
+    await this.setValue(combinationFrame!, this.editCombinationModalReferenceInput, combinationData.reference);
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalSaveButton);
 
-    return this.getAlertSuccessBlockParagraphContent(combinationFrame);
+    return this.getAlertSuccessBlockParagraphContent(combinationFrame!);
   }
 
   /**
    * Get recent stock movements
    * @param page {Page} Browser tab
    * @param row {number} Row in table
-   * @returns {Promise<{dateTime: string, quantity: string, employee: string}>}
+   * @returns {Promise<ProductStockMovement>}
    */
-  async getRecentStockMovements(page: Page, row: number = 1): Promise<object> {
-    const combinationFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+  async getRecentStockMovements(page: Page, row: number = 1): Promise<ProductStockMovement> {
+    const combinationFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    await expect(combinationFrame).to.be.not.null;
 
     return {
-      dateTime: await this.getTextContent(combinationFrame, this.combinationStockMovementsDate(row)),
-      employee: await this.getTextContent(combinationFrame, this.combinationStockMovementsEmployeeName(row)),
-      quantity: await this.getNumberFromText(combinationFrame, this.combinationStockMovements(row)),
+      dateTime: await this.getTextContent(combinationFrame!, this.combinationStockMovementsDate(row)),
+      employee: await this.getTextContent(combinationFrame!, this.combinationStockMovementsEmployeeName(row)),
+      quantity: await this.getNumberFromText(combinationFrame!, this.combinationStockMovements(row)),
     };
   }
 
@@ -476,14 +489,15 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeEditCombinationModal(page: Page): Promise<boolean> {
-    const combinationFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Frame|null = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    await expect(combinationFrame).to.be.not.null;
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
     if (await this.elementVisible(page, this.editCombinationModalDiscardButton, 2000)) {
       await this.waitForSelectorAndClick(page, this.editCombinationModalDiscardButton);
     }
 
-    return this.elementVisible(combinationFrame, this.editCombinationModalQuantityInput, 2000);
+    return this.elementVisible(combinationFrame!, this.editCombinationModalQuantityInput, 2000);
   }
 
   // Methods for sort
@@ -512,9 +526,9 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param column {string} Column name to get text content
    * @param row {number} Row on table
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string | null> {
+  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string> {
     const selector: string = this.combinationListTableColumn(row, column);
     let text: string | null = '';
 
@@ -550,10 +564,10 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param numberOfCombinations {number} Number of combinations
    * @param column {string} Column name to get all rows text content
-   * @return {Promise<(string|null)[]>}
+   * @return {Promise<string[]>}
    */
-  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<(string | null)[]> {
-    const allRowsContentTable: (string | null)[] = [];
+  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<string[]> {
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= numberOfCombinations; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
@@ -621,14 +635,19 @@ class CombinationsTab extends BOBasePage {
     if (!footerText) {
       return 0;
     }
-    const result = footerText.match(/out of ([0-9]+)/);
+    const regexMatch: RegExpMatchArray|null = footerText.match(/out of ([0-9]+)/);
 
-    if (!result) {
+    if (regexMatch === null) {
       return 0;
     }
-    const numberOfCombinations = /\d+/g.exec(result).toString();
 
-    return parseInt(numberOfCombinations, 10);
+    const regexResult: RegExpExecArray|null = /\d+/g.exec(regexMatch.toString());
+
+    if (regexResult === null) {
+      return 0;
+    }
+
+    return parseInt(regexResult.toString(), 10);
   }
 
   /**
@@ -699,11 +718,11 @@ class CombinationsTab extends BOBasePage {
 
   /**
    * Bulk edit stock
-   * @param page {Page} Browser tab
-   * @param editStockData {object} Data to set on bulk edit stock form
+   * @param page {Frame|Page} Browser tab
+   * @param editStockData {ProductCombinationBulkStock} Data to set on bulk edit stock form
    * @returns {Promise<void>}
    */
-  async bulkEditStock(page: Page, editStockData: object): Promise<void> {
+  async bulkEditStock(page: Frame|Page, editStockData: ProductCombinationBulkStock): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalStocksButton);
     await this.setChecked(
       page,
@@ -733,11 +752,11 @@ class CombinationsTab extends BOBasePage {
 
   /**
    * Bulk edit retail price
-   * @param page {Page} Browser tab
-   * @param editRetailPriceData {object} Data to set on bulk edit retail price form
+   * @param page {Frame|Page} Browser tab
+   * @param editRetailPriceData {ProductCombinationBulkRetailPrice} Data to set on bulk edit retail price form
    * @returns {Promise<void>}
    */
-  async bulkEditRetailPrice(page: Page, editRetailPriceData: object): Promise<void> {
+  async bulkEditRetailPrice(page: Frame|Page, editRetailPriceData: ProductCombinationBulkRetailPrice): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalRetailPriceButton);
     await this.setChecked(page, this.bulkEditModalCostPriceSwitchButton(editRetailPriceData.costPriceToEnable ? 1 : 0),
     );
@@ -756,11 +775,11 @@ class CombinationsTab extends BOBasePage {
 
   /**
    * Bulk edit references
-   * @param page {Page} Browser tab
-   * @param specificReferencesData {object} Data to set on specific references form
+   * @param page {Frame|Page} Browser tab
+   * @param specificReferencesData {ProductCombinationBulkSpecificReferences} Data to set on specific references form
    * @returns {Promise<void>}
    */
-  async bulkEditSpecificPrice(page: Page, specificReferencesData: object): Promise<void> {
+  async bulkEditSpecificPrice(page: Frame|Page, specificReferencesData: ProductCombinationBulkSpecificReferences): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalSpecificReferences);
     await this.setChecked(
       page,
@@ -772,23 +791,24 @@ class CombinationsTab extends BOBasePage {
   /**
    * Edit combinations by bulk actions
    * @param page {Page} Browser tab
-   * @param editCombinationsData {object} Data to edit combination
+   * @param editCombinationsData {ProductCombinationBulk} Data to edit combination
    * @returns {Promise<string>}
    */
-  async editCombinationsByBulkActions(page: Page, editCombinationsData: object): Promise<string> {
-    const bulkEditCombinationFrame: Page = await page.frame('bulk-combination-form-modal-iframe');
+  async editCombinationsByBulkActions(page: Page, editCombinationsData: ProductCombinationBulk): Promise<string> {
+    const bulkEditCombinationFrame: Frame|null = await page.frame('bulk-combination-form-modal-iframe');
+    await expect(bulkEditCombinationFrame).to.be.not.null;
 
     // Edit stocks
     if (editCombinationsData.stocks) {
-      await this.bulkEditStock(bulkEditCombinationFrame, editCombinationsData.stocks);
+      await this.bulkEditStock(bulkEditCombinationFrame!, editCombinationsData.stocks);
     }
     // Edit retail price
     if (editCombinationsData.retailPrice) {
-      await this.bulkEditRetailPrice(bulkEditCombinationFrame, editCombinationsData.retailPrice);
+      await this.bulkEditRetailPrice(bulkEditCombinationFrame!, editCombinationsData.retailPrice);
     }
     // Edit specific references
     if (editCombinationsData.specificReferences) {
-      await this.bulkEditSpecificPrice(bulkEditCombinationFrame, editCombinationsData.specificReferences);
+      await this.bulkEditSpecificPrice(bulkEditCombinationFrame!, editCombinationsData.specificReferences);
     }
     // Save and close progress modal
     await this.waitForSelectorAndClick(page, this.bulkEditModalSaveButton);

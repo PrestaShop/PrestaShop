@@ -201,9 +201,9 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @param columnName {string} Column name to get text column from table
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(page: Page, row: number, columnName: string): Promise<string | null> {
+  async getTextColumnFromTable(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (columnName) {
@@ -287,11 +287,11 @@ class TaxRules extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param columnName {string} Column name to get all rows column content
-   * @return {Promise<Array<string>>}
+   * @return {Promise<string[]>}
    */
-  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string | null)[]> {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber: number = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable: (string | null)[] = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, columnName);

@@ -3,17 +3,17 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import {loginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 
 // Import data
-import type Customer from '@data/types/customer';
+import type CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {Context} from 'mocha';
 import type {Page} from 'playwright';
 
 export default {
-  async loginFO(mochaContext: Context, page: Page, customer: Customer): Promise<void> {
+  async loginFO(mochaContext: Context, page: Page, customer: CustomerData): Promise<void> {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginFO');
 
     await loginPage.goTo(page, global.FO.URL);

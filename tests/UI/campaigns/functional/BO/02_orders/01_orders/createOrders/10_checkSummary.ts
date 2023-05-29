@@ -166,7 +166,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         const result = await addOrderPage.getVoucherDetailsFromTable(page);
         await Promise.all([
           expect(result.name).to.contains(cartRuleWithCodeData.name),
-          expect(result.value).to.equal(cartRuleWithCodeData.discountAmount.value),
+          expect(result.value).to.equal(cartRuleWithCodeData.discountAmount!.value),
         ]);
       });
 
@@ -174,16 +174,16 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
         const totalTaxes = await basicHelper.percentage(
-          Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount.value,
+          Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value,
           20,
         );
-        const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount.value;
+        const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value;
         const totalTaxIncluded = totalTaxes + totalTaxExcluded;
 
         const result = await addOrderPage.getSummaryDetails(page);
         await Promise.all([
           expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-          expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeData.discountAmount.value.toFixed(2)}`),
+          expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeData.discountAmount!.value.toFixed(2)}`),
           expect(result.totalShipping).to.equal('€0.00'),
           expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
           expect(result.totalTaxExcluded).to.equal(`€${totalTaxExcluded.toFixed(2)}`),
@@ -244,14 +244,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should choose \'Send pre-filled order to the customer by email\' from more actions', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setMoreActions', baseContext);
 
-        const textMessage = await addOrderPage.setMoreActions(page, 'pre-filled order');
+        const textMessage = await addOrderPage.setMoreActionsPreFilledOrder(page);
         await expect(textMessage, 'Invalid success message!').to.be.equal(addOrderPage.emailSendSuccessMessage);
       });
 
       it('should choose \'Proceed to checkout in the front office\' from more actions', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-        page = await addOrderPage.setMoreActions(page, 'Proceed to checkout');
+        page = await addOrderPage.setMoreActionsProceedToCheckout(page);
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
         await expect(isCheckoutPage, 'Not redirected to checkout page!').to.be.true;

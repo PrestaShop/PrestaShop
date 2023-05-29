@@ -26,7 +26,7 @@ Scenario:
 describe('BO - Orders - Shopping carts: Export carts', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {

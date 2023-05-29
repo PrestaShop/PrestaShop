@@ -64,6 +64,13 @@ type GlobalMaildevConfig = {
   silent: boolean
 }
 
+type GlobalKeycloakConfig = {
+  keycloakServer: string
+  keycloakAdminUser: string
+  keycloakAdminPass: string
+  keycloakClientId: string
+}
+
 declare global {
   var INSTALL: GlobalInstall;
   var URLHasPort: boolean;
@@ -74,6 +81,7 @@ declare global {
   var GENERATE_FAILED_STEPS: any;
   var SCREENSHOT: GlobalScreenshot;
   var maildevConfig: GlobalMaildevConfig;
+  var keycloakConfig: GlobalKeycloakConfig;
   var browserErrors: GlobalBrowserErrors;
 }
 

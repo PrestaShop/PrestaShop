@@ -245,7 +245,7 @@
               {l s='Your visitors and customers cannot access your store while in maintenance mode.' d='Admin.Navigation.Notification'}
           </p>
           <p class="text-left">
-            {l s='To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' d='Admin.Navigation.Notification'}
+            {l s='To manage the maintenance settings, go to Shop Parameters > General > Maintenance tab.' d='Admin.Navigation.Notification'}
           </p>
           {if isset($maintenance_allow_admins) && $maintenance_allow_admins}
             <p class="text-left">

@@ -131,8 +131,14 @@ class AddCurrency extends LocalizationBasePage {
     for (let i = 0; i < 50 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        (selector) => window.getComputedStyle(document.querySelector(selector))
-          .getPropertyValue('display') === 'none',
+        (selector) => {
+          const element: HTMLElement|null = document.querySelector(selector);
+
+          if (element === null) {
+            return false;
+          }
+          return window.getComputedStyle(element).getPropertyValue('display') === 'none';
+        },
         this.currencyLoadingModal,
       );
       await page.waitForTimeout(200);
@@ -144,7 +150,15 @@ class AddCurrency extends LocalizationBasePage {
     for (let i = 0; i < 50 && !inputHasValue; i++) {
       /* eslint-env browser */
       inputHasValue = await page.evaluate(
-        (selector) => document.querySelector(selector).value !== '',
+        (selector) => {
+          const element: HTMLInputElement|null = document.querySelector(selector);
+
+          if (element === null) {
+            return false;
+          }
+
+          return element.value !== '';
+        },
         this.currencyNameInput(1),
       );
 

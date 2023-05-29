@@ -144,7 +144,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
 
       await cartPage.addPromoCode(page, newCartRuleData.code);
 
-      const discount = await basicHelper.percentage(Products.demo_6.combinations[0].price * 2, newCartRuleData.discountPercent);
+      const discount = await basicHelper.percentage(Products.demo_6.combinations[0].price * 2, newCartRuleData.discountPercent!);
 
       const totalAfterDiscount = await cartPage.getATIPrice(page);
       await expect(totalAfterDiscount).to.eq(parseFloat((Products.demo_6.combinations[0].price * 2 - discount).toFixed(2)));
