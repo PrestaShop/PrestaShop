@@ -86,7 +86,7 @@ class UpdateLicensesCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->text = str_replace('{currentYear}', date('Y'), $this->text);
 

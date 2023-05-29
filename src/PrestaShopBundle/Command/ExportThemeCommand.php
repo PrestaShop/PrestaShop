@@ -72,7 +72,7 @@ class ExportThemeCommand extends Command
             ->addArgument('theme', InputArgument::REQUIRED, 'Theme to export directory name.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $theme = $this->themeRepository->getInstanceByName($input->getArgument('theme'));
 

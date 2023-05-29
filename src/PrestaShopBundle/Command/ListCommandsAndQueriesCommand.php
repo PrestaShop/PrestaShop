@@ -68,7 +68,7 @@ class ListCommandsAndQueriesCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $outputStyle = new OutputFormatterStyle('blue', null);
         $output->getFormatter()->setStyle('blue', $outputStyle);
