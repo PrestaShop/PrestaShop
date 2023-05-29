@@ -52,7 +52,7 @@ final class CommandsAndQueriesDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $exception = null): void
     {
         $this->data = [
             'executed_commands' => $this->executedCommandRegistry->getExecutedCommands(),
@@ -63,7 +63,7 @@ final class CommandsAndQueriesDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'ps.commands_and_queries_collector';
     }
@@ -71,7 +71,7 @@ final class CommandsAndQueriesDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function reset()
+    public function reset(): void
     {
         $this->data = [];
     }
