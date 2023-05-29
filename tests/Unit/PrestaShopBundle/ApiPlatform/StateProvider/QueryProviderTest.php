@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Api\StateProvider;
+namespace Tests\Unit\PrestaShopBundle\ApiPlatform\StateProvider;
 
 use ApiPlatform\Metadata\Get;
 use PHPUnit\Framework\TestCase;
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\QueryResult\HookStatus;
 use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
 use RuntimeException;
 
-class HookStatusProviderTest extends TestCase
+class QueryProviderTest extends TestCase
 {
     /**
      * @var CommandBusInterface
@@ -76,9 +76,11 @@ class HookStatusProviderTest extends TestCase
         $hookStatusProvider = new QueryProvider($this->queryBus);
         $get = new Get();
         $get = $get->withExtraProperties(['query' => "PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus"]);
-        // @phpstan-ignore-next-line
-        self::assertEquals(false, $hookStatusProvider->provide($get, ['id' => 1])->isActive());
-        // @phpstan-ignore-next-line
-        self::assertTrue($hookStatusProvider->provide($get, ['id' => 2])->isActive());
+        /** @var HookStatus $hookStatus */
+        $hookStatus = $hookStatusProvider->provide($get, ['hookId' => 1]);
+        self::assertEquals(false, $hookStatus->isActive());
+        /** @var HookStatus $hookStatus */
+        $hookStatus = $hookStatusProvider->provide($get, ['hookId' => 2]);
+        self::assertTrue($hookStatus->isActive());
     }
 }
