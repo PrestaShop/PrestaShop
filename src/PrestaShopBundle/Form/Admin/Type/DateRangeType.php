@@ -151,7 +151,7 @@ class DateRangeType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'date_range';
     }

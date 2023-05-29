@@ -170,7 +170,7 @@ class UploadQuotaType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'administration_upload_quota_block';
     }

@@ -86,7 +86,7 @@ class CreateProductFormType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'create_product';
     }

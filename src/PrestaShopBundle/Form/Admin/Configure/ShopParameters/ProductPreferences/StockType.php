@@ -222,7 +222,7 @@ class StockType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'product_preferences_stock_block';
     }

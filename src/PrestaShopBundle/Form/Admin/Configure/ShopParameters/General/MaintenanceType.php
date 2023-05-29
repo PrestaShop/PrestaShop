@@ -148,7 +148,7 @@ class MaintenanceType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'maintenance_general_block';
     }

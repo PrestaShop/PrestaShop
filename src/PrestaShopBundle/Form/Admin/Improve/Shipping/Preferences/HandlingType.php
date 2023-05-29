@@ -132,7 +132,7 @@ class HandlingType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'shipping_preferences_handling_block';
     }

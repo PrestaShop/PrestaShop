@@ -82,7 +82,7 @@ final class LogsByEmailType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'logs_by_email_block';
     }

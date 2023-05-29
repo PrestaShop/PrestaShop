@@ -84,7 +84,7 @@ class SmartyType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'performance_smarty_block';
     }

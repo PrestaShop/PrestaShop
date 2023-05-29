@@ -194,7 +194,7 @@ class EditProductFormType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'product';
     }

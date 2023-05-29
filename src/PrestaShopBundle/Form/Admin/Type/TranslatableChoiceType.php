@@ -63,7 +63,7 @@ class TranslatableChoiceType extends TranslatableType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'translatable_choice';
     }

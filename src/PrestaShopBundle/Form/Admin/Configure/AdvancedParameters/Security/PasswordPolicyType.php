@@ -98,7 +98,7 @@ class PasswordPolicyType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'security_password_policy_block';
     }

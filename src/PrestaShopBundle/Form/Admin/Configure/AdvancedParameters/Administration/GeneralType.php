@@ -80,7 +80,7 @@ class GeneralType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'administration_general_block';
     }

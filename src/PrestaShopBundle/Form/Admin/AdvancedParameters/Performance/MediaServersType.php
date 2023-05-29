@@ -64,7 +64,7 @@ class MediaServersType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'performance_media_servers_block';
     }

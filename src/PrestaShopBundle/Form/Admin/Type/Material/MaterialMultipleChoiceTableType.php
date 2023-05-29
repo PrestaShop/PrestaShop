@@ -126,7 +126,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'material_multiple_choice_table';
     }

@@ -63,7 +63,7 @@ class NotificationsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'administration_notification_block';
     }

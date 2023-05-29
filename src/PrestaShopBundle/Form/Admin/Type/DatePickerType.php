@@ -88,7 +88,7 @@ class DatePickerType extends AbstractType
      *
      * @return string The prefix name
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'date_picker';
     }

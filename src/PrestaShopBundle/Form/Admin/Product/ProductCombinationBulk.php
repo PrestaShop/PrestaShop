@@ -120,7 +120,7 @@ class ProductCombinationBulk extends CommonAbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'product_combination_bulk';
     }

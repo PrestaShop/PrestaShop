@@ -150,7 +150,7 @@ class GiftOptionsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'order_preferences_gift_options_block';
     }

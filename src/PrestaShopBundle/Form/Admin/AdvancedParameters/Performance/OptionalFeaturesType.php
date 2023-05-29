@@ -81,7 +81,7 @@ class OptionalFeaturesType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'performance_optional_features_block';
     }

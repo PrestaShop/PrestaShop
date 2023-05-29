@@ -95,7 +95,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'webservice_configuration';
     }

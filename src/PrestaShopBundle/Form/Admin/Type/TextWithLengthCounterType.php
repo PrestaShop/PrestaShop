@@ -72,7 +72,7 @@ class TextWithLengthCounterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'text_with_length_counter';
     }

@@ -141,7 +141,7 @@ class GeneralType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'customer_preferences_general_block';
     }

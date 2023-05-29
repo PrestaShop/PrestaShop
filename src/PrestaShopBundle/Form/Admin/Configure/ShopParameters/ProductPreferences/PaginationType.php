@@ -102,7 +102,7 @@ class PaginationType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'product_preferences_pagination_block';
     }

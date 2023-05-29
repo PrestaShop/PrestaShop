@@ -83,7 +83,7 @@ class ProductCategories extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'product_categories';
     }

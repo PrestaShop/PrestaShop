@@ -130,7 +130,7 @@ class DeltaQuantityType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'delta_quantity';
     }

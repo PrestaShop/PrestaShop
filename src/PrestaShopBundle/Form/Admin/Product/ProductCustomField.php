@@ -105,7 +105,7 @@ class ProductCustomField extends CommonAbstractType
      *
      * @return string The prefix name
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'product_custom_field';
     }

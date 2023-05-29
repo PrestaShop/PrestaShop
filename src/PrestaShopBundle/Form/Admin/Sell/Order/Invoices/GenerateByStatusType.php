@@ -100,7 +100,7 @@ class GenerateByStatusType extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'orders_invoices_by_status_block';
     }

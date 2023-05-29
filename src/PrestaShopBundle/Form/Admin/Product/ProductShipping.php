@@ -285,7 +285,7 @@ class ProductShipping extends CommonAbstractType
      *
      * @return string The prefix name
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'product_shipping';
     }

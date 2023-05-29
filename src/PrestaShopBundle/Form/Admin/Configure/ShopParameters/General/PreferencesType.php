@@ -259,7 +259,7 @@ class PreferencesType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'preferences';
     }
