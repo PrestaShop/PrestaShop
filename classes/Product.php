@@ -7162,7 +7162,7 @@ class ProductCore extends ObjectModel
         $listIds = array_column($result, 'id_product');
         $count = count($result);
         if ($position > $count && in_array($this->id, $listIds)
-            || $position > $count + 1 && !in_array($this->id, $listIds)    
+            || $position > $count + 1 && !in_array($this->id, $listIds)
         ) {
             WebserviceRequest::getInstance()->setError(
                 500,
