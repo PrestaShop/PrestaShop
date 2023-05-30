@@ -1385,12 +1385,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
         <source>Invalid action</source>
         <target>Invalid action</target>
-        <note>Line: 208</note>
+        <note>Line: 206</note>
       </trans-unit>
       <trans-unit id="2b73839c76b07fdd994e444e0c7e75ad">
         <source>Your uploaded file might exceed the [1]upload_max_filesize[/1] and the [1]post_max_size[/1] directives in [1]php.ini[/1], please check your server configuration.</source>
         <target>Your uploaded file might exceed the [1]upload_max_filesize[/1] and the [1]post_max_size[/1] directives in [1]php.ini[/1], please check your server configuration.</target>
-        <note>Line: 332</note>
+        <note>Line: 330</note>
       </trans-unit>
     </body>
   </file>
