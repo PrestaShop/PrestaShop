@@ -92,7 +92,7 @@ class ValidateTest extends TestCase
             [false, 'john.doe@prestashop'],
             [true, 'john.doe@сайт.рф'],
             [true, 'john.doe@xn--80aswg.xn--p1ai'],
-            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not cyrilic mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
         ];

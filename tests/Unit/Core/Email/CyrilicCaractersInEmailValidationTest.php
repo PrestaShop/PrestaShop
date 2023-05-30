@@ -29,12 +29,12 @@ namespace Tests\Unit\Core\Email;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
+use PrestaShop\PrestaShop\Core\Email\CyrilicCaractersInEmailValidation;
 
-class SwiftMailerValidationTest extends TestCase
+class CyrilicCaractersInEmailValidationTest extends TestCase
 {
     /**
-     * @var SwiftMailerValidation
+     * @var CyrilicCaractersInEmailValidation
      */
     protected $validator;
 
@@ -45,7 +45,7 @@ class SwiftMailerValidationTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->validator = new SwiftMailerValidation();
+        $this->validator = new CyrilicCaractersInEmailValidation();
         $this->lexer = new EmailLexer();
     }
 

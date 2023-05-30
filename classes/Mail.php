@@ -611,7 +611,7 @@ class MailCore extends ObjectModel
             /* Send mail */
             $email->from(new Address($from, (string) $fromName));
 
-            // Hook to alter Swift Message before sending mail
+            // Hook to alter Symfony Mailer before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [
                 'message' => &$email,
             ]);
@@ -851,13 +851,13 @@ class MailCore extends ObjectModel
         );
     }
 
-    /* Rewrite of Swift_Message::generateId() without getmypid() */
+    /* Generate a Message-ID */
     protected static function generateId($idstring = null)
     {
         $midparams = [
             'utctime' => date('YmdHis'),
             'randint' => mt_rand(),
-            'customstr' => ($idstring !== null && preg_match('/^(?<!\\.)[a-z0-9\\.]+(?!\\.)$/iD', $idstring) ? $idstring : 'swift'),
+            'customstr' => ($idstring !== null && preg_match('/^(?<!\\.)[a-z0-9\\.]+(?!\\.)$/iD', $idstring) ? $idstring : 'mailer'),
             'hostname' => !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : php_uname('n'),
         ];
 

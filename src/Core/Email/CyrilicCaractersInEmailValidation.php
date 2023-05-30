@@ -33,7 +33,7 @@ use Egulias\EmailValidator\Result\Reason\ExceptionFound;
 use Egulias\EmailValidator\Validation\EmailValidation;
 use PrestaShop\PrestaShop\Core\Exception\NonASCIIInLocalPartException;
 
-class SwiftMailerValidation implements EmailValidation
+class CyrilicCaractersInEmailValidation implements EmailValidation
 {
     /**
      * @var InvalidEmail|null
