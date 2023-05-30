@@ -222,7 +222,7 @@ class TranslateCore
         }
 
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
-            return str_replace('"', '&quot;', $string);
+            return str_replace('"', '&quot;', Translate::checkAndReplaceArgs($string, $sprintf));
         }
 
         $string = preg_replace("/\\\*'/", "\'", $string);
