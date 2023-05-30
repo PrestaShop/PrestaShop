@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
-use Shop;
 
 /**
  * Data provider for new Architecture, about Product stocks.
@@ -54,18 +53,13 @@ class StockManager implements StockInterface
         $stockAvailable = $this->newStockAvailable($this->getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
 
         if (!$stockAvailable->id) {
-            $shopAdapter = new ShopAdapter();
+            $shop_group = $this->getShopGroup($id_shop);
+
             $stockAvailable->id_product = (int) $product->id;
             $stockAvailable->id_product_attribute = (int) $id_product_attribute;
 
             $outOfStock = $this->outOfStock((int) $product->id, $id_shop);
             $stockAvailable->out_of_stock = (int) $outOfStock;
-
-            if ($id_shop === null) {
-                $shop_group = $shopAdapter->getContextShopGroup();
-            } else {
-                $shop_group = $shopAdapter->ShopGroup((int) $shopAdapter->getGroupFromShop((int) $id_shop));
-            }
 
             // if quantities are shared between shops of the group
             if ($shop_group->share_stock) {
@@ -104,8 +98,9 @@ class StockManager implements StockInterface
     {
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
         $whereShopIdCond = $shopId;
+        $shop_group = $this->getShopGroup($shopId);
 
-        if(Shop::isFeatureActive() && Shop::getContextShopGroup()->share_stock){
+        if ($shop_group->share_stock) {
             $whereShopIdCond = 0;
         }
 
@@ -147,11 +142,14 @@ class StockManager implements StockInterface
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
+        $shop_group = $this->getShopGroup($shopId);
+
         $whereShopIdCond = $shopId;
         $whereCondition = 'o.id_shop = :shop_id AND ';
-        if(Shop::isFeatureActive() && Shop::getContextShopGroup()->share_stock){
+
+        if ($shop_group->share_stock) {
             $whereShopIdCond = 0;
-            $whereCondition = 'o.id_shop_group = '. Shop::getContextShopGroup()->id .' AND ';
+            $whereCondition = 'o.id_shop_group = ' . $shop_group->id . ' AND ';
         }
 
         $updateReservedQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
@@ -205,6 +203,26 @@ class StockManager implements StockInterface
         $updateReservedQuantityQuery = strtr($updateReservedQuantityQuery, $strParams);
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
+    }
+
+     /**
+     * return shop_group from current shop.
+     *
+     * @param int $shopId
+     *
+     * @return ShopGroup object
+     */
+    private function getShopGroup($shopId)
+    {
+        $shopAdapter = new ShopAdapter();
+
+        if ($shopId === null) {
+            $shop_group = $shopAdapter->getContextShopGroup();
+        } else {
+            $shop_group = $shopAdapter->ShopGroup((int) $shopAdapter->getGroupFromShop((int) $shopId));
+        }
+
+        return $shop_group;
     }
 
     /**
