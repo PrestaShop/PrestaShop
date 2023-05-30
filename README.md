@@ -130,7 +130,7 @@ Responsible (and private) disclosure is a standard practice when someone encount
 
 The PrestaShop team tries to be very proactive when preventing security problems. Even so, critical issues might surface without notice.
 
-This is why we have set up a [Bug Bounty Program](https://yeswehack.com/programs/prestashop) where anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
+This is why we have set up a [Bug Bounty Program][bug-bounty] where anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
 
 Understanding a security issue means knowing how the attacker got in and hacked the site. If you have those details, then please do contact us privately about it (and please do not publish those details before we answer). If you do not know how the attacker got in, please [ask for help][support].
 
@@ -175,3 +175,4 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [reporting-issues]: https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/
 [modules-devdocs]: https://devdocs.prestashop-project.org/8/modules/
 [themes-devdocs]: https://devdocs.prestashop-project.org/8/themes/
+[bug-bounty]: https://www.prestashop-project.org/security/bug-bounty/
