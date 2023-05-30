@@ -43,7 +43,7 @@ Check that there is 1 image in the delivery slip (Logo)
 describe('BO - Orders - Delivery slips : Enable/Disable product image', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {

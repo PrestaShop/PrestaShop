@@ -25,7 +25,7 @@ const baseContext: string = 'functional_BO_orders_invoices_generateInvoiceByDate
 describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   const todayDate: string = date.getDateFormat('yyyy-mm-dd');
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');

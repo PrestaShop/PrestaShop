@@ -1,7 +1,7 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
 
-import {Page} from 'playwright';
+import {Frame, Page} from 'playwright';
 
 /**
  * BO parent page, contains functions that can be used on all BO page
@@ -123,7 +123,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly modulesParentLink: string;
 
-  private readonly moduleCatalogueLink: string;
+  public readonly moduleCatalogueLink: string;
 
   public readonly moduleManagerLink: string;
 
@@ -135,7 +135,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly pagesLink: string;
 
-  private readonly positionsLink: string;
+  public readonly positionsLink: string;
 
   public readonly imageSettingsLink: string;
 
@@ -183,7 +183,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly informationLink: string;
 
-  private readonly performanceLink: string;
+  public readonly performanceLink: string;
 
   private readonly administrationLink: string;
 
@@ -205,7 +205,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly multistoreLink: string;
 
-  private readonly menuTabLink: string;
+  public readonly menuTabLink: string;
 
   public readonly menuTree: { parent: string; children: string[] }[];
 
@@ -252,6 +252,8 @@ export default class BOBasePage extends CommonPage {
   private readonly invalidTokenContinueLink: string;
 
   private readonly invalidTokenCancelLink: string;
+
+  public readonly debugModeToolbar: string;
 
   /**
    * @constructs
@@ -303,6 +305,8 @@ export default class BOBasePage extends CommonPage {
     this.navbarCollapsed = (isCollapsed) => `body${isCollapsed
       ? '.page-sidebar-closed'
       : ':not(.page-sidebar-closed)'}`;
+
+    this.debugModeToolbar = 'div[id*=sfToolbarMainContent]';
 
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';
@@ -891,10 +895,10 @@ export default class BOBasePage extends CommonPage {
 
   /**
    * Close symfony Toolbar
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @return {Promise<void>}
    */
-  async closeSfToolBar(page: Page): Promise<void> {
+  async closeSfToolBar(page: Frame|Page): Promise<void> {
     if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await page.click(this.sfCloseToolbarLink);
     }
@@ -923,9 +927,9 @@ export default class BOBasePage extends CommonPage {
   /**
    * Get help document URL
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getHelpDocumentURL(page: Page): Promise<string | null> {
+  async getHelpDocumentURL(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.helpDocumentURL, 'data');
   }
 
@@ -980,19 +984,19 @@ export default class BOBasePage extends CommonPage {
 
   /**
    * Get text content of alert success block
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockContent(page: Page): Promise<string> {
+  getAlertSuccessBlockContent(page: Frame|Page): Promise<string> {
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Get text content of alert success block paragraph
-   * @param page {Page} Browser tab
+   * @param page {Frame|Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockParagraphContent(page: Page): Promise<string> {
+  getAlertSuccessBlockParagraphContent(page: Frame|Page): Promise<string> {
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 

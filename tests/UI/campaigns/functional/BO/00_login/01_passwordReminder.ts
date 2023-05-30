@@ -15,7 +15,7 @@ import loginPage from '@pages/BO/login';
 
 // Import data
 import EmployeeData from '@data/faker/employee';
-import type MailDevEmail from '@data/types/maildev';
+import type MailDevEmail from '@data/types/maildevEmail';
 
 import {expect} from 'chai';
 import type MailDev from 'maildev';

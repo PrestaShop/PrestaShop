@@ -16,7 +16,7 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
@@ -235,7 +235,9 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAddress', baseContext);
 
         editAddressIframe = await addOrderPage.getEditAddressIframe(page);
-        await addAddressPage.createEditAddress(editAddressIframe, addressToEditData, true, false);
+        await expect(editAddressIframe).to.be.not.null;
+
+        await addAddressPage.createEditAddress(editAddressIframe!, addressToEditData, true, false);
 
         const editedAddress = await addOrderPage.getDeliveryAddressDetails(page);
         await expect(editedAddress).to.be.equal(`${addressToEditData.firstName} ${addressToEditData.lastName}`
@@ -262,7 +264,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       it('should filter the list by order ID', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterOrdersTableByID', baseContext);
 
-        await ordersPage.filterOrders(page, 'input', 'id_order', orderID);
+        await ordersPage.filterOrders(page, 'input', 'id_order', orderID.toString());
 
         const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
         await expect(numberOfOrdersAfterFilter).to.be.equal(1);
@@ -446,8 +448,9 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'editAddress2', baseContext);
 
         editAddressIframe = await addOrderPage.getEditAddressIframe(page);
+        await expect(editAddressIframe).to.be.not.null;
 
-        await addAddressPage.createEditAddress(editAddressIframe, newAddressToCreate, true, false);
+        await addAddressPage.createEditAddress(editAddressIframe!, newAddressToCreate, true, false);
 
         const editedAddress = await addOrderPage.getInvoiceAddressDetails(page);
         await expect(editedAddress).to.be.equal(`${newAddressToCreate.firstName} ${newAddressToCreate.lastName}`
@@ -471,7 +474,9 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addNewAddress', baseContext);
 
       addAddressIframe = await addOrderPage.getAddAddressIframe(page);
-      await addAddressPage.createEditAddress(addAddressIframe, newAddressData, true, false);
+      await expect(addAddressIframe).to.be.not.null;
+
+      await addAddressPage.createEditAddress(addAddressIframe!, newAddressData, true, false);
 
       const deliveryAddress = await addOrderPage.getDeliveryAddressList(page);
       await expect(deliveryAddress).to.contains(newAddressData.alias);

@@ -179,7 +179,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue1', baseContext);
 
-      const discount = await basicHelper.percentage(Products.demo_8.finalPrice, newCartRuleData.discountPercent);
+      const discount = await basicHelper.percentage(Products.demo_8.finalPrice, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
       await expect(discountValue).to.eq(-discount.toFixed(2));
@@ -197,7 +197,7 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue2', baseContext);
 
-      const discount = await basicHelper.percentage(Products.demo_8.finalPrice, newCartRuleData.discountPercent);
+      const discount = await basicHelper.percentage(Products.demo_8.finalPrice, newCartRuleData.discountPercent!);
 
       const discountValue = await cartPage.getDiscountValue(page);
       await expect(discountValue).to.eq(-discount.toFixed(2));

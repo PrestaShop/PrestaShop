@@ -23,6 +23,7 @@ import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import {Frame} from 'playwright';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_searchAddRemoveVoucher';
 
@@ -46,7 +47,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCartRules: number = 0;
-  let addVoucherPage: Page;
+  let addVoucherPage: Frame|null;
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   // Data to create cart rule without code
@@ -167,7 +168,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await Promise.all([
         expect(result.name).to.contains(cartRuleWithoutCodeData.name),
         expect(result.description).to.equal(cartRuleWithoutCodeData.description),
-        expect(result.value).to.equal(cartRuleWithoutCodeData.discountAmount.value),
+        expect(result.value).to.equal(cartRuleWithoutCodeData.discountAmount!.value),
       ]);
     });
 
@@ -175,16 +176,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock1', baseContext);
 
       const totalTaxes = await basicHelper.percentage(
-        Products.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount.value,
+        Products.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount!.value,
         20,
       );
-      const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount.value;
+      const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithoutCodeData.discountAmount!.value;
       const totalTaxIncluded = totalTaxes + totalTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalVouchers).to.equal(`-€${cartRuleWithoutCodeData.discountAmount.value.toFixed(2)}`),
+        expect(result.totalVouchers).to.equal(`-€${cartRuleWithoutCodeData.discountAmount!.value.toFixed(2)}`),
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
         expect(result.totalTaxExcluded).to.equal(`€${totalTaxExcluded.toFixed(2)}`),
@@ -306,7 +307,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await Promise.all([
         expect(result.name).to.contains(cartRuleWithCodeData.name),
         expect(result.description).to.equal(cartRuleWithCodeData.description),
-        expect(result.value).to.equal(cartRuleWithCodeData.discountAmount.value),
+        expect(result.value).to.equal(cartRuleWithCodeData.discountAmount!.value),
       ]);
     });
 
@@ -314,16 +315,16 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
       const totalTaxes = await basicHelper.percentage(
-        Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount.value,
+        Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value,
         20,
       );
-      const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount.value;
+      const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value;
       const totalTaxIncluded = totalTaxes + totalTaxExcluded;
 
       const result = await addOrderPage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
-        expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeData.discountAmount.value.toFixed(2)}`),
+        expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeData.discountAmount!.value.toFixed(2)}`),
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
         expect(result.totalTaxExcluded).to.equal(`€${totalTaxExcluded.toFixed(2)}`),
@@ -385,12 +386,13 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await expect(isIframeVisible, 'Add cart rule frame is not visible!').to.be.true;
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
+      await expect(addVoucherPage).to.be.not.null;
     });
 
     it('should create then search for the disabled voucher and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchDisabledVoucher', baseContext);
 
-      await addCartRulePage.createEditCartRules(addVoucherPage, disabledCartRuleData, false);
+      await addCartRulePage.createEditCartRules(addVoucherPage!, disabledCartRuleData, false);
 
       await addOrderPage.searchVoucher(page, disabledCartRuleData.name);
 
@@ -412,8 +414,9 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'CreateCArtRuleWithGift', baseContext);
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
+      await expect(addVoucherPage).to.be.not.null;
 
-      await addCartRulePage.createEditCartRules(addVoucherPage, cartRuleWithGiftData, false);
+      await addCartRulePage.createEditCartRules(addVoucherPage!, cartRuleWithGiftData, false);
     });
 
     it('should search for the created voucher and check details', async function () {
@@ -506,7 +509,9 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'addFreeShippingVoucher', baseContext);
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
-      await addCartRulePage.createEditCartRules(addVoucherPage, cartRuleFreeShippingData, false);
+      await expect(addVoucherPage).to.be.not.null;
+
+      await addCartRulePage.createEditCartRules(addVoucherPage!, cartRuleFreeShippingData, false);
     });
 
     it('should search for the created voucher and check details', async function () {

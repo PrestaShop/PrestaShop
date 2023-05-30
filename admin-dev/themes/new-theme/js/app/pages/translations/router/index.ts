@@ -26,7 +26,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import Overview from '@app/pages/translations/components/app.vue';
 
 export default createRouter({
-  history: createWebHistory(`${window.data.baseUrl}/translations`),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',

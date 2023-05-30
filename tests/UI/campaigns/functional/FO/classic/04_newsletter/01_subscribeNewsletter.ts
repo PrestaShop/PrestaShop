@@ -8,13 +8,13 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foAccountIdentityPage from '@pages/FO/myAccount/identity';
 
 // Import data
@@ -88,7 +88,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
 
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
-      const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
@@ -96,7 +96,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToInformationPage(page);
+      await myAccountPage.goToInformationPage(page);
 
       const pageTitle = await foAccountIdentityPage.getPageTitle(page);
       await expect(pageTitle).to.equal(foAccountIdentityPage.pageTitle);

@@ -37,6 +37,10 @@ class Category extends FOBasePage {
 
   private readonly valueToSortBy: (sortBy: string) => string;
 
+  private readonly subCategoriesList: string;
+
+  private readonly subCategoriesItem: (title: string) => string;
+
   private readonly productList: string;
 
   private readonly productArticle: (number: number) => string;
@@ -77,6 +81,10 @@ class Category extends FOBasePage {
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
     this.valueToSortBy = (sortBy: string) => `${this.productListTop} .products-sort-order .dropdown-menu a[href*='${sortBy}']`;
+
+    // SubCategories List
+    this.subCategoriesList = '#subcategories ul.subcategories-list';
+    this.subCategoriesItem = (title: string) => `${this.subCategoriesList} li a[title="${title}"]`;
 
     // Products list
     this.productList = '#js-product-list';
@@ -143,7 +151,7 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getSortByValue(page: Page): Promise<string> {
+  async getSortByValue(page: Page): Promise<string> {
     return this.getTextContent(page, this.sortByButton);
   }
 
@@ -152,7 +160,7 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isSortButtonVisible(page: Page): Promise<boolean> {
+  async isSortButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.sortByButton, 1000);
   }
 
@@ -198,7 +206,7 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isPagesListVisible(page: Page): Promise<boolean> {
+  async isPagesListVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.pagesList);
   }
 
@@ -207,7 +215,7 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPagesList(page: Page): Promise<string> {
+  async getPagesList(page: Page): Promise<string> {
     return this.getTextContent(page, this.pagesList);
   }
 
@@ -216,7 +224,7 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getShowingItems(page: Page): Promise<string> {
+  async getShowingItems(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationText, true);
   }
 
@@ -255,8 +263,14 @@ class Category extends FOBasePage {
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
-          .getPropertyValue('display') === 'block',
+        (selector) => {
+          const element: HTMLElement|null = document.querySelector(selector);
+
+          if (element === null) {
+            return false;
+          }
+          return window.getComputedStyle(element, ':after').getPropertyValue('display') === 'block';
+        },
         this.productDescriptionDiv(id),
       );
       await page.waitForTimeout(100);
@@ -264,7 +278,7 @@ class Category extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), (el) => el.click()),
+      page.$eval(this.productQuickViewLink(id), (el: HTMLElement) => el.click()),
     ]);
   }
 
@@ -291,8 +305,18 @@ class Category extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getCategoryDescription(page: Page): Promise<string> {
+  async getCategoryDescription(page: Page): Promise<string> {
     return this.getTextContent(page, this.categoryDescription, true);
+  }
+
+  /**
+   * Returns the URL of the main image of a subcategory
+   * @param page {Page} Browser tab
+   * @param name {string} Name of a category
+   * @returns {Promise<string|null>}
+   */
+  async getCategoryImageMain(page: Page, name: string): Promise<string|null> {
+    return this.getAttributeContent(page, `${this.subCategoriesItem(name)} source`, 'srcset');
   }
 
   /**

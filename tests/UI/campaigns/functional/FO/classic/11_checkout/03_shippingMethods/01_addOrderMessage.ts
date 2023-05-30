@@ -9,7 +9,7 @@ import {homePage} from '@pages/FO/home';
 import {loginPage} from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 

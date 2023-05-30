@@ -19,7 +19,7 @@ const baseContext: string = 'functional_BO_orders_orders_exportOrders';
 describe('BO - Orders : Export orders', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string;
+  let filePath: string|null;
 
   // before and after functions
   before(async function () {

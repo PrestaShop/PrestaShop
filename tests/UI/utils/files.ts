@@ -7,6 +7,7 @@ import path from 'path';
 import {getDocument, OPS, PDFDocumentProxy} from 'pdfjs-dist/legacy/build/pdf.js';
 import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
 import https from 'https';
+import {RawImageData} from 'jpeg-js';
 
 /**
  * @module FilesHelper
@@ -15,11 +16,11 @@ import https from 'https';
 export default {
   /**
    * Delete File if exist
-   * @param filePath {string} Filepath to delete
+   * @param filePath {string|null} Filepath to delete
    * @return {Promise<void>}
    */
-  async deleteFile(filePath: string): Promise<void> {
-    if (fs.existsSync(filePath)) {
+  async deleteFile(filePath: string|null): Promise<void> {
+    if (filePath && fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
   },
@@ -49,12 +50,16 @@ export default {
 
   /**
    * Check if file was download in path
-   * @param filePath {string} Filepath to check
+   * @param filePath {string|null} Filepath to check
    * @param attempt {number} Number of attempt to check for the file
    * @returns {Promise<boolean>}
    */
-  async doesFileExist(filePath: string, attempt: number = 5000): Promise<boolean> {
-    let found = false;
+  async doesFileExist(filePath: string|null, attempt: number = 5000): Promise<boolean> {
+    if (filePath === null) {
+      return false;
+    }
+
+    let found: boolean = false;
 
     for (let i = 0; i <= attempt && !found; i += 100) {
       await (new Promise((resolve) => {
@@ -81,12 +86,15 @@ export default {
 
   /**
    * Check text in PDF
-   * @param filePath {string} Path of the PDF file
+   * @param filePath {string|null} Path of the PDF file
    * @param text {string} Text to check on the file
    * @param deleteComma {boolean} True if we need to delete comma
    * @returns {Promise<boolean>}
    */
-  async isTextInPDF(filePath: string, text: string, deleteComma: boolean = false): Promise<boolean> {
+  async isTextInPDF(filePath: string|null, text: string, deleteComma: boolean = false): Promise<boolean> {
+    if (filePath === null) {
+      return false;
+    }
     const pdf = await getDocument({
       url: filePath,
       standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
@@ -109,10 +117,13 @@ export default {
 
   /**
    * Get quantity of images on the PDF
-   * @param filePath {string} FilePath of the PDF file
+   * @param filePath {string|null} FilePath of the PDF file
    * @return {Promise<number>}
    */
-  async getImageNumberInPDF(filePath: string): Promise<number> {
+  async getImageNumberInPDF(filePath: string|null): Promise<number> {
+    if (filePath === null) {
+      return 0;
+    }
     const pdf = await getDocument({
       url: filePath,
       standardFontDataUrl: path.join(path.dirname(__dirname), 'node_modules/pdfjs-dist/standard_fonts/'),
@@ -172,7 +183,7 @@ export default {
   },
   /**
    * Check text in file
-   * @param filePath {string} Filepath to check
+   * @param filePath {string|null} Filepath to check
    * @param textToCheckWith {string} Text to check on the file
    * @param ignoreSpaces {boolean} True to delete all spaces before the check
    * @param ignoreTimeZone {boolean} True to delete timezone string added to some image url
@@ -180,12 +191,15 @@ export default {
    * @return {Promise<boolean>}
    */
   async isTextInFile(
-    filePath: string,
+    filePath: string|null,
     textToCheckWith: string,
     ignoreSpaces: boolean = false,
     ignoreTimeZone: boolean = false,
     encoding: BufferEncoding = 'utf8',
   ): Promise<boolean> {
+    if (filePath === null) {
+      return false;
+    }
     let fileText: string = await fs.readFileSync(filePath, {
       encoding,
     });
@@ -228,7 +242,7 @@ export default {
 
     switch (extension) {
       case 'jpg': {
-        await imgGen.generateImage(width, height, quality, (err: Error, image: object) => {
+        await imgGen.generateImage(width, height, quality, (err: Error|null, image: RawImageData<Buffer>) => {
           if ('data' in image) {
             fs.writeFileSync(imageName, image.data);
           }
@@ -285,11 +299,14 @@ export default {
 
   /**
    * Rename files
-   * @param oldPath {string} Old path of the file
+   * @param oldPath {string|null} Old path of the file
    * @param newPath {string} New path of the file
    * @return {Promise<void>}
    */
-  async renameFile(oldPath: string, newPath: string): Promise<void> {
+  async renameFile(oldPath: string|null, newPath: string): Promise<void> {
+    if (oldPath === null) {
+      return;
+    }
     await fs.rename(oldPath, newPath, (err) => {
       if (err) throw err;
     });

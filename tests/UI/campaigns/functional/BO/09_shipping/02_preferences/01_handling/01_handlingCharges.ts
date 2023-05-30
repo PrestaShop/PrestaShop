@@ -45,7 +45,7 @@ Go back to default value : tax included in Customer group page
 describe('BO - Shipping - Preferences : Test handling charges for carriers in FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let newCarrierID: string = '0';
+  let newCarrierID: number = 0;
 
   const createCarrierData: CarrierData = new CarrierData({
     freeShipping: false,
@@ -167,7 +167,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       await carriersPage.filterTable(page, 'input', 'name', createCarrierData.name);
 
-      newCarrierID = await carriersPage.getTextColumn(page, 1, 'id_carrier');
+      newCarrierID = parseInt(await carriersPage.getTextColumn(page, 1, 'id_carrier'), 10);
 
       const name = await carriersPage.getTextColumn(page, 1, 'name');
       await expect(name).to.contains(createCarrierData.name);

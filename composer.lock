@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v2.7.6",
+            "version": "v2.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "e6cb63475c0ae13b9c8861004728751e8d2e899d"
+                "reference": "79f548640960c8df36d4048e2de3a7d7113fbd6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/e6cb63475c0ae13b9c8861004728751e8d2e899d",
-                "reference": "e6cb63475c0ae13b9c8861004728751e8d2e899d",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/79f548640960c8df36d4048e2de3a7d7113fbd6b",
+                "reference": "79f548640960c8df36d4048e2de3a7d7113fbd6b",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v2.7.6"
+                "source": "https://github.com/api-platform/core/tree/v2.7.11"
             },
             "funding": [
                 {
@@ -173,7 +173,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-14T07:49:28+00:00"
+            "time": "2023-03-10T09:36:05+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -2469,16 +2469,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.4.3",
+            "version": "2.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "67c26b443f348a51926030c83481b85718457d3d"
+                "reference": "0454e12ef0cd597ccd2adb036f7bda4e7fface66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/67c26b443f348a51926030c83481b85718457d3d",
-                "reference": "67c26b443f348a51926030c83481b85718457d3d",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/0454e12ef0cd597ccd2adb036f7bda4e7fface66",
+                "reference": "0454e12ef0cd597ccd2adb036f7bda4e7fface66",
                 "shasum": ""
             },
             "require": {
@@ -2504,9 +2504,6 @@
                 "bamarni-bin": {
                     "bin-links": true,
                     "forward-command": false
-                },
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2568,7 +2565,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.4.3"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.5"
             },
             "funding": [
                 {
@@ -2584,7 +2581,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-26T14:07:24+00:00"
+            "time": "2023-04-17T16:00:45+00:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -4501,16 +4498,16 @@
         },
         {
             "name": "nyholm/psr7",
-            "version": "1.5.1",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nyholm/psr7.git",
-                "reference": "f734364e38a876a23be4d906a2a089e1315be18a"
+                "reference": "e874c8c4286a1e010fb4f385f3a55ac56a05cc93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/f734364e38a876a23be4d906a2a089e1315be18a",
-                "reference": "f734364e38a876a23be4d906a2a089e1315be18a",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/e874c8c4286a1e010fb4f385f3a55ac56a05cc93",
+                "reference": "e874c8c4286a1e010fb4f385f3a55ac56a05cc93",
                 "shasum": ""
             },
             "require": {
@@ -4520,6 +4517,7 @@
                 "psr/http-message": "^1.0"
             },
             "provide": {
+                "php-http/message-factory-implementation": "1.0",
                 "psr/http-factory-implementation": "1.0",
                 "psr/http-message-implementation": "1.0"
             },
@@ -4532,7 +4530,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.6-dev"
                 }
             },
             "autoload": {
@@ -4562,7 +4560,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Nyholm/psr7/issues",
-                "source": "https://github.com/Nyholm/psr7/tree/1.5.1"
+                "source": "https://github.com/Nyholm/psr7/tree/1.6.1"
             },
             "funding": [
                 {
@@ -4574,7 +4572,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-22T07:13:36+00:00"
+            "time": "2023-04-17T16:03:48+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -5118,16 +5116,16 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "9cf6e28af5549ebc0f8d700c77bbfdf646f6b43f"
+                "reference": "481b7af6c5d5f82b4db05ec4fd747a9cc5ff87e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/9cf6e28af5549ebc0f8d700c77bbfdf646f6b43f",
-                "reference": "9cf6e28af5549ebc0f8d700c77bbfdf646f6b43f",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/481b7af6c5d5f82b4db05ec4fd747a9cc5ff87e3",
+                "reference": "481b7af6c5d5f82b4db05ec4fd747a9cc5ff87e3",
                 "shasum": ""
             },
             "require-dev": {
@@ -5151,9 +5149,9 @@
             ],
             "description": "Classic theme for PrestaShop 1.7",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/2.1.0"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/2.1.1"
             },
-            "time": "2023-02-24T16:27:02+00:00"
+            "time": "2023-03-13T21:18:14+00:00"
         },
         {
             "name": "prestashop/contactform",

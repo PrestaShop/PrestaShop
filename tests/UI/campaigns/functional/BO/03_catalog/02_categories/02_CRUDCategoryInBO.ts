@@ -29,8 +29,8 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCategories: number = 0;
-  let categoryID: string = '0';
-  let subcategoryID: string = '0';
+  let categoryID: number = 0;
+  let subcategoryID: number = 0;
 
   const createCategoryData: CategoryData = new CategoryData();
   const createSubCategoryData: CategoryData = new CategoryData({name: 'subCategoryToCreate'});
@@ -130,7 +130,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       it('should go to FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCheckCreatedCategory', baseContext);
 
-        categoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
+        categoryID = parseInt(await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
         // View Shop
         page = await categoriesPage.viewMyShop(page);
         // Change FO language
@@ -223,7 +223,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       it('should go to FO and check the created Subcategory', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedSubcategoryFO', baseContext);
 
-        subcategoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
+        subcategoryID = parseInt(await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
         // View shop
         page = await categoriesPage.viewMyShop(page);
         // Change language in FO
@@ -438,7 +438,7 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         'name',
         editCategoryData.name,
       );
-      categoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
+      categoryID = parseInt(await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
 
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
       await expect(textColumn).to.contains(editCategoryData.name);

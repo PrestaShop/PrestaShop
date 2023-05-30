@@ -27,6 +27,7 @@ import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
+import OrderShippingData from '@data/faker/orderShipping';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -53,11 +54,11 @@ describe('BO - Orders : Preview order', async () => {
   const addressData: AddressData = new AddressData({country: 'France'});
   const editShippingAddressData: AddressData = new AddressData({country: 'France'});
   const editInvoiceAddressData: AddressData = new AddressData({country: 'France'});
-  const shippingDetailsData = {
+  const shippingDetailsData: OrderShippingData = new OrderShippingData({
     trackingNumber: '123654789',
     carrier: Carriers.myCarrier.name,
     carrierID: Carriers.myCarrier.id,
-  };
+  });
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

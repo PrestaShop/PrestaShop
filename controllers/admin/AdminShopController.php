@@ -617,7 +617,7 @@ class AdminShopControllerCore extends AdminController
                 'select' => [
                     'type' => 'select',
                     'name' => 'importFromShop',
-                    'label' => $this->trans('Choose the source shop', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Choose the source store', [], 'Admin.Advparameters.Feature'),
                     'options' => [
                         'query' => Shop::getShops(false),
                         'name' => 'name',
@@ -893,7 +893,7 @@ class AdminShopControllerCore extends AdminController
 
         $tree = [[
             'data' => [
-                'title' => '<b>' . $this->trans('Shop groups list', [], 'Admin.Advparameters.Feature') . '</b>',
+                'title' => '<b>' . $this->trans('Store groups list', [], 'Admin.Advparameters.Feature') . '</b>',
                 'icon' => 'themes/' . $this->context->employee->bo_theme . '/img/tree-multishop-root.png',
                 'attr' => [
                     'href' => $this->context->link->getAdminLink('AdminShopGroup'),

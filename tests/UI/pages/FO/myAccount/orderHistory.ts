@@ -2,7 +2,7 @@ import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
 
-import {OrderHistory} from '@data/types/order';
+import {OrderHistory, OrderHistoryMessage} from '@data/types/order';
 
 /**
  * Order history page, contains functions that can be used on the page
@@ -159,9 +159,9 @@ class OrderHistoryPage extends FOBasePage {
    * Get order id from invoice href
    * @param page {Page} Browser tab
    * @param orderRow {number} Row number in orders table
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  getOrderIdFromInvoiceHref(page: Page, orderRow: number = 1): Promise<string | null> {
+  getOrderIdFromInvoiceHref(page: Page, orderRow: number = 1): Promise<string> {
     return this.getAttributeContent(page, this.orderTableColumnInvoice(orderRow), 'href');
   }
 
@@ -244,10 +244,10 @@ class OrderHistoryPage extends FOBasePage {
   /**
    * Send message
    * @param page {Page} Browser tab
-   * @param messageText {{product: string, message:string}} Data to set on Add message form
+   * @param messageText {OrderHistoryMessage} Data to set on Add message form
    * @returns {Promise<string>}
    */
-  async sendMessage(page: Page, messageText: any): Promise<string> {
+  async sendMessage(page: Page, messageText: OrderHistoryMessage): Promise<string> {
     if (messageText.product !== '') {
       await this.selectByVisibleText(page, this.productSelect, messageText.product);
     }

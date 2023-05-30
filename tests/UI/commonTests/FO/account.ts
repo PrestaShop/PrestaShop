@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
 import {createAccountPage as foCreateAccountPage} from '@pages/FO/myAccount/add';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
@@ -79,7 +79,7 @@ function createAccountTest(customerData: CustomerData, baseContext: string = 'co
 }
 
 function createAddressTest(
-  customerLoginData: object,
+  customerLoginData: CustomerData,
   addressData: AddressData,
   baseContext: string = 'commonTests-createAddressTest',
 ): void {
@@ -128,14 +128,14 @@ function createAddressTest(
 
       await homePage.goToMyAccountPage(page);
 
-      const pageTitle = await foMyAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+      const pageTitle = await myAccountPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go to \'Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
 
-      await foMyAccountPage.goToAddressesPage(page);
+      await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.include(foAddressesPage.addressPageTitle);

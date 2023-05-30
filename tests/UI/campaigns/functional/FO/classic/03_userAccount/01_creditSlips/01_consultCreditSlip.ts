@@ -13,7 +13,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import myAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import ordersPage from '@pages/BO/orders';
@@ -55,7 +55,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   let orderReference: string;
   let creditSlipID: string;
   let dateIssued: string;
-  let filePath: string;
+  let filePath: string|null;
 
   const customerData: CustomerData = new CustomerData();
   const addressData: AddressData = new AddressData({

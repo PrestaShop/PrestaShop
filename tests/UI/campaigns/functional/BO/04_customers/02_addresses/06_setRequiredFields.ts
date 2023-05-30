@@ -12,7 +12,7 @@ import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
@@ -104,7 +104,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       await testContext.addContextItem(this, 'testIdentifier', `goToFOAddressesPage${index}`, baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToAddressesPage(page);
+      await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);

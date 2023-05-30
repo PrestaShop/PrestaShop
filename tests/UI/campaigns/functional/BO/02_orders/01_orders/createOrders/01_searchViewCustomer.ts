@@ -176,8 +176,9 @@ describe('BO - Orders - Create order : Search and view customer details from new
       await testContext.addContextItem(this, 'testIdentifier', 'checkPersonalInformation', baseContext);
 
       customerIframe = await addOrderPage.getCustomerIframe(page, Customers.johnDoe.id);
+      await expect(customerIframe).to.be.not.null;
 
-      const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(customerIframe);
+      const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(customerIframe!);
       await expect(cardHeaderText).to.contains(Customers.johnDoe.firstName);
       await expect(cardHeaderText).to.contains(Customers.johnDoe.lastName);
       await expect(cardHeaderText).to.contains(Customers.johnDoe.email);
@@ -197,7 +198,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
       it(`should check the ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.blockName}Number`, baseContext);
 
-        const cardHeaderText = await viewCustomerPage.getNumberOfElementFromTitle(customerIframe, test.args.blockName);
+        const cardHeaderText = await viewCustomerPage.getNumberOfElementFromTitle(customerIframe!, test.args.blockName);
         await expect(parseInt(cardHeaderText, 10)).to.be.at.least(test.args.number);
       });
     });
@@ -205,7 +206,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
     it('should check the existence of add private note block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddPrivateNote', baseContext);
 
-      const isVisible = await viewCustomerPage.isPrivateNoteBlockVisible(customerIframe);
+      const isVisible = await viewCustomerPage.isPrivateNoteBlockVisible(customerIframe!);
       await expect(isVisible).to.be.true;
     });
   });

@@ -354,7 +354,7 @@ export default class ModuleCard {
   ): boolean {
     if (this.pendingRequest) {
       $.growl.warning({
-        message: window.translate_javascripts['An action is already in progress please wait for it to finish.'],
+        message: window.translate_javascripts['An action is already in progress. Please wait for it to finish.'],
       });
       return false;
     }

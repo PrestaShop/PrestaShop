@@ -12,7 +12,7 @@ class Translations extends BOBasePage {
 
   public readonly validationMessage: string;
 
-  private readonly validationResetMessage: string;
+  public readonly validationResetMessage: string;
 
   public readonly successAlertMessage: string;
 

@@ -127,4 +127,13 @@ export default {
     decimals: 0,
     enabled: true,
   }),
+  pyg: new CurrencyData({
+    name: 'Paraguayan Guarani',
+    frName: 'guaraní paraguayen',
+    symbol: 'PYG',
+    isoCode: 'PYG',
+    exchangeRate: 7942.22,
+    decimals: 0,
+    enabled: true,
+  }),
 };

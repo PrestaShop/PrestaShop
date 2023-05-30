@@ -22,11 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {createRouter, createWebHistory} from 'vue-router';
+import {createRouter, createWebHistory, RouteLocationNormalized} from 'vue-router';
 import Overview from '@app/pages/stock/components/overview/index.vue';
 import Movements from '@app/pages/stock/components/movements/index.vue';
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(`${window.data.baseUrl}${/(index\.php)/.exec(window.location.href) ? '/index.php' : ''}/sell/stocks`),
   routes: [
     {
@@ -41,3 +41,16 @@ export default createRouter({
     },
   ],
 });
+
+function hasTokenQueryParams(route: RouteLocationNormalized) {
+  return '_token' in route.query;
+}
+router.beforeEach((to, from, next) => {
+  if (!hasTokenQueryParams(to) && hasTokenQueryParams(from)) {
+    next({name: to.name!, query: from.query});
+  } else {
+    next();
+  }
+});
+
+export default router;

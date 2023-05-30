@@ -14,7 +14,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductData from '@data/faker/product';
-import {ProductDetails} from '@data/types/product';
+import {ProductInformations} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,7 +30,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   + 'with combinations in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let productInformation: ProductDetails = {
+  let productInformation: ProductInformations = {
     price: 0,
     name: '',
     description: '',

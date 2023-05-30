@@ -15,7 +15,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {homePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foVouchersPage from '@pages/FO/myAccount/vouchers';
 import cartPage from '@pages/FO/cart';
 
@@ -133,7 +133,7 @@ describe('BO - Catalog - Cart rules : Limit to single customer', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
       await homePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToVouchersPage(page);
+      await myAccountPage.goToVouchersPage(page);
 
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

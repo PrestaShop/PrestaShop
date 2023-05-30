@@ -202,7 +202,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
           filterType: 'input',
           testIdentifier: 'filterOutstandingAllowance1',
           filterBy: 'outstanding_allow_amount',
-          filterValue: createCustomerData1.allowedOutstandingAmount,
+          filterValue: createCustomerData1.allowedOutstandingAmount.toString(),
         },
       },
     ];

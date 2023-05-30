@@ -16,7 +16,7 @@ import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import orderDetails from '@pages/FO/myAccount/orderDetails';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
@@ -192,7 +192,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
-      const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
@@ -200,7 +200,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
-      await foMyAccountPage.goToHistoryAndDetailsPage(page);
+      await myAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);

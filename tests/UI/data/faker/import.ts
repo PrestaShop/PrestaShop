@@ -1,4 +1,13 @@
-import type {ImportAddress, ImportCreator, ImportHeaderItem} from '@data/types/import';
+import type {
+  ImportAddress,
+  ImportBrand,
+  ImportCategory,
+  ImportCombination,
+  ImportCreator,
+  ImportCustomer,
+  ImportHeaderItem,
+  ImportProduct,
+} from '@data/types/import';
 
 /**
  * Create new address to use in customer address form on BO and FO
@@ -9,7 +18,7 @@ export default class ImportData {
 
   public readonly header: ImportHeaderItem[];
 
-  public readonly records: ImportAddress[];
+  public readonly records: ImportAddress[]|ImportBrand[]|ImportCategory[]|ImportCombination[]|ImportCustomer[]|ImportProduct[];
 
   /**
    * Constructor for class ImportData

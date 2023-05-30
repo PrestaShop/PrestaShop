@@ -267,9 +267,9 @@ class HomePage extends FOBasePage {
   /**
    * Click on slider number
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getSliderURL(page: Page): Promise<string | null> {
+  async getSliderURL(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.carouselSliderURL, 'href');
   }
 
@@ -804,9 +804,9 @@ class HomePage extends FOBasePage {
    * Go to social sharing link
    * @param page {Page} Browser tab
    * @param socialSharing {string} The social network name
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string | null> {
+  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string> {
     let selector;
 
     switch (socialSharing) {

@@ -1,6 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import type ProductData from '@data/faker/product';
+import type {ProductFilterMinMax} from '@data/types/product';
 
 import type {Page} from 'playwright';
 
@@ -350,25 +351,28 @@ class Products extends BOBasePage {
    * Filter products
    * @param page {Page} Browser tab
    * @param filterBy {string} Column to filter
-   * @param value {{min: number, max:number}|string} Value to put on filter
+   * @param value {ProductFilterMinMax|string} Value to put on filter
    * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
-  async filterProducts(page: Page, filterBy: string, value: object | string = '', filterType: string = 'input') {
+  async filterProducts(page: Page, filterBy: string, value: ProductFilterMinMax|string = '', filterType: string = 'input') {
     switch (filterType) {
       case 'input':
-        switch (filterBy) {
-          case 'id_product':
-            await this.filterIDProducts(page, value.min, value.max);
-            break;
-          case 'price':
-            await this.filterPriceProducts(page, value.min, value.max);
-            break;
-          case 'sav_quantity':
-            await this.filterQuantityProducts(page, value.min, value.max);
-            break;
-          default:
-            await this.setValue(page, this.productFilterInput(filterBy), value);
+        if (typeof value === 'string') {
+          await page.type(this.productFilterInput(filterBy), value);
+        } else {
+          switch (filterBy) {
+            case 'id_product':
+              await this.filterIDProducts(page, value.min, value.max);
+              break;
+            case 'price':
+              await this.filterPriceProducts(page, value.min, value.max);
+              break;
+            case 'sav_quantity':
+              await this.filterQuantityProducts(page, value.min, value.max);
+              break;
+            default:
+          }
         }
         break;
       case 'select':
@@ -395,7 +399,7 @@ class Products extends BOBasePage {
   async getTextColumn(page: Page, columnName: string, row: number): Promise<string> {
     switch (columnName) {
       case 'id_product':
-        return this.getProductIDFromList(page, row);
+        return (await this.getProductIDFromList(page, row)).toString();
       case 'name':
         return this.getProductNameFromList(page, row);
       case 'reference':
@@ -403,11 +407,11 @@ class Products extends BOBasePage {
       case 'name_category':
         return this.getProductCategoryFromList(page, row);
       case 'price':
-        return this.getProductPriceFromList(page, row, false);
+        return (await this.getProductPriceFromList(page, row, false)).toString();
       case 'sav_quantity':
-        return this.getProductQuantityFromList(page, row);
+        return (await this.getProductQuantityFromList(page, row)).toString();
       case 'active':
-        return this.getProductStatusFromList(page, row);
+        return (await this.getProductStatusFromList(page, row)).toString();
       default:
       // Do nothing
     }
@@ -446,9 +450,18 @@ class Products extends BOBasePage {
     }
 
     const footerText = await this.getTextContent(page, this.productNumberBloc);
-    const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
+    const regexMatch: RegExpMatchArray|null = footerText.match(/out of ([0-9]+)/);
 
-    return parseInt(numberOfProduct, 10);
+    if (regexMatch === null) {
+      return 0;
+    }
+    const regexResult: RegExpExecArray|null = /\d+/g.exec(regexMatch.toString());
+
+    if (regexResult === null) {
+      return 0;
+    }
+
+    return parseInt(regexResult.toString(), 10);
   }
 
   /**

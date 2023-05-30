@@ -23,6 +23,7 @@ admin_carriers_edit:
   methods: GET
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::editAction'
+    _legacy_controller: AdminCarriers
   requirements:
     carrierId: \d+
 

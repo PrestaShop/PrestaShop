@@ -64,3 +64,10 @@ global.maildevConfig = {
   smtpServer: process.env.SMTP_SERVER || 'localhost',
   silent: true,
 };
+
+global.keycloakConfig = {
+  keycloakServer: process.env.KEYCLOAK_SERVER || 'http://127.0.0.1:8003',
+  keycloakAdminUser: process.env.KEYCLOAK_ADMIN_USER || 'admin',
+  keycloakAdminPass: process.env.KEYCLOAK_ADMIN_PASS || 'admin',
+  keycloakClientId: process.env.KEYCLOAK_CLIENT_ID || 'KEYCLOAK_CLIENT_ID',
+};

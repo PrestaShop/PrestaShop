@@ -38,6 +38,9 @@ import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import OrderShippingData from '@data/faker/orderShipping';
+import type {OrderPayment} from '@data/types/order';
+import type {ProductDiscount} from '@data/types/product';
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkInvoice';
 
@@ -140,17 +143,17 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     minimumQuantity: 1,
   });
   // Discount data
-  const discountData = {
+  const discountData: ProductDiscount = {
     name: 'Discount',
     type: 'Percent',
-    value: 65,
+    value: '65',
   };
   // Payment data
-  const paymentData = {
+  const paymentData: OrderPayment = {
     date: today,
     paymentMethod: 'Payments by check',
-    transactionID: '12190',
-    amount: (productWithEcoTax.price).toFixed(2),
+    transactionID: 12190,
+    amount: parseFloat((productWithEcoTax.price).toFixed(2)),
     currency: '€',
   };
 
@@ -1342,11 +1345,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should update the carrier', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
-          const shippingDetailsData = {
+          const shippingDetailsData: OrderShippingData = new OrderShippingData({
             trackingNumber: '',
             carrier: Carriers.myCarrier.name,
             carrierID: 1,
-          };
+          });
 
           const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
           await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
@@ -1413,7 +1416,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountsTable', baseContext);
 
           const totalPrice = productWithEcoTax.price + customizedProduct.price;
-          const discount = await basicHelper.percentage(totalPrice, discountData.value);
+          const discount = await basicHelper.percentage(totalPrice, parseInt(discountData.value, 10));
 
           const isDiscountVisible = await files.isTextInPDF(
             filePath,
@@ -1427,7 +1430,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscount', baseContext);
 
           const totalPrice = productWithEcoTax.price + customizedProduct.price;
-          const discount = await basicHelper.percentage(totalPrice, discountData.value);
+          const discount = await basicHelper.percentage(totalPrice, parseInt(discountData.value, 10));
 
           const isDiscountVisible = await files.isTextInPDF(
             filePath,
@@ -1462,7 +1465,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkIsDiscountNotVisible', baseContext);
 
           const totalPrice = productWithEcoTax.price + customizedProduct.price;
-          const discount = await basicHelper.percentage(totalPrice, discountData.value);
+          const discount = await basicHelper.percentage(totalPrice, parseInt(discountData.value, 10));
 
           const isDiscountVisible = await files.isTextInPDF(
             filePath,

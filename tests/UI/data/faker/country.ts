@@ -20,7 +20,7 @@ export default class CountryData {
 
   public readonly isoCode: string;
 
-  public readonly callPrefix: number;
+  public readonly callPrefix: string;
 
   public readonly currency: string;
 
@@ -52,8 +52,8 @@ export default class CountryData {
     /** @type {string} Country iso code */
     this.isoCode = countryToCreate.isoCode || faker.address.countryCode();
 
-    /** @type {number} Country call Prefix */
-    this.callPrefix = countryToCreate.callPrefix || 0;
+    /** @type {string} Country call Prefix */
+    this.callPrefix = countryToCreate.callPrefix || '0';
 
     /** @type {string} Currency used in the country */
     this.currency = countryToCreate.currency || faker.helpers.arrayElement(currencies);

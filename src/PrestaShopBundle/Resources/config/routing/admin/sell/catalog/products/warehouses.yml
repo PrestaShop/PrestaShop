@@ -3,6 +3,7 @@ admin_warehouse_refresh_product_warehouse_combination_form:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\WarehouseController::refreshProductWarehouseCombinationFormAction
+    _legacy_controller: AdminProducts
     idProduct: 0
   requirements:
     idProduct: \d+

@@ -73,7 +73,7 @@ describe('BO - Advanced Parameters - Team : Filter roles table', async () => {
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_profile', filterValue: 4,
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_profile', filterValue: '4',
         },
       },
       {

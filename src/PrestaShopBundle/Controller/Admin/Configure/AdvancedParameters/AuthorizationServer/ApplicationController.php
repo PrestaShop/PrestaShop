@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,6 +51,8 @@ use Symfony\Component\HttpFoundation\Response;
 class ApplicationController extends FrameworkBundleAdminController
 {
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param AuthorizedApplicationsFilters $filters the list of filters from the request
      *
      * @return Response
@@ -61,7 +64,7 @@ class ApplicationController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig', [
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
-            'layoutTitle' => $this->trans('Authorization server management', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -70,6 +73,9 @@ class ApplicationController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     */
     public function viewAction(): void
     {
         // TODO: Implement viewAction() method in view PR.
@@ -77,6 +83,8 @@ class ApplicationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return Response
@@ -106,6 +114,8 @@ class ApplicationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param int $applicationId
      *
@@ -150,6 +160,9 @@ class ApplicationController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     */
     public function deleteAction(): void
     {
         // TODO: Implement deleteAction() method in delete PR.

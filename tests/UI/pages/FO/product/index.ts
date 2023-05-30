@@ -1,7 +1,9 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import ProductReviewData from '@data/faker/productReview';
-import {ProductAttribute, ProductDetails} from '@data/types/product';
+import {
+  ProductAttribute, ProductImageUrls, ProductInformations,
+} from '@data/types/product';
 
 import type {Page} from 'playwright';
 
@@ -224,9 +226,9 @@ class Product extends FOBasePage {
   /**
    * Get product page URL
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  getProductPageURL(page: Page): Promise<string | null> {
+  getProductPageURL(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.metaLink, 'content');
   }
 
@@ -251,9 +253,9 @@ class Product extends FOBasePage {
   /**
    * Get Product information (Product name, price, short description, description)
    * @param page {Page} Browser tab
-   * @returns {Promise<ProductDetails>}
+   * @returns {Promise<ProductInformations>}
    */
-  async getProductInformation(page: Page): Promise<ProductDetails> {
+  async getProductInformation(page: Page): Promise<ProductInformations> {
     return {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),
@@ -338,9 +340,9 @@ class Product extends FOBasePage {
   /**
    * Get product image urls
    * @param page {Page} Browser tab
-   * @returns {Promise<{thumbImage: string|null, coverImage: string|null}>}
+   * @returns {Promise<ProductImageUrls>}
    */
-  async getProductImageUrls(page: Page): Promise<{ thumbImage: string | null, coverImage: string | null }> {
+  async getProductImageUrls(page: Page): Promise<ProductImageUrls> {
     return {
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
       thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
@@ -414,9 +416,9 @@ class Product extends FOBasePage {
    * Select thumb image
    * @param page {Page} Browser tab
    * @param id {number} Id for the thumb
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async selectThumbImage(page: Page, id: number): Promise<string | null> {
+  async selectThumbImage(page: Page, id: number): Promise<string> {
     if (id === 1) {
       await this.waitForSelectorAndClick(page, this.thumbFirstImg);
       await this.waitForVisibleSelector(page, `${this.thumbFirstImg}.selected`);
@@ -501,9 +503,9 @@ class Product extends FOBasePage {
    * Go to social sharing link
    * @param page {Page} Browser tab
    * @param socialSharing {string} Social network's name to get link from
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string | null> {
+  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string> {
     let selector;
 
     switch (socialSharing) {

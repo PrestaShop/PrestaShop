@@ -28,6 +28,7 @@
       v-if="isModalShown"
       :modal-title="$t('modal.title')"
       :confirmation="true"
+      :close-on-click-outside="false"
       @close="closeModal"
     >
       <template #body>

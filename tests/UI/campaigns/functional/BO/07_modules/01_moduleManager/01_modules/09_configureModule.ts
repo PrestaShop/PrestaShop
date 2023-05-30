@@ -7,17 +7,18 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
+import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
 
 // Import data
-import ModuleCategories from '@data/demo/moduleCategories';
+import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext: string = 'functional_BO_modules_moduleManager_filterModulesByCategories';
+const baseContext: string = 'functional_BO_modules_moduleManager_modules_configureModule';
 
-describe('BO - Modules - Module Manager : Filter modules by Categories', async () => {
+describe('BO - Modules - Module Manager : Configure module', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -49,17 +50,19 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
     await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  describe('Filter modules by categories', async () => {
-    ModuleCategories.forEach((category: string) => {
-      it(`should filter by category : '${category}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
+  it(`should search for module ${Modules.contactForm.name}`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-        // Filter modules by categories
-        await moduleManagerPage.filterByCategory(page, category);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
+    await expect(isModuleVisible, 'Module is not visible!').to.be.true;
+  });
 
-        const firstBlockTitle = await moduleManagerPage.getBlockModuleTitle(page, 1);
-        await expect(firstBlockTitle).to.equal(category);
-      });
-    });
+  it('should go to module configuration page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
+
+    await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.tag);
+
+    const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
+    await expect(pageSubtitle).to.contains(Modules.contactForm.name);
   });
 });

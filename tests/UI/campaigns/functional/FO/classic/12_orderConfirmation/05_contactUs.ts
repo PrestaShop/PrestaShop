@@ -14,7 +14,7 @@ import customerServiceMessageViewPage from '@pages/BO/customerService/customerSe
 // FO pages
 import {homePage as foHomePage} from '@pages/FO/home';
 import {loginPage as foLoginPage} from '@pages/FO/login';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
@@ -24,7 +24,7 @@ import contactUsPage from '@pages/FO/contactUs';
 import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import PaymentMethods from '@data/demo/paymentMethods';
-import type ContactUsData from '@data/types/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -48,12 +48,12 @@ describe('FO - Order confirmation : Contact us', async () => {
   let page: Page;
   const filename: string = 'testfile.txt';
 
-  const contactUsData: ContactUsData = {
+  const contactUsData: MessageData = new MessageData({
     subject: 'Customer service',
     message: 'Test message to customer service for order reference',
     emailAddress: Customers.johnDoe.email,
     reference: '',
-  };
+  });
 
   // before and after functions
   before(async function () {
@@ -97,7 +97,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
       await foLoginPage.customerLogin(page, Customers.johnDoe);
-      const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 

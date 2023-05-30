@@ -228,9 +228,9 @@ class ViewAttribute extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @param columnName {string} Column to get text value
-   * @return {Promise<string|null>}
+   * @return {Promise<string>}
    */
-  async getTextColumn(page: Page, row: number, columnName: string): Promise<string|null> {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector: string;
 
     switch (columnName) {

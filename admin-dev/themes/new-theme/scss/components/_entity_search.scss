@@ -3,28 +3,7 @@ ul.entities-list {
 }
 
 .entity-search-widget {
-  .twitter-typeahead {
-    .tt-menu {
-      width: 100%;
-      max-height: 19.5rem;
-      padding: 0.3125rem 0;
-      overflow: auto;
-      background: $white;
-      border: 1px solid $gray-medium;
-    }
-
-    .tt-suggestion {
-      padding: 0.3125rem 0.625rem;
-      color: $gray-medium;
-      cursor: pointer;
-
-      &:hover,
-      &.tt-cursor {
-        color: $white;
-        background-color: $primary-hover;
-      }
-    }
-  }
+  @import "twitter_typeahead";
 
   .entities-list {
     max-width: 100%;

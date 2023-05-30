@@ -216,8 +216,6 @@ describe('FO - Navigation and display : Display tags', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      await productsPage.resetFilter(page);
-
       const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProducts).to.be.above(0);
     });
@@ -362,7 +360,7 @@ describe('FO - Navigation and display : Display tags', async () => {
 
   // Post-condition: Reset 'Number of days for which the product is considered 'new''
   describe('POST-TEST : Reset \'Number of days for which the product is considered \'new\'\'', async () => {
-    it('should go back BO', async function () {
+    it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
       page = await homePage.closePage(browserContext, page, 0);
@@ -406,6 +404,13 @@ describe('FO - Navigation and display : Display tags', async () => {
 
       const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
+
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter by product name', async function () {

@@ -92,11 +92,11 @@ class Outstanding extends BOBasePage {
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Outstanding row in table
-   * @returns {Promise<string|number>}
+   * @returns {Promise<string>}
    */
   async getTextColumn(page: Page, columnName: string, row: number): Promise<string> {
     if (columnName === 'id_invoice') {
-      return this.getNumberFromText(page, this.tableColumn(row, 'id_invoice'));
+      return (await this.getNumberFromText(page, this.tableColumn(row, 'id_invoice'))).toString();
     }
 
     return this.getTextContent(page, this.tableColumn(row, columnName));
@@ -234,7 +234,7 @@ class Outstanding extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       if (column === 'outstanding_allow_amount') {
-        rowContent = await this.getOutstandingAllowancePrice(page, i);
+        rowContent = (await this.getOutstandingAllowancePrice(page, i)).toString();
       } else {
         rowContent = await this.getTextColumn(page, column, i);
       }

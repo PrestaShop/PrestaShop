@@ -163,7 +163,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderID', baseContext);
 
       orderID = await ordersPage.getOrderIDNumber(page);
-      await expect(parseInt(orderID, 10)).to.be.at.least(5);
+      await expect(orderID).to.be.at.least(5);
     });
   });
 
@@ -240,8 +240,9 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInfo', baseContext);
 
       orderIframe = await addOrderPage.getOrderIframe(page, orderID);
+      await expect(orderIframe).to.be.not.null;
 
-      const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(orderIframe);
+      const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(orderIframe!);
       await expect(customerInfo).to.contains(newCustomer.socialTitle);
       await expect(customerInfo).to.contains(newCustomer.firstName);
       await expect(customerInfo).to.contains(newCustomer.lastName);
@@ -251,14 +252,14 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should check number of ordered products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts0', baseContext);
 
-      const productCount = await orderPageProductsBlock.getProductsNumber(orderIframe);
+      const productCount = await orderPageProductsBlock.getProductsNumber(orderIframe!);
       await expect(productCount).to.equal(1);
     });
 
     it('should check the ordered product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSimpleProductDetails', baseContext);
 
-      const result = await orderPageProductsBlock.getProductDetails(orderIframe, 1);
+      const result = await orderPageProductsBlock.getProductDetails(orderIframe!, 1);
       await Promise.all([
         expect(result.name).to.equal(`${Products.demo_1.name} (Size: S - Color: White)`),
         expect(result.reference).to.equal(`Reference number: ${Products.demo_1.reference}`),
@@ -271,14 +272,14 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should check that the status number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusNumber', baseContext);
 
-      const statusNumber = await orderPageTabListBlock.getStatusNumber(orderIframe);
+      const statusNumber = await orderPageTabListBlock.getStatusNumber(orderIframe!);
       await expect(statusNumber).to.be.equal(1);
     });
 
     it('should check the status name from the table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusName', baseContext);
 
-      const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(orderIframe, 'status', 1);
+      const statusName = await orderPageTabListBlock.getTextColumnFromHistoryTable(orderIframe!, 'status', 1);
       await expect(statusName).to.be.equal('Awaiting bank wire payment');
     });
   });

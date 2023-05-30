@@ -14,7 +14,7 @@ import cartPage from '@pages/FO/cart';
 import {homePage} from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import foMyAccountPage from '@pages/FO/myAccount';
+import {myAccountPage} from '@pages/FO/myAccount';
 import foVouchersPage from '@pages/FO/myAccount/vouchers';
 import checkoutPage from '@pages/FO/checkout';
 
@@ -57,7 +57,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
     },
   });
 
-  const amountValue: number = cartRuleEnabledPartialUse.discountAmount.value - Products.demo_1.finalPrice;
+  const amountValue: number = cartRuleEnabledPartialUse.discountAmount!.value - Products.demo_1.finalPrice;
 
   // before and after functions
   before(async function () {
@@ -197,7 +197,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
         await homePage.goToMyAccountPage(page);
-        await foMyAccountPage.goToVouchersPage(page);
+        await myAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
         await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
@@ -396,7 +396,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage2', baseContext);
 
         await homePage.goToMyAccountPage(page);
-        await foMyAccountPage.goToVouchersPage(page);
+        await myAccountPage.goToVouchersPage(page);
 
         const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
         await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

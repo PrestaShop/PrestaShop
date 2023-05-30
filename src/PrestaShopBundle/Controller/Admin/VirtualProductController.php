@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,8 @@ class VirtualProductController extends FrameworkBundleAdminController
 {
     /**
      * Process Ajax Form to create/update virtual product.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
      *
      * @param string|int $idProduct
      * @param Request $request
@@ -97,6 +100,8 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Download the content of the virtual product.
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param int $idProduct
      *
      * @return BinaryFileResponse
@@ -125,6 +130,8 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax Form to remove attached file.
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param string|int $idProduct
      * @param Request $request
      *
@@ -150,6 +157,8 @@ class VirtualProductController extends FrameworkBundleAdminController
 
     /**
      * Process Ajax remove action.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))")
      *
      * @param string|int $idProduct
      * @param Request $request

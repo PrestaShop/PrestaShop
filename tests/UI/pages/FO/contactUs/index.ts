@@ -73,9 +73,9 @@ class ContactUs extends FOBasePage {
   /**
    * Get email us link href
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  getEmailUsLink(page: Page): Promise<string|null> {
+  getEmailUsLink(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.emailUsLink, 'href');
   }
 
@@ -123,9 +123,9 @@ class ContactUs extends FOBasePage {
   /**
    * Get and return the content of the email input
    * @param page {Page} Browser tab
-   * @returns {Promise<string|null>}
+   * @returns {Promise<string>}
    */
-  async getEmailFieldValue(page: Page): Promise<string|null> {
+  async getEmailFieldValue(page: Page): Promise<string> {
     return this.getAttributeContent(page, this.emailAddressInput, 'value');
   }
 

@@ -41,6 +41,25 @@ type OrderHistory = {
   invoice: string
 }
 
+type OrderHistoryMessage = {
+  product: string
+  message : string
+}
+
+type OrderMessage = {
+  orderMessage: string
+  displayToCustomer: boolean
+  message : string
+}
+
+type OrderPayment = {
+  date: string
+  paymentMethod: string
+  transactionID : number
+  amount : number
+  currency : string
+}
+
 type MerchandiseReturns = {
   orderReference: string
   fileName: string
@@ -48,10 +67,18 @@ type MerchandiseReturns = {
   dateIssued: string
 }
 
+type MerchandiseProductReturn = {
+  quantity: number
+}
+
 export {
+  MerchandiseProductReturn,
+  MerchandiseReturns,
   OrderCreator,
   OrderDeliveryOption,
   OrderHistory,
-  MerchandiseReturns,
+  OrderHistoryMessage,
+  OrderMessage,
+  OrderPayment,
   OrderProduct,
 };

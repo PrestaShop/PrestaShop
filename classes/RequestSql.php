@@ -664,7 +664,7 @@ class RequestSqlCore extends ObjectModel
      */
     public function checkedLimit($limit)
     {
-        if (!preg_match('#^[0-9]+$#', trim($limit['start'])) || !preg_match('#^[0-9]+$#', trim($limit['end']))) {
+        if (!preg_match('#^[0-9]+$#', trim($limit['offset'])) || !preg_match('#^[0-9]+$#', trim($limit['rowcount']))) {
             $this->error_sql['checkedLimit'] = false;
 
             return false;

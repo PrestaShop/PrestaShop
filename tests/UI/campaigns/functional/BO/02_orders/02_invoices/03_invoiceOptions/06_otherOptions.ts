@@ -42,6 +42,12 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
   let filePath: string|null;
 
   const invoiceData: InvoiceData = new InvoiceData({legalFreeText: 'Legal free text'});
+  const invoiceDefaultData: InvoiceData = new InvoiceData({
+    prefix: invoiceData.prefix,
+    invoiceNumber: '0',
+    legalFreeText: '',
+    footerText: '',
+  });
   const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
     products: [
@@ -181,7 +187,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
     it('should change the Invoice number, legal free text and the footer text to default data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultData', baseContext);
 
-      await invoicesPage.setInputOptions(page, {invoiceNumber: '0', legalFreeText: null, footerText: null});
+      await invoicesPage.setInputOptions(page, invoiceDefaultData);
 
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
       await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);

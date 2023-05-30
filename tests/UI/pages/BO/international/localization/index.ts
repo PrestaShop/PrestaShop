@@ -81,7 +81,12 @@ class Localization extends LocalizationBasePage {
    * @param downloadPackData {boolean} True if we need to download pack data
    * @return {Promise<string>}
    */
-  async importLocalizationPack(page: Page, country: string, contentToImport, downloadPackData: boolean = true): Promise<string> {
+  async importLocalizationPack(
+    page: Page,
+    country: string,
+    contentToImport: ImportContent,
+    downloadPackData: boolean = true,
+  ): Promise<string> {
     // Choose which country to import
     await this.selectByVisibleText(page, this.importlocalizationPackSelect, country);
 
