@@ -26,55 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Alias\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use Throwable;
 
 /**
- * Duplicates multiple products
+ * Base class to use for bulk operations, it stores a list of exception indexed by the alias ID that was impacted.
+ * It should be used as a base class for all the bulk action exceptions.
  */
-class BulkDuplicateProductCommand
+class BulkAliasException extends AliasException implements BulkCommandExceptionInterface
 {
-    /**
-     * @var ProductId[]
-     */
-    private $productIds;
+    public const FAILED_BULK_DELETE = 1;
 
-    /**
-     * @var ShopConstraint
-     */
-    private $shopConstraint;
-
-    /**
-     * @param int[] $productIds
-     *
-     * @throws ProductConstraintException
-     */
     public function __construct(
-        array $productIds,
-        ShopConstraint $shopConstraint
+        private readonly array $exceptions,
+        string $message = 'Errors occurred during Alias bulk action',
+        int $code = 0,
+        Throwable $previous = null
     ) {
-        foreach ($productIds as $productId) {
-            $this->productIds[] = new ProductId($productId);
-        }
-        $this->shopConstraint = $shopConstraint;
+        parent::__construct($message, $code, $previous);
     }
 
     /**
-     * @return ProductId[]
+     * {@inheritdoc}
      */
-    public function getProductIds(): array
+    public function getExceptions(): array
     {
-        return $this->productIds;
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
+        return $this->exceptions;
     }
 }

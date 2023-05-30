@@ -26,55 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Adapter\Alias\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Alias\CommandHandler\UpdateAliasStatusHandlerInterfaces;
+use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotUpdateAliasException;
 
 /**
- * Duplicates multiple products
+ * Toggles alias status
  */
-class BulkDuplicateProductCommand
+class UpdateAliasStatusHandler implements UpdateAliasStatusHandlerInterfaces
 {
     /**
-     * @var ProductId[]
-     */
-    private $productIds;
-
-    /**
-     * @var ShopConstraint
-     */
-    private $shopConstraint;
-
-    /**
-     * @param int[] $productIds
-     *
-     * @throws ProductConstraintException
+     * @param AliasRepository $aliasRepository
      */
     public function __construct(
-        array $productIds,
-        ShopConstraint $shopConstraint
+        protected AliasRepository $aliasRepository
     ) {
-        foreach ($productIds as $productId) {
-            $this->productIds[] = new ProductId($productId);
-        }
-        $this->shopConstraint = $shopConstraint;
     }
 
     /**
-     * @return ProductId[]
+     * @param UpdateAliasStatusCommand $command
+     *
+     * @return void
      */
-    public function getProductIds(): array
+    public function handle(UpdateAliasStatusCommand $command): void
     {
-        return $this->productIds;
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
+        $alias = $this->aliasRepository->get($command->aliasId);
+        $alias->active = $command->enabled;
+        $this->aliasRepository->partialUpdate($alias, ['active'], CannotUpdateAliasException::class);
     }
 }

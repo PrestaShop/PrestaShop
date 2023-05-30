@@ -151,4 +151,17 @@ class AliasRepository extends AbstractObjectModelRepository
 
         return $qb->execute()->fetchFirstColumn();
     }
+
+    /**
+     * @param Alias $alias
+     * @param string[] $propertiesToUpdate
+     * @param string $exceptionClass
+     *
+     * @return void
+     */
+    public function partialUpdate(Alias $alias, array $propertiesToUpdate, string $exceptionClass): void
+    {
+        $this->aliasValidator->validate($alias);
+        $this->partiallyUpdateObjectModel($alias, $propertiesToUpdate, $exceptionClass);
+    }
 }

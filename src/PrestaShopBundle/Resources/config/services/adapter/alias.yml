@@ -19,3 +19,13 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasForEditing
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateAliasStatusHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\UpdateAliasStatusCommand
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkUpdateAliasStatusHandler:
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkUpdateAliasStatusCommand
