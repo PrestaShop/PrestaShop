@@ -63,9 +63,6 @@ class ConfigurationCore extends ObjectModel
         ],
     ];
 
-    /** @var array|null Configuration cache (kept for backward compat) */
-    protected static $_cache = null;
-
     /** @var array|null Configuration cache with optimised key order */
     protected static $_new_cache_shop = null;
     protected static $_new_cache_group = null;
@@ -159,7 +156,6 @@ class ConfigurationCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
-        self::$_cache = null;
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
@@ -183,26 +179,15 @@ class ConfigurationCore extends ObjectModel
                 $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
                 self::$types[$row['name']] = (bool) $lang;
 
-                if (!isset(self::$_cache[self::$definition['table']][$lang])) {
-                    self::$_cache[self::$definition['table']][$lang] = [
-                        'global' => [],
-                        'group' => [],
-                        'shop' => [],
-                    ];
-                }
-
                 if ($row['value'] === null) {
                     $row['value'] = '';
                 }
 
                 if ($row['id_shop']) {
-                    self::$_cache[self::$definition['table']][$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
                     self::$_new_cache_shop[$row['name']][$lang][$row['id_shop']] = $row['value'];
                 } elseif ($row['id_shop_group']) {
-                    self::$_cache[self::$definition['table']][$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
                     self::$_new_cache_group[$row['name']][$lang][$row['id_shop_group']] = $row['value'];
                 } else {
-                    self::$_cache[self::$definition['table']][$lang]['global'][$row['name']] = $row['value'];
                     self::$_new_cache_global[$row['name']][$lang] = $row['value'];
                 }
             }
@@ -394,13 +379,10 @@ class ConfigurationCore extends ObjectModel
         foreach ($values as $lang => $value) {
             if ($idShop) {
                 self::$_new_cache_shop[$key][$lang][$idShop] = $value;
-                self::$_cache[self::$definition['table']][$lang]['shop'][$idShop][$key] = $value;
             } elseif ($idShopGroup) {
                 self::$_new_cache_group[$key][$lang][$idShopGroup] = $value;
-                self::$_cache[self::$definition['table']][$lang]['group'][$idShopGroup][$key] = $value;
             } else {
                 self::$_new_cache_global[$key][$lang] = $value;
-                self::$_cache[self::$definition['table']][$lang]['global'][$key] = $value;
             }
         }
     }
@@ -582,7 +564,6 @@ class ConfigurationCore extends ObjectModel
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
         WHERE `name` = "' . pSQL($key) . '"');
 
-        self::$_cache = null;
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
@@ -634,7 +615,6 @@ class ConfigurationCore extends ObjectModel
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang`
         WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
 
-        self::$_cache = null;
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
