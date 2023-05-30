@@ -45,3 +45,8 @@ Feature: Update alias status from Back Office (BO)
       | id reference | alias  | search | active |
       | alias1       | bloose | blouse | 0      |
       | alias2       | blues  | blouse | 0      |
+    When I bulk enable the following aliases "alias1,alias2"
+    Then following aliases should exist:
+      | id reference | alias  | search | active |
+      | alias1       | bloose | blouse | 1      |
+      | alias2       | blues  | blouse | 1      |
