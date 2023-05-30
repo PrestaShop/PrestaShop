@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -47,28 +48,20 @@ class LocalizationConfigurationType extends TranslatorAwareType
     /**
      * @var array
      */
-    private $countryChoices;
-
-    /**
-     * @var array
-     */
     private $timezoneChoices;
 
     /**
      * @param array $languageChoices
-     * @param array $countryChoices
      * @param array $timezoneChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $languageChoices,
-        array $countryChoices,
         array $timezoneChoices
     ) {
         parent::__construct($translator, $locales);
         $this->languageChoices = $languageChoices;
-        $this->countryChoices = $countryChoices;
         $this->timezoneChoices = $timezoneChoices;
     }
 
@@ -101,7 +94,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'Admin.International.Help'
                 ),
             ])
-            ->add('default_country', ChoiceType::class, [
+            ->add('default_country', CountryChoiceType::class, [
                 'label' => $this->trans(
                     'Default country',
                     'Admin.International.Feature'
@@ -110,8 +103,6 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'The default country used in your shop.',
                     'Admin.International.Help'
                 ),
-                'choices' => $this->countryChoices,
-                'choice_translation_domain' => false,
                 'autocomplete' => true,
             ])
             ->add('detect_country_from_browser', SwitchType::class, [

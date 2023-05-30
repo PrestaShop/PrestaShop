@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
@@ -60,11 +61,6 @@ class CatalogPriceRuleType extends AbstractType
     /**
      * @var array
      */
-    private $countryByIdChoices;
-
-    /**
-     * @var array
-     */
     private $groupByIdChoices;
 
     /**
@@ -75,20 +71,17 @@ class CatalogPriceRuleType extends AbstractType
     /**
      * @param TranslatorInterface $translator
      * @param bool $isMultiShopEnabled
-     * @param array $countryByIdChoices
      * @param array $groupByIdChoices
      * @param array $shopByIdChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         bool $isMultiShopEnabled,
-        array $countryByIdChoices,
         array $groupByIdChoices,
         array $shopByIdChoices
     ) {
         $this->translator = $translator;
         $this->isMultiShopEnabled = $isMultiShopEnabled;
-        $this->countryByIdChoices = $countryByIdChoices;
         $this->groupByIdChoices = $groupByIdChoices;
         $this->shopByIdChoices = $shopByIdChoices;
     }
@@ -107,10 +100,10 @@ class CatalogPriceRuleType extends AbstractType
             ->add('id_currency', CurrencyChoiceType::class, [
                 'add_all_currencies_option' => true,
             ])
-            ->add('id_country', ChoiceType::class, [
+            ->add('id_country', CountryChoiceType::class, [
                 'required' => false,
                 'placeholder' => false,
-                'choices' => $this->getModifiedCountryChoices(),
+                'add_all_countries_option' => true,
             ])
             ->add('id_group', ChoiceType::class, [
                 'required' => false,
@@ -184,19 +177,6 @@ class CatalogPriceRuleType extends AbstractType
                 'choices' => $this->shopByIdChoices,
             ]);
         }
-    }
-
-    /**
-     * Prepends 'All countries' option with id of 0 to country choices
-     *
-     * @return array
-     */
-    private function getModifiedCountryChoices(): array
-    {
-        return array_merge(
-            [$this->translator->trans('All countries', [], 'Admin.Global') => 0],
-            $this->countryByIdChoices
-        );
     }
 
     /**
