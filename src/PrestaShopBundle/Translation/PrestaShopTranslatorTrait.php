@@ -54,7 +54,7 @@ trait PrestaShopTranslatorTrait
             $locale = null;
         }
 
-        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain)) {
+        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $locale)) {
             return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
         }
 
@@ -164,16 +164,17 @@ trait PrestaShopTranslatorTrait
      *
      * @param string $message Message to translate
      * @param ?string $domain Translation domain
+     * @param ?string $locale Translation locale
      *
      * @return bool
      */
-    private function shouldFallbackToLegacyModuleTranslation(string $message, ?string $domain): bool
+    private function shouldFallbackToLegacyModuleTranslation(string $message, ?string $domain, ?string $locale): bool
     {
         return
             'Modules.' === substr($domain ?? '', 0, 8)
             && (
                 !method_exists($this, 'getCatalogue')
-                || !$this->getCatalogue()->has($message, $this->normalizeDomain($domain))
+                || !$this->getCatalogue($locale)->has($message, $this->normalizeDomain($domain))
             )
             ;
     }
