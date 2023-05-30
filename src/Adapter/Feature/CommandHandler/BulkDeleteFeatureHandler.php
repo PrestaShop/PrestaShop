@@ -55,7 +55,9 @@ class BulkDeleteFeatureHandler extends AbstractBulkCommandHandler implements Bul
     }
 
     /**
-     * {@inheritDoc}
+     * @param FeatureId $id
+     * @param BulkDeleteFeatureCommand $command
+     * @return void
      */
     protected function handleSingleAction(mixed $id, mixed $command): void
     {
