@@ -47,18 +47,6 @@ interface ModuleManagerInterface
 
     public function disable(string $name): bool;
 
-    /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public function enableMobile(string $name): bool;
-
-    /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public function disableMobile(string $name): bool;
-
     public function reset(string $name, bool $keepData = false): bool;
 
     public function postInstall(string $name): bool;

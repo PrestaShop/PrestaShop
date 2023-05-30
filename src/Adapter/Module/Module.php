@@ -130,14 +130,12 @@ class Module implements ModuleInterface
 
     /**
      * Default values for ParameterBag database.
-     * active_on_mobile property is deprecated and will be removed in 10.0.0
      *
      * @var array
      */
     private $database_default = [
         'installed' => 0,
         'active' => null,
-        'active_on_mobile' => null,
         'version' => null,
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
@@ -226,23 +224,6 @@ class Module implements ModuleInterface
     public function isActive(): bool
     {
         return (bool) $this->database->get('active');
-    }
-
-    /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public function isActiveOnMobile(): bool
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 9.0.0. There is no replacement.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return $this->isActive();
     }
 
     public function isInstalled(): bool
@@ -347,40 +328,6 @@ class Module implements ModuleInterface
         $this->database->set('active', !$result);
 
         return $result;
-    }
-
-    /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public function onMobileEnable(): bool
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 9.0.0. There is no replacement.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return true;
-    }
-
-    /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public function onMobileDisable(): bool
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 9.0.0. There is no replacement.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return true;
     }
 
     /**

@@ -2088,23 +2088,6 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public static function isEnabledForMobileDevices($module_name)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 9.0.0. There is no replacement. Use Module::isEnabled only.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return self::isEnabled($module_name);
-    }
-
-    /**
      * Check if module is registered on hook
      *
      * @param string $hook Hook name

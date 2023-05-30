@@ -199,8 +199,6 @@ class ModuleManagerTest extends TestCase
         $module->method('onUninstall')->willReturn(true);
         $module->method('onEnable')->willReturn(true);
         $module->method('onDisable')->willReturn(true);
-        $module->method('onMobileEnable')->willReturn(true);
-        $module->method('onMobileDisable')->willReturn(true);
         $module->method('onUpgrade')->willReturn(true);
         $module->method('onReset')->willReturn(true);
         $module->method('onPostInstall')->willReturn(true);

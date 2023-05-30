@@ -16,7 +16,7 @@ admin_module_manage_action:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\ModuleController::moduleAction
   requirements:
-    action: install|uninstall|enable|disable|enableMobile|disableMobile|reset|upgrade|delete
+    action: install|uninstall|enable|disable|reset|upgrade|delete
 
 admin_module_configure_action:
   path: /manage/action/configure/{module_name}

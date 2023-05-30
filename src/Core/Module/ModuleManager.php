@@ -253,40 +253,6 @@ class ModuleManager implements ModuleManagerInterface
         return $disabled;
     }
 
-    /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public function enableMobile(string $name): bool
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 9.0.0. There is no replacement.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return true;
-    }
-
-    /**
-     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
-     * in the next major. There is no replacement, all clients should have the same experience.
-     */
-    public function disableMobile(string $name): bool
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 9.0.0. There is no replacement.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return true;
-    }
-
     public function reset(string $name, bool $keepData = false): bool
     {
         if (
